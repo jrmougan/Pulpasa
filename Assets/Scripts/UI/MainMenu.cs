@@ -32,10 +32,20 @@ public class MainMenu : MonoBehaviour
             ActualizarSeleccion();
             audioMover?.Play();
         }
-        else if (Input.GetKeyDown(KeyCode.Return))
+        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
         {
             SeleccionarOpcion();
             audioSeleccionar?.Play();
+        }
+
+        // 
+        for (int i = 0; i < opciones.Length; i++)
+        {
+            if (opciones[i].rectTransform.rect.Contains(Input.mousePosition - opciones[i].rectTransform.position))
+            {
+                indiceSeleccionado = i;
+                ActualizarSeleccion();
+            }
         }
     }
 
@@ -44,7 +54,9 @@ public class MainMenu : MonoBehaviour
         for (int i = 0; i < opciones.Length; i++)
         {
             opciones[i].color = (i == indiceSeleccionado) ? colorSeleccionado : colorNormal;
-            opciones[i].text = (i == indiceSeleccionado) ? $"> {opciones[i].text.TrimStart('>', ' ') }" : opciones[i].text.TrimStart('>', ' ');
+            opciones[i].fontStyle = (i == indiceSeleccionado) ? FontStyles.Bold : FontStyles.Normal;
+            string textoBase = opciones[i].text.TrimStart('>', ' ');
+            opciones[i].text = (i == indiceSeleccionado) ? $">{textoBase}" : textoBase;
         }
     }
 
