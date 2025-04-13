@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d31212675c3d3f64aa2ad0d316006793, type: 3}
+  m_Name: Order_3
+  m_EditorClassIdentifier: 
+  orderName: Order 3
+  recipeBoxes:
+  - recipe: {fileID: 11400000, guid: 7cc3e6098d9c8314bb1283285c29ac78, type: 2}
+    amount: 2
+  drinks:
+  - drink: {fileID: 11400000, guid: febdeac4f8f37c045bffe9f467a3bce6, type: 2}
+    amount: 1
+  - drink: {fileID: 11400000, guid: bb93db207bf485e4588f263d80e2049e, type: 2}
+    amount: 1
+  maxTime: 0
+  description: 

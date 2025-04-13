@@ -18,6 +18,12 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Adds new orders every 5 seconds
+        if (Time.time % 5 < Time.deltaTime) // Check if 5 seconds have passed
+        {
+            orderManager.SpawnRandomOrder();
+        }
+
 
     }
 }

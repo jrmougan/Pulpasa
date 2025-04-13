@@ -18,18 +18,14 @@ public class OrderTicket : MonoBehaviour
         orderIdText.text = $"#{order.orderId}"; // Asignar el ID de la orden al texto
 
 
-        /*         // Crear entradas visuales por cada caja del pedido
-                foreach (var recipeBox in order.template.recipeBoxes)
-                {
-                    for (int i = 0; i < recipeBox.amount; i++)
-                    {
-                        GameObject entryGO = Instantiate(boxEntryPrefab, boxListContainer);
-                        BoxEntryUI entry = entryGO.GetComponent<BoxEntryUI>();
+        // Crear entradas visuales por cada caja del pedido
+        foreach (var recipeBox in order.template.recipeBoxes)
+        {
+            GameObject boxEntryGO = Instantiate(boxEntryPrefab, boxListContainer);
+            BoxEntryUI boxEntryUI = boxEntryGO.GetComponent<BoxEntryUI>();
+            boxEntryUI.Setup(recipeBox); // Asignar la receta y cantidad a la entrada visual
 
-                        if (entry != null)
-                            entry.Setup(recipeBox.recipe, recipeBox.recipe.box);
-                    }
-                } */
+        }
 
         // También podrías agregar bebidas o especias si están en la OrderSO
     }

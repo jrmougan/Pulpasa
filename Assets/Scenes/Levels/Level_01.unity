@@ -229,7 +229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6715076470628272069, guid: 42e4a1c119f0a694e9b827c3fd950bb5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6715076470628272069, guid: 42e4a1c119f0a694e9b827c3fd950bb5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1263,6 +1263,7 @@ MonoBehaviour:
   orderTemplates:
   - {fileID: 11400000, guid: 1d4ba7e99bb665a438fb9f422dc8f16e, type: 2}
   - {fileID: 11400000, guid: 212aad3eba682114a9205f9938037341, type: 2}
+  - {fileID: 11400000, guid: 36de2a368a2e7c1409e6a76669477211, type: 2}
   ticketPrefab: {fileID: 6439576756403067974, guid: 39b27c0004d323d439965a61fe0514c9, type: 3}
   ticketContainer: {fileID: 1240692811}
 --- !u!4 &1498173076 stripped

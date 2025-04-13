@@ -16,7 +16,7 @@ public class OrderManager : MonoBehaviour
             Debug.LogError("No hay plantillas de órdenes disponibles.");
             return;
         }
-        OrderSO randomTemplate = orderTemplates[Random.Range(0, orderTemplates.Count - 1)];
+        OrderSO randomTemplate = orderTemplates[Random.Range(0, orderTemplates.Count)];
         ActiveOrder newOrder = new ActiveOrder(randomTemplate);
         activeOrders.Add(newOrder);
 
