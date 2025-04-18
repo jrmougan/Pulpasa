@@ -14,38 +14,36 @@ public class OrderStand : MonoBehaviour, IController
 
     private void OnTriggerEnter(Collider other)
     {
-        var holder = other.GetComponent<PlayerBoxHolder>();
-        if (holder != null && holder.HasBox)
+        var holder = other.GetComponent<PlayerHoldSystem>();
+        if (holder != null && holder.HasItem)
         {
-            TryValidate(holder);
+            var heldObject = holder.GetHeldObject();
+            var box = heldObject?.GetComponent<Box>();
+
+            if (box != null)
+            {
+                TryValidate(box, holder);
+            }
         }
     }
 
-    private void TryValidate(PlayerBoxHolder holder)
+
+    private void TryValidate(Box box, PlayerHoldSystem holder)
     {
-        var system = this.GetArchitecture().GetSystem<IOrderSystem>();
-        var box = holder.GetBox();
-
-        if (system.ValidateBox(box, deliverySlotId, out int points))
+        if (currentOrder == null)
         {
-            Debug.Log($"✅ Orden completada en stand {deliverySlotId}, puntos: {points}");
-
-
-            // 🗑️ Eliminar la caja
-            Destroy(box.gameObject);
-
-            // 🔄 Vaciar referencia en el jugador
-            holder.DropBox();
-
-            system.CompleteOrder(currentOrder);
-            ClearOrder();
+            Debug.Log("❌ No hay pedido activo.");
+            return;
         }
-        else
+
+        if (box == null)
         {
-            Debug.Log("❌ Caja no válida para este pedido.");
+            Debug.Log("❌ No hay caja en la mano.");
+            return;
         }
+
+        Debug.Log($"Validando pedido #{currentOrder.orderId} con caja {box} en el stand {deliverySlotId}.");
     }
-
     public void AssignOrder(ActiveOrder order)
     {
         currentOrder = order;

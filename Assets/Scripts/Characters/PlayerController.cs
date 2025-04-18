@@ -8,13 +8,16 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     private PlayerInteraction interaction;
     private Animator animator;
+    private PlayerHoldSystem holdSystem;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
         interaction = GetComponent<PlayerInteraction>();
         animator = GetComponent<Animator>();
+        holdSystem = GetComponent<PlayerHoldSystem>();
     }
+
 
     void Update()
     {
@@ -37,12 +40,20 @@ public class PlayerController : MonoBehaviour
         moveInput = value.Get<Vector2>();
     }
 
-    // Aquí pondremos interacción más adelante
     public void OnInteract(InputValue value)
     {
-        if (value.isPressed && interaction != null)
+        if (value.isPressed)
         {
-            interaction.TryInteract(); // Llamamos al método público de PlayerInteraction
+            if (holdSystem != null && holdSystem.HasItem)
+            {
+                // Si ya estás sujetando algo, lo sueltas
+                holdSystem.Drop();
+            }
+            else if (interaction != null)
+            {
+                // Si no tienes nada en la mano, interactúas normalmente
+                interaction.TryInteract();
+            }
         }
     }
 }
