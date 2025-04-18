@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
 
 public class OrderTicket : MonoBehaviour
 {
@@ -13,20 +12,14 @@ public class OrderTicket : MonoBehaviour
 
     public void Setup(ActiveOrder order)
     {
-        currentOrder = order;
         Debug.Log($"Configurando ticket para la orden #{order.orderId}");
-        orderIdText.text = $"#{order.orderId}"; // Asignar el ID de la orden al texto
+        orderIdText.text = $"#{order.orderId}";
 
-
-        // Crear entradas visuales por cada caja del pedido
         foreach (var recipeBox in order.template.recipeBoxes)
         {
             GameObject boxEntryGO = Instantiate(boxEntryPrefab, boxListContainer);
             BoxEntryUI boxEntryUI = boxEntryGO.GetComponent<BoxEntryUI>();
-            boxEntryUI.Setup(recipeBox); // Asignar la receta y cantidad a la entrada visual
-
+            boxEntryUI.Setup(recipeBox);
         }
-
-        // También podrías agregar bebidas o especias si están en la OrderSO
     }
 }

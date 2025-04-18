@@ -1,21 +1,13 @@
-using System.Data.Common;
-using UnityEngine;
-
 public class ActiveOrder
 {
+    public int orderId;
     public OrderSO template;
+    public int deliverySlotId;
 
-    public int orderId; // ID de la orden, si lo necesitas
-    public float timeRemaining;
-
-    public ActiveOrder(OrderSO template)
+    public ActiveOrder(OrderSO template, int id, int deliverySlotId)
     {
-        // Asignar un ID único, de 3 cifras
-        orderId = Random.Range(100, 999); // o usar un ID si lo tenés
-
         this.template = template;
-        this.timeRemaining = template.maxTime;
+        this.orderId = id;
+        this.deliverySlotId = deliverySlotId;
     }
-
-    public bool IsExpired => timeRemaining <= 0f;
 }

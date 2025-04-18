@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewIngredient", menuName = "PulpaSA/Ingredient")]
@@ -11,7 +12,6 @@ public class IngredientSO : ScriptableObject
     public IngredientType type;
     public bool isCookable;
     public bool isCuttable;
-
     public float cookTime;
 
     [TextArea]

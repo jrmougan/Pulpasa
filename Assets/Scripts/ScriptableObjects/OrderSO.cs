@@ -17,6 +17,7 @@ public class OrderSO : ScriptableObject
     public class RecipeBoxPair
     {
         public RecipeSO recipe;
+
         public int amount;
     }
 
