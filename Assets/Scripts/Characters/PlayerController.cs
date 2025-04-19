@@ -12,8 +12,20 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         controller = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         holdSystem = GetComponent<PlayerHoldSystem>();
+        if (holdSystem == null)
+        {
+            Debug.LogError("❌ Falta el componente PlayerHoldSystem.");
+        }
+        if (controller == null)
+        {
+            Debug.LogError("❌ Falta el componente CharacterController.");
+        }
+        if (animator == null)
+        {
+            Debug.LogError("❌ Falta el componente Animator.");
+        }
     }
 
 
