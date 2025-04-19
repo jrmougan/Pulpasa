@@ -17,7 +17,7 @@ public class OrderStand : MonoBehaviour, IController
         var holder = other.GetComponent<PlayerHoldSystem>();
         if (holder != null && holder.HasItem)
         {
-            var heldObject = holder.GetHeldObject();
+            var heldObject = holder.HeldObject;
             var box = heldObject?.GetComponent<Box>();
 
             if (box != null)

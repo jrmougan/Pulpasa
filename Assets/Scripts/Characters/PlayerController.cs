@@ -6,14 +6,12 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     private Vector2 moveInput;
     private CharacterController controller;
-    private PlayerInteraction interaction;
     private Animator animator;
     private PlayerHoldSystem holdSystem;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
-        interaction = GetComponent<PlayerInteraction>();
         animator = GetComponent<Animator>();
         holdSystem = GetComponent<PlayerHoldSystem>();
     }
@@ -42,18 +40,21 @@ public class PlayerController : MonoBehaviour
 
     public void OnInteract(InputValue value)
     {
-        if (value.isPressed)
+        Debug.Log("📥 Botón de interact presionado");
+
+        if (!value.isPressed) return;
+
+        var interactionCtrl = GetComponent<PlayerInteractionController>();
+        if (interactionCtrl != null)
         {
-            if (holdSystem != null && holdSystem.HasItem)
-            {
-                // Si ya estás sujetando algo, lo sueltas
-                holdSystem.Drop();
-            }
-            else if (interaction != null)
-            {
-                // Si no tienes nada en la mano, interactúas normalmente
-                interaction.TryInteract();
-            }
+            interactionCtrl.HandleInteraction();
+        }
+        else
+        {
+            Debug.LogError("❌ Falta el componente PlayerInteractionController.");
         }
     }
+
+
+
 }
