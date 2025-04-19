@@ -12,28 +12,37 @@ public class InteractableSlot : MonoBehaviour, IInteractable
         var hold = player.HoldSystem;
         if (hold == null) return;
 
+        // 🟩 COLOCAR objeto en el slot
         if (currentItem == null && hold.HasItem)
         {
             currentItem = hold.HeldItem;
             var go = currentItem.GetGameObject();
 
-            SlotHelper.SnapObjectToAnchor(go, anchor);
-            var rb = go.GetComponent<Rigidbody>();
-            if (rb)
-            {
-                rb.isKinematic = true;
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
+            SnappingHelper.AlignByAnchorPoint(go, anchor);
+
+            // ✅ Animar apertura
+            Animator anim = go.GetComponentInChildren<Animator>();
+            if (anim != null)
+                anim.SetTrigger("Open");
 
             hold.Clear();
         }
+
+        // 🟥 RECOGER objeto desde el slot
         else if (currentItem != null && !hold.HasItem)
         {
-            hold.PickUp(currentItem.GetGameObject());
+            var go = currentItem.GetGameObject();
+
+            // ✅ Animar cierre
+            Animator anim = go.GetComponentInChildren<Animator>();
+            if (anim != null)
+                anim.SetTrigger("Close");
+
+            hold.PickUp(go);
             currentItem = null;
         }
     }
+
 
     public GameObject GetGameObject() => gameObject;
 }

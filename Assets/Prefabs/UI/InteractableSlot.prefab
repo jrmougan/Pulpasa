@@ -200,7 +200,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1791443481824422655}
   m_Layer: 0
-  m_Name: Slot
+  m_Name: AnchorPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

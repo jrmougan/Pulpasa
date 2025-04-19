@@ -1,34 +1,43 @@
 using UnityEngine;
 
-public static class SlotHelper
+public static class SnappingHelper
 {
-    public static void SnapObjectToAnchor(GameObject obj, Transform anchor)
+    public static void AlignByAnchorPoint(GameObject obj, Transform anchorTarget, string anchorName = "AnchorPoint")
     {
-        if (obj == null || anchor == null) return;
+        if (obj == null || anchorTarget == null)
+        {
+            Debug.LogWarning("❌ SnappingHelper: Objeto o anchor nulo.");
+            return;
+        }
 
-        // 1. Guardar escala original
+        Transform anchorPoint = obj.transform.Find(anchorName);
+        if (anchorPoint == null)
+        {
+            Debug.LogWarning($"❌ No se encontró '{anchorName}' en {obj.name}");
+            return;
+        }
+
+        Debug.Log($"📌 Parentando {obj.name} a {anchorTarget.name}");
+
+        // Offset entre el objeto y su anchor interno
+        Vector3 offset = obj.transform.position - anchorPoint.position;
+
         Vector3 originalScale = obj.transform.localScale;
 
-        // 2. Parentar sin heredar escala
-        obj.transform.SetParent(anchor, true);
+        // ✅ Aseguramos el parenting correcto
+        obj.transform.SetParent(anchorTarget, true);
         obj.transform.localScale = originalScale;
-        obj.transform.rotation = anchor.rotation;
+        obj.transform.rotation = anchorTarget.rotation * Quaternion.Inverse(anchorPoint.localRotation);
 
-        // 3. Ajustar altura visual (base sobre el anchor)
-        Renderer rend = obj.GetComponentInChildren<Renderer>();
-        if (rend != null)
-        {
-            float baseToPivot = rend.bounds.extents.y;
-            obj.transform.position = anchor.position + new Vector3(0, baseToPivot, 0);
-        }
-        else
-        {
-            obj.transform.position = anchor.position;
-        }
 
-        // 4. Física
+        // Posición corregida
+        obj.transform.position = anchorTarget.position + offset;
+
+        Debug.Log($"📍 Posición después: {obj.transform.position}");
+
+        // Física
         var rb = obj.GetComponent<Rigidbody>();
-        if (rb)
+        if (rb != null)
         {
             rb.isKinematic = true;
             rb.linearVelocity = Vector3.zero;
