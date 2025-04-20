@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11a04efba092d914fb2baad88e2b4170, type: 3}
   m_Name: Paprika
   m_EditorClassIdentifier: 
-  spiceName: Paprika
+  type: 1
+  color: {r: 0, g: 0, b: 0, a: 0}
   icon: {fileID: 0}
-  visualColor: {r: 0.8962264, g: 0.3019038, b: 0, a: 0}
-  applyEffectPrefab: {fileID: 0}
-  pointsBonus: 0
-  spiceTime: 0
-  description: 
+  prefab: {fileID: 3904700848335895579, guid: 8c456f0ccc5c5224fabf7ab80492c705, type: 3}
+  useSound: {fileID: 0}

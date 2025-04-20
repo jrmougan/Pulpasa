@@ -6,6 +6,8 @@ public class PlayerInteractionController : MonoBehaviour
 {
     private InteractionDetector detector;
     private PlayerHoldSystem holdSystem;
+    [SerializeField] private InteractionDetector interactionDetector;
+    public InteractionDetector InteractionDetector => interactionDetector;
 
     private void Awake()
     {

@@ -43,6 +43,8 @@ public class PlayerController : MonoBehaviour
         controller.Move(move * moveSpeed * Time.deltaTime);
 
         animator.SetFloat("Speed", speed); // Actualizamos el parámetro del Animator
+
+        animator.SetBool("IsHolding", holdSystem.HasItem); // Actualizamos el parámetro del Animator
     }
 
     public void OnMove(InputValue value)

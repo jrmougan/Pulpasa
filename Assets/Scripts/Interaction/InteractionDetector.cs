@@ -51,8 +51,8 @@ public class InteractionDetector : MonoBehaviour
         // Actualizamos highlight como antes
         if (selected != previous)
         {
-            previous?.GetGameObject().GetComponentInChildren<InteractableHighlight>()?.Hide();
-            selected?.GetGameObject().GetComponentInChildren<InteractableHighlight>()?.Show();
+            previous?.GetGameObject().GetComponentInChildren<HighlightController>()?.Hide();
+            selected?.GetGameObject().GetComponentInChildren<HighlightController>()?.Show();
             previous = selected;
         }
 
