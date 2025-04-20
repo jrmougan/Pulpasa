@@ -24,17 +24,17 @@ public class InteractionDetector : MonoBehaviour
 
         foreach (var hit in hits)
         {
+            // Intenta encontrar un IInteractable en el collider o sus hijos/padres
             var interactable = hit.GetComponentInParent<IInteractable>() ?? hit.GetComponentInChildren<IInteractable>();
-            if (interactable != null)
+            if (interactable != null && !candidates.Contains(interactable))
                 candidates.Add(interactable);
         }
 
-        // FILTRADO INTELIGENTE
         IInteractable selected = null;
 
         if (holdSystem != null && holdSystem.HasItem)
         {
-            // Si tengo algo en la mano → buscar slots disponibles
+            // Si sostiene algo, buscar slots vacíos
             selected = candidates
                 .Where(c => c is InteractableSlot slot && !slot.HasItem)
                 .OrderBy(c => Vector3.Distance(c.GetGameObject().transform.position, transform.position))
@@ -42,13 +42,18 @@ public class InteractionDetector : MonoBehaviour
         }
         else
         {
-            // Si no tengo nada → buscar el más cercano (caja o slot con objeto)
+            // Si no sostiene nada, priorizar Kitchen si está cerca
             selected = candidates
-                .OrderBy(c => Vector3.Distance(c.GetGameObject().transform.position, transform.position))
+                .OrderBy(c =>
+                {
+                    float dist = Vector3.Distance(c.GetGameObject().transform.position, transform.position);
+                    bool isKitchen = c.GetGameObject().CompareTag("Kitchen");
+                    return isKitchen ? dist * 0.5f : dist; // Kitchen tiene "más peso"
+                })
                 .FirstOrDefault();
         }
 
-        // Actualizamos highlight como antes
+        // Actualiza los highlights si el objeto ha cambiado
         if (selected != previous)
         {
             previous?.GetGameObject().GetComponentInChildren<HighlightController>()?.Hide();
@@ -59,7 +64,7 @@ public class InteractionDetector : MonoBehaviour
         Current = selected;
     }
 
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         if (drawGizmos)
         {
