@@ -20,49 +20,44 @@ public class InteractionDetector : MonoBehaviour
     void Update()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius, interactableLayer);
-        List<IInteractable> candidates = new();
+        IInteractable closest = null;
+        float closestDistance = Mathf.Infinity;
 
         foreach (var hit in hits)
         {
-            // Intenta encontrar un IInteractable en el collider o sus hijos/padres
             var interactable = hit.GetComponentInParent<IInteractable>() ?? hit.GetComponentInChildren<IInteractable>();
-            if (interactable != null && !candidates.Contains(interactable))
-                candidates.Add(interactable);
+            if (interactable == null) continue;
+
+            // Si está sujetando algo, ignorar slots ocupados
+            if (holdSystem.HasItem && interactable is InteractableSlot slot && slot.HasItem)
+                continue;
+
+            float dist = Vector3.Distance(hit.transform.position, transform.position);
+
+            // Si es Kitchen y no llevas nada, dar peso extra
+            if (!holdSystem.HasItem && interactable.GetGameObject().CompareTag("Kitchen"))
+            {
+                dist *= 0.25f; // prioriza
+            }
+
+            if (dist < closestDistance)
+            {
+                closest = interactable;
+                closestDistance = dist;
+            }
         }
 
-        IInteractable selected = null;
-
-        if (holdSystem != null && holdSystem.HasItem)
-        {
-            // Si sostiene algo, buscar slots vacíos
-            selected = candidates
-                .Where(c => c is InteractableSlot slot && !slot.HasItem)
-                .OrderBy(c => Vector3.Distance(c.GetGameObject().transform.position, transform.position))
-                .FirstOrDefault();
-        }
-        else
-        {
-            // Si no sostiene nada, priorizar Kitchen si está cerca
-            selected = candidates
-                .OrderBy(c =>
-                {
-                    float dist = Vector3.Distance(c.GetGameObject().transform.position, transform.position);
-                    bool isKitchen = c.GetGameObject().CompareTag("Kitchen");
-                    return isKitchen ? dist * 0.5f : dist; // Kitchen tiene "más peso"
-                })
-                .FirstOrDefault();
-        }
-
-        // Actualiza los highlights si el objeto ha cambiado
-        if (selected != previous)
+        // Resaltar si ha cambiado
+        if (closest != previous)
         {
             previous?.GetGameObject().GetComponentInChildren<HighlightController>()?.Hide();
-            selected?.GetGameObject().GetComponentInChildren<HighlightController>()?.Show();
-            previous = selected;
+            closest?.GetGameObject().GetComponentInChildren<HighlightController>()?.Show();
+            previous = closest;
         }
 
-        Current = selected;
+        Current = closest;
     }
+
 
     private void OnDrawGizmosSelected()
     {

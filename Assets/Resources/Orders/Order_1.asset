@@ -13,15 +13,9 @@ MonoBehaviour:
   m_Name: Order_1
   m_EditorClassIdentifier: 
   orderName: Order 1
-  recipeBoxes:
-  - recipe: {fileID: 11400000, guid: 684d04b1d3485034c896e8677d64824d, type: 2}
-    amount: 1
-  - recipe: {fileID: 11400000, guid: 7cc3e6098d9c8314bb1283285c29ac78, type: 2}
-    amount: 2
-  drinks:
-  - drink: {fileID: 11400000, guid: febdeac4f8f37c045bffe9f467a3bce6, type: 2}
-    amount: 2
-  - drink: {fileID: 11400000, guid: 69b61746554e4f0418fd27a6e1b73a77, type: 2}
-    amount: 1
+  recipe: {fileID: 11400000, guid: 684d04b1d3485034c896e8677d64824d, type: 2}
+  spices:
+  - {fileID: 11400000, guid: 8aea8a7263757864d859095b48011a28, type: 2}
+  - {fileID: 11400000, guid: bc7c9fe59052d464b886a0dfc6b0080b, type: 2}
   maxTime: 0
   description: 

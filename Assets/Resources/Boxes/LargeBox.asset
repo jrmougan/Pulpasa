@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9ad8be8106653a4eabec11fcd18853c, type: 3}
   m_Name: LargeBox
   m_EditorClassIdentifier: 
-  boxName: PulpFamily
+  boxName: Grande
   icon: {fileID: 0}
   prefab: {fileID: 3223339312836087132, guid: dd4c54a591593bc42a9346b1cb41d11d, type: 3}
   requiredCapacity: 100

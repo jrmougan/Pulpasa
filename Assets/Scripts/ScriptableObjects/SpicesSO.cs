@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Seasoning", menuName = "Ingredients/Seasoning")]
-public class SeasoningData : ScriptableObject
+public class SpicesSO : ScriptableObject
 {
 
     public SeasoningType type;

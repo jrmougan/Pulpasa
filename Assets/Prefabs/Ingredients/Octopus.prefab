@@ -200,3 +200,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   canBePickedUp: 1
+  data: {fileID: 11400000, guid: fbd363504d592f3448093c63413dbdae, type: 2}

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SeasoningItem : MonoBehaviour, IPickable, IInteractable
 {
-    [SerializeField] private SeasoningData seasoning;
+    [SerializeField] private SpicesSO seasoning;
 
     public bool IsHeld { get; private set; }
 

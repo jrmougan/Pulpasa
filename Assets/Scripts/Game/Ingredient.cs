@@ -6,6 +6,9 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
     [SerializeField] private IngredientType type;
     [SerializeField] private bool canBePickedUp = true;
 
+    [SerializeField] private IngredientSO data;
+    public IngredientSO Data => data;
+
     public IngredientType Type => type;
     public bool IsHeld { get; private set; }
 
@@ -53,15 +56,15 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
         interactor.HoldSystem.TryToggleHold(gameObject);
     }
 
-    public void ApplySeasoning(SeasoningData seasoningData)
+    public void ApplySeasoning(SpicesSO SpicesSO)
     {
-        Debug.Log($"🧂 Aplicando {seasoningData.type} a {type}");
+        Debug.Log($"🧂 Aplicando {SpicesSO.type} a {type}");
 
         // Aquí puedes agregar la lógica para aplicar el sazonador al ingrediente.
         // Por ejemplo, podrías cambiar su color o modificar su comportamiento.
     }
 
-    public bool CanReceiveSeasoning(SeasoningData seasoningData)
+    public bool CanReceiveSeasoning(SpicesSO SpicesSO)
     {
         // Aquí puedes agregar la lógica para determinar si el ingrediente puede recibir el sazonador.
         // Por ejemplo, podrías verificar si el ingrediente ya tiene un sazonador aplicado.

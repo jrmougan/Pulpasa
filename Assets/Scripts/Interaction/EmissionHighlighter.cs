@@ -8,6 +8,7 @@ public class EmissionHighlighter : MonoBehaviour
 
     private List<Material> materialInstances = new();
     private List<Color> originalEmissions = new();
+    private List<Renderer> renderers = new();
 
     void Awake()
     {
@@ -15,8 +16,17 @@ public class EmissionHighlighter : MonoBehaviour
 
         foreach (var rend in renderers)
         {
-            foreach (var mat in rend.materials) // instanciar materiales
+            var materials = rend.materials; // instancia
+            for (int i = 0; i < materials.Length; i++)
             {
+                Material mat = materials[i];
+                if (rend.gameObject.CompareTag("IgnoreEmission")) continue;
+
+                if (mat.shader.name != "Universal Render Pipeline/Lit")
+                {
+                    mat.shader = Shader.Find("Universal Render Pipeline/Lit"); // fallback seguro
+                }
+
                 if (mat.HasProperty("_EmissionColor"))
                 {
                     materialInstances.Add(mat);
@@ -29,12 +39,20 @@ public class EmissionHighlighter : MonoBehaviour
             Debug.LogWarning($"⚠️ No se encontraron materiales con _EmissionColor en {name}");
     }
 
+
     public void Show()
     {
-        foreach (var mat in materialInstances)
+        for (int i = 0; i < materialInstances.Count; i++)
         {
+            var mat = materialInstances[i];
             mat.EnableKeyword("_EMISSION");
             mat.SetColor("_EmissionColor", highlightEmission);
+            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+
+            if (i < renderers.Count)
+            {
+                DynamicGI.SetEmissive(renderers[i], highlightEmission); // Soporte extra
+            }
         }
     }
 
@@ -43,6 +61,11 @@ public class EmissionHighlighter : MonoBehaviour
         for (int i = 0; i < materialInstances.Count; i++)
         {
             materialInstances[i].SetColor("_EmissionColor", originalEmissions[i]);
+
+            if (i < renderers.Count)
+            {
+                DynamicGI.SetEmissive(renderers[i], originalEmissions[i]); // Restaurar
+            }
         }
     }
 }

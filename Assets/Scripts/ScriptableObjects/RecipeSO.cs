@@ -7,10 +7,8 @@ public class RecipeSO : ScriptableObject
 {
     public string recipeName;
     public Sprite icon;
-    public List<IngredientSO> ingredients;
+    public IngredientSO ingredients;
     public BoxSO box;
-    public bool requiresCooking;
-    public float preparationTime;
     public int basePoints;
 
     [TextArea]

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9ad8be8106653a4eabec11fcd18853c, type: 3}
   m_Name: SmallBox
   m_EditorClassIdentifier: 
-  boxName: PulpMini
+  boxName: "Peque\xF1a"
   icon: {fileID: 0}
   prefab: {fileID: 2851866490831350412, guid: c5c9ff62c7804644ca932013285ae7fe, type: 3}
   requiredCapacity: 100

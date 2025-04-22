@@ -436,7 +436,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   titleText: {fileID: 1119780230274540609}
   amountText: {fileID: 539462272509696505}
-  detailList: []
+  detailListContainer: {fileID: 4970854830549101270}
+  detailTextPrefab: {fileID: 3176860981059519214}
 --- !u!1 &4647990151431270633
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,12 +490,12 @@ MonoBehaviour:
   m_Padding:
     m_Left: 30
     m_Right: 0
-    m_Top: 0
+    m_Top: 20
     m_Bottom: 0
   m_ChildAlignment: 0
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0

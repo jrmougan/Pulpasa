@@ -262,10 +262,10 @@ PrefabInstance:
       addedObject: {fileID: 9148912479230159380}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fdc87347d3806d94babe485426737e5f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 82246961795714691}
+      addedObject: {fileID: 3072656851898873311}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fdc87347d3806d94babe485426737e5f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3072656851898873311}
+      addedObject: {fileID: 7161948933149447585}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: fdc87347d3806d94babe485426737e5f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6242153904295828119}
@@ -309,19 +309,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.49294227, y: 0.4628788, z: 0.49294227}
   m_Center: {x: 0, y: 0.23503174, z: 0.00999999}
---- !u!114 &82246961795714691
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3904700848335895579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3270e2f50b137554fb984b1e3fe5c74a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  highlightEmission: {r: 0.909804, g: 0.38823533, b: 0.08235294, a: 1}
 --- !u!114 &3072656851898873311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,6 +321,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c4edfd46a0274e4097b88d7e3111c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7161948933149447585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3904700848335895579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7829b26086766340b10751ce62b2e3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMaterial: {fileID: 2100000, guid: c9fb99902b8e6124e9892a98c0b5e302, type: 2}
+  scaleFactor: 1.05
 --- !u!54 &6242153904295828119
 Rigidbody:
   m_ObjectHideFlags: 0

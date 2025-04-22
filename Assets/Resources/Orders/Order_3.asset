@@ -13,13 +13,7 @@ MonoBehaviour:
   m_Name: Order_3
   m_EditorClassIdentifier: 
   orderName: Order 3
-  recipeBoxes:
-  - recipe: {fileID: 11400000, guid: 7cc3e6098d9c8314bb1283285c29ac78, type: 2}
-    amount: 2
-  drinks:
-  - drink: {fileID: 11400000, guid: febdeac4f8f37c045bffe9f467a3bce6, type: 2}
-    amount: 1
-  - drink: {fileID: 11400000, guid: bb93db207bf485e4588f263d80e2049e, type: 2}
-    amount: 1
+  recipe: {fileID: 11400000, guid: be3b3351202448446b7b227d26b28946, type: 2}
+  spices: []
   maxTime: 0
   description: 

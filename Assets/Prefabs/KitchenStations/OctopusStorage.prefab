@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 139731133958304156}
   - component: {fileID: 327265056330312928}
   - component: {fileID: 6150674776413347220}
-  - component: {fileID: 4378821956687917582}
+  - component: {fileID: 6314251074155452948}
   m_Layer: 3
   m_Name: OctopusStorage
   m_TagString: Untagged
@@ -253,7 +253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c4edfd46a0274e4097b88d7e3111c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4378821956687917582
+--- !u!114 &6314251074155452948
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -262,10 +262,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3609504522752084550}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3270e2f50b137554fb984b1e3fe5c74a, type: 3}
+  m_Script: {fileID: 11500000, guid: e7829b26086766340b10751ce62b2e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightEmission: {r: 5, g: 4.6078434, b: 0.078431375, a: 5}
+  outlineMaterial: {fileID: 2100000, guid: c9fb99902b8e6124e9892a98c0b5e302, type: 2}
+  scaleFactor: 1.05
 --- !u!1 &4026300821246260594
 GameObject:
   m_ObjectHideFlags: 0

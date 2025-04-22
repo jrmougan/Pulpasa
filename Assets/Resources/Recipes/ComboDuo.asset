@@ -12,12 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765fbb6744d2d7046a9befa00f2de043, type: 3}
   m_Name: ComboDuo
   m_EditorClassIdentifier: 
-  recipeName: PulpDuo
+  recipeName: Pulpo Doble
   icon: {fileID: 0}
-  ingredients:
-  - {fileID: 11400000, guid: fbd363504d592f3448093c63413dbdae, type: 2}
+  ingredients: {fileID: 11400000, guid: fbd363504d592f3448093c63413dbdae, type: 2}
   box: {fileID: 11400000, guid: 916c7926815cd1e4abc05c4db05e1414, type: 2}
-  requiresCooking: 0
-  preparationTime: 0
   basePoints: 0
   description: 

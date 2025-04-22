@@ -15,11 +15,9 @@ public class OrderTicket : MonoBehaviour
         Debug.Log($"Configurando ticket para la orden #{order.orderId}");
         orderIdText.text = $"#{order.orderId}";
 
-        foreach (var recipeBox in order.template.recipeBoxes)
-        {
-            GameObject boxEntryGO = Instantiate(boxEntryPrefab, boxListContainer);
-            BoxEntryUI boxEntryUI = boxEntryGO.GetComponent<BoxEntryUI>();
-            boxEntryUI.Setup(recipeBox);
-        }
+        GameObject boxEntryGO = Instantiate(boxEntryPrefab, boxListContainer);
+        BoxEntryUI boxEntryUI = boxEntryGO.GetComponent<BoxEntryUI>();
+        boxEntryUI.Setup(order.template);
+
     }
 }

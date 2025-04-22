@@ -1,5 +1,5 @@
 public interface ISeasonable
 {
-    void ApplySeasoning(SeasoningData seasoning);
-    bool CanReceiveSeasoning(SeasoningData seasoning);
+    void ApplySeasoning(SpicesSO seasoning);
+    bool CanReceiveSeasoning(SpicesSO seasoning);
 }

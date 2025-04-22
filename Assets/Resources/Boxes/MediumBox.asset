@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9ad8be8106653a4eabec11fcd18853c, type: 3}
   m_Name: MediumBox
   m_EditorClassIdentifier: 
-  boxName: PulpDuo
+  boxName: Mediana
   icon: {fileID: 0}
   prefab: {fileID: 3417035325432769602, guid: 616b54673f4477b41b4bb7426e3062c8, type: 3}
   requiredCapacity: 100

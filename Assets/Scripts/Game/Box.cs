@@ -8,13 +8,19 @@ public class Box : MonoBehaviour, IPickable, IInteractable
     [SerializeField] private bool isSpawner = false;
     [SerializeField] private GameObject boxPrefab;
 
+    [SerializeField] private IngredientSO ingredient;
+    [SerializeField] private BoxSO boxSO;
+
+    public IngredientSO GetIngredient() => ingredient;
+    public BoxSO GetBoxSO() => boxSO;
+
 
     public bool IsHeld { get; private set; }
 
     [SerializeField] private bool isFilled = false;
-    public List<SeasoningData> appliedSeasonings = new();
+    public List<SpicesSO> appliedSeasonings = new();
 
-    public void ApplySeasoning(SeasoningData seasoning)
+    public void ApplySeasoning(SpicesSO seasoning)
     {
         if (CanReceiveSeasoning(seasoning))
         {
@@ -23,7 +29,15 @@ public class Box : MonoBehaviour, IPickable, IInteractable
         }
     }
 
-    public bool CanReceiveSeasoning(SeasoningData seasoning)
+    public void SetIngredient(IngredientSO newIngredient)
+    {
+        ingredient = newIngredient;
+        isFilled = true;
+    }
+
+    public void SetBoxSO(BoxSO box) => boxSO = box;
+
+    public bool CanReceiveSeasoning(SpicesSO seasoning)
     {
         return isFilled && !appliedSeasonings.Contains(seasoning);
     }

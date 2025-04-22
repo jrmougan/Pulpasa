@@ -2,27 +2,32 @@ using UnityEngine;
 
 public class HighlightController : MonoBehaviour
 {
-    private EmissionHighlighter emissionHighlighter;
-    private InteractableHighlight visualHighlighter;
+    private OutlineHighlighter outline;
 
-    void Awake()
+    private InteractableHighlight reticule;
+
+    private void Awake()
     {
-        emissionHighlighter = GetComponentInChildren<EmissionHighlighter>();
-        visualHighlighter = GetComponentInChildren<InteractableHighlight>();
+        outline = GetComponent<OutlineHighlighter>();
+        reticule = GetComponent<InteractableHighlight>();
+
+        if (outline == null && reticule == null)
+        {
+            Debug.LogWarning($"⚠️ No se encontró un componente de resaltado en {name}");
+        }
     }
 
     public void Show()
     {
-        Debug.Log($"🔆 HighlightController.Show() llamado en {name}");
-
-        emissionHighlighter?.Show();
-        visualHighlighter?.Show();
+        outline?.Show();
+        reticule?.Show();
+        Debug.Log($"🌟 HighlightController.Show() en {name}");
     }
 
     public void Hide()
     {
-        Debug.Log($"❌ HighlightController.Hide() llamado en {name}");
-        emissionHighlighter?.Hide();
-        visualHighlighter?.Hide();
+        outline?.Hide();
+        reticule?.Hide();
+        Debug.Log($"❌ HighlightController.Hide() en {name}");
     }
 }
