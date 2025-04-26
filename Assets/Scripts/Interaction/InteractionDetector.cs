@@ -28,22 +28,31 @@ public class InteractionDetector : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            // 🔥 Filtrar colliders no deseados aquí si es necesario (por Layer, Tag o componente especial)
-
             var interactable = hit.GetComponentInParent<IInteractable>() ?? hit.GetComponentInChildren<IInteractable>();
             var pickable = hit.GetComponentInParent<IPickable>() ?? hit.GetComponentInChildren<IPickable>();
 
             if (interactable == null && pickable == null)
                 continue;
 
-            Vector3 toTarget = (hit.transform.position - transform.position).normalized;
-            float dot = Vector3.Dot(transform.forward, toTarget);
+            // 🔵 Altura ajustada
+            Vector3 fromPosition = transform.position + Vector3.up * 0.8f;
+            Vector3 toTarget = hit.transform.position - fromPosition;
+            toTarget.y = 0;
+            toTarget.Normalize();
 
-            if (dot < Mathf.Cos(30f * Mathf.Deg2Rad))
-                continue; // ❌ Fuera del ángulo de visión permitido
+            Vector3 forward = transform.forward;
+            forward.y = 0;
+            forward.Normalize();
 
-            float dist = Vector3.Distance(hit.transform.position, transform.position);
-            float score = dot * 2f + (1f / Mathf.Max(dist, 0.1f)); // 💡 Score combinando alineación + distancia
+            float dot = Vector3.Dot(forward, toTarget);
+
+            float dist = Vector3.Distance(hit.transform.position, fromPosition);
+
+            // 🔵 Permitir interacción si muy cerca aunque no esté perfecto en ángulo
+            if (dist > 0.7f && dot < Mathf.Cos(30f * Mathf.Deg2Rad))
+                continue;
+
+            float score = dot * 2f + (1f / Mathf.Max(dist, 0.1f));
 
             if (pickable != null && !holdSystem.HasItem)
             {
@@ -56,10 +65,10 @@ public class InteractionDetector : MonoBehaviour
             else if (interactable != null)
             {
                 if (holdSystem.HasItem && interactable is InteractableSlot slot && slot.HasItem)
-                    continue; // ⚠️ Ignorar slots ocupados si llevas algo
+                    continue;
 
                 if (!holdSystem.HasItem && interactable.GetGameObject().CompareTag("Kitchen"))
-                    score += 1.0f; // 🎯 Bonus si es cocina y vas vacío
+                    score += 1.0f;
 
                 if (score > bestInteractableScore)
                 {
@@ -69,7 +78,6 @@ public class InteractionDetector : MonoBehaviour
             }
         }
 
-        // ✅ Prioridad: primero pickables, luego interactuables
         IInteractable best = bestPickable as IInteractable ?? bestInteractable;
 
         if (best != previous)

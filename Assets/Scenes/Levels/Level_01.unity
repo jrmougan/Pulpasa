@@ -346,6 +346,10 @@ PrefabInstance:
       value: 1.72
       objectReference: {fileID: 0}
     - target: {fileID: 2068160648301660026, guid: 42e4a1c119f0a694e9b827c3fd950bb5, type: 3}
+      propertyPath: detectionRadius
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2068160648301660026, guid: 42e4a1c119f0a694e9b827c3fd950bb5, type: 3}
       propertyPath: interactableLayer.m_Bits
       value: 8
       objectReference: {fileID: 0}
@@ -948,45 +952,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2470249578018545866, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
-      propertyPath: m_IgnoreReversedGraphics
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7914530548401991386, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1127605995}
-    - target: {fileID: 7914530548401991386, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
-      propertyPath: m_SortingOrder
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 8138076642782421555, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
-      propertyPath: m_Size.x
-      value: 0.8060503
-      objectReference: {fileID: 0}
-    - target: {fileID: 8138076642782421555, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
-      propertyPath: m_Size.y
-      value: 1.2153947
-      objectReference: {fileID: 0}
-    - target: {fileID: 8138076642782421555, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
-      propertyPath: m_Size.z
-      value: 0.79614437
-      objectReference: {fileID: 0}
-    - target: {fileID: 8138076642782421555, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
-      propertyPath: m_Center.z
-      value: -0.46331316
-      objectReference: {fileID: 0}
     - target: {fileID: 8298042348784261387, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
       propertyPath: m_Name
       value: Kitchen
       objectReference: {fileID: 0}
-    - target: {fileID: 8298042348784261387, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
-      propertyPath: m_TagString
-      value: Kitchen
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
-    - {fileID: -8741852036795458917, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
+    - {fileID: 4437068235339466139, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4c24561c4fb3b848813de19754ee5d1, type: 3}

@@ -11,9 +11,14 @@ GameObject:
   - component: {fileID: 313039040638971648}
   - component: {fileID: 3744735170575622309}
   - component: {fileID: 1446516973482710127}
-  m_Layer: 0
+  - component: {fileID: 5723087419835077276}
+  - component: {fileID: 2348383515926447732}
+  - component: {fileID: 2522107307161106421}
+  - component: {fileID: 3016688799030842195}
+  - component: {fileID: 7609421902160716990}
+  m_Layer: 3
   m_Name: Prop_Pot_06
-  m_TagString: Untagged
+  m_TagString: Kitchen
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86,6 +91,81 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5723087419835077276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086480172085753274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c3fb1680e1abaa4aaf36d6a4b5bd49a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  progressBar: {fileID: 1377584155614430366}
+  duration: 5
+--- !u!114 &2348383515926447732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086480172085753274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7829b26086766340b10751ce62b2e3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMaterial: {fileID: 2100000, guid: c9fb99902b8e6124e9892a98c0b5e302, type: 2}
+  scaleFactor: 1.05
+--- !u!114 &2522107307161106421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086480172085753274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c4edfd46a0274e4097b88d7e3111c49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3016688799030842195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086480172085753274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92281289ccee76644ac450c315cb65fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  potTransform: {fileID: 9016731643941025297}
+  kitchenProgress: {fileID: 5723087419835077276}
+--- !u!65 &7609421902160716990
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086480172085753274}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.30794492, y: 0.3268243, z: 0.26842546}
+  m_Center: {x: 0, y: 0.16341215, z: -0.00045817345}
 --- !u!1 &1594235109652925899
 GameObject:
   m_ObjectHideFlags: 0
@@ -766,11 +846,7 @@ GameObject:
   m_Component:
   - component: {fileID: 124326318796518964}
   - component: {fileID: 8138076642782421555}
-  - component: {fileID: 6904346291721988622}
-  - component: {fileID: 2249707023353642024}
-  - component: {fileID: 2873313052326829295}
-  - component: {fileID: 6425203668648008604}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Kitchen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -816,62 +892,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.9985237, y: 1.5056131, z: 0.70951796}
-  m_Center: {x: -4.03, y: 1.2472626, z: -0.42}
---- !u!114 &6904346291721988622
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8298042348784261387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92281289ccee76644ac450c315cb65fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  potTransform: {fileID: 9016731643941025297}
-  kitchenProgress: {fileID: 6425203668648008604}
---- !u!114 &2249707023353642024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8298042348784261387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c4edfd46a0274e4097b88d7e3111c49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2873313052326829295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8298042348784261387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7829b26086766340b10751ce62b2e3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMaterial: {fileID: 2100000, guid: c9fb99902b8e6124e9892a98c0b5e302, type: 2}
-  scaleFactor: 1.05
---- !u!114 &6425203668648008604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8298042348784261387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c3fb1680e1abaa4aaf36d6a4b5bd49a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  progressBar: {fileID: 1377584155614430366}
-  duration: 5
+  m_Size: {x: 0.8060503, y: 1.2153947, z: 0.79614437}
+  m_Center: {x: -4.03, y: 1.2472626, z: -0.46331316}
 --- !u!1001 &2325506549361419072
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -959,6 +981,10 @@ PrefabInstance:
     - target: {fileID: 5434706225195711125, guid: 8a76b8bc556f30043a92431252fe6d0a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5590045189272128922, guid: 8a76b8bc556f30043a92431252fe6d0a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6642305487243352905, guid: 8a76b8bc556f30043a92431252fe6d0a, type: 3}
       propertyPath: m_Name
