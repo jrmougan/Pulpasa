@@ -12,6 +12,10 @@ public class KitchenStation : MonoBehaviour, IInteractable
 
     public GameObject GetGameObject() => gameObject;
 
+    private void Awake()
+    {
+        kitchenProgress.OnCookingFinished += HandleCookingDone;
+    }
     public void Interact(PlayerInteractionController interactor)
     {
         if (isBusy) return;
@@ -42,12 +46,22 @@ public class KitchenStation : MonoBehaviour, IInteractable
 
     }
 
-    private void OnCookingDone(Ingredient ingredient)
+    private void HandleCookingDone()
     {
         Debug.Log("🐙 ¡Pulpo cocido!");
 
-        // Aquí puedes cambiar color, activar humito, etc.
-        ingredient.GetComponent<Renderer>().material.color = Color.red; // Ejemplo visual
+        if (currentIngredient != null)
+        {
+            currentIngredient.SetCooked(); // Cambiar estado
+            currentIngredient.transform.SetParent(null); // Liberarlo visualmente
+            var renderer = currentIngredient.GetComponentInChildren<Renderer>();
+            if (renderer != null)
+            {
+                var materials = renderer.materials;
+                materials[0].color = new Color(1f, 0.5f, 0.3f);
+                materials[1].color = new Color(0.8f, 0.2f, 0.2f);
+            }
+        }
 
         isBusy = false;
     }

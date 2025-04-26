@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
+using System;
 
 public class KitchenProgress : MonoBehaviour
 {
+    public Action OnCookingFinished;
     public SimpleProgressBar progressBar;  // Arrastra desde la jerarquía (ClassicProgressBar)
     public float duration = 5f;
 
@@ -30,6 +30,7 @@ public class KitchenProgress : MonoBehaviour
         {
             isCooking = false;
             progressBar.gameObject.SetActive(false); // Ocultar al acabar
+            OnCookingFinished?.Invoke();
         }
     }
 }

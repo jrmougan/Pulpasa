@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
 
 public class InteractionDetector : MonoBehaviour
 {
@@ -20,44 +19,68 @@ public class InteractionDetector : MonoBehaviour
     void Update()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, detectionRadius, interactableLayer);
-        IInteractable closest = null;
-        float closestDistance = Mathf.Infinity;
+
+        IPickable bestPickable = null;
+        float bestPickableScore = -Mathf.Infinity;
+
+        IInteractable bestInteractable = null;
+        float bestInteractableScore = -Mathf.Infinity;
 
         foreach (var hit in hits)
         {
-            var interactable = hit.GetComponentInParent<IInteractable>() ?? hit.GetComponentInChildren<IInteractable>();
-            if (interactable == null) continue;
+            // 🔥 Filtrar colliders no deseados aquí si es necesario (por Layer, Tag o componente especial)
 
-            // Si está sujetando algo, ignorar slots ocupados
-            if (holdSystem.HasItem && interactable is InteractableSlot slot && slot.HasItem)
+            var interactable = hit.GetComponentInParent<IInteractable>() ?? hit.GetComponentInChildren<IInteractable>();
+            var pickable = hit.GetComponentInParent<IPickable>() ?? hit.GetComponentInChildren<IPickable>();
+
+            if (interactable == null && pickable == null)
                 continue;
 
+            Vector3 toTarget = (hit.transform.position - transform.position).normalized;
+            float dot = Vector3.Dot(transform.forward, toTarget);
+
+            if (dot < Mathf.Cos(30f * Mathf.Deg2Rad))
+                continue; // ❌ Fuera del ángulo de visión permitido
+
             float dist = Vector3.Distance(hit.transform.position, transform.position);
+            float score = dot * 2f + (1f / Mathf.Max(dist, 0.1f)); // 💡 Score combinando alineación + distancia
 
-            // Si es Kitchen y no llevas nada, dar peso extra
-            if (!holdSystem.HasItem && interactable.GetGameObject().CompareTag("Kitchen"))
+            if (pickable != null && !holdSystem.HasItem)
             {
-                dist *= 0.25f; // prioriza
+                if (score > bestPickableScore)
+                {
+                    bestPickable = pickable;
+                    bestPickableScore = score;
+                }
             }
-
-            if (dist < closestDistance)
+            else if (interactable != null)
             {
-                closest = interactable;
-                closestDistance = dist;
+                if (holdSystem.HasItem && interactable is InteractableSlot slot && slot.HasItem)
+                    continue; // ⚠️ Ignorar slots ocupados si llevas algo
+
+                if (!holdSystem.HasItem && interactable.GetGameObject().CompareTag("Kitchen"))
+                    score += 1.0f; // 🎯 Bonus si es cocina y vas vacío
+
+                if (score > bestInteractableScore)
+                {
+                    bestInteractable = interactable;
+                    bestInteractableScore = score;
+                }
             }
         }
 
-        // Resaltar si ha cambiado
-        if (closest != previous)
+        // ✅ Prioridad: primero pickables, luego interactuables
+        IInteractable best = bestPickable as IInteractable ?? bestInteractable;
+
+        if (best != previous)
         {
             previous?.GetGameObject().GetComponentInChildren<HighlightController>()?.Hide();
-            closest?.GetGameObject().GetComponentInChildren<HighlightController>()?.Show();
-            previous = closest;
+            best?.GetGameObject().GetComponentInChildren<HighlightController>()?.Show();
+            previous = best;
         }
 
-        Current = closest;
+        Current = best;
     }
-
 
     private void OnDrawGizmosSelected()
     {
@@ -65,6 +88,14 @@ public class InteractionDetector : MonoBehaviour
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+            // 🔥 Opcional: Dibujar el cono de visión (solo visual, no afecta al juego)
+            Vector3 leftLimit = Quaternion.Euler(0, -30, 0) * transform.forward;
+            Vector3 rightLimit = Quaternion.Euler(0, 30, 0) * transform.forward;
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(transform.position, transform.position + leftLimit * detectionRadius);
+            Gizmos.DrawLine(transform.position, transform.position + rightLimit * detectionRadius);
         }
     }
 }

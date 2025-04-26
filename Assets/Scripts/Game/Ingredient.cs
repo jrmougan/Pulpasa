@@ -10,7 +10,19 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
     public IngredientSO Data => data;
 
     public IngredientType Type => type;
+
+    public CookingState cookingState = CookingState.Raw;
     public bool IsHeld { get; private set; }
+
+    public void SetCooked()
+    {
+        cookingState = CookingState.Cooked;
+        // cambiar color, icono, sprite, etc. aquí
+    }
+
+    public bool IsCooked => cookingState == CookingState.Cooked;
+
+
 
     public void OnPickedUp(Transform parent)
     {

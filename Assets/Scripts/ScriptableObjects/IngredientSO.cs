@@ -23,3 +23,10 @@ public enum IngredientType
 {
     Octopus
 }
+
+public enum CookingState
+{
+    Raw,
+    Cooked,
+    Burnt
+}
