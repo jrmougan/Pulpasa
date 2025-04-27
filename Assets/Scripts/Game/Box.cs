@@ -30,8 +30,15 @@ public class Box : MonoBehaviour, IPickable, IInteractable
         fillAmount += amount;
         fillAmount = Mathf.Clamp(fillAmount, 0f, maxFill);
 
-        // 🎨 Aquí podrías actualizar un UI de barra de progreso en la caja
         Debug.Log($"🧪 Caja llena: {fillAmount * 100f}%");
+
+        if (fillAmount >= maxFill)
+        {
+            Debug.Log("✅ Caja llena al 100%!");
+            // añadir pulpo
+
+
+        }
     }
 
     public IngredientSO GetIngredient() => ingredient;
@@ -67,10 +74,15 @@ public class Box : MonoBehaviour, IPickable, IInteractable
 
     public void OnPickedUp(Transform parent)
     {
-        if (!canBePickedUp) return;
+        // 🔥 1. Liberar Slot PRIMERO
+        var slot = GetComponentInParent<InteractableSlot>();
+        if (slot != null)
+        {
+            slot.ForceClearSlot();
+            Debug.Log($"✅ {name} liberó su Slot automáticamente.");
+        }
 
-        Debug.Log("📦 Box.OnPickedUp() ejecutado.");
-
+        // 🔥 2. Luego parentar
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -78,17 +90,20 @@ public class Box : MonoBehaviour, IPickable, IInteractable
         var rb = GetComponent<Rigidbody>();
         if (rb)
         {
+            rb.isKinematic = true;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = true;
         }
 
         IsHeld = true;
     }
 
-    public void OnDropped(Vector3 dropPosition)
+
+    public void OnDropped(Vector3 dropPosition, bool keepParent = false)
     {
-        transform.SetParent(null);
+        if (!keepParent)
+            transform.SetParent(null);
+
         transform.position = dropPosition;
 
         var rb = GetComponent<Rigidbody>();
@@ -99,10 +114,15 @@ public class Box : MonoBehaviour, IPickable, IInteractable
             rb.angularVelocity = Vector3.zero;
         }
 
-        // layer a interactable
-        gameObject.layer = LayerMask.NameToLayer("Interactable");
         IsHeld = false;
     }
+
+    public void OnDropped(Vector3 dropPosition)
+    {
+        OnDropped(dropPosition, false);
+    }
+
+
 
     public GameObject GetGameObject() => gameObject;
 

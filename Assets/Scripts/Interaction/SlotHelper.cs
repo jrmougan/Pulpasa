@@ -19,23 +19,19 @@ public static class SnappingHelper
 
         Debug.Log($"📌 Parentando {obj.name} a {anchorTarget.name}");
 
-        // Offset entre el objeto y su anchor interno
-        Vector3 offset = obj.transform.position - anchorPoint.position;
+        // 🔵 Calculamos desplazamiento relativo
+        Vector3 localPosOffset = anchorPoint.localPosition;
+        Quaternion localRotOffset = anchorPoint.localRotation;
+        Debug.Log($"🌟 Snapping {obj.name} to {anchorTarget.name}");
 
-        Vector3 originalScale = obj.transform.localScale;
+        // 🔥 Parentar SIN mantener world position
+        obj.transform.SetParent(anchorTarget, false);
 
-        // ✅ Aseguramos el parenting correcto
-        obj.transform.SetParent(anchorTarget, true);
-        obj.transform.localScale = originalScale;
-        obj.transform.rotation = anchorTarget.rotation * Quaternion.Inverse(anchorPoint.localRotation);
+        // 🔥 Aplicar los offsets para que quede igual que el AnchorPoint
+        obj.transform.localPosition = -localPosOffset;
+        obj.transform.localRotation = Quaternion.Inverse(localRotOffset);
 
-
-        // Posición corregida
-        obj.transform.position = anchorTarget.position + offset;
-
-        Debug.Log($"📍 Posición después: {obj.transform.position}");
-
-        // Física
+        // 🔵 Física y layer
         var rb = obj.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -44,7 +40,8 @@ public static class SnappingHelper
             rb.angularVelocity = Vector3.zero;
         }
 
-        // Cambiar layer a Interactable
         obj.layer = LayerMask.NameToLayer("Interactable");
+
+        Debug.Log($"📍 Final local position: {obj.transform.localPosition}");
     }
 }

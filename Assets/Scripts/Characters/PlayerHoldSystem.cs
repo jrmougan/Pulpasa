@@ -14,6 +14,11 @@ public class PlayerHoldSystem : MonoBehaviour
 
     public void PickUp(GameObject obj)
     {
+        if (HasItem) return;
+
+        // 🔥 Buscar Slot cercano antes de cambiar el parent
+        TryForceClearNearbySlot(obj);
+
         heldObject = obj;
         heldItem = obj.GetComponent<IPickable>();
 
@@ -32,6 +37,7 @@ public class PlayerHoldSystem : MonoBehaviour
             rb.interpolation = RigidbodyInterpolation.None;
         }
 
+        // 🔥 SOLO AHORA cambiamos el parent
         heldObject.transform.SetParent(holdPoint, false);
         heldObject.transform.localPosition = Vector3.zero;
         heldObject.transform.localRotation = Quaternion.identity;
@@ -84,6 +90,25 @@ public class PlayerHoldSystem : MonoBehaviour
         else
         {
             Debug.Log("❌ Ya tienes otro objeto en la mano.");
+        }
+    }
+
+    // 🧠 NUEVO: Buscar Slot cercano para liberar
+    private void TryForceClearNearbySlot(GameObject obj)
+    {
+        float searchRadius = 0.5f; // Radio pequeño para detectar Slots cercanos
+        LayerMask slotLayer = LayerMask.GetMask("Interactable"); // O ajusta a la Layer donde están tus Slots
+
+        Collider[] colliders = Physics.OverlapSphere(obj.transform.position, searchRadius, slotLayer);
+        foreach (var col in colliders)
+        {
+            var slot = col.GetComponent<InteractableSlot>();
+            if (slot != null && slot.HasItem)
+            {
+                Debug.Log($"📤 Slot liberado: {slot.name} al recoger {obj.name}");
+                slot.ForceClearSlot();
+                break; // solo liberar uno
+            }
         }
     }
 }
