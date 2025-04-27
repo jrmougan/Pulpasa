@@ -3,7 +3,7 @@ using UnityEngine;
 public class InteractableSlot : MonoBehaviour, IInteractable
 {
     [SerializeField] private Transform anchor;
-    private IPickable currentItem;
+    private IPickable currentItem; // 🔥 Solo privado
 
     public bool HasItem => currentItem != null;
 
@@ -12,7 +12,7 @@ public class InteractableSlot : MonoBehaviour, IInteractable
         var hold = player.HoldSystem;
         if (hold == null) return;
 
-        // 🟩 COLOCAR objeto en el slot
+        // 🟡 SLOT VACÍO + jugador lleva algo
         if (currentItem == null && hold.HasItem)
         {
             currentItem = hold.HeldItem;
@@ -20,35 +20,38 @@ public class InteractableSlot : MonoBehaviour, IInteractable
 
             SnappingHelper.AlignByAnchorPoint(go, anchor);
 
-            // 🔥 Asegurar Layer correcto
             go.layer = LayerMask.NameToLayer("Interactable");
 
-            // ✅ Animar apertura
             Animator anim = go.GetComponentInChildren<Animator>();
             if (anim != null)
                 anim.SetTrigger("Open");
 
             hold.Clear();
         }
-        // 🟥 RECOGER objeto desde el slot
+        // 🔴 SLOT OCUPADO + jugador sin objeto
         else if (currentItem != null && !hold.HasItem)
         {
             var go = currentItem.GetGameObject();
-
             currentItem = null;
             hold.PickUp(go);
         }
-        // 🔶 CASO NUEVO: tienes algo en mano y el slot también está ocupado
+        // 🚫 SLOT OCUPADO + jugador lleva algo (❗ bloqueamos)
         else if (currentItem != null && hold.HasItem)
         {
-            Debug.Log("⚠️ No puedes colocar porque el Slot ya tiene un objeto y tú llevas otro.");
-            // Aquí podrías añadir lógica de swap en el futuro si quieres.
+            Debug.Log("❌ El Slot ya tiene un objeto, no puedes colocar otro encima.");
         }
     }
+
+
 
     public void ForceClearSlot()
     {
         currentItem = null;
+    }
+
+    public IInteractable GetContainedItem()
+    {
+        return currentItem as IInteractable;
     }
 
     public GameObject GetGameObject() => gameObject;

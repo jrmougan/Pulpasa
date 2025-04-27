@@ -45,14 +45,30 @@ public class InteractionDetector : MonoBehaviour
             forward.Normalize();
 
             float dot = Vector3.Dot(forward, toTarget);
-
             float dist = Vector3.Distance(hit.transform.position, fromPosition);
 
-            // 🔵 Permitir interacción si muy cerca aunque no esté perfecto en ángulo
             if (dist > 0.7f && dot < Mathf.Cos(30f * Mathf.Deg2Rad))
                 continue;
 
             float score = dot * 2f + (1f / Mathf.Max(dist, 0.1f));
+
+            // 🔥🔥🔥 Aquí hacemos la mejora 🔥🔥🔥
+
+            bool holdingSeasoning = holdSystem.HeldObject?.GetComponent<SeasoningItem>() != null;
+
+            // Si es un slot ocupado y llevas algo, mirar su contenido
+            if (interactable is InteractableSlot slot && slot.HasItem)
+            {
+                var contained = slot.GetContainedItem();
+                if (contained != null)
+                {
+                    interactable = contained;
+                }
+                else
+                {
+                    continue; // slot vacío, no sirve
+                }
+            }
 
             if (pickable != null && !holdSystem.HasItem)
             {
@@ -64,30 +80,20 @@ public class InteractionDetector : MonoBehaviour
             }
             else if (interactable != null)
             {
-                if (holdSystem.HasItem && interactable is InteractableSlot slot && slot.HasItem)
-                    continue;
-
                 if (!holdSystem.HasItem && interactable.GetGameObject().CompareTag("Kitchen"))
                     score += 1.0f;
+
+                // 💡 Priorizar cajas llenas cuando llevas seasoning
+                var box = interactable.GetGameObject().GetComponent<Box>();
+                if (holdingSeasoning && box != null && box.IsFull())
+                {
+                    score += 10f;
+                }
 
                 if (score > bestInteractableScore)
                 {
                     bestInteractable = interactable;
                     bestInteractableScore = score;
-                }
-            }
-
-            // 🎯 Ajuste extra si llevas condimentos
-            bool holdingSeasoning = holdSystem.HeldObject?.GetComponent<SeasoningItem>() != null;
-            if (holdingSeasoning)
-            {
-                if (interactable != null && interactable.GetGameObject().CompareTag("SeasoningSlot"))
-                {
-                    score += 5f; // Favorecer Seasoning Slots
-                }
-                else
-                {
-                    score -= 5f; // Penalizar otros interactuables
                 }
             }
         }
