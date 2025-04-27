@@ -76,6 +76,20 @@ public class InteractionDetector : MonoBehaviour
                     bestInteractableScore = score;
                 }
             }
+
+            // 🎯 Ajuste extra si llevas condimentos
+            bool holdingSeasoning = holdSystem.HeldObject?.GetComponent<SeasoningItem>() != null;
+            if (holdingSeasoning)
+            {
+                if (interactable != null && interactable.GetGameObject().CompareTag("SeasoningSlot"))
+                {
+                    score += 5f; // Favorecer Seasoning Slots
+                }
+                else
+                {
+                    score -= 5f; // Penalizar otros interactuables
+                }
+            }
         }
 
         IInteractable best = bestPickable as IInteractable ?? bestInteractable;

@@ -11,6 +11,29 @@ public class Box : MonoBehaviour, IPickable, IInteractable
     [SerializeField] private IngredientSO ingredient;
     [SerializeField] private BoxSO boxSO;
 
+    [SerializeField] private float fillAmount = 0f; // 0 = vacío, 1 = lleno
+    [SerializeField] private float fillPerPress = 0.05f; // cuánto llena cada pulsación
+    [SerializeField] private float maxFill = 1f; // cuando llega a 1 está completa
+
+    public bool IsFull()
+    {
+        return fillAmount >= maxFill;
+    }
+
+    public float GetFillPercent()
+    {
+        return fillAmount * 100f; // Devuelve el porcentaje de llenado
+    }
+
+    public void Fill(float amount)
+    {
+        fillAmount += amount;
+        fillAmount = Mathf.Clamp(fillAmount, 0f, maxFill);
+
+        // 🎨 Aquí podrías actualizar un UI de barra de progreso en la caja
+        Debug.Log($"🧪 Caja llena: {fillAmount * 100f}%");
+    }
+
     public IngredientSO GetIngredient() => ingredient;
     public BoxSO GetBoxSO() => boxSO;
 
@@ -76,6 +99,8 @@ public class Box : MonoBehaviour, IPickable, IInteractable
             rb.angularVelocity = Vector3.zero;
         }
 
+        // layer a interactable
+        gameObject.layer = LayerMask.NameToLayer("Interactable");
         IsHeld = false;
     }
 

@@ -43,5 +43,8 @@ public static class SnappingHelper
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
+
+        // Cambiar layer a Interactable
+        obj.layer = LayerMask.NameToLayer("Interactable");
     }
 }
