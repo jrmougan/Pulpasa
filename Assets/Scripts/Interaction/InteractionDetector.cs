@@ -80,15 +80,16 @@ public class InteractionDetector : MonoBehaviour
             }
             else if (interactable != null)
             {
+                if (interactable is InteractableSlot slotInteractable)
+                {
+                    if (slotInteractable.HasItem && holdSystem.HasItem)
+                    {
+                        continue; // 🔥 Saltar porque no queremos interactuar con slot ocupado si llevamos algo
+                    }
+                }
+
                 if (!holdSystem.HasItem && interactable.GetGameObject().CompareTag("Kitchen"))
                     score += 1.0f;
-
-                // 💡 Priorizar cajas llenas cuando llevas seasoning
-                var box = interactable.GetGameObject().GetComponent<Box>();
-                if (holdingSeasoning && box != null && box.IsFull())
-                {
-                    score += 10f;
-                }
 
                 if (score > bestInteractableScore)
                 {
