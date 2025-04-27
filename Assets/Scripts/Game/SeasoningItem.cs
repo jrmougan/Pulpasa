@@ -5,7 +5,7 @@ public class SeasoningItem : MonoBehaviour, IPickable, IInteractable
     [SerializeField] private SpicesSO seasoning;
 
     public bool IsHeld { get; private set; }
-
+    public SpicesSO GetSeasoning() => seasoning;
     public void OnPickedUp(Transform parent)
     {
         transform.SetParent(parent);

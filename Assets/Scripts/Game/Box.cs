@@ -69,7 +69,7 @@ public class Box : MonoBehaviour, IPickable, IInteractable
 
     public bool CanReceiveSeasoning(SpicesSO seasoning)
     {
-        return isFilled && !appliedSeasonings.Contains(seasoning);
+        return IsFull() && !appliedSeasonings.Contains(seasoning);
     }
 
     public void OnPickedUp(Transform parent)

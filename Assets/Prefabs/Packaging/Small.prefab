@@ -243,7 +243,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e4da8e338bb97429391ef0703de91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highlightVisual: {fileID: 0}
+  canBePickedUp: 1
+  isSpawner: 0
+  boxPrefab: {fileID: 0}
+  ingredient: {fileID: 0}
+  boxSO: {fileID: 11400000, guid: 64a0ac958bdde62479ad900559c586cc, type: 2}
+  fillAmount: 0
+  fillPerPress: 0.05
+  maxFill: 1
+  isFilled: 0
+  appliedSeasonings: []
 --- !u!65 &1160561005844064240
 BoxCollider:
   m_ObjectHideFlags: 0

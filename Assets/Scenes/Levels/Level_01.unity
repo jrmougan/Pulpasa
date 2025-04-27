@@ -2067,6 +2067,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 60781764645943232, guid: aab1f3e7304352646bac7106513026b4, type: 3}
+      propertyPath: boxSO
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 60781764645943232, guid: aab1f3e7304352646bac7106513026b4, type: 3}
       propertyPath: boxPrefab
       value: 
       objectReference: {fileID: 3223339312836087132, guid: 423a205d59ec13a4d9a24f07213bad9a, type: 3}
@@ -2127,6 +2131,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3596107607661908998, guid: aab1f3e7304352646bac7106513026b4, type: 3}
+      propertyPath: boxSO
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3596107607661908998, guid: aab1f3e7304352646bac7106513026b4, type: 3}
       propertyPath: boxPrefab
       value: 
       objectReference: {fileID: 3223339312836087132, guid: 5f58df8f1a8e97848985afdc10f7582f, type: 3}
@@ -2141,6 +2149,10 @@ PrefabInstance:
     - target: {fileID: 3596107607661908998, guid: aab1f3e7304352646bac7106513026b4, type: 3}
       propertyPath: canBePickedUp
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3615026195773397007, guid: aab1f3e7304352646bac7106513026b4, type: 3}
+      propertyPath: boxSO
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3615026195773397007, guid: aab1f3e7304352646bac7106513026b4, type: 3}
       propertyPath: boxPrefab

@@ -20,6 +20,8 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
         // cambiar color, icono, sprite, etc. aquí
     }
 
+    public IngredientSO GetIngredientSO() => data;
+
     public bool IsCooked => cookingState == CookingState.Cooked;
 
 
