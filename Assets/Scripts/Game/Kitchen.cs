@@ -25,7 +25,7 @@ public class KitchenStation : MonoBehaviour, IInteractable
         if (heldObject == null) return;
 
         var ingredient = heldObject.GetComponent<Ingredient>();
-        if (ingredient == null) return;
+        if (ingredient == null || ingredient.cookingState == CookingState.Cooked) return;
         Debug.Log($"🍳 Interactuando con ingrediente: {ingredient.Data.type}");
         if (ingredient.Data == null || !ingredient.Data.isCookable || ingredient.Data.type != IngredientType.Octopus) return;
 
@@ -39,6 +39,8 @@ public class KitchenStation : MonoBehaviour, IInteractable
         ingredient.transform.position = potTransform.position;
         ingredient.transform.rotation = potTransform.rotation;
         ingredient.transform.SetParent(potTransform);
+        // Cambiar a layer cooking
+        ingredient.gameObject.layer = LayerMask.NameToLayer("Cooking");
 
         kitchenProgress.gameObject.SetActive(true);
         kitchenProgress.StartCooking(ingredient.Data.cookTime);
@@ -55,6 +57,8 @@ public class KitchenStation : MonoBehaviour, IInteractable
             currentIngredient.SetCooked(); // Cambiar estado
             currentIngredient.transform.SetParent(null); // Liberarlo visualmente
             var renderer = currentIngredient.GetComponentInChildren<Renderer>();
+            currentIngredient.gameObject.layer = LayerMask.NameToLayer("Interactable"); // Cambiar a layer default
+
             if (renderer != null)
             {
                 var materials = renderer.materials;
