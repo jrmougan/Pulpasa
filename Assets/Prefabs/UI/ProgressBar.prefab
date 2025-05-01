@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 147999786443899786}
   - component: {fileID: 3700818283899054046}
   m_Layer: 3
-  m_Name: Canvas
+  m_Name: ProgressBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

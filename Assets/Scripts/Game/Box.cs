@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class Box : MonoBehaviour, IPickable, IInteractable
 {
@@ -14,6 +16,8 @@ public class Box : MonoBehaviour, IPickable, IInteractable
     [SerializeField] private float fillAmount = 0f; // 0 = vacío, 1 = lleno
     [SerializeField] private float fillPerPress = 0.05f; // cuánto llena cada pulsación
     [SerializeField] private float maxFill = 1f; // cuando llega a 1 está completa
+
+    public SimpleProgressBar progressBar;
 
     public bool IsFull()
     {
@@ -31,11 +35,20 @@ public class Box : MonoBehaviour, IPickable, IInteractable
         fillAmount = Mathf.Clamp(fillAmount, 0f, maxFill);
 
         Debug.Log($"🧪 Caja llena: {fillAmount * 100f}%");
+        if (fillAmount > 0 && progressBar != null)
+        {
+            progressBar.gameObject.SetActive(true);
+
+        }
+        if (progressBar != null)
+        {
+            progressBar.SetProgress(fillAmount);
+        }
 
         if (fillAmount >= maxFill)
         {
             Debug.Log("✅ Caja llena al 100%!");
-            // añadir pulpo
+            progressBar.gameObject.SetActive(false);
 
 
         }
@@ -135,6 +148,11 @@ public class Box : MonoBehaviour, IPickable, IInteractable
             if (boxPrefab != null)
             {
                 GameObject spawned = Instantiate(boxPrefab);
+                Canvas canvas = spawned.GetComponentInChildren<Canvas>();
+                if (canvas != null)
+                {
+                    canvas.worldCamera = Camera.main;
+                }
                 interactor.HoldSystem.PickUp(spawned);
             }
             else

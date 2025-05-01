@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private PlayerHoldSystem holdSystem;
 
+    public ProductivitySystem productivitySystem;
+
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -31,6 +33,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (productivitySystem == null || !productivitySystem.isRunning || productivitySystem.isFinished)
+            return;
         Vector3 move = new Vector3(moveInput.x, 0, moveInput.y);
         float speed = move.magnitude;
 

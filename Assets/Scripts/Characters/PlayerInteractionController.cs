@@ -9,6 +9,7 @@ public class PlayerInteractionController : MonoBehaviour
     [SerializeField] private InteractionDetector interactionDetector;
     public InteractionDetector InteractionDetector => interactionDetector;
 
+
     private void Awake()
     {
         detector = GetComponent<InteractionDetector>();
