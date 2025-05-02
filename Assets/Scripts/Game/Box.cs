@@ -29,6 +29,11 @@ public class Box : MonoBehaviour, IPickable, IInteractable
         return fillAmount * 100f; // Devuelve el porcentaje de llenado
     }
 
+    public float GetFillPerPress()
+    {
+        return fillPerPress;
+    }
+
     public void Fill(float amount)
     {
         fillAmount += amount;

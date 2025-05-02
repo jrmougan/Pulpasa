@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 
@@ -7,6 +8,10 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
     [SerializeField] private bool canBePickedUp = true;
 
     [SerializeField] private IngredientSO data;
+
+    public float remainintCuantity = 100f;
+
+    public SimpleProgressBar progressBar;
     public IngredientSO Data => data;
 
     public IngredientType Type => type;
@@ -25,6 +30,31 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
     public bool IsCooked => cookingState == CookingState.Cooked;
 
 
+    public void Cut(float amount)
+    {
+        if (remainintCuantity <= 0f) return;
+
+        if (remainintCuantity < 100f && progressBar != null)
+        {
+            progressBar.gameObject.SetActive(true);
+        }
+
+        remainintCuantity -= amount;
+        remainintCuantity = Mathf.Clamp(remainintCuantity, 0f, 100f);
+
+        Debug.Log($"🔪 Cortando {type}: {remainintCuantity}% restante");
+
+        if (progressBar != null)
+        {
+            progressBar.SetProgress(remainintCuantity / 100f);
+            if (remainintCuantity <= 0f)
+            {
+                progressBar.gameObject.SetActive(false);
+                gameObject.SetActive(false);
+                StartCoroutine(DestroyWithDelay(0.5f));
+            }
+        }
+    }
 
     public void OnPickedUp(Transform parent)
     {
@@ -84,6 +114,13 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
         // Por ejemplo, podrías verificar si el ingrediente ya tiene un sazonador aplicado.
         return true; // Por defecto, todos los ingredientes pueden recibir sazonadores.
     }
+    private IEnumerator DestroyWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
+    }
 
     public GameObject GetGameObject() => gameObject;
 }
+
+

@@ -65,15 +65,9 @@ public class MainMenu : MonoBehaviour
         switch (indiceSeleccionado)
         {
             case 0:
-                SceneManager.LoadScene("EscenaIndividual");
+                SceneManager.LoadScene("Level_01");
                 break;
             case 1:
-                SceneManager.LoadScene("EscenaMultijugador");
-                break;
-            case 2:
-                SceneManager.LoadScene("EscenaOpciones");
-                break;
-            case 3:
                 Application.Quit();
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;

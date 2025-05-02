@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(InteractionDetector))]
 [RequireComponent(typeof(PlayerHoldSystem))]
@@ -48,6 +49,8 @@ public class PlayerInteractionController : MonoBehaviour
             return false;
 
         var ingredient = HoldSystem.HeldObject.GetComponent<Ingredient>();
+
+
         if (ingredient == null || !ingredient.IsCooked)
             return false; // No llevas pulpo cocinado
 
@@ -56,7 +59,10 @@ public class PlayerInteractionController : MonoBehaviour
             return false; // No apuntas a una caja válida
 
         // 🎯 Llenar la caja un poquito
-        targetBox.Fill(0.05f); // Cada pulsación llena 5% (ajustable)
+        // cantidad a llenar del tipo de caja
+        float fillPerPress = targetBox.gameObject.GetComponent<Box>().GetFillPerPress(); // Ajustar según el tipo de caja
+        targetBox.Fill(fillPerPress);
+        ingredient.Cut(fillPerPress * 50); // Ajustar según el tipo de ingrediente
 
         Debug.Log($"🔪 Cortando pulpo: Caja llena {targetBox.GetFillPercent()}%");
 
@@ -66,6 +72,14 @@ public class PlayerInteractionController : MonoBehaviour
             Debug.Log("📦 Caja completamente llena");
             targetBox.SetIngredient(ingredient.GetIngredientSO());
         }
+
+        if (ingredient.remainintCuantity <= 0f)
+        {
+            Debug.Log("❌ Pulpo cortado completamente, soltando.");
+            HoldSystem.Drop();
+        }
+
+
 
         return true; // Importante: devolver true si procesamos acción especial
     }
