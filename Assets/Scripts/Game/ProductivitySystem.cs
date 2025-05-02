@@ -42,6 +42,8 @@ public class ProductivitySystem : MonoBehaviour, IController
 
     void Update()
     {
+        if (!isRunning || isPaused || isFinished) return;
+
         if (isRunning)
         {
             elapsedTime += Time.deltaTime;

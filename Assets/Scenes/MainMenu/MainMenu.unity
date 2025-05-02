@@ -1054,7 +1054,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sair a Escritorio
+  m_text: Sair
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5b1dffb74ee21d84aaea50e3cbf8ef9e, type: 2}
   m_sharedMaterial: {fileID: -7959730528973754824, guid: 5b1dffb74ee21d84aaea50e3cbf8ef9e, type: 2}
