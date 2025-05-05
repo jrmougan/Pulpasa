@@ -9,6 +9,7 @@ public interface IOrderSystem : ISystem
     void GenerateOrder(int deliverySlotId);
     void CompleteOrder(ActiveOrder order);
     bool ValidateBox(Box box, int deliverySlotId, out int points);
+    void ResetOrders();
 }
 public class OrderSystem : AbstractSystem, IOrderSystem
 {
@@ -37,7 +38,7 @@ public class OrderSystem : AbstractSystem, IOrderSystem
     {
         Debug.Log($"Completando orden: {order.orderId}");
         ActiveOrders.Remove(order);
-        this.SendEvent(new OrderCompletedEvent(order));
+        this.SendEvent(new OrderCompletedEvent(order , order.template.recipe.basePoints));
         Debug.Log($"Orden completada: {order.orderId}");
     }
 
@@ -107,6 +108,15 @@ public class OrderSystem : AbstractSystem, IOrderSystem
         points = 0;
         return false;
     }
+    public void ResetOrders()
+{
+    foreach (var stand in Object.FindObjectsByType<OrderStand>(FindObjectsSortMode.None))
+{
+    stand.ClearOrder();
+}
+    ActiveOrders.Clear();
+    nextOrderId = 1;
+}
 
 
 }

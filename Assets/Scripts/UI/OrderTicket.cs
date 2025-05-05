@@ -9,6 +9,7 @@ public class OrderTicket : MonoBehaviour
     public GameObject boxEntryPrefab;
 
     private ActiveOrder currentOrder;
+    
 
     public void Setup(ActiveOrder order)
     {

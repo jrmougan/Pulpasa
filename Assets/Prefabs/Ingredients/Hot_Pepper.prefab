@@ -102,11 +102,11 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &5839960182402411124
@@ -304,8 +304,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   seasoning: {fileID: 11400000, guid: 8aea8a7263757864d859095b48011a28, type: 2}
-  audioSource: {fileID: 4423200369536266306}
-  millSound: {fileID: 8300000, guid: 404f10a94b225514796fe3f649881908, type: 3}
 --- !u!65 &5678727554427357413
 BoxCollider:
   m_ObjectHideFlags: 0

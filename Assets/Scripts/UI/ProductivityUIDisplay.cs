@@ -24,23 +24,12 @@ public class ProductivityUIDisplay : MonoBehaviour
         remainingTime = Mathf.Max(0f, remainingTime);
         timeRemainingText.text = $"{remainingTime:F1}s";
 
-        float currentRatio = productivitySystem.GetPerformanceRatio();
-        float diff = currentRatio - productivitySystem.targetRate;
+        float currentRatio = productivitySystem.GetProductivityRatio();
+        
 
 
-        ratioStatusText.text = $"{diff:F1} cajas/hora";
-        if (diff > 0)
-        {
-            ratioStatusText.color = Color.green;
-        }
-        else if (diff < 0)
-        {
-            ratioStatusText.color = Color.red;
-        }
-        else
-        {
-            ratioStatusText.color = Color.white;
-        }
+        ratioStatusText.text = $"Ratio: {currentRatio:F2}";
+        ratioStatusText.color = currentRatio > 1f ? Color.green : Color.red;
 
         if (remainingTime <= 0f)
         {
