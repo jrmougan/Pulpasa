@@ -3,7 +3,7 @@ using UnityEngine;
 public class InteractableSlot : MonoBehaviour, IInteractable
 {
     [SerializeField] private Transform anchor;
-    private IPickable currentItem; // 🔥 Solo privado
+    private IPickable currentItem;
 
     public bool HasItem => currentItem != null;
 
@@ -12,14 +12,12 @@ public class InteractableSlot : MonoBehaviour, IInteractable
         var hold = player.HoldSystem;
         if (hold == null) return;
 
-        if (currentItem == null && hold.HasItem)
+        if (!HasItem && hold.HasItem)
         {
             currentItem = hold.HeldItem;
-            var go = currentItem.GetGameObject();
+            GameObject go = currentItem.GetGameObject();
 
             SnappingHelper.AlignByAnchorPoint(go, anchor);
-
-            go.layer = LayerMask.NameToLayer("Interactable");
 
             Animator anim = go.GetComponentInChildren<Animator>();
             if (anim != null)
@@ -28,29 +26,25 @@ public class InteractableSlot : MonoBehaviour, IInteractable
             hold.Clear();
         }
 
-        else if (currentItem != null && !hold.HasItem)
+        else if (HasItem && !hold.HasItem)
         {
-            var go = currentItem.GetGameObject();
+            GameObject go = currentItem.GetGameObject();
             currentItem = null;
             hold.PickUp(go);
         }
-        else if (currentItem != null && hold.HasItem)
+
+        else if (HasItem && hold.HasItem)
         {
-            Debug.Log("El Slot ya tiene un objeto, no puedes colocar otro encima.");
+            Debug.Log("El slot ya contiene un objeto y el jugador también.");
         }
     }
-
-
 
     public void ForceClearSlot()
     {
         currentItem = null;
     }
 
-    public IInteractable GetContainedItem()
-    {
-        return currentItem as IInteractable;
-    }
+    public IInteractable GetContainedItem() => currentItem as IInteractable;
 
     public GameObject GetGameObject() => gameObject;
 }
