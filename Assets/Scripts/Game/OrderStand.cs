@@ -8,6 +8,10 @@ public class OrderStand : MonoBehaviour, IController
     public int deliverySlotId;
     public TextMeshPro textDisplay;
     public Transform deliveryPoint;
+    
+    public AudioSource audioSource;
+    public AudioClip deliverySound;
+    public AudioClip errorSound;
 
     public ActiveOrder currentOrder;
     public bool IsOccupied => currentOrder != null;
@@ -49,6 +53,7 @@ public class OrderStand : MonoBehaviour, IController
         {
             Debug.Log($"Pedido entregado correctamente.");
             // todo:feedback de entrega correcta
+            audioSource.PlayOneShot(deliverySound);
             holder.Drop(); 
             Destroy(box.gameObject); 
             orderSystem.CompleteOrder(currentOrder);
@@ -58,6 +63,7 @@ public class OrderStand : MonoBehaviour, IController
         {
             Debug.Log("Pedido incorrecto. No se corresponde con lo solicitado.");
             // todo:feedback de error
+            audioSource.PlayOneShot(errorSound);
         }
     }
 

@@ -12,6 +12,8 @@ public class Box : MonoBehaviour, IPickable, IInteractable
 
     [SerializeField] private IngredientSO ingredient;
     [SerializeField] private BoxSO boxSO;
+    public AudioSource audioSource;
+    public AudioClip millSound;
 
     [SerializeField] private float fillAmount = 0f; // 0 = vacío, 1 = lleno
     [SerializeField] private float fillPerPress = 0.05f; // cuánto llena cada pulsación
@@ -74,6 +76,7 @@ public class Box : MonoBehaviour, IPickable, IInteractable
         if (CanReceiveSeasoning(seasoning))
         {
             appliedSeasonings.Add(seasoning);
+            audioSource.PlayOneShot(millSound);
             Debug.Log($"{seasoning.type} aplicado a la caja {name}");
         }
     }
