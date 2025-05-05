@@ -4,13 +4,12 @@ using System;
 public class KitchenProgress : MonoBehaviour
 {
     public Action OnCookingFinished;
-    public SimpleProgressBar progressBar;  // Arrastra desde la jerarquía (ClassicProgressBar)
+    public SimpleProgressBar progressBar; 
     public float duration = 5f;
 
     private float timer;
     private bool isCooking = false;
 
-    // audio hervir
     [SerializeField] private AudioSource boilAudioSource; 
 
     public void StartCooking(float time)
@@ -19,7 +18,7 @@ public class KitchenProgress : MonoBehaviour
         timer = 0f;
         isCooking = true;
         progressBar.gameObject.SetActive(true);
-        boilAudioSource.Play(); // Reproducir audio hervir
+        boilAudioSource.Play(); 
     }
 
     void Update()
@@ -33,7 +32,7 @@ public class KitchenProgress : MonoBehaviour
         if (value >= 1f)
         {
             isCooking = false;
-            progressBar.gameObject.SetActive(false); // Ocultar al acabar
+            progressBar.gameObject.SetActive(false); 
             boilAudioSource.Stop(); 
             OnCookingFinished?.Invoke();
         }
