@@ -48,42 +48,22 @@ public class SeasoningItem : MonoBehaviour, IPickable, IInteractable
             return;
         }
 
-        // Si ya está sostenido, intentar sazonar el objeto objetivo
         var target = player.InteractionDetector?.Current;
 
-        if (target == null)
-        {
-            Debug.Log("❗ No hay objeto objetivo para aplicar condimento.");
-            return;
-        }
+        if (target == null) return;
 
-        // 🔥 Verificar si el objetivo es una caja (Box)
         Box box = target.GetGameObject().GetComponent<Box>();
         if (box != null)
         {
-            if (!box.IsFull())
-            {
-                Debug.Log("⚠️ La caja aún no está llena, no puedes sazonar.");
-                return;
-            }
+            if (!box.IsFull()) return;
 
             if (box.CanReceiveSeasoning(seasoning))
             {
                 box.ApplySeasoning(seasoning);
-                Debug.Log($"🧂 Aplicado {seasoning.type} a {box.name}");
-
-                // Opcional: consumir el Seasoning después de usarlo
+                // todo: feedback de aplicar condimento
                 player.HoldSystem.Drop();
-                Destroy(gameObject); // ❗ Solo si quieres que desaparezca
+                Destroy(gameObject);
             }
-            else
-            {
-                Debug.Log("⚠️ Esta caja ya tiene este condimento aplicado.");
-            }
-        }
-        else
-        {
-            Debug.Log("❌ No puedes aplicar el condimento a este objeto.");
         }
     }
 

@@ -10,12 +10,16 @@ public class KitchenProgress : MonoBehaviour
     private float timer;
     private bool isCooking = false;
 
+    // audio hervir
+    [SerializeField] private AudioSource boilAudioSource; 
+
     public void StartCooking(float time)
     {
         duration = time;
         timer = 0f;
         isCooking = true;
         progressBar.gameObject.SetActive(true);
+        boilAudioSource.Play(); // Reproducir audio hervir
     }
 
     void Update()
@@ -30,6 +34,7 @@ public class KitchenProgress : MonoBehaviour
         {
             isCooking = false;
             progressBar.gameObject.SetActive(false); // Ocultar al acabar
+            boilAudioSource.Stop(); 
             OnCookingFinished?.Invoke();
         }
     }

@@ -32,32 +32,32 @@ public class OrderStand : MonoBehaviour, IController
     {
         if (currentOrder == null)
         {
-            Debug.Log("❌ No hay pedido activo.");
+            Debug.Log("No hay pedido activo.");
             return;
         }
 
         if (box == null)
         {
-            Debug.Log("❌ No hay caja en la mano.");
+            Debug.Log("No hay caja en la mano.");
             return;
         }
 
-        Debug.Log($"📦 Validando pedido #{currentOrder.orderId} con caja {box.name} en el stand {deliverySlotId}.");
 
         var orderSystem = this.GetSystem<IOrderSystem>();
 
         if (orderSystem.ValidateBox(box, deliverySlotId, out int points))
         {
-            Debug.Log($"✅ Pedido entregado correctamente. +{points} puntos.");
-            holder.Drop(); // o Destroy si no vuelve a usarse
-            Destroy(box.gameObject); // opcional, si no se recicla
+            Debug.Log($"Pedido entregado correctamente.");
+            // todo:feedback de entrega correcta
+            holder.Drop(); 
+            Destroy(box.gameObject); 
             orderSystem.CompleteOrder(currentOrder);
             ClearOrder();
         }
         else
         {
-            Debug.Log("❌ Pedido incorrecto. No se corresponde con lo solicitado.");
-            // Feedback negativo (sonido, shake, animación, etc.)
+            Debug.Log("Pedido incorrecto. No se corresponde con lo solicitado.");
+            // todo:feedback de error
         }
     }
 

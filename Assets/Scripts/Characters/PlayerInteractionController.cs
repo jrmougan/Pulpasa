@@ -9,6 +9,7 @@ public class PlayerInteractionController : MonoBehaviour
     private PlayerHoldSystem holdSystem;
     [SerializeField] private InteractionDetector interactionDetector;
     public InteractionDetector InteractionDetector => interactionDetector;
+    [SerializeField] private AudioClip cutAudio;
 
 
     private void Awake()
@@ -29,17 +30,11 @@ public class PlayerInteractionController : MonoBehaviour
 
         if (detector.Current != null)
         {
-            Debug.Log($"🎯 Interactuando con: {detector.Current.GetGameObject().name}");
             detector.Current.Interact(this);
         }
         else if (HoldSystem.HasItem)
         {
-            Debug.Log("📤 No hay target, soltando objeto en el suelo.");
             HoldSystem.Drop();
-        }
-        else
-        {
-            Debug.Log("❌ No hay nada que interactuar ni objeto en mano.");
         }
     }
 
@@ -52,36 +47,34 @@ public class PlayerInteractionController : MonoBehaviour
 
 
         if (ingredient == null || !ingredient.IsCooked)
-            return false; // No llevas pulpo cocinado
+            return false; 
 
         var targetBox = InteractionDetector.Current?.GetGameObject().GetComponent<Box>();
         if (targetBox == null || targetBox.IsFull())
-            return false; // No apuntas a una caja válida
+            return false; 
 
-        // 🎯 Llenar la caja un poquito
-        // cantidad a llenar del tipo de caja
-        float fillPerPress = targetBox.gameObject.GetComponent<Box>().GetFillPerPress(); // Ajustar según el tipo de caja
+        float fillPerPress = targetBox.gameObject.GetComponent<Box>().GetFillPerPress(); 
         targetBox.Fill(fillPerPress);
-        ingredient.Cut(fillPerPress * 50); // Ajustar según el tipo de ingrediente
+        ingredient.Cut(fillPerPress * 50); 
+        
+  
+        AudioSource.PlayClipAtPoint(cutAudio, transform.position);
 
-        Debug.Log($"🔪 Cortando pulpo: Caja llena {targetBox.GetFillPercent()}%");
 
-        // ✅ Si la caja se llenó completamente, soltamos el pulpo
         if (targetBox.IsFull())
         {
-            Debug.Log("📦 Caja completamente llena");
             targetBox.SetIngredient(ingredient.GetIngredientSO());
+            // todo: feedback de llenado
         }
 
         if (ingredient.remainintCuantity <= 0f)
         {
-            Debug.Log("❌ Pulpo cortado completamente, soltando.");
             HoldSystem.Drop();
         }
 
 
 
-        return true; // Importante: devolver true si procesamos acción especial
+        return true; 
     }
 
     private bool TrySeasonBox()
@@ -91,22 +84,18 @@ public class PlayerInteractionController : MonoBehaviour
 
         var seasoningItem = HoldSystem.HeldObject.GetComponent<SeasoningItem>();
         if (seasoningItem == null)
-            return false; // No llevas una especia
+            return false; 
 
         var targetBox = InteractionDetector.Current?.GetGameObject().GetComponent<Box>();
         if (targetBox == null || !targetBox.IsFull())
-            return false; // No apuntas a una caja llena
+            return false; 
 
         if (!targetBox.CanReceiveSeasoning(seasoningItem.GetSeasoning()))
         {
-            Debug.Log("⚠️ Esta caja no puede recibir más sazonadores o ya tiene este.");
-            return true; // 🔥 CONSUMIMOS el input igual
+            return true;
         }
 
-        // 🎯 Aplicar sazonador
         targetBox.ApplySeasoning(seasoningItem.GetSeasoning());
-
-        Debug.Log($"🧂 {seasoningItem.GetSeasoning().type} aplicado a {targetBox.name}");
 
         return true;
     }

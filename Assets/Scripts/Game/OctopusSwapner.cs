@@ -6,11 +6,11 @@ public class OctopusSpawner : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractionController player)
     {
-        Debug.Log("🧊 Nevera: Spawneando pulpo...");
+        Debug.Log("Nevera: Spawneando pulpo...");
 
         if (player.HoldSystem.HasItem)
         {
-            Debug.Log("⚠️ Ya estás sosteniendo algo.");
+            Debug.Log("Ya estás sosteniendo algo.");
             return;
         }
 
@@ -19,10 +19,7 @@ public class OctopusSpawner : MonoBehaviour, IInteractable
             GameObject spawned = Instantiate(octopusPrefab);
             player.HoldSystem.PickUp(spawned);
         }
-        else
-        {
-            Debug.LogWarning("❌ No se asignó prefab de pulpo en el spawner.");
-        }
+
     }
 
     public GameObject GetGameObject() => gameObject;

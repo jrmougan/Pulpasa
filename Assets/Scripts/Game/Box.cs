@@ -66,6 +66,7 @@ public class Box : MonoBehaviour, IPickable, IInteractable
     public bool IsHeld { get; private set; }
 
     [SerializeField] private bool isFilled = false;
+    public bool IsFilled => isFilled;
     public List<SpicesSO> appliedSeasonings = new();
 
     public void ApplySeasoning(SpicesSO seasoning)
@@ -73,7 +74,7 @@ public class Box : MonoBehaviour, IPickable, IInteractable
         if (CanReceiveSeasoning(seasoning))
         {
             appliedSeasonings.Add(seasoning);
-            Debug.Log($"🍽 {seasoning.type} aplicado a la caja {name}");
+            Debug.Log($"{seasoning.type} aplicado a la caja {name}");
         }
     }
 
@@ -92,15 +93,12 @@ public class Box : MonoBehaviour, IPickable, IInteractable
 
     public void OnPickedUp(Transform parent)
     {
-        // 🔥 1. Liberar Slot PRIMERO
         var slot = GetComponentInParent<InteractableSlot>();
         if (slot != null)
         {
             slot.ForceClearSlot();
-            Debug.Log($"✅ {name} liberó su Slot automáticamente.");
         }
 
-        // 🔥 2. Luego parentar
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -148,8 +146,6 @@ public class Box : MonoBehaviour, IPickable, IInteractable
     {
         if (isSpawner)
         {
-            Debug.Log("📦 Spawner: Instanciando nueva caja.");
-
             if (boxPrefab != null)
             {
                 GameObject spawned = Instantiate(boxPrefab);
@@ -162,7 +158,7 @@ public class Box : MonoBehaviour, IPickable, IInteractable
             }
             else
             {
-                Debug.LogWarning("⚠️ No hay prefab asignado para spawnear.");
+                Debug.LogWarning("No hay prefab asignado para spawnear.");
             }
 
             return;
@@ -170,11 +166,11 @@ public class Box : MonoBehaviour, IPickable, IInteractable
 
         if (!canBePickedUp)
         {
-            Debug.Log("❌ No se puede recoger esta caja.");
+            Debug.Log("No se puede recoger esta caja.");
             return;
         }
 
-        Debug.Log("📦 Box.Interact() ejecutado.");
+
         interactor.HoldSystem.TryToggleHold(gameObject);
     }
 

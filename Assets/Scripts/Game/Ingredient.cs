@@ -22,7 +22,6 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
     public void SetCooked()
     {
         cookingState = CookingState.Cooked;
-        // cambiar color, icono, sprite, etc. aquí
     }
 
     public IngredientSO GetIngredientSO() => data;
@@ -42,7 +41,7 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
         remainintCuantity -= amount;
         remainintCuantity = Mathf.Clamp(remainintCuantity, 0f, 100f);
 
-        Debug.Log($"🔪 Cortando {type}: {remainintCuantity}% restante");
+        Debug.Log($"Cortando ...: {remainintCuantity}% restante");
 
         if (progressBar != null)
         {
@@ -59,8 +58,6 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
     public void OnPickedUp(Transform parent)
     {
         if (!canBePickedUp) return;
-
-        Debug.Log($"🧺 Ingrediente recogido: {type}");
 
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
@@ -104,15 +101,11 @@ public class Ingredient : MonoBehaviour, IPickable, IInteractable, ISeasonable
     {
         Debug.Log($"🧂 Aplicando {SpicesSO.type} a {type}");
 
-        // Aquí puedes agregar la lógica para aplicar el sazonador al ingrediente.
-        // Por ejemplo, podrías cambiar su color o modificar su comportamiento.
     }
 
     public bool CanReceiveSeasoning(SpicesSO SpicesSO)
     {
-        // Aquí puedes agregar la lógica para determinar si el ingrediente puede recibir el sazonador.
-        // Por ejemplo, podrías verificar si el ingrediente ya tiene un sazonador aplicado.
-        return true; // Por defecto, todos los ingredientes pueden recibir sazonadores.
+        return true; 
     }
     private IEnumerator DestroyWithDelay(float delay)
     {

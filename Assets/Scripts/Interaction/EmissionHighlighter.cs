@@ -24,7 +24,7 @@ public class EmissionHighlighter : MonoBehaviour
 
                 if (mat.shader.name != "Universal Render Pipeline/Lit")
                 {
-                    mat.shader = Shader.Find("Universal Render Pipeline/Lit"); // fallback seguro
+                    mat.shader = Shader.Find("Universal Render Pipeline/Lit");
                 }
 
                 if (mat.HasProperty("_EmissionColor"))
@@ -35,8 +35,6 @@ public class EmissionHighlighter : MonoBehaviour
             }
         }
 
-        if (materialInstances.Count == 0)
-            Debug.LogWarning($"⚠️ No se encontraron materiales con _EmissionColor en {name}");
     }
 
 
@@ -51,7 +49,7 @@ public class EmissionHighlighter : MonoBehaviour
 
             if (i < renderers.Count)
             {
-                DynamicGI.SetEmissive(renderers[i], highlightEmission); // Soporte extra
+                DynamicGI.SetEmissive(renderers[i], highlightEmission);
             }
         }
     }
@@ -64,7 +62,7 @@ public class EmissionHighlighter : MonoBehaviour
 
             if (i < renderers.Count)
             {
-                DynamicGI.SetEmissive(renderers[i], originalEmissions[i]); // Restaurar
+                DynamicGI.SetEmissive(renderers[i], originalEmissions[i]);
             }
         }
     }

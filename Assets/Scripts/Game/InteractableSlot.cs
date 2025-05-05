@@ -12,7 +12,6 @@ public class InteractableSlot : MonoBehaviour, IInteractable
         var hold = player.HoldSystem;
         if (hold == null) return;
 
-        // 🟡 SLOT VACÍO + jugador lleva algo
         if (currentItem == null && hold.HasItem)
         {
             currentItem = hold.HeldItem;
@@ -28,17 +27,16 @@ public class InteractableSlot : MonoBehaviour, IInteractable
 
             hold.Clear();
         }
-        // 🔴 SLOT OCUPADO + jugador sin objeto
+
         else if (currentItem != null && !hold.HasItem)
         {
             var go = currentItem.GetGameObject();
             currentItem = null;
             hold.PickUp(go);
         }
-        // 🚫 SLOT OCUPADO + jugador lleva algo (❗ bloqueamos)
         else if (currentItem != null && hold.HasItem)
         {
-            Debug.Log("❌ El Slot ya tiene un objeto, no puedes colocar otro encima.");
+            Debug.Log("El Slot ya tiene un objeto, no puedes colocar otro encima.");
         }
     }
 

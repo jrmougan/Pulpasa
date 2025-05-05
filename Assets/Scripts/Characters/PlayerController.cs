@@ -16,18 +16,6 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
         holdSystem = GetComponent<PlayerHoldSystem>();
-        if (holdSystem == null)
-        {
-            Debug.LogError("❌ Falta el componente PlayerHoldSystem.");
-        }
-        if (controller == null)
-        {
-            Debug.LogError("❌ Falta el componente CharacterController.");
-        }
-        if (animator == null)
-        {
-            Debug.LogError("❌ Falta el componente Animator.");
-        }
     }
 
 
@@ -46,9 +34,8 @@ public class PlayerController : MonoBehaviour
 
         controller.Move(move * moveSpeed * Time.deltaTime);
 
-        animator.SetFloat("Speed", speed); // Actualizamos el parámetro del Animator
-
-        animator.SetBool("IsHolding", holdSystem.HasItem); // Actualizamos el parámetro del Animator
+        animator.SetFloat("Speed", speed); 
+        animator.SetBool("IsHolding", holdSystem.HasItem);
     }
 
     public void OnMove(InputValue value)
@@ -58,7 +45,6 @@ public class PlayerController : MonoBehaviour
 
     public void OnInteract(InputValue value)
     {
-        Debug.Log("📥 Botón de interact presionado");
 
         if (!value.isPressed) return;
 
@@ -66,10 +52,6 @@ public class PlayerController : MonoBehaviour
         if (interactionCtrl != null)
         {
             interactionCtrl.HandleInteraction();
-        }
-        else
-        {
-            Debug.LogError("❌ Falta el componente PlayerInteractionController.");
         }
     }
 

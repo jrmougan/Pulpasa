@@ -34,7 +34,6 @@ public class InteractionDetector : MonoBehaviour
             if (interactable == null && pickable == null)
                 continue;
 
-            // 🔵 Altura ajustada
             Vector3 fromPosition = transform.position + Vector3.up * 0.8f;
             Vector3 toTarget = hit.transform.position - fromPosition;
             toTarget.y = 0;
@@ -52,11 +51,9 @@ public class InteractionDetector : MonoBehaviour
 
             float score = dot * 2f + (1f / Mathf.Max(dist, 0.1f));
 
-            // 🔥🔥🔥 Aquí hacemos la mejora 🔥🔥🔥
 
             bool holdingSeasoning = holdSystem.HeldObject?.GetComponent<SeasoningItem>() != null;
 
-            // Si es un slot ocupado y llevas algo, mirar su contenido
             if (interactable is InteractableSlot slot && slot.HasItem)
             {
                 var contained = slot.GetContainedItem();
@@ -84,7 +81,7 @@ public class InteractionDetector : MonoBehaviour
                 {
                     if (slotInteractable.HasItem && holdSystem.HasItem)
                     {
-                        continue; // 🔥 Saltar porque no queremos interactuar con slot ocupado si llevamos algo
+                        continue; // Saltar porque no queremos interactuar con slot ocupado si llevamos algo
                     }
                 }
 
@@ -118,7 +115,6 @@ public class InteractionDetector : MonoBehaviour
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
-            // 🔥 Opcional: Dibujar el cono de visión (solo visual, no afecta al juego)
             Vector3 leftLimit = Quaternion.Euler(0, -30, 0) * transform.forward;
             Vector3 rightLimit = Quaternion.Euler(0, 30, 0) * transform.forward;
 

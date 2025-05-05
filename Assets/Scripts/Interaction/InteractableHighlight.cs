@@ -9,7 +9,7 @@ public class InteractableHighlight : MonoBehaviour
     private void Awake()
     {
         if (highlightVisual != null)
-            highlightVisual.SetActive(false); // ✅ Ocultar al iniciar
+            highlightVisual.SetActive(false);
     }
 
     private void SetHighlight(bool value)

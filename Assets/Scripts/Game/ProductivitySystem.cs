@@ -3,11 +3,11 @@ using QFramework;
 
 public class ProductivitySystem : MonoBehaviour, IController
 {
-    public float elapsedTime; // en segundos
+    public float elapsedTime;
     public int boxesDelivered = 0;
 
-    public float targetRate = 300f; // cajas/hora objetivo
-    public float timeLimit = 180f; // tiempo límite en segundos (3 minutos)
+    public float targetRate = 300f; 
+    public float timeLimit = 180f;
     public bool isRunning = false;
 
     public bool isPaused = false;
@@ -52,7 +52,7 @@ public class ProductivitySystem : MonoBehaviour, IController
         {
             isRunning = false;
             isFinished = true;
-            // finalizar el juego 
+            // todo: feedback de fin de juego
         }
     }
 
@@ -64,8 +64,8 @@ public class ProductivitySystem : MonoBehaviour, IController
     public float GetPerformanceRatio()
     {
         if (elapsedTime <= 0f) return 0f;
-        float hours = elapsedTime / 3600f; // convertir segundos a horas
-        return boxesDelivered / hours; // cajas por hora
+        float hours = elapsedTime / 3600f;
+        return boxesDelivered / hours; 
     }
 
     public bool GoalReached()

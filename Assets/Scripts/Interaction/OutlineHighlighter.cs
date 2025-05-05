@@ -21,12 +21,10 @@ public class OutlineHighlighter : MonoBehaviour
             var originalFilter = originalRenderer.GetComponent<MeshFilter>();
             if (originalFilter == null) continue;
 
-            // Crear objeto hijo
             var outlineObj = new GameObject($"{originalRenderer.gameObject.name}_Outline");
             outlineObj.transform.SetParent(originalRenderer.transform, false);
             outlineObj.transform.localScale = Vector3.one * scaleFactor;
 
-            // Asignar mesh
             var outlineFilter = outlineObj.AddComponent<MeshFilter>();
             outlineFilter.sharedMesh = originalFilter.sharedMesh;
 

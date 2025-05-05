@@ -11,8 +11,8 @@ public class PauseMenuManager : MonoBehaviour
 
     void Start()
     {
-        productivitySystem = FindObjectOfType<ProductivitySystem>();
-        playerController = FindObjectOfType<PlayerController>();
+        productivitySystem = Object.FindFirstObjectByType<ProductivitySystem>();
+        playerController = Object.FindFirstObjectByType<PlayerController>();
         pausePanel.SetActive(false);
     }
 
@@ -31,7 +31,7 @@ public class PauseMenuManager : MonoBehaviour
     {
         isPaused = true;
         pausePanel.SetActive(true);
-        Time.timeScale = 0f; // congela todo menos UI
+        Time.timeScale = 0f;
 
         if (productivitySystem != null)
         {
