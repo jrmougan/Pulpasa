@@ -56,8 +56,9 @@ public class OrderStand : MonoBehaviour, IController
             audioSource.PlayOneShot(deliverySound);
             holder.Drop(); 
             Destroy(box.gameObject); 
-            orderSystem.CompleteOrder(currentOrder);
+            var completedOrder = currentOrder;
             ClearOrder();
+            orderSystem.CompleteOrder(completedOrder);
         }
         else
         {
