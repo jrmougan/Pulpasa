@@ -69,10 +69,10 @@ public class ProductivitySystem : MonoBehaviour, IController
     {
         float ratio = GetProductivityRatio();
 
-        if (ratio < 1f) return "Pulpero en prácticas";
-        else if (ratio < 2f) return "Pulpero aceptable";
-        else if (ratio < 3f) return "Pulpero eficiente";
-        else return "¡Pulpero legendario!";
+        if (ratio < 1f) return "Pulpeiro ineficiente";
+        else if (ratio < 2f) return "Pulpeiro aceptable";
+        else if (ratio < 3f) return "Pulpeiro eficiente";
+        else return "!Pulpeiro lexendario!";
     }
 
     public IArchitecture GetArchitecture() => PulpaSAArchitecture.Interface;
