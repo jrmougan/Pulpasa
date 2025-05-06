@@ -33,7 +33,7 @@ public class PauseMenuController : MonoBehaviour
             ActualizarSeleccion();
             audioMover?.Play();
         }
-        else if (Input.GetKeyDown(KeyCode.Return))
+        else if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0))
         {
             SeleccionarOpcion();
             audioSeleccionar?.Play();
