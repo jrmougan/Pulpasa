@@ -293,9 +293,10 @@ func test_ui_layout_matches_unity_strip_and_corner() -> void:
 		assert_lte(rect.end.y, 260.0, "ticket dentro de la franja superior")
 
 
-func test_camera_pose_is_a_level_override_and_rig_is_neutral() -> void:
+func test_camera_rig_default_pose_is_unity_view_and_level_overrides_it() -> void:
 	var rig: Camera3D = CAMERA_RIG.instantiate()
-	assert_eq(rig.transform, Transform3D.IDENTITY, "camera_rig.tscn con pose neutra")
+	assert_lt(rig.position.distance_to(Vector3(0.7, 7.49, 5.86)), 0.01, "pose por defecto")
+	assert_almost_eq(rad_to_deg(rig.rotation.x), CAMERA_PITCH_DEG, ANGLE_TOLERANCE_DEG)
 	assert_eq(rig.projection, Camera3D.PROJECTION_ORTHOGONAL)
 	assert_almost_eq(rig.size, CAMERA_SIZE, 0.01)
 	rig.free()

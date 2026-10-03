@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [node name="CameraRig" type="Camera3D" unique_id=697112619]
+transform = Transform3D(1, 0, 0, 0, 0.7880108, 0.6156615, 0, -0.6156615, 0.7880108, 0.7, 7.49, 5.86)
 projection = 1
 current = true
 size = 12.74

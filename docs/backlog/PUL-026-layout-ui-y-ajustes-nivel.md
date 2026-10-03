@@ -40,4 +40,4 @@ Capa común en `ui/`; sin contadores propios; navegación y `tr()` intactos. `.t
 - Captura de `level_01` con la cámara de juego: `docs/evidence/PUL-026/level_01_layout.png` (fila trasera visible).
 - AC1: `test_ui_does_not_cover_fridge_pot_or_shelves_with_game_camera`; AC2: tests de cámara, `level.gd` y layout en `test_level_01.gd`.
 - AC1/AC3 de PUL-024 usan `GameState.start_level()` / `restart_level()` reales (el runner de GUT no tiene `current_scene`).
-- Nota: `camera_rig.tscn` queda con pose neutra (identidad); los sandboxes que lo instancian ya no heredan la pose de level_01.
+- Regla de cámara (decisión del producer): `camera_rig.tscn` tiene como pose por defecto la vista de Unity, para que sandboxes y `test_player.gd` sigan igual; cada nivel fija la suya con un override de transform de `CameraRig` (`level_01.tscn` lo conserva explícito).
