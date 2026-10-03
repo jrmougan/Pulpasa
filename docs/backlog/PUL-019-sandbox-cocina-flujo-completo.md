@@ -1,11 +1,11 @@
 ---
 id: PUL-019
 title: Montar el sandbox de cocina y probar el flujo completo
-status: review
+status: done
 milestone: M0
 role: qa-tester
 deps: [PUL-017, PUL-018]
-orca_task: null
+orca_task: task_8f8b0fe8d8f1
 unity_sources: [Assets/Scenes/Levels/Level_01.unity]
 owns: [godot/scenes/sandbox/kitchen_sandbox.tscn, godot/scenes/sandbox/kitchen_sandbox.tscn.uid, godot/tests/integration/test_kitchen_flow.gd, godot/tests/integration/test_kitchen_flow.gd.uid, docs/evidence/PUL-019/**]
 touches_scenes: [godot/scenes/sandbox/kitchen_sandbox.tscn]

@@ -31,4 +31,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-016 | M0·6 | gameplay-engineer | done | Objetos: pulpo, caja y condimento |
 | PUL-017 | M0·6 | gameplay-engineer | done | Estaciones: nevera, olla y estanterías |
 | PUL-018 | M0·6 | gameplay-engineer | done | Puesto de entrega conectado a OrderService |
-| PUL-019 | M0·6 | qa-tester | ready (dep. 017, 018) | Sandbox de cocina y flujo completo |
+| PUL-019 | M0·6 | qa-tester | done | Sandbox de cocina y flujo completo |
