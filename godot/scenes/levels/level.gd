@@ -14,6 +14,9 @@ extends Node
 
 
 func _ready() -> void:
+	if round_config == null or order_catalog == null:
+		push_error("Level: faltan round_config u order_catalog")
+		return
 	OrderService.setup(order_catalog)
 	RoundManager.start_round(round_config, get_slot_ids())
 
@@ -22,5 +25,9 @@ func _ready() -> void:
 func get_slot_ids() -> Array[int]:
 	var ids: Array[int] = []
 	for stand: Node in stands:
-		ids.append(stand.get(&"slot_id") as int)
+		var slot_id: Variant = stand.get(&"slot_id")
+		if slot_id == null:
+			push_error("Level: el puesto %s no tiene slot_id" % stand.name)
+			continue
+		ids.append(slot_id as int)
 	return ids

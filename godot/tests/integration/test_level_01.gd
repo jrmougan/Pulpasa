@@ -21,6 +21,8 @@ extends GutTest
 ##   tamaño 6,37 (semialto en Unity; `Camera3D.size` es el alto total, 12,74).
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
+const LEVEL_SCRIPT: GDScript = preload("res://scenes/levels/level.gd")
+const CAMERA_RIG: PackedScene = preload("res://entities/camera/camera_rig.tscn")
 const MENU_SCENE: String = "res://ui/menus/main_menu.tscn"
 const POSITION_TOLERANCE: float = 0.1
 const ANGLE_TOLERANCE_DEG: float = 2.0
@@ -61,17 +63,26 @@ const BUS_SIGNALS: Array[String] = [
 	"pause_changed",
 ]
 
+## Tamaño de ventana del proyecto (`project.godot`): el headless arranca a 100×100.
+const SCREEN_SIZE: Vector2i = Vector2i(1280, 720)
+
 var _level: Node
+var _window_size: Vector2i
 
 
 func before_each() -> void:
 	GameState.set_paused(false)
+	_window_size = get_tree().root.size
 
 
 func after_each() -> void:
 	GameState.set_paused(false)
+	get_tree().root.size = _window_size
 	if is_instance_valid(_level):
+		var was_current: bool = _level == get_tree().current_scene
 		_level.free()
+		if was_current:
+			get_tree().current_scene = null
 	_level = null
 
 
@@ -79,6 +90,21 @@ func _load_level() -> Node:
 	_level = LEVEL.instantiate()
 	add_child(_level)
 	await wait_physics_frames(2)
+	return _level
+
+
+## Cambia de nivel como el juego (`GameState`) y devuelve la escena actual ya lista. El runner de
+## GUT (`gut_cmdln.gd`) es un `SceneTree` sin `current_scene`, así que el cambio no lo destruye.
+func _enter_level(start: Callable) -> Node:
+	var previous: Node = get_tree().current_scene
+	assert_eq(start.call(), OK)
+	for _i: int in 120:
+		await wait_process_frames(1)
+		var current: Node = get_tree().current_scene
+		if current != null and current != previous and current.is_node_ready():
+			break
+	await wait_physics_frames(2)
+	_level = get_tree().current_scene
 	return _level
 
 
@@ -109,7 +135,8 @@ func test_ac1_play_target_is_level_01() -> void:
 
 
 func test_ac1_level_has_one_player_four_stands_with_orders_hud_and_tickets() -> void:
-	await _load_level()
+	await _enter_level(func() -> Error: return GameState.start_level(GameMode.Mode.SINGLE))
+	assert_eq(_level.scene_file_path, LEVEL.resource_path, "start_level carga level_01")
 	var players: Array[Node] = _level.get_node("Characters").get_children()
 	assert_eq(players.size(), 1, "un solo personaje en M0")
 	var player: Player = _player()
@@ -219,13 +246,98 @@ func test_ac2_environment_has_world_environment_and_sun() -> void:
 	assert_lt(direction.z, 0.0)
 
 
+# --- Layout, cámara y validaciones (PUL-026) ---------------------------------------------------
+
+
+## Rects de pantalla que ocupa la UI de partida: HUD y cada ticket (el panel de tickets es
+## transparente al ratón y solo "tapa" donde hay tickets).
+func _load_level_at_project_size() -> Node:
+	get_tree().root.size = SCREEN_SIZE
+	await _load_level()
+	await wait_process_frames(2)
+	return _level
+
+
+func _ui_rects() -> Array[Rect2]:
+	var rects: Array[Rect2] = [(_level.get_node("UI/HUD") as Control).get_global_rect()]
+	var panel: Control = _level.get_node("UI/OrderTicketsPanel")
+	for ticket: Node in panel.get_node("%Tickets").get_children():
+		rects.append((ticket as Control).get_global_rect())
+	return rects
+
+
+func test_ui_does_not_cover_fridge_pot_or_shelves_with_game_camera() -> void:
+	await _load_level_at_project_size()
+	var camera: Camera3D = _level.get_node("CameraRig")
+	var screen: Rect2 = Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
+	var rects: Array[Rect2] = _ui_rects()
+	assert_eq(rects.size(), STAND_COUNT + 1)
+	for path: String in ["OctopusStorage", "Kitchen", "BoxShelf", "SpiceShelf"]:
+		var station: Node3D = _level.get_node("Stations/%s" % path)
+		var pos: Vector2 = camera.unproject_position(station.global_position + Vector3.UP * 0.5)
+		assert_true(screen.has_point(pos), "%s en pantalla: %s" % [path, pos])
+		for rect: Rect2 in rects:
+			assert_false(rect.has_point(pos), "%s tapada por %s" % [path, rect])
+
+
+func test_ui_layout_matches_unity_strip_and_corner() -> void:
+	await _load_level_at_project_size()
+	var screen_size: Vector2 = get_viewport().get_visible_rect().size
+	var hud: Rect2 = (_level.get_node("UI/HUD") as Control).get_global_rect()
+	assert_lt(hud.position.x, screen_size.x * 0.25, "HUD a la izquierda")
+	assert_gt(hud.position.y, screen_size.y * 0.6, "HUD abajo")
+	var panel: Rect2 = (_level.get_node("UI/OrderTicketsPanel") as Control).get_global_rect()
+	assert_almost_eq(panel.position.y, 8.0, 0.5)
+	assert_lte(panel.size.y, 250.0)
+	for rect: Rect2 in _ui_rects().slice(1):
+		assert_lte(rect.end.y, 260.0, "ticket dentro de la franja superior")
+
+
+func test_camera_pose_is_a_level_override_and_rig_is_neutral() -> void:
+	var rig: Camera3D = CAMERA_RIG.instantiate()
+	assert_eq(rig.transform, Transform3D.IDENTITY, "camera_rig.tscn con pose neutra")
+	assert_eq(rig.projection, Camera3D.PROJECTION_ORTHOGONAL)
+	assert_almost_eq(rig.size, CAMERA_SIZE, 0.01)
+	rig.free()
+	var state: SceneState = LEVEL.get_state()
+	var found: bool = false
+	for i: int in state.get_node_count():
+		if str(state.get_node_path(i)).ends_with("CameraRig"):
+			for p: int in state.get_node_property_count(i):
+				if state.get_node_property_name(i, p) == &"transform":
+					found = true
+					var pose: Transform3D = state.get_node_property_value(i, p)
+					assert_lt(pose.origin.distance_to(Vector3(0.7, 7.49, 5.86)), 0.01)
+	assert_true(found, "level_01 sobrescribe el transform de CameraRig")
+
+
+func test_level_script_reports_missing_configuration() -> void:
+	var level: Node = LEVEL_SCRIPT.new()
+	add_child_autofree(level)
+	assert_push_error("faltan round_config u order_catalog")
+
+
+func test_level_script_reports_stand_without_slot_id() -> void:
+	var level: Node = LEVEL_SCRIPT.new()
+	var bad: Node = Node.new()
+	bad.name = "SinSlot"
+	var good: OrderStand = OrderStand.new()
+	level.set("stands", [bad, good] as Array[Node])
+	var ids: Array[int] = level.get_slot_ids()
+	assert_push_error("SinSlot no tiene slot_id")
+	assert_eq(ids.size(), 1)
+	bad.free()
+	good.free()
+	level.free()
+
+
 # --- AC3 ---------------------------------------------------------------------------------------
 
 
 func test_ac3_retry_after_round_finished_leaves_clean_state() -> void:
 	watch_signals(EventBus)
 	var baseline: Dictionary[String, int] = _bus_connections()
-	await _load_level()
+	await _enter_level(func() -> Error: return GameState.start_level(GameMode.Mode.SINGLE))
 	var with_level: Dictionary[String, int] = _bus_connections()
 	# Ensucia la ronda: un pulpo en la olla y el reloj a cero.
 	var actor: InteractionComponent = _player().get_node("%InteractionComponent")
@@ -239,11 +351,12 @@ func test_ac3_retry_after_round_finished_leaves_clean_state() -> void:
 	assert_signal_emit_count(EventBus, "round_finished", 1)
 	assert_true((_level.get_node("UI/GameOver") as GameOver).visible)
 
-	# Reintentar = `reload_current_scene()`: se libera el nivel y entra uno nuevo.
-	_level.free()
-	assert_eq(_bus_connections(), baseline, "sin conexiones huérfanas")
+	# Reintentar = `GameState.restart_level()`: se libera el nivel y entra uno nuevo.
+	var old_level: Node = _level
 	var before: Dictionary[String, int] = _emit_counts()
-	await _load_level()
+	await _enter_level(func() -> Error: return GameState.restart_level())
+	assert_ne(_level, old_level, "escena nueva")
+	assert_false(is_instance_valid(old_level) and old_level.is_inside_tree(), "nivel viejo fuera")
 	assert_eq(_bus_connections(), with_level, "sin señales duplicadas")
 	var after: Dictionary[String, int] = _emit_counts()
 	assert_eq(after["orders_reset"] - before["orders_reset"], 1)
