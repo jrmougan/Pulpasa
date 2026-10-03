@@ -7,7 +7,7 @@ role: asset-pipeline
 deps: []
 orca_task: null
 unity_sources: [Assets/Audio/**, Assets/Art/Icons/**, Assets/Art/Logo/**, Assets/Plugins/TextMesh Pro/Fonts/**]
-owns: [godot/assets/audio/**, godot/assets/fonts/**, godot/assets/textures/**, godot/ui/theme/**, godot/tests/unit/test_assets_audio_ui.gd, godot/tests/unit/test_assets_audio_ui.gd.uid, docs/assets/licenses.md]
+owns: [godot/assets/audio/**, godot/assets/fonts/**, godot/assets/textures/**, godot/assets/CREDITS.md, godot/ui/theme/**, godot/tests/unit/test_assets_audio_ui.gd, godot/tests/unit/test_assets_audio_ui.gd.uid, docs/assets/licenses-pul-009.md]
 touches_scenes: []
 ---
 
@@ -22,7 +22,7 @@ Fase 3 de M0 (audio, fuentes, iconos) bajo D16: solo licencias confirmadas.
    con su `OFL.txt`. Crea `ui/theme/default_theme.tres` que la use.
 3. **Iconos**: `pepper-hot-solid.svg` (CC BY, con atribución) y sustitutos CC0/CC BY para pulpo,
    sal y retícula de selección. Copia el logo propio `PulpaSA.png`.
-4. Fichero `CREDITS.md` en `godot/assets/` con las atribuciones obligatorias, y filas en `docs/assets/licenses.md`.
+4. Fichero `CREDITS.md` en `godot/assets/` con las atribuciones obligatorias, y una tabla con el mismo formato que `docs/assets/licenses.md` en `docs/assets/licenses-pul-009.md` (el producer la consolida al fusionar; PUL-008 edita licenses.md en paralelo).
 
 ## Constraints
 - Nada de la tabla «Pendientes» de licenses.md (audio original, OCRAEXT, iconos sin origen).
@@ -32,7 +32,7 @@ Fase 3 de M0 (audio, fuentes, iconos) bajo D16: solo licencias confirmadas.
 ## Acceptance
 - [ ] AC1 Los 5 SFX existen, cargan como `AudioStream` y el de hervir tiene loop → `test_assets_audio_ui.gd`.
 - [ ] AC2 `default_theme.tres` carga y usa la fuente incorporada → mismo test.
-- [ ] AC3 Cada asset nuevo tiene fila en licenses.md con URL y licencia, y `CREDITS.md` recoge las atribuciones.
+- [ ] AC3 Cada asset nuevo tiene fila en licenses-pul-009.md con URL y licencia, y `CREDITS.md` recoge las atribuciones.
 - [ ] AC4 `tools/verify.sh` en verde.
 
 ## Plan
