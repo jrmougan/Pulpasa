@@ -1,7 +1,7 @@
 ---
 id: PUL-010
 title: Configurar exportación Linux, Windows y Web y probarla temprano
-status: ready
+status: review
 milestone: M0
 role: godot-architect
 deps: []
@@ -27,11 +27,13 @@ instaladas en `~/.local/share/godot/export_templates/4.7.2.stable`.
 - No subir builds al repo.
 
 ## Acceptance
-- [ ] AC1 `tools/export.sh all` genera los tres builds sin errores.
-- [ ] AC2 El build de Linux arranca en headless y termina sin errores (`--quit-after 120`).
-- [ ] AC3 El build web se sirve en local y carga `boot.tscn` en Chromium/Chrome sin errores de consola; captura en `docs/evidence/PUL-010/` (si no puedes abrir un navegador, márcalo «no verificable» y deja el comando para que lo pruebe una persona).
-- [ ] AC4 Tamaños de cada build anotados en export.md; `tools/verify.sh` en verde.
+- [x] AC1 `tools/export.sh all` genera los tres builds sin errores.
+- [x] AC2 El build de Linux arranca en headless y termina sin errores (`--quit-after 120`).
+- [x] AC3 El build web se sirve en local y carga `boot.tscn` en Chromium/Chrome sin errores de consola; captura en `docs/evidence/PUL-010/` (si no puedes abrir un navegador, márcalo «no verificable» y deja el comando para que lo pruebe una persona).
+- [x] AC4 Tamaños de cada build anotados en export.md; `tools/verify.sh` en verde.
 
 ## Plan
 
 ## Evidence
+- Presets, `tools/export.sh`, `docs/arch/export.md`; capturas y log en `docs/evidence/PUL-010/`.
+- **Producer**: añadir `/build/` al `.gitignore` raíz (no está en `owns`). Hasta entonces `build/` queda sin trackear.

@@ -1,0 +1,6 @@
+Chrome, http://localhost:8765/index.html (python3 -m http.server), sin errores de consola:
+Godot Engine v4.7.2.stable.official
+OpenGL API OpenGL ES 3.0 (WebGL 2.0) - Compatibility
+Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.
+Pulpasa boot OK — Godot 4.7.2-stable (official)
+Linux headless: ./pulpasa.x86_64 --headless --quit-after 120 -> "Pulpasa boot OK", rc=0
