@@ -6,10 +6,15 @@
 [ext_resource type="Script" path="res://components/control_component.gd" id="4_bectd"]
 [ext_resource type="Resource" path="res://data/config/input_config.tres" id="5_wvtmh"]
 [ext_resource type="Script" path="res://components/hold_component.gd" id="6_7thud"]
+[ext_resource type="Script" path="res://components/interaction_detector.gd" id="7_26q78"]
+[ext_resource type="Script" path="res://components/interaction_component.gd" id="8_bectd"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a1qjk"]
 radius = 0.21
 height = 1.54
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wvtmh"]
+radius = 2.2
 
 [node name="Player" type="CharacterBody3D" unique_id=370749224]
 collision_layer = 2
@@ -21,7 +26,7 @@ config = ExtResource("2_qiwj3")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.77, 0)
 shape = SubResource("CapsuleShape3D_a1qjk")
 
-[node name="Model" type="Node3D" parent="." unique_id=1402027219 instance=ExtResource("3_26q78")]
+[node name="Model" parent="." unique_id=1402027219 instance=ExtResource("3_26q78")]
 
 [node name="HoldPoint" type="Marker3D" parent="." unique_id=1680575663]
 unique_name_in_owner = true
@@ -38,3 +43,22 @@ script = ExtResource("6_7thud")
 hold_point = NodePath("../HoldPoint")
 carrier = NodePath("..")
 config = ExtResource("2_qiwj3")
+
+[node name="InteractionDetector" type="Area3D" parent="." unique_id=1365201339 node_paths=PackedStringArray("holder", "carrier")]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("7_26q78")
+config = ExtResource("2_qiwj3")
+holder = NodePath("../HoldComponent")
+carrier = NodePath("..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionDetector" unique_id=430434958]
+shape = SubResource("SphereShape3D_wvtmh")
+
+[node name="InteractionComponent" type="Node" parent="." unique_id=936876525 node_paths=PackedStringArray("control", "holder", "detector")]
+unique_name_in_owner = true
+script = ExtResource("8_bectd")
+control = NodePath("../Control")
+holder = NodePath("../HoldComponent")
+detector = NodePath("../InteractionDetector")

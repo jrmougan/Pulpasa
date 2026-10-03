@@ -48,3 +48,12 @@ func test_ac3_seasoning_colors_match_prototype() -> void:
 		assert_not_null(seasoning, id)
 		if seasoning:
 			assert_eq(seasoning.color, expected[id] as Color, id)
+
+
+## PUL-015: parámetros de puntuación del detector (InteractionDetector.cs).
+func test_ac1_player_config_has_detector_scoring_values() -> void:
+	var cfg: PlayerConfig = load("res://data/config/player_config.tres") as PlayerConfig
+	assert_almost_eq(cfg.detector_cone_half_angle, 30.0, 0.001)
+	assert_almost_eq(cfg.detector_near_distance, 0.7, 0.001)
+	assert_almost_eq(cfg.detector_kitchen_bonus, 1.0, 0.001)
+	assert_almost_eq(cfg.detector_origin_height, 0.8, 0.001)
