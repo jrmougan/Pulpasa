@@ -31,6 +31,41 @@ class CountingPickable:
 		is_held = false
 
 
+class NoPickedUpPickable:
+	extends RigidBody3D
+	## Sin `on_picked_up`.
+
+	var is_held: bool = false
+	var dropped_calls: int = 0
+
+	func on_dropped() -> void:
+		dropped_calls += 1
+
+
+class NoDroppedPickable:
+	extends RigidBody3D
+	## Sin `on_dropped`.
+
+	var is_held: bool = false
+	var picked_up_calls: int = 0
+
+	func on_picked_up(_holder: Holder) -> void:
+		picked_up_calls += 1
+
+
+class NoIsHeldPickable:
+	extends RigidBody3D
+	## Sin `is_held`.
+
+	var picked_up_calls: int = 0
+
+	func on_picked_up(_holder: Holder) -> void:
+		picked_up_calls += 1
+
+	func on_dropped() -> void:
+		pass
+
+
 func before_each() -> void:
 	var level: Node3D = add_child_autofree(Node3D.new())
 	_items_root = Node3D.new()
@@ -152,6 +187,72 @@ func test_ac4_incomplete_contract_is_rejected_without_changes() -> void:
 	assert_signal_not_emitted(_hold, "item_picked_up")
 
 
+func _assert_rejected_without_changes(item: RigidBody3D) -> void:
+	item.collision_layer = INTERACTABLE_LAYER
+	item.add_to_group(&"pickable")
+	_items_root.add_child(item)
+	item.global_position = Vector3(3.0, 0.0, 3.0)
+	watch_signals(_hold)
+	assert_false(_hold.can_hold(item))
+	assert_false(_hold.pick_up(item))
+	assert_null(_hold.get_held_item())
+	assert_eq(item.get_parent(), _items_root)
+	assert_eq(item.global_position, Vector3(3.0, 0.0, 3.0))
+	assert_eq(item.collision_layer, INTERACTABLE_LAYER)
+	assert_false(item.freeze)
+	assert_signal_not_emitted(_hold, "item_picked_up")
+
+
+func test_ac4_body_without_on_picked_up_is_rejected_without_changes() -> void:
+	var item: NoPickedUpPickable = NoPickedUpPickable.new()
+	_assert_rejected_without_changes(item)
+	assert_false(item.is_held)
+	assert_eq(item.dropped_calls, 0)
+
+
+func test_ac4_body_without_on_dropped_is_rejected_without_changes() -> void:
+	var item: NoDroppedPickable = NoDroppedPickable.new()
+	_assert_rejected_without_changes(item)
+	assert_false(item.is_held)
+	assert_eq(item.picked_up_calls, 0)
+
+
+func test_ac4_body_without_is_held_is_rejected_without_changes() -> void:
+	var item: NoIsHeldPickable = NoIsHeldPickable.new()
+	_assert_rejected_without_changes(item)
+	assert_eq(item.picked_up_calls, 0)
+
+
+func test_ac3_freed_held_item_clears_hand_and_allows_new_pick_up() -> void:
+	var item: CountingPickable = _make_pickable()
+	_hold.pick_up(item)
+	await wait_physics_frames(2)
+	assert_true(_player.is_holding)
+	item.queue_free()
+	await wait_physics_frames(3)
+	assert_false(is_instance_valid(item))
+	assert_null(_hold.get_held_item())
+	assert_false(_player.is_holding)
+	watch_signals(_hold)
+	assert_null(_hold.drop())
+	assert_signal_not_emitted(_hold, "item_dropped")
+	var other: CountingPickable = _make_pickable()
+	assert_true(_hold.pick_up(other))
+	assert_eq(_hold.get_held_item(), other)
+	await wait_physics_frames(2)
+	assert_true(_player.is_holding)
+	assert_eq(_hold.drop(), other)
+	assert_eq(other.dropped_calls, 1)
+
+
+func test_ac3_item_queued_for_deletion_is_not_reported_as_held() -> void:
+	var item: CountingPickable = _make_pickable()
+	_hold.pick_up(item)
+	item.queue_free()
+	assert_null(_hold.get_held_item())
+	assert_null(_hold.drop())
+
+
 func test_ac4_null_is_rejected() -> void:
 	watch_signals(_hold)
 	assert_false(_hold.pick_up(null))
@@ -165,16 +266,10 @@ func test_ac4_helper_accepts_complete_pickable_in_group() -> void:
 	assert_true(PickableContract.is_valid_pickable(item))
 
 
-func test_ac4_helper_rejects_pickable_outside_group() -> void:
-	var item: FakePickable = autofree(FakePickable.new())
-	assert_false(PickableContract.is_valid_pickable(item))
-
-
-func test_ac4_helper_rejects_incomplete_contract() -> void:
-	var item: Node = autofree(IncompletePickable.new())
-	item.add_to_group(&"pickable")
-	assert_false(PickableContract.is_valid_pickable(item))
-
-
-func test_ac4_helper_rejects_null() -> void:
+func test_ac4_helper_rejects_outside_group_incomplete_or_null() -> void:
+	var outside: FakePickable = autofree(FakePickable.new())
+	assert_false(PickableContract.is_valid_pickable(outside))
+	var incomplete: Node = autofree(IncompletePickable.new())
+	incomplete.add_to_group(&"pickable")
+	assert_false(PickableContract.is_valid_pickable(incomplete))
 	assert_false(PickableContract.is_valid_pickable(null))

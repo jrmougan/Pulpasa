@@ -23,11 +23,11 @@ var _saved_freeze: bool = false
 
 
 func get_held_item() -> Node:
-	return _held
+	return _current_held()
 
 
 func can_hold(item: Node) -> bool:
-	if _held != null or hold_point == null:
+	if _current_held() != null or hold_point == null:
 		return false
 	if not PickableContract.is_valid_pickable(item) or not item is Node3D:
 		return false
@@ -53,9 +53,9 @@ func pick_up(item: Node) -> bool:
 
 
 func drop() -> Node:
-	if _held == null:
+	var body: Node3D = _current_held()
+	if body == null:
 		return null
-	var body: Node3D = _held
 	_held = null
 	var target: Vector3 = _drop_position()
 	var basis: Basis = body.global_basis
@@ -66,6 +66,14 @@ func drop() -> Node:
 	body.call("on_dropped")
 	item_dropped.emit(body)
 	return body
+
+
+## Objeto en la mano, o `null`; si se liberó (o va a liberarse) estando en la mano, olvida la
+## referencia para no dejar estado obsoleto y poder coger otro.
+func _current_held() -> Node3D:
+	if not is_instance_valid(_held) or _held.is_queued_for_deletion():
+		_held = null
+	return _held
 
 
 ## 0,6 m delante y 0,6 m arriba del portador (PlayerConfig), con "delante" en el suelo.

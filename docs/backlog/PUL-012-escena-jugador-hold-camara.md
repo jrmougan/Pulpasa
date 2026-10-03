@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-011, PUL-008]
 orca_task: null
 unity_sources: [Assets/Scripts/Characters/PlayerController.cs, Assets/Scripts/Characters/PlayerHoldSystem.cs, Assets/Prefabs/Characters/Player.prefab, Assets/Scenes/Levels/Level_01.unity]
-owns: [godot/entities/player/**, godot/components/pickable_contract.gd, godot/components/pickable_contract.gd.uid, godot/entities/camera/**, godot/components/hold_component.gd, godot/components/hold_component.gd.uid, godot/scenes/sandbox/player_sandbox.tscn, godot/scenes/sandbox/player_sandbox.tscn.uid, godot/tests/integration/test_player.gd, godot/tests/integration/test_player.gd.uid, godot/tests/integration/test_hold_component.gd, godot/tests/integration/test_hold_component.gd.uid, docs/evidence/PUL-012/**]
+owns: [godot/entities/player/**, godot/components/pickable_contract.gd, godot/components/pickable_contract.gd.uid, godot/entities/camera/**, godot/components/hold_component.gd, godot/components/hold_component.gd.uid, godot/scenes/sandbox/player_sandbox.tscn, godot/scenes/sandbox/player_sandbox.tscn.uid, godot/tests/integration/test_player.gd, godot/tests/integration/test_player.gd.uid, godot/tests/integration/test_hold_component.gd, godot/tests/integration/test_hold_component.gd.uid, docs/evidence/PUL-012/**, godot/components/interaction_contract.gd, godot/tests/unit/test_interaction_contract.gd]
 touches_scenes: [godot/entities/player/player.tscn, godot/entities/camera/camera_rig.tscn, godot/scenes/sandbox/player_sandbox.tscn]
 ---
 
@@ -66,18 +66,25 @@ Fase 4 de M0, **capa específica 3D** (`scene-tree.md` §3 `player.tscn`, ADR-00
 - `tools/verify.sh` → `✓ verify OK` (gdformat, gdlint, import, GUT, smoke). GUT:
   ```
   Scripts              23
-  Tests               207
-  Passing Tests       207
-  Asserts             867
+  Tests               211
+  Passing Tests       211
+  Asserts             911
   ---- All tests passed! ----
   ```
-  `test_player.gd` 9/9, `test_hold_component.gd` 15/15.
+  `test_player.gd` 9/9, `test_hold_component.gd` 18/18, `test_interaction_contract.gd` 8/8.
 - AC1: 1 s de `p1_move_right` en ticks reales de física → 5 m ± 5 % hacia la derecha de pantalla,
   también con la cámara girada 90°; giro suave (no instantáneo) y mirando hacia el movimiento.
 - AC5 (MCP, `run_project` background + `simulate_input` + `take_screenshot`, sin errores en `get_debug_output`):
   - `docs/evidence/PUL-012/ac5-jugador-llevando-objeto.png`: jugador mirando a la derecha con la caja en `HoldPoint`.
   - `docs/evidence/PUL-012/ac5-jugador-recoge-mirando-camara.png`: tras coger y moverse hacia la cámara.
   - Soltar con `p1_interact`: la caja aparece en jugador + (0,6, 0,6, 0) bajo `Items` y cae.
+- Revisión (codex): `HoldComponent` olvida el objeto en la mano si se libera o está en cola de
+  borrado (`is_instance_valid` / `is_queued_for_deletion`): `get_held_item` = null, `drop` no
+  falla, se puede coger otro e `is_holding` vuelve a `false` (regresión con `queue_free` y ticks
+  reales). AC4 con dobles `RigidBody3D` a los que les falta cada requisito por separado. Un único
+  chequeo del contrato: `InteractionContract.pickable_violations`, que usan `violations` y
+  `PickableContract.is_valid_pickable` (owns ampliado por el producer con `interaction_contract.gd`
+  y su test).
 - Notas: las escenas se generaron con un script headless de Godot (`PackedScene.pack` +
   `ResourceSaver`); como el resto del proyecto, los `.tscn` de texto no llevan `uid=` en la
   cabecera ni fichero `.uid`. Los scripts del sandbox viven en `entities/player/sandbox/` (dentro de `owns`).
