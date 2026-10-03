@@ -1,13 +1,13 @@
 ---
 id: PUL-011
 title: Implementar los componentes comunes del jugador - Control, Holder y PlayerInput
-status: ready
+status: review
 milestone: M0
 role: gameplay-engineer
 deps: []
 orca_task: null
 unity_sources: [Assets/Scripts/Characters/PlayerController.cs, Assets/Scripts/Characters/PlayerHoldSystem.cs, Assets/Scripts/Interfaces/IPickable.cs, Assets/PlayerInputActions.inputactions]
-owns: [godot/components/control_component.gd, godot/components/control_component.gd.uid, godot/components/holder.gd, godot/components/holder.gd.uid, godot/core/player_input.gd, godot/core/player_input.gd.uid, godot/resources/player_config.gd, godot/resources/player_config.gd.uid, godot/resources/input_config.gd, godot/resources/input_config.gd.uid, godot/data/config/player_config.tres, godot/data/config/input_config.tres, godot/project.godot, godot/tests/unit/test_control_component.gd, godot/tests/unit/test_control_component.gd.uid, godot/tests/unit/test_holder.gd, godot/tests/unit/test_holder.gd.uid, godot/tests/unit/test_player_input.gd, godot/tests/unit/test_player_input.gd.uid, godot/tests/unit/test_physics_layers.gd, godot/tests/unit/test_physics_layers.gd.uid, godot/tests/helpers/**]
+owns: [godot/components/control_component.gd, godot/components/control_component.gd.uid, godot/components/holder.gd, godot/components/holder.gd.uid, godot/core/player_input.gd, godot/core/player_input.gd.uid, godot/resources/player_config.gd, godot/resources/player_config.gd.uid, godot/resources/input_config.gd, godot/resources/input_config.gd.uid, godot/data/config/player_config.tres, godot/data/config/input_config.tres, godot/project.godot, godot/tests/unit/test_control_component.gd, godot/tests/unit/test_control_component.gd.uid, godot/tests/unit/test_holder.gd, godot/tests/unit/test_holder.gd.uid, godot/tests/unit/test_player_input.gd, godot/tests/unit/test_player_input.gd.uid, godot/tests/unit/test_physics_layers.gd, godot/tests/unit/test_physics_layers.gd.uid, godot/tests/helpers/**, godot/tests/unit/test_data_*.gd]
 touches_scenes: []
 ---
 
@@ -44,5 +44,10 @@ Fase 4 de M0, **capa común** (ADR-003 §0 y §3, ADR-004). Nada de 3D en estos 
 - [ ] AC5 Ningún fichero de esta ficha referencia tipos 3D/2D (test que carga los scripts sin escenas) y `tools/verify.sh` en verde.
 
 ## Plan
+- AC1 `test_player_input.gd` · AC2 `test_control_component.gd` · AC3 `test_holder.gd` (dobles `tests/helpers/fake_holder.gd`, `fake_pickable.gd`) · AC4 y AC5 `test_physics_layers.gd` (AC5: regex sobre el código fuente de los 5 scripts comunes, sin cargar escenas).
+- Sin señales nuevas de EventBus; `ControlComponent.control_changed` y `Holder.item_*` son locales.
+- Fuera de `owns`: `tests/unit/test_data_integrity.gd` contaba 15 `.tres` y ahora hay 17 (los dos de config); ajustado el número.
 
 ## Evidence
+`tools/verify.sh` → `✓ verify OK` (gdformat, gdlint, import, GUT, smoke).
+GUT (tras revisión): Scripts 17 · Tests 137 · Passing 137 · Failing 0 · "All tests passed!"
