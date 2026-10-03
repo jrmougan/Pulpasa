@@ -49,13 +49,13 @@ Fase 6 de M0, estaciones (`scene-tree.md` §3 `entities/stations/`).
 - Escenas `octopus_storage`, `kitchen`, `box_shelf`, `spice_shelf` generadas con un script tipado
   (`PackedScene.pack` con `GEN_EDIT_STATE_INSTANCE`). `spice_shelf` = 3 `slot.tscn` con
   `initial_item = seasoning.tscn` + `initial_item_data` (nuevo export opcional de `slot.gd`,
-  aprobado por el coordinador). AC3 → `test_shelves.gd` (+ 2 tests nuevos en `test_slot.gd`).
+  aprobado por el coordinador). AC3 → `test_shelves.gd` (+ 2 tests nuevos en `test_slot.gd`). Tras la revisión, sobre el mueble `Mueblecajas`.
 - AC4: sandbox `entities/stations/sandbox/stations_sandbox.tscn` (owns ampliado, aprobado).
 
 ## Evidence
-- `tools/verify.sh` en verde: 304 tests GUT, gdformat/gdlint/import/smoke OK.
-- Tests: `test_item_spawner.gd` (8), `test_cooking_station.gd` (14, incluida la pausa real del árbol
-  durante 30 frames de física), `test_shelves.gd` (7), `test_slot.gd` (+2 `test_pul017_*`).
+- `tools/verify.sh` en verde: 326 tests GUT (tras rebase y revisión), gdformat/gdlint/import/smoke OK.
+- Tests: `test_item_spawner.gd` (8), `test_cooking_station.gd` (16, incluida la pausa real del árbol
+  durante 30 frames de física), `test_shelves.gd` (10), `test_slot.gd` (+2 `test_pul017_*`).
 - Capturas (MCP `run_project` background + `simulate_input` de movimiento/`p1_interact` con
   `mcp_bridge` activado en caliente, como en PUL-016), en `docs/evidence/PUL-017/`:
   `ac4-estaciones.png` (nevera, olla, estantería de cajas S/M/L y de especias),
@@ -74,6 +74,19 @@ Fase 6 de M0, estaciones (`scene-tree.md` §3 `entities/stations/`).
   - Spawners de la estantería: `Highlightable` sin nombre único (hay tres en la misma escena);
     el detector lo busca como hijo directo.
 - Pendiente para revisión visual: la posición de las cajas dentro del mueble está convertida de
-  `Mueblecajas.prefab` (sobre el estante bajo, frente −Z); la del nivel es de la fase 8. La
-  estantería de especias usa tres mesas cuadradas de `slot.tscn` (no hay modelo de mueble de
-  especias).
+  `Mueblecajas.prefab` (frente −Z); la colocación en el nivel es de la fase 8.
+- Revisión (hallazgos 1, 3, 4):
+  - `spice_shelf.tscn`: `Model` = `Mueblecajas.tscn` (como `MuebleEspecias.prefab`) + `CollisionShape3D`
+    igual que `box_shelf`; slots a x −0,6/0/0,6, z −0,78 con el bote a y 0,15 sobre el mueble
+    (slot a y −0,99 porque su `%Anchor` está a 1,14). La mesa de cada slot se oculta y se desactiva
+    (`visible = false`, `process_mode = DISABLED`, quita también su colisión) con override en la
+    instancia (`[editable path]`), sin tocar `slot.tscn`. La caja de colisión `interactable` del
+    slot (1,37 m) sigue y para al jugador ~0,7 m delante del mueble; el detector llega bien.
+    Tests: `test_ac3_spice_shelf_uses_box_furniture_model`, `..._hide_and_disable_their_tables`,
+    `test_ac3_spices_sit_on_the_shelf_in_order`. Capturas `ac3-especia-cogida(-zoom).png` y
+    `ac3-especia-devuelta(-zoom).png` (pimentón cogido y devuelto con `p1_interact`) y
+    `ac4-estaciones.png` renovada. En el sandbox se giró la estantería de cajas para que su frente
+    mire al jugador.
+  - `Slot.anchor_offset()` (estática, cálculo global) la usan `slot.gd` y `cooking_station.gd`.
+  - `test_ac2_cooked_octopus_uses_cooked_material` y `test_ac2_octopus_anchor_point_sits_on_pot_anchor`.
+  - Hallazgo 2 (doc del reloj) lo cerró el producer en `c6075f0`; código del reloj sin cambios.

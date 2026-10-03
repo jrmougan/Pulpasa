@@ -45,6 +45,17 @@ static func pick_up_item(actor: InteractionComponent, item: Node) -> bool:
 	return actor.holder.pick_up(item)
 
 
+## Transformación del `%AnchorPoint` del objeto respecto a su raíz (identidad si no tiene).
+## Compartida por todo lo que coloca objetos por su ancla (slots, olla).
+static func anchor_offset(item: Node3D) -> Transform3D:
+	var anchor_point: Node3D = item.get_node_or_null(^"%AnchorPoint") as Node3D
+	if anchor_point == null:
+		anchor_point = item.get_node_or_null(^"AnchorPoint") as Node3D
+	if anchor_point == null:
+		return Transform3D.IDENTITY
+	return item.global_transform.affine_inverse() * anchor_point.global_transform
+
+
 func _ready() -> void:
 	if initial_item != null:
 		var item: Node3D = initial_item.instantiate() as Node3D
@@ -96,7 +107,7 @@ func _store(item: Node3D) -> void:
 	_item = item
 	if item.get_parent() != _anchor:
 		item.reparent(_anchor, false)
-	item.transform = _anchor_offset(item).affine_inverse()
+	item.transform = Slot.anchor_offset(item).affine_inverse()
 	if item is CollisionObject3D:
 		var collider: CollisionObject3D = item as CollisionObject3D
 		_saved_layer = collider.collision_layer
@@ -128,13 +139,3 @@ func _restore(item: Node3D) -> void:
 		(item as CollisionObject3D).collision_layer = _saved_layer
 	if item is RigidBody3D:
 		(item as RigidBody3D).freeze = _saved_freeze
-
-
-## Transformación del `%AnchorPoint` del objeto respecto a su raíz (identidad si no tiene).
-func _anchor_offset(item: Node3D) -> Transform3D:
-	var anchor_point: Node3D = item.get_node_or_null(^"%AnchorPoint") as Node3D
-	if anchor_point == null:
-		anchor_point = item.get_node_or_null(^"AnchorPoint") as Node3D
-	if anchor_point == null:
-		return Transform3D.IDENTITY
-	return item.global_transform.affine_inverse() * anchor_point.global_transform

@@ -135,7 +135,7 @@ func _store(ingredient: Ingredient) -> void:
 	_ingredient = ingredient
 	if ingredient.get_parent() != _anchor:
 		ingredient.reparent(_anchor, false)
-	ingredient.transform = _anchor_offset(ingredient).affine_inverse()
+	ingredient.transform = Slot.anchor_offset(ingredient).affine_inverse()
 	_saved_layer = ingredient.collision_layer
 	ingredient.collision_layer = 0
 	_saved_freeze = ingredient.freeze
@@ -148,9 +148,3 @@ func _store(ingredient: Ingredient) -> void:
 func _restore(ingredient: Ingredient) -> void:
 	ingredient.collision_layer = _saved_layer
 	ingredient.freeze = _saved_freeze
-
-
-## Transformación del `%AnchorPoint` del pulpo respecto a su raíz (identidad si no tiene).
-func _anchor_offset(ingredient: Ingredient) -> Transform3D:
-	var anchor_point: Node3D = ingredient.get_node_or_null(^"%AnchorPoint") as Node3D
-	return anchor_point.transform if anchor_point != null else Transform3D.IDENTITY

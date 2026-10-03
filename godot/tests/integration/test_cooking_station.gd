@@ -47,6 +47,14 @@ func _cook_for(seconds: float) -> void:
 	simulate(_kitchen, roundi(seconds / STEP), STEP)
 
 
+func _meshes_using(octopus: Ingredient, material: Material) -> int:
+	var count: int = 0
+	for node: Node in octopus.find_children("*", "MeshInstance3D"):
+		if (node as MeshInstance3D).material_override == material:
+			count += 1
+	return count
+
+
 func _bar() -> WorldProgressBar:
 	return _kitchen.get_node("%CookBar") as WorldProgressBar
 
@@ -88,6 +96,23 @@ func test_ac2_cooked_after_five_seconds_of_game() -> void:
 	assert_false((_kitchen.get_node("%BoilAudio") as AudioStreamPlayer3D).playing)
 	_cook_for(2.0)
 	assert_signal_emit_count(_kitchen, "cooking_finished", 1, "sin quemado ni doble aviso")
+
+
+func test_ac2_cooked_octopus_uses_cooked_material() -> void:
+	var octopus: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	assert_false(_meshes_using(octopus, octopus.cooked_material) > 0, "crudo antes de cocer")
+	_cook_for(5.0)
+	assert_gt(_meshes_using(octopus, octopus.cooked_material), 0, "material cocido en datos")
+	assert_eq(_meshes_using(octopus, octopus.raw_material), 0, "sin restos del crudo")
+
+
+func test_ac2_octopus_anchor_point_sits_on_pot_anchor() -> void:
+	var octopus: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	var anchor: Node3D = _kitchen.get_node("%AnchorPoint")
+	var point: Node3D = octopus.get_node("%AnchorPoint")
+	assert_true(point.global_transform.is_equal_approx(anchor.global_transform))
 
 
 func test_ac2_paused_tree_does_not_advance() -> void:
