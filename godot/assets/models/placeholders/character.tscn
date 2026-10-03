@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/ph_character.tres" id="1_c136u"]
+[ext_resource type="Material" path="res://assets/materials/ph_nose.tres" id="2_s4y0a"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_vwc28"]
+radius = 0.21
+height = 1.54
+
+[sub_resource type="SphereMesh" id="SphereMesh_2aupb"]
+radius = 0.07
+height = 0.14
+
+[node name="Character" type="Node3D" unique_id=1402027219]
+
+[node name="Front" type="Marker3D" parent="." unique_id=427081998]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.21)
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=510312780]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+material_override = ExtResource("1_c136u")
+mesh = SubResource("CapsuleMesh_vwc28")
+
+[node name="Nose" type="MeshInstance3D" parent="." unique_id=1358164402]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.35, -0.25)
+material_override = ExtResource("2_s4y0a")
+mesh = SubResource("SphereMesh_2aupb")

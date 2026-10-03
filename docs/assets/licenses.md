@@ -7,9 +7,9 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 
 | Asset (origen) | Destino en `godot/` | Licencia | Atribución requerida |
 |---|---|---|---|
-| `Art/Furniture/Mueblecajas.fbx` | — | Propio (equipo Pulpasa) | No |
-| `Art/Furniture/order_stand.fbx` | — | Propio (equipo Pulpasa) | No |
-| `Art/Materials/**` (colores y parámetros) | — | Propio | No |
+| `Art/Furniture/Mueblecajas.fbx` | `assets/models/furniture/Mueblecajas.fbx` (+ envoltorio `Mueblecajas.tscn`) | Propio (equipo Pulpasa) | No |
+| `Art/Furniture/order_stand.fbx` | `assets/models/furniture/order_stand.fbx` | Propio (equipo Pulpasa) | No |
+| `Art/Materials/**` (colores y parámetros; sin texturas) | `assets/materials/*.tres` | Propio | No |
 | `Animations/Packaging/Box/*.anim` | — | Propio | No |
 | https://opengameart.org/content/boiling-water-loops (`cooking_without_cover_01.ogg`, TinyWorlds) | `assets/audio/boiling_water_loop.ogg` (loop en import) | CC0 | No |
 | https://opengameart.org/content/various-scissors (`hair_scissors_01.mp3`, sinny; convertido a ogg) | `assets/audio/cut.ogg` | CC0 | No |
@@ -24,6 +24,16 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `Art/Logo/PulpaSA.png` | `assets/textures/logo/PulpaSA.png` | Propio | No |
 
 Los SVG de game-icons.net se modifican quitando el rectángulo negro de fondo. Atribuciones completas en `godot/assets/CREDITS.md`.
+
+## Creados en el proyecto (PUL-008)
+
+| Asset | Destino en `godot/` | Licencia | Atribución requerida |
+|---|---|---|---|
+| Placeholders de primitivas (olla, fogón, nevera, 3 mesas, 3 cajas, bote, 2 pulpos, personaje); dimensiones tomadas de prefabs Unity y Pandazole solo como medida | `assets/models/placeholders/*.tscn` | Propio (creados por el equipo) | No |
+| Materiales `ph_*` de los placeholders | `assets/materials/ph_*.tres` | Propio | No |
+
+Los materiales `hot_pepper_quad`, `salt_quad`, `octopus_symbol` y `reticule` conservan solo el color
+de Unity; sus texturas (iconos sin origen) no se importan.
 
 ## Pendientes de confirmar (no se usan hasta confirmarlos)
 

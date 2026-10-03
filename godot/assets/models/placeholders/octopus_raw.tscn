@@ -1,0 +1,68 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/ph_octopus_raw.tres" id="1_xxp3t"]
+[ext_resource type="Material" path="res://assets/materials/ph_white.tres" id="2_pkdgr"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_s3sub"]
+radius = 0.21
+height = 0.42
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_onmd1"]
+radius = 0.04
+height = 0.3
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_dt1qr"]
+radius = 0.04
+height = 0.3
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_gxjh7"]
+radius = 0.04
+height = 0.3
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fxohr"]
+radius = 0.04
+height = 0.3
+
+[sub_resource type="SphereMesh" id="SphereMesh_wy3es"]
+radius = 0.03
+height = 0.06
+
+[node name="OctopusRaw" type="Node3D" unique_id=1635490825]
+
+[node name="Front" type="Marker3D" parent="." unique_id=1179839153]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.21)
+
+[node name="Head" type="MeshInstance3D" parent="." unique_id=1292193347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+material_override = ExtResource("1_xxp3t")
+mesh = SubResource("SphereMesh_s3sub")
+
+[node name="Tentacle1" type="MeshInstance3D" parent="." unique_id=1313395782]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.15, 0)
+material_override = ExtResource("1_xxp3t")
+mesh = SubResource("CapsuleMesh_onmd1")
+
+[node name="Tentacle2" type="MeshInstance3D" parent="." unique_id=1893582454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.083, 0.15, 0)
+material_override = ExtResource("1_xxp3t")
+mesh = SubResource("CapsuleMesh_dt1qr")
+
+[node name="Tentacle3" type="MeshInstance3D" parent="." unique_id=605500870]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.083, 0.15, 0)
+material_override = ExtResource("1_xxp3t")
+mesh = SubResource("CapsuleMesh_gxjh7")
+
+[node name="Tentacle4" type="MeshInstance3D" parent="." unique_id=314700381]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.15, 0)
+material_override = ExtResource("1_xxp3t")
+mesh = SubResource("CapsuleMesh_fxohr")
+
+[node name="EyeL" type="MeshInstance3D" parent="." unique_id=369979582]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.34, -0.19)
+material_override = ExtResource("2_pkdgr")
+mesh = SubResource("SphereMesh_wy3es")
+
+[node name="EyeR" type="MeshInstance3D" parent="." unique_id=412871832]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.34, -0.19)
+material_override = ExtResource("2_pkdgr")
+mesh = SubResource("SphereMesh_wy3es")

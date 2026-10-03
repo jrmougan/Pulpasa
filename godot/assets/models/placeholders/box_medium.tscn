@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/medium_box.tres" id="1_n74py"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_82eot"]
+size = Vector3(0.396, 0.333, 0.375)
+
+[node name="BoxMedium" type="Node3D" unique_id=1077296058]
+
+[node name="Front" type="Marker3D" parent="." unique_id=2032370931]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1875)
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=928986318]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1665, 0)
+material_override = ExtResource("1_n74py")
+mesh = SubResource("BoxMesh_82eot")
