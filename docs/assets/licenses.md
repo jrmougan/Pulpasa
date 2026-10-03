@@ -13,7 +13,7 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `Art/Materials/**` (colores y parámetros) | — | Propio | No |
 | `Animations/Packaging/Box/*.anim` | — | Propio | No |
 | `Plugins/TextMesh Pro/Fonts/LiberationSans.ttf` | — | SIL OFL 1.1 | Incluir licencia OFL |
-| `Art/Icons/pepper-hot-solid.svg` | — | Font Awesome Free, CC BY 4.0 | Sí: «Font Awesome Free, CC BY 4.0» |
+| `Art/Icons/pepper-hot-solid.svg` | — | Line Awesome (Icons8), MIT | Sí: aviso de copyright y texto MIT (corregido tras revisión de PUL-009; no es Font Awesome) |
 
 ## Pendientes de confirmar (no se usan hasta confirmarlos)
 
