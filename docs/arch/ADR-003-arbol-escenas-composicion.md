@@ -94,11 +94,13 @@ Godot no tiene interfaces; se usa **grupo + métodos con firma fija**, verificad
 
 | Grupo | Métodos obligatorios en el script raíz | Lo implementan |
 |---|---|---|
-| `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación) | estaciones, slots, caja, puesto de entrega |
+| `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación) | estaciones, slots, caja, puesto de entrega, pulpo, condimento |
 | `pickable` | `on_picked_up(holder: Holder) -> void`; `on_dropped() -> void`; `var is_held: bool` | pulpo, caja, condimento |
 | `kitchen` | Ninguno (marca). Lo usa `InteractionDetector` para el bonus de puntuación con mano vacía (`PlayerConfig.kitchen_bonus`, equivale al tag `Kitchen` de Unity). No es una capa de física | raíz de `kitchen.tscn` (obligatorio) |
 
 *Enmienda 2026-10-03 (grupo `kitchen`), aprobada por el responsable tras la revisión de PUL-015.*
+
+*Enmienda 2026-10-03: pulpo y condimento están en `pickable` **e** `interactable`, como en Unity (`Ingredient.cs`, `SeasoningItem.cs` implementan `IPickable` e `IInteractable`). `InteractionScoring` solo elige un cogible si también es interactuable (paridad con `InteractionDetector.cs:99`). Aprobada por el responsable tras la revisión de PUL-016.*
 
 - Los tipos del contrato (`InteractionComponent`, `Holder`) son comunes: el receptor accede a la mano
   con `actor.holder` y al jugador con `actor.control.controlled_by`, sin conocer `Player`. El

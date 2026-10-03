@@ -83,7 +83,7 @@ Un único detector (B7). Movimiento 5 m/s y giro en `PlayerConfig.tres`.
 
 ### `entities/items/`
 ```
-octopus.tscn [6]   Octopus (RigidBody3D, capa interactable; grupos pickable)    ingredient.gd  class_name Ingredient
+octopus.tscn [6]   Octopus (RigidBody3D, capa interactable; grupos pickable, interactable)    ingredient.gd  class_name Ingredient
                    ├── CollisionShape3D, Model, %AnchorPoint (Marker3D)
                    ├── %Highlightable (Node)                                components/highlightable.gd
                    └── %AmountBar                                           ui/widgets/world_progress_bar.tscn
@@ -91,7 +91,7 @@ box.tscn [6]       Box (RigidBody3D; grupos pickable, interactable)          box
                    ├── CollisionShape3D, Model, %AnchorPoint, %AnimationPlayer (box_open / box_close)
                    ├── %Highlightable, %FillBar (world_progress_bar.tscn)
                    └── %SeasonAudio (AudioStreamPlayer3D)
-seasoning.tscn [6] Seasoning (RigidBody3D; grupo pickable)                   seasoning_item.gd  @export data: SeasoningData
+seasoning.tscn [6] Seasoning (RigidBody3D; grupos pickable, interactable)                   seasoning_item.gd  @export data: SeasoningData
                    ├── CollisionShape3D, Model, %AnchorPoint, %Highlightable
 ```
 Tres cajas y tres condimentos = una escena + `.tres` (`data/boxes/{small,medium,large}.tres`,
