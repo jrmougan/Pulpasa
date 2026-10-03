@@ -1,11 +1,11 @@
 ---
 id: PUL-007
 title: Crear los autoloads OrderService y RoundManager como adaptadores
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: [PUL-006]
-orca_task: null
+orca_task: task_dcbd3d1032a7
 unity_sources: [Assets/Scripts/Systems/OrderSystem.cs, Assets/Scripts/Game/ProductivitySystem.cs]
 owns: [godot/autoload/order_service.gd, godot/autoload/order_service.gd.uid, godot/autoload/round_manager.gd, godot/autoload/round_manager.gd.uid, godot/project.godot, godot/tests/unit/test_order_service.gd, godot/tests/unit/test_order_service.gd.uid, godot/tests/unit/test_round_manager.gd, godot/tests/unit/test_round_manager.gd.uid]
 touches_scenes: []
