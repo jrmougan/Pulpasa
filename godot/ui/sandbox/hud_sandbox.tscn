@@ -1,0 +1,50 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://ui/hud/hud.tscn" id="1_jnb24"]
+[ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="1_wnchj"]
+[ext_resource type="Script" path="res://ui/hud/hud.gd" id="2_ecjer"]
+[ext_resource type="Script" path="res://ui/hud/hud_sandbox.gd" id="2_y7bn5"]
+[ext_resource type="PackedScene" path="res://ui/tickets/order_tickets_panel.tscn" id="3_df3jg"]
+[ext_resource type="Script" path="res://ui/tickets/order_tickets_panel.gd" id="6_qnw2m"]
+
+[node name="HUDSandbox" type="Control" unique_id=1494405884]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+theme = ExtResource("1_wnchj")
+script = ExtResource("2_y7bn5")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1331373044]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.0627451, 0.11764706, 0.1254902, 1)
+
+[node name="HUD" type="Control" parent="." unique_id=1410909336 instance=ExtResource("1_jnb24")]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 32.0
+offset_top = 28.0
+offset_right = -32.0
+offset_bottom = 132.0
+grow_horizontal = 2
+mouse_filter = 2
+theme = ExtResource("1_wnchj")
+script = ExtResource("2_ecjer")
+
+[node name="OrderTicketsPanel" type="Control" parent="." unique_id=513847647 instance=ExtResource("3_df3jg")]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 32.0
+offset_top = 160.0
+offset_right = -32.0
+offset_bottom = 440.0
+grow_horizontal = 2
+mouse_filter = 2
+theme = ExtResource("1_wnchj")
+script = ExtResource("6_qnw2m")

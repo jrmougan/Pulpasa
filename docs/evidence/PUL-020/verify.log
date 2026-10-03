@@ -1,0 +1,40 @@
+
+== gdformat --check
+92 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== tests (GUT)
+res://tests/unit/test_smoke.gd
+[0m* test_engine_is_4_7
+* test_boot_scene_loads
+Pulpasa boot OK — Godot 4.7.2-stable (official)
+[1m2/2 passed.
+[0m
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Scripts              37
+Tests               337
+Passing Tests       337
+Asserts            1820
+Time              24.754s
+
+
+[32m---- All tests passed! ----
+[0m
+Results saved to res://.gut_reports/junit.xml
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✓ verify OK
