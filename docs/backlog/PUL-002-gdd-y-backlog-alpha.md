@@ -1,11 +1,11 @@
 ---
 id: PUL-002
 title: Escribir el GDD de trabajo y el backlog de la alpha
-status: review
+status: done
 milestone: F0
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_ae93f84a3afb
 unity_sources: []
 owns: [docs/design/gdd.md, docs/design/features/**]
 touches_scenes: []
