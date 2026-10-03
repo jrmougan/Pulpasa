@@ -1,7 +1,7 @@
 ---
 id: PUL-001
 title: Inventariar el proyecto Unity y mapearlo a Godot
-status: ready
+status: review
 milestone: F0
 role: migration-analyst
 deps: []
@@ -25,10 +25,21 @@ Crear `docs/migration/inventory.md` con:
 No editar nada fuera de `docs/migration/`. No convertir assets todavía.
 
 ## Acceptance
-- [ ] AC1 Los 46 scripts propios de `Assets/Scripts` aparecen en el inventario.
-- [ ] AC2 Cada fila tiene destino Godot y fase asignada.
-- [ ] AC3 Los bugs conocidos (doble `CompleteOrder`, temporizadores duplicados, `EmissionHighlighter`) están listados con archivo:línea.
+- [x] AC1 Los 46 scripts propios de `Assets/Scripts` aparecen en el inventario.
+- [x] AC2 Cada fila tiene destino Godot y fase asignada.
+- [x] AC3 Los bugs conocidos (doble `CompleteOrder`, temporizadores duplicados, `EmissionHighlighter`) están listados con archivo:línea.
 
 ## Plan
+1. Leer los 47 `.cs`, mapear GUIDs de scripts → prefabs/escenas y prefabs → nivel.
+2. Leer los 13 `.asset` de `Resources/` y los overrides de `Level_01.unity`.
+3. Contar referencias de cada asset de arte/audio/fuente para decidir reutilización.
+4. Fases de M0 confirmadas por el coordinador (documentadas al inicio del inventario).
 
 ## Evidence
+- `docs/migration/inventory.md`: §1 scripts (47 filas), §2 ScriptableObjects (13), §3 prefabs (18) + escenas (2) + config, §4 bugs (B1–B18) y código muerto, §5 assets con origen/licencia.
+- AC1: la ficha dice 46 scripts, pero en `Assets/Scripts` hay 47 `.cs`; los 47 aparecen (comprobado con un bucle `grep` sobre cada ruta: 0 ausentes).
+- AC2: cada fila de §1–§3 tiene destino y fase 0–8; lo que no se porta lleva `—` y remite a §4.
+- AC3: B1 doble `CompleteOrder` (`OrderSystem.cs:103` + `OrderStand.cs:61`), B2 temporizadores duplicados (`ProductivitySystem.cs:45/47`, `ProductivityUIDisplay.cs:23/36`), B3 `EmissionHighlighter` (`EmissionHighlighter.cs:15`, `:25-28`; `HighlightController.cs:11-12`).
+- `tools/verify.sh`: OK (gdformat, gdlint, import, GUT 2/2, smoke).
+- Pendiente fuera de alcance: verificar licencias marcadas **verificar** en §5 (Boite Hamburger, Condiment.obj, iconos, audio, OCRAEXT).
+- Revisión de codex (CHANGES) aplicada: B1 describe ahora la secuencia real (comanda original → comanda nueva completada sin entrega → otra asignada), con QFramework síncrono como causa; las ampliaciones de D2/D4 (recaudación/estrellas, paciencia/caducidad, aceite/cachelos, condimento sí/no) van etiquetadas **[M1]** y la fase de cada fila sigue siendo la de paridad M0.
