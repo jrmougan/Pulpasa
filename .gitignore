@@ -75,3 +75,6 @@ crashlytics-build.properties
 .claude/current-task
 .claude/.stop-retries
 .claude/settings.local.json
+
+# Builds de exportación (tools/export.sh)
+/build/
