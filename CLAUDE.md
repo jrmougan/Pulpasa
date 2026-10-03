@@ -6,7 +6,7 @@ Cooperativo de cocina (pulpo á feira en romerías gallegas) en migración de Un
 ## Dónde está cada cosa
 - `godot/`: proyecto Godot (lo que se desarrolla). GDScript tipado, tests GUT en `godot/tests/`.
 - `Assets/`: prototipo Unity. **Solo lectura**: es la especificación de la migración.
-- `docs/design/decisions.md`: decisiones cerradas (mandan sobre el GDD). `docs/design/gdd.md`: GDD de trabajo.
+- `docs/design/roadmap.md`: hitos y fases de M0. `docs/design/decisions.md`: decisiones cerradas (mandan sobre el GDD). `docs/design/gdd.md`: GDD de trabajo.
 - `docs/arch/`: ADRs, `signals.md`, `scene-tree.md`. Contratos: no se cambian sin ADR y gate humano.
 - `docs/migration/inventory.md`: mapa Unity → Godot y bugs que no se portan.
 - `docs/backlog/PUL-*.md`: fichas de tarea. `docs/evidence/<id>/`: capturas y pruebas.
