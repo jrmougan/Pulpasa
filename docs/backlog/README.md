@@ -24,7 +24,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-009 | M0·3 | asset-pipeline | done | Audio, fuentes e iconos libres (CC0/OFL) |
 | PUL-010 | M0·3 | godot-architect | done | Exportación Linux, Windows y Web |
 | PUL-011 | M0·4 | gameplay-engineer | done | Componentes comunes: Control, Holder, PlayerInput |
-| PUL-012 | M0·4 | gameplay-engineer | ready (dep. 011, 008) | Escena del jugador, HoldComponent y cámara |
+| PUL-012 | M0·4 | gameplay-engineer | done | Escena del jugador, HoldComponent y cámara |
 | PUL-013 | M0·4 | asset-pipeline | blocked (licencia del modelo) | Modelo y AnimationTree del jugador |
 | PUL-014 | M0·5 | gameplay-engineer | done | Interacción común: scoring, componente y contrato |
 | PUL-015 | M0·5 | gameplay-engineer | ready (dep. 012, 014) | Detector 3D, resaltado por shader y slots |

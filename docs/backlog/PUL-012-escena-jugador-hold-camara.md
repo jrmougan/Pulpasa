@@ -1,11 +1,11 @@
 ---
 id: PUL-012
 title: Montar la escena del jugador con movimiento, HoldComponent y cámara
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: [PUL-011, PUL-008]
-orca_task: null
+orca_task: task_259783905a46
 unity_sources: [Assets/Scripts/Characters/PlayerController.cs, Assets/Scripts/Characters/PlayerHoldSystem.cs, Assets/Prefabs/Characters/Player.prefab, Assets/Scenes/Levels/Level_01.unity]
 owns: [godot/entities/player/**, godot/components/pickable_contract.gd, godot/components/pickable_contract.gd.uid, godot/entities/camera/**, godot/components/hold_component.gd, godot/components/hold_component.gd.uid, godot/scenes/sandbox/player_sandbox.tscn, godot/scenes/sandbox/player_sandbox.tscn.uid, godot/tests/integration/test_player.gd, godot/tests/integration/test_player.gd.uid, godot/tests/integration/test_hold_component.gd, godot/tests/integration/test_hold_component.gd.uid, docs/evidence/PUL-012/**, godot/components/interaction_contract.gd, godot/tests/unit/test_interaction_contract.gd]
 touches_scenes: [godot/entities/player/player.tscn, godot/entities/camera/camera_rig.tscn, godot/scenes/sandbox/player_sandbox.tscn]
