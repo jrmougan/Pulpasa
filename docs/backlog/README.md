@@ -15,4 +15,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 |----|------|-----|--------|--------|
 | PUL-001 | F0 | migration-analyst | done | Inventario Unity → Godot |
 | PUL-002 | F0 | game-designer | done | GDD de trabajo y backlog de la alpha |
-| PUL-003 | F0 | godot-architect | ready (dep. PUL-001) | ADR-001..004 y contratos |
+| PUL-003 | F0 | godot-architect | done | ADR-001..004 y contratos |

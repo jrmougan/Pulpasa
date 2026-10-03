@@ -1,11 +1,11 @@
 ---
 id: PUL-003
 title: Redactar ADR-001..004 y contratos de arquitectura
-status: review
+status: done
 milestone: F0
 role: godot-architect
 deps: [PUL-001]
-orca_task: null
+orca_task: task_36e82662998e
 unity_sources: [Assets/Scripts/Architecture/**, Assets/Scripts/Systems/**, Assets/Scripts/Interfaces/**]
 owns: [docs/arch/**]
 touches_scenes: []
@@ -28,7 +28,7 @@ No crear código ni escenas. Cada ADR: contexto, decisión, alternativas, consec
 ## Acceptance
 - [x] AC1 Los 4 ADR existen con estado «propuesto».
 - [x] AC2 Cada señal de signals.md tiene emisor, receptores y tipos.
-- [ ] AC3 Gate humano: el responsable aprueba los ADR (estado → «aceptado»).
+- [x] AC3 Gate humano: el responsable aprueba los ADR (estado → «aceptado»).
 
 ## Plan
 1. Leer inventario (PUL-001), decisiones, roadmap, GDD/features de PUL-002 (`jrmougan/pul-002`) y

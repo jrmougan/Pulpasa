@@ -1,6 +1,6 @@
 # ADR-003 — Árbol de escenas y composición
 
-- **Estado:** propuesto
+- **Estado:** aceptado (2026-10-03)
 - **Fecha:** 2026-10-03
 - **Ficha:** PUL-003
 - **Relacionado:** `docs/arch/scene-tree.md` (árbol objetivo de M0), ADR-001 (carpetas), ADR-002

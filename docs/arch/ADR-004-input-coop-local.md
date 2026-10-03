@@ -1,6 +1,6 @@
 # ADR-004 — Input para coop local y cambio de personaje
 
-- **Estado:** propuesto
+- **Estado:** aceptado (2026-10-03)
 - **Fecha:** 2026-10-03
 - **Ficha:** PUL-003
 - **Relacionado:** D3 y D11 (`docs/design/decisions.md`), ADR-005 (D14, 3D o 2D), Must 5–7 (`docs/design/roadmap.md`), features

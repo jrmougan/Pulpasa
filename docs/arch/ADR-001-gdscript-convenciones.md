@@ -1,6 +1,6 @@
 # ADR-001 — Lenguaje y convenciones GDScript
 
-- **Estado:** propuesto
+- **Estado:** aceptado (2026-10-03)
 - **Fecha:** 2026-10-03
 - **Ficha:** PUL-003
 - **Relacionado:** `docs/design/decisions.md` (T1–T4), skill `gdscript-conventions`, ADR-003

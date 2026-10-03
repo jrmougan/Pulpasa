@@ -4,21 +4,30 @@ description: Convenciones de código GDScript, escenas y tests de Pulpasa en God
 ---
 # Convenciones GDScript de Pulpasa
 
+La norma completa es `docs/arch/ADR-001-gdscript-convenciones.md` (manda sobre esta skill).
+Arquitectura de núcleos y autoloads: `docs/arch/ADR-002-eventbus-autoloads.md`.
+
+## Carpetas (`godot/`)
+`autoload/` (adaptadores, sin `class_name`) · `core/` (lógica `RefCounted`, sin nodos) ·
+`resources/` (clases Resource) · `data/` (`.tres`) · `components/` · `entities/{player,items,stations}/` ·
+`ui/{hud,tickets,menus,widgets}/` · `scenes/` (boot, levels) · `shaders/` · `assets/` · `tests/{unit,integration,helpers}/`.
+
 ## Código
 - Tipado estático siempre: `var speed: float = 4.0`, `func f(x: int) -> void:`. El proyecto trata
   `untyped_declaration` como error.
-- `class_name` en scripts reutilizables y Resources. Archivos y nodos en `snake_case`; clases en `PascalCase`.
+- `class_name` en scripts reutilizables y Resources, salvo autoloads (los tests los cargan con `preload(...).new()`). Archivos y nodos en `snake_case`; clases en `PascalCase`.
 - Orden: `class_name`, `extends`, docstring `##`, señales, enums, constantes, `@export`, vars
   públicas, vars `_privadas`, `@onready`, funciones built-in, públicas, privadas.
 - Referencias a nodos hijos con `%UniqueName` o `@export var x: Node3D`. Nunca rutas absolutas
   ni `get_tree().get_first_node_in_group` para sistemas.
-- Comunicación entre sistemas: señales de `EventBus` (catálogo en `docs/arch/signals.md`).
+- Comunicación entre sistemas: señales de `EventBus` (catálogo en `docs/arch/signals.md`). Hechos por señal, órdenes por método del autoload dueño.
+- Tests de reglas: instancia los núcleos de `core/` con dependencias inyectadas, nunca los autoloads.
 - Números de balance en Resources `.tres` dentro de `godot/data/`, no en código.
 - Aleatoriedad con `RandomNumberGenerator` inyectable (semilla fija en tests).
 - Formato lo decide `gdformat`; el hook lo aplica solo.
 
 ## Escenas
-- Una escena por entidad o pieza de UI, junto a su script: `entities/stations/kitchen_station.{tscn,gd}`.
+- Una escena por entidad o pieza de UI, junto a su script: `entities/stations/kitchen.{tscn,gd}`.
 - `level_*.tscn` solo instancia escenas; no lleva lógica ni overrides grandes.
 - `.tscn` y `.tres` se editan con herramientas del MCP o del editor; a mano solo cambios triviales
   de texto. Nunca inventes `uid://` ni ids de ExtResource.

@@ -1,6 +1,6 @@
 # ADR-005 — Dimensión: 3D o 2D
 
-- **Estado:** propuesto (decide el responsable; resuelve D14)
+- **Estado:** aceptado (2026-10-03): opción A, 3D con cámara ortográfica fija (D14)
 - **Fecha:** 2026-10-03
 - **Ficha:** PUL-003
 - **Relacionado:** D6 y D14 (`docs/design/decisions.md`), roadmap (fases y gate de M0), ADR-003 §0
@@ -104,15 +104,9 @@ ventaja clara frente a A con cámara ortográfica (H).
 
 ## Decisión
 
-Pendiente del responsable (D14). Hasta entonces:
-1. Fases 0–2 avanzan con la capa común (sin tipos 3D/2D ni clases específicas en `autoload/`,
-   `core/`, `resources/`, `ui/`, componentes comunes ni firmas de `EventBus`; ADR-002 regla 10,
-   ADR-003 §0).
-2. Ninguna ficha de fases 3–8 pasa a `ready` sin D14 resuelta; los spikes de medición sí pueden.
-3. Si se acepta A: `scene-tree.md` §2–§3 rige tal cual; la fase 3 incluye la prueba de export web
-   con Compatibility.
-4. Si se acepta B: `scene-tree.md` §6 rige para la capa específica; se reescribe el gate de M0 y se
-   crea la ficha de arte según la fuente elegida (B1, B2 o B3, con revisión humana de licencias).
+**Aceptada la opción A (3D con cámara ortográfica fija)** por el responsable el 2026-10-03 (D14).
+Rige `scene-tree.md` §2–§3. La fase 3 de M0 incluye una ficha de prueba de export web con el
+renderizador Compatibility.
 
 ## Consecuencias
 - (+) La decisión queda acotada a la capa específica; no reabre ADR-002 ni ADR-004 ni el catálogo

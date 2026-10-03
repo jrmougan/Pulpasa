@@ -18,7 +18,7 @@ Tomadas el 2026-10-03 por el responsable del proyecto. Fuente de verdad frente a
 | D11 | Cambio de personaje | Tecla fija que alterna entre los dos | Concreta D3 |
 | D12 | Asignación de comandas | Cada comanda va a su puesto, como en Unity | Se rechaza «cualquier puesto» |
 | D13 | Corte | Pulsación repetida, como en Unity | Se rechaza «mantener pulsado» |
-| D14 | 3D o 2D | **Pendiente** | El responsable duda. Ver ADR-005. Bloquea fases 3–8 de M0, no las 0–2 |
+| D14 | 3D o 2D | 3D con cámara ortográfica fija | ADR-005 aceptado. La capa común sigue siendo independiente de la dimensión |
 
 ## Decisiones técnicas
 

@@ -1,7 +1,7 @@
 # Pulpasa
 
 Cooperativo de cocina (pulpo á feira en romerías gallegas) en migración de Unity 6 a
-**Godot 4.7.2** y camino de una alpha. Desarrollo hecho por agentes coordinados con Orca.
+**Godot 4.7.2** (3D, cámara ortográfica) y camino de una alpha. Desarrollo hecho por agentes coordinados con Orca.
 
 ## Dónde está cada cosa
 - `godot/`: proyecto Godot (lo que se desarrolla). GDScript tipado, tests GUT en `godot/tests/`.
@@ -25,7 +25,10 @@ Cooperativo de cocina (pulpo á feira en romerías gallegas) en migración de Un
    permite tocar `owns` y `touches_scenes` de esa ficha. Bórralo al terminar.
 2. No se termina con `tools/verify.sh` en rojo (un hook de Stop lo impide hasta 3 veces; después, escala).
 3. Tipado estático en todo GDScript. Datos de balance en `.tres`, no en código.
-4. Sistemas comunicados por señales de `EventBus`; nada de rutas absolutas de nodos.
+4. Lógica en núcleos `RefCounted` de `core/`; autoloads `EventBus`, `GameState`, `OrderService`,
+   `RoundManager` como adaptadores finos (ADR-002). Sistemas comunicados por señales de `EventBus`
+   (catálogo cerrado en `docs/arch/signals.md`); nada de rutas absolutas de nodos.
+   `autoload/`, `core/`, `resources/` y `ui/` sin tipos 3D/2D de mundo.
 5. Un `.tscn` tiene un solo dueño por oleada. No inventes `uid://`; versiona los `.uid`.
 6. No portes los bugs del prototipo (lista en `docs/migration/inventory.md`).
 7. No edites `Assets/`, `godot/addons/` ni `main.tex`.

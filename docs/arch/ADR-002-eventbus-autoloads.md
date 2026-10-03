@@ -1,6 +1,6 @@
 # ADR-002 — Bus de eventos y autoloads (sustituto de QFramework)
 
-- **Estado:** propuesto
+- **Estado:** aceptado (2026-10-03)
 - **Fecha:** 2026-10-03
 - **Ficha:** PUL-003
 - **Relacionado:** `docs/arch/signals.md`, ADR-001, ADR-003, ADR-005 (D14); inventario §1 (Architecture, Systems,
