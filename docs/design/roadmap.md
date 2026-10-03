@@ -27,3 +27,24 @@ Propuesta completa (privada): https://claude.ai/artifact/PstRxmwwgejjsphmEXCkJe
 | 8 | `level_01.tscn`, iluminación, export Linux/Web | Partida lado a lado con Unity |
 
 Coop, audio completo y pulido no son M0.
+
+## Alcance aprobado de la alpha (MoSCoW)
+
+**Must**
+1. Paridad con el prototipo Unity (sin sus bugs): smoke checklist en builds Windows y Linux.
+2. Ciclo de comandas sin bugs: 20 entregas seguidas sin puestos vacíos; +1 exacto por entrega.
+3. Paciencia por comanda: barra que se vacía en `max_time` (40–90 s en datos); al caducar penaliza y se regenera.
+4. Puntuación y objetivo: base + bonus por tiempo; recaudación en HUD; 0–3 estrellas por umbrales en datos (D2).
+5. Coop local 2P y mando Xbox: teclado + mando o dos mandos; flujo menú → game over completable sin teclado.
+6. Modo individual: cambio entre 2 personajes en < 0,2 s (D3).
+7. Menú principal: Individual, Local 2P y Salir llevan al nivel en el modo correcto.
+8. Comanda reducida (D4): pimentón dulce/picante, sal sí/no, aceite sí/no, cachelos opcionales; iconos en el ticket.
+9. Feedback mínimo: sonido y respuesta visual en coger, cocer, condimentar, entrega correcta y errónea; música y ambiente.
+
+**Should**: olla que se pasa, dificultad por fases, opciones de volumen, textos en gallego, tutorial breve.
+**Could**: barro, gaiteros, 2 personajes con habilidad, lavado de platos.
+**Won't**: mapa de niveles, online, 4 personajes, NPC animados, móvil.
+
+## Flujo de cocina (prototipo, se mantiene por D1)
+Nevera → pulpo crudo → olla (cocción) → el jugador lleva el pulpo **cocido** y lo corta sobre una
+caja (cada pulsación llena la caja y gasta pulpo) → condimentos sobre la caja llena → entrega en el puesto.
