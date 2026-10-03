@@ -1,11 +1,11 @@
 ---
 id: PUL-005
 title: Portar los ScriptableObjects a Resources y .tres
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: []
-orca_task: null
+orca_task: task_5008aa931117
 unity_sources: [Assets/Scripts/ScriptableObjects/**, Assets/Resources/**, Assets/Prefabs/Packaging/**]
 owns: [godot/resources/**, godot/data/**, godot/tests/unit/test_data_*.gd, godot/tests/unit/test_data_*.gd.uid]
 touches_scenes: []
