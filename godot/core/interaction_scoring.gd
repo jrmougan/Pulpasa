@@ -2,6 +2,11 @@ class_name InteractionScoring
 extends RefCounted
 ## Elección de objetivo de interacción (InteractionDetector.cs). Pura, sobre el plano del suelo.
 ##
+## La DIRECCIÓN (cono) usa el plano del suelo (`Vector2`); la DISTANCIA es un escalar que
+## calcula el adaptador específico: en Unity es 3D desde la posición del jugador + 0,8 m de
+## altura hasta el cuerpo (`InteractionDetector.cs:37-49`). Esa altura 0,8 la aporta el
+## adaptador (irá a `PlayerConfig` en PUL-015); aquí no se conoce.
+##
 ## Los números (cono, distancia mínima, bonus de cocina) llegan por parámetro desde el
 ## detector (que los lee de `PlayerConfig`). El detector resuelve antes los casos de slot
 ## (slot vacío, slot ocupado con la mano llena) y construye un `Candidate` por cuerpo.
@@ -13,7 +18,10 @@ const MIN_SCORE_DISTANCE: float = 0.1
 ## Un cuerpo candidato, ya proyectado al plano del suelo.
 class Candidate:
 	extends RefCounted
+	## Posición en el plano del suelo (solo para la dirección del cono).
 	var position: Vector2
+	## Distancia 3D desde el punto de mira del jugador (la calcula el adaptador).
+	var distance: float
 	var is_pickable: bool
 	var is_interactable: bool
 	## Equivale al tag `Kitchen` del prototipo.
@@ -21,11 +29,13 @@ class Candidate:
 
 	func _init(
 		new_position: Vector2 = Vector2.ZERO,
+		new_distance: float = 0.0,
 		pickable: bool = false,
 		interactable: bool = true,
 		kitchen: bool = false
 	) -> void:
 		position = new_position
+		distance = new_distance
 		is_pickable = pickable
 		is_interactable = interactable
 		is_kitchen = kitchen
@@ -36,9 +46,10 @@ static func score(dot: float, dist: float) -> float:
 	return dot * 2.0 + 1.0 / maxf(dist, MIN_SCORE_DISTANCE)
 
 
-## Índice del mejor candidato o -1. Con la mano vacía gana el mejor cogible sobre cualquier
-## interactuable; si no hay cogible, el mejor interactuable (con `kitchen_bonus` a la cocina).
-## Con la mano llena solo cuentan los interactuables, sin bonus.
+## Índice del mejor candidato o -1 (`InteractionDetector.cs:99`). Con la mano vacía el mejor
+## cogible gana sobre cualquier interactuable, pero solo si además es interactuable
+## (`bestPickable as IInteractable`); si no, se usa el mejor interactuable (con `kitchen_bonus`
+## a la cocina) o -1. Con la mano llena solo cuentan los interactuables, sin bonus.
 static func pick_best(
 	origin: Vector2,
 	forward: Vector2,
@@ -60,7 +71,7 @@ static func pick_best(
 		if not cand.is_pickable and not cand.is_interactable:
 			continue
 		var to_target: Vector2 = cand.position - origin
-		var dist: float = to_target.length()
+		var dist: float = cand.distance
 		var dot: float = fwd.dot(to_target.normalized())  # normalized() de cero es cero
 		if dist > near_distance and dot < cos_limit:
 			continue
@@ -76,4 +87,6 @@ static func pick_best(
 				best_interactable = i
 				best_interactable_score = cand_score
 
-	return best_pickable if best_pickable != -1 else best_interactable
+	if best_pickable != -1 and candidates[best_pickable].is_interactable:
+		return best_pickable
+	return best_interactable
