@@ -11,7 +11,6 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `Art/Furniture/order_stand.fbx` | — | Propio (equipo Pulpasa) | No |
 | `Art/Materials/**` (colores y parámetros) | — | Propio | No |
 | `Animations/Packaging/Box/*.anim` | — | Propio | No |
-
 | https://opengameart.org/content/boiling-water-loops (`cooking_without_cover_01.ogg`, TinyWorlds) | `assets/audio/boiling_water_loop.ogg` (loop en import) | CC0 | No |
 | https://opengameart.org/content/various-scissors (`hair_scissors_01.mp3`, sinny; convertido a ogg) | `assets/audio/cut.ogg` | CC0 | No |
 | https://opengameart.org/content/scrapes (`scrape-3.ogg`, AntumDeluge) | `assets/audio/pepper_mill.ogg` | CC0 | No |
