@@ -64,7 +64,7 @@ Una romería con un puesto semiabierto sobre terreno de tierra y césped. Zonas:
 
 **Objetivo del nivel (corregido, D7):** conseguir la mayor recaudación posible en 5 minutos sirviendo
 comandas dentro de su plazo, y alcanzar al menos 1 estrella. El nivel enseña en este orden: coger/soltar,
-cortar, cocer, condimentar, entregar y coordinarse.
+cocer, cortar, condimentar, entregar y coordinarse.
 
 ## 6. Alcance de la alpha (MoSCoW aprobado)
 Alineado con «Alcance aprobado de la alpha» de `roadmap.md`.
@@ -86,7 +86,7 @@ Soporte del flujo Must (también Must): `features/movimiento-e-interaccion.md`,
 (`features/dificultad-progresiva.md`), opciones de volumen (`features/opciones-de-volumen.md`),
 textos en gallego (`features/textos-gallego.md`), tutorial breve (`features/tutorial-breve.md`).
 
-**Could**: barro, gaiteros (`features/eventos-de-entorno.md`, marcada Could), 2 personajes con
+**Could**: barro, gaiteros (`features/eventos-de-entorno.md`), 2 personajes con
 habilidad, lavado de platos.
 
 **Won't (alpha)**: mapa de niveles, online, 4 personajes, NPC animados, móvil; además cinemáticas,
@@ -94,7 +94,7 @@ niveles de sal/aceite «poco/mucho», combate entre jugadores, bebidas (`DrinkSO
 
 ## 7. Presentación y tono
 Cartoon low-poly colorido; toldo blanco, madera, platos de madera. Humor satírico sobre la
-globalización (franquía vs. pulpeiros tradicionales). Textos de la alpha en castellano; galego como Could.
+globalización (franquía vs. pulpeiros tradicionales). Textos de la alpha en castellano; galego como Should (`features/textos-gallego.md`).
 
 ## 8. Erratas corregidas respecto a `main.tex` (D7)
 1. **«Se permite atacar enemigos con un arma o golpe cuerpo a cuerpo»** (tabla de mecánicas,
@@ -110,18 +110,29 @@ globalización (franquía vs. pulpeiros tradicionales). Textos de la alpha en ca
 7. **Plataforma/motor «Unity 6, C#»**: ahora Godot 4.7.2 y GDScript (decisiones técnicas T1–T2).
 8. **Pimentón «pementa, … etc.»** en tabla de mecánicas: condimentos cerrados en D4.
 
-## 9. Preguntas abiertas
-Las que el roadmap ya responde (paciencia 40–90 s, regeneración al caducar, mando y cambio como Must,
-gaiteros Could, olla que se pasa Should) se han retirado.
+## 9. Reglas vigentes de paridad con Unity
+Defaults del prototipo que se mantienen (no son preguntas abiertas). Cualquier cambio va a la sección 10.
+- **Caja errónea**: al entregar una caja que no coincide, se conserva en el puesto/mano y no hay penalización
+  (`OrderStand`); solo la comanda caducada penaliza.
+- **Olla**: admite una cocción a la vez (`KitchenStation`, `isBusy`).
+- **Asignación por puesto**: cada comanda pertenece a un puesto de entrega y solo se valida ahí (`OrderSystem`, `deliverySlotId`).
+- **Reposición inmediata**: al entregar con éxito (o caducar) se pide otra comanda para ese puesto en el acto
+  (`OrderTicketUIController.OnClearTicket`), hasta `max_active_orders` = 4.
+- **Corte**: por pulsación, con `fill_per_press` según el tipo de caja (Small 0,2 / Medium 0,1 / Large 0,05).
+- **Cocción**: sin quemado (el quemado es el Should `olla-que-se-pasa`).
 
+## 10. Propuestas para gate humano
+Cambios sobre los defaults de arriba que NO rigen hasta aprobarse:
+1. Penalizar o devolver la caja errónea.
+2. Olla con capacidad > 1.
+3. Asignar la comanda a cualquier puesto.
+4. Corte por «mantener pulsado» en vez de pulsar.
+
+## 11. Preguntas abiertas
 1. **Estrellas**: umbrales exactos de recaudación para 1/2/3 estrellas (provisional en
    `entrega-y-puntuacion.md`; validar jugando).
-2. **Caja mal entregada**: ¿se devuelve al jugador, se descarta o penaliza?
-3. **Cachelos**: ¿se cuecen en la olla o son ingrediente listo? (el prototipo no los modela; se asume listo).
-4. **Olla**: ¿admite un pulpo a la vez (prototipo) o varios?
-5. **Puestos de entrega**: ¿cuántos y la comanda se asigna a un puesto (prototipo) o a cualquiera?
-6. **Corte: pulsar o mantener**: el prototipo llena la caja con cada pulsación (20 pulsaciones). ¿Se
-   cambia a mantener pulsado? Hasta decidir, rige «pulsar» (paridad).
-7. **Modo individual**: ¿cambio con tecla fija o al personaje más cercano al objetivo?
-8. **Modelos Pandazole (D6)**: ¿se usan o se sustituyen? Afecta a asset-pipeline, no a las features.
-9. **Dificultad por fases**: ¿intervalo decreciente o más comandas simultáneas?
+2. **Cachelos**: ¿se cuecen en la olla o son ingrediente listo? (el prototipo no los modela; se asume listo).
+3. **Modo individual**: ¿cambio con tecla fija o al personaje más cercano al objetivo?
+4. **Modelos Pandazole (D6)**: ¿se usan o se sustituyen? Afecta a asset-pipeline, no a las features.
+5. **Fases de dificultad**: valores provisionales de `dificultad-progresiva.md` (límites de fase, puestos activos, `max_time`) a validar en playtest.
+6. **Número de puestos de entrega** del nivel: 4 asumidos por `max_active_orders`; confirmar con el inventario (PUL-001).

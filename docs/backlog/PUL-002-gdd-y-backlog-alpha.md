@@ -35,17 +35,17 @@ Alcance según la propuesta: Must/Should/Could/Won't.
 ## Evidence
 
 - AC1: `docs/design/gdd.md` §3 tabla D1–D7 (cada una enlaza a su feature) y §8 erratas.
-- AC2: 8 Must en `docs/design/features/` (movimiento-e-interaccion, corte-pulpo, coccion-pulpo,
-  condimentacion, comandas, entrega-y-puntuacion, partida-5-min, jugadores-y-cambio), con 4–8 AC
-  Given/When/Then medibles cada una. Además 4 Should (dificultad-progresiva, audio-y-fx,
-  eventos-de-entorno, mando-y-reasignacion).
-- AC3: `gdd.md` §9 Preguntas abiertas (9).
-- `tools/verify.sh`: verde (GUT 2/2, smoke OK).
-- Nota: la «propuesta» MoSCoW no estaba en el repo; los 8 Must se derivaron del bucle de juego.
-  El producer debe validar la selección. Los números (tiempos, euros, umbrales) son provisionales.
-
-## Revisión del producer (2.ª ronda)
-- Rebase sobre `jrmougan/agentica-migracion-godot-alpha`; `roadmap.md` es la fuente del MoSCoW.
-- Flujo corregido: pulpo crudo → olla → pulpo cocido → corte sobre caja (pulsar, 20 pulsaciones/caja) → condimentos → entrega (gdd §2/§4, corte-pulpo, coccion-pulpo).
-- MoSCoW alineado (gdd §6): Must incluye mando Xbox, feedback mínimo, menú principal y paridad Unity (nuevas: `paridad-unity.md`, `menu-principal.md`); gaiteros → Could; Should = olla que se pasa, dificultad por fases, volumen, gallego, tutorial (nuevas fichas de feature).
-- Preguntas abiertas depuradas; «pulsar vs mantener» queda como pregunta nº 6.
+- AC2: los **9 Must del roadmap** («Alcance aprobado») trazados a features en `gdd.md` §6:
+  1 paridad → `paridad-unity`; 2/3/8 → `comandas` (ciclo, paciencia, iconos); 4 → `entrega-y-puntuacion`;
+  5 → `jugadores-y-cambio` + `mando-y-reasignacion`; 6 → `jugadores-y-cambio`; 7 → `menu-principal`;
+  D4 → `condimentacion`; 9 → `audio-y-fx`. Soporte Must: `movimiento-e-interaccion`, `coccion-pulpo`,
+  `corte-pulpo`, `partida-5-min`. Todas con ≥ 2 AC medibles en Given/When/Then.
+- **5 Should**: `olla-que-se-pasa`, `dificultad-progresiva`, `opciones-de-volumen`, `textos-gallego`, `tutorial-breve`.
+  Could: `eventos-de-entorno` (gaiteros).
+- AC3: `gdd.md` §11 Preguntas abiertas (6); §9 reglas vigentes de paridad; §10 propuestas para gate humano.
+- Revisiones: flujo corregido (pulpo crudo → olla → cocido → corte → condimentos → entrega); 2.ª ronda (codex)
+  aplicada: reposición inmediata, `fill_per_press` por tipo de caja, HUD de recaudación, precedencia
+  entrega/caducidad, variantes de cocción, fases de dificultad, galego Should, volumen movido al Should.
+- `tools/verify.sh`: verde.
+- Los números (tiempos, euros, umbrales, fases) son provisionales. Esta ficha está fuera del `owns`
+  estricto; la actualización de Evidence la autorizó el producer.
