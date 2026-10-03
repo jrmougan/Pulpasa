@@ -38,5 +38,9 @@ Fase 7 de M0, `scene-tree.md` §4 (pausa, game over, panel común). Overlays den
 - [ ] AC4 Capturas de pausa y game over en `docs/evidence/PUL-021/`. `tools/verify.sh` en verde, `check_owns` limpio.
 
 ## Plan
+- Componer los dos overlays con `menu_panel`, tema compartido y foco nativo circular.
+- Escuchar pausa y ciclo de ronda en EventBus; delegar navegación a GameState.
+- AC1/AC3: input real, congelación y navegación en test_pause_menu; AC2/AC3: tramos y foco en test_game_over.
+- Sandbox reproducible, capturas MCP, verify completo y control de owns.
 
 ## Evidence

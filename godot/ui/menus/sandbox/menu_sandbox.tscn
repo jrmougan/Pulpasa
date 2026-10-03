@@ -1,0 +1,73 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="1_dy4xm"]
+[ext_resource type="Script" path="res://ui/menus/sandbox/menu_sandbox.gd" id="2_mslcq"]
+[ext_resource type="PackedScene" path="res://ui/menus/pause_menu.tscn" id="3_qber2"]
+[ext_resource type="Script" path="res://ui/menus/pause_menu.gd" id="4_fpsuq"]
+[ext_resource type="PackedScene" path="res://ui/menus/game_over.tscn" id="5_twysa"]
+[ext_resource type="Script" path="res://ui/menus/game_over.gd" id="6_nuskd"]
+
+[node name="MenuSandbox" type="Control" unique_id=1360572571]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_dy4xm")
+script = ExtResource("2_mslcq")
+
+[node name="Background" type="ColorRect" parent="." unique_id=820199236]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.3254902, 0.40392157, 0.36078432, 1)
+
+[node name="Center" type="CenterContainer" parent="." unique_id=286906921]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Content" type="VBoxContainer" parent="Center" unique_id=1343737620]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Heading" type="Label" parent="Center/Content" unique_id=1654895165]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Pulpasa · Romería"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Hint" type="Label" parent="Center/Content" unique_id=1852460329]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Esc / Start: pausa · Flechas / cruceta: elegir · A / Intro: aceptar"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="StartButton" type="Button" parent="Center/Content" unique_id=876590128]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+
+[node name="Overlays" type="CanvasLayer" parent="." unique_id=28310221]
+
+[node name="PauseMenu" type="Control" parent="Overlays" unique_id=1374802359 instance=ExtResource("3_qber2")]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("4_fpsuq")
+
+[node name="GameOver" type="Control" parent="Overlays" unique_id=1599561603 instance=ExtResource("5_twysa")]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("6_nuskd")

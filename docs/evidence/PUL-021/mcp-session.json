@@ -1,0 +1,269 @@
+[
+  {
+    "name": "run_project",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Godot project started and MCP bridge is ready (port 40627).\n- Runtime tools (take_screenshot, simulate_input, get_ui_elements, run_script) are available now\n- Use get_debug_output to check runtime output and errors\n- Call stop_project when done\n\nSecurity scan findings:\n- autoload/round_manager.gd:68 Callable - Callable(target, \"method\") constructs runtime dynamic dispatch that bypasses static analysis\n- ui/menus/sandbox/menu_sandbox.gd:4 preload - preload() with a literal path can run _init code in the loaded resource\n- ui/menus/sandbox/menu_sandbox.gd:5 preload - preload() with a literal path can run _init code in the loaded resource\n- Elicitation disabled (GODOT_MCP_DISABLE_ELICITATION); launching without user confirmation."
+        }
+      ]
+    }
+  },
+  {
+    "name": "simulate_input",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"success\":true,\"results\":[{\"changes\":{\"appeared\":[\"/root/MenuSandbox/Overlays/PauseMenu\"],\"focus\":\"/root/MenuSandbox/Overlays/PauseMenu/MenuPanel/Center/Card/Content/PrimaryButton\"},\"elapsed_ms\":43,\"focus\":\"/root/MenuSandbox/Overlays/PauseMenu/MenuPanel/Center/Card/Content/PrimaryButton\",\"frame\":2,\"index\":0,\"ok\":true,\"type\":\"key\"}]}"
+        }
+      ],
+      "structuredContent": {
+        "success": true,
+        "results": [
+          {
+            "changes": {
+              "appeared": [
+                "/root/MenuSandbox/Overlays/PauseMenu"
+              ],
+              "focus": "/root/MenuSandbox/Overlays/PauseMenu/MenuPanel/Center/Card/Content/PrimaryButton"
+            },
+            "elapsed_ms": 43,
+            "focus": "/root/MenuSandbox/Overlays/PauseMenu/MenuPanel/Center/Card/Content/PrimaryButton",
+            "frame": 2,
+            "index": 0,
+            "ok": true,
+            "type": "key"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "simulate_input",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"success\":true,\"results\":[{\"elapsed_ms\":66,\"frame\":3,\"index\":0,\"ok\":true,\"type\":\"wait\"}]}"
+        }
+      ],
+      "structuredContent": {
+        "success": true,
+        "results": [
+          {
+            "elapsed_ms": 66,
+            "frame": 3,
+            "index": 0,
+            "ok": true,
+            "type": "wait"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "take_screenshot",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"responseMode\":\"path_only\",\"path\":\"/home/jeromo/orca/workspaces/Pulpasa/pul-021/godot/.mcp/godot-runtime/screenshots/screenshot_1791061969_60016.png\",\"size\":{\"width\":1280,\"height\":720}}"
+        }
+      ],
+      "structuredContent": {
+        "responseMode": "path_only",
+        "path": "/home/jeromo/orca/workspaces/Pulpasa/pul-021/godot/.mcp/godot-runtime/screenshots/screenshot_1791061969_60016.png",
+        "size": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    }
+  },
+  {
+    "name": "simulate_input",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"success\":true,\"results\":[{\"elapsed_ms\":43,\"focus\":\"/root/MenuSandbox/Overlays/PauseMenu/MenuPanel/Center/Card/Content/PrimaryButton\",\"frame\":2,\"index\":0,\"ok\":true,\"type\":\"key\"},{\"changes\":{\"disappeared\":[\"/root/MenuSandbox/Overlays/PauseMenu\"],\"focus\":\"/root/MenuSandbox/Center/Content/StartButton\"},\"elapsed_ms\":85,\"focus\":\"/root/MenuSandbox/Center/Content/StartButton\",\"frame\":4,\"index\":1,\"ok\":true,\"type\":\"key\"},{\"elapsed_ms\":127,\"focus\":\"/root/MenuSandbox/Center/Content/StartButton\",\"frame\":6,\"index\":2,\"ok\":true,\"type\":\"key\"},{\"changes\":{\"appeared\":[\"/root/MenuSandbox/Overlays/GameOver\"],\"disappeared\":[\"/root/MenuSandbox/Center/Content/StartButton\"],\"focus\":\"/root/MenuSandbox/Overlays/GameOver/MenuPanel/Center/Card/Content/PrimaryButton\"},\"elapsed_ms\":2436,\"frame\":118,\"index\":3,\"ok\":true,\"type\":\"wait\"}]}"
+        }
+      ],
+      "structuredContent": {
+        "success": true,
+        "results": [
+          {
+            "elapsed_ms": 43,
+            "focus": "/root/MenuSandbox/Overlays/PauseMenu/MenuPanel/Center/Card/Content/PrimaryButton",
+            "frame": 2,
+            "index": 0,
+            "ok": true,
+            "type": "key"
+          },
+          {
+            "changes": {
+              "disappeared": [
+                "/root/MenuSandbox/Overlays/PauseMenu"
+              ],
+              "focus": "/root/MenuSandbox/Center/Content/StartButton"
+            },
+            "elapsed_ms": 85,
+            "focus": "/root/MenuSandbox/Center/Content/StartButton",
+            "frame": 4,
+            "index": 1,
+            "ok": true,
+            "type": "key"
+          },
+          {
+            "elapsed_ms": 127,
+            "focus": "/root/MenuSandbox/Center/Content/StartButton",
+            "frame": 6,
+            "index": 2,
+            "ok": true,
+            "type": "key"
+          },
+          {
+            "changes": {
+              "appeared": [
+                "/root/MenuSandbox/Overlays/GameOver"
+              ],
+              "disappeared": [
+                "/root/MenuSandbox/Center/Content/StartButton"
+              ],
+              "focus": "/root/MenuSandbox/Overlays/GameOver/MenuPanel/Center/Card/Content/PrimaryButton"
+            },
+            "elapsed_ms": 2436,
+            "frame": 118,
+            "index": 3,
+            "ok": true,
+            "type": "wait"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "take_screenshot",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"responseMode\":\"path_only\",\"path\":\"/home/jeromo/orca/workspaces/Pulpasa/pul-021/godot/.mcp/godot-runtime/screenshots/screenshot_1791061972_1218.png\",\"size\":{\"width\":1280,\"height\":720}}"
+        }
+      ],
+      "structuredContent": {
+        "responseMode": "path_only",
+        "path": "/home/jeromo/orca/workspaces/Pulpasa/pul-021/godot/.mcp/godot-runtime/screenshots/screenshot_1791061972_1218.png",
+        "size": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    }
+  },
+  {
+    "name": "simulate_input",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"success\":true,\"results\":[{\"elapsed_ms\":41,\"focus\":\"/root/MenuSandbox/Overlays/GameOver/MenuPanel/Center/Card/Content/PrimaryButton\",\"frame\":2,\"index\":0,\"ok\":true,\"type\":\"key\"}]}"
+        }
+      ],
+      "structuredContent": {
+        "success": true,
+        "results": [
+          {
+            "elapsed_ms": 41,
+            "focus": "/root/MenuSandbox/Overlays/GameOver/MenuPanel/Center/Card/Content/PrimaryButton",
+            "frame": 2,
+            "index": 0,
+            "ok": true,
+            "type": "key"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "take_screenshot",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"responseMode\":\"path_only\",\"path\":\"/home/jeromo/orca/workspaces/Pulpasa/pul-021/godot/.mcp/godot-runtime/screenshots/screenshot_1791061972_24923.png\",\"size\":{\"width\":1280,\"height\":720}}"
+        }
+      ],
+      "structuredContent": {
+        "responseMode": "path_only",
+        "path": "/home/jeromo/orca/workspaces/Pulpasa/pul-021/godot/.mcp/godot-runtime/screenshots/screenshot_1791061972_24923.png",
+        "size": {
+          "width": 1280,
+          "height": 720
+        }
+      }
+    }
+  },
+  {
+    "name": "get_debug_output",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"output\":[\"Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\",\"\",\"Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3090\",\"\",\"\",\"\",\"McpBridge: Listening on TCP port 40627\",\"\"],\"errors\":[\"WARNING: Failed to create wd.xic as the input method or its xim server may not have started yet.\",\"     at: _create_xic (platform/linuxbsd/x11/display_server_x11.cpp:6347)\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"],\"running\":true}"
+        }
+      ],
+      "structuredContent": {
+        "output": [
+          "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+          "",
+          "Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3090",
+          "",
+          "",
+          "",
+          "McpBridge: Listening on TCP port 40627",
+          ""
+        ],
+        "errors": [
+          "WARNING: Failed to create wd.xic as the input method or its xim server may not have started yet.",
+          "     at: _create_xic (platform/linuxbsd/x11/display_server_x11.cpp:6347)",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "running": true
+      }
+    }
+  },
+  {
+    "name": "stop_project",
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"message\":\"Godot project stopped\",\"mode\":\"spawned\",\"externalProcessPreserved\":false,\"alreadyExited\":false,\"finalOutput\":[\"McpBridge: Listening on TCP port 40627\"],\"finalErrors\":[\"WARNING: Failed to create wd.xic as the input method or its xim server may not have started yet.\",\"     at: _create_xic (platform/linuxbsd/x11/display_server_x11.cpp:6347)\"]}"
+        }
+      ],
+      "structuredContent": {
+        "message": "Godot project stopped",
+        "mode": "spawned",
+        "externalProcessPreserved": false,
+        "alreadyExited": false,
+        "finalOutput": [
+          "McpBridge: Listening on TCP port 40627"
+        ],
+        "finalErrors": [
+          "WARNING: Failed to create wd.xic as the input method or its xim server may not have started yet.",
+          "     at: _create_xic (platform/linuxbsd/x11/display_server_x11.cpp:6347)"
+        ]
+      }
+    }
+  }
+]
