@@ -1,0 +1,79 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/terrain.tres" id="1_wgy1n"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/table_square.tscn" id="2_5v8fb"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/table_medium.tscn" id="3_kg1gr"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/table_long.tscn" id="4_jk2bp"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_aa7sl"]
+size = Vector3(47.32295, 0.2, 42.286316)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_xtlaw"]
+size = Vector2(47.32295, 42.286316)
+
+[node name="KitchenLayout" type="Node3D" unique_id=1599914524]
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1384352300]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42, 0, -1.52)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1256558842]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+shape = SubResource("BoxShape3D_aa7sl")
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor" unique_id=38978639]
+material_override = ExtResource("1_wgy1n")
+mesh = SubResource("PlaneMesh_xtlaw")
+
+[node name="Tables" type="Node3D" parent="." unique_id=85598000]
+
+[node name="RightTable1" parent="Tables" unique_id=1966669628 instance=ExtResource("2_5v8fb")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.967, 0.007, -3.846)
+
+[node name="LeftTable1" parent="Tables" unique_id=1191492867 instance=ExtResource("2_5v8fb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.357, 0.007, 4.666)
+
+[node name="LeftTable2" parent="Tables" unique_id=1348263698 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6.665, 0.002, -2.31)
+
+[node name="LeftTable3" parent="Tables" unique_id=498922233 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6.666, 0.002, 3.08)
+
+[node name="RightTable2" parent="Tables" unique_id=1447346978 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.276, 0.002, -0.47)
+
+[node name="RightTable3" parent="Tables" unique_id=1230601149 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.276, 0.002, -2.26)
+
+[node name="LeftTable4" parent="Tables" unique_id=177546839 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6.666, 0.002, 1.29)
+
+[node name="TopTable1" parent="Tables" unique_id=1144057626 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.55, 0, -4.016)
+
+[node name="TopTable2" parent="Tables" unique_id=1152230571 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -2.03, 0, -4.016)
+
+[node name="LeftTable5" parent="Tables" unique_id=818348665 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6.665, 0.002, -0.501)
+
+[node name="RightTable4" parent="Tables" unique_id=1900553206 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.275, 0.002, 3.13)
+
+[node name="RightTable5" parent="Tables" unique_id=908764865 instance=ExtResource("2_5v8fb")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.976, 0.007, 4.704)
+
+[node name="LeftTable6" parent="Tables" unique_id=638806102 instance=ExtResource("2_5v8fb")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -6.366, 0.007, -3.884)
+
+[node name="TopTable3" parent="Tables" unique_id=1314550972 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.238, 0, -4.016)
+
+[node name="RightTable6" parent="Tables" unique_id=832975543 instance=ExtResource("3_kg1gr")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7.275, 0.002, 1.321)
+
+[node name="FrontTable1" parent="Tables" unique_id=936947317 instance=ExtResource("4_jk2bp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.47, 0, 4.966)
+
+[node name="FrontTable2" parent="Tables" unique_id=1757886845 instance=ExtResource("4_jk2bp")]
+transform = Transform3D(1.16, 0, 0, 0, 1, 0, 0, 0, 1, 4.74, 0, 4.976)

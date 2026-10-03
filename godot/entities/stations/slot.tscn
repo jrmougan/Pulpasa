@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_dypjb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_05087"]
-size = Vector3(1.37, 1.14, 1.37)
+size = Vector3(0.43, 0.1, 0.475)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_le6nm"]
 size = Vector2(0.6, 0.6)
@@ -17,7 +17,7 @@ collision_mask = 0
 script = ExtResource("1_kt2by")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1185679354]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.57, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09, 0)
 shape = SubResource("BoxShape3D_05087")
 
 [node name="Model" type="Node3D" parent="." unique_id=1966669628 instance=ExtResource("2_lfw2b")]

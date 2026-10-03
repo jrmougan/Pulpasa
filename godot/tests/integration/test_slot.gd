@@ -234,3 +234,21 @@ func test_ac2_slot_scene_fulfils_interaction_contract() -> void:
 	assert_true(_slot.is_in_group(&"interactable"))
 	assert_eq(InteractionContract.scan_tree(_slot), [])
 	assert_eq(_slot.collision_layer, INTERACTABLE_LAYER)
+
+
+func test_pul024_interactable_shape_matches_unity_slot_and_hugs_the_anchor() -> void:
+	# `InteractableSlot.prefab`: collider 0,43 × 0,1 × 0,475 a la altura del ancla. Una caja de
+	# 1,37 m frenaba al jugador ~0,7 m antes de la estantería (roadmap, fase 8).
+	var shape_node: CollisionShape3D = _slot.get_node("CollisionShape3D")
+	var box: BoxShape3D = shape_node.shape as BoxShape3D
+	assert_lte(box.size.x, 0.5)
+	assert_lte(box.size.z, 0.5)
+	assert_lte(box.size.y, 0.2)
+	var anchor: Marker3D = _slot.get_node("%Anchor")
+	assert_almost_eq(shape_node.position.y, anchor.position.y - box.size.y / 2.0, 0.06)
+
+
+func test_pul024_standalone_slot_table_still_blocks_on_world_layer() -> void:
+	var bodies: Array[Node] = _slot.get_node("Model").find_children("*", "StaticBody3D")
+	assert_eq(bodies.size(), 1)
+	assert_eq((bodies[0] as StaticBody3D).collision_layer, 1)
