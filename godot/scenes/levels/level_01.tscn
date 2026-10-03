@@ -66,6 +66,7 @@ items_root = NodePath("../../Items")
 [node name="Items" type="Node3D" parent="." unique_id=1698734200]
 
 [node name="CameraRig" parent="." unique_id=697112619 instance=ExtResource("12_uujh0")]
+transform = Transform3D(1, 0, 0, 0, 0.7880108, 0.6156615, 0, -0.6156615, 0.7880108, 0.7, 7.49, 5.86)
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=675094657]
 

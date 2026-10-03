@@ -5,10 +5,10 @@
 [ext_resource type="Script" path="res://ui/tickets/order_ticket.gd" id="2_ahx7y"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u775v"]
-content_margin_left = 22.0
-content_margin_top = 18.0
-content_margin_right = 22.0
-content_margin_bottom = 18.0
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
 bg_color = Color(0.15686275, 0.22745098, 0.22745098, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
@@ -24,7 +24,7 @@ width = 256
 height = 8
 
 [node name="OrderTicket" type="PanelContainer" unique_id=2068974431]
-custom_minimum_size = Vector2(270, 240)
+custom_minimum_size = Vector2(236, 245)
 mouse_filter = 2
 theme = ExtResource("1_oad86")
 theme_override_styles/panel = SubResource("StyleBoxFlat_u775v")
@@ -33,13 +33,13 @@ script = ExtResource("2_ahx7y")
 [node name="Content" type="VBoxContainer" parent="." unique_id=1793628071]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 10
 
 [node name="OrderId" type="Label" parent="Content" unique_id=587401737]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9490196, 0.70980394, 0.40784314, 1)
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 26
 
 [node name="Entry" type="HBoxContainer" parent="Content" unique_id=241350231 instance=ExtResource("1_x4wjf")]
 unique_name_in_owner = true
