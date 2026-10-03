@@ -19,6 +19,8 @@ Tomadas el 2026-10-03 por el responsable del proyecto. Fuente de verdad frente a
 | D12 | Asignación de comandas | Cada comanda va a su puesto, como en Unity | Se rechaza «cualquier puesto» |
 | D13 | Corte | Pulsación repetida, como en Unity | Se rechaza «mantener pulsado» |
 | D14 | 3D o 2D | 3D con cámara ortográfica fija | ADR-005 aceptado. La capa común sigue siendo independiente de la dimensión |
+| D15 | Modelos de Pandazole | No se usan en M0: placeholders con primitivas | Olla, fogón, nevera y mesas. Sustitución definitiva en una ficha de arte posterior |
+| D16 | Assets con licencia sin confirmar | Solo se usa lo confirmado | Lo dudoso se sustituye por alternativas libres (CC0/OFL) o primitivas. Registro en `docs/assets/licenses.md` |
 
 ## Decisiones técnicas
 
