@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-012, PUL-014]
 orca_task: null
 unity_sources: [Assets/Scripts/Interaction/**, Assets/Scripts/Game/InteractableSlot.cs, Assets/Art/Materials/HighlightTexture.mat]
-owns: [godot/components/interaction_detector.gd, godot/components/interaction_detector.gd.uid, godot/components/highlightable.gd, godot/components/highlightable.gd.uid, godot/shaders/**, godot/entities/stations/slot.tscn, godot/entities/stations/slot.gd, godot/entities/stations/slot.gd.uid, godot/entities/player/player.tscn, godot/scenes/sandbox/**, godot/tests/integration/test_interaction_detector.gd, godot/tests/integration/test_interaction_detector.gd.uid, godot/tests/integration/test_slot.gd, godot/tests/integration/test_slot.gd.uid, docs/evidence/PUL-015/**]
+owns: [godot/resources/player_config.gd, godot/data/config/player_config.tres, godot/tests/unit/test_data_*.gd, godot/components/interaction_detector.gd, godot/components/interaction_detector.gd.uid, godot/components/highlightable.gd, godot/components/highlightable.gd.uid, godot/shaders/**, godot/entities/stations/slot.tscn, godot/entities/stations/slot.gd, godot/entities/stations/slot.gd.uid, godot/entities/player/player.tscn, godot/scenes/sandbox/**, godot/tests/integration/test_interaction_detector.gd, godot/tests/integration/test_interaction_detector.gd.uid, godot/tests/integration/test_slot.gd, godot/tests/integration/test_slot.gd.uid, docs/evidence/PUL-015/**]
 touches_scenes: [godot/entities/player/player.tscn, godot/entities/stations/slot.tscn, godot/scenes/sandbox/player_sandbox.tscn]
 ---
 
@@ -15,13 +15,14 @@ touches_scenes: [godot/entities/player/player.tscn, godot/entities/stations/slot
 Fase 5 de M0, **capa específica 3D** (`scene-tree.md` §3; ADR-003 §3).
 
 ## Change
-1. `components/interaction_detector.gd` (`Area3D`, máscara `interactable`, radio de `PlayerConfig`):
+1. Añade a `PlayerConfig` (+ `.tres`) los parámetros de puntuación que `InteractionScoring.pick_best` recibe: cono 30°, distancia mínima 0,7 m, bonus de cocina 1,0 (valores de `InteractionDetector.cs`).
+2. `components/interaction_detector.gd` (`Area3D`, máscara `interactable`, radio de `PlayerConfig`):
    delega en `InteractionScoring` y emite `target_changed(target)`. Uno por jugador (B7).
-2. `components/highlightable.gd` + `shaders/highlight_outline.gdshader` (inverted hull en
+3. `components/highlightable.gd` + `shaders/highlight_outline.gdshader` (inverted hull en
    `material_overlay`): se activa cuando el objeto es el objetivo. Sin `EmissionHighlighter` (B3).
-3. `entities/stations/slot.{tscn,gd}`: mesa/hueco que guarda un objeto alineado por su `%AnchorPoint`
+4. `entities/stations/slot.{tscn,gd}`: mesa/hueco que guarda un objeto alineado por su `%AnchorPoint`
    (sustituye `InteractableSlot` + `SnappingHelper`).
-4. Añade `%InteractionDetector` e `%InteractionComponent` a `player.tscn` y un par de slots y objetos
+5. Añade `%InteractionDetector` e `%InteractionComponent` a `player.tscn` y un par de slots y objetos
    al sandbox.
 
 ## Constraints
