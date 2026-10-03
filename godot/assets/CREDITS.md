@@ -4,7 +4,7 @@ Detalle por fichero en `docs/assets/licenses.md` (y `licenses-pul-009.md` hasta 
 
 ## Atribución obligatoria
 
-- **Iconos de Font Awesome Free** (`textures/icons/pepper-hot-solid.svg`): «Font Awesome Free, CC BY 4.0» — https://fontawesome.com/license/free
+- **Line Awesome «pepper-hot-solid»** (`textures/icons/pepper-hot-solid.svg`) por Icons8, licencia MIT (alternativa Good Boy License) — https://github.com/icons8/line-awesome/blob/master/svg/pepper-hot-solid.svg ; texto de la licencia en `textures/icons/LICENSE-line-awesome.md`.
 - **Iconos de Game-icons.net** (`textures/icons/octopus.svg`, `salt.svg`, `selection.svg`), CC BY 3.0, modificados (se elimina el fondo negro):
   - «Octopus» y «Salt shaker» por Lorc — https://game-icons.net/1x1/lorc/octopus.html, https://game-icons.net/1x1/lorc/salt-shaker.html
   - «Crosshair» por Delapouite — https://game-icons.net/1x1/delapouite/crosshair.html

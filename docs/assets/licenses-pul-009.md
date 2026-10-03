@@ -10,7 +10,7 @@ Mismo formato que `licenses.md`; el producer lo consolida al fusionar. Los SFX d
 | https://kenney.nl/assets/interface-sounds (`confirmation_002.ogg`) | `assets/audio/delivery_ok.ogg` | CC0 | No |
 | https://kenney.nl/assets/interface-sounds (`error_005.ogg`) | `assets/audio/delivery_error.ogg` | CC0 | No |
 | `Plugins/TextMesh Pro/Fonts/LiberationSans.ttf` y su `OFL.txt` | `assets/fonts/LiberationSans.ttf`, `assets/fonts/OFL.txt` | SIL OFL 1.1 | Incluir licencia OFL |
-| `Art/Icons/pepper-hot-solid.svg` (Font Awesome Free, https://fontawesome.com/license/free) | `assets/textures/icons/pepper-hot-solid.svg` | CC BY 4.0 | Sí: «Font Awesome Free, CC BY 4.0» |
+| `Art/Icons/pepper-hot-solid.svg` = Line Awesome «pepper-hot-solid» por Icons8 (https://github.com/icons8/line-awesome/blob/master/svg/pepper-hot-solid.svg; licencia https://github.com/icons8/line-awesome/blob/master/LICENSE.md) | `assets/textures/icons/pepper-hot-solid.svg`, `assets/textures/icons/LICENSE-line-awesome.md` | MIT (o Good Boy License) | Sí: autor Icons8, obra Line Awesome, texto de licencia incluido |
 | https://game-icons.net/1x1/lorc/octopus.html (Lorc) sustituye a `Art/Icons/octopus` | `assets/textures/icons/octopus.svg` | CC BY 3.0 | Sí: «Octopus» por Lorc, game-icons.net |
 | https://game-icons.net/1x1/lorc/salt-shaker.html (Lorc) sustituye a `Art/Icons/salt` | `assets/textures/icons/salt.svg` | CC BY 3.0 | Sí: «Salt shaker» por Lorc, game-icons.net |
 | https://game-icons.net/1x1/delapouite/crosshair.html (Delapouite) sustituye a `Art/Icons/selection` | `assets/textures/icons/selection.svg` | CC BY 3.0 | Sí: «Crosshair» por Delapouite, game-icons.net |

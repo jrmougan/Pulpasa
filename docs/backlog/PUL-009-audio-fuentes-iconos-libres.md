@@ -41,3 +41,4 @@ Fase 3 de M0 (audio, fuentes, iconos) bajo D16: solo licencias confirmadas.
 
 Evidence (tools/verify.sh): gdformat, gdlint, import OK; GUT 8 scripts, 37/37 tests passed (incl. `test_assets_audio_ui.gd`); smoke OK; `✓ verify OK`.
 Notas: sin captura visual (solo audio/tema, sin escenas). Hervor: `loop=true` en `boiling_water_loop.ogg.import`. Iconos octopus/salt/selection de game-icons.net (CC BY 3.0).
+Corrección: el icono pimiento es Line Awesome (Icons8, MIT), no Font Awesome; verify OK.
