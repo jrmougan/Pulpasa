@@ -1,11 +1,11 @@
 ---
 id: PUL-024
 title: Montar level_01 como el nivel de Unity con la UI integrada
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: []
-orca_task: null
+orca_task: task_610f4363338a
 unity_sources: [Assets/Scenes/Levels/Level_01.unity, Assets/Prefabs/**, Assets/Settings/**]
 owns: [godot/scenes/levels/**, godot/entities/environment/**, godot/entities/stations/slot.tscn, godot/tests/integration/test_level_01.gd, godot/tests/integration/test_level_01.gd.uid, godot/tests/integration/test_slot.gd, docs/evidence/PUL-024/**]
 touches_scenes: [godot/scenes/levels/level_01.tscn, godot/entities/environment/environment.tscn, godot/entities/environment/kitchen_layout.tscn, godot/entities/stations/slot.tscn]

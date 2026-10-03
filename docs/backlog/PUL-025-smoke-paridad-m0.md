@@ -4,7 +4,7 @@ title: Pasar el smoke checklist de paridad M0 en builds Linux y Windows
 status: ready
 milestone: M0
 role: qa-tester
-deps: [PUL-024, PUL-023]
+deps: [PUL-024, PUL-023, PUL-026]
 orca_task: null
 unity_sources: [Assets/Scenes/**]
 owns: [godot/tests/integration/test_parity_smoke.gd, godot/tests/integration/test_parity_smoke.gd.uid, docs/evidence/PUL-025/**, docs/design/m0-gate.md]
