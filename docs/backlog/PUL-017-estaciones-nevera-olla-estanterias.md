@@ -18,7 +18,7 @@ Fase 6 de M0, estaciones (`scene-tree.md` §3 `entities/stations/`).
 1. `item_spawner.gd` genérico (`@export scene`, `@export data`): instancia el objeto **en la mano**
    del actor si está vacía (ADR-003 §6). Sustituye `OctopusSpawner` y el modo spawner de `Box`.
 2. `octopus_storage.tscn` (nevera placeholder) con el spawner de pulpo.
-3. `kitchen.tscn` + `cooking_station.gd`: acepta un pulpo crudo de la mano, lo cuece en
+3. `kitchen.tscn` (raíz en los grupos `interactable` y `kitchen`, ADR-003 §4) + `cooking_station.gd`: acepta un pulpo crudo de la mano, lo cuece en
    `cook_time` (`IngredientData`, 5 s), barra de progreso y bucle de hervor (PUL-009), y lo devuelve
    cocido al interactuar con mano vacía. Capacidad 1 (D9 es M1). Sin quemado (M1). Pausa congela el temporizador.
 4. `box_shelf.tscn` (Mueblecajas de PUL-008) con tres spawners S/M/L y `spice_shelf.tscn` con tres
