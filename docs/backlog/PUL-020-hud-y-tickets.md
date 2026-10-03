@@ -1,11 +1,11 @@
 ---
 id: PUL-020
 title: Crear el HUD y el panel de tickets de comandas
-status: ready
+status: done
 milestone: M0
 role: ui-engineer
 deps: []
-orca_task: null
+orca_task: task_8a867ea20d53
 unity_sources: [Assets/Scripts/UI/ProductivityUIDisplay.cs, Assets/Scripts/UI/OrderTicket.cs, Assets/Scripts/UI/BoxEntryUI.cs, Assets/Scripts/Game/OrderTicketUIController.cs, Assets/Prefabs/UI/**, Assets/Scenes/Levels/Level_01.unity]
 owns: [godot/ui/hud/**, godot/ui/tickets/**, godot/ui/sandbox/hud_sandbox.tscn, godot/tests/integration/test_hud.gd, godot/tests/integration/test_hud.gd.uid, godot/tests/integration/test_order_tickets.gd, godot/tests/integration/test_order_tickets.gd.uid, docs/evidence/PUL-020/**]
 touches_scenes: [godot/ui/hud/hud.tscn, godot/ui/tickets/order_tickets_panel.tscn, godot/ui/tickets/order_ticket.tscn, godot/ui/tickets/ticket_entry.tscn, godot/ui/sandbox/hud_sandbox.tscn]
@@ -33,10 +33,10 @@ Fase 7 de M0, `scene-tree.md` §4 (HUD y tickets). Paridad M0 con el HUD y los t
 - `.tscn` con un script tipado propio o el editor; las tools headless del MCP fallan por `untyped_declaration=error`. No inventes uid.
 
 ## Acceptance
-- [ ] AC1 El HUD muestra el tiempo restante y se actualiza solo con señales; en pausa no cambia; al terminar la ronda marca 0 → `test_hud.gd`.
-- [ ] AC2 Hay exactamente un ticket por comanda activa; al completarse desaparece el suyo y aparece el de la repuesta; tras `orders_reset` se vacía → `test_order_tickets.gd`.
-- [ ] AC3 Un panel creado con la ronda en marcha muestra las comandas activas (`get_active_orders`) → `test_order_tickets.gd`.
-- [ ] AC4 Captura del sandbox con HUD y tickets en `docs/evidence/PUL-020/`. `tools/verify.sh` en verde, `check_owns` limpio.
+- [x] AC1 El HUD muestra el tiempo restante y se actualiza solo con señales; en pausa no cambia; al terminar la ronda marca 0 → `test_hud.gd`.
+- [x] AC2 Hay exactamente un ticket por comanda activa; al completarse desaparece el suyo y aparece el de la repuesta; tras `orders_reset` se vacía → `test_order_tickets.gd`.
+- [x] AC3 Un panel creado con la ronda en marcha muestra las comandas activas (`get_active_orders`) → `test_order_tickets.gd`.
+- [x] AC4 Captura del sandbox con HUD y tickets en `docs/evidence/PUL-020/`. `tools/verify.sh` en verde, `check_owns` limpio.
 
 ## Plan
 
