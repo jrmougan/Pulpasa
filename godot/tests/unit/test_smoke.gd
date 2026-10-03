@@ -8,9 +8,9 @@ func test_engine_is_4_7() -> void:
 	assert_eq(info["minor"], 7)
 
 
-func test_boot_scene_loads() -> void:
-	var scene: PackedScene = load("res://scenes/boot.tscn")
+func test_main_menu_scene_loads() -> void:
+	var scene: PackedScene = load("res://ui/menus/main_menu.tscn")
 	assert_not_null(scene)
 	var node: Node = scene.instantiate()
 	add_child_autofree(node)
-	assert_true(node is Node3D)
+	assert_true(node is Control)

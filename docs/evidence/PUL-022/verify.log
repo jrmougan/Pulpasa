@@ -1,0 +1,40 @@
+
+== gdformat --check
+87 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== tests (GUT)
+
+res://tests/unit/test_smoke.gd
+[0m* test_engine_is_4_7
+* test_main_menu_scene_loads
+[1m2/2 passed.
+[0m
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Scripts              36
+Tests               334
+Passing Tests       334
+Asserts            1793
+Time              24.742s
+
+
+[32m---- All tests passed! ----
+[0m
+Results saved to res://.gut_reports/junit.xml
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✓ verify OK
