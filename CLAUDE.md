@@ -22,7 +22,9 @@ Cooperativo de cocina (pulpo á feira en romerías gallegas) en migración de Un
 
 ## Reglas no negociables
 1. Una ficha por worker. Escribe su id en `.claude/current-task` antes de editar: un hook solo
-   permite tocar `owns` y `touches_scenes` de esa ficha. Bórralo al terminar.
+   permite tocar `owns` y `touches_scenes` de esa ficha. Bórralo al terminar. El merge gate
+   (`tools/check_owns.py`) rechaza la rama si cambia cualquier otra ruta, también desde Bash: si
+   necesitas tocar algo más, pregunta al coordinador.
 2. No se termina con `tools/verify.sh` en rojo (un hook de Stop lo impide hasta 3 veces; después, escala).
 3. Tipado estático en todo GDScript. Datos de balance en `.tres`, no en código.
 4. Lógica en núcleos `RefCounted` de `core/`; autoloads `EventBus`, `GameState`, `OrderService`,
