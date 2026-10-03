@@ -52,3 +52,5 @@ caja (cada pulsación llena la caja y gasta pulpo) → condimentos sobre la caja
 ## Pendientes detectados para la fase 8 (montaje del nivel)
 - La caja de colisión `interactable` de cada `slot.tscn` (1,37 m) detiene al jugador ~0,7 m delante de los muebles (PUL-017). Revisar tamaño de colisión vs. alcance al colocar el nivel.
 - Colocar Mueblecajas con la rotación de Level_01 (−90° en Unity) sobre el envoltorio con frente −Z (PUL-008).
+- Con un bote en la mano, el detector prefiere un bote u objeto suelto al slot vacío de la estantería; devolver especias cuesta (PUL-019). Revisar colocación y, si hace falta, prioridad del slot vacío en `InteractionScoring` (decisión de diseño).
+- La caja pequeña del `SmallSpawner` no coincide en color con su cajón de la estantería (PUL-019). Solo visual.

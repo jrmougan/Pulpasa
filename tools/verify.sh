@@ -10,7 +10,7 @@ fail=0
 step() { printf '\n== %s\n' "$1"; }
 
 cd "$GODOT_DIR"
-mapfile -t GD_FILES < <(find . -name '*.gd' -not -path './addons/*' -not -path './.godot/*' | sort)
+mapfile -t GD_FILES < <(find . -name '*.gd' -not -path './addons/*' -not -path './.godot/*' -not -path './.mcp/*' | sort)
 
 step "gdformat --check"
 if ((${#GD_FILES[@]})); then gdformat --check "${GD_FILES[@]}" || fail=1; fi

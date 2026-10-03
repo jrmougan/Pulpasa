@@ -36,7 +36,7 @@ Solo instancias (ADR-003). Overrides permitidos: transform, `slot_id`, `player_i
 
 ```
 Level01 (Node3D)                         scenes/levels/level.gd  (común, extends Node)
-│   @export round_config = data/config/round_config.tres   (duration 300 s, D5)
+│   @export round_config = data/config/round_config.tres   (duration 180 s en M0 (paridad); 300 s en M1 (D5))
 │   @export order_catalog = data/orders/order_catalog.tres
 │   @export stands = [OrderStand1..4]
 ├── Environment          entities/environment/environment.tscn     WorldEnvironment + DirectionalLight3D [8]
