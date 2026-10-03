@@ -53,6 +53,8 @@ func test_ac1_parity_values() -> void:
 		assert_eq(order.max_time, 0.0)
 		assert_eq(order.recipe.base_points, 0)
 		assert_eq(order.recipe.ingredient.cook_time, 5.0)
+		assert_eq(order.recipe.ingredient.total_capacity, 100.0)
+		assert_eq(order.recipe.ingredient.amount_per_full_box, 50.0)
 	var config: RoundConfig = load(ROUND_CONFIG_PATH) as RoundConfig
 	assert_eq(config.duration, 180.0)
 

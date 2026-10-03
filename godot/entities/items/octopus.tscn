@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/items/ingredient.gd" id="1_ev0h6"]
+[ext_resource type="Resource" path="res://data/ingredients/octopus.tres" id="2_48f17"]
+[ext_resource type="Material" path="res://assets/materials/ph_octopus_raw.tres" id="3_bkf63"]
+[ext_resource type="Material" path="res://assets/materials/ph_octopus_cooked.tres" id="4_gi4yh"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/octopus_raw.tscn" id="5_2pphk"]
+[ext_resource type="Script" path="res://components/highlightable.gd" id="6_peg75"]
+[ext_resource type="PackedScene" path="res://ui/widgets/world_progress_bar.tscn" id="7_sh7dx"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_jqbqk"]
+radius = 0.26
+
+[node name="Octopus" type="RigidBody3D" unique_id=1885777515 groups=["interactable", "pickable"]]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_ev0h6")
+data = ExtResource("2_48f17")
+raw_material = ExtResource("3_bkf63")
+cooked_material = ExtResource("4_gi4yh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1575972654]
+shape = SubResource("SphereShape3D_jqbqk")
+
+[node name="Model" parent="." unique_id=1635490825 instance=ExtResource("5_2pphk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.26, 0)
+
+[node name="AnchorPoint" type="Marker3D" parent="." unique_id=235730098]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.26, 0)
+
+[node name="Highlightable" type="Node" parent="." unique_id=1654914492]
+unique_name_in_owner = true
+script = ExtResource("6_peg75")
+
+[node name="AmountBar" parent="." unique_id=1276433737 instance=ExtResource("7_sh7dx")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)

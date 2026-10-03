@@ -5,9 +5,11 @@ extends Area3D
 ##
 ## Cada tick de física construye un `Candidate` por entidad cercana (dirección en el suelo,
 ## distancia 3D desde el portador + `detector_origin_height`), delega la elección en
-## `InteractionScoring.pick_best` y emite `target_changed` solo cuando cambia. Resuelve antes los
-## slots: con la mano llena se descarta uno ocupado. Enciende el `Highlightable` del objetivo
-## (el del objeto guardado si es un slot ocupado) y apaga el anterior: nunca hay dos.
+## `InteractionScoring.pick_best` y emite `target_changed` solo cuando cambia. Como
+## InteractionDetector.cs:57, un slot ocupado se sustituye por su objeto guardado (con la posición
+## del slot para puntuar), con la mano vacía o llena, y ese objeto compite como cualquier otro: él
+## decide qué hacer con la mano (la caja corta o condimenta). Enciende el `Highlightable` del
+## objetivo y apaga el anterior: nunca hay dos.
 
 ## Objetivo nuevo; ambos pueden ser `null` (signals.md).
 signal target_changed(previous: Node, current: Node)
@@ -66,9 +68,9 @@ func refresh() -> void:
 		var entity: Node3D = _entity_of(body)
 		if entity == null or not _is_alive(entity) or entity in entities:
 			continue
-		if holding and entity is Slot and (entity as Slot).has_item():
-			continue
 		var pos: Vector3 = entity.global_position
+		if entity is Slot and (entity as Slot).has_item():
+			entity = (entity as Slot).get_item()
 		candidates.append(
 			InteractionScoring.Candidate.new(
 				Vector2(pos.x, pos.z),
@@ -126,14 +128,11 @@ func _is_alive(node: Variant) -> bool:
 	return is_instance_valid(node) and not node.is_queued_for_deletion()
 
 
-## Lo que se resalta para `target`: el objeto guardado si es un slot ocupado, si no él mismo.
+## `Highlightable` hijo directo de `target`, o `null`.
 func _highlightable_of(target: Node) -> Highlightable:
 	if not _is_alive(target):
 		return null
-	var shown: Node = target
-	if target is Slot and (target as Slot).has_item():
-		shown = (target as Slot).get_item()
-	for child: Node in shown.get_children():
+	for child: Node in target.get_children():
 		if child is Highlightable:
 			return child as Highlightable
 	return null
