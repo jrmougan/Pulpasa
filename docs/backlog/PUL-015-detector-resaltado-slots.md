@@ -81,6 +81,12 @@ Fase 5 de M0, **capa específica 3D** (`scene-tree.md` §3; ADR-003 §3).
   izquierda, por `initial_item`). `get_debug_output` sin errores.
 - **AC4** `tools/verify.sh`: ✓ verify OK (gdformat, gdlint, import, GUT 233/233, smoke).
   `tools/check_owns.py` sin rutas fuera de owns.
+- **Revisión de codex**: el detector conserva `_has_target` aparte para publicar
+  `target_changed(null, …)` cuando el objetivo se libera (`free` o `queue_free`) y excluye
+  candidatos en cola de borrado; nunca emite un objeto liberado como `previous`. +9 tests: liberar
+  el único objetivo (emite `[null, null]` una vez) o con sustituto (emite `[null, sustituto]` y lo
+  resalta), altura de mira 0,8 m frente a distancia plana, excepción de 0,7 m en 3D (dentro y fuera)
+  y bonus `kitchen` con mano vacía/llena. `tools/verify.sh` ✓ (GUT 242/242).
 
 Notas para revisión:
 - `PlayerConfig` gana `detector_cone_half_angle`, `detector_near_distance`, `detector_kitchen_bonus`,

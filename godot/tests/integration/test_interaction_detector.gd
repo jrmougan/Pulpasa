@@ -230,3 +230,102 @@ func test_ac1_taking_item_from_slot_moves_highlight_off_the_item() -> void:
 	assert_eq(_hold.get_held_item(), item)
 	assert_false((item.get_child(1) as Highlightable).is_highlighted())
 	assert_eq(_detector.get_target(), slot, "slot vacío y mano llena: se puede dejar")
+
+
+## Revisión: liberar el objetivo publica la transición, sin objetos liberados
+## ni resaltados colgados.
+func test_ac1_freeing_only_target_emits_null_once() -> void:
+	var front: Target = _add_target(Vector3(0.0, 0.5, -1.0))
+	await _settle()
+	watch_signals(_detector)
+	front.free()
+	await _settle()
+	assert_null(_detector.get_target())
+	assert_signal_emit_count(_detector, "target_changed", 1)
+	assert_signal_emitted_with_parameters(_detector, "target_changed", [null, null])
+
+
+func test_ac1_queue_freeing_only_target_emits_null_once() -> void:
+	var front: Target = _add_target(Vector3(0.0, 0.5, -1.0))
+	await _settle()
+	watch_signals(_detector)
+	front.queue_free()
+	await _settle()
+	assert_null(_detector.get_target())
+	assert_signal_emit_count(_detector, "target_changed", 1)
+	assert_signal_emitted_with_parameters(_detector, "target_changed", [null, null])
+
+
+func test_ac1_freeing_target_switches_to_substitute() -> void:
+	var front: Target = _add_target(Vector3(0.0, 0.5, -1.0))
+	var other: Target = _add_target(Vector3(0.0, 0.5, -1.8))
+	await _settle()
+	assert_eq(_detector.get_target(), front)
+	watch_signals(_detector)
+	front.free()
+	await _settle()
+	assert_eq(_detector.get_target(), other)
+	assert_true(other.highlight.is_highlighted())
+	assert_signal_emit_count(_detector, "target_changed", 1)
+	assert_signal_emitted_with_parameters(_detector, "target_changed", [null, other])
+
+
+func test_ac1_queue_freeing_target_switches_to_substitute() -> void:
+	var front: Target = _add_target(Vector3(0.0, 0.5, -1.0))
+	var other: Target = _add_target(Vector3(0.0, 0.5, -1.8))
+	await _settle()
+	watch_signals(_detector)
+	front.queue_free()
+	await _settle()
+	assert_eq(_detector.get_target(), other)
+	assert_true(other.highlight.is_highlighted())
+	assert_eq(_highlighted([other]), 1)
+	assert_signal_emit_count(_detector, "target_changed", 1)
+	assert_signal_emitted_with_parameters(_detector, "target_changed", [null, other])
+
+
+## Revisión: la distancia es 3D desde el jugador + 0,8 m, no la del suelo.
+func test_ac1_origin_height_changes_choice_against_flat_distance() -> void:
+	# En el suelo, `low` está más cerca (0,5 m frente a 0,6 m); en 3D desde 0,8 m, `high` gana.
+	var low: Target = _add_target(Vector3(0.0, 0.0, -0.5))
+	var high: Target = _add_target(Vector3(0.0, 0.8, -0.6))
+	await _settle()
+	assert_eq(_detector.get_target(), high)
+	assert_false(low.highlight.is_highlighted())
+
+
+## Revisión: por debajo de 0,7 m (3D) se ignora el cono.
+func test_ac1_near_exception_allows_target_outside_cone() -> void:
+	var side: Target = _add_target(Vector3(0.5, 0.8, 0.0))
+	await _settle()
+	assert_eq(_detector.get_target(), side, "a 0,5 m en 3D, fuera del cono")
+
+
+func test_ac1_near_exception_uses_3d_distance_not_flat() -> void:
+	# A 0,5 m en el suelo pero ~0,94 m desde la altura de mira: fuera del cono y no cercano.
+	_add_target(Vector3(0.5, 0.0, 0.0))
+	await _settle()
+	assert_null(_detector.get_target())
+
+
+## Revisión: el bonus del grupo `kitchen` cambia el ganador solo con la mano vacía.
+func _kitchen_setup() -> Array[Target]:
+	var kitchen: Target = _add_target(Vector3(0.0, 0.8, -1.5))
+	kitchen.add_to_group(InteractionDetector.KITCHEN_GROUP)
+	var near: Target = _add_target(Vector3(0.1, 0.8, -1.0))
+	return [kitchen, near]
+
+
+func test_ac1_kitchen_bonus_wins_with_empty_hand() -> void:
+	var targets: Array[Target] = _kitchen_setup()
+	await _settle()
+	assert_eq(_detector.get_target(), targets[0])
+
+
+func test_ac1_kitchen_bonus_ignored_with_full_hand() -> void:
+	var targets: Array[Target] = _kitchen_setup()
+	var carried: Item = Item.new()
+	_level.add_child(carried)
+	assert_true(_hold.pick_up(carried))
+	await _settle()
+	assert_eq(_detector.get_target(), targets[1])

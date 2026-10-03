@@ -25,6 +25,8 @@ const KITCHEN_GROUP: StringName = &"kitchen"
 @export var carrier: Node3D
 
 var _target: Node
+## Si hay un objetivo publicado: sobrevive a que se libere, para publicar la transición a `null`.
+var _has_target: bool = false
 var _lit: Highlightable
 
 
@@ -49,7 +51,7 @@ func _physics_process(_delta: float) -> void:
 
 ## Objetivo actual, o `null`.
 func get_target() -> Node:
-	if not is_instance_valid(_target):
+	if not _is_alive(_target):
 		_target = null
 	return _target
 
@@ -62,7 +64,7 @@ func refresh() -> void:
 	var eye: Vector3 = carrier.global_position + Vector3.UP * config.detector_origin_height
 	for body: Node3D in get_overlapping_bodies():
 		var entity: Node3D = _entity_of(body)
-		if entity == null or entity in entities:
+		if entity == null or not _is_alive(entity) or entity in entities:
 			continue
 		if holding and entity is Slot and (entity as Slot).has_item():
 			continue
@@ -108,17 +110,25 @@ func _in_contract(node: Node) -> bool:
 	)
 
 
+## Publica el objetivo nuevo. Si el anterior se liberó (o va a liberarse), `previous` es `null`:
+## nunca se emite un objeto liberado, pero la transición se publica igual (una vez).
 func _set_target(current: Node) -> void:
 	var previous: Node = get_target()
-	if current == previous:
+	if current == previous and _has_target == (current != null):
 		return
 	_target = current
+	_has_target = current != null
 	target_changed.emit(previous, current)
+
+
+## Válido y no en cola de borrado. `Variant`: un parámetro `Node` rechaza objetos liberados.
+func _is_alive(node: Variant) -> bool:
+	return is_instance_valid(node) and not node.is_queued_for_deletion()
 
 
 ## Lo que se resalta para `target`: el objeto guardado si es un slot ocupado, si no él mismo.
 func _highlightable_of(target: Node) -> Highlightable:
-	if not is_instance_valid(target):
+	if not _is_alive(target):
 		return null
 	var shown: Node = target
 	if target is Slot and (target as Slot).has_item():
@@ -131,6 +141,9 @@ func _highlightable_of(target: Node) -> Highlightable:
 
 func _set_lit(highlight: Highlightable) -> void:
 	if not is_instance_valid(_lit):
+		_lit = null
+	elif _lit.is_queued_for_deletion():
+		_lit.hide()
 		_lit = null
 	if highlight == _lit:
 		return
