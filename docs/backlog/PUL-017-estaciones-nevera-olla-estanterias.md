@@ -1,11 +1,11 @@
 ---
 id: PUL-017
 title: Crear las estaciones - nevera, olla y estanterías de cajas y especias
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: [PUL-016]
-orca_task: null
+orca_task: task_b75490e607aa
 unity_sources: [Assets/Scripts/Game/OctopusSwapner.cs, Assets/Scripts/Game/Kitchen.cs, Assets/Scripts/UI/KitchenProgress.cs, Assets/Scripts/Game/Box.cs, Assets/Prefabs/KitchenStations/**]
 owns: [godot/entities/stations/item_spawner.gd, godot/entities/stations/item_spawner.gd.uid, godot/entities/stations/octopus_storage.tscn, godot/entities/stations/kitchen.tscn, godot/entities/stations/cooking_station.gd, godot/entities/stations/cooking_station.gd.uid, godot/entities/stations/box_shelf.tscn, godot/entities/stations/spice_shelf.tscn, godot/tests/integration/test_item_spawner.gd, godot/tests/integration/test_item_spawner.gd.uid, godot/tests/integration/test_cooking_station.gd, godot/tests/integration/test_cooking_station.gd.uid, godot/tests/integration/test_shelves.gd, godot/tests/integration/test_shelves.gd.uid, godot/entities/stations/sandbox/**, godot/entities/stations/slot.gd, godot/tests/integration/test_slot.gd, docs/evidence/PUL-017/**]
 touches_scenes: [godot/entities/stations/octopus_storage.tscn, godot/entities/stations/kitchen.tscn, godot/entities/stations/box_shelf.tscn, godot/entities/stations/spice_shelf.tscn]

@@ -48,3 +48,7 @@ Coop, audio completo y pulido no son M0.
 ## Flujo de cocina (prototipo, se mantiene por D1)
 Nevera → pulpo crudo → olla (cocción) → el jugador lleva el pulpo **cocido** y lo corta sobre una
 caja (cada pulsación llena la caja y gasta pulpo) → condimentos sobre la caja llena → entrega en el puesto.
+
+## Pendientes detectados para la fase 8 (montaje del nivel)
+- La caja de colisión `interactable` de cada `slot.tscn` (1,37 m) detiene al jugador ~0,7 m delante de los muebles (PUL-017). Revisar tamaño de colisión vs. alcance al colocar el nivel.
+- Colocar Mueblecajas con la rotación de Level_01 (−90° en Unity) sobre el envoltorio con frente −Z (PUL-008).
