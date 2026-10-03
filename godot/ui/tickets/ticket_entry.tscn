@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="1_sdufk"]
+[ext_resource type="Script" path="res://ui/tickets/ticket_entry.gd" id="2_fnq4i"]
+
+[node name="TicketEntry" type="HBoxContainer" unique_id=241350231]
+mouse_filter = 2
+theme = ExtResource("1_sdufk")
+script = ExtResource("2_fnq4i")
+
+[node name="Details" type="VBoxContainer" parent="." unique_id=1538344326]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="Recipe" type="Label" parent="Details" unique_id=1350993805]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 23
+
+[node name="Seasonings" type="Label" parent="Details" unique_id=774199072]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.84705883, 0.7647059, 0.64705884, 1)
+theme_override_font_sizes/font_size = 18
