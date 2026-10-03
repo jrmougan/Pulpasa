@@ -38,4 +38,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-023 | M0·7 | ui-engineer | done | Pulido de UI con hallazgos de revisión |
 | PUL-024 | M0·8 | gameplay-engineer | done | Montaje de level_01 con UI integrada |
 | PUL-025 | M0·8 | qa-tester | ready (dep. 026) | Smoke de paridad M0 y guía de la puerta humana |
-| PUL-026 | M0·8 | ui-engineer | ready | Layout de HUD y tickets como Unity + menores de level_01 |
+| PUL-026 | M0·8 | ui-engineer | done | Layout de HUD y tickets como Unity + menores de level_01 |

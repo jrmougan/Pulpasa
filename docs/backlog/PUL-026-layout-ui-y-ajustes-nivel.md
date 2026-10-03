@@ -1,11 +1,11 @@
 ---
 id: PUL-026
 title: Ajustar el layout de HUD y tickets a Unity y cerrar los menores de level_01
-status: review
+status: done
 milestone: M0
 role: ui-engineer
 deps: []
-orca_task: null
+orca_task: task_7dae950412cd
 unity_sources: [Assets/Scenes/Levels/Level_01.unity, Assets/Prefabs/UI/**, Assets/Scripts/UI/ProductivityUIDisplay.cs]
 owns: [godot/ui/hud/**, godot/ui/tickets/**, godot/scenes/levels/level_01.tscn, godot/scenes/levels/level.gd, godot/entities/camera/camera_rig.tscn, godot/tests/integration/test_hud.gd, godot/tests/integration/test_order_tickets.gd, godot/tests/integration/test_level_01.gd, docs/evidence/PUL-026/**]
 touches_scenes: [godot/ui/hud/hud.tscn, godot/ui/tickets/order_tickets_panel.tscn, godot/ui/tickets/order_ticket.tscn, godot/scenes/levels/level_01.tscn, godot/entities/camera/camera_rig.tscn]
