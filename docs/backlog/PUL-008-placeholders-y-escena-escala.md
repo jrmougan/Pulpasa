@@ -1,11 +1,11 @@
 ---
 id: PUL-008
 title: Crear placeholders 3D, importar muebles propios y montar la escena de escala
-status: review
+status: done
 milestone: M0
 role: asset-pipeline
 deps: []
-orca_task: null
+orca_task: task_68ed8d3c8a08
 unity_sources: [Assets/Art/Furniture/**, Assets/Art/Materials/**, Assets/Prefabs/**, Assets/Scenes/Levels/Level_01.unity]
 owns: [godot/assets/models/**, godot/assets/materials/**, godot/scenes/scale_check.tscn, godot/scenes/scale_check.tscn.uid, godot/tests/integration/test_scale_check.gd, godot/tests/integration/test_scale_check.gd.uid, docs/assets/licenses.md]
 touches_scenes: [godot/scenes/scale_check.tscn]
