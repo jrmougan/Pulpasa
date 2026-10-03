@@ -48,3 +48,4 @@ Generado con script headless de Godot (ResourceSaver), sin uids inventados; scri
 - AC1/AC2: `godot/tests/integration/test_scale_check.gd`. AABB importados: Mueblecajas 1,14×0,92×1,80 m; order_stand 1,92×2,02×0,77 m.
 - AC3: `docs/evidence/PUL-008/scale_check.png` (revisión humana).
 - Notas: `Camera3D.size` es el alto total (12,74 = 2 × 6,37 de Unity); posición z espejada (Unity −5,86 → +5,86). Mueblecajas va sin la rotación de −90° del nivel. La orientación del frente de los FBX no se pudo verificar sin referencia: revisar en la captura.
+- Revisión codex aplicada: cajas y bote con bounds de mesh × transforms de prefab (no collider); envoltorio `Mueblecajas.tscn` (yaw +90°, frente −Z, FBX original intacto; colocación del nivel en fase 8); tests con referencias derivadas y dirección global de Front/Nose/Handle; captura renovada.

@@ -14,14 +14,19 @@ const PLACEHOLDERS: Dictionary = {
 	"table_long": Vector3(2.79, 1.14, 0.77),
 	"table_medium": Vector3(1.8, 1.14, 0.77),
 	"table_square": Vector3(1.37, 1.14, 1.37),
-	"box_small": Vector3(0.49, 0.47, 0.41),
-	"box_medium": Vector3(0.57, 0.55, 0.48),
-	"box_large": Vector3(0.71, 0.68, 0.6),
-	"condiment_jar": Vector3(0.3, 0.48, 0.3),
+	# Cajas: bounds del mesh del FBX × transforms del prefab × escala de Visual
+	# (0,1305904 / 0,1531381 / 0,19). NO el BoxCollider reutilizado (0,711×0,683×0,600).
+	"box_small": Vector3(0.338, 0.284, 0.320),
+	"box_medium": Vector3(0.396, 0.333, 0.375),
+	"box_large": Vector3(0.491, 0.414, 0.466),
+	# Bote: OBJ 4,764×4,764×9,8015 × escala de Pepper.prefab 0,071, rotación X −90°.
+	"condiment_jar": Vector3(0.338, 0.696, 0.338),
 	"octopus_raw": Vector3(0.63, 0.58, 0.42),
 	"octopus_cooked": Vector3(0.63, 0.58, 0.42),
 	"character": Vector3(0.42, 1.54, 0.5),
 }
+# Mueblecajas normalizado a frente -Z: el FBX (abertura hacia +X) se gira +90° en yaw.
+const WRAPPER_SIZE: Vector3 = Vector3(1.796, 0.923, 1.143)
 const PLACEHOLDER_DIR: String = "res://assets/models/placeholders/"
 
 
@@ -68,17 +73,40 @@ func test_ac2_every_placeholder_exists_with_plausible_size() -> void:
 		_assert_size_close(_aabb_of(inst).size, PLACEHOLDERS[id] as Vector3, id)
 
 
+func _assert_faces_minus_z(inst: Node3D, id: String, markers: Array[String]) -> void:
+	var root_back: Vector3 = inst.global_transform.basis.z
+	assert_almost_eq(root_back.distance_to(Vector3.BACK), 0.0, 0.001, "%s: raíz girada" % id)
+	for marker_name: String in markers:
+		var marker: Node3D = inst.get_node_or_null(marker_name) as Node3D
+		assert_not_null(marker, "%s sin %s" % [id, marker_name])
+		if marker != null:
+			var dir: Vector3 = marker.global_position - inst.global_position
+			assert_lt(dir.z, 0.0, "%s: %s debe estar en -Z global" % [id, marker_name])
+
+
 func test_ac2_placeholders_face_minus_z() -> void:
+	var extra: Dictionary = {
+		"character": ["Front", "Nose"],
+		"fridge": ["Front", "Handle"],
+	}
 	for id: String in PLACEHOLDERS:
-		var inst: Node = (load(PLACEHOLDER_DIR + id + ".tscn") as PackedScene).instantiate()
+		var inst: Node3D = (load(PLACEHOLDER_DIR + id + ".tscn") as PackedScene).instantiate()
 		add_child_autofree(inst)
-		var front: Marker3D = inst.get_node_or_null("Front") as Marker3D
-		assert_not_null(front, "%s sin marcador Front" % id)
-		if front != null:
-			assert_lt(front.position.z, 0.0, "%s: el frente debe estar en -Z" % id)
-	var character: Node = (load(PLACEHOLDER_DIR + "character.tscn") as PackedScene).instantiate()
-	add_child_autofree(character)
-	assert_lt((character.get_node("Nose") as Node3D).position.z, 0.0, "la nariz marca -Z")
+		var markers: Array[String] = []
+		markers.assign(extra.get(id, ["Front"]) as Array)
+		_assert_faces_minus_z(inst, id, markers)
+
+
+func test_mueblecajas_wrapper_normalizes_front_to_minus_z() -> void:
+	var packed: PackedScene = load("res://assets/models/furniture/Mueblecajas.tscn")
+	var inst: Node3D = packed.instantiate()
+	add_child_autofree(inst)
+	_assert_faces_minus_z(inst, "Mueblecajas", ["Front"])
+	_assert_size_close(_aabb_of(inst).size, WRAPPER_SIZE, "Mueblecajas.tscn")
+	# La abertura del FBX (+X local) debe quedar en -Z global tras el yaw de +90°.
+	var model: Node3D = inst.get_node("Model") as Node3D
+	var opening: Vector3 = model.global_transform.basis * Vector3.RIGHT
+	assert_almost_eq(opening.distance_to(Vector3.FORWARD), 0.0, 0.001)
 
 
 func test_ac3_scale_check_scene_uses_unity_camera() -> void:
