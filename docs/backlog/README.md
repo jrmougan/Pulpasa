@@ -28,7 +28,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-013 | M0·4 | asset-pipeline | blocked (licencia del modelo) | Modelo y AnimationTree del jugador |
 | PUL-014 | M0·5 | gameplay-engineer | done | Interacción común: scoring, componente y contrato |
 | PUL-015 | M0·5 | gameplay-engineer | done | Detector 3D, resaltado por shader y slots |
-| PUL-016 | M0·6 | gameplay-engineer | ready (dep. 015) | Objetos: pulpo, caja y condimento |
+| PUL-016 | M0·6 | gameplay-engineer | done | Objetos: pulpo, caja y condimento |
 | PUL-017 | M0·6 | gameplay-engineer | ready (dep. 016) | Estaciones: nevera, olla y estanterías |
 | PUL-018 | M0·6 | gameplay-engineer | ready (dep. 016) | Puesto de entrega conectado a OrderService |
 | PUL-019 | M0·6 | qa-tester | ready (dep. 017, 018) | Sandbox de cocina y flujo completo |

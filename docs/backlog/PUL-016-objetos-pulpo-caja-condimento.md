@@ -1,11 +1,11 @@
 ---
 id: PUL-016
 title: Crear los objetos jugables - pulpo, caja y condimento
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: [PUL-015]
-orca_task: null
+orca_task: task_e745f3953d4b
 unity_sources: [Assets/Scripts/Game/Ingredient.cs, Assets/Scripts/Game/Box.cs, Assets/Scripts/Game/SeasoningItem.cs, Assets/Scripts/UI/SimpleProgressBar.cs, Assets/Scripts/UI/FaceToCamera.cs, Assets/Prefabs/Ingredients/**, Assets/Prefabs/Packaging/**, Assets/Animations/Packaging/**]
 owns: [godot/entities/items/**, godot/components/interaction_detector.gd, godot/entities/stations/slot.gd, godot/entities/stations/slot.tscn, godot/tests/integration/test_interaction_detector.gd, godot/tests/integration/test_slot.gd, godot/tests/integration/test_box_on_slot.gd, godot/tests/integration/test_box_on_slot.gd.uid, godot/entities/player/sandbox/sandbox_pickable.gd, godot/entities/player/sandbox/sandbox_pickable.gd.uid, godot/resources/ingredient_data.gd, godot/data/ingredients/octopus.tres, godot/tests/unit/test_data_*.gd, godot/ui/widgets/**, godot/tests/integration/test_octopus.gd, godot/tests/integration/test_octopus.gd.uid, godot/tests/integration/test_box.gd, godot/tests/integration/test_box.gd.uid, godot/tests/integration/test_seasoning.gd, godot/tests/integration/test_seasoning.gd.uid, godot/tests/integration/test_items_contract.gd, godot/tests/integration/test_items_contract.gd.uid, docs/evidence/PUL-016/**]
 touches_scenes: [godot/entities/items/octopus.tscn, godot/entities/items/box.tscn, godot/entities/items/seasoning.tscn, godot/ui/widgets/world_progress_bar.tscn]
