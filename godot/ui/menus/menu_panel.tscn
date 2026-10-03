@@ -1,0 +1,121 @@
+[gd_scene format=3]
+
+[ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="1_y6gjx"]
+[ext_resource type="Script" path="res://ui/menus/menu_panel.gd" id="2_kql8w"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vvqa4"]
+content_margin_left = 40.0
+content_margin_top = 32.0
+content_margin_right = 40.0
+content_margin_bottom = 32.0
+bg_color = Color(0.1254902, 0.20392157, 0.23921569, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqxmd"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.9411765, 0.7647059, 0.4862745, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiel4"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.9411765, 0.7647059, 0.4862745, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="MenuPanel" type="Control" unique_id=1619565341]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("1_y6gjx")
+script = ExtResource("2_kql8w")
+
+[node name="Shade" type="ColorRect" parent="." unique_id=1713347688]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.04, 0.06, 0.08, 0.82)
+
+[node name="Center" type="CenterContainer" parent="." unique_id=1643609920]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Card" type="PanelContainer" parent="Center" unique_id=1860634783]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vvqa4")
+
+[node name="Content" type="VBoxContainer" parent="Center/Card" unique_id=1984530822]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Brand" type="Label" parent="Center/Card/Content" unique_id=1380234855]
+unique_name_in_owner = true
+modulate = Color(0.9411765, 0.7647059, 0.4862745, 1)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "PULPASA"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Title" type="Label" parent="Center/Card/Content" unique_id=1380209499]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Description" type="Label" parent="Center/Card/Content" unique_id=326208650]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Ratio" type="Label" parent="Center/Card/Content" unique_id=1334911276]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="PrimaryButton" type="Button" parent="Center/Card/Content" unique_id=213921159]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+focus_neighbor_left = NodePath("../ExitButton")
+focus_neighbor_top = NodePath("../ExitButton")
+focus_neighbor_right = NodePath("../ExitButton")
+focus_neighbor_bottom = NodePath("../ExitButton")
+focus_next = NodePath("../ExitButton")
+focus_previous = NodePath("../ExitButton")
+theme_override_styles/focus = SubResource("StyleBoxFlat_hqxmd")
+
+[node name="ExitButton" type="Button" parent="Center/Card/Content" unique_id=740311893]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+focus_neighbor_left = NodePath("../PrimaryButton")
+focus_neighbor_top = NodePath("../PrimaryButton")
+focus_neighbor_right = NodePath("../PrimaryButton")
+focus_neighbor_bottom = NodePath("../PrimaryButton")
+focus_next = NodePath("../PrimaryButton")
+focus_previous = NodePath("../PrimaryButton")
+theme_override_styles/focus = SubResource("StyleBoxFlat_xiel4")

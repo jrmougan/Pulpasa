@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://ui/menus/pause_menu.gd" id="1_2pmna"]
+[ext_resource type="PackedScene" path="res://ui/menus/menu_panel.tscn" id="2_412up"]
+[ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="3_77jbk"]
+[ext_resource type="Script" path="res://ui/menus/menu_panel.gd" id="4_ipetd"]
+
+[node name="PauseMenu" type="Control" unique_id=1374802359]
+process_mode = 3
+visible = false
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_2pmna")
+
+[node name="MenuPanel" type="Control" parent="." unique_id=1619565341 instance=ExtResource("2_412up")]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource("3_77jbk")
+script = ExtResource("4_ipetd")
