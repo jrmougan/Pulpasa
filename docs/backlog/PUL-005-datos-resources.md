@@ -46,7 +46,7 @@ Clases en `godot/resources/`, `.tres` en `godot/data/`, tests `test_data_{catalo
 
 ## Evidence
 
-GUT: 4 scripts, 11 tests, 11 passing, 89 asserts; `tools/verify.sh` OK (AC4).
+GUT: 4 scripts, 11 tests, 12 passing; `tools/verify.sh` OK (AC4).
 
 Notas / desviaciones de la ficha:
 - AC1 dice "Order_1: ComboDuo"; en Unity (`Order_1.asset`) y en `inventory.md` §2 es **Familiar** + Hot_Paprika + Salt. Se porta Unity.
@@ -54,5 +54,5 @@ Notas / desviaciones de la ficha:
 - `RoundConfig` lleva `duration` (180) y `first_order_delay` (0, ADR-002); `OrderCatalog.max_active_orders` = 4.
 - Campos M1 con valor de paridad: `OrderData.max_time` 0, `RecipeData.base_points` 0 y `base_price` 0.
 - Los campos `scene: PackedScene` (cajas, ingrediente, condimentos) quedan vacíos hasta las fases 3-6.
-- `Salt` rehecho con el esquema actual (color tomado de `visualColor`); Paprika/Hot_Paprika con color blanco (en Unity era 0,0,0,0). Cajas sin `prefab` roto. `DrinkSO` no se porta.
+- `Salt` rehecho con el esquema actual (color tomado de `visualColor`); Paprika/Hot_Paprika con color (0,0,0,0) como en Unity (paridad; test `test_ac3_seasoning_colors_match_prototype`). Propuesta M1: un RGBA 0,0,0,0 es transparente, así que si la UI usa `color` (tickets, iconos) habrá que darles un color real. Cajas sin `prefab` roto. `DrinkSO` no se porta.
 - Los `.tres` no llevan `uid://`; el import no los generó.

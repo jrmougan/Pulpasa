@@ -35,3 +35,16 @@ func test_ac3_references_are_filled() -> void:
 		var recipe: RecipeData = load("res://data/recipes/%s.tres" % id) as RecipeData
 		assert_not_null(recipe.ingredient, id)
 		assert_not_null(recipe.box, id)
+
+
+func test_ac3_seasoning_colors_match_prototype() -> void:
+	var expected: Dictionary = {
+		"salt": Color(0.5931827, 0.8113208, 0.7928984, 1.0),
+		"paprika": Color(0, 0, 0, 0),
+		"hot_paprika": Color(0, 0, 0, 0),
+	}
+	for id: String in expected:
+		var seasoning: SeasoningData = load("res://data/seasonings/%s.tres" % id) as SeasoningData
+		assert_not_null(seasoning, id)
+		if seasoning:
+			assert_eq(seasoning.color, expected[id] as Color, id)

@@ -6,4 +6,4 @@
 script = ExtResource("1_sea")
 display_name = "Pimentón picante"
 type = 2
-color = Color(1, 1, 1, 1)
+color = Color(0, 0, 0, 0)
