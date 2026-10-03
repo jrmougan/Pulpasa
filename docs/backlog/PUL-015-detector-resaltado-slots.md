@@ -1,11 +1,11 @@
 ---
 id: PUL-015
 title: Montar detector 3D, resaltado por shader y slots con ancla
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: [PUL-012, PUL-014]
-orca_task: null
+orca_task: task_8acfbeddfff3
 unity_sources: [Assets/Scripts/Interaction/**, Assets/Scripts/Game/InteractableSlot.cs, Assets/Art/Materials/HighlightTexture.mat]
 owns: [godot/entities/player/sandbox/**, godot/resources/player_config.gd, godot/data/config/player_config.tres, godot/tests/unit/test_data_*.gd, godot/components/interaction_detector.gd, godot/components/interaction_detector.gd.uid, godot/components/highlightable.gd, godot/components/highlightable.gd.uid, godot/shaders/**, godot/entities/stations/slot.tscn, godot/entities/stations/slot.gd, godot/entities/stations/slot.gd.uid, godot/entities/player/player.tscn, godot/scenes/sandbox/**, godot/tests/integration/test_interaction_detector.gd, godot/tests/integration/test_interaction_detector.gd.uid, godot/tests/integration/test_slot.gd, godot/tests/integration/test_slot.gd.uid, docs/evidence/PUL-015/**]
 touches_scenes: [godot/entities/player/player.tscn, godot/entities/stations/slot.tscn, godot/scenes/sandbox/player_sandbox.tscn]
