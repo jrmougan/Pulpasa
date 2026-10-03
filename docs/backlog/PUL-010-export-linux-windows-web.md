@@ -36,4 +36,5 @@ instaladas en `~/.local/share/godot/export_templates/4.7.2.stable`.
 
 ## Evidence
 - Presets, `tools/export.sh`, `docs/arch/export.md`; capturas y log en `docs/evidence/PUL-010/`.
-- **Producer**: añadir `/build/` al `.gitignore` raíz (no está en `owns`). Hasta entonces `build/` queda sin trackear.
+- `/build/` ya está en el `.gitignore` raíz (rama base).
+- Revisión Codex [MEDIA]: `tools/export.sh` usa `set -euo pipefail`; si `--import` falla aborta con su código y no exporta; los fallos de export (código de godot, `ERROR`, fichero ausente o vacío) dan código 1. Comprobado a mano: `GODOT_PATH` a un script que devuelve 42 → «FALLO: la importación terminó con código 42», rc=42, sin exportar; script que importa bien y exporta con código 7 → rc=1; `tools/export.sh all` real → rc=0; argumento inválido → rc=2.
