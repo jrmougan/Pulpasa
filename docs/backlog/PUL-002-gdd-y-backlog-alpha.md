@@ -1,7 +1,7 @@
 ---
 id: PUL-002
 title: Escribir el GDD de trabajo y el backlog de la alpha
-status: ready
+status: review
 milestone: F0
 role: game-designer
 deps: []
@@ -33,3 +33,13 @@ Alcance según la propuesta: Must/Should/Could/Won't.
 ## Plan
 
 ## Evidence
+
+- AC1: `docs/design/gdd.md` §3 tabla D1–D7 (cada una enlaza a su feature) y §8 erratas.
+- AC2: 8 Must en `docs/design/features/` (movimiento-e-interaccion, corte-pulpo, coccion-pulpo,
+  condimentacion, comandas, entrega-y-puntuacion, partida-5-min, jugadores-y-cambio), con 4–8 AC
+  Given/When/Then medibles cada una. Además 4 Should (dificultad-progresiva, audio-y-fx,
+  eventos-de-entorno, mando-y-reasignacion).
+- AC3: `gdd.md` §9 Preguntas abiertas (9).
+- `tools/verify.sh`: verde (GUT 2/2, smoke OK).
+- Nota: la «propuesta» MoSCoW no estaba en el repo; los 8 Must se derivaron del bucle de juego.
+  El producer debe validar la selección. Los números (tiempos, euros, umbrales) son provisionales.
