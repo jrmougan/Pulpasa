@@ -1,3 +1,6 @@
+> **No se realizó.** El responsable descartó la comparación lado a lado el 2026-10-04 (D17): el
+> prototipo Unity era rudimentario y la paridad no es requisito. Se conserva como referencia.
+
 # Puerta humana de M0: partida lado a lado con Unity
 
 Última comprobación de M0 (`roadmap.md`, fase 8; feature `features/paridad-unity.md`). El smoke

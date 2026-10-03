@@ -5,7 +5,7 @@ Cooperativo de cocina (pulpo á feira en romerías gallegas) en migración de Un
 
 ## Dónde está cada cosa
 - `godot/`: proyecto Godot (lo que se desarrolla). GDScript tipado, tests GUT en `godot/tests/`.
-- `Assets/`: prototipo Unity. **Solo lectura**: es la especificación de la migración.
+- `Assets/`: prototipo Unity. **Solo lectura**. Fue la especificación de M0; desde M1 es solo referencia (D17): manda el diseño.
 - `docs/design/roadmap.md`: hitos y fases de M0. `docs/design/decisions.md`: decisiones cerradas (mandan sobre el GDD). `docs/design/gdd.md`: GDD de trabajo.
 - `docs/arch/`: ADRs, `signals.md`, `scene-tree.md`. Contratos: no se cambian sin ADR y gate humano.
 - `docs/migration/inventory.md`: mapa Unity → Godot y bugs que no se portan.
@@ -32,7 +32,7 @@ Cooperativo de cocina (pulpo á feira en romerías gallegas) en migración de Un
    (catálogo cerrado en `docs/arch/signals.md`); nada de rutas absolutas de nodos.
    `autoload/`, `core/`, `resources/` y `ui/` sin tipos 3D/2D de mundo.
 5. Un `.tscn` tiene un solo dueño por oleada. No inventes `uid://`; versiona los `.uid`.
-6. No portes los bugs del prototipo (lista en `docs/migration/inventory.md`).
+6. No portes los bugs del prototipo (lista en `docs/migration/inventory.md`). La paridad con Unity ya no es requisito (D17).
 7. No edites `Assets/`, `godot/addons/` ni `main.tex`.
 
 ## Agentes y skills

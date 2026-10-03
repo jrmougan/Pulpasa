@@ -1,7 +1,7 @@
 ---
 id: PUL-025
 title: Pasar el smoke checklist de paridad M0 en builds Linux y Windows
-status: review
+status: done
 milestone: M0
 role: qa-tester
 deps: [PUL-024, PUL-023, PUL-026]

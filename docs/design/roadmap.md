@@ -6,7 +6,7 @@ Propuesta completa (privada): https://claude.ai/artifact/PstRxmwwgejjsphmEXCkJe
 |------|-----------|---------------|
 | B | Bootstrap de entorno y sistema agéntico | MCP funciona (hecho) |
 | F0 | Inventario (PUL-001), GDD de trabajo (PUL-002), ADRs (PUL-003) | Aprobar ADRs y alcance |
-| M0 | Migración hasta paridad con Unity, sin sus bugs (técnicamente completo 2026-10-04; falta la puerta humana `m0-gate.md` y PUL-013) | Partida lado a lado; archivar Unity |
+| M0 | Migración hasta paridad con Unity, sin sus bugs — **cerrado 2026-10-04** (smoke automático PUL-025 en verde; puerta humana descartada por el responsable, D17; PUL-013 sigue bloqueada por licencia) | Archivar Unity (pendiente de decidir) |
 | M1 | Paciencia, puntuación y estrellas, aceite y cachelos, iconos en tickets | — |
 | M2 | Coop local 2P, mando, cambio de personaje, menú por modo | Playtest de game feel |
 | M3 | Audio completo, feedback, olla que se pasa, dificultad por fases | — |
