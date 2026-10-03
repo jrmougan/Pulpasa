@@ -1,11 +1,11 @@
 ---
 id: PUL-006
 title: Implementar los núcleos OrderBoard y RoundState con sus tests
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: [PUL-004, PUL-005]
-orca_task: null
+orca_task: task_f223bf04a9b9
 unity_sources: [Assets/Scripts/Systems/OrderSystem.cs, Assets/Scripts/Game/ProductivitySystem.cs, Assets/Scripts/Game/OrderStand.cs, Assets/Scripts/Game/OrderTicketUIController.cs, Assets/Scripts/Interfaces/ActiveOrder.cs]
 owns: [godot/core/**, godot/tests/unit/test_order_board.gd, godot/tests/unit/test_order_board.gd.uid, godot/tests/unit/test_round_state.gd, godot/tests/unit/test_round_state.gd.uid, godot/tests/unit/test_order_validator.gd, godot/tests/unit/test_order_validator.gd.uid, godot/autoload/event_bus.gd, godot/resources/round_config.gd, godot/data/config/round_config.tres, godot/tests/unit/test_event_bus.gd, godot/tests/unit/test_data_*.gd]
 touches_scenes: []
@@ -84,6 +84,7 @@ Asserts             425
   Comprobación de mutación: parar el tablero antes de su `advance` en el tick final hace fallar las dos trazas.
 - AC6: `test_ac6_same_seed_same_sequence`, `test_ac6_boards_do_not_share_state`.
 - `test_event_bus.gd` exige `ActiveOrder`/`RoundResult` (sin el marcador `RefCounted`).
-- Tolerancia: `d = min(delta, time_left)`; solo se absorbe un residuo ≤ 1e-9 s (el error acumulado de 60 Hz es ~1e-12),
-  así que ni la ronda ni la paciencia terminan antes del límite real con cualquier delta ≥ 1e-9.
+- Tolerancia: `d = min(delta, time_left)`; se absorbe un residuo ≤ 1e-9 s (el error acumulado de 60 Hz es ~1e-12).
+  Un límite puede adelantarse como máximo 1e-9 s (p. ej. `advance(179.9999999995)` termina la ronda). Aceptado por
+  el producer y documentado en ADR-002 §Reloj (revisión de codex, P3 baja).
 - Notas: `BoxContents.ingredient_state` cubre «sin cocinar» sin cambiar el bus. `first_order_delay` no se usa (M1).

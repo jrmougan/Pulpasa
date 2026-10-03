@@ -91,6 +91,10 @@ este orden y en la misma llamada:
 3. Resta `d` al reloj de ronda, emite `round_time_changed` si cambió el segundo entero y, si llega
    a 0, `OrderBoard.stop()` (no repone ni caduca más) y `round_finished`.
 
+**Tolerancia temporal (contrato):** caducidad y fin de ronda absorben un residuo de coma flotante ≤ 1e-9 s,
+para que 3600 × 1/60 caduque en el tick exacto. Un límite puede adelantarse como máximo 1e-9 s; a 60 Hz
+(16,7 ms por tick) es inobservable. Aceptado en la revisión de PUL-006.
+
 Consecuencias de ese orden:
 - **Pausa**: `get_tree().paused` detiene `RoundManager._physics_process`; nada avanza, ni ronda ni
   paciencia. La UI no lleva contadores propios.
