@@ -53,3 +53,18 @@ tiene que salir vacío.
 
 Para alcance, ADRs, game feel y fin de hito:
 `orca-ide skills get orchestration --reference references/messaging-and-gates.md` y usa `gate-create`.
+
+## Agentes no Claude
+
+- **antigravity** (Gemini, `agy`): `worker-start ... --agent antigravity --model <id>` funciona supervisado.
+  Modelos: `agy models` (p. ej. `gemini-3.1-pro-high` para fichas difíciles, `gemini-3.8-flash-high` para medias).
+- **kimi** (`kimi`, K3): Orca no lo reconoce como agente, `worker-start --terminal` falla en `agent_readiness`.
+  Receta (vía no supervisada, low-level-topology):
+  1. `orca-ide worktree create --name pul-0xx --base-branch <rama-integración> --setup skip --json`
+  2. `orca-ide terminal create --worktree path:<ruta> --title "PUL-0xx kimi" --command "kimi --auto" --json`
+  3. La primera vez kimi pregunta «Trust this folder?» (MCP del proyecto): `terminal send --enter`.
+  4. `orchestration task-create --run <run> --spec "..."` y `orchestration dispatch --task <id> --to <terminal> --inject`.
+  5. Si el texto queda en el prompt sin enviarse, `terminal send --terminal <h> --enter`.
+  El carril queda «unsupervised»: `worker-stop/release` no cierran el proceso; ciérralo con `orca-ide terminal close` al terminar.
+- Ni antigravity ni kimi ejecutan los hooks de `.claude/`: la propiedad y la verificación las garantiza
+  `tools/merge_gate.sh` (check_owns + verify). Pide en el spec que ejecuten ambos antes de cerrar.
