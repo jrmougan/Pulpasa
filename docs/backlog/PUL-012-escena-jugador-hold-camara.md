@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-011, PUL-008]
 orca_task: null
 unity_sources: [Assets/Scripts/Characters/PlayerController.cs, Assets/Scripts/Characters/PlayerHoldSystem.cs, Assets/Prefabs/Characters/Player.prefab, Assets/Scenes/Levels/Level_01.unity]
-owns: [godot/entities/player/**, godot/entities/camera/**, godot/components/hold_component.gd, godot/components/hold_component.gd.uid, godot/scenes/sandbox/player_sandbox.tscn, godot/scenes/sandbox/player_sandbox.tscn.uid, godot/tests/integration/test_player.gd, godot/tests/integration/test_player.gd.uid, godot/tests/integration/test_hold_component.gd, godot/tests/integration/test_hold_component.gd.uid, docs/evidence/PUL-012/**]
+owns: [godot/entities/player/**, godot/components/pickable_contract.gd, godot/components/pickable_contract.gd.uid, godot/entities/camera/**, godot/components/hold_component.gd, godot/components/hold_component.gd.uid, godot/scenes/sandbox/player_sandbox.tscn, godot/scenes/sandbox/player_sandbox.tscn.uid, godot/tests/integration/test_player.gd, godot/tests/integration/test_player.gd.uid, godot/tests/integration/test_hold_component.gd, godot/tests/integration/test_hold_component.gd.uid, docs/evidence/PUL-012/**]
 touches_scenes: [godot/entities/player/player.tscn, godot/entities/camera/camera_rig.tscn, godot/scenes/sandbox/player_sandbox.tscn]
 ---
 
@@ -41,7 +41,7 @@ Fase 4 de M0, **capa específica 3D** (`scene-tree.md` §3 `player.tscn`, ADR-00
 - [ ] AC1 Con `p1_move_right` pulsado 1 s, el jugador se desplaza 5 m ± 5 % en la dirección de pantalla correcta y mira hacia ella → `test_player.gd`.
 - [ ] AC2 Fuera de ronda (antes de `round_started` o tras `round_finished`) el jugador no se mueve → `test_player.gd`.
 - [ ] AC3 `pick_up` de un objeto pickable: queda bajo `HoldPoint`, capa `held`, `is_held = true`, `on_picked_up` llamado una vez; `drop` lo deja 0,6 m delante y 0,6 m arriba bajo `items_root` con `on_dropped` una vez → `test_hold_component.gd`.
-- [ ] AC4 `pick_up` de algo que no es pickable no cambia el estado (B5) → `test_hold_component.gd`.
+- [ ] AC4 `pick_up` de algo que no es pickable, o que no cumple el contrato completo (`on_picked_up`, `on_dropped`, `is_held`), no cambia el estado ni emite señales (B5). Extrae la validación a un helper común reutilizable (p. ej. `static func Holder.is_valid_pickable(item)` no está en owns: ponlo en `components/pickable_contract.gd`, común) → `test_hold_component.gd`.
 - [ ] AC5 Captura del sandbox con el jugador llevando el objeto, vía MCP (`simulate_input`), en `docs/evidence/PUL-012/`. `tools/verify.sh` en verde.
 
 ## Plan
