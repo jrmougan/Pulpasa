@@ -102,7 +102,7 @@ Tres cajas y tres condimentos = una escena + `.tres` (`data/boxes/{small,medium,
 item_spawner.gd [6]   script genérico (no escena): @export scene: PackedScene; @export data: Resource
 octopus_storage.tscn  OctopusStorage (StaticBody3D; grupo interactable)  item_spawner.gd  scene = octopus.tscn
                       ├── CollisionShape3D, Model (nevera), %Highlightable
-kitchen.tscn          Kitchen (StaticBody3D; grupo interactable)  cooking_station.gd
+kitchen.tscn          Kitchen (StaticBody3D; grupos interactable, kitchen)  cooking_station.gd
                       ├── CollisionShape3D, Model (olla + fogón), %AnchorPoint, %Highlightable
                       ├── %CookBar (world_progress_bar.tscn), %BoilAudio (AudioStreamPlayer3D)
                       └── %CookTimer (Timer)       cook_time desde IngredientData

@@ -96,6 +96,9 @@ Godot no tiene interfaces; se usa **grupo + métodos con firma fija**, verificad
 |---|---|---|
 | `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación) | estaciones, slots, caja, puesto de entrega |
 | `pickable` | `on_picked_up(holder: Holder) -> void`; `on_dropped() -> void`; `var is_held: bool` | pulpo, caja, condimento |
+| `kitchen` | Ninguno (marca). Lo usa `InteractionDetector` para el bonus de puntuación con mano vacía (`PlayerConfig.kitchen_bonus`, equivale al tag `Kitchen` de Unity). No es una capa de física | raíz de `kitchen.tscn` (obligatorio) |
+
+*Enmienda 2026-10-03 (grupo `kitchen`), aprobada por el responsable tras la revisión de PUL-015.*
 
 - Los tipos del contrato (`InteractionComponent`, `Holder`) son comunes: el receptor accede a la mano
   con `actor.holder` y al jugador con `actor.control.controlled_by`, sin conocer `Player`. El
