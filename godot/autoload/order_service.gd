@@ -24,6 +24,7 @@ func setup(catalog: OrderCatalog, rng: RandomNumberGenerator = null) -> void:
 	if rng == null:
 		rng = RandomNumberGenerator.new()
 		rng.randomize()
+	_disconnect_board()
 	board = OrderBoard.new(catalog, rng)
 	board.orders_reset.connect(_on_orders_reset)
 	board.order_generated.connect(_on_order_generated)
@@ -52,6 +53,18 @@ func get_active_orders() -> Array[ActiveOrder]:
 	if board == null:
 		return [] as Array[ActiveOrder]
 	return board.get_active_orders()
+
+
+## Deja de reenviar el tablero anterior, por si alguien conserva una referencia a él.
+func _disconnect_board() -> void:
+	if board == null:
+		return
+	board.orders_reset.disconnect(_on_orders_reset)
+	board.order_generated.disconnect(_on_order_generated)
+	board.order_completed.disconnect(_on_order_completed)
+	board.delivery_rejected.disconnect(_on_delivery_rejected)
+	board.order_patience_changed.disconnect(_on_order_patience_changed)
+	board.order_expired.disconnect(_on_order_expired)
 
 
 func _get_bus() -> Node:

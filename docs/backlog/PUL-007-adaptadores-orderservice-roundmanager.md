@@ -42,8 +42,10 @@ Sin reglas de juego en los adaptadores. Sin acceso a escena. Sin tipos 3D.
 
 ```
 Scripts              13
-Tests               105
-Passing Tests       105
+Tests               107
+Passing Tests       107
 Asserts             520
 ---- All tests passed! ----
 ```
+
+Revisión (Codex P2): `start_round` desconecta el reenvío y las conexiones al tablero del `RoundState` anterior; `OrderService.setup` desconecta el tablero anterior. Tests: `test_ac1_previous_round_state_is_fully_detached_on_restart`, `test_ac1_previous_board_no_longer_forwards_after_new_setup`. verify OK, 107 tests.

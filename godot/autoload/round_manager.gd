@@ -42,12 +42,33 @@ func start_round(config: RoundConfig, slot_ids: Array[int]) -> void:
 	if board == null:
 		push_error("RoundManager: OrderService.setup(catalog) debe llamarse antes de start_round")
 		return
+	_detach_round_state(board)
 	round_state = RoundState.new(config, board)
 	round_state.round_started.connect(_on_round_started)
 	round_state.round_time_changed.connect(_on_round_time_changed)
 	round_state.round_finished.connect(_on_round_finished)
 	round_state.score_changed.connect(_on_score_changed)
 	round_state.start(slot_ids)
+
+
+## Suelta el núcleo anterior: el reenvío al bus y las conexiones que él mismo hizo al tablero
+## (RoundState las crea en su constructor), para que un núcleo conservado no siga emitiendo.
+func _detach_round_state(board: OrderBoard) -> void:
+	var previous: RoundState = round_state
+	if previous == null:
+		return
+	previous.round_started.disconnect(_on_round_started)
+	previous.round_time_changed.disconnect(_on_round_time_changed)
+	previous.round_finished.disconnect(_on_round_finished)
+	previous.score_changed.disconnect(_on_score_changed)
+	for board_signal: Signal in [
+		board.order_completed, board.order_expired, board.delivery_rejected
+	]:
+		for connection: Dictionary in board_signal.get_connections():
+			var callable: Callable = connection["callable"]
+			if callable.get_object() == previous:
+				board_signal.disconnect(callable)
+	round_state = null
 
 
 func _physics_process(delta: float) -> void:

@@ -187,3 +187,22 @@ func test_ac1_physics_process_without_round_is_noop() -> void:
 	_manager._physics_process(TICK)
 	assert_signal_not_emitted(_bus, "round_time_changed")
 	assert_null(_manager.round_state)
+
+
+func test_ac1_previous_round_state_is_fully_detached_on_restart() -> void:
+	_service.setup(_patient_catalog(10.0), _seeded_rng())
+	_manager.start_round(_config(), [0] as Array[int])
+	var previous: RoundState = _manager.round_state
+	_manager.start_round(_config(), [0] as Array[int])
+	assert_ne(_manager.round_state, previous)
+	watch_signals(_bus)
+	var order: ActiveOrder = _service.get_active_orders()[0]
+	_service.try_deliver(0, _contents_for(order))
+	assert_signal_emit_count(_bus, "score_changed", 1)
+	assert_signal_emitted_with_parameters(_bus, "score_changed", [1, 0])
+	assert_eq(previous.get_boxes_delivered(), 0)
+	_service.board.advance(10.0)
+	assert_signal_emit_count(_bus, "order_expired", 1)
+	assert_signal_emit_count(_bus, "score_changed", 2)
+	_manager.round_state.advance(1.0)
+	assert_signal_emit_count(_bus, "round_time_changed", 1)

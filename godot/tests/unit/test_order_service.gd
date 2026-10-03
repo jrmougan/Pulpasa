@@ -122,6 +122,17 @@ func test_ac1_get_active_orders_returns_copies() -> void:
 	assert_ne(_service.get_active_orders()[0].time_left, -5.0)
 
 
+func test_ac1_previous_board_no_longer_forwards_after_new_setup() -> void:
+	_setup_default()
+	var previous: OrderBoard = _service.board
+	_service.setup(load(CATALOG_PATH) as OrderCatalog, _seeded_rng())
+	watch_signals(_bus)
+	previous.request_order(0)
+	assert_signal_not_emitted(_bus, "order_generated")
+	_service.request_order(0)
+	assert_signal_emit_count(_bus, "order_generated", 1)
+
+
 func test_ac1_new_setup_does_not_duplicate_forwarding() -> void:
 	_setup_default()
 	_service.setup(load(CATALOG_PATH) as OrderCatalog, _seeded_rng())
