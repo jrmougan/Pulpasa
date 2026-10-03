@@ -2,8 +2,6 @@
 
 [ext_resource type="Script" path="res://ui/menus/game_over.gd" id="1_k5c08"]
 [ext_resource type="PackedScene" path="res://ui/menus/menu_panel.tscn" id="2_ghdab"]
-[ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="3_b2f6y"]
-[ext_resource type="Script" path="res://ui/menus/menu_panel.gd" id="4_arbac"]
 
 [node name="GameOver" type="Control" unique_id=1599561603]
 process_mode = 3
@@ -20,5 +18,3 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource("3_b2f6y")
-script = ExtResource("4_arbac")

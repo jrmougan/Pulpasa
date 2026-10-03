@@ -55,7 +55,7 @@ prueban aparte, solo para comprobar el reenvío al bus.
 | # | Autoload | Script | Responsabilidad | `process_mode` |
 |---|---|---|---|---|
 | 1 | `EventBus` | `autoload/event_bus.gd` | Solo declara señales tipadas (catálogo `signals.md`). Sin estado ni lógica | `INHERIT` |
-| 2 | `GameState` | `autoload/game_state.gd` | Modo de juego (`GameMode.Mode.SINGLE` / `COOP_2P`; el enum vive en `core/game_mode.gd` para poder tiparlo fuera del autoload), aplica `DeviceAssignment` al InputMap (ADR-004), pausa (`set_paused()` → `get_tree().paused`) y cambios de escena (`go_to_main_menu()`, `start_level(mode)`) | `ALWAYS` |
+| 2 | `GameState` | `autoload/game_state.gd` | Modo de juego (`GameMode.Mode.SINGLE` / `COOP_2P`; el enum vive en `core/game_mode.gd` para poder tiparlo fuera del autoload), aplica `DeviceAssignment` al InputMap (ADR-004), pausa (`set_paused()` → `get_tree().paused`) y cambios de escena (`go_to_main_menu()`, `start_level(mode)`, `restart_level()` que delega en `start_level(mode)` con el modo actual para que el reparto de mandos de M2 viva en un solo sitio) | `ALWAYS` |
 | 3 | `OrderService` | `autoload/order_service.gd` | Adaptador de `OrderBoard`: `setup(catalog)`, `try_deliver(slot_id, contents)`, `get_active_orders()`; reenvía sus señales al bus. **Sin acceso a escena**. No tiene `_process`: su tiempo lo avanza `RoundManager` | `INHERIT` |
 | 4 | `RoundManager` | `autoload/round_manager.gd` | Adaptador de `RoundState`: `start_round(config, slot_ids)`; en `_physics_process(delta)` llama `RoundState.advance(delta)`; reenvía señales | `INHERIT` (se detiene con la pausa) |
 

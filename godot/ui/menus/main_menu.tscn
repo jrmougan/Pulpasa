@@ -3,85 +3,9 @@
 [ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="1_qc8qn"]
 [ext_resource type="Script" path="res://ui/menus/main_menu.gd" id="2_5ssi0"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1njj5"]
-bg_color = Color(0.72156864, 0.23921569, 0.20392157, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h223f"]
-bg_color = Color(0.6349804, 0.2105098, 0.17945099, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l3r6a"]
-bg_color = Color(0.6349804, 0.2105098, 0.17945099, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1kjlq"]
-bg_color = Color(0.72156864, 0.23921569, 0.20392157, 1)
-draw_center = false
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-expand_margin_left = 5.0
-expand_margin_top = 5.0
-expand_margin_right = 5.0
-expand_margin_bottom = 5.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vuv8w"]
-bg_color = Color(0.9490196, 0.8627451, 0.7529412, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u0fm7"]
-bg_color = Color(0.83513725, 0.7592157, 0.66258824, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tg3eq"]
-bg_color = Color(0.83513725, 0.7592157, 0.66258824, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g305v"]
-bg_color = Color(0.9490196, 0.8627451, 0.7529412, 1)
-draw_center = false
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-expand_margin_left = 5.0
-expand_margin_top = 5.0
-expand_margin_right = 5.0
-expand_margin_bottom = 5.0
-
 [node name="MainMenu" type="Control" unique_id=1249809611]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource("1_qc8qn")
@@ -120,8 +44,7 @@ theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
 horizontal_alignment = 1
 
-[node name="@Control@2" type="Control" parent="Center/Column" unique_id=474855341]
-unique_name_in_owner = true
+[node name="Spacer" type="Control" parent="Center/Column" unique_id=474855341]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 
@@ -129,41 +52,21 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-focus_neighbor_left = NodePath("../Exit")
 focus_neighbor_top = NodePath("../Exit")
-focus_neighbor_right = NodePath("../Exit")
 focus_neighbor_bottom = NodePath("../Exit")
 focus_next = NodePath("../Exit")
 focus_previous = NodePath("../Exit")
-theme_override_styles/normal = SubResource("StyleBoxFlat_1njj5")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_h223f")
-theme_override_styles/hover = SubResource("StyleBoxFlat_l3r6a")
-theme_override_styles/focus = SubResource("StyleBoxFlat_1kjlq")
-theme_override_colors/font_color = Color(1, 0.96862745, 0.9098039, 1)
-theme_override_colors/font_focus_color = Color(1, 0.96862745, 0.9098039, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.96862745, 0.9098039, 1)
-theme_override_colors/font_hover_color = Color(1, 0.96862745, 0.9098039, 1)
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"MenuPrimaryButton"
 
 [node name="Exit" type="Button" parent="Center/Column" unique_id=1959124435]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-focus_neighbor_left = NodePath("../Play")
 focus_neighbor_top = NodePath("../Play")
-focus_neighbor_right = NodePath("../Play")
 focus_neighbor_bottom = NodePath("../Play")
 focus_next = NodePath("../Play")
 focus_previous = NodePath("../Play")
-theme_override_styles/normal = SubResource("StyleBoxFlat_vuv8w")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_u0fm7")
-theme_override_styles/hover = SubResource("StyleBoxFlat_tg3eq")
-theme_override_styles/focus = SubResource("StyleBoxFlat_g305v")
-theme_override_colors/font_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
-theme_override_colors/font_focus_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
-theme_override_colors/font_pressed_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
-theme_override_colors/font_hover_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"MenuSecondaryButton"
 
 [node name="Mode" type="Label" parent="Center/Column" unique_id=1007240839]
 unique_name_in_owner = true

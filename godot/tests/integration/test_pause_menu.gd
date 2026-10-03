@@ -69,6 +69,19 @@ func test_ac1_ac3_ui_accept_resumes_and_focus_cycles() -> void:
 	assert_false(get_tree().paused)
 
 
+func test_ui_cancel_resumes_only_while_paused() -> void:
+	await _tap("ui_cancel")
+	assert_false(get_tree().paused, "ui_cancel no pausa")
+	await _tap("pause")
+	assert_true(get_tree().paused)
+	await _tap("ui_cancel")
+	assert_false(get_tree().paused)
+	assert_false(_menu.visible)
+	await _tap("pause")
+	await _joypad_tap(JOY_BUTTON_B)
+	assert_false(get_tree().paused)
+
+
 func test_ac1_external_pause_signal_and_round_end() -> void:
 	GameState.set_paused(true)
 	assert_true(_menu.visible)

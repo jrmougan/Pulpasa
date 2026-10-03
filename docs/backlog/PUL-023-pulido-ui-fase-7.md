@@ -1,7 +1,7 @@
 ---
 id: PUL-023
 title: Pulir la UI de la fase 7 con los hallazgos de revisión
-status: ready
+status: review
 milestone: M0
 role: ui-engineer
 deps: []

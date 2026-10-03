@@ -1,7 +1,92 @@
-[gd_resource type="Theme" load_steps=2 format=3]
+[gd_resource type="Theme" load_steps=8 format=3]
 
 [ext_resource type="FontFile" path="res://assets/fonts/LiberationSans.ttf" id="1_font"]
+
+[sub_resource type="StyleBoxFlat" id="primary_normal"]
+bg_color = Color(0.72156864, 0.23921569, 0.20392157, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="primary_pressed"]
+bg_color = Color(0.6349804, 0.2105098, 0.17945099, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="primary_focus"]
+bg_color = Color(0.72156864, 0.23921569, 0.20392157, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
+
+[sub_resource type="StyleBoxFlat" id="secondary_normal"]
+bg_color = Color(0.9490196, 0.8627451, 0.7529412, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="secondary_pressed"]
+bg_color = Color(0.83513725, 0.7592157, 0.66258824, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="secondary_focus"]
+bg_color = Color(0.9490196, 0.8627451, 0.7529412, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+expand_margin_left = 5.0
+expand_margin_top = 5.0
+expand_margin_right = 5.0
+expand_margin_bottom = 5.0
 
 [resource]
 default_font = ExtResource("1_font")
 default_font_size = 18
+RoundHUD/colors/ratio_good_color = Color(0.4, 0.85, 0.45, 1)
+RoundHUD/colors/ratio_bad_color = Color(0.9, 0.3, 0.27, 1)
+RoundHUD/colors/paused_color = Color(1, 1, 1, 0.45)
+MenuPrimaryButton/base_type = &"Button"
+MenuPrimaryButton/colors/font_color = Color(1, 0.96862745, 0.9098039, 1)
+MenuPrimaryButton/colors/font_focus_color = Color(1, 0.96862745, 0.9098039, 1)
+MenuPrimaryButton/colors/font_hover_color = Color(1, 0.96862745, 0.9098039, 1)
+MenuPrimaryButton/colors/font_pressed_color = Color(1, 0.96862745, 0.9098039, 1)
+MenuPrimaryButton/font_sizes/font_size = 24
+MenuPrimaryButton/styles/focus = SubResource("primary_focus")
+MenuPrimaryButton/styles/hover = SubResource("primary_pressed")
+MenuPrimaryButton/styles/normal = SubResource("primary_normal")
+MenuPrimaryButton/styles/pressed = SubResource("primary_pressed")
+MenuSecondaryButton/base_type = &"Button"
+MenuSecondaryButton/colors/font_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+MenuSecondaryButton/colors/font_focus_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+MenuSecondaryButton/colors/font_hover_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+MenuSecondaryButton/colors/font_pressed_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+MenuSecondaryButton/font_sizes/font_size = 24
+MenuSecondaryButton/styles/focus = SubResource("secondary_focus")
+MenuSecondaryButton/styles/hover = SubResource("secondary_pressed")
+MenuSecondaryButton/styles/normal = SubResource("secondary_normal")
+MenuSecondaryButton/styles/pressed = SubResource("secondary_pressed")

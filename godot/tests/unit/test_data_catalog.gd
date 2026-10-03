@@ -74,3 +74,17 @@ func test_pul006_ac5_round_config_performance_tiers() -> void:
 			as Array[String]
 		)
 	)
+
+
+func test_translation_keys_are_explicit() -> void:
+	var expected: Dictionary[String, String] = {
+		"res://data/recipes/familiar.tres": "RECIPE_FAMILIAR",
+		"res://data/recipes/individual.tres": "RECIPE_INDIVIDUAL",
+		"res://data/recipes/combo_duo.tres": "RECIPE_COMBO_DUO",
+		"res://data/seasonings/salt.tres": "SEASONING_SALT",
+		"res://data/seasonings/paprika.tres": "SEASONING_PAPRIKA",
+		"res://data/seasonings/hot_paprika.tres": "SEASONING_HOT_PAPRIKA",
+	}
+	for path: String in expected:
+		var data: Resource = load(path)
+		assert_eq(data.get("translation_key"), expected[path], path)
