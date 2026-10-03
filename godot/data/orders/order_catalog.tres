@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="OrderCatalog" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://resources/order_catalog.gd" id="1_cat"]
+[ext_resource type="Resource" path="res://data/orders/order_1.tres" id="2_o1"]
+[ext_resource type="Resource" path="res://data/orders/order_2.tres" id="3_o2"]
+[ext_resource type="Resource" path="res://data/orders/order_3.tres" id="4_o3"]
+
+[resource]
+script = ExtResource("1_cat")
+orders = [ExtResource("2_o1"), ExtResource("3_o2"), ExtResource("4_o3")]
+max_active_orders = 4

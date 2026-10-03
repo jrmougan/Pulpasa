@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="RecipeData" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://resources/recipe_data.gd" id="1_rec"]
+[ext_resource type="Resource" path="res://data/ingredients/octopus.tres" id="2_ing"]
+[ext_resource type="Resource" path="res://data/boxes/medium.tres" id="3_box"]
+
+[resource]
+script = ExtResource("1_rec")
+display_name = "Pulpo Doble"
+ingredient = ExtResource("2_ing")
+box = ExtResource("3_box")
+base_points = 0
+base_price = 0
