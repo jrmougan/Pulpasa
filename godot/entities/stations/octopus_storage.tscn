@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/stations/item_spawner.gd" id="1_w2pem"]
+[ext_resource type="PackedScene" path="res://entities/items/octopus.tscn" id="2_n77ji"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/fridge.tscn" id="3_hdq4l"]
+[ext_resource type="Script" path="res://components/highlightable.gd" id="4_bxfsx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_512c5"]
+size = Vector3(1.61, 2.33, 0.91)
+
+[node name="OctopusStorage" type="StaticBody3D" unique_id=696420386 groups=["interactable"]]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_w2pem")
+scene = ExtResource("2_n77ji")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1892118216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.165, 0)
+shape = SubResource("BoxShape3D_512c5")
+
+[node name="Model" parent="." unique_id=837607215 instance=ExtResource("3_hdq4l")]
+
+[node name="Highlightable" type="Node" parent="." unique_id=243222243]
+unique_name_in_owner = true
+script = ExtResource("4_bxfsx")

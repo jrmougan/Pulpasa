@@ -12,6 +12,9 @@ extends StaticBody3D
 
 ## Objeto con el que empieza el slot (p. ej. el bote de cada especia).
 @export var initial_item: PackedScene
+## Datos opcionales del objeto inicial (p. ej. la `SeasoningData` de cada especia): se asignan a su
+## propiedad `data` antes de que entre al árbol. `null` deja los de la escena.
+@export var initial_item_data: Resource
 
 var _item: Node3D
 var _saved_layer: int = 0
@@ -46,6 +49,8 @@ func _ready() -> void:
 	if initial_item != null:
 		var item: Node3D = initial_item.instantiate() as Node3D
 		if item != null:
+			if initial_item_data != null and &"data" in item:
+				item.set(&"data", initial_item_data)
 			_anchor.add_child(item)
 			_store(item)
 
