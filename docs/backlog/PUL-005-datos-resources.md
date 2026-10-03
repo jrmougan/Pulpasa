@@ -1,7 +1,7 @@
 ---
 id: PUL-005
 title: Portar los ScriptableObjects a Resources y .tres
-status: ready
+status: review
 milestone: M0
 role: gameplay-engineer
 deps: []
@@ -42,5 +42,17 @@ Fase 1 de M0. `docs/migration/inventory.md` §2 (13 `.asset`) y la fila de Scrip
 - [ ] AC4 `tools/verify.sh` en verde.
 
 ## Plan
+Clases en `godot/resources/`, `.tres` en `godot/data/`, tests `test_data_{catalog,boxes,integrity}.gd` (AC1-AC3).
 
 ## Evidence
+
+GUT: 4 scripts, 11 tests, 11 passing, 89 asserts; `tools/verify.sh` OK (AC4).
+
+Notas / desviaciones de la ficha:
+- AC1 dice "Order_1: ComboDuo"; en Unity (`Order_1.asset`) y en `inventory.md` §2 es **Familiar** + Hot_Paprika + Salt. Se porta Unity.
+- El catálogo se llama `data/orders/order_catalog.tres` y la config `data/config/round_config.tres` (nombres de `docs/arch/scene-tree.md` §5, contrato), no `catalog.tres`.
+- `RoundConfig` lleva `duration` (180) y `first_order_delay` (0, ADR-002); `OrderCatalog.max_active_orders` = 4.
+- Campos M1 con valor de paridad: `OrderData.max_time` 0, `RecipeData.base_points` 0 y `base_price` 0.
+- Los campos `scene: PackedScene` (cajas, ingrediente, condimentos) quedan vacíos hasta las fases 3-6.
+- `Salt` rehecho con el esquema actual (color tomado de `visualColor`); Paprika/Hot_Paprika con color blanco (en Unity era 0,0,0,0). Cajas sin `prefab` roto. `DrinkSO` no se porta.
+- Los `.tres` no llevan `uid://`; el import no los generó.

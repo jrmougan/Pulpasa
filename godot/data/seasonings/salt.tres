@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SeasoningData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/seasoning_data.gd" id="1_sea"]
+
+[resource]
+script = ExtResource("1_sea")
+display_name = "Sal"
+type = 0
+color = Color(0.5931827, 0.8113208, 0.7928984, 1)
