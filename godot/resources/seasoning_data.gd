@@ -2,7 +2,7 @@ class_name SeasoningData
 extends Resource
 ## Condimento (porta SpicesSO). `scene` queda vacía hasta la fase 6.
 
-enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL, ACEITE = 3 }
+enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL }
 
 @export var display_name: String = ""
 ## Clave tr() explícita; no se deriva del nombre del fichero.
@@ -14,3 +14,9 @@ enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL, ACEITE = 3 }
 @export var color: Color = Color.WHITE
 @export var icon: Texture2D
 @export var scene: PackedScene
+
+
+func same_as(other: SeasoningData) -> bool:
+	if other == null:
+		return false
+	return self == other or type == other.type

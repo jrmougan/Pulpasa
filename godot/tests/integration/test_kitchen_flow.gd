@@ -177,14 +177,15 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
 	assert_eq(_order_for(SLOT_ID).id, order.id, "la comanda sigue viva")
 
 	assert_true(_press(_free_slot), "deja la caja para condimentarla")
-	var extra: Array[SeasoningData] = [missing]
+	_season(box, [missing])
+	var extra: Array[SeasoningData] = []
 	for slot: Node in _sandbox.get_node("Stations/SpiceShelf").get_children():
 		if slot is Slot and (slot as Slot).get_item() is SeasoningItem:
 			var data: SeasoningData = ((slot as Slot).get_item() as SeasoningItem).data
 			if not wanted.has(data) and box.can_season(data):
 				extra.append(data)
 				break
-	assert_gt(extra.size(), 1, "hay al menos un condimento que la comanda no pide")
+	assert_gt(extra.size(), 0, "hay al menos un condimento que la comanda no pide")
 	_season(box, extra)
 	assert_true(_press(box))
 	# El puesto ignora un segundo intento de la misma caja en el mismo tick de física.

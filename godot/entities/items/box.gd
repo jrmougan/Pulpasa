@@ -44,7 +44,7 @@ func has_seasoning(seasoning: SeasoningData) -> bool:
 	if seasoning == null:
 		return false
 	for existing: SeasoningData in _seasonings:
-		if existing == seasoning or (existing != null and existing.type == seasoning.type):
+		if existing != null and existing.same_as(seasoning):
 			return true
 	return false
 
@@ -69,10 +69,6 @@ func can_season(seasoning: SeasoningData) -> bool:
 	):
 		return false
 	return true
-
-
-func get_seasonings() -> Array[SeasoningData]:
-	return _seasonings.duplicate()
 
 
 ## Copia de lo que lleva la caja, para `OrderService.try_deliver`.

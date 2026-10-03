@@ -1,5 +1,5 @@
 extends GutTest
-## PUL-006 AC2: OrderValidator es puro y aplica la regla M0 (especias ⊆, B15).
+## PUL-006 / PUL-028 AC2: OrderValidator es puro y aplica igualdad exacta (D4/D17).
 
 const ORDER_1_PATH: String = "res://data/orders/order_1.tres"
 const SMALL_BOX_PATH: String = "res://data/boxes/small.tres"
@@ -10,7 +10,7 @@ var _order: OrderData
 
 
 func before_each() -> void:
-	_order = load(ORDER_1_PATH) as OrderData
+	_order = (load(ORDER_1_PATH) as OrderData).duplicate(true)
 
 
 func _valid_contents(order: OrderData) -> BoxContents:
@@ -82,9 +82,10 @@ func test_ac2_matches_does_not_mutate_contents() -> void:
 
 
 func test_ac2_exact_validation_with_oil() -> void:
+	var order: OrderData = _order.duplicate(true)
 	var oil: SeasoningData = load(OIL_PATH) as SeasoningData
-	_order.seasonings.append(oil)
-	var contents: BoxContents = _valid_contents(_order)
-	assert_true(OrderValidator.matches(_order, contents))
+	order.seasonings.append(oil)
+	var contents: BoxContents = _valid_contents(order)
+	assert_true(OrderValidator.matches(order, contents))
 	contents.seasonings.erase(oil)
-	assert_false(OrderValidator.matches(_order, contents))
+	assert_false(OrderValidator.matches(order, contents))

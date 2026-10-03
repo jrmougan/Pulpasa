@@ -1,3 +1,4 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-016 AC1/AC2: la caja decide (ADR-003 §4) si el objeto en la mano la llena (pulpo cocido,
 ## corte por pulsación D1/D13) o la condimenta (una vez por tipo, con la caja llena).
@@ -178,7 +179,7 @@ func test_ac1_condimentacion_ac1_sweet_paprika_applied_once() -> void:
 	_fill(box)
 	_hold.drop()
 	octopus.queue_free()
-	var paprika: SeasoningItem = _seasoning_in_hand(PAPRIKA)
+	_seasoning_in_hand(PAPRIKA)
 	watch_signals(box)
 	assert_true(box.interact(_actor))
 	assert_eq(box.get_contents().seasonings, [PAPRIKA] as Array[SeasoningData])
@@ -196,7 +197,7 @@ func test_ac1_condimentacion_ac2_paprika_exclusivity_rejects_hot_paprika() -> vo
 	assert_eq(box.get_contents().seasonings, [PAPRIKA] as Array[SeasoningData])
 	_hold.drop()
 	paprika.queue_free()
-	var hot: SeasoningItem = _seasoning_in_hand(HOT_PAPRIKA)
+	_seasoning_in_hand(HOT_PAPRIKA)
 	watch_signals(box)
 	assert_true(box.interact(_actor), "consume pulsación")
 	assert_eq(box.get_contents().seasonings, [PAPRIKA] as Array[SeasoningData], "no cambia")
@@ -214,7 +215,7 @@ func test_ac1_condimentacion_ac2_hot_paprika_exclusivity_rejects_sweet_paprika()
 	assert_eq(box.get_contents().seasonings, [HOT_PAPRIKA] as Array[SeasoningData])
 	_hold.drop()
 	hot.queue_free()
-	var paprika: SeasoningItem = _seasoning_in_hand(PAPRIKA)
+	_seasoning_in_hand(PAPRIKA)
 	watch_signals(box)
 	assert_true(box.interact(_actor))
 	assert_eq(box.get_contents().seasonings, [HOT_PAPRIKA] as Array[SeasoningData])
@@ -227,7 +228,7 @@ func test_ac1_condimentacion_ac3_salt_is_idempotent() -> void:
 	_fill(box)
 	_hold.drop()
 	octopus.queue_free()
-	var salt: SeasoningItem = _seasoning_in_hand(SALT)
+	_seasoning_in_hand(SALT)
 	watch_signals(box)
 	assert_true(box.interact(_actor))
 	assert_eq(box.get_contents().seasonings, [SALT] as Array[SeasoningData])
@@ -265,10 +266,28 @@ func test_ac1_full_box_can_receive_oil() -> void:
 	_fill(box)
 	_hold.drop()
 	octopus.queue_free()
-	var oil: SeasoningItem = _seasoning_in_hand(OIL)
+	_seasoning_in_hand(OIL)
 	watch_signals(box)
 	assert_true(box.interact(_actor))
 	assert_eq(box.get_contents().seasonings, [OIL] as Array[SeasoningData])
+	assert_signal_emit_count(box, "seasoned", 1)
+
+
+func test_ac1_oil_and_paprika_can_coexist() -> void:
+	var box: Box = _box(SMALL)
+	var octopus: Ingredient = _octopus_in_hand(true)
+	_fill(box)
+	_hold.drop()
+	octopus.queue_free()
+	var paprika: SeasoningItem = _seasoning_in_hand(PAPRIKA)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings, [PAPRIKA] as Array[SeasoningData])
+	_hold.drop()
+	paprika.queue_free()
+	_seasoning_in_hand(OIL)
+	watch_signals(box)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings, [PAPRIKA, OIL] as Array[SeasoningData])
 	assert_signal_emit_count(box, "seasoned", 1)
 
 

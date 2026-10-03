@@ -101,7 +101,8 @@ func test_pul028_ac1_seasoning_data_oil_and_exclusivity_groups() -> void:
 	assert_eq(oil.display_name, "Aceite")
 	assert_eq(oil.translation_key, "SEASONING_OIL")
 	assert_eq(oil.type, SeasoningData.SeasoningType.OIL)
-	assert_eq(oil.type, SeasoningData.SeasoningType.ACEITE)
+	assert_true(oil.same_as(oil))
+	assert_false(oil.same_as(salt))
 	assert_eq(oil.exclusivity_group, &"")
 
 	assert_eq(paprika.exclusivity_group, &"paprika")

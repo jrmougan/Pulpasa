@@ -30,6 +30,6 @@ static func _has_seasoning(list: Array[SeasoningData], target: SeasoningData) ->
 	if target == null:
 		return false
 	for item: SeasoningData in list:
-		if item == target or (item != null and item.type == target.type):
+		if item != null and item.same_as(target):
 			return true
 	return false

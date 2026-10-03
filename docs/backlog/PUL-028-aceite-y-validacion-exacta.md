@@ -47,7 +47,7 @@ M1, feature `condimentacion.md` (AC1–AC4) y `entrega-y-puntuacion.md` AC3 (coi
 ## Evidence
 - Informe detallado: `docs/evidence/PUL-028/README.md`.
 - Captura visual de la estantería con 4 slots: `docs/evidence/PUL-028/ac3-spice-shelf-4-slots.png`.
-- Tests GUT: 392 tests pasando, 0 fallos (cobertura unitaria e integración de AC1, AC2 y AC3).
+- Tests GUT: 393 tests pasando, 0 fallos (cobertura unitaria e integración de AC1, AC2 y AC3).
 - Smoke run: 120 frames sin errores.
 - `tools/verify.sh`: ✓ verify OK.
 - `tools/check_owns.py`: limpio (todas las rutas dentro de `owns`).
