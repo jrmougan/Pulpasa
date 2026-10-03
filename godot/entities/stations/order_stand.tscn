@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/stations/order_stand.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/models/furniture/order_stand.fbx" id="2_model"]
+[ext_resource type="AudioStream" path="res://assets/audio/delivery_ok.ogg" id="3_ok"]
+[ext_resource type="AudioStream" path="res://assets/audio/delivery_error.ogg" id="4_err"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/LiberationSans.ttf" id="5_font"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_body"]
+size = Vector3(1.9, 1.0, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_zone"]
+size = Vector3(1.8, 1.0, 1.6)
+
+[node name="OrderStand" type="StaticBody3D" groups=["interactable"]]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_script")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_body")
+
+[node name="Model" parent="." instance=ExtResource("2_model")]
+
+[node name="DeliveryZone" type="Area3D" parent="."]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeliveryZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 1.2)
+shape = SubResource("BoxShape3D_zone")
+
+[node name="OrderLabel" type="Label3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0.4)
+billboard = 1
+no_depth_test = true
+text = "–"
+font = ExtResource("5_font")
+font_size = 96
+pixel_size = 0.01
+
+[node name="OkAudio" type="AudioStreamPlayer3D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("3_ok")
+
+[node name="ErrorAudio" type="AudioStreamPlayer3D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("4_err")
