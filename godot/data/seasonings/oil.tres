@@ -4,8 +4,7 @@
 
 [resource]
 script = ExtResource("1_sea")
-display_name = "Pimentón picante"
-translation_key = "SEASONING_HOT_PAPRIKA"
-type = 2
-exclusivity_group = &"paprika"
+display_name = "Aceite"
+translation_key = "SEASONING_OIL"
+type = 3
 color = Color(0, 0, 0, 0)

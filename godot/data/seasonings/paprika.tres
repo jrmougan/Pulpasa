@@ -7,4 +7,5 @@ script = ExtResource("1_sea")
 display_name = "Pimentón"
 translation_key = "SEASONING_PAPRIKA"
 type = 1
+exclusivity_group = &"paprika"
 color = Color(0, 0, 0, 0)

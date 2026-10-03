@@ -20,7 +20,7 @@ const PAUSE_TOLERANCE: float = 0.05
 const PAUSE_SECONDS: float = 0.5
 ## Margen sobre `cook_time` para esperar la cocción.
 const COOK_MARGIN: float = 3.0
-const SPICE_JARS: int = 3
+const SPICE_JARS: int = 4
 
 var _level: Node
 var _menu: Node

@@ -160,7 +160,7 @@ func test_ac1_full_flow_completes_exactly_one_order_and_stand_gets_new_one() -> 
 	assert_signal_emit_count(EventBus, "order_completed", 1, "una sola vez, también después")
 
 
-func test_ac2_missing_seasoning_rejected_extra_seasoning_accepted() -> void:
+func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
 	var order: ActiveOrder = _seasoned_order()
 	var box: Box = await _cook_and_fill(order)
 	var wanted: Array[SeasoningData] = order.data.seasonings
@@ -181,8 +181,9 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_accepted() -> void:
 	for slot: Node in _sandbox.get_node("Stations/SpiceShelf").get_children():
 		if slot is Slot and (slot as Slot).get_item() is SeasoningItem:
 			var data: SeasoningData = ((slot as Slot).get_item() as SeasoningItem).data
-			if not wanted.has(data):
+			if not wanted.has(data) and box.can_season(data):
 				extra.append(data)
+				break
 	assert_gt(extra.size(), 1, "hay al menos un condimento que la comanda no pide")
 	_season(box, extra)
 	assert_true(_press(box))
@@ -190,9 +191,8 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_accepted() -> void:
 	await wait_physics_frames(1)
 
 	assert_true(_press(_stand))
-	assert_signal_emit_count(EventBus, "order_completed", 1, "B15: condimentos de más se aceptan")
-	assert_signal_emit_count(EventBus, "delivery_rejected", 1)
-	assert_eq(
-		(get_signal_parameters(EventBus, "order_completed", 0)[0] as ActiveOrder).id, order.id
-	)
-	assert_true(_is_released(box))
+	assert_signal_not_emitted(EventBus, "order_completed")
+	assert_signal_emit_count(EventBus, "delivery_rejected", 2)
+	assert_eq(get_signal_parameters(EventBus, "delivery_rejected", 1), [SLOT_ID, order.id, 0])
+	assert_eq(_hold.get_held_item(), box, "la caja rechazada se queda en la mano")
+	assert_eq(_order_for(SLOT_ID).id, order.id, "la comanda sigue viva")

@@ -4,6 +4,7 @@ extends GutTest
 const ORDER_1_PATH: String = "res://data/orders/order_1.tres"
 const SMALL_BOX_PATH: String = "res://data/boxes/small.tres"
 const PAPRIKA_PATH: String = "res://data/seasonings/paprika.tres"
+const OIL_PATH: String = "res://data/seasonings/oil.tres"
 
 var _order: OrderData
 
@@ -56,10 +57,10 @@ func test_ac2_missing_seasoning_does_not_match() -> void:
 	assert_false(OrderValidator.matches(_order, contents))
 
 
-func test_ac2_extra_seasoning_is_accepted_in_m0() -> void:
+func test_ac2_extra_seasoning_is_rejected_in_m1() -> void:
 	var contents: BoxContents = _valid_contents(_order)
 	contents.seasonings.append(load(PAPRIKA_PATH) as SeasoningData)
-	assert_true(OrderValidator.matches(_order, contents))
+	assert_false(OrderValidator.matches(_order, contents))
 
 
 func test_ac2_seasoning_order_does_not_matter() -> void:
@@ -78,3 +79,12 @@ func test_ac2_matches_does_not_mutate_contents() -> void:
 	OrderValidator.matches(_order, contents)
 	assert_eq(contents.seasonings.size(), before)
 	assert_eq(contents.box, _order.recipe.box)
+
+
+func test_ac2_exact_validation_with_oil() -> void:
+	var oil: SeasoningData = load(OIL_PATH) as SeasoningData
+	_order.seasonings.append(oil)
+	var contents: BoxContents = _valid_contents(_order)
+	assert_true(OrderValidator.matches(_order, contents))
+	contents.seasonings.erase(oil)
+	assert_false(OrderValidator.matches(_order, contents))

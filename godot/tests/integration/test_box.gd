@@ -11,6 +11,8 @@ const MEDIUM: BoxData = preload("res://data/boxes/medium.tres")
 const LARGE: BoxData = preload("res://data/boxes/large.tres")
 const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
 const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
+const HOT_PAPRIKA: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
+const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
 
 var _level: Node3D
 var _hold: HoldComponent
@@ -168,6 +170,106 @@ func test_ac2_contents_are_a_copy() -> void:
 	var box: Box = _box(SMALL)
 	box.get_contents().seasonings.append(SALT)
 	assert_eq(box.get_contents().seasonings.size(), 0)
+
+
+func test_ac1_condimentacion_ac1_sweet_paprika_applied_once() -> void:
+	var box: Box = _box(SMALL)
+	var octopus: Ingredient = _octopus_in_hand(true)
+	_fill(box)
+	_hold.drop()
+	octopus.queue_free()
+	var paprika: SeasoningItem = _seasoning_in_hand(PAPRIKA)
+	watch_signals(box)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings, [PAPRIKA] as Array[SeasoningData])
+	assert_signal_emit_count(box, "seasoned", 1)
+
+
+func test_ac1_condimentacion_ac2_paprika_exclusivity_rejects_hot_paprika() -> void:
+	var box: Box = _box(SMALL)
+	var octopus: Ingredient = _octopus_in_hand(true)
+	_fill(box)
+	_hold.drop()
+	octopus.queue_free()
+	var paprika: SeasoningItem = _seasoning_in_hand(PAPRIKA)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings, [PAPRIKA] as Array[SeasoningData])
+	_hold.drop()
+	paprika.queue_free()
+	var hot: SeasoningItem = _seasoning_in_hand(HOT_PAPRIKA)
+	watch_signals(box)
+	assert_true(box.interact(_actor), "consume pulsación")
+	assert_eq(box.get_contents().seasonings, [PAPRIKA] as Array[SeasoningData], "no cambia")
+	assert_signal_emit_count(box, "seasoned", 0, "no emite seasoned")
+
+
+func test_ac1_condimentacion_ac2_hot_paprika_exclusivity_rejects_sweet_paprika() -> void:
+	var box: Box = _box(SMALL)
+	var octopus: Ingredient = _octopus_in_hand(true)
+	_fill(box)
+	_hold.drop()
+	octopus.queue_free()
+	var hot: SeasoningItem = _seasoning_in_hand(HOT_PAPRIKA)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings, [HOT_PAPRIKA] as Array[SeasoningData])
+	_hold.drop()
+	hot.queue_free()
+	var paprika: SeasoningItem = _seasoning_in_hand(PAPRIKA)
+	watch_signals(box)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings, [HOT_PAPRIKA] as Array[SeasoningData])
+	assert_signal_emit_count(box, "seasoned", 0)
+
+
+func test_ac1_condimentacion_ac3_salt_is_idempotent() -> void:
+	var box: Box = _box(SMALL)
+	var octopus: Ingredient = _octopus_in_hand(true)
+	_fill(box)
+	_hold.drop()
+	octopus.queue_free()
+	var salt: SeasoningItem = _seasoning_in_hand(SALT)
+	watch_signals(box)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings, [SALT] as Array[SeasoningData])
+	assert_signal_emit_count(box, "seasoned", 1)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings, [SALT] as Array[SeasoningData])
+	assert_signal_emit_count(box, "seasoned", 1)
+
+
+func test_ac1_condimentacion_ac4_empty_box_rejects_seasoning() -> void:
+	var box: Box = _box(SMALL)
+	_seasoning_in_hand(SALT)
+	watch_signals(box)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings.size(), 0)
+	assert_signal_emit_count(box, "seasoned", 0)
+
+
+func test_ac1_condimentacion_ac4_half_filled_box_rejects_seasoning() -> void:
+	var box: Box = _box(SMALL)
+	var octopus: Ingredient = _octopus_in_hand(true)
+	assert_true(box.interact(_actor))
+	_hold.drop()
+	octopus.queue_free()
+	_seasoning_in_hand(SALT)
+	watch_signals(box)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings.size(), 0)
+	assert_signal_emit_count(box, "seasoned", 0)
+
+
+func test_ac1_full_box_can_receive_oil() -> void:
+	var box: Box = _box(SMALL)
+	var octopus: Ingredient = _octopus_in_hand(true)
+	_fill(box)
+	_hold.drop()
+	octopus.queue_free()
+	var oil: SeasoningItem = _seasoning_in_hand(OIL)
+	watch_signals(box)
+	assert_true(box.interact(_actor))
+	assert_eq(box.get_contents().seasonings, [OIL] as Array[SeasoningData])
+	assert_signal_emit_count(box, "seasoned", 1)
 
 
 func test_box_without_fill_bar_does_not_crash() -> void:
