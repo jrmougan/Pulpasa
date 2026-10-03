@@ -1,11 +1,11 @@
 ---
 id: PUL-001
 title: Inventariar el proyecto Unity y mapearlo a Godot
-status: review
+status: done
 milestone: F0
 role: migration-analyst
 deps: []
-orca_task: null
+orca_task: task_bb848615f7f2
 unity_sources: [Assets/Scripts/**, Assets/Resources/**, Assets/Prefabs/**, Assets/Scenes/**]
 owns: [docs/migration/**]
 touches_scenes: []
