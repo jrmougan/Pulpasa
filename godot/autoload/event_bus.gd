@@ -8,28 +8,24 @@ extends Node
 signal round_started(duration: float)
 @warning_ignore("unused_signal")
 signal round_time_changed(time_left: float)
-# TODO(PUL-006): RoundResult
 @warning_ignore("unused_signal")
-signal round_finished(result: RefCounted)
+signal round_finished(result: RoundResult)
 @warning_ignore("unused_signal")
 signal score_changed(boxes_delivered: int, revenue: int)
 
 # --- Comandas: emisor OrderService (reenvía OrderBoard) ---
 @warning_ignore("unused_signal")
 signal orders_reset
-# TODO(PUL-006): ActiveOrder
 @warning_ignore("unused_signal")
-signal order_generated(order: RefCounted)
-# TODO(PUL-006): ActiveOrder
+signal order_generated(order: ActiveOrder)
 @warning_ignore("unused_signal")
-signal order_completed(order: RefCounted, points: int)
+signal order_completed(order: ActiveOrder, points: int)
 @warning_ignore("unused_signal")
 signal delivery_rejected(slot_id: int, order_id: int, penalty: int)
 @warning_ignore("unused_signal")
 signal order_patience_changed(order_id: int, time_left: float, max_time: float)
-# TODO(PUL-006): ActiveOrder
 @warning_ignore("unused_signal")
-signal order_expired(order: RefCounted, penalty: int)
+signal order_expired(order: ActiveOrder, penalty: int)
 
 # --- Sesión y jugadores: emisores GameState y CharacterSwitcher ---
 @warning_ignore("unused_signal")
