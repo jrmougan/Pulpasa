@@ -41,6 +41,11 @@ No crear código ni escenas. Cada ADR: contexto, decisión, alternativas, consec
    equivalencias 2D y ADR-005 con comparación y recomendación.
 
 ## Evidence
+### 2ª revisión de codex: empate caducidad/entrega
+- La entrega se vincula al `order_id` previo al `advance`; si caducó en ese tick → `delivery_rejected`
+  sin redirigir a la repuesta (AC5b). Caso de prueba obligatorio en ADR-002; firma
+  `delivery_rejected(slot_id, order_id, penalty)` en `signals.md`.
+
 ### Revisión de codex (CHANGES) aplicada
 - [ALTA] Mandos: `DeviceAssignment` puro con `NONE` (−2, solo teclado) distinto de `ANY` (−1, solo
   `SINGLE`); al aplicar se borran solo los eventos de mando del jugador. Casos de test listados

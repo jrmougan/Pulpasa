@@ -94,12 +94,29 @@ este orden y en la misma llamada:
 Consecuencias de ese orden:
 - **Pausa**: `get_tree().paused` detiene `RoundManager._physics_process`; nada avanza, ni ronda ni
   paciencia. La UI no lleva contadores propios.
-- **Empate caducar/entregar**: si la paciencia se agota y llega una entrega en el mismo tick, gana
-  la caducidad: el reloj corre primero en el tick, así que la entrega (`body_entered` o
-  `_physics_process` del puesto) ya ve la comanda caducada y valida contra la repuesta. Además
-  `try_deliver` nunca acepta una comanda con `time_left <= 0`. Una pulsación de interactuar se
-  procesa antes del tick (fase de input) y cuenta para el tick anterior, en el que la comanda
-  seguía viva.
+- **Empate caducar/entregar (por `order_id`)**: gana la caducidad y la entrega **no se redirige a
+  la comanda repuesta** (feature `entrega-y-puntuacion` AC5b).
+  - Al empezar cada `advance`, `OrderBoard` vacía `_expired_this_tick: Dictionary[int, int]`
+    (`slot_id → order_id`) y registra en él cada comanda que caduca en ese `advance`.
+  - Todo intento de entrega que llega **después** de ese `advance` y antes del siguiente
+    (`body_entered` o `_physics_process` del puesto en el mismo tick, o la pulsación de
+    interactuar del tick siguiente, que se procesa antes de su `advance`) queda vinculado al
+    `order_id` que el puesto tenía **antes** del avance. Si ese puesto está en
+    `_expired_this_tick`, `try_deliver` emite `delivery_rejected(slot_id, order_id_caducada, 0)`,
+    devuelve `null` y **no valida** contra la repuesta, aunque tenga la misma receta. La penalización
+    ya la aplicó `order_expired`; el rechazo no penaliza otra vez.
+  - Una entrega que llega antes del `advance` que agota la paciencia ve la comanda viva
+    (`time_left > 0`) y se completa (AC5c). `try_deliver` nunca acepta una comanda con
+    `time_left <= 0`.
+  - La comanda repuesta es entregable a partir del siguiente `advance` (un tick, 1/60 s).
+  - **Caso de prueba obligatorio** (`test_order_board.gd`, sin árbol):
+    `test_ac5b_delivery_on_expiry_tick_rejected_not_redirected`. Catálogo con **una sola** receta
+    (`max_time` = 60), un puesto, RNG con semilla. `advance()` hasta `t` = 60,0 exacto (p. ej.
+    3600 × 1/60 o `advance(60.0)`), luego `try_deliver(slot, contenido_valido)`. Esperado:
+    1 `order_expired`, 1 `order_generated` de reposición para ese puesto en el mismo `advance`,
+    `try_deliver` devuelve `null`, 1 `delivery_rejected` con el `order_id` caducado y `penalty` 0,
+    **0** `order_completed` e ingreso 0 en `RoundState`. Control: tras un `advance(1/60)` más, la
+    misma entrega completa la repuesta (1 `order_completed`).
 - **Fin de ronda**: una comanda que caduca en el mismo `advance` que acaba la ronda caduca (paso 2
   antes que 3). Tras `round_finished`, `try_deliver` devuelve `null` sin señales.
 - **Paridad M0**: los tres `OrderData` del prototipo tienen `max_time = 0` → sin paciencia ni
@@ -124,8 +141,9 @@ Consecuencias de ese orden:
    `int slot_id`), nunca `Node`. Las escenas escuchan señales (B16: los puestos escuchan
    `orders_reset` en lugar de ser buscados).
 5. **Validar no muta.** `OrderValidator.matches(order_data, contents) -> bool` es una función pura
-   en `core/`. `OrderBoard.try_deliver(slot_id, contents) -> ActiveOrder` caduca lo vencido, valida
-   y, solo si coincide, completa **esa** comanda una vez, emite `order_completed` y repone el puesto
+   en `core/`. `OrderBoard.try_deliver(slot_id, contents) -> ActiveOrder` primero aplica la regla de
+   empate por `order_id` (rechaza si la comanda del puesto caducó en el último `advance`), valida y,
+   solo si coincide, completa **esa** comanda una vez, emite `order_completed` y repone el puesto
    (`order_generated`). Una entrega → una señal (B1).
 6. **Arranque determinista.** El nivel llama `RoundManager.start_round(config, slot_ids)`, que
    crea un `RoundState` nuevo y en este orden hace `OrderBoard.reset()` (`orders_reset`),

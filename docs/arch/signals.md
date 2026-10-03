@@ -53,7 +53,7 @@ así el servicio valida datos y nunca recibe un nodo.
 | `orders_reset()` | `OrderService` (`OrderBoard.reset()`) | `order_stand.gd` (vacía su `#id`), `order_tickets_panel.gd` (borra tickets) | Al empezar ronda, antes de generar comandas (B10, B16) | 2 / 6, 7 |
 | `order_generated(order: ActiveOrder)` | `OrderService` (`OrderBoard`: `request_order` / `fill_slots` / reposición) | `order_tickets_panel.gd` (crea ticket con `time_left`/`max_time` iniciales), `order_stand.gd` (si `order.slot_id == slot_id`, muestra `#id`) | Al crear una comanda, máx. 4 activas; una por puesto | 2 / 6, 7 |
 | `order_completed(order: ActiveOrder, points: int)` | `OrderService` (`OrderBoard.try_deliver()` cuando la caja coincide) | `RoundState` (señal del núcleo: cuenta entrega; M1 suma `points`), `order_tickets_panel.gd` (quita ticket), `order_stand.gd` (sonido OK, limpia `#id`) | **Una vez por entrega**, sobre la comanda entregada (B1). Después se emite `order_generated` para reponer ese puesto | 2 / 6, 7 |
-| `delivery_rejected(slot_id: int, penalty: int)` | `OrderService` (`OrderBoard.try_deliver()` cuando ninguna comanda viva del puesto coincide) | `order_stand.gd` (sonido de error si es su `slot_id`; la caja se queda en la mano), `RoundState` (M1: resta `penalty`) | Cada intento fallido. M0: `penalty` = 0 (paridad); M1: penalización en datos (D8) | 2 / 6 |
+| `delivery_rejected(slot_id: int, order_id: int, penalty: int)` | `OrderService` (`OrderBoard.try_deliver()` cuando la caja no coincide con la comanda viva del puesto, o cuando la comanda del puesto caducó en el último `advance`) | `order_stand.gd` (sonido de error si es su `slot_id`; la caja se queda en la mano), `RoundState` (M1: resta `penalty`) | Cada intento fallido. `order_id` = comanda a la que se vinculó el intento (−1 si el puesto no tenía). Caja errónea: M0 `penalty` = 0 (paridad), M1 penalización en datos (D8). Empate con caducidad: `order_id` de la caducada, `penalty` = 0 (ya penalizó `order_expired`) y sin redirigir a la repuesta (AC5b; ADR-002) | 2 / 6 |
 | `order_patience_changed(order_id: int, time_left: float, max_time: float)` | `OrderService` (`OrderBoard.advance()`) | `order_ticket.gd` (barra lineal de paciencia, Must 3; sin contador propio) | Una vez por comanda con `max_time > 0` en cada `advance` (cada tick de física). No se emite en pausa ni tras `round_finished` | M1 (firma desde fase 0) |
 | `order_expired(order: ActiveOrder, penalty: int)` | `OrderService` (`OrderBoard.advance()`, paciencia agotada) | `RoundState` (resta penalización), `order_tickets_panel.gd` (quita ticket), `order_stand.gd` (limpia `#id`) | En el `advance` en que `time_left` llega a 0, antes que cualquier entrega del mismo tick; luego repone con `order_generated` en la misma llamada | M1 |
 
@@ -84,7 +84,9 @@ así el servicio valida datos y nunca recibe un nodo.
 `order_completed(order, points)` → `score_changed(n, revenue)` (desde `RoundManager`) →
 `order_generated(nueva)` para el mismo `slot_id` → el puesto suelta y libera la caja.
 
-**Entrega errónea**: `try_deliver` devuelve `null` → `delivery_rejected(slot_id, penalty)`; no cambia el estado de las comandas (M1: `RoundState` resta `penalty` y `RoundManager` reenvía `score_changed`).
+**Entrega errónea**: `try_deliver` devuelve `null` → `delivery_rejected(slot_id, order_id, penalty)`; no cambia el estado de las comandas (M1: `RoundState` resta `penalty` y `RoundManager` reenvía `score_changed`).
+
+**Entrega en el tick de caducidad** (AC5b): tick N: `advance` → `order_expired(A)` → `order_generated(B)` (mismo puesto) → entrega de la caja → `delivery_rejected(slot_id, A.id, 0)`; sin `order_completed` ni ingreso. B solo es entregable desde el `advance` del tick N+1.
 
 **Fin de ronda**: `round_time_changed(0.0)` → `round_finished(result)`; el reloj se para y
 `OrderService` no repone más.
