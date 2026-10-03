@@ -132,6 +132,14 @@ pause={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="world"
+3d_physics/layer_2="player"
+3d_physics/layer_3="interactable"
+3d_physics/layer_4="held"
+3d_physics/layer_5="delivery_zone"
+
 [rendering]
 
 renderer/rendering_method="forward_plus"

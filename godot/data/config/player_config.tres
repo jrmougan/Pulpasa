@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PlayerConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/player_config.gd" id="1_cfg"]
+
+[resource]
+script = ExtResource("1_cfg")
+speed = 5.0
+rotation_speed = 20.0
+detector_radius = 2.2
+drop_forward_offset = 0.6
+drop_up_offset = 0.6

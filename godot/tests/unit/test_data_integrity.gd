@@ -15,7 +15,7 @@ func _collect(dir_path: String, out: Array[String]) -> void:
 func test_ac3_all_tres_load() -> void:
 	var paths: Array[String] = []
 	_collect(DATA_DIR, paths)
-	assert_eq(paths.size(), 15)
+	assert_eq(paths.size(), 17)
 	for path: String in paths:
 		var res: Resource = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 		assert_not_null(res, path)
