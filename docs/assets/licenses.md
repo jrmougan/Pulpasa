@@ -22,6 +22,15 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | https://game-icons.net/1x1/lorc/salt-shaker.html (Lorc) sustituye a `Art/Icons/salt` | `assets/textures/icons/salt.svg` | CC BY 3.0 | Sí: «Salt shaker» por Lorc, game-icons.net |
 | https://game-icons.net/1x1/delapouite/crosshair.html (Delapouite) sustituye a `Art/Icons/selection` | `assets/textures/icons/selection.svg` | CC BY 3.0 | Sí: «Crosshair» por Delapouite, game-icons.net |
 | `Art/Logo/PulpaSA.png` | `assets/textures/logo/PulpaSA.png` | Propio | No |
+| https://game-icons.net/1x1/delapouite/olive.html («Olive», Delapouite) | `assets/textures/icons/oil.svg` | CC BY 3.0 | Sí: «Olive» por Delapouite, game-icons.net |
+| https://game-icons.net/1x1/delapouite/potato.html («Potato», Delapouite) | `assets/textures/icons/potato.svg` | CC BY 3.0 | Sí: «Potato» por Delapouite, game-icons.net |
+| https://game-icons.net/1x1/delapouite/round-star.html («Round star», Delapouite) | `assets/textures/icons/star_full.svg` | CC BY 3.0 | Sí: «Round star» por Delapouite, game-icons.net |
+| Derivado de https://game-icons.net/1x1/delapouite/round-star.html («Round star», Delapouite) | `assets/textures/icons/star_empty.svg` | CC BY 3.0 | Sí: modificación de «Round star» por Delapouite, game-icons.net |
+| Propio (primitivas; dimensiones junto a la olla de PUL-008) | `assets/models/placeholders/oil_bottle.tscn` | Propio | No |
+| Propio (primitivas) | `assets/models/placeholders/cachelos_raw.tscn` | Propio | No |
+| Propio (primitivas) | `assets/models/placeholders/cachelos_cooked.tscn` | Propio | No |
+| Propio (primitivas) | `assets/models/placeholders/cachelera.tscn` | Propio | No |
+| Propio | `assets/materials/ph_oil.tres`, `ph_oil_liquid.tres`, `ph_cachelo_raw.tres`, `ph_cachelo_cooked.tres` | Propio | No |
 
 Los SVG de game-icons.net se modifican quitando el rectángulo negro de fondo. Atribuciones completas en `godot/assets/CREDITS.md`.
 

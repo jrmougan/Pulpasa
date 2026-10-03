@@ -43,4 +43,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-028 | M1 | gameplay (antigravity · flash) | ready | Aceite, exclusividad de pimentones y validación exacta |
 | PUL-029 | M1 | gameplay (antigravity · pro) | ready (dep. 028, 031) | Cachelos y olla con varias plazas |
 | PUL-030 | M1 | ui (kimi) | ready (dep. 027, 031) | Recaudación, estrellas, iconos y paciencia en la UI |
-| PUL-031 | M1 | asset-pipeline (kimi) | ready | Iconos y placeholders de aceite, cachelos y estrellas |
+| PUL-031 | M1 | asset-pipeline (kimi) | done | Iconos y placeholders de aceite, cachelos y estrellas |

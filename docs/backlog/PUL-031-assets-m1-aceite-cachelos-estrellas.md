@@ -1,12 +1,12 @@
 ---
 id: PUL-031
 title: Incorporar iconos y placeholders de aceite, cachelos y estrellas
-status: review
+status: done
 milestone: M1
 role: asset-pipeline
 agent: kimi (fácil)
 deps: []
-orca_task: null
+orca_task: task_31c90f34dce0
 unity_sources: []
 owns: [godot/assets/textures/icons/**, godot/assets/models/placeholders/**, godot/assets/materials/**, godot/assets/CREDITS.md, docs/assets/licenses-pul-031.md, godot/tests/unit/test_assets_m1.gd, godot/tests/unit/test_assets_m1.gd.uid, docs/evidence/PUL-031/**]
 touches_scenes: []
