@@ -73,3 +73,12 @@ func test_start_level_unpauses() -> void:
 	_state.set_paused(true)
 	_state.start_level(GameMode.Mode.SINGLE)
 	assert_false(get_tree().paused)
+
+
+func test_restart_level_unpauses() -> void:
+	_state.set_paused(true)
+	if get_tree().current_scene == null:
+		assert_eq(_state.restart_level(), ERR_UNCONFIGURED)
+	else:
+		assert_eq(_state.restart_level(), OK)
+	assert_false(get_tree().paused)

@@ -48,6 +48,16 @@ func go_to_main_menu() -> Error:
 	return _change_scene(MAIN_MENU_SCENE)
 
 
+## Recarga la escena actual y quita la pausa (Reintentar del game over).
+## Devuelve ERR_UNCONFIGURED si no hay escena activa (p. ej. en tests headless).
+func restart_level() -> Error:
+	set_paused(false)
+	if get_tree().current_scene == null:
+		push_warning("GameState: no hay escena actual que recargar")
+		return ERR_UNCONFIGURED
+	return get_tree().reload_current_scene()
+
+
 func _change_scene(path: String) -> Error:
 	set_paused(false)
 	if not ResourceLoader.exists(path):
