@@ -5,7 +5,7 @@ status: review
 milestone: M0
 role: qa-tester
 deps: [PUL-024, PUL-023, PUL-026]
-orca_task: null
+orca_task: task_ef1e616e0937
 unity_sources: [Assets/Scenes/**]
 owns: [godot/tests/integration/test_parity_smoke.gd, godot/tests/integration/test_parity_smoke.gd.uid, docs/evidence/PUL-025/**, docs/design/m0-gate.md]
 touches_scenes: []
