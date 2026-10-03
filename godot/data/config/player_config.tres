@@ -9,3 +9,7 @@ rotation_speed = 20.0
 detector_radius = 2.2
 drop_forward_offset = 0.6
 drop_up_offset = 0.6
+detector_cone_half_angle = 30.0
+detector_near_distance = 0.7
+detector_kitchen_bonus = 1.0
+detector_origin_height = 0.8

@@ -1,0 +1,111 @@
+class_name Slot
+extends StaticBody3D
+## Mesa o hueco que guarda un objeto (scene-tree.md §3). Sustituye a InteractableSlot +
+## SnappingHelper: deja lo que lleva la mano con su `%AnchorPoint` sobre `%Anchor` y se lo
+## devuelve a una mano vacía. Contrato `interactable` (ADR-003 §4).
+##
+## Mientras está guardado, el objeto se congela y sale de su capa de física: el detector solo
+## ve el slot (que resalta el objeto guardado). Al devolverlo se restaura todo antes de que la
+## mano lo coja, para que esta guarde y restaure el estado original al soltarlo.
+
+## Objeto con el que empieza el slot (p. ej. el bote de cada especia).
+@export var initial_item: PackedScene
+
+var _item: Node3D
+var _saved_layer: int = 0
+var _saved_freeze: bool = false
+
+@onready var _anchor: Node3D = %Anchor
+
+
+func _ready() -> void:
+	if initial_item != null:
+		var item: Node3D = initial_item.instantiate() as Node3D
+		if item != null:
+			_anchor.add_child(item)
+			_store(item)
+
+
+func can_interact(actor: InteractionComponent) -> bool:
+	var holder: Holder = actor.holder if actor != null else null
+	if holder == null:
+		return false
+	var held: Node = holder.get_held_item()
+	if has_item():
+		return held == null
+	return held is Node3D
+
+
+func interact(actor: InteractionComponent) -> bool:
+	if not can_interact(actor):
+		return false
+	var holder: Holder = actor.holder
+	if has_item():
+		return _give(holder)
+	var item: Node3D = holder.drop() as Node3D
+	if item == null:
+		return false
+	_store(item)
+	return true
+
+
+func has_item() -> bool:
+	return get_item() != null
+
+
+## Objeto guardado, o `null` (también si se liberó o alguien lo sacó del slot).
+func get_item() -> Node3D:
+	if not is_instance_valid(_item) or _item.is_queued_for_deletion():
+		_item = null
+	elif _item.get_parent() != _anchor:
+		_item = null
+	return _item
+
+
+## Alinea `item` por su `%AnchorPoint` (o su origen) a `%Anchor`, congelado y sin capa.
+func _store(item: Node3D) -> void:
+	_item = item
+	if item.get_parent() != _anchor:
+		item.reparent(_anchor, false)
+	item.transform = _anchor_offset(item).affine_inverse()
+	if item is CollisionObject3D:
+		var collider: CollisionObject3D = item as CollisionObject3D
+		_saved_layer = collider.collision_layer
+		collider.collision_layer = 0
+	if item is RigidBody3D:
+		var rigid: RigidBody3D = item as RigidBody3D
+		_saved_freeze = rigid.freeze
+		rigid.linear_velocity = Vector3.ZERO
+		rigid.angular_velocity = Vector3.ZERO
+		rigid.freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
+		rigid.freeze = true
+
+
+## Devuelve el objeto a la mano; si la mano lo rechaza, sigue guardado tal cual.
+func _give(holder: Holder) -> bool:
+	var item: Node3D = get_item()
+	if not holder.can_hold(item):
+		return false
+	_restore(item)
+	if holder.pick_up(item):
+		_item = null
+		return true
+	_store(item)
+	return false
+
+
+func _restore(item: Node3D) -> void:
+	if item is CollisionObject3D:
+		(item as CollisionObject3D).collision_layer = _saved_layer
+	if item is RigidBody3D:
+		(item as RigidBody3D).freeze = _saved_freeze
+
+
+## Transformación del `%AnchorPoint` del objeto respecto a su raíz (identidad si no tiene).
+func _anchor_offset(item: Node3D) -> Transform3D:
+	var anchor_point: Node3D = item.get_node_or_null(^"%AnchorPoint") as Node3D
+	if anchor_point == null:
+		anchor_point = item.get_node_or_null(^"AnchorPoint") as Node3D
+	if anchor_point == null:
+		return Transform3D.IDENTITY
+	return item.global_transform.affine_inverse() * anchor_point.global_transform

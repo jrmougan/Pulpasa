@@ -12,3 +12,11 @@ extends Resource
 @export var drop_forward_offset: float = 0.6
 ## Al soltar: desplazamiento hacia arriba.
 @export var drop_up_offset: float = 0.6
+## Detector: semiángulo del cono de selección (grados).
+@export var detector_cone_half_angle: float = 30.0
+## Detector: por debajo de esta distancia se ignora el cono.
+@export var detector_near_distance: float = 0.7
+## Detector: bonus de puntuación de la cocina con la mano vacía.
+@export var detector_kitchen_bonus: float = 1.0
+## Detector: altura sobre el jugador desde la que se mide la distancia 3D.
+@export var detector_origin_height: float = 0.8
