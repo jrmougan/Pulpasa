@@ -22,4 +22,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-007 | M0·2 | gameplay-engineer | done | Autoloads OrderService y RoundManager |
 | PUL-008 | M0·3 | asset-pipeline | ready | Placeholders 3D, muebles propios y escena de escala |
 | PUL-009 | M0·3 | asset-pipeline | done | Audio, fuentes e iconos libres (CC0/OFL) |
-| PUL-010 | M0·3 | godot-architect | ready (tras PUL-007: comparte project.godot) | Exportación Linux, Windows y Web |
+| PUL-010 | M0·3 | godot-architect | ready | Exportación Linux, Windows y Web |
