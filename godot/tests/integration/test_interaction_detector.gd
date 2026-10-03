@@ -6,6 +6,8 @@ const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const SLOT_SCENE: PackedScene = preload("res://entities/stations/slot.tscn")
 const INTERACTABLE_LAYER: int = 1 << 2
 const SETTLE_FRAMES: int = 3
+## Donde nacen los objetos antes de cogerlos: sin solapar la cápsula del jugador.
+const AWAY: Vector3 = Vector3(5.0, 0.5, 5.0)
 
 var _level: Node3D
 var _player: Player
@@ -60,7 +62,7 @@ class Item:
 		return not is_held and actor.holder.can_hold(self)
 
 	func interact(actor: InteractionComponent) -> bool:
-		return actor.holder.pick_up(self)
+		return Slot.pick_up_item(actor, self)
 
 	func on_picked_up(_holder: Holder) -> void:
 		is_held = true
@@ -186,30 +188,36 @@ func test_ac1_target_changed_not_emitted_every_frame() -> void:
 	assert_signal_emit_count(_detector, "target_changed", 0)
 
 
-func test_ac1_occupied_slot_resolves_to_slot_and_highlights_its_item() -> void:
+## PUL-016 (InteractionDetector.cs:57): el slot ocupado se sustituye por su objeto.
+func test_ac1_occupied_slot_resolves_to_its_item_and_highlights_it() -> void:
 	var slot: Slot = SLOT_SCENE.instantiate()
+	# Colocado antes de entrar al árbol: nunca existe en el origen, dentro del jugador.
+	slot.position = Vector3(0.0, 0.0, -1.0)
 	_level.add_child(slot)
-	slot.global_position = Vector3(0.0, 0.0, -1.0)
 	var item: Item = Item.new()
 	_level.add_child(item)
+	item.global_position = AWAY
 	_hold.pick_up(item)
 	slot.interact(_player.get_node("%InteractionComponent"))
 	await _settle()
-	assert_eq(_detector.get_target(), slot)
+	assert_eq(_detector.get_target(), item, "con la mano vacía, el objeto (para cogerlo)")
 	var item_highlight: Highlightable = item.get_child(1) as Highlightable
 	assert_true(item_highlight.is_highlighted(), "se resalta el objeto guardado")
 
 
-func test_ac1_occupied_slot_is_skipped_with_full_hand() -> void:
+func test_ac1_occupied_slot_with_incompatible_item_is_skipped_with_full_hand() -> void:
 	var slot: Slot = SLOT_SCENE.instantiate()
+	# Colocado antes de entrar al árbol: nunca existe en el origen, dentro del jugador.
+	slot.position = Vector3(0.0, 0.0, -1.0)
 	_level.add_child(slot)
-	slot.global_position = Vector3(0.0, 0.0, -1.0)
 	var stored: Item = Item.new()
 	_level.add_child(stored)
+	stored.global_position = AWAY
 	_hold.pick_up(stored)
 	slot.interact(_player.get_node("%InteractionComponent"))
 	var carried: Item = Item.new()
 	_level.add_child(carried)
+	carried.global_position = AWAY
 	_hold.pick_up(carried)
 	await _settle()
 	assert_null(_detector.get_target())
@@ -217,10 +225,12 @@ func test_ac1_occupied_slot_is_skipped_with_full_hand() -> void:
 
 func test_ac1_taking_item_from_slot_moves_highlight_off_the_item() -> void:
 	var slot: Slot = SLOT_SCENE.instantiate()
+	# Colocado antes de entrar al árbol: nunca existe en el origen, dentro del jugador.
+	slot.position = Vector3(0.0, 0.0, -1.0)
 	_level.add_child(slot)
-	slot.global_position = Vector3(0.0, 0.0, -1.0)
 	var item: Item = Item.new()
 	_level.add_child(item)
+	item.global_position = AWAY
 	_hold.pick_up(item)
 	var actor: InteractionComponent = _player.get_node("%InteractionComponent")
 	slot.interact(actor)
@@ -326,6 +336,7 @@ func test_ac1_kitchen_bonus_ignored_with_full_hand() -> void:
 	var targets: Array[Target] = _kitchen_setup()
 	var carried: Item = Item.new()
 	_level.add_child(carried)
+	carried.global_position = AWAY
 	assert_true(_hold.pick_up(carried))
 	await _settle()
 	assert_eq(_detector.get_target(), targets[1])

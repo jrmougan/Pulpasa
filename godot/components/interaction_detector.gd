@@ -5,9 +5,12 @@ extends Area3D
 ##
 ## Cada tick de física construye un `Candidate` por entidad cercana (dirección en el suelo,
 ## distancia 3D desde el portador + `detector_origin_height`), delega la elección en
-## `InteractionScoring.pick_best` y emite `target_changed` solo cuando cambia. Resuelve antes los
-## slots: con la mano llena se descarta uno ocupado. Enciende el `Highlightable` del objetivo
-## (el del objeto guardado si es un slot ocupado) y apaga el anterior: nunca hay dos.
+## `InteractionScoring.pick_best` y emite `target_changed` solo cuando cambia. Como
+## InteractionDetector.cs:57, un slot ocupado se sustituye por su objeto guardado (con la posición
+## del slot para puntuar): el objetivo es ese objeto, que decide qué hacer con la mano (la caja
+## corta o condimenta). Con la mano llena solo cuenta si el objeto declara que acepta lo que lleva
+## (`can_receive(held)`); si no, se descarta. Enciende el `Highlightable` del objetivo y apaga el
+## anterior: nunca hay dos.
 
 ## Objetivo nuevo; ambos pueden ser `null` (signals.md).
 signal target_changed(previous: Node, current: Node)
@@ -58,7 +61,8 @@ func get_target() -> Node:
 
 ## Reevalúa el objetivo y el resaltado con los cuerpos que solapan ahora.
 func refresh() -> void:
-	var holding: bool = holder != null and holder.get_held_item() != null
+	var held: Node = holder.get_held_item() if holder != null else null
+	var holding: bool = held != null
 	var entities: Array[Node3D] = []
 	var candidates: Array[InteractionScoring.Candidate] = []
 	var eye: Vector3 = carrier.global_position + Vector3.UP * config.detector_origin_height
@@ -66,9 +70,11 @@ func refresh() -> void:
 		var entity: Node3D = _entity_of(body)
 		if entity == null or not _is_alive(entity) or entity in entities:
 			continue
-		if holding and entity is Slot and (entity as Slot).has_item():
-			continue
 		var pos: Vector3 = entity.global_position
+		if entity is Slot and (entity as Slot).has_item():
+			entity = (entity as Slot).get_item()
+			if holding and not _receives(entity, held):
+				continue
 		candidates.append(
 			InteractionScoring.Candidate.new(
 				Vector2(pos.x, pos.z),
@@ -103,6 +109,11 @@ func _entity_of(body: Node3D) -> Node3D:
 	return null
 
 
+## Si el objeto guardado `item` acepta lo que lleva la mano (método opcional `can_receive`).
+func _receives(item: Node, held: Node) -> bool:
+	return item.has_method(&"can_receive") and bool(item.call(&"can_receive", held))
+
+
 func _in_contract(node: Node) -> bool:
 	return (
 		node.is_in_group(InteractionContract.GROUP_INTERACTABLE)
@@ -126,14 +137,11 @@ func _is_alive(node: Variant) -> bool:
 	return is_instance_valid(node) and not node.is_queued_for_deletion()
 
 
-## Lo que se resalta para `target`: el objeto guardado si es un slot ocupado, si no él mismo.
+## `Highlightable` hijo directo de `target`, o `null`.
 func _highlightable_of(target: Node) -> Highlightable:
 	if not _is_alive(target):
 		return null
-	var shown: Node = target
-	if target is Slot and (target as Slot).has_item():
-		shown = (target as Slot).get_item()
-	for child: Node in shown.get_children():
+	for child: Node in target.get_children():
 		if child is Highlightable:
 			return child as Highlightable
 	return null

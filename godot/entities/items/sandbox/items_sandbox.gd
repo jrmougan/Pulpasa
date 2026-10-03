@@ -1,10 +1,11 @@
 extends Node3D
-## Sandbox de PUL-016: pulpo ya cocido (aún no hay cocina), una caja y dos condimentos en el
-## suelo. Arranca una ronda como `level.gd` para que el jugador se mueva.
+## Sandbox de PUL-016: pulpo ya cocido (aún no hay cocina), una mesa con una caja pequeña y dos
+## condimentos en el suelo. Arranca una ronda como `level.gd` para que el jugador se mueva.
 ##
-## El `simulate_input` del MCP pulsa acciones sin generar `_unhandled_input`; `mcp_bridge` reenvía
-## `p1_interact` sondeado a `InteractionComponent.interact_pressed()`. Solo para capturas: con
-## teclado real la pulsación llegaría dos veces.
+## Una sola ruta de input: `InteractionComponent._unhandled_input`. El `simulate_input` del MCP no
+## genera `_unhandled_input`, así que para capturas se activa `mcp_bridge` en caliente (p. ej. con
+## `run_script`), que reenvía `p1_interact` sondeado; está apagado por defecto para que con
+## teclado una pulsación sea un corte.
 
 @export var round_config: RoundConfig
 @export var order_catalog: OrderCatalog

@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-015]
 orca_task: null
 unity_sources: [Assets/Scripts/Game/Ingredient.cs, Assets/Scripts/Game/Box.cs, Assets/Scripts/Game/SeasoningItem.cs, Assets/Scripts/UI/SimpleProgressBar.cs, Assets/Scripts/UI/FaceToCamera.cs, Assets/Prefabs/Ingredients/**, Assets/Prefabs/Packaging/**, Assets/Animations/Packaging/**]
-owns: [godot/entities/items/**, godot/resources/ingredient_data.gd, godot/data/ingredients/octopus.tres, godot/tests/unit/test_data_*.gd, godot/ui/widgets/**, godot/tests/integration/test_octopus.gd, godot/tests/integration/test_octopus.gd.uid, godot/tests/integration/test_box.gd, godot/tests/integration/test_box.gd.uid, godot/tests/integration/test_seasoning.gd, godot/tests/integration/test_seasoning.gd.uid, godot/tests/integration/test_items_contract.gd, godot/tests/integration/test_items_contract.gd.uid, docs/evidence/PUL-016/**]
+owns: [godot/entities/items/**, godot/components/interaction_detector.gd, godot/entities/stations/slot.gd, godot/entities/stations/slot.tscn, godot/tests/integration/test_interaction_detector.gd, godot/tests/integration/test_slot.gd, godot/tests/integration/test_box_on_slot.gd, godot/tests/integration/test_box_on_slot.gd.uid, godot/entities/player/sandbox/sandbox_pickable.gd, godot/entities/player/sandbox/sandbox_pickable.gd.uid, godot/resources/ingredient_data.gd, godot/data/ingredients/octopus.tres, godot/tests/unit/test_data_*.gd, godot/ui/widgets/**, godot/tests/integration/test_octopus.gd, godot/tests/integration/test_octopus.gd.uid, godot/tests/integration/test_box.gd, godot/tests/integration/test_box.gd.uid, godot/tests/integration/test_seasoning.gd, godot/tests/integration/test_seasoning.gd.uid, godot/tests/integration/test_items_contract.gd, godot/tests/integration/test_items_contract.gd.uid, docs/evidence/PUL-016/**]
 touches_scenes: [godot/entities/items/octopus.tscn, godot/entities/items/box.tscn, godot/entities/items/seasoning.tscn, godot/ui/widgets/world_progress_bar.tscn]
 ---
 
@@ -98,11 +98,40 @@ Notas para revisión:
 - `box.tscn` usa el modelo `box_medium` para las tres tallas: `BoxData` no tiene campo de modelo.
 - `world_progress_bar` (`Sprite3D` + `SubViewport`) vive en `ui/widgets/` por la ficha y
   scene-tree §6, aunque es capa específica (CLAUDE.md regla 4 pide `ui/` sin tipos 3D).
-- Hallazgo para la fase de estaciones: una caja guardada en un `Slot` sale de la capa
-  `interactable` y el slot ocupado rechaza la mano llena, así que no se puede cortar ni condimentar
-  sobre una caja en una mesa; el slot tendría que delegar en su objeto (PUL-015 / kitchen).
-- `mcp_bridge` del sandbox reenvía `p1_interact` sondeado porque `simulate_input` no genera
-  `_unhandled_input`; con teclado real se duplicaría (solo sandbox).
 - Escenas generadas con scripts tipados fuera del repo (`PackedScene.pack` + `ResourceSaver`,
   `GEN_EDIT_STATE_*` para no volcar overrides); el sandbox con una escena temporal para tener
   autoloads, borrada después.
+
+Revisión de codex (CHANGES):
+- **P1 caja sobre la mesa**: `InteractionDetector` sustituye un slot ocupado por su objeto
+  guardado antes del filtro de mano llena, puntuando con la posición del slot
+  (InteractionDetector.cs:57). Con mano vacía el objetivo es el objeto (para cogerlo); con mano
+  llena solo si el objeto declara que acepta lo que se lleva (método opcional
+  `can_receive(held) -> bool`, que implementa `Box`), así se mantiene el rechazo de objetos
+  incompatibles. La lógica de cortar/condimentar sigue en `Box`. Recoger un objeto guardado pasa
+  siempre por `Slot.pick_up_item(actor, item)` (+ `Slot.slot_of(item)`), un único sitio que
+  usan `Box`, `Ingredient`, `SeasoningItem` y `SandboxPickable` (owns ampliado, aprobado): el slot
+  restaura capa y `freeze` antes de que la mano los guarde (paridad con `Box.OnPickedUp` →
+  `ForceClearSlot`).
+- **P1 tests**: `tests/integration/test_box_on_slot.gd` (5 tests, escenas reales Player + Slot +
+  Box + detector + `interact_pressed`): dejar la caja en la mesa, llenarla en 5/10/20 pulsaciones
+  con pulpo cocido (gasta 50), pulpo crudo descartado, condimentar con el bote en la mano (una vez,
+  bote conservado), recogerla (mesa libre) y soltarla sin `freeze`, en capa `interactable`, máscara
+  original y con su contenido. `test_interaction_detector.gd`: el slot ocupado resuelve a su objeto;
+  el objeto incompatible se descarta con mano llena (el caso que acepta, la caja con pulpo cocido o
+  bote, lo cubre `test_box_on_slot.gd`; el fichero del detector está en el máximo de gdlint).
+  `test_slot.gd`: coger del slot vía detector y soltar restaura capa/máscara/`freeze`;
+  `slot_of`/`pick_up_item`.
+- Hallazgo en tests: un `Slot` añadido en el origen y movido después llegaba a solapar la cápsula
+  del jugador (máscara `world|interactable`) en algún paso de física y lo empujaba 0,9 m según el
+  orden de los tests; ahora se coloca antes de `add_child` y los objetos nacen lejos.
+- **P2 grupos**: se mantienen `pickable` + `interactable` (enmienda aprobada, rebase sobre
+  `ebb28c5`).
+- **P2 sandbox**: una sola ruta de input; `mcp_bridge` apagado por defecto y activado en caliente
+  con `run_script` solo para la captura. El sandbox tiene ahora una mesa (`Slot`) con una caja
+  pequeña como `initial_item`.
+- **Captura**: `docs/evidence/PUL-016/review-caja-llenandose-en-mesa.png` (+ `-zoom`): pulpo
+  cocido en la mano, objetivo = la caja de la mesa, 3 pulsaciones = 3 cortes (`fill` 0,2 → 0,4 →
+  0,6 en el `watch`), barra y tapa abierta. `get_debug_output` sin errores.
+- Para el architect: `can_receive(held)` es un método opcional nuevo que consulta el detector;
+  convendría anotarlo en ADR-003 §4.

@@ -4,9 +4,11 @@ extends StaticBody3D
 ## SnappingHelper: deja lo que lleva la mano con su `%AnchorPoint` sobre `%Anchor` y se lo
 ## devuelve a una mano vacía. Contrato `interactable` (ADR-003 §4).
 ##
-## Mientras está guardado, el objeto se congela y sale de su capa de física: el detector solo
-## ve el slot (que resalta el objeto guardado). Al devolverlo se restaura todo antes de que la
-## mano lo coja, para que esta guarde y restaure el estado original al soltarlo.
+## Mientras está guardado, el objeto se congela y sale de su capa de física: el detector ve el
+## slot y lo sustituye por el objeto guardado (InteractionDetector.cs:57). Al devolverlo se
+## restaura todo antes de que la mano lo coja, para que esta guarde y restaure el estado original
+## al soltarlo. Los cogibles se cogen siempre con `Slot.pick_up_item` (como
+## `Box.OnPickedUp` → `ForceClearSlot`), que pasa por aquí si el objeto está guardado.
 
 ## Objeto con el que empieza el slot (p. ej. el bote de cada especia).
 @export var initial_item: PackedScene
@@ -16,6 +18,28 @@ var _saved_layer: int = 0
 var _saved_freeze: bool = false
 
 @onready var _anchor: Node3D = %Anchor
+
+
+## Slot que guarda `item`, o `null`.
+static func slot_of(item: Node) -> Slot:
+	if item == null or not is_instance_valid(item):
+		return null
+	var anchor: Node = item.get_parent()
+	var slot: Slot = anchor.get_parent() as Slot if anchor != null else null
+	if slot != null and slot.get_item() == item:
+		return slot
+	return null
+
+
+## Único camino para que un cogible se ponga en la mano de `actor`: si está guardado en un slot,
+## el slot lo devuelve (restaurando capa y `freeze`); si no, la mano lo coge directamente.
+static func pick_up_item(actor: InteractionComponent, item: Node) -> bool:
+	if actor == null or actor.holder == null:
+		return false
+	var slot: Slot = slot_of(item)
+	if slot != null:
+		return slot.interact(actor)
+	return actor.holder.pick_up(item)
 
 
 func _ready() -> void:

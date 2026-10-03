@@ -12,7 +12,7 @@ func can_interact(actor: InteractionComponent) -> bool:
 
 
 func interact(actor: InteractionComponent) -> bool:
-	return actor.holder.pick_up(self)
+	return Slot.pick_up_item(actor, self)
 
 
 func on_picked_up(new_holder: Holder) -> void:

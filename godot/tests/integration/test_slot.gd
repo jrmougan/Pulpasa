@@ -42,7 +42,7 @@ class Item:
 		return not is_held and actor.holder.can_hold(self)
 
 	func interact(actor: InteractionComponent) -> bool:
-		return actor.holder.pick_up(self)
+		return Slot.pick_up_item(actor, self)
 
 	func on_picked_up(_holder: Holder) -> void:
 		is_held = true
@@ -59,8 +59,9 @@ func before_each() -> void:
 	_hold.items_root = _level
 	_actor = _player.get_node("%InteractionComponent")
 	_slot = SLOT_SCENE.instantiate()
+	# Colocado antes de entrar al árbol: nunca existe en el origen, dentro del jugador.
+	_slot.transform = Transform3D(Basis(Vector3.UP, deg_to_rad(30.0)), Vector3(2, 0, -1))
 	_level.add_child(_slot)
-	_slot.global_transform = Transform3D(Basis(Vector3.UP, deg_to_rad(30.0)), Vector3(2, 0, -1))
 
 
 func _held_item() -> Item:
@@ -157,6 +158,39 @@ func test_ac2_interact_press_places_and_takes_via_detector() -> void:
 	assert_true(_actor.interact_pressed())
 	assert_eq(_hold.get_held_item(), item)
 	assert_false(_slot.has_item())
+
+
+## PUL-016: el detector apunta al objeto guardado; cogerlo pasa por el slot y al soltarlo
+## recupera capa, máscara y `freeze` originales.
+func test_pul016_taking_stored_item_via_detector_restores_physics() -> void:
+	_slot.global_transform = Transform3D(Basis.IDENTITY, Vector3(0, 0, -1))
+	var item: Item = _held_item()
+	assert_true(_slot.interact(_actor))
+	await wait_physics_frames(3)
+	var detector: InteractionDetector = _player.get_node("%InteractionDetector")
+	assert_eq(detector.get_target(), item)
+	assert_true(_actor.interact_pressed())
+	assert_eq(_hold.get_held_item(), item)
+	assert_false(_slot.has_item())
+	_hold.drop()
+	assert_false(item.freeze)
+	assert_eq(item.collision_layer, INTERACTABLE_LAYER)
+	assert_eq(item.collision_mask, 1)
+
+
+func test_pul016_slot_of_and_pick_up_item() -> void:
+	var loose: Item = Item.new()
+	_level.add_child(loose)
+	assert_null(Slot.slot_of(loose))
+	var stored: Item = _held_item()
+	_slot.interact(_actor)
+	assert_eq(Slot.slot_of(stored), _slot)
+	assert_true(Slot.pick_up_item(_actor, stored))
+	assert_null(Slot.slot_of(stored))
+	assert_eq(_hold.get_held_item(), stored)
+	_hold.drop()
+	assert_false(stored.freeze)
+	assert_eq(stored.collision_layer, INTERACTABLE_LAYER)
 
 
 func test_ac2_initial_item_is_stored_on_ready() -> void:

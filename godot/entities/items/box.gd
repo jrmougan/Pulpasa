@@ -58,6 +58,14 @@ func can_interact(actor: InteractionComponent) -> bool:
 	var held: Node = holder.get_held_item()
 	if held == null:
 		return holder.can_hold(self)
+	return can_receive(held)
+
+
+## Si `held` (lo que lleva la mano) llena o condimenta la caja. Lo consulta también el detector
+## para elegir una caja guardada en un slot con la mano llena.
+func can_receive(held: Node) -> bool:
+	if is_held or not is_instance_valid(held):
+		return false
 	if held is Ingredient:
 		return _can_cut(held as Ingredient)
 	if held is SeasoningItem:
@@ -70,7 +78,7 @@ func interact(actor: InteractionComponent) -> bool:
 		return false
 	var held: Node = actor.holder.get_held_item()
 	if held == null:
-		return actor.holder.pick_up(self)
+		return Slot.pick_up_item(actor, self)
 	if held is Ingredient:
 		_cut(held as Ingredient)
 		return true
