@@ -1,0 +1,8 @@
+== import
+== export linux
+tamaño: 71M	/home/jeromo/orca/workspaces/Pulpasa/pul-025/build/linux
+rc=0
+== import
+== export windows
+tamaño: 106M	/home/jeromo/orca/workspaces/Pulpasa/pul-025/build/windows
+rc=0
