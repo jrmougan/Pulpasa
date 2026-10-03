@@ -1,7 +1,7 @@
 ---
 id: PUL-003
 title: Redactar ADR-001..004 y contratos de arquitectura
-status: ready
+status: review
 milestone: F0
 role: godot-architect
 deps: [PUL-001]
@@ -26,10 +26,29 @@ touches_scenes: []
 No crear código ni escenas. Cada ADR: contexto, decisión, alternativas, consecuencias.
 
 ## Acceptance
-- [ ] AC1 Los 4 ADR existen con estado «propuesto».
-- [ ] AC2 Cada señal de signals.md tiene emisor, receptores y tipos.
+- [x] AC1 Los 4 ADR existen con estado «propuesto».
+- [x] AC2 Cada señal de signals.md tiene emisor, receptores y tipos.
 - [ ] AC3 Gate humano: el responsable aprueba los ADR (estado → «aceptado»).
 
 ## Plan
+1. Leer inventario (PUL-001), decisiones, roadmap, GDD/features de PUL-002 (`jrmougan/pul-002`) y
+   `Assets/Scripts/{Architecture,Systems,Interfaces,Events}`.
+2. ADR-001 (convenciones y carpetas), ADR-002 (autoloads + mapa QFramework), ADR-003 (escenas,
+   componentes, contrato de interacción, capas), ADR-004 (InputMap por jugador/dispositivo, cambio).
+3. `signals.md` y `scene-tree.md` coherentes con los ADR; índice en `docs/arch/README.md`.
+4. Redirección del coordinador (D14 pendiente): capa común independiente de 3D/2D (ADR-002 regla 10,
+   firmas del bus sin nodos), ADR-003/004 separan común y específico, `scene-tree.md` §6 con
+   equivalencias 2D y ADR-005 con comparación y recomendación.
 
 ## Evidence
+- AC1: `docs/arch/ADR-00{1,2,3,4}-*.md` (+ ADR-005 pedido por el coordinador), todos con `Estado: propuesto` y secciones contexto,
+  decisión, alternativas consideradas y consecuencias. Índice en `docs/arch/README.md`.
+- AC2: `docs/arch/signals.md` §2 (13 señales de `EventBus`) y §4 (8 locales): cada fila tiene
+  firma tipada, emisor, receptores, cuándo y fase; tipos de las firmas en §1.
+- AC3: pendiente del gate humano (estado → «aceptado»).
+- `tools/verify.sh`: ✓ verify OK (2026-10-03; sin código ni escenas nuevas).
+- Decisiones a revisar en el gate: se añade `RoundManager` como 4.º autoload (ADR-002); estructura
+  `entities/`/`components/`/`ui/` sustituye las rutas `scenes/...` del inventario (ADR-001);
+  contrato de interacción por grupo + métodos (ADR-003 §4); asignación de mandos (ADR-004 §2);
+  D11 aplicada (tecla fija, ADR-004 §4); D8 prevista en la firma `delivery_rejected(slot_id, penalty)`;
+  **D14 (3D/2D)**: ADR-005 recomienda 3D con cámara ortográfica (la del prototipo ya lo es).
