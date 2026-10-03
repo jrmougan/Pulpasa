@@ -105,7 +105,7 @@ octopus_storage.tscn  OctopusStorage (StaticBody3D; grupo interactable)  item_sp
 kitchen.tscn          Kitchen (StaticBody3D; grupos interactable, kitchen)  cooking_station.gd
                       ├── CollisionShape3D, Model (olla + fogón), %AnchorPoint, %Highlightable
                       ├── %CookBar (world_progress_bar.tscn), %BoilAudio (AudioStreamPlayer3D)
-                      └── %CookTimer (Timer)       cook_time desde IngredientData
+                      └── (reloj interno en _physics_process, sin nodo Timer; cook_time desde IngredientData; se congela con la pausa)
 box_shelf.tscn        BoxShelf (StaticBody3D)  Model (mueble)
                       ├── SmallSpawner  (StaticBody3D; interactable)  item_spawner.gd  scene = box.tscn, data = small.tres
                       ├── MediumSpawner …                                                 data = medium.tres

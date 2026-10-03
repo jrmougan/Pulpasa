@@ -132,7 +132,7 @@ Se listan todos. Destino: **A** = autoload, **N** = script de nodo, **R** = `Res
 | `UI/BoxEntryUI.cs` | Línea de ticket: receta + lista de especias | `ticket_entry.gd` (N) en `ticket_entry.tscn` (S) | 7 | |
 | `UI/FaceToCamera.cs` | Billboard de canvas en mundo | — (`Label3D`/`Sprite3D` billboard) | 7 | Sin script en Godot |
 | `UI/GameOverUI.cs` | Panel fin de turno: rendimiento, reiniciar, salir | `game_over.gd` (N) en `game_over.tscn` (S) | 7 | Escucha `EventBus.round_finished` en vez de sondear `isFinished` cada frame (:27-33). M0: rendimiento como el prototipo. **[M1]** D2: estrellas y recaudación |
-| `UI/KitchenProgress.cs` | Temporizador de cocción + barra + audio de hervir; evento `OnCookingFinished` | `Timer` + señal en `cooking_station.gd` | 6 | Barra: `TextureProgressBar` en `SubViewport`/`Sprite3D` o `ProgressBar` 3D |
+| `UI/KitchenProgress.cs` | Temporizador de cocción + barra + audio de hervir; evento `OnCookingFinished` | acumulador en `_physics_process` + señal en `cooking_station.gd` | 6 | Barra: `TextureProgressBar` en `SubViewport`/`Sprite3D` o `ProgressBar` 3D |
 | `UI/MainMenu.cs` | Menú con flechas/Enter/ratón: Jugar → `Level_01`, Salir | `main_menu.gd` (N) en `main_menu.tscn` (S) | 7 | Botones `Button` con foco nativo; hover de ratón buggy (§4) |
 | `UI/OrderTicket.cs` | Ticket: `#id` + una entrada | `order_ticket.gd` (N) en `order_ticket.tscn` (S) | 7 | |
 | `UI/PauseMenuController.cs` | Navegación del menú de pausa (Reanudar/Salir) | `pause_menu.gd` (N) | 7 | Copia literal de `MainMenu` (§4): un único componente de menú |
