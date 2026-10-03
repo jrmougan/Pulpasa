@@ -1,0 +1,6 @@
+# Godot: escenas y recursos no se fusionan línea a línea; un conflicto se rehace.
+*.tscn merge=binary
+*.tres merge=binary
+*.gd text eol=lf
+*.sh text eol=lf
+*.uid text eol=lf

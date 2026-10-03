@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "enabledMcpjsonServers": ["godot"],
+  "permissions": {
+    "allow": [
+      "Bash(godot --headless:*)",
+      "Bash(tools/verify.sh:*)",
+      "Bash(gdlint:*)",
+      "Bash(gdformat:*)",
+      "Bash(orca-ide orchestration:*)",
+      "mcp__godot__check_project",
+      "mcp__godot__get_debug_output",
+      "mcp__godot__get_scene_tree",
+      "mcp__godot__get_project_files",
+      "mcp__godot__take_screenshot",
+      "mcp__godot__stop_project"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard_ownership.py" }]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [{ "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gd_lint_format.sh" }]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [{ "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/verify_on_stop.sh", "timeout": 900 }]
+      }
+    ]
+  }
+}

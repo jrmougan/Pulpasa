@@ -1,0 +1,7 @@
+# Godot 4
+.godot/
+/android/
+.gut_reports/
+.mcp/
+# Assets de terceros con licencia restrictiva (ver docs/arch)
+assets/third_party/
