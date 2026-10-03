@@ -1,0 +1,71 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/items/sandbox/items_sandbox.gd" id="1_0b75t"]
+[ext_resource type="Resource" path="res://data/config/round_config.tres" id="2_jfe31"]
+[ext_resource type="Resource" path="res://data/orders/order_catalog.tres" id="3_12gd5"]
+[ext_resource type="PackedScene" path="res://entities/camera/camera_rig.tscn" id="4_5x07g"]
+[ext_resource type="Material" path="res://assets/materials/terrain.tres" id="5_dpaqa"]
+[ext_resource type="PackedScene" path="res://entities/items/octopus.tscn" id="6_y1iff"]
+[ext_resource type="PackedScene" path="res://entities/items/box.tscn" id="7_x15j2"]
+[ext_resource type="PackedScene" path="res://entities/items/seasoning.tscn" id="8_xx3kv"]
+[ext_resource type="Resource" path="res://data/seasonings/paprika.tres" id="9_7kqk3"]
+[ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="10_cmrg4"]
+
+[sub_resource type="Environment" id="Environment_ae2mo"]
+background_mode = 1
+background_color = Color(0.36, 0.17, 0.71, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.6, 0.6, 0.65, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qvn7g"]
+size = Vector3(20, 0.2, 20)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sp6j1"]
+size = Vector2(20, 20)
+
+[node name="ItemsSandbox" type="Node3D" unique_id=373915112 node_paths=PackedStringArray("cooked_octopus", "interaction")]
+script = ExtResource("1_0b75t")
+round_config = ExtResource("2_jfe31")
+order_catalog = ExtResource("3_12gd5")
+cooked_octopus = NodePath("Items/CookedOctopus")
+interaction = NodePath("Player/InteractionComponent")
+mcp_bridge = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1518121667]
+environment = SubResource("Environment_ae2mo")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=383568302]
+transform = Transform3D(0.8660254, -0.38302222, 0.32139382, 0, 0.64278764, 0.76604444, -0.5, -0.66341394, 0.5566704, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CameraRig" parent="." unique_id=697112619 instance=ExtResource("4_5x07g")]
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=412535662]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=759841461]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+shape = SubResource("BoxShape3D_qvn7g")
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor" unique_id=393611768]
+material_override = ExtResource("5_dpaqa")
+mesh = SubResource("PlaneMesh_sp6j1")
+
+[node name="Items" type="Node3D" parent="." unique_id=688970816]
+
+[node name="CookedOctopus" parent="Items" unique_id=811880050 instance=ExtResource("6_y1iff")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.26, 0)
+
+[node name="BoxSmall" parent="Items" unique_id=1225731382 instance=ExtResource("7_x15j2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.17, 0)
+
+[node name="Salt" parent="Items" unique_id=2088751670 instance=ExtResource("8_xx3kv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 1.3)
+
+[node name="Paprika" parent="Items" unique_id=1345607933 instance=ExtResource("8_xx3kv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.35, 1.3)
+data = ExtResource("9_7kqk3")
+
+[node name="Player" parent="." unique_id=370749224 node_paths=PackedStringArray("camera", "items_root") instance=ExtResource("10_cmrg4")]
+camera = NodePath("../CameraRig")
+items_root = NodePath("../Items")
