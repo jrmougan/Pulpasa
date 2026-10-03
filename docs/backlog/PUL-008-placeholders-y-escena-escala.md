@@ -1,7 +1,7 @@
 ---
 id: PUL-008
 title: Crear placeholders 3D, importar muebles propios y montar la escena de escala
-status: ready
+status: review
 milestone: M0
 role: asset-pipeline
 deps: []
@@ -35,11 +35,16 @@ licencias confirmadas). `docs/assets/licenses.md` dice qué se puede usar.
 - `.tscn` vía MCP o editor; no inventes uid.
 
 ## Acceptance
-- [ ] AC1 Los dos FBX propios importan sin errores y su AABB está en metros plausibles (± 20 % de Unity) → `test_scale_check.gd`.
-- [ ] AC2 Existe un placeholder por cada elemento listado, con el frente en −Z → `test_scale_check.gd`.
-- [ ] AC3 Captura de `scale_check.tscn` con la cámara ortográfica de Unity en `docs/evidence/PUL-008/` (revisión humana).
-- [ ] AC4 `licenses.md` actualizado; `tools/verify.sh` en verde.
+- [x] AC1 Los dos FBX propios importan sin errores y su AABB está en metros plausibles (± 20 % de Unity) → `test_scale_check.gd`.
+- [x] AC2 Existe un placeholder por cada elemento listado, con el frente en −Z → `test_scale_check.gd`.
+- [x] AC3 Captura de `scale_check.tscn` con la cámara ortográfica de Unity en `docs/evidence/PUL-008/` (revisión humana).
+- [x] AC4 `licenses.md` actualizado; `tools/verify.sh` en verde.
 
 ## Plan
+Generado con script headless de Godot (ResourceSaver), sin uids inventados; script temporal retirado.
 
 ## Evidence
+- `tools/verify.sh`: ✓ verify OK (gdformat, gdlint, import, GUT 36/36, smoke).
+- AC1/AC2: `godot/tests/integration/test_scale_check.gd`. AABB importados: Mueblecajas 1,14×0,92×1,80 m; order_stand 1,92×2,02×0,77 m.
+- AC3: `docs/evidence/PUL-008/scale_check.png` (revisión humana).
+- Notas: `Camera3D.size` es el alto total (12,74 = 2 × 6,37 de Unity); posición z espejada (Unity −5,86 → +5,86). Mueblecajas va sin la rotación de −90° del nivel. La orientación del frente de los FBX no se pudo verificar sin referencia: revisar en la captura.

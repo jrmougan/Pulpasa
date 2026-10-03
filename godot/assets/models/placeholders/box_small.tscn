@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/small_box.tres" id="1_eris6"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_upbkh"]
+size = Vector3(0.49, 0.47, 0.41)
+
+[node name="BoxSmall" type="Node3D" unique_id=1065392217]
+
+[node name="Front" type="Marker3D" parent="." unique_id=965668905]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.205)
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=737225015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.235, 0)
+material_override = ExtResource("1_eris6")
+mesh = SubResource("BoxMesh_upbkh")

@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/ph_metal.tres" id="1_r2wgu"]
+[ext_resource type="Material" path="res://assets/materials/ph_dark.tres" id="2_6bqcd"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vq28e"]
+top_radius = 0.33
+bottom_radius = 0.33
+height = 0.65
+
+[sub_resource type="BoxMesh" id="BoxMesh_kku10"]
+size = Vector3(0.76, 0.06, 0.08)
+
+[node name="Pot" type="Node3D" unique_id=23962942]
+
+[node name="Front" type="Marker3D" parent="." unique_id=1107432682]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.335)
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=407310612]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.325, 0)
+material_override = ExtResource("1_r2wgu")
+mesh = SubResource("CylinderMesh_vq28e")
+
+[node name="Handle" type="MeshInstance3D" parent="." unique_id=1667991016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = ExtResource("2_6bqcd")
+mesh = SubResource("BoxMesh_kku10")
