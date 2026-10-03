@@ -1,11 +1,11 @@
 ---
 id: PUL-004
 title: Montar el esqueleto de M0 - EventBus, GameState e InputMap
-status: review
+status: done
 milestone: M0
 role: godot-architect
 deps: []
-orca_task: null
+orca_task: task_c2ff3c30272f
 unity_sources: [Assets/Scripts/Architecture/**, Assets/Scripts/Game/PauseManager.cs, Assets/PlayerInputActions.inputactions]
 owns: [godot/project.godot, godot/autoload/event_bus.gd, godot/autoload/event_bus.gd.uid, godot/autoload/game_state.gd, godot/autoload/game_state.gd.uid, godot/core/game_mode.gd, godot/core/game_mode.gd.uid, godot/tests/unit/test_event_bus.gd, godot/tests/unit/test_event_bus.gd.uid, godot/tests/unit/test_game_state.gd, godot/tests/unit/test_game_state.gd.uid, godot/tests/unit/test_input_map.gd, godot/tests/unit/test_input_map.gd.uid, godot/tests/helpers/**]
 touches_scenes: []
@@ -86,3 +86,6 @@ Notas para revisión:
   Espacio / Esc) + botón A (0) / B (1) con `device = -1`. Las direcciones `ui_*` ya traen cruceta
   y stick por defecto y no se tocan.
 
+
+### Nota de revisión (codex, baja, no bloqueante)
+`tests/unit/test_input_map.gd:96` comprueba solo alguna tecla de `ui_accept`/`ui_cancel`. Mejora pendiente: aserciones explícitas de Enter, Enter numérico, Espacio y Escape.
