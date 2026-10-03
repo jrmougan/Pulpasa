@@ -18,7 +18,9 @@ Por cada ficha `ready` sin solapes de `owns`/`touches_scenes`:
 
 ```bash
 orca-ide orchestration worker-start \
-  --spec "$(cat docs/backlog/PUL-0xx-*.md)
+  --spec "Tarea PUL-0xx: implementa la ficha docs/backlog/PUL-0xx-<slug>.md (copiada abajo).
+
+$(cat docs/backlog/PUL-0xx-*.md)
 
 ROL: actúa según .claude/agents/<role>.md. Escribe PUL-0xx en .claude/current-task antes de editar.
 VERIFICACIÓN: tools/verify.sh debe pasar. Evidencia en docs/evidence/PUL-0xx/.
@@ -28,7 +30,8 @@ CIERRE: commit en tu rama con mensaje 'PUL-0xx: <título>' y worker_done con --f
   --agent claude --model <sonnet|opus según rol> --json
 ```
 
-Guarda el `task_id` devuelto en `orca_task` de la ficha.
+El spec no puede empezar por `---` (Orca lo toma por un flag): por eso va la línea «Tarea …» delante.
+No escribas `orca_task` en la ficha mientras el worker la tiene: chocaría al mergear. Anótalo al cerrarla.
 
 ## Esperar y procesar
 
