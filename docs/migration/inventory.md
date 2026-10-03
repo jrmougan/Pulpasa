@@ -8,7 +8,7 @@ Lo que se lee aquí es **la especificación**, no el diseño final: si algo choc
 
 ## Fases de M0
 
-Fases de la propuesta aprobada (confirmadas por el coordinador). Cada fila del inventario lleva
+Fases de `docs/design/roadmap.md` (propuesta aprobada). Cada fila del inventario lleva
 una. Coop de 2 jugadores, audio completo y pulido **no** son M0: se marcan `post-M0`. Los bugs y el
 código muerto van en su propia sección y no llevan fase (`—`).
 
@@ -34,7 +34,12 @@ código muerto van en su propia sección y no llevan fase (`—`).
 5. Entrar con la caja en el trigger de un `OrderStand` valida contra el pedido de su puesto
    (`OrderStand.cs:19`). 4 puestos (`deliverySlotId` 1–4), máx. 4 pedidos activos (`OrderSystem.cs:28`).
 6. `ProductivitySystem` cuenta 180 s y cajas entregadas; `GameOverUI` muestra cajas/minuto.
-   En la alpha la métrica pasa a recaudación + estrellas (D2) y la partida dura 5 min (D5).
+   En la alpha la métrica pasa a recaudación + estrellas (D2, **M1**) y la partida dura 5 min (D5).
+
+**M0 = paridad.** La fase de cada fila es la de migrar el componente tal como está en Unity (sin sus
+bugs). Lo que amplía el prototipo (recaudación/estrellas, paciencia y caducidad, aceite/cachelos,
+condimento sí/no) se marca **[M1]** en Notas y no entra en la fase M0 indicada
+(ver `docs/design/roadmap.md`).
 
 ## 1. Scripts (`Assets/Scripts`, 47 archivos `.cs`)
 
@@ -71,7 +76,7 @@ Se listan todos. Destino: **A** = autoload, **N** = script de nodo, **R** = `Res
 
 | Origen | Responsabilidad | Destino Godot | Fase | Notas |
 |---|---|---|---|---|
-| `Game/Box.cs` | Caja: llenado por pulsación, ingrediente, condimentos aplicados, coger/soltar, modo spawner | `box.gd` (N) en `box.tscn` (S) + `box_spawner.gd` (N) separado | 6 | `fillPerPress` por prefab (S 0.2 / M 0.1 / L 0.05) → mover a `BoxData` (.tres). Separar spawner (:10-11, :150-168) de la caja. NRE :58 (§4). D4: condimento sí/no |
+| `Game/Box.cs` | Caja: llenado por pulsación, ingrediente, condimentos aplicados, coger/soltar, modo spawner | `box.gd` (N) en `box.tscn` (S) + `box_spawner.gd` (N) separado | 6 | `fillPerPress` por prefab (S 0.2 / M 0.1 / L 0.05) → mover a `BoxData` (.tres). Separar spawner (:10-11, :150-168) de la caja. NRE :58 (§4). **[M1]** D4: condimento sí/no |
 | `Game/Ingredient.cs` | Pulpo: estado de cocción, cantidad restante (100), corte, coger/soltar | `ingredient.gd` (N) en `octopus.tscn` (S) | 6 | `ISeasonable` stub (:100-109) no se porta. Destrucción condicionada a `progressBar` (:46-54) (§4). Errata `remainintCuantity` |
 | `Game/InteractableSlot.cs` | Hueco que guarda un objeto alineado por `AnchorPoint`; dispara trigger `Open` | `slot.gd` (N) en `slot.tscn` (S) | 5 | `Marker3D` AnchorPoint en cada objeto colocable |
 | `Game/Kitchen.cs` (clase `KitchenStation`) | Olla: acepta pulpo crudo cocinable, lo cuece, lo devuelve cocido y cambia color | `cooking_station.gd` (N) en `kitchen.tscn` (S) | 6 | Color hardcodeado (:61-62) → material "cocido" en datos. `CookingState.Burnt` no se usa: no hay quemado en M0 |
@@ -80,7 +85,7 @@ Se listan todos. Destino: **A** = autoload, **N** = script de nodo, **R** = `Res
 | `Game/OrderTicketSpawner.cs` | Pinta tickets al generarse pedidos | — | — | No está en ninguna escena; duplicado de `OrderTicketUIController` (§4) |
 | `Game/OrderTicketUIController.cs` | Pide pedido inicial por puesto, crea/destruye tickets, asigna pedido al stand | `order_tickets_panel.gd` (N, UI) + `OrderService` (asignación a puesto) | 7 | La lógica de asignar y reponer pedidos (:20-37, :84-85) pasa a `OrderService` (fase 2); la UI solo escucha señales |
 | `Game/PauseManager.cs` (clase `PauseMenuManager`) | Esc pausa/reanuda (`timeScale`), deshabilita jugador, sale al menú | `pause_menu.gd` (N) en `pause_menu.tscn` (S), `process_mode = ALWAYS` | 7 | `get_tree().paused`; sobra `productivitySystem.isPaused` y deshabilitar al jugador (§4) |
-| `Game/ProductivitySystem.cs` | Cronómetro de ronda (180 s), cajas entregadas, ratio y texto de rendimiento | `RoundManager` (A) | 2 | D2/D5: recaudación + estrellas, 5 min en datos (`RoundConfig.tres`). Temporizador duplicado (§4) |
+| `Game/ProductivitySystem.cs` | Cronómetro de ronda (180 s), cajas entregadas, ratio y texto de rendimiento | `RoundManager` (A) | 2 | M0: ratio de cajas/minuto como el prototipo, duración en datos (`RoundConfig.tres`, 5 min por D5). **[M1]** D2: recaudación + estrellas. Temporizador duplicado (§4) |
 | `Game/SeasoningItem.cs` | Condimento cogible; rama de aplicar a caja (y se destruye) | `seasoning_item.gd` (N) en `seasoning_*.tscn` (S) | 6 | Rama :51-67 inalcanzable en la práctica (§4). Sin destruir el bote al usarlo (decisión de diseño a confirmar en PUL-002) |
 
 ### Interaction
@@ -98,7 +103,7 @@ Se listan todos. Destino: **A** = autoload, **N** = script de nodo, **R** = `Res
 
 | Origen | Responsabilidad | Destino Godot | Fase | Notas |
 |---|---|---|---|---|
-| `Interfaces/ActiveOrder.cs` | Pedido en curso: id, plantilla, puesto | `ActiveOrder` (`RefCounted` con `class_name`) | 2 | Añadir tiempo restante (D2: bonus por tiempo / caducada) |
+| `Interfaces/ActiveOrder.cs` | Pedido en curso: id, plantilla, puesto | `ActiveOrder` (`RefCounted` con `class_name`) | 2 | **[M1]** Añadir tiempo restante (D2: bonus por tiempo / caducada) |
 | `Interfaces/IInteractable.cs` | Contrato `Interact` + `GetGameObject` | Duck typing: método `interact(actor)` + grupo `interactable` | 5 | Contrato a fijar en ADR (PUL-003) |
 | `Interfaces/IPickable.cs` | Contrato coger/soltar | Grupo `pickable` + `on_picked_up/on_dropped` | 4 | `OnPickedUp` nunca se llama (§4) |
 | `Interfaces/ISeasonable.cs` | Contrato condimentar | — | — | Solo lo implementa `Ingredient` con stub; la caja no lo implementa (§4) |
@@ -110,15 +115,15 @@ Se listan todos. Destino: **A** = autoload, **N** = script de nodo, **R** = `Res
 | `ScriptableObjects/BoxSO.cs` | Tipo de caja: nombre, icono, prefab, capacidad | `BoxData` (R) | 1 | Añadir `fill_per_press` (hoy en el prefab). `requiredCapacity` no se usa |
 | `ScriptableObjects/DrinkSO.cs` | Bebida | — | — | Sin assets ni usos: código muerto (§4) |
 | `ScriptableObjects/IngredientSO.cs` | Ingrediente + enums `IngredientType`, `CookingState` | `IngredientData` (R) + enums en el script | 1 | `totalCapacity`, `isCuttable` no se usan; `Burnt` no se usa |
-| `ScriptableObjects/OrderSO.cs` | Plantilla de pedido: receta + especias + `maxTime` | `OrderData` (R) | 1 | `maxTime` no se usa (0 en los 3 assets): D2 lo necesita (caducidad) |
-| `ScriptableObjects/RecipeSO.cs` | Receta: ingrediente, caja, `basePoints` | `RecipeData` (R) | 1 | `basePoints` = 0 en los 3 assets; D2 da precio base por receta → rellenar en `.tres` |
-| `ScriptableObjects/SpicesSO.cs` | Condimento + enum `SeasoningType` (Salt, Paprika, Hot_Paprika) | `SeasoningData` (R) | 1 | D4 añade aceite y cachelos: ampliar el enum |
+| `ScriptableObjects/OrderSO.cs` | Plantilla de pedido: receta + especias + `maxTime` | `OrderData` (R) | 1 | M0: portar el campo tal cual. `maxTime` no se usa (0 en los 3 assets). **[M1]** Paciencia/caducidad (D2) |
+| `ScriptableObjects/RecipeSO.cs` | Receta: ingrediente, caja, `basePoints` | `RecipeData` (R) | 1 | M0: portar `base_points` tal cual (0 en los 3 assets). **[M1]** D2: precio base por receta en `.tres` |
+| `ScriptableObjects/SpicesSO.cs` | Condimento + enum `SeasoningType` (Salt, Paprika, Hot_Paprika) | `SeasoningData` (R) | 1 | M0: los 3 tipos actuales. **[M1]** D4: aceite y cachelos |
 
 ### Systems
 
 | Origen | Responsabilidad | Destino Godot | Fase | Notas |
 |---|---|---|---|---|
-| `Systems/OrderSystem.cs` | Carga pedidos de `Resources/Orders`, genera (máx. 4), valida caja (tipo, ingrediente, especias ⊆), completa, resetea | `OrderService` (A) | 2 | Sin acceso a escena (`ResetOrders` usa `FindObjectsByType`, :113). Validación como función pura. Doble `CompleteOrder` (§4). Especias: hoy acepta especias extra (solo comprueba ⊆, :84-92); D4 exige igualdad sí/no |
+| `Systems/OrderSystem.cs` | Carga pedidos de `Resources/Orders`, genera (máx. 4), valida caja (tipo, ingrediente, especias ⊆), completa, resetea | `OrderService` (A) | 2 | Sin acceso a escena (`ResetOrders` usa `FindObjectsByType`, :113). Validación como función pura. Doble `CompleteOrder` (§4). Especias: hoy acepta especias extra (solo comprueba ⊆, :84-92). **[M1]** D4: igualdad exacta sí/no |
 
 ### UI
 
@@ -126,7 +131,7 @@ Se listan todos. Destino: **A** = autoload, **N** = script de nodo, **R** = `Res
 |---|---|---|---|---|
 | `UI/BoxEntryUI.cs` | Línea de ticket: receta + lista de especias | `ticket_entry.gd` (N) en `ticket_entry.tscn` (S) | 7 | |
 | `UI/FaceToCamera.cs` | Billboard de canvas en mundo | — (`Label3D`/`Sprite3D` billboard) | 7 | Sin script en Godot |
-| `UI/GameOverUI.cs` | Panel fin de turno: rendimiento, reiniciar, salir | `game_over.gd` (N) en `game_over.tscn` (S) | 7 | Escucha `EventBus.round_finished` en vez de sondear `isFinished` cada frame (:27-33). D2: estrellas y recaudación |
+| `UI/GameOverUI.cs` | Panel fin de turno: rendimiento, reiniciar, salir | `game_over.gd` (N) en `game_over.tscn` (S) | 7 | Escucha `EventBus.round_finished` en vez de sondear `isFinished` cada frame (:27-33). M0: rendimiento como el prototipo. **[M1]** D2: estrellas y recaudación |
 | `UI/KitchenProgress.cs` | Temporizador de cocción + barra + audio de hervir; evento `OnCookingFinished` | `Timer` + señal en `cooking_station.gd` | 6 | Barra: `TextureProgressBar` en `SubViewport`/`Sprite3D` o `ProgressBar` 3D |
 | `UI/MainMenu.cs` | Menú con flechas/Enter/ratón: Jugar → `Level_01`, Salir | `main_menu.gd` (N) en `main_menu.tscn` (S) | 7 | Botones `Button` con foco nativo; hover de ratón buggy (§4) |
 | `UI/OrderTicket.cs` | Ticket: `#id` + una entrada | `order_ticket.gd` (N) en `order_ticket.tscn` (S) | 7 | |
@@ -144,7 +149,7 @@ Destino: `godot/data/<tipo>/<nombre>.tres`. Todos en fase **1**.
 | `Resources/Boxes/MediumBox.asset` | BoxSO | "Mediana", 100 | `data/boxes/medium.tres` | `prefab` roto (GUID inexistente). `fill_per_press` 0.1 |
 | `Resources/Boxes/LargeBox.asset` | BoxSO | "Grande", 100 | `data/boxes/large.tres` | `fill_per_press` 0.05 |
 | `Resources/Ingredients/Octopus.asset` | IngredientSO | "Pulpo", cocinable, cortable, `cookTime` 5 | `data/ingredients/octopus.tres` | `prefab` vacío |
-| `Resources/Recipes/Individual.asset` | RecipeSO | "Pulpo Individual": pulpo + SmallBox, 0 pts | `data/recipes/individual.tres` | Precio base (D2) pendiente de PUL-002 |
+| `Resources/Recipes/Individual.asset` | RecipeSO | "Pulpo Individual": pulpo + SmallBox, 0 pts | `data/recipes/individual.tres` | **[M1]** Precio base (D2) pendiente de PUL-002 |
 | `Resources/Recipes/ComboDuo.asset` | RecipeSO | "Pulpo Doble": pulpo + MediumBox, 0 pts | `data/recipes/combo_duo.tres` | Ídem |
 | `Resources/Recipes/Familiar.asset` | RecipeSO | "Pulpo Familiar": pulpo + LargeBox, 0 pts | `data/recipes/familiar.tres` | Ídem |
 | `Resources/Orders/Order_1.asset` | OrderSO | Familiar + Hot_Paprika + Salt | `data/orders/order_1.tres` | `maxTime` 0 |
@@ -209,7 +214,7 @@ reproducido en Unity.
 
 | # | Bug | Ubicación | Efecto | En Godot |
 |---|---|---|---|---|
-| B1 | **Doble `CompleteOrder`** | `Systems/OrderSystem.cs:103` (dentro de `ValidateBox`) y `Game/OrderStand.cs:61` | `OrderCompletedEvent` se emite dos veces: `boxesDelivered` suma 2 por entrega (`ProductivitySystem.cs:57`) y el segundo `OnClearTicket` (`OrderTicketUIController.cs:82`) limpia el stand **después** de que el primero le asignó un pedido nuevo → el puesto queda sin `currentOrder` aunque el pedido siga activo y el ticket visible: puesto bloqueado (deducido) | `validate()` es pura y no completa; solo `complete_order()` emite `order_completed`, una vez. Test GUT: una entrega = una señal |
+| B1 | **Doble `CompleteOrder`** | `Systems/OrderSystem.cs:103` (dentro de `ValidateBox`) y `Game/OrderStand.cs:61` | QFramework ejecuta eventos y comandos de forma síncrona (`Plugins/QFramework/QFramework.cs:175,621,823`). Secuencia: (1) `ValidateBox` completa la comanda original → `OrderCompletedEvent` → `OrderTicketUIController.OnClearTicket` limpia el stand y pide una comanda nueva (`OrderTicketUIController.cs:82-85`), que se asigna al mismo stand (`:62`); (2) de vuelta en `OrderStand`, `completedOrder = currentOrder` (`OrderStand.cs:59`) captura **esa comanda nueva**, la limpia y la completa (`:61`) **sin entrega**; (3) el segundo evento vuelve a pedir y asignar otra comanda. Resultado: por cada entrega se completan dos comandas (la segunda de forma fraudulenta), `boxesDelivered` suma 2 (`ProductivitySystem.cs:57`) y el puesto sigue ocupado (con 4 puestos quedan 4 comandas activas) | `validate()` es pura y no completa; solo `complete_order()` emite `order_completed`, una vez, sobre la comanda validada. Test GUT: una entrega = una señal y la comanda completada es la entregada |
 | B2 | **Temporizadores duplicados** | `Game/ProductivitySystem.cs:45` (`elapsedTime`) y `UI/ProductivityUIDisplay.cs:23` (`remainingTime`) | Dos contadores independientes. El sistema termina con `RoundToInt(elapsed) >= RoundToInt(limit)` (`ProductivitySystem.cs:47`), es decir a 179,5 s, mientras el HUD aún marca 0,5 s; el HUD llama `StopTracking` (`ProductivityUIDisplay.cs:36`) que no marca `isFinished`: si llegara antes, nunca saldría el game over | Un único reloj en `RoundManager`; el HUD solo lee/escucha. Fin exacto a `duration` |
 | B3 | **`EmissionHighlighter`** | `Interaction/EmissionHighlighter.cs:15` (variable local `renderers` oculta el campo de :11), :25-28, :50/:63; `Interaction/HighlightController.cs:11-12` | La lista `renderers` nunca se llena, así que `DynamicGI.SetEmissive` no se ejecuta; fuerza el shader `URP/Lit` en todos los materiales del objeto (rompe otros shaders); y `HighlightController` no lo conoce, por lo que `Salt.prefab` (único usuario) nunca se resalta | No se porta. Un solo resaltado por shader (`material_overlay`) para todos los interactuables |
 
@@ -228,7 +233,7 @@ reproducido en Unity.
 | B12 | Entrega solo en `OnTriggerEnter`: si el jugador ya estaba dentro al coger la caja, no valida | `Game/OrderStand.cs:19-32` | Validar al entrar y al interactuar en el stand |
 | B13 | Pausa redundante: `timeScale = 0` + flag `isPaused` + deshabilitar `PlayerController`; Esc leído con el Input Manager antiguo (`activeInputHandler: 2`, ambos) | `Game/PauseManager.cs:21,34-44` | `get_tree().paused` y acción `pause` del InputMap |
 | B14 | Hover de ratón en menús compara `rect` local con `mousePosition − position` (falla con escalado del Canvas) | `UI/MainMenu.cs:44`, `UI/PauseMenuController.cs:45` | `Button` con foco/hover nativo |
-| B15 | Validación de especias acepta especias de más (solo comprueba inclusión) | `Systems/OrderSystem.cs:84-92` | D4: igualdad exacta del conjunto sí/no |
+| B15 | Validación de especias acepta especias de más (solo comprueba inclusión) | `Systems/OrderSystem.cs:84-92` | M0: mantener la regla actual (⊆) salvo que PUL-002 diga otra cosa. **[M1]** D4: igualdad exacta del conjunto sí/no |
 | B16 | `OrderSystem` (System QFramework) busca objetos de escena | `Systems/OrderSystem.cs:113` | Servicio sin acceso a escena; stands escuchan `order_reset` |
 | B17 | `Salt.asset` con esquema antiguo (sin `type`) y `BoxSO.prefab` de Small/Medium a GUID inexistente | `Resources/Spices/Salt.asset`, `Resources/Boxes/{Small,Medium}Box.asset` | Recrear los `.tres` a mano |
 | B18 | `?.` sobre objetos de Unity (salta el null de Unity → `MissingReferenceException` con objetos destruidos) | p. ej. `Characters/PlayerInteractionController.cs:52`, `Interaction/InteractionDetector.cs:103-104` | `is_instance_valid()` |
@@ -243,7 +248,7 @@ reproducido en Unity.
 | `ObjectDroppedEvent`, `ObjectPickedUpEvent` | `Events/` | Nunca se envían ni escuchan |
 | `ISeasonable` y su stub en `Ingredient` | `Interfaces/ISeasonable.cs`, `Game/Ingredient.cs:100-109` | `ApplySeasoning` solo hace log; la caja no implementa la interfaz |
 | `EmissionHighlighter` | `Interaction/EmissionHighlighter.cs` | Ver B3 |
-| Campos sin uso | `BoxSO.requiredCapacity`, `IngredientSO.totalCapacity/isCuttable`, `CookingState.Burnt`, `Box.isFilled/IsFilled`, `OrderSO.maxTime` | No se leen. `maxTime` sí se recupera por D2 |
+| Campos sin uso | `BoxSO.requiredCapacity`, `IngredientSO.totalCapacity/isCuttable`, `CookingState.Burnt`, `Box.isFilled/IsFilled`, `OrderSO.maxTime` | No se leen. `maxTime` se recupera en **[M1]** (D2) |
 | `PauseMenuController` ≈ `MainMenu` | `UI/PauseMenuController.cs`, `UI/MainMenu.cs` | Código copiado; un componente de menú |
 | `InputSystem_Actions.inputactions`, `Readme.asset` | `Assets/` | Plantilla de Unity sin uso |
 | Animaciones Kevin Iglesias y maniquíes | `Animations/Character/{Idles,Movement}/*.fbx`, `Art/Characters/HumanCharacterDummy_*.fbx` | 0 referencias en prefabs/escenas/controllers |
