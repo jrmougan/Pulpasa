@@ -1,11 +1,11 @@
 ---
 id: PUL-023
 title: Pulir la UI de la fase 7 con los hallazgos de revisión
-status: review
+status: done
 milestone: M0
 role: ui-engineer
 deps: []
-orca_task: null
+orca_task: task_8bfc4d097b07
 unity_sources: [Assets/Scripts/UI/ProductivityUIDisplay.cs, Assets/Scripts/UI/MainMenu.cs, Assets/Scripts/Game/PauseManager.cs]
 owns: [godot/ui/hud/**, godot/ui/tickets/**, godot/ui/menus/**, godot/ui/sandbox/**, godot/ui/theme/**, godot/autoload/game_state.gd, godot/resources/recipe_data.gd, godot/resources/seasoning_data.gd, godot/data/recipes/**, godot/data/seasonings/**, godot/tests/unit/test_game_state.gd, godot/tests/unit/test_data_*.gd, godot/tests/integration/test_hud.gd, godot/tests/integration/test_order_tickets.gd, godot/tests/integration/test_pause_menu.gd, godot/tests/integration/test_game_over.gd, godot/tests/integration/test_main_menu.gd, docs/arch/ADR-002-eventbus-autoloads.md, docs/evidence/PUL-023/**]
 touches_scenes: [godot/ui/hud/hud.tscn, godot/ui/tickets/order_ticket.tscn, godot/ui/menus/main_menu.tscn, godot/ui/menus/pause_menu.tscn, godot/ui/menus/game_over.tscn, godot/ui/sandbox/hud_sandbox.tscn]
