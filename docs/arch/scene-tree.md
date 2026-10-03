@@ -144,7 +144,7 @@ data/recipes/{individual,combo_duo,familiar}.tres RecipeData
 data/orders/order_{1,2,3}.tres                   OrderData
 data/orders/order_catalog.tres                   OrderCatalog   (orders: Array[OrderData], max_active_orders 4)
 data/seasonings/{salt,paprika,hot_paprika}.tres  SeasoningData
-data/config/round_config.tres                    RoundConfig    (duration 300)
+data/config/round_config.tres                    RoundConfig    (duration 180 en M0; 300 en M1, D5)
 data/config/player_config.tres                   PlayerConfig   (speed 5, rotation_speed 20, detector_radius 2.2: valor efectivo en Level_01 del prototipo; 1,5 en el prefab)
 data/config/input_config.tres                    InputConfig    (deadzone 0.2, switch_cooldown 0.2)
 ```
