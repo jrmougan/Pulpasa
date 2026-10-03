@@ -31,12 +31,14 @@ poder ejecutarse con cualquiera de las dos sin reescribir los contratos.
 
 | Capa | Qué contiene | Depende de D14 |
 |---|---|---|
-| **Común** | `autoload/`, `core/`, `resources/`, `data/`; toda la UI de pantalla (`ui/` bajo `CanvasLayer`: HUD, tickets, menús, pausa, game over); `scenes/levels/level.gd`; `InteractionComponent`; `CharacterSwitcher`; contrato de interacción (§4); nombres de grupos y capas (§5); InputMap (ADR-004) | No |
-| **Específica** | `entities/` (jugador, objetos, estaciones, entorno, cámara), `HoldComponent`, `InteractionDetector`, `Highlightable`, `shaders/`, `ui/widgets/world_progress_bar`, `assets/`, `level_01.tscn` | Sí |
+| **Común** | `autoload/`, `core/`, `resources/`, `data/`; toda la UI de pantalla (`ui/` bajo `CanvasLayer`: HUD, tickets, menús, pausa, game over); `scenes/levels/level.gd`; componentes comunes `ControlComponent`, `Holder` (base abstracta), `InteractionComponent`; `CharacterSwitcher`; contrato de interacción (§4); nombres de grupos y capas (§5); InputMap (ADR-004) | No |
+| **Específica** | `entities/` (jugador, objetos, estaciones, entorno, cámara), `HoldComponent` (implementa `Holder`), `InteractionDetector`, `Highlightable`, `shaders/`, `ui/widgets/world_progress_bar`, `assets/`, `level_01.tscn` | Sí |
 
 Reglas de la capa común:
-- Ningún script común referencia `Node3D`, `Node2D`, `Vector3`, `Transform3D`, `Area3D`/`Area2D`
-  ni cuerpos físicos. Los scripts comunes que son nodos extienden `Node` o `Control` (un script
+- Ningún script común referencia `Node3D`, `Node2D`, `Vector3`, `Transform3D`, `Area3D`/`Area2D`,
+  cuerpos físicos **ni clases de la capa específica** (`Player`, `HoldComponent`, `Box`…), tampoco
+  de forma transitiva en tipos de parámetros, `@export` o `Array[...]`. Lo específico se alcanza
+  solo a través de una base común (`Holder`) o de `Node` + grupo + métodos verificados por test. Los scripts comunes que son nodos extienden `Node` o `Control` (un script
   `extends Node` se puede asignar a una raíz `Node3D` o `Node2D`).
 - La geometría que la lógica necesita se expresa en el **plano del suelo** como `Vector2`
   (en 3D, `(x, z)`). Así `InteractionScoring` (cono, distancia, `dot*2 + 1/dist`) es el mismo
@@ -46,6 +48,9 @@ Reglas de la capa común:
   hijos visuales/físicos. La tabla de equivalencias está en `scene-tree.md` §6.
 - Si D14 se resuelve en 2D, se sustituyen las escenas específicas; los tests unitarios y la UI no
   cambian.
+- **Verificación**: los tests de los scripts comunes los instancian con dobles (`Node` simples y
+  un `Holder` de prueba) sin cargar ninguna escena ni clase física; si un script común necesitara
+  una clase específica para cargar, el test fallaría al compilar.
 
 ### 1. Escenas pequeñas, una por entidad
 - Cada entidad, estación o pieza de UI es su propia escena con su script al lado
@@ -77,8 +82,10 @@ El jugador y los objetos se componen de nodos-componente reutilizables en `compo
 
 | Componente | Capa | Nodo base (3D / 2D) | Sustituye a | Notas |
 |---|---|---|---|---|
-| `InteractionComponent` | Común | `Node` | `PlayerInteractionController` | Al pulsar `p<n>_interact`, toma el objetivo del detector y llama `interact()`; si nada acepta y lleva algo, pide soltar |
-| `HoldComponent` | Específica | `Node` + `Marker3D`/`Marker2D` `%HoldPoint` | `PlayerHoldSystem` | Coge/suelta. Único camino: llama `on_picked_up`/`on_dropped` del objeto (B4); valida antes de mutar (B5). Misma API pública en ambas |
+| `ControlComponent` | Común | `Node` | parte de `PlayerController` | `@export var player_index: int` (identidad del personaje), `var controlled_by: int` (jugador que lo controla, 0 = nadie), señal `control_changed(controlled_by)`. Crea el `PlayerInput` del jugador que lo controla (ADR-004) |
+| `Holder` | Común (abstracta) | `Node` | `IPickable` + `PlayerHoldSystem` (API) | API de la mano: `get_held_item() -> Node`, `can_hold(item: Node) -> bool`, `pick_up(item: Node) -> bool`, `drop() -> Node`; señales `item_picked_up`/`item_dropped`. Los métodos base fallan con `push_error`; los implementa `HoldComponent` |
+| `InteractionComponent` | Común | `Node` | `PlayerInteractionController` | `@export var control: ControlComponent`, `@export var holder: Holder`, `@export var detector: Node` (conecta `target_changed` por nombre). Al pulsar `p<n>_interact` llama `interact(self)` del objetivo; si nada acepta y lleva algo, `holder.drop()` |
+| `HoldComponent` | Específica | `Holder` + `Marker3D`/`Marker2D` `%HoldPoint` | `PlayerHoldSystem` | Implementa `Holder`: reparenta y coloca el objeto. Único camino: llama `on_picked_up`/`on_dropped` del objeto (B4); valida antes de mutar (B5) |
 | `InteractionDetector` | Específica | `Area3D` / `Area2D` | `InteractionDetector` | Un solo detector por jugador (B7); radio en `PlayerConfig.tres`. Delega la puntuación en `InteractionScoring` (común, `Vector2` del suelo) |
 | `Highlightable` | Específica | `Node` | `HighlightController`, `OutlineHighlighter`, `InteractableHighlight` | 3D: `material_overlay` con shader de contorno; 2D: shader `canvas_item` de contorno. Retícula opcional. Sin `EmissionHighlighter` (B3) |
 
@@ -87,11 +94,12 @@ Godot no tiene interfaces; se usa **grupo + métodos con firma fija**, verificad
 
 | Grupo | Métodos obligatorios en el script raíz | Lo implementan |
 |---|---|---|
-| `interactable` | `can_interact(actor: Player) -> bool`; `interact(actor: Player) -> bool` (devuelve si consumió la pulsación) | estaciones, slots, caja, puesto de entrega |
-| `pickable` | `on_picked_up(holder: HoldComponent) -> void`; `on_dropped() -> void`; `var is_held: bool` | pulpo, caja, condimento |
+| `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación) | estaciones, slots, caja, puesto de entrega |
+| `pickable` | `on_picked_up(holder: Holder) -> void`; `on_dropped() -> void`; `var is_held: bool` | pulpo, caja, condimento |
 
-- `Player` y `HoldComponent` son `class_name` que existen en ambas dimensiones (con distinto nodo
-  base); el contrato no cambia con D14.
+- Los tipos del contrato (`InteractionComponent`, `Holder`) son comunes: el receptor accede a la mano
+  con `actor.holder` y al jugador con `actor.control.controlled_by`, sin conocer `Player`. El
+  contrato no cambia con D14.
 - La interacción contextual va en el **receptor**: la caja decide si el objeto en la mano del
   actor la llena (pulpo cocido, corte D1/D13) o la condimenta; no el controlador del jugador como
   en `PlayerInteractionController.cs:41,80`.
@@ -113,7 +121,7 @@ Mismos números y nombres en `layer_names/3d_physics` o `layer_names/2d_physics`
 
 ### 6. Objetos generados y soltados — específica, misma regla
 - Los spawners (`item_spawner.gd`, `@export var scene: PackedScene`) instancian el objeto
-  **directamente en el `HoldComponent`** del actor, como el prototipo.
+  **directamente en la mano del actor** (`actor.holder.pick_up(item)`), como el prototipo.
 - Al soltar, el objeto se reparenta al nodo `Items` del nivel, que cada personaje recibe por
   `@export var items_root: Node` (override de referencia permitido en el nivel). En 2D, `Items`,
   `Characters` y `Stations` cuelgan de un mismo contenedor con `y_sort_enabled`.
@@ -133,12 +141,15 @@ escena cambia de escena por su cuenta. Pausa y game over son overlays dentro del
 3. **Jerarquía de clases** (`Interactable extends StaticBody3D`, `Pickable extends RigidBody3D`).
    Las raíces de las entidades son de tipos distintos y GDScript no tiene herencia múltiple; además
    ataría el contrato a la dimensión. Descartada.
-4. **Componente nodo `Interactable` que emite `interacted(actor)`.** Desacopla más, pero obliga al
+4. **Contrato con `Player` como tipo de actor.** Más directo, pero ata la capa común a la clase
+   específica (`CharacterBody3D`/`2D`) de forma transitiva. Descartada en favor de
+   `InteractionComponent` + `Holder`.
+5. **Componente nodo `Interactable` que emite `interacted(actor)`.** Desacopla más, pero obliga al
    detector a buscar un hijo por nombre en cada cuerpo y duplica nodos en todas las entidades.
    Se puede adoptar más adelante con enmienda si el grupo + métodos se queda corto.
-5. **Duck typing sin grupos** (`has_method("interact")` en tiempo de juego). Sin contrato
+6. **Duck typing sin grupos** (`has_method("interact")` en tiempo de juego). Sin contrato
    explícito ni filtrado barato. Descartada.
-6. **Esperar a D14 para fijar el árbol.** Bloquearía también fases 0–2 y las fichas de UI. Se
+7. **Esperar a D14 para fijar el árbol.** Bloquearía también fases 0–2 y las fichas de UI. Se
    prefiere separar capas y dejar pendiente solo la parte específica.
 
 ## Consecuencias

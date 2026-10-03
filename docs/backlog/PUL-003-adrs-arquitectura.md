@@ -41,6 +41,27 @@ No crear código ni escenas. Cada ADR: contexto, decisión, alternativas, consec
    equivalencias 2D y ADR-005 con comparación y recomendación.
 
 ## Evidence
+### Revisión de codex (CHANGES) aplicada
+- [ALTA] Mandos: `DeviceAssignment` puro con `NONE` (−2, solo teclado) distinto de `ANY` (−1, solo
+  `SINGLE`); al aplicar se borran solo los eventos de mando del jugador. Casos de test listados
+  (teclado + 1 mando, 2 mandos, desconexión, reconexión). ADR-004 §2.
+- [ALTA] Paciencia: `RoundManager._physics_process` (prioridad mínima) → `RoundState.advance` →
+  `OrderBoard.advance` (único reloj); señal `order_patience_changed(order_id, time_left, max_time)`
+  + `get_active_orders()` para tickets; pausa congela; caducar gana a entregar en el mismo tick;
+  reposición en la misma llamada; fin de ronda tras la paciencia. ADR-002 «Reloj y paciencia»,
+  `signals.md` §2–§3, `scene-tree.md` §4.
+- [MEDIA] Testabilidad: lógica en núcleos `RefCounted` (`OrderBoard`, `RoundState`,
+  `DeviceAssignment`) con dependencias por constructor y señales propias; autoloads como
+  adaptadores con `set_bus()`; dos instancias aisladas sin `SceneTree`. ADR-002.
+- [MEDIA] Capa común sin `Player`: `ControlComponent`, `Holder` (base abstracta) e
+  `InteractionComponent`; contrato `interact(actor: InteractionComponent)`,
+  `on_picked_up(holder: Holder)`; `CharacterSwitcher` usa `Array[ControlComponent]`; tests con
+  dobles. ADR-003 §0/§3/§4, ADR-004 §3–§4.
+- [MEDIA] ADR-005: hechos separados de hipótesis (H), alternativas 2D B1 packs / B2 primitivas /
+  B3 IA + revisión humana, mediciones propuestas antes del gate; recomendación 3D como propuesta.
+- Rebase sobre `jrmougan/agentica-migracion-godot-alpha` (D8–D14, gdd.md).
+
+### Entrega inicial
 - AC1: `docs/arch/ADR-00{1,2,3,4}-*.md` (+ ADR-005 pedido por el coordinador), todos con `Estado: propuesto` y secciones contexto,
   decisión, alternativas consideradas y consecuencias. Índice en `docs/arch/README.md`.
 - AC2: `docs/arch/signals.md` §2 (13 señales de `EventBus`) y §4 (8 locales): cada fila tiene

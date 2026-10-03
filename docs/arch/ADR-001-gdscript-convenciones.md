@@ -73,12 +73,14 @@ un `RandomNumberGenerator` inyectable con semilla fija en tests.
 ```
 godot/
 ├── autoload/           # singletons (ADR-002): event_bus.gd, game_state.gd, order_service.gd, round_manager.gd
-├── core/               # lógica pura y tipos de valor (RefCounted): active_order.gd, box_contents.gd,
-│                       #   order_validator.gd, round_result.gd, interaction_scoring.gd, player_input.gd
+├── core/               # núcleos y tipos de valor (RefCounted, ADR-002): order_board.gd, round_state.gd,
+│                       #   device_assignment.gd, active_order.gd, box_contents.gd, order_validator.gd,
+│                       #   round_result.gd, interaction_scoring.gd, player_input.gd, game_mode.gd
 ├── resources/          # scripts de clases Resource: box_data.gd, recipe_data.gd, round_config.gd…
 ├── data/               # instancias .tres: boxes/, ingredients/, recipes/, orders/, seasonings/, config/
-├── components/         # nodos reutilizables por composición: hold_component, interaction_detector,
-│                       #   interaction_component, highlightable (.gd y, si lo necesitan, .tscn)
+├── components/         # nodos reutilizables por composición. Comunes: control_component, holder,
+│                       #   interaction_component. Específicos (3D/2D): hold_component, interaction_detector,
+│                       #   highlightable
 ├── entities/           # una carpeta por entidad, escena y script juntos (capa específica 3D/2D)
 │   ├── player/         #   player.tscn, player.gd, character_switcher.{tscn,gd}
 │   ├── items/          #   octopus, box, seasoning

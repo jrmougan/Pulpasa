@@ -19,8 +19,8 @@ nombres de escena, `class_name`, `@export` públicos, grupos, capas y señales l
 /root (Window)
 ├── EventBus        autoload/event_bus.gd        [0]
 ├── GameState       autoload/game_state.gd       [0]   process_mode ALWAYS
-├── OrderService    autoload/order_service.gd    [0, lógica en 2]
-├── RoundManager    autoload/round_manager.gd    [0, lógica en 2]
+├── OrderService    autoload/order_service.gd    [0, lógica en 2]  adaptador de core/order_board.gd
+├── RoundManager    autoload/round_manager.gd    [0, lógica en 2]  adaptador de core/round_state.gd; único reloj (_physics_process)
 └── <escena actual> boot.tscn → main_menu.tscn → level_01.tscn
 ```
 
@@ -53,7 +53,7 @@ Level01 (Node3D)                         scenes/levels/level.gd  (común, extend
 ├── Characters (Node3D)
 │   ├── Player1          entities/player/player.tscn  player_index = 1, controlled_by = 1, items_root = Items  [4]
 │   └── Player2          entities/player/player.tscn  player_index = 2                                         [M2]
-├── CharacterSwitcher    entities/player/character_switcher.tscn  (común) characters = [Player1, Player2]      [M2]
+├── CharacterSwitcher    entities/player/character_switcher.tscn  (común) characters = [Player1/%Control, Player2/%Control]  [M2]
 ├── Items (Node3D)       destino de los objetos soltados (ADR-003 §6)
 ├── CameraRig            entities/camera/camera_rig.tscn  Camera3D fija, vista del prototipo [4]
 └── UI (CanvasLayer)
@@ -72,10 +72,11 @@ Player (CharacterBody3D, capa player)     player.gd  class_name Player
 ├── Model                                  instancia de assets/models/freakycapucha (rotado 180° Y)
 ├── %AnimationTree                         StateMachine Idle/Walk/Pick/WalkWhileHolding; speed, is_holding
 ├── %HoldPoint (Marker3D)
-├── %HoldComponent (Node)                  components/hold_component.gd   @export hold_point
+├── %Control (Node)                        components/control_component.gd  (común) player_index, controlled_by
+├── %HoldComponent (Node)                  components/hold_component.gd  extends Holder (común)  @export hold_point
 ├── %InteractionDetector (Area3D)          components/interaction_detector.gd  máscara interactable
 │   └── CollisionShape3D (Sphere, radio de PlayerConfig)
-├── %InteractionComponent (Node)           components/interaction_component.gd  @export detector, hold
+├── %InteractionComponent (Node)           components/interaction_component.gd  (común) @export control, holder, detector
 └── %ActiveIndicator (MeshInstance3D)      aro bajo el personaje [M2]
 ```
 Un único detector (B7). Movimiento 5 m/s y giro en `PlayerConfig.tres`.
@@ -128,8 +129,8 @@ ui/menus/pause_menu.tscn     PauseMenu (Control)       pause_menu.gd  Reanudar /
 ui/menus/game_over.tscn      GameOver (Control)        game_over.gd   escucha round_finished; Reintentar / Salir
 ui/menus/menu_panel.tscn     panel y Theme comunes (sustituye a PanelPauseBase.prefab)
 ui/hud/hud.tscn              HUD (Control)             hud.gd         tiempo, cajas/minuto (M1: recaudación)
-ui/tickets/order_tickets_panel.tscn  (Control)         order_tickets_panel.gd  escucha orders_reset / order_generated / order_completed
-ui/tickets/order_ticket.tscn         (PanelContainer)  order_ticket.gd   "#id" + ticket_entry
+ui/tickets/order_tickets_panel.tscn  (Control)         order_tickets_panel.gd  escucha orders_reset / order_generated / order_completed / order_expired; get_active_orders() para reconstruir
+ui/tickets/order_ticket.tscn         (PanelContainer)  order_ticket.gd   "#id" + ticket_entry + %PatienceBar (TextureProgressBar) que solo pinta order_patience_changed de su order_id; sin contador propio (M1)
 ui/tickets/ticket_entry.tscn         (HBoxContainer)   ticket_entry.gd   receta + condimentos
 ui/widgets/world_progress_bar.tscn   (Sprite3D billboard + SubViewport con TextureProgressBar)
 ```

@@ -36,7 +36,7 @@ ella (acciones, dispositivos, quién controla a quién) de cómo se traduce el i
 ### 0. Común y específico de dimensión
 | Parte | Capa |
 |---|---|
-| Acciones del InputMap, asignación de dispositivos (`GameState`), `PlayerInput`, `controlled_by`, `CharacterSwitcher`, menús | **Común**: no cambia con D14 |
+| Acciones del InputMap, asignación de dispositivos (`DeviceAssignment` + `GameState`), `PlayerInput`, `ControlComponent`, `CharacterSwitcher`, menús | **Común**: no cambia con D14 |
 | Convertir el `Vector2` de movimiento en velocidad del cuerpo, orientación del personaje, indicador de personaje activo | **Específica** de `player.gd` (3D o 2D) |
 
 `PlayerInput.get_move_vector()` devuelve siempre un `Vector2` en el plano de pantalla/suelo
@@ -68,30 +68,53 @@ Acciones **por jugador** con prefijo `p<n>_` y acciones **globales** sin prefijo
 - Zona muerta de stick en datos (`InputConfig.tres`, 0,2) aplicada a las acciones de movimiento
   al arrancar.
 
-### 2. Asignación de dispositivos (`GameState`)
-`GameState` guarda `mode: GameMode.Mode` y `player_devices: Dictionary[int, int]` (jugador → id de mando, o `-1`
-= solo teclado) y reescribe el `device` de los eventos de mando de cada acción `p<n>_*` con
-`InputMap.action_get_events()` / `action_erase_event()` / `action_add_event()`.
+### 2. Asignación de dispositivos (`DeviceAssignment` + `GameState`)
+La regla es pura y vive en `core/device_assignment.gd` (`class_name DeviceAssignment`, funciones
+`static`, testeable sin árbol); `GameState` solo la aplica al InputMap. Cada jugador tiene un valor
+de mando con **tres significados distintos**, sin reutilizar `-1` para dos cosas:
+
+| Constante | Valor | Significado | Cuándo |
+|---|---|---|---|
+| id de mando | `>= 0` | Solo ese mando | `COOP_2P` |
+| `DeviceAssignment.ANY` | `-1` (= `device` comodín de Godot) | Cualquier mando | **Solo** J1 en `SINGLE` |
+| `DeviceAssignment.NONE` | `-2` | Ningún mando: solo teclado | Jugador sin mando asignado |
+
+Aplicación (`GameState.apply_devices()`): al arrancar, `GameState` copia los eventos de mando de
+la plantilla de cada acción `p<n>_*`. Para aplicar una asignación, en cada acción `p<n>_*`
+**borra solo los eventos de mando** (`InputEventJoypadButton`/`InputEventJoypadMotion`) y, según el
+valor del jugador: `NONE` → no añade ninguno; id → añade las copias de plantilla con ese `device`;
+`ANY` → las añade con `device = -1`. Los eventos de teclado no se tocan nunca.
 
 | Situación | J1 | J2 |
 |---|---|---|
-| `SINGLE` | K1 + **cualquier** mando (`device = -1`) | — (sin personaje controlado) |
-| `COOP_2P`, 0 mandos | K1 | K2 |
-| `COOP_2P`, 1 mando | K1 | K2 + mando A |
+| `SINGLE` | K1 + `ANY` | `NONE` (sin personaje controlado) |
+| `COOP_2P`, 0 mandos | K1 + `NONE` | K2 + `NONE` |
+| `COOP_2P`, 1 mando | K1 + `NONE` | K2 + mando A |
 | `COOP_2P`, 2+ mandos | K1 + mando A | K2 + mando B |
 
 "Mando A/B" = orden de `Input.get_connected_joypads()` al llamar `GameState.start_level(mode)`.
-Hot-plug (M2): `GameState` escucha `Input.joy_connection_changed`; si se desconecta un mando
-asignado durante la ronda, llama `set_paused(true)` y emite `EventBus.device_disconnected`; un
-mando que se conecta se asigna al primer jugador sin mando y se emite `device_assigned`.
+**Invariante**: en `COOP_2P` un id de mando está como mucho en un jugador y `ANY` no aparece nunca.
+
+Hot-plug (M2), `GameState` escucha `Input.joy_connection_changed`:
+- **Desconexión** de un mando asignado: ese jugador pasa a `NONE` (se borran sus eventos de mando;
+  conserva su teclado), `set_paused(true)` y `EventBus.device_disconnected(player_index)`.
+- **Conexión** en `COOP_2P`: el mando va al jugador que lo perdió si sigue en `NONE`; si no, al
+  primer jugador en `NONE`; si no hay ninguno, queda sin asignar. Se emite `device_assigned`.
+  En `SINGLE` no hace falta reasignar (`ANY` ya lo acepta).
+
+Casos de test (unitarios sobre `DeviceAssignment` + uno de integración sobre el InputMap):
+teclado + un mando (J1 no responde al mando de J2), dos mandos (cada uno mueve solo a su
+jugador), desconexión del mando de J2 (J2 sigue con K2, J1 no gana el mando), reconexión (vuelve a
+J2, nunca a ambos) y `SINGLE` con cualquier mando.
 
 ### 3. Lectura de input en el personaje
 - `core/player_input.gd` (`class_name PlayerInput`, `RefCounted`) construye y cachea los
   `StringName` de las acciones de un jugador (`&"p1_move_left"`…) y expone
   `get_move_vector() -> Vector2` (`Input.get_vector`) e `is_interact_event(event: InputEvent) -> bool`.
-- `player.gd` (específico; la parte de control es idéntica en 3D y 2D) tiene `@export var player_index: int` (identidad del personaje, 1 o 2) y
-  `var controlled_by: int` (jugador que lo controla; `0` = nadie). Si `controlled_by == 0`, su
-  velocidad horizontal es 0, no procesa input y conserva el objeto en la mano (feature
+- El componente común `ControlComponent` (ADR-003 §3) lleva `@export var player_index: int`
+  (identidad del personaje, 1 o 2) y `var controlled_by: int` (jugador que lo controla; `0` =
+  nadie), y emite `control_changed`. `player.gd` (específico) lo consulta: si `controlled_by == 0`,
+  velocidad horizontal 0, no procesa input y conserva el objeto en la mano (feature
   `jugadores-y-cambio` AC3–AC4). Sigue con gravedad y física.
 - El input de acciones puntuales (`interact`) se lee en `_unhandled_input`, para que la pausa y la
   UI lo consuman antes.
@@ -99,15 +122,18 @@ mando que se conecta se asigna al primer jugador sin mando y se emite `device_as
 
 ### 4. Cambio de personaje (`CharacterSwitcher`, M2)
 - Escena `entities/player/character_switcher.tscn` (común: raíz `Node`) instanciada en el nivel,
-  con `@export var characters: Array[Player]` y `@export var config: InputConfig`
+  con `@export var characters: Array[ControlComponent]` (los componentes de control de cada
+  personaje; nunca `Player`) y `@export var config: InputConfig`
   (`switch_cooldown` 0,2 s, de `jugadores-y-cambio`).
-- `SINGLE`: al pulsar `p1_switch`, si pasó el cooldown, pone `controlled_by = 0` al actual y `1`
+- `SINGLE`: al pulsar `p1_switch`, si pasó el cooldown y la ronda está en curso, pone `controlled_by = 0` al actual y `1`
   al siguiente **en el mismo frame** y emite `EventBus.character_switched(1, player_index_del_nuevo)`
   (índices, no nodos: el bus es independiente de la dimensión). Cumple
   < 0,2 s por construcción (el siguiente `_physics_process` ya mueve).
 - `COOP_2P`: asigna `controlled_by = 1` y `2` al empezar e ignora `p1_switch`.
 - Siempre hay exactamente un personaje con cada `controlled_by` activo; el indicador visual lo
-  pinta el propio `player.gd` al escuchar `character_switched`.
+  pinta el propio `player.gd` al recibir `control_changed`.
+- Se prueba sin escena: `CharacterSwitcher` + dos `ControlComponent` sueltos, sin `Player` ni
+  clases físicas.
 - D11 cierra la pregunta del GDD §11.3: **tecla fija que alterna entre los dos**.
 
 ### 5. Menús y UI
@@ -128,14 +154,17 @@ escucha `pause` y llama `GameState.set_paused()`.
 4. **Cambio de personaje instanciando/liberando el controlador** o moviendo la cámara de uno a
    otro. Más caro y con riesgo de perder estado (objeto en mano, corte en curso). Descartada: solo
    cambia `controlled_by`.
-5. **Mando único compartido por J1 en coop.** Contradice "cada dispositivo controla a un solo
+5. **Un único valor `-1` para "sin mando" y "cualquier mando"**, como en la primera versión de
+   esta ADR. En `COOP_2P` con un mando, J1 acabaría aceptando el mando de J2. Descartada:
+   `NONE` y `ANY` son constantes distintas y `ANY` solo existe en `SINGLE`.
+6. **Mando único compartido por J1 en coop.** Contradice "cada dispositivo controla a un solo
    jugador". Descartada.
 
 ## Consecuencias
 - (+) Los nombres de acción de M0 (`p1_*`, `pause`) no cambian al llegar el coop.
 - (+) Todo salvo la traducción a movimiento es común: D14 no reabre esta ADR.
 - (+) El test de bindings (feature `mando-y-reasignacion` AC4) se escribe sobre el InputMap estático.
-- (+) El cambio de personaje es una asignación de un entero: barato, testeable en headless y sin
+- (+) La asignación de mandos es pura y probada por casos; el cambio de personaje es una asignación de un entero: barato, testeable en headless y sin
   pérdida de estado.
 - (−) `GameState` modifica el InputMap global en tiempo de ejecución: los tests que dependan de
   `device` deben restaurarlo (`GameState.reset_input()`) en `after_each`.
