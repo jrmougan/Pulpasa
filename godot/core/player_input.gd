@@ -24,9 +24,10 @@ func _init(index: int = 1, move_deadzone: float = 0.2) -> void:
 
 
 ## Plano de pantalla/suelo: x a la derecha, y hacia la cámara.
-## Longitud <= 1; cero bajo la zona muerta.
+## Cero bajo la zona muerta; por encima, vector unitario (como el prototipo).
 func get_move_vector() -> Vector2:
-	return Input.get_vector(_move_left, _move_right, _move_up, _move_down, deadzone)
+	var raw: Vector2 = Input.get_vector(_move_left, _move_right, _move_up, _move_down, deadzone)
+	return raw.normalized()
 
 
 func is_interact_just_pressed() -> bool:

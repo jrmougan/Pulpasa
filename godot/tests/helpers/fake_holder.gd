@@ -12,7 +12,10 @@ func get_held_item() -> Node:
 
 
 func can_hold(item: Node) -> bool:
-	return _held == null and item != null and item.has_method("on_picked_up")
+	if _held != null or item == null:
+		return false
+	# Contrato `pickable` completo (ADR-003 §4), antes de mutar nada.
+	return item.has_method("on_picked_up") and item.has_method("on_dropped") and "is_held" in item
 
 
 func pick_up(item: Node) -> bool:

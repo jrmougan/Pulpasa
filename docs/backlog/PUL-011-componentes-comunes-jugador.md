@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: []
 orca_task: null
 unity_sources: [Assets/Scripts/Characters/PlayerController.cs, Assets/Scripts/Characters/PlayerHoldSystem.cs, Assets/Scripts/Interfaces/IPickable.cs, Assets/PlayerInputActions.inputactions]
-owns: [godot/components/control_component.gd, godot/components/control_component.gd.uid, godot/components/holder.gd, godot/components/holder.gd.uid, godot/core/player_input.gd, godot/core/player_input.gd.uid, godot/resources/player_config.gd, godot/resources/player_config.gd.uid, godot/resources/input_config.gd, godot/resources/input_config.gd.uid, godot/data/config/player_config.tres, godot/data/config/input_config.tres, godot/project.godot, godot/tests/unit/test_control_component.gd, godot/tests/unit/test_control_component.gd.uid, godot/tests/unit/test_holder.gd, godot/tests/unit/test_holder.gd.uid, godot/tests/unit/test_player_input.gd, godot/tests/unit/test_player_input.gd.uid, godot/tests/unit/test_physics_layers.gd, godot/tests/unit/test_physics_layers.gd.uid, godot/tests/helpers/**]
+owns: [godot/components/control_component.gd, godot/components/control_component.gd.uid, godot/components/holder.gd, godot/components/holder.gd.uid, godot/core/player_input.gd, godot/core/player_input.gd.uid, godot/resources/player_config.gd, godot/resources/player_config.gd.uid, godot/resources/input_config.gd, godot/resources/input_config.gd.uid, godot/data/config/player_config.tres, godot/data/config/input_config.tres, godot/project.godot, godot/tests/unit/test_control_component.gd, godot/tests/unit/test_control_component.gd.uid, godot/tests/unit/test_holder.gd, godot/tests/unit/test_holder.gd.uid, godot/tests/unit/test_player_input.gd, godot/tests/unit/test_player_input.gd.uid, godot/tests/unit/test_physics_layers.gd, godot/tests/unit/test_physics_layers.gd.uid, godot/tests/helpers/**, godot/tests/unit/test_data_*.gd]
 touches_scenes: []
 ---
 
@@ -50,4 +50,4 @@ Fase 4 de M0, **capa común** (ADR-003 §0 y §3, ADR-004). Nada de 3D en estos 
 
 ## Evidence
 `tools/verify.sh` → `✓ verify OK` (gdformat, gdlint, import, GUT, smoke).
-GUT: Scripts 17 · Tests 133 · Passing 133 · Failing 0 · Asserts 606 · "All tests passed!"
+GUT (tras revisión): Scripts 17 · Tests 137 · Passing 137 · Failing 0 · "All tests passed!"
