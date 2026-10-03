@@ -20,7 +20,7 @@ Fase 6 de M0, puesto de entrega (`scene-tree.md` §3 `order_stand.tscn`; ADR-002
    con ella en la mano (B12), llama `OrderService.try_deliver(slot_id, contents)`. Una entrega → una
    completada (B1); el puesto no completa nada por su cuenta.
 3. `%OrderLabel` (`Label3D`): `#id` de la comanda del puesto o «–», actualizado por señales
-   (`orders_reset`, `order_generated`, `order_completed`, `order_expired`), sin consultar sistemas (B16).
+   (`orders_reset`, `order_generated`, `order_completed`, `order_expired`), sin consultar sistemas salvo una vez en `_ready` (`OrderService.get_active_orders()` filtrado por `slot_id`, para puestos creados con la ronda en marcha; ADR-002); las actualizaciones posteriores son solo por señales (B16).
 4. Sonidos ok/error (PUL-009) según `order_completed` / `delivery_rejected` de su `slot_id`.
 5. La caja entregada se libera; la rechazada se queda en la mano (paridad, D8 es M1).
 

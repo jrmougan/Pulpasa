@@ -13,6 +13,10 @@ const EMPTY_LABEL: String = "–"
 
 var _bus: Node
 var _service: Node
+## Último intento de entrega (caja y tick de física): `body_entered` e `interact` en el mismo
+## tick no deben pedir dos veces lo mismo al servicio.
+var _last_box_id: int = 0
+var _last_attempt_frame: int = -1
 
 @onready var _zone: Area3D = %DeliveryZone
 @onready var _label: Label3D = %OrderLabel
@@ -32,6 +36,7 @@ func _ready() -> void:
 	_bus.order_expired.connect(_on_order_expired)
 	_bus.delivery_rejected.connect(_on_delivery_rejected)
 	_zone.body_entered.connect(_on_body_entered)
+	_rebuild_label()
 
 
 ## Inyecta el bus (tests). Llamar antes de añadir el nodo al árbol; por defecto, el autoload.
@@ -67,10 +72,23 @@ func _try_deliver(holder: Holder) -> void:
 	var box: Box = _held_box(holder)
 	if box == null:
 		return
+	var frame: int = Engine.get_physics_frames()
+	if box.get_instance_id() == _last_box_id and frame == _last_attempt_frame:
+		return
+	_last_box_id = box.get_instance_id()
+	_last_attempt_frame = frame
 	if _service.try_deliver(slot_id, box.get_contents()) == null:
 		return
 	holder.drop()
 	box.queue_free()
+
+
+## Una sola consulta al cargar (puesto creado con la ronda en marcha); luego, solo señales (B16).
+func _rebuild_label() -> void:
+	_label.text = EMPTY_LABEL
+	for order: ActiveOrder in _service.get_active_orders():
+		if order.slot_id == slot_id:
+			_label.text = "#%d" % order.id
 
 
 func _on_body_entered(body: Node3D) -> void:

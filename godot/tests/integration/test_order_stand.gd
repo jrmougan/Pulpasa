@@ -219,3 +219,55 @@ func test_ac4_stand_fulfils_interaction_contract() -> void:
 	assert_eq(InteractionContract.scan_tree(_stand), [])
 	var zone: Area3D = _stand.get_node("%DeliveryZone")
 	assert_eq(zone.collision_layer, 1 << 4, "capa delivery_zone")
+
+
+func test_review_same_tick_both_entry_points_valid_box_completes_once() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var box: Box = _box_in_hand(_order_for(SLOT_ID))
+	_stand._on_body_entered(_player)
+	_stand.interact(_actor)
+	assert_signal_emit_count(_bus, "order_completed", 1)
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+	assert_true(_is_released(box))
+
+
+func test_review_same_tick_both_entry_points_wrong_box_rejects_once() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var box: Box = _box_in_hand(null)
+	_stand._on_body_entered(_player)
+	assert_true(_stand.interact(_actor))
+	assert_signal_emit_count(_bus, "delivery_rejected", 1)
+	assert_eq(_hold.get_held_item(), box)
+
+
+func test_review_deliberate_retry_in_later_tick_is_allowed() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	_box_in_hand(null)
+	_stand.interact(_actor)
+	await wait_physics_frames(2)
+	_stand.interact(_actor)
+	assert_signal_emit_count(_bus, "delivery_rejected", 2)
+
+
+func test_review_box_staying_in_zone_does_not_retry_by_itself() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	_box_in_hand(null)
+	await _enter_zone()
+	await wait_physics_frames(10)
+	assert_signal_emit_count(_bus, "delivery_rejected", 1)
+
+
+func test_review_late_stand_shows_current_order_id() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var late: OrderStand = STAND_SCENE.instantiate()
+	late.slot_id = 3
+	late.set_bus(_bus)
+	late.set_service(_service)
+	_level.add_child(late)
+	assert_eq((late.get_node("%OrderLabel") as Label3D).text, "#%d" % _order_for(3).id)
+	var empty: OrderStand = STAND_SCENE.instantiate()
+	empty.slot_id = 9
+	empty.set_bus(_bus)
+	empty.set_service(_service)
+	_level.add_child(empty)
+	assert_eq((empty.get_node("%OrderLabel") as Label3D).text, "–")
