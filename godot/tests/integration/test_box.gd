@@ -68,7 +68,8 @@ func _assert_presses_to_fill(data: BoxData, expected: int) -> void:
 	assert_false(box.is_full(), "%s no llena antes de %d" % [data.display_name, expected])
 	assert_true(box.interact(_actor))
 	assert_true(box.is_full(), "%s llena en %d" % [data.display_name, expected])
-	assert_false(box.can_interact(_actor), "llena: no admite más cortes")
+	assert_true(box.interact(_actor), "llena: consume la pulsación (paridad Unity)...")
+	assert_eq(box.fill, 1.0, "...sin cortar más")
 	assert_almost_eq(octopus.remaining, 100.0 - 50.0, 0.001, "gasta medio pulpo")
 	var contents: BoxContents = box.get_contents()
 	assert_eq(contents.box, data)
@@ -103,10 +104,12 @@ func test_ac1_each_press_spends_octopus_and_emits_fill_changed() -> void:
 func test_ac1_raw_octopus_does_nothing() -> void:
 	var box: Box = _box(SMALL)
 	var octopus: Ingredient = _octopus_in_hand(false)
-	assert_false(box.can_interact(_actor))
-	assert_false(box.interact(_actor))
+	# Paridad Unity: la caja consume la pulsación (no se suelta el pulpo) pero no corta.
+	assert_true(box.can_interact(_actor))
+	assert_true(box.interact(_actor))
 	assert_eq(box.fill, 0.0)
 	assert_eq(octopus.remaining, 100.0)
+	assert_eq(_hold.get_held_item(), octopus)
 
 
 func test_ac1_one_octopus_fills_two_boxes_then_is_freed() -> void:
@@ -156,8 +159,8 @@ func test_ac2_seasoning_not_applied_to_unfilled_box() -> void:
 	_hold.drop()
 	octopus.queue_free()
 	_seasoning_in_hand(SALT)
-	assert_false(box.can_interact(_actor))
-	assert_false(box.interact(_actor))
+	# Consume la pulsación sin aplicar (paridad Unity).
+	assert_true(box.interact(_actor))
 	assert_eq(box.get_contents().seasonings.size(), 0)
 
 

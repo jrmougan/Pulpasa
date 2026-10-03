@@ -38,7 +38,7 @@ func test_b6_jar_is_not_consumed_when_seasoning() -> void:
 	_level.add_child(octopus)
 	octopus.set_cooked()
 	_hold.pick_up(octopus)
-	while box.can_interact(_actor):
+	while not box.is_full():
 		box.interact(_actor)
 	_hold.drop()
 	var salt: SeasoningItem = _salt()

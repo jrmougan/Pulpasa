@@ -3,7 +3,8 @@ extends RigidBody3D
 ## Caja de pulpo (porta Box.cs sin el modo spawner). Receptor de la interacción contextual
 ## (ADR-003 §4): con pulpo cocido en la mano, cada pulsación corta y llena `fill_per_press`
 ## (D1/D13); con un condimento y la caja llena, lo aplica una vez por tipo; con la mano vacía, se
-## coge. La entrega lee `get_contents()`.
+## coge. Con cualquier otra cosa en la mano consume la pulsación sin efecto (paridad Unity).
+## La entrega lee `get_contents()`.
 
 ## Cada corte (D1).
 signal fill_changed(fill: float)
@@ -58,19 +59,9 @@ func can_interact(actor: InteractionComponent) -> bool:
 	var held: Node = holder.get_held_item()
 	if held == null:
 		return holder.can_hold(self)
-	return can_receive(held)
-
-
-## Si `held` (lo que lleva la mano) llena o condimenta la caja. Lo consulta también el detector
-## para elegir una caja guardada en un slot con la mano llena.
-func can_receive(held: Node) -> bool:
-	if is_held or not is_instance_valid(held):
-		return false
-	if held is Ingredient:
-		return _can_cut(held as Ingredient)
-	if held is SeasoningItem:
-		return is_full() and (held as SeasoningItem).data != null
-	return false
+	# Paridad Unity (Box.Interact → TryToggleHold con la mano llena): la caja consume la
+	# pulsación aunque lo que se lleva no le sirva; así no se suelta. M1: filtrar por compatibilidad.
+	return true
 
 
 func interact(actor: InteractionComponent) -> bool:
@@ -79,10 +70,10 @@ func interact(actor: InteractionComponent) -> bool:
 	var held: Node = actor.holder.get_held_item()
 	if held == null:
 		return Slot.pick_up_item(actor, self)
-	if held is Ingredient:
+	if held is Ingredient and _can_cut(held as Ingredient):
 		_cut(held as Ingredient)
-		return true
-	_season((held as SeasoningItem).data)
+	elif held is SeasoningItem and is_full() and (held as SeasoningItem).data != null:
+		_season((held as SeasoningItem).data)
 	return true
 
 

@@ -65,7 +65,8 @@ Fase 6 de M0, objetos (`scene-tree.md` §3 `entities/items/`). Flujo de cocina e
 ## Evidence
 - **AC1** `tests/integration/test_box.gd`: S/M/L se llenan en exactamente 5/10/20 pulsaciones
   (no antes) y cada caja llena gasta 50 de pulpo (`fill_per_press * amount_per_full_box`); cada
-  corte emite `fill_changed`; con pulpo crudo `can_interact`/`interact` son `false` y nada cambia;
+  corte emite `fill_changed`; con pulpo crudo la caja consume la pulsación sin cortar ni gastar
+  (paridad Unity, el pulpo sigue en la mano);
   un pulpo llena dos cajas y se libera dejando la mano libre; `get_contents()` da `BoxContents`
   con caja, ingrediente (solo al llenarse, como `SetIngredient` de Unity), `COOKED` y `fill` 1.0.
   Sin `%FillBar` llena igual (B8). Mano vacía → coge la caja.
@@ -104,22 +105,19 @@ Notas para revisión:
 
 Revisión de codex (CHANGES):
 - **P1 caja sobre la mesa**: `InteractionDetector` sustituye un slot ocupado por su objeto
-  guardado antes del filtro de mano llena, puntuando con la posición del slot
-  (InteractionDetector.cs:57). Con mano vacía el objetivo es el objeto (para cogerlo); con mano
-  llena solo si el objeto declara que acepta lo que se lleva (método opcional
-  `can_receive(held) -> bool`, que implementa `Box`), así se mantiene el rechazo de objetos
-  incompatibles. La lógica de cortar/condimentar sigue en `Box`. Recoger un objeto guardado pasa
+  guardado, puntuando con la posición del slot (InteractionDetector.cs:57), con la mano vacía
+  o llena, y ese objeto compite normalmente. La lógica de cortar/condimentar y el rechazo
+  contextual siguen en `Box`. Recoger un objeto guardado pasa
   siempre por `Slot.pick_up_item(actor, item)` (+ `Slot.slot_of(item)`), un único sitio que
   usan `Box`, `Ingredient`, `SeasoningItem` y `SandboxPickable` (owns ampliado, aprobado): el slot
   restaura capa y `freeze` antes de que la mano los guarde (paridad con `Box.OnPickedUp` →
   `ForceClearSlot`).
 - **P1 tests**: `tests/integration/test_box_on_slot.gd` (5 tests, escenas reales Player + Slot +
   Box + detector + `interact_pressed`): dejar la caja en la mesa, llenarla en 5/10/20 pulsaciones
-  con pulpo cocido (gasta 50), pulpo crudo descartado, condimentar con el bote en la mano (una vez,
+  con pulpo cocido (gasta 50), con mano incompatible la caja sigue siendo el objetivo, condimentar con el bote en la mano (una vez,
   bote conservado), recogerla (mesa libre) y soltarla sin `freeze`, en capa `interactable`, máscara
   original y con su contenido. `test_interaction_detector.gd`: el slot ocupado resuelve a su objeto;
-  el objeto incompatible se descarta con mano llena (el caso que acepta, la caja con pulpo cocido o
-  bote, lo cubre `test_box_on_slot.gd`; el fichero del detector está en el máximo de gdlint).
+  también con la mano llena aunque no acepte lo que se lleva.
   `test_slot.gd`: coger del slot vía detector y soltar restaura capa/máscara/`freeze`;
   `slot_of`/`pick_up_item`.
 - Hallazgo en tests: un `Slot` añadido en el origen y movido después llegaba a solapar la cápsula
@@ -133,5 +131,17 @@ Revisión de codex (CHANGES):
 - **Captura**: `docs/evidence/PUL-016/review-caja-llenandose-en-mesa.png` (+ `-zoom`): pulpo
   cocido en la mano, objetivo = la caja de la mesa, 3 pulsaciones = 3 cortes (`fill` 0,2 → 0,4 →
   0,6 en el `watch`), barra y tapa abierta. `get_debug_output` sin errores.
-- Para el architect: `can_receive(held)` es un método opcional nuevo que consulta el detector;
-  convendría anotarlo en ADR-003 §4.
+
+Último hallazgo de codex (P2, decisión del producer por paridad M0):
+- Retirado el filtro de compatibilidad (`_receives`/`can_receive`) del detector y de `Box`: como
+  Unity (InteractionDetector.cs:57 y :80), el slot ocupado se resuelve siempre a su objeto y este
+  compite normalmente; el rechazo contextual queda en `Box.can_interact`/`interact`.
+- Qué ocurre con la mano llena e incompatible (pulpo crudo, condimento con la caja sin llenar,
+  pulpo cocido con la caja llena, otro objeto): la caja es el objetivo y **consume la pulsación sin
+  efecto** (`can_interact`/`interact` devuelven `true`), así que `InteractionComponent` no suelta
+  lo que se lleva. Es lo que hace Unity: `TryCutPulpo`/`TrySeasonBox` fallan y `Box.Interact` →
+  `TryToggleHold` con la mano llena no hace nada. `test_box_on_slot.gd`
+  (`test_review_incompatible_hand_still_targets_box_on_table_and_press_does_nothing`),
+  `test_box.gd` (crudo, llena, condimento sin llenar) y `test_interaction_detector.gd`.
+- **Posible mejora M1**: filtrar por compatibilidad en la selección (que una caja que no acepta lo
+  que llevas no tape otro objetivo, o que la pulsación suelte el objeto).

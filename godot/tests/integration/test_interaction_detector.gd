@@ -205,7 +205,9 @@ func test_ac1_occupied_slot_resolves_to_its_item_and_highlights_it() -> void:
 	assert_true(item_highlight.is_highlighted(), "se resalta el objeto guardado")
 
 
-func test_ac1_occupied_slot_with_incompatible_item_is_skipped_with_full_hand() -> void:
+## Paridad Unity (InteractionDetector.cs:57/:80): con la mano llena el objeto guardado sigue
+## compitiendo aunque no acepte lo que se lleva; el rechazo es suyo (`can_interact`/`interact`).
+func test_ac1_occupied_slot_resolves_to_its_item_with_full_hand() -> void:
 	var slot: Slot = SLOT_SCENE.instantiate()
 	# Colocado antes de entrar al árbol: nunca existe en el origen, dentro del jugador.
 	slot.position = Vector3(0.0, 0.0, -1.0)
@@ -220,7 +222,7 @@ func test_ac1_occupied_slot_with_incompatible_item_is_skipped_with_full_hand() -
 	carried.global_position = AWAY
 	_hold.pick_up(carried)
 	await _settle()
-	assert_null(_detector.get_target())
+	assert_eq(_detector.get_target(), stored)
 
 
 func test_ac1_taking_item_from_slot_moves_highlight_off_the_item() -> void:

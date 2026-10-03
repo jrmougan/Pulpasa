@@ -7,10 +7,9 @@ extends Area3D
 ## distancia 3D desde el portador + `detector_origin_height`), delega la elección en
 ## `InteractionScoring.pick_best` y emite `target_changed` solo cuando cambia. Como
 ## InteractionDetector.cs:57, un slot ocupado se sustituye por su objeto guardado (con la posición
-## del slot para puntuar): el objetivo es ese objeto, que decide qué hacer con la mano (la caja
-## corta o condimenta). Con la mano llena solo cuenta si el objeto declara que acepta lo que lleva
-## (`can_receive(held)`); si no, se descarta. Enciende el `Highlightable` del objetivo y apaga el
-## anterior: nunca hay dos.
+## del slot para puntuar), con la mano vacía o llena, y ese objeto compite como cualquier otro: él
+## decide qué hacer con la mano (la caja corta o condimenta). Enciende el `Highlightable` del
+## objetivo y apaga el anterior: nunca hay dos.
 
 ## Objetivo nuevo; ambos pueden ser `null` (signals.md).
 signal target_changed(previous: Node, current: Node)
@@ -61,8 +60,7 @@ func get_target() -> Node:
 
 ## Reevalúa el objetivo y el resaltado con los cuerpos que solapan ahora.
 func refresh() -> void:
-	var held: Node = holder.get_held_item() if holder != null else null
-	var holding: bool = held != null
+	var holding: bool = holder != null and holder.get_held_item() != null
 	var entities: Array[Node3D] = []
 	var candidates: Array[InteractionScoring.Candidate] = []
 	var eye: Vector3 = carrier.global_position + Vector3.UP * config.detector_origin_height
@@ -73,8 +71,6 @@ func refresh() -> void:
 		var pos: Vector3 = entity.global_position
 		if entity is Slot and (entity as Slot).has_item():
 			entity = (entity as Slot).get_item()
-			if holding and not _receives(entity, held):
-				continue
 		candidates.append(
 			InteractionScoring.Candidate.new(
 				Vector2(pos.x, pos.z),
@@ -107,11 +103,6 @@ func _entity_of(body: Node3D) -> Node3D:
 	if parent != null and _in_contract(parent):
 		return parent
 	return null
-
-
-## Si el objeto guardado `item` acepta lo que lleva la mano (método opcional `can_receive`).
-func _receives(item: Node, held: Node) -> bool:
-	return item.has_method(&"can_receive") and bool(item.call(&"can_receive", held))
 
 
 func _in_contract(node: Node) -> bool:

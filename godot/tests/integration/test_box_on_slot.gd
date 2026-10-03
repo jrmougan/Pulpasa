@@ -100,12 +100,20 @@ func test_review_large_box_on_table_fills_in_20_presses() -> void:
 	await _assert_fills_on_table(LARGE, 20)
 
 
-func test_review_raw_octopus_does_not_target_box_on_table() -> void:
+## Paridad Unity: con algo incompatible en la mano (pulpo crudo) la caja de la mesa sigue siendo el
+## objetivo; la pulsación la consume la caja sin efecto, así que no se suelta lo que se lleva
+## (en Unity, Box.Interact → TryToggleHold con la mano llena no hace nada). M1: filtrar.
+func test_review_incompatible_hand_still_targets_box_on_table_and_press_does_nothing() -> void:
 	var box: Box = await _box_on_table(SMALL)
-	_in_hand(OCTOPUS_SCENE.instantiate())
+	var raw: Ingredient = _in_hand(OCTOPUS_SCENE.instantiate()) as Ingredient
 	await _settle()
-	assert_null(_detector.get_target(), "pulpo crudo: la caja no lo acepta y se descarta")
+	assert_eq(_detector.get_target(), box)
+	assert_true(_actor.interact_pressed(), "la caja consume la pulsación")
+	await _settle()
 	assert_eq(box.fill, 0.0)
+	assert_eq(raw.remaining, 100.0)
+	assert_eq(_hold.get_held_item(), raw, "no se suelta el pulpo")
+	assert_eq(_slot.get_item(), box)
 
 
 func test_review_season_box_on_table_then_pick_up_and_drop() -> void:
