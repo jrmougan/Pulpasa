@@ -31,7 +31,10 @@ func test_ac1_placeholders_cargan_e_instancian() -> void:
 		if instance == null:
 			continue
 		add_child_autofree(instance)
-		assert_not_null(instance.get_node_or_null("Front"), "%s sin marcador Front" % file_name)
+		var front: Marker3D = instance.get_node_or_null("Front") as Marker3D
+		assert_not_null(front, "%s sin marcador Front" % file_name)
+		if front != null:
+			assert_lt(front.position.z, 0.0, "Front de %s debe estar en -Z" % file_name)
 		assert_gt(_count_meshes(instance), 0, "%s sin mallas" % file_name)
 
 

@@ -10,7 +10,7 @@ Detalle por fichero en `docs/assets/licenses.md` (y `licenses-pul-009.md`, `lice
   - «Crosshair» por Delapouite — https://game-icons.net/1x1/delapouite/crosshair.html
   - Licencia: https://creativecommons.org/licenses/by/3.0/
 - **Iconos de Game-icons.net para M1** (`textures/icons/oil.svg`, `potato.svg`, `star_full.svg`, `star_empty.svg`), CC BY 3.0, todos por Delapouite:
-  - «Wine bottle» (oil.svg) — https://game-icons.net/1x1/delapouite/wine-bottle.html
+  - «Olive» (oil.svg) — https://game-icons.net/1x1/delapouite/olive.html
   - «Potato» (potato.svg) — https://game-icons.net/1x1/delapouite/potato.html
   - «Round star» (star_full.svg) — https://game-icons.net/1x1/delapouite/round-star.html
   - star_empty.svg es una modificación de «Round star»: solo el contorno.
