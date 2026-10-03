@@ -132,9 +132,10 @@ Mismos números y nombres en `layer_names/3d_physics` o `layer_names/2d_physics`
   `Characters` y `Stations` cuelgan de un mismo contenedor con `y_sort_enabled`.
 
 ### 7. Flujo de escenas — común
-`scenes/boot.tscn` (escena principal; provisional hasta la fase 7) → `ui/menus/main_menu.tscn` →
-`scenes/levels/level_01.tscn`. Los cambios de escena pasan por `GameState`
-(`start_level(mode)`, `go_to_main_menu()`), que usa `get_tree().change_scene_to_file()`; ninguna
+`ui/menus/main_menu.tscn` (escena principal desde la fase 7; `scenes/boot.tscn` queda como entrada
+alternativa que salta al menú) → `scenes/levels/level_01.tscn`. Los cambios de escena pasan por
+`GameState` (`start_level(mode)`, `go_to_main_menu()`, `restart_level()` para Reintentar), que usa
+`get_tree().change_scene_to_file()` / `reload_current_scene()`; ninguna
 escena cambia de escena por su cuenta. Pausa y game over son overlays dentro del nivel, no escenas.
 
 ## Alternativas consideradas

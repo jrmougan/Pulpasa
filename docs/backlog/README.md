@@ -32,6 +32,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-017 | M0·6 | gameplay-engineer | done | Estaciones: nevera, olla y estanterías |
 | PUL-018 | M0·6 | gameplay-engineer | done | Puesto de entrega conectado a OrderService |
 | PUL-019 | M0·6 | qa-tester | done | Sandbox de cocina y flujo completo |
-| PUL-020 | M0·7 | ui-engineer | ready | HUD y panel de tickets |
-| PUL-021 | M0·7 | ui-engineer | ready | Menú de pausa y fin de partida |
-| PUL-022 | M0·7 | ui-engineer | ready | Menú principal y flujo de escenas |
+| PUL-020 | M0·7 | ui-engineer | done | HUD y panel de tickets |
+| PUL-021 | M0·7 | ui-engineer | done | Menú de pausa y fin de partida |
+| PUL-022 | M0·7 | ui-engineer | done | Menú principal y flujo de escenas |
+| PUL-023 | M0·7 | ui-engineer | ready | Pulido de UI con hallazgos de revisión |

@@ -21,11 +21,11 @@ nombres de escena, `class_name`, `@export` públicos, grupos, capas y señales l
 ├── GameState       autoload/game_state.gd       [0]   process_mode ALWAYS
 ├── OrderService    autoload/order_service.gd    [0, lógica en 2]  adaptador de core/order_board.gd
 ├── RoundManager    autoload/round_manager.gd    [0, lógica en 2]  adaptador de core/round_state.gd; único reloj (_physics_process)
-└── <escena actual> boot.tscn → main_menu.tscn → level_01.tscn
+└── <escena actual> main_menu.tscn → level_01.tscn  (boot.tscn: entrada alternativa que salta al menú)
 ```
 
-Flujo: `scenes/boot.tscn` (escena principal; en fase 7 pasa a ser `main_menu.tscn` o un boot que
-salta a él) → `ui/menus/main_menu.tscn` → `GameState.start_level(mode)` →
+Flujo: `ui/menus/main_menu.tscn` (escena principal desde la fase 7; `boot.tscn` salta a él) →
+`GameState.start_level(mode)` →
 `scenes/levels/level_01.tscn`. Game over → reintentar (`start_level` con el mismo modo) o salir al
 menú (`GameState.go_to_main_menu()`).
 

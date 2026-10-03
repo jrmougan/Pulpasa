@@ -32,8 +32,9 @@ Los `.pck` son pequeños porque aún solo hay la escena de arranque; el tamaño 
 mallas y texturas (hipótesis de ADR-005). Medir de nuevo en el spike 3D.
 
 ## Verificación
-- AC2: build Linux en headless con `--quit-after 120` imprime «Pulpasa boot OK» y sale con 0.
-- AC3: Chrome carga `boot.tscn` en web: WebGL 2.0 / Compatibility, sin errores de consola.
+- AC2: build Linux en headless con `--quit-after 120` sale con 0 y sin `ERROR` en la salida. (Hasta la
+  fase 7 imprimía «Pulpasa boot OK»; desde PUL-022 arranca en el menú principal y ya no lo imprime.)
+- AC3 (en PUL-010, con `boot.tscn`): Chrome carga el build web: WebGL 2.0 / Compatibility, sin errores de consola.
   Captura en `docs/evidence/PUL-010/web-boot.jpg`, log en `console-web.txt`.
 - Windows: solo se comprueba que exporta; no se ha ejecutado (sin Wine/Windows).
 
