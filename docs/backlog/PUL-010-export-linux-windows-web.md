@@ -1,11 +1,11 @@
 ---
 id: PUL-010
 title: Configurar exportación Linux, Windows y Web y probarla temprano
-status: review
+status: done
 milestone: M0
 role: godot-architect
 deps: []
-orca_task: null
+orca_task: task_b0276ac6ba8a
 unity_sources: []
 owns: [godot/export_presets.cfg, tools/export.sh, godot/project.godot, docs/arch/export.md, docs/evidence/PUL-010/**]
 touches_scenes: []
