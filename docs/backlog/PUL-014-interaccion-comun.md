@@ -1,11 +1,11 @@
 ---
 id: PUL-014
 title: Implementar la interacción común - InteractionScoring, InteractionComponent y contrato
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: []
-orca_task: null
+orca_task: task_8346c29ddb2a
 unity_sources: [Assets/Scripts/Interaction/InteractionDetector.cs, Assets/Scripts/Characters/PlayerInteractionController.cs, Assets/Scripts/Interfaces/IInteractable.cs, Assets/Scripts/Interfaces/IPickable.cs]
 owns: [godot/core/interaction_scoring.gd, godot/core/interaction_scoring.gd.uid, godot/components/interaction_component.gd, godot/components/interaction_component.gd.uid, godot/components/interaction_contract.gd, godot/components/interaction_contract.gd.uid, godot/tests/unit/test_interaction_scoring.gd, godot/tests/unit/test_interaction_scoring.gd.uid, godot/tests/unit/test_interaction_component.gd, godot/tests/unit/test_interaction_component.gd.uid, godot/tests/unit/test_interaction_contract.gd, godot/tests/unit/test_interaction_contract.gd.uid, godot/tests/helpers/**]
 touches_scenes: []
