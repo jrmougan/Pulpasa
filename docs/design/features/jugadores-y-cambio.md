@@ -1,4 +1,4 @@
-# Jugadores locales y cambio de personaje (Must, D3)
+# Coop local 2P, modo individual y cambio de personaje (Must, D3)
 
 **Slug:** jugadores-y-cambio · **Prototipo:** `PlayerController`, `PlayerInput` (Input System).
 
@@ -14,6 +14,7 @@
 - **AC4** Given el personaje no controlado con un objeto en la mano, When se cambia, Then conserva el objeto.
 - **AC5** Given el personaje activo, Then está marcado con un indicador visible (aro/color) distinto del inactivo.
 - **AC6** Given el modo individual con 2 personajes, When se cambia 10 veces seguidas en 2 s, Then no hay errores en consola y siempre hay exactamente 1 personaje activo.
+- **AC8** Given teclado + mando (o dos mandos), When la partida arranca desde el menú en modo Local 2P, Then cada dispositivo controla a un solo jugador (ver `mando-y-reasignacion.md`).
 - **AC7** Given el modo de 2 jugadores, When un jugador entrega una caja, Then la recaudación es compartida (un solo contador).
 
 ## Datos (`.tres`)

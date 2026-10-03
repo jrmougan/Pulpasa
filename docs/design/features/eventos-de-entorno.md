@@ -1,4 +1,4 @@
-# Eventos de entorno: gaiteros (Should)
+# Eventos de entorno: gaiteros (Could)
 
 **Slug:** eventos-de-entorno · **Original:** «Eventos de entorno» (grupo de gaiteiros).
 

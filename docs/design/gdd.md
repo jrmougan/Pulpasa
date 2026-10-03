@@ -12,18 +12,21 @@ que quiere conquistar las romerías gallegas. Cámara cenital, 3D cartoon low-po
 Pilares: **caos cooperativo**, **identidad gallega**, **recetas más simples que Overcooked**.
 
 ## 2. Bucle de juego
-1. Aparecen comandas (tickets) con el pulpo y su condimento.
-2. Se coge un pulpo de la caja de almacén y se **corta sobre la caja** (D1).
-3. Se **cuece** en el caldero hasta que esté cocido.
-4. Se **condimenta** (D4) la caja con el pulpo cocido.
-5. Se **entrega** en el puesto de la comanda; se valida y puntúa (D2).
-6. A los 5 minutos (D5) acaba la partida: recaudación y 0–3 estrellas.
+Flujo del prototipo, que se mantiene por D1 (ver `roadmap.md`):
+1. Aparecen comandas (tickets) con el condimento pedido y su barra de paciencia.
+2. Se coge **pulpo crudo** de la nevera.
+3. Se **cuece** en la olla (el pulpo entra crudo).
+4. El jugador lleva el pulpo **cocido** y lo **corta sobre una caja** (D1): cada pulsación llena la
+   caja y gasta pulpo.
+5. Se **condimenta** (D4) la caja llena.
+6. Se **entrega** en el puesto de la comanda; se valida y puntúa (D2).
+7. A los 5 minutos (D5) acaba la partida: recaudación y 0–3 estrellas.
 
 ## 3. Decisiones de diseño aplicadas
 
 | # | Decisión | Cómo queda en el GDD de trabajo |
 |---|----------|----------------------------------|
-| D1 | Corte sobre la caja | No hay estación de corte. El corte es una acción sobre la caja que lleva el jugador (como el prototipo). La «zona de preparación con mesas para cortar» del original pasa a ser mesa de apoyo/entrega. Ver `features/corte-pulpo.md` |
+| D1 | Corte sobre la caja | No hay estación de corte. El jugador lleva el pulpo cocido y lo corta sobre la caja (como el prototipo). La «zona de preparación con mesas para cortar» del original pasa a ser mesa de apoyo/entrega. Ver `features/corte-pulpo.md` |
 | D2 | Recaudación + 0–3 estrellas | Puntos por comanda = base de la receta + bonus por tiempo restante − penalización por comanda caducada. Estrellas por umbrales de recaudación en datos. Sustituye al ratio «cajas/minuto» del prototipo. Ver `features/entrega-y-puntuacion.md` |
 | D3 | Modo individual = cambio de personaje | Un jugador controla un personaje y cambia al otro (< 0,2 s); el no controlado se queda quieto. Sustituye al «control simultáneo de 2 NPC» del original, imposible con un solo mando. Ver `features/jugadores-y-cambio.md` |
 | D4 | Condimento sí/no | Pimentón dulce **o** picante; sal sí/no; aceite sí/no; cachelos opcionales (sí/no). Se eliminan los niveles «poco/normal/mucho» del original. Ver `features/condimentacion.md` |
@@ -37,24 +40,25 @@ Pilares: **caos cooperativo**, **identidad gallega**, **recetas más simples que
 |----------|------|---------------|
 | Atender comandas | Primaria | Máx. 4 comandas activas; cada una con límite de tiempo (paciencia) |
 | Coordinación cooperativa | Primaria | 2 jugadores locales comparten el puesto; sin combate (ver §8) |
-| Preparación | Secundaria | Cortar el pulpo sobre la caja (D1) |
-| Cocción | Secundaria | El pulpo crudo se cuece en el caldero; temporizador visible; solo cocido es válido |
+| Cocción | Secundaria | El pulpo **crudo** se cuece en la olla; temporizador visible; solo el cocido se puede cortar |
+| Corte | Secundaria | El pulpo **cocido** se corta sobre la caja (D1): cada pulsación llena la caja y gasta pulpo |
 | Condimentación | Secundaria | Decisiones sí/no (D4) aplicadas a la caja |
 | Dificultad | Sistema | La cadencia de comandas aumenta con el tiempo transcurrido |
 | Valoración | Sistema | Recaudación + estrellas (D2) |
 
 ### Comandas
 Una comanda = pulpo + condimento pedido (pimentón dulce/picante, sal sí/no, aceite sí/no, cachelos
-sí/no) + tiempo máximo. Una caja entregada es válida solo si coincide exactamente con alguna comanda
-del puesto de entrega (tipo de caja, pulpo cocido y cortado, y todos los condimentos pedidos).
+sí/no) + tiempo máximo (paciencia, 40–90 s en datos). Una caja entregada es válida solo si coincide
+exactamente con alguna comanda del puesto de entrega (tipo de caja, caja llena de pulpo y todos los
+condimentos pedidos, sin extras).
 
 ### Controles
-Teclado y ratón + mando Xbox (Should). Jugador 1 y 2 con esquemas separados en `InputMap`.
+Teclado + mando Xbox (Must): teclado y mando, o dos mandos. El flujo menú → game over es completable sin teclado. Jugador 1 y 2 con esquemas separados en `InputMap`.
 
 ## 5. Nivel de la alpha (un nivel)
 Una romería con un puesto semiabierto sobre terreno de tierra y césped. Zonas:
-- **Almacén**: cajas con pulpo crudo, cachelos, sal, aceite, pimentón dulce y picante.
-- **Cocción**: caldero de cobre.
+- **Almacén (nevera)**: pulpo crudo, cachelos, sal, aceite, pimentón dulce y picante.
+- **Cocción**: olla/caldero de cobre.
 - **Condimentación y entrega**: aplicar condimentos y entregar en los puestos de comanda.
 - Mesas de apoyo para dejar objetos.
 
@@ -62,29 +66,31 @@ Una romería con un puesto semiabierto sobre terreno de tierra y césped. Zonas:
 comandas dentro de su plazo, y alcanzar al menos 1 estrella. El nivel enseña en este orden: coger/soltar,
 cortar, cocer, condimentar, entregar y coordinarse.
 
-## 6. Alcance de la alpha (MoSCoW)
+## 6. Alcance de la alpha (MoSCoW aprobado)
+Alineado con «Alcance aprobado de la alpha» de `roadmap.md`.
 
-**Must (8)** — sin ellas no hay alpha jugable:
-1. `features/movimiento-e-interaccion.md`
-2. `features/corte-pulpo.md`
-3. `features/coccion-pulpo.md`
-4. `features/condimentacion.md`
-5. `features/comandas.md`
-6. `features/entrega-y-puntuacion.md`
-7. `features/partida-5-min.md`
-8. `features/jugadores-y-cambio.md`
+**Must** (cada punto del roadmap → feature):
+1. Paridad con Unity sin sus bugs → `features/paridad-unity.md`
+2. Ciclo de comandas sin bugs; 8. comanda reducida (D4) con iconos en el ticket; 3. paciencia → `features/comandas.md`
+4. Puntuación y objetivo (D2) → `features/entrega-y-puntuacion.md`
+5. Coop local 2P y mando Xbox → `features/jugadores-y-cambio.md` y `features/mando-y-reasignacion.md`
+6. Modo individual con cambio (D3) → `features/jugadores-y-cambio.md`
+7. Menú principal (Individual / Local 2P / Salir) → `features/menu-principal.md`
+8. Condimentos D4 → `features/condimentacion.md`
+9. Feedback mínimo (efectos, música, ambiente) → `features/audio-y-fx.md`
 
-**Should** (entran si el tiempo lo permite):
-- `features/dificultad-progresiva.md`
-- `features/audio-y-fx.md`
-- `features/eventos-de-entorno.md` (gaiteros)
-- `features/mando-y-reasignacion.md` (Xbox)
+Soporte del flujo Must (también Must): `features/movimiento-e-interaccion.md`,
+`features/coccion-pulpo.md`, `features/corte-pulpo.md`, `features/partida-5-min.md`.
 
-**Could**: habilidades distintas por personaje (John Cea, Bill Gatos, Vanessa Poconcho, Natalie Newport),
-barro que resbala, selección de personaje, localización galego/castelán, idioma inglés.
+**Should**: olla que se pasa (`features/olla-que-se-pasa.md`), dificultad por fases
+(`features/dificultad-progresiva.md`), opciones de volumen (`features/opciones-de-volumen.md`),
+textos en gallego (`features/textos-gallego.md`), tutorial breve (`features/tutorial-breve.md`).
 
-**Won't (alpha)**: multijugador online, móvil, cinemáticas de inicio/final, más de un nivel, niveles de
-sal/aceite «poco/mucho», combate o golpes entre jugadores, bebidas (`DrinkSO` del prototipo), tienda/DLC.
+**Could**: barro, gaiteros (`features/eventos-de-entorno.md`, marcada Could), 2 personajes con
+habilidad, lavado de platos.
+
+**Won't (alpha)**: mapa de niveles, online, 4 personajes, NPC animados, móvil; además cinemáticas,
+niveles de sal/aceite «poco/mucho», combate entre jugadores, bebidas (`DrinkSO`), tienda/DLC.
 
 ## 7. Presentación y tono
 Cartoon low-poly colorido; toldo blanco, madera, platos de madera. Humor satírico sobre la
@@ -105,14 +111,17 @@ globalización (franquía vs. pulpeiros tradicionales). Textos de la alpha en ca
 8. **Pimentón «pementa, … etc.»** en tabla de mecánicas: condimentos cerrados en D4.
 
 ## 9. Preguntas abiertas
-1. **Estrellas**: umbrales exactos de recaudación para 1/2/3 estrellas (propuesta provisional en
-   `entrega-y-puntuacion.md`, hay que validarla jugando).
-2. **Comanda caducada**: ¿desaparece el ticket y penaliza una sola vez, o bloquea el puesto unos segundos?
-3. **Caja mal entregada**: ¿se devuelve al jugador, se descarta, o penaliza?
-4. **Cachelos**: ¿se cuecen también en el caldero o son un ingrediente listo? (el prototipo no los modela;
-   se asume ingrediente listo hasta decidir).
-5. **Caldero**: ¿admite un pulpo a la vez (prototipo) o varios en la alpha?
-6. **Puestos de entrega**: ¿cuántos hay en el nivel y cada comanda se asigna a un puesto (prototipo) o a cualquiera?
-7. **Modo individual**: ¿el cambio de personaje es una tecla fija o cambia al más cercano al objetivo?
+Las que el roadmap ya responde (paciencia 40–90 s, regeneración al caducar, mando y cambio como Must,
+gaiteros Could, olla que se pasa Should) se han retirado.
+
+1. **Estrellas**: umbrales exactos de recaudación para 1/2/3 estrellas (provisional en
+   `entrega-y-puntuacion.md`; validar jugando).
+2. **Caja mal entregada**: ¿se devuelve al jugador, se descarta o penaliza?
+3. **Cachelos**: ¿se cuecen en la olla o son ingrediente listo? (el prototipo no los modela; se asume listo).
+4. **Olla**: ¿admite un pulpo a la vez (prototipo) o varios?
+5. **Puestos de entrega**: ¿cuántos y la comanda se asigna a un puesto (prototipo) o a cualquiera?
+6. **Corte: pulsar o mantener**: el prototipo llena la caja con cada pulsación (20 pulsaciones). ¿Se
+   cambia a mantener pulsado? Hasta decidir, rige «pulsar» (paridad).
+7. **Modo individual**: ¿cambio con tecla fija o al personaje más cercano al objetivo?
 8. **Modelos Pandazole (D6)**: ¿se usan o se sustituyen? Afecta a asset-pipeline, no a las features.
-9. **Dificultad progresiva** (Should): ¿intervalo de comandas decreciente o más comandas simultáneas?
+9. **Dificultad por fases**: ¿intervalo decreciente o más comandas simultáneas?

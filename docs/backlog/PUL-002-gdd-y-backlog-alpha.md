@@ -43,3 +43,9 @@ Alcance según la propuesta: Must/Should/Could/Won't.
 - `tools/verify.sh`: verde (GUT 2/2, smoke OK).
 - Nota: la «propuesta» MoSCoW no estaba en el repo; los 8 Must se derivaron del bucle de juego.
   El producer debe validar la selección. Los números (tiempos, euros, umbrales) son provisionales.
+
+## Revisión del producer (2.ª ronda)
+- Rebase sobre `jrmougan/agentica-migracion-godot-alpha`; `roadmap.md` es la fuente del MoSCoW.
+- Flujo corregido: pulpo crudo → olla → pulpo cocido → corte sobre caja (pulsar, 20 pulsaciones/caja) → condimentos → entrega (gdd §2/§4, corte-pulpo, coccion-pulpo).
+- MoSCoW alineado (gdd §6): Must incluye mando Xbox, feedback mínimo, menú principal y paridad Unity (nuevas: `paridad-unity.md`, `menu-principal.md`); gaiteros → Could; Should = olla que se pasa, dificultad por fases, volumen, gallego, tutorial (nuevas fichas de feature).
+- Preguntas abiertas depuradas; «pulsar vs mantener» queda como pregunta nº 6.

@@ -1,4 +1,4 @@
-# Dificultad progresiva (Should)
+# Dificultad progresiva (Should, dificultad por fases)
 
 **Slug:** dificultad-progresiva · **Original:** mecánica «Variación de dificultad».
 

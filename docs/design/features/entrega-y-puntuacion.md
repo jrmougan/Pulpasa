@@ -13,7 +13,7 @@ La caja se entrega en un puesto. Se valida contra las comandas del puesto. La m�
 - Estrellas (provisional, pregunta abierta nº 1): 1★ ≥ 30 €, 2★ ≥ 60 €, 3★ ≥ 90 €.
 
 ## Criterios de aceptación
-- **AC1** Given una comanda de pulpo+sal+aceite y una caja con pulpo cocido+cortado+sal+aceite, When se entrega en su puesto, Then la validación es verdadera, se emite `order_completed` una vez y la comanda desaparece.
+- **AC1** Given una comanda de pulpo+sal+aceite y una caja llena de pulpo con sal+aceite, When se entrega en su puesto, Then la validación es verdadera, se emite `order_completed` una vez y la comanda desaparece.
 - **AC2** Given la misma comanda y una caja sin aceite, When se entrega, Then la validación es falsa, `order_completed` no se emite y la comanda sigue activa.
 - **AC3** Given una caja con un condimento extra no pedido, When se entrega, Then es inválida (coincidencia exacta).
 - **AC4** Given una receta con `base_points` = 10 y `max_time` = 60 s, When se entrega con 30 s restantes, Then se ingresan 10 + floor(0,5 × 5) = 12 €.
