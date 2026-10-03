@@ -57,6 +57,9 @@ Para alcance, ADRs, game feel y fin de hito:
 ## Agentes no Claude
 
 - **antigravity** (Gemini, `agy`): `worker-start ... --agent antigravity --model <id>` funciona supervisado.
+  **No reutilices su terminal** para la ronda de cambios (`worker-start --terminal` falla en `agent_readiness`
+  y la entrada se pierde): libera el worker y lanza uno nuevo sobre la misma rama con
+  `--task <task de la ronda> --retry-of <dispatch fallido> --worktree branch:<rama> --agent antigravity --model <id>`.
   Modelos: `agy models` (p. ej. `gemini-3.1-pro-high` para fichas difíciles, `gemini-3.8-flash-high` para medias).
 - **kimi** (`kimi`, K3): Orca no lo reconoce como agente, `worker-start --terminal` falla en `agent_readiness`.
   Receta (vía no supervisada, low-level-topology):
