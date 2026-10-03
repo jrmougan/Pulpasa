@@ -2,6 +2,7 @@ extends GutTest
 ## AC1: el catálogo trae las 3 comandas del prototipo con receta, caja y condimentos.
 
 const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
+const ROUND_CONFIG_PATH: String = "res://data/config/round_config.tres"
 
 
 func _seasoning_types(order: OrderData) -> Array:
@@ -52,5 +53,22 @@ func test_ac1_parity_values() -> void:
 		assert_eq(order.max_time, 0.0)
 		assert_eq(order.recipe.base_points, 0)
 		assert_eq(order.recipe.ingredient.cook_time, 5.0)
-	var config: RoundConfig = load("res://data/config/round_config.tres") as RoundConfig
+	var config: RoundConfig = load(ROUND_CONFIG_PATH) as RoundConfig
 	assert_eq(config.duration, 180.0)
+
+
+func test_pul006_ac5_round_config_performance_tiers() -> void:
+	var config: RoundConfig = load(ROUND_CONFIG_PATH) as RoundConfig
+	assert_eq(config.performance_thresholds, [1.0, 2.0, 3.0] as Array[float])
+	assert_eq(
+		config.performance_texts,
+		(
+			[
+				"Pulpeiro ineficiente",
+				"Pulpeiro aceptable",
+				"Pulpeiro eficiente",
+				"!Pulpeiro lexendario!",
+			]
+			as Array[String]
+		)
+	)

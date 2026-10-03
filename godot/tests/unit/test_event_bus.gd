@@ -4,10 +4,9 @@ extends GutTest
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 
 ## Firma esperada por señal: lista de [nombre_arg, Variant.Type, clases admitidas].
-## Las clases vacías indican tipo primitivo. ActiveOrder/RoundResult aún no existen
-## (PUL-006): mientras tanto se admite el marcador RefCounted.
-const ORDER_CLASSES: Array[String] = ["ActiveOrder", "RefCounted"]
-const RESULT_CLASSES: Array[String] = ["RoundResult", "RefCounted"]
+## Clases vacías: tipo primitivo. Las de objeto son tipos de valor de core/ (PUL-006).
+const ORDER_CLASSES: Array[String] = ["ActiveOrder"]
+const RESULT_CLASSES: Array[String] = ["RoundResult"]
 const CATALOG: Dictionary = {
 	"round_started": [["duration", TYPE_FLOAT, []]],
 	"round_time_changed": [["time_left", TYPE_FLOAT, []]],

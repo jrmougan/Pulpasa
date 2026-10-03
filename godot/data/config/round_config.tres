@@ -6,3 +6,5 @@
 script = ExtResource("1_cfg")
 duration = 180.0
 first_order_delay = 0.0
+performance_thresholds = Array[float]([1.0, 2.0, 3.0])
+performance_texts = Array[String](["Pulpeiro ineficiente", "Pulpeiro aceptable", "Pulpeiro eficiente", "!Pulpeiro lexendario!"])
