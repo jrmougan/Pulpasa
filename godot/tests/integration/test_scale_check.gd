@@ -88,6 +88,8 @@ func test_ac2_placeholders_face_minus_z() -> void:
 	var extra: Dictionary = {
 		"character": ["Front", "Nose"],
 		"fridge": ["Front", "Handle"],
+		"octopus_raw": ["Front", "EyeL", "EyeR"],
+		"octopus_cooked": ["Front", "EyeL", "EyeR"],
 	}
 	for id: String in PLACEHOLDERS:
 		var inst: Node3D = (load(PLACEHOLDER_DIR + id + ".tscn") as PackedScene).instantiate()
