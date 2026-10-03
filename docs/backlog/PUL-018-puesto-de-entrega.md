@@ -1,11 +1,11 @@
 ---
 id: PUL-018
 title: Crear el puesto de entrega conectado a OrderService
-status: review
+status: done
 milestone: M0
 role: gameplay-engineer
 deps: [PUL-016]
-orca_task: null
+orca_task: task_de5522bc574b
 unity_sources: [Assets/Scripts/Game/OrderStand.cs, Assets/Prefabs/KitchenStations/OrderStand.prefab]
 owns: [godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand.gd, godot/entities/stations/order_stand.gd.uid, godot/tests/integration/test_order_stand.gd, godot/tests/integration/test_order_stand.gd.uid, docs/evidence/PUL-018/**]
 touches_scenes: [godot/entities/stations/order_stand.tscn]
