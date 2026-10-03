@@ -8,8 +8,10 @@ signal round_time_changed(time_left: float)
 signal round_finished(result: RoundResult)
 signal score_changed(boxes_delivered: int, revenue: int)
 
-## Tolerancia del reloj: 10800 × 1/60 debe acabar en el tick 10800 pese al error de coma flotante.
-const TIME_EPSILON: float = 1e-6
+## Residuo de coma flotante que se absorbe al llegar a 0: acumular 1/60 s deja restos del orden
+## de 1e-12, así que 10800 × 1/60 acaba en el tick 10800. Es muy inferior a cualquier delta real:
+## la ronda nunca acaba antes del límite (advance(179,9999995) deja 5e-7 s y no acaba).
+const TIME_EPSILON: float = 1e-9
 
 var _config: RoundConfig
 var _board: OrderBoard
@@ -50,10 +52,12 @@ func start(slot_ids: Array[int]) -> void:
 func advance(delta: float) -> void:
 	if not _running or _finished or delta <= 0.0:
 		return
-	var d: float = _time_left if _time_left - delta <= TIME_EPSILON else delta
+	var d: float = minf(delta, _time_left)
 	_board.advance(d)
 	var previous_second: int = _whole_second(_time_left)
-	_time_left = 0.0 if d >= _time_left else _time_left - d
+	_time_left -= d
+	if _time_left <= TIME_EPSILON:
+		_time_left = 0.0
 	if _whole_second(_time_left) != previous_second:
 		round_time_changed.emit(_time_left)
 	if _time_left <= 0.0:
@@ -89,7 +93,13 @@ func _finish() -> void:
 	_finished = true
 	_running = false
 	_board.stop()
-	_result = RoundResult.new(_config.duration, _boxes_delivered, _revenue)
+	_result = RoundResult.new(
+		_config.duration,
+		_boxes_delivered,
+		_revenue,
+		_config.performance_thresholds,
+		_config.performance_texts
+	)
 	round_finished.emit(_result)
 
 

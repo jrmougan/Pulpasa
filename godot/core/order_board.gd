@@ -13,8 +13,10 @@ signal order_expired(order: ActiveOrder, penalty: int)
 
 ## `order_id` de `delivery_rejected` cuando el puesto no tiene comanda.
 const NO_ORDER: int = -1
-## Tolerancia de caducidad: 3600 × 1/60 debe caducar en el tick 3600 pese al error de coma flotante.
-const EXPIRY_EPSILON: float = 1e-6
+## Residuo de coma flotante que cuenta como paciencia agotada: 3600 × 1/60 deja restos del orden de
+## 1e-12 y debe caducar en el tick 3600. Es muy inferior a cualquier delta real, así que nunca se
+## caduca antes del límite (advance(59,9999995) deja 5e-7 s y no caduca).
+const EXPIRY_EPSILON: float = 1e-9
 ## Penalizaciones M0 (paridad): ninguna. M1 (D8) las lee de datos.
 const REJECT_PENALTY: int = 0
 const EXPIRE_PENALTY: int = 0

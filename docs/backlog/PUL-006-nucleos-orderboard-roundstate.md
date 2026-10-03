@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-004, PUL-005]
 orca_task: null
 unity_sources: [Assets/Scripts/Systems/OrderSystem.cs, Assets/Scripts/Game/ProductivitySystem.cs, Assets/Scripts/Game/OrderStand.cs, Assets/Scripts/Game/OrderTicketUIController.cs, Assets/Scripts/Interfaces/ActiveOrder.cs]
-owns: [godot/core/**, godot/tests/unit/test_order_board.gd, godot/tests/unit/test_order_board.gd.uid, godot/tests/unit/test_round_state.gd, godot/tests/unit/test_round_state.gd.uid, godot/tests/unit/test_order_validator.gd, godot/tests/unit/test_order_validator.gd.uid, godot/autoload/event_bus.gd]
+owns: [godot/core/**, godot/tests/unit/test_order_board.gd, godot/tests/unit/test_order_board.gd.uid, godot/tests/unit/test_round_state.gd, godot/tests/unit/test_round_state.gd.uid, godot/tests/unit/test_order_validator.gd, godot/tests/unit/test_order_validator.gd.uid, godot/autoload/event_bus.gd, godot/resources/round_config.gd, godot/data/config/round_config.tres, godot/tests/unit/test_event_bus.gd, godot/tests/unit/test_data_*.gd]
 touches_scenes: []
 ---
 
@@ -59,24 +59,31 @@ y los tipos de `docs/arch/signals.md` §Tipos.
   AC5 → `test_round_state.gd`; AC7 → `tools/verify.sh`.
 
 ## Evidence
-`tools/verify.sh` → `✓ verify OK` (gdformat, gdlint, import, GUT, smoke 120 frames). Resumen GUT:
+Revisión de codex (CHANGES) aplicada; owns ampliado por el producer (`round_config.gd/.tres`,
+`test_event_bus.gd`, `test_data_*.gd`). `tools/verify.sh` → `✓ verify OK`. Resumen GUT:
 ```
 Scripts              10
-Tests                70
-Passing Tests        70
-Asserts             397
+Tests                81
+Passing Tests        81
+Asserts             425
 ---- All tests passed! ----
 ```
 - AC1: `test_order_board.gd` `test_ac1_order_completed_once_per_delivery`,
-  `test_ac1_twenty_deliveries_count_twenty_and_no_empty_slot` (+ rechazo sin cambio de estado, máx. 4, copias, tablero parado).
+  `test_ac1_twenty_deliveries_count_twenty_and_no_empty_slot` (+ rechazo sin cambio de estado, máx. 4, copias, tablero parado);
+  traza `test_ac5_trace_delivery_completed_score_generated` (completed → score → generated).
 - AC2: `test_order_validator.gd` (`test_ac2_*`: caja correcta/errónea, sin ingrediente, sin cocinar, especia de menos, especia de más aceptada).
-- AC3: `test_ac5b_delivery_on_expiry_tick_rejected_not_redirected` (3600 × 1/60, control en el tick siguiente),
-  más `test_ac5b_single_advance_of_sixty_expires` y `test_ac5c_delivery_before_expiry_completes`.
-- AC4: `test_ac4_zero_max_time_never_expires_nor_emits_patience` (600 s con el catálogo de paridad).
-- AC5: `test_round_state.gd` (no acaba a 179,5 s, acaba en el tick 10800, `try_deliver` nulo y mudo tras el fin, umbrales).
+- AC3: `test_ac5b_delivery_on_expiry_tick_rejected_not_redirected`, ahora avanzando con `RoundState.advance` (3600 × 1/60, control en el tick siguiente);
+  límites: `test_ac3_patience_not_expired_one_tick_before_limit` (3599/3600 ticks), `test_ac3_patience_not_expired_just_below_limit`
+  (`advance(59,9999995)` no caduca y entrega), `test_ac3_patience_expires_just_after_limit`.
+- AC4: `test_ac4_zero_max_time_never_expires_nor_emits_patience`.
+- AC5: `test_round_state.gd`: no acaba a 179,5 s, acaba en el tick 10800, `advance(179,9999995)` no acaba, `advance(180,0000005)` acaba en 180;
+  `try_deliver` nulo y mudo tras el fin; umbrales y textos desde `RoundConfig` (`data/config/round_config.tres`, valores de Unity,
+  comprobados en `test_data_catalog.gd::test_pul006_ac5_round_config_performance_tiers`). Trazas con paciencia positiva:
+  `test_ac5_trace_final_tick_with_patience` y `..._with_delta_beyond_time_left` (paciencia de todas → expired/score/generated por slot
+  ascendente → `time:0` → finished), `test_ac5_trace_start_sequence` (reset → generated × 4 → time(180) → started).
+  Comprobación de mutación: parar el tablero antes de su `advance` en el tick final hace fallar las dos trazas.
 - AC6: `test_ac6_same_seed_same_sequence`, `test_ac6_boards_do_not_share_state`.
-- Notas: `BoxContents` añade `ingredient_state` (no cambia ninguna firma del bus) para cubrir «sin cocinar».
-  Los umbrales y textos de rendimiento quedan como constantes en `RoundResult` porque `RoundConfig`
-  (`resources/`) no está en `owns`; moverlos a datos es candidato para M1 (pasa a recaudación/estrellas).
-  `first_order_delay` no se usa (M1). `test_event_bus.gd` (PUL-004) aún admite `RefCounted` como
-  marcador; sigue en verde y puede endurecerse en otra ficha.
+- `test_event_bus.gd` exige `ActiveOrder`/`RoundResult` (sin el marcador `RefCounted`).
+- Tolerancia: `d = min(delta, time_left)`; solo se absorbe un residuo ≤ 1e-9 s (el error acumulado de 60 Hz es ~1e-12),
+  así que ni la ronda ni la paciencia terminan antes del límite real con cualquier delta ≥ 1e-9.
+- Notas: `BoxContents.ingredient_state` cubre «sin cocinar» sin cambiar el bus. `first_order_delay` no se usa (M1).

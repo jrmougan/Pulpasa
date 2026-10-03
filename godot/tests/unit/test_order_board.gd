@@ -183,7 +183,7 @@ func test_ac5b_delivery_on_expiry_tick_rejected_not_redirected() -> void:
 	watch_signals(board)
 
 	for i: int in range(3600):
-		board.advance(TICK)
+		round_state.advance(TICK)
 
 	assert_signal_emit_count(board, "order_expired", 1)
 	var expired: ActiveOrder = get_signal_parameters(board, "order_expired")[0]
@@ -202,7 +202,7 @@ func test_ac5b_delivery_on_expiry_tick_rejected_not_redirected() -> void:
 	assert_eq(board.get_order_for_slot(0).id, replacement.id)
 
 	# Control: un tick después, la misma entrega completa la comanda repuesta.
-	board.advance(TICK)
+	round_state.advance(TICK)
 	var completed: ActiveOrder = board.try_deliver(0, contents)
 	assert_not_null(completed)
 	assert_eq(completed.id, replacement.id)
@@ -248,6 +248,43 @@ func test_ac3_patience_signals_and_expiry_order_by_slot() -> void:
 	assert_eq((get_signal_parameters(board, "order_expired", 0)[0] as ActiveOrder).slot_id, 1)
 	assert_eq((get_signal_parameters(board, "order_expired", 1)[0] as ActiveOrder).slot_id, 3)
 	assert_eq(board.get_active_orders().size(), 2)
+
+
+func test_ac3_patience_not_expired_one_tick_before_limit() -> void:
+	var board: OrderBoard = _single_recipe_board(60.0)
+	board.reset()
+	board.fill_slots([0])
+	watch_signals(board)
+	for i: int in range(3599):
+		board.advance(TICK)
+	assert_signal_not_emitted(board, "order_expired")
+	assert_gt(board.get_order_for_slot(0).time_left, 0.0)
+	board.advance(TICK)
+	assert_signal_emit_count(board, "order_expired", 1)
+
+
+func test_ac3_patience_not_expired_just_below_limit() -> void:
+	var board: OrderBoard = _single_recipe_board(60.0)
+	board.reset()
+	board.fill_slots([0])
+	var order: ActiveOrder = board.get_order_for_slot(0)
+	watch_signals(board)
+	board.advance(59.9999995)
+	assert_signal_not_emitted(board, "order_expired")
+	assert_gt(board.get_order_for_slot(0).time_left, 0.0)
+	assert_not_null(board.try_deliver(0, _contents_for(order)))
+	assert_signal_emit_count(board, "order_completed", 1)
+
+
+func test_ac3_patience_expires_just_after_limit() -> void:
+	var board: OrderBoard = _single_recipe_board(60.0)
+	board.reset()
+	board.fill_slots([0])
+	watch_signals(board)
+	board.advance(60.0000005)
+	assert_signal_emit_count(board, "order_expired", 1)
+	var params: Array = get_signal_parameters(board, "order_patience_changed", 0)
+	assert_eq(params[1], 0.0)
 
 
 # --- AC4: paridad M0 (max_time 0) sin caducidad ni paciencia ---
