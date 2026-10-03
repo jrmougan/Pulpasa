@@ -1,7 +1,7 @@
 ---
 id: PUL-022
 title: Crear el menú principal y el flujo de escenas
-status: ready
+status: review
 milestone: M0
 role: ui-engineer
 deps: []
@@ -32,11 +32,21 @@ Fase 7 de M0, `scene-tree.md` §4 y ADR-003 §7 (flujo `boot → main_menu → l
 - `.tscn` con un script tipado propio o el editor; las tools headless del MCP fallan por `untyped_declaration=error`. No inventes uid.
 
 ## Acceptance
-- [ ] AC1 Al arrancar el proyecto aparece el menú con foco en Jugar → `test_main_menu.gd`.
-- [ ] AC2 Jugar llama a `GameState.start_level(SINGLE)` exactamente una vez; Salir cierra el árbol → `test_main_menu.gd` (con doble de `GameState` o señal).
-- [ ] AC3 Se navega solo con `ui_*` (teclado y mando).
-- [ ] AC4 Captura del menú en `docs/evidence/PUL-022/`. El smoke de `verify.sh` arranca con el menú sin errores; `check_owns` limpio.
+- [x] AC1 Al arrancar el proyecto aparece el menú con foco en Jugar → `test_main_menu.gd`.
+- [x] AC2 Jugar llama a `GameState.start_level(SINGLE)` exactamente una vez; Salir cierra el árbol → `test_main_menu.gd` (con doble de `GameState` o señal).
+- [x] AC3 Se navega solo con `ui_*` (teclado y mando).
+- [x] AC4 Captura del menú en `docs/evidence/PUL-022/`. El smoke de `verify.sh` arranca con el menú sin errores; `check_owns` limpio.
 
 ## Plan
 
+- Crear menú Control con logo propio, tema común, textos traducibles y foco nativo.
+- Arranque directo al menú; boot conserva una entrada alternativa sin cubo.
+- Tests AC1–AC3: foco, activación única SINGLE, salida con doble, navegación ui_* y error recuperable.
+- AC4: verify completo, captura e interacción MCP, check_owns.
+
 ## Evidence
+
+- [Informe y limitaciones](../evidence/PUL-022/README.md), capturas y logs en `docs/evidence/PUL-022/`.
+- `tools/verify.sh`: 334 tests verdes y smoke del menú sin errores.
+- Nivel aún ausente: retorno controlado de GameState, aviso visible y foco recuperado.
+- Salir comprobado con doble GUT y proceso gráfico real (código 0).
