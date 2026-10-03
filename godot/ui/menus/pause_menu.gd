@@ -23,9 +23,14 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if not _round_finished and event.is_action_pressed("pause"):
+	if _round_finished:
+		return
+	if event.is_action_pressed("pause"):
 		get_viewport().set_input_as_handled()
 		_game_state.set_paused(not get_tree().paused)
+	elif get_tree().paused and event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		_game_state.set_paused(false)
 
 
 ## Inyección para pruebas; por defecto se usa el autoload. Llamar antes de _ready.

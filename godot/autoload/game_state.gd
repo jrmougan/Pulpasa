@@ -48,14 +48,10 @@ func go_to_main_menu() -> Error:
 	return _change_scene(MAIN_MENU_SCENE)
 
 
-## Recarga la escena actual y quita la pausa (Reintentar del game over).
-## Devuelve ERR_UNCONFIGURED si no hay escena activa (p. ej. en tests headless).
+## Reintentar del game over: recarga el nivel con el modo actual (el reparto de mandos de M2
+## vive en start_level). Devuelve ERR_FILE_NOT_FOUND si la escena aún no existe.
 func restart_level() -> Error:
-	set_paused(false)
-	if get_tree().current_scene == null:
-		push_warning("GameState: no hay escena actual que recargar")
-		return ERR_UNCONFIGURED
-	return get_tree().reload_current_scene()
+	return start_level(mode)
 
 
 func _change_scene(path: String) -> Error:

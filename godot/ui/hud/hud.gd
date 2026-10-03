@@ -17,6 +17,7 @@ func _ready() -> void:
 	_bus.round_started.connect(_on_round_started)
 	_bus.round_time_changed.connect(_on_time_changed)
 	_bus.score_changed.connect(_on_score_changed)
+	_bus.pause_changed.connect(_on_pause_changed)
 	%TimeTitle.text = _text("HUD_TIME_LEFT", "Tiempo restante")
 	%RateTitle.text = _text("HUD_BOXES_PER_MINUTE", "Cajas / minuto")
 	_render()
@@ -43,11 +44,17 @@ func _on_score_changed(boxes_delivered: int, _revenue: int) -> void:
 	_render()
 
 
+func _on_pause_changed(paused: bool) -> void:
+	modulate = get_theme_color(&"paused_color", &"RoundHUD") if paused else Color.WHITE
+
+
 func _render() -> void:
-	_time_label.text = _text("HUD_SECONDS_FORMAT", "%.1f s") % _time_left
+	_time_label.text = _text("HUD_SECONDS_FORMAT", "%.1fs") % _time_left
 	var elapsed: float = maxf(_duration - _time_left, 0.0)
 	var rate: float = float(_boxes) * 60.0 / elapsed if elapsed > 0.0 else 0.0
 	_rate_label.text = "%.2f" % rate
+	var tone: StringName = &"ratio_good_color" if rate > 1.0 else &"ratio_bad_color"
+	_rate_label.add_theme_color_override(&"font_color", get_theme_color(tone, &"RoundHUD"))
 
 
 func _text(key: String, fallback: String) -> String:

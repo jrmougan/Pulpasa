@@ -46,19 +46,19 @@ func _text(node_name: String) -> String:
 
 func test_ac1_mount_does_not_start_round_or_own_clock() -> void:
 	assert_null(_manager.round_state)
-	assert_eq(_text("TimeLeft"), "0.0 s")
+	assert_eq(_text("TimeLeft"), "0.0s")
 	_bus.round_started.emit(180.0)
 	await wait_physics_frames(4)
-	assert_eq(_text("TimeLeft"), "180.0 s", "sin eventos no avanza")
+	assert_eq(_text("TimeLeft"), "180.0s", "sin eventos no avanza")
 
 
 func test_ac1_round_signals_update_time_and_finish_at_zero() -> void:
 	_start()
-	assert_eq(_text("TimeLeft"), "180.0 s")
+	assert_eq(_text("TimeLeft"), "180.0s")
 	_manager.round_state.advance(60.0)
-	assert_eq(_text("TimeLeft"), "120.0 s")
+	assert_eq(_text("TimeLeft"), "120.0s")
 	_manager.round_state.advance(120.0)
-	assert_eq(_text("TimeLeft"), "0.0 s")
+	assert_eq(_text("TimeLeft"), "0.0s")
 	assert_true(_manager.round_state.is_finished())
 
 
@@ -69,7 +69,7 @@ func test_ac1_pause_freezes_actual_round_and_hud() -> void:
 	var before: float = _manager.round_state.get_time_left()
 	await wait_process_frames(4)
 	assert_eq(_manager.round_state.get_time_left(), before)
-	assert_eq(_text("TimeLeft"), "180.0 s")
+	assert_eq(_text("TimeLeft"), "180.0s")
 	get_tree().paused = false
 	await wait_physics_frames(4)
 	assert_lt(_manager.round_state.get_time_left(), before)
@@ -87,3 +87,27 @@ func test_ac1_productivity_uses_reported_boxes_and_elapsed_time() -> void:
 	assert_eq(_text("BoxesPerMinute"), "1.50")
 	_start()
 	assert_eq(_text("BoxesPerMinute"), "0.00", "reinicio sin score_changed inicial")
+
+
+func test_pause_changed_dims_and_restores_hud() -> void:
+	assert_eq(_hud.modulate, Color.WHITE)
+	_bus.pause_changed.emit(true)
+	assert_lt(_hud.modulate.a, 1.0)
+	_bus.pause_changed.emit(false)
+	assert_eq(_hud.modulate, Color.WHITE)
+
+
+func test_ratio_is_green_above_one_and_red_otherwise() -> void:
+	var rate: Label = _hud.get_node("%BoxesPerMinute")
+	var good: Color = _hud.get_theme_color(&"ratio_good_color", &"RoundHUD")
+	var bad: Color = _hud.get_theme_color(&"ratio_bad_color", &"RoundHUD")
+	assert_ne(good, bad)
+	_start()
+	assert_eq(rate.get_theme_color(&"font_color"), bad, "0.00 en rojo")
+	_bus.score_changed.emit(2, 0)
+	_manager.round_state.advance(60.0)
+	assert_eq(_text("BoxesPerMinute"), "2.00")
+	assert_eq(rate.get_theme_color(&"font_color"), good)
+	_manager.round_state.advance(60.0)
+	assert_eq(_text("BoxesPerMinute"), "1.00")
+	assert_eq(rate.get_theme_color(&"font_color"), bad, "1.00 no es mayor que 1")

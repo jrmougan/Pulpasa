@@ -5,6 +5,8 @@ extends Resource
 enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA }
 
 @export var display_name: String = ""
+## Clave tr() explícita; no se deriva del nombre del fichero.
+@export var translation_key: String = ""
 @export var type: SeasoningType = SeasoningType.SALT
 @export var color: Color = Color.WHITE
 @export var scene: PackedScene

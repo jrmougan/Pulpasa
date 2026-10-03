@@ -33,6 +33,12 @@ func test_ac2_accept_starts_single_exactly_once() -> void:
 	assert_eq(_quit_calls, 0)
 
 
+func test_double_accept_starts_level_once() -> void:
+	await _tap(&"ui_accept")
+	await _tap(&"ui_accept")
+	assert_eq(_calls.size(), 1)
+
+
 func test_ac2_exit_invokes_tree_quit_action_once() -> void:
 	await _tap(&"ui_down")
 	await _tap(&"ui_accept")

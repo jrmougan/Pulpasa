@@ -77,8 +77,8 @@ func test_start_level_unpauses() -> void:
 
 func test_restart_level_unpauses() -> void:
 	_state.set_paused(true)
-	if get_tree().current_scene == null:
-		assert_eq(_state.restart_level(), ERR_UNCONFIGURED)
-	else:
-		assert_eq(_state.restart_level(), OK)
+	_state.mode = GameMode.Mode.COOP_2P
+	var expected: Error = OK if ResourceLoader.exists(_state.LEVEL_SCENE) else ERR_FILE_NOT_FOUND
+	assert_eq(_state.restart_level(), expected)
 	assert_false(get_tree().paused)
+	assert_eq(_state.mode, GameMode.Mode.COOP_2P, "restart conserva el modo")
