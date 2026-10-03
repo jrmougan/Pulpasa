@@ -19,12 +19,20 @@ static func violations(node: Node) -> Array[String]:
 			if not node.has_method(method):
 				found.append("%s (interactable): falta %s()" % [node.name, method])
 	if node.is_in_group(GROUP_PICKABLE):
-		for method: String in PICKABLE_METHODS:
-			if not node.has_method(method):
-				found.append("%s (pickable): falta %s()" % [node.name, method])
-		for property: String in PICKABLE_PROPERTIES:
-			if not property in node:
-				found.append("%s (pickable): falta la propiedad %s" % [node.name, property])
+		found.append_array(pickable_violations(node))
+	return found
+
+
+## Incumplimientos de los métodos y propiedades `pickable` de `node`, esté o no en el grupo.
+## Única comprobación del contrato `pickable` (la reutiliza `PickableContract`).
+static func pickable_violations(node: Node) -> Array[String]:
+	var found: Array[String] = []
+	for method: String in PICKABLE_METHODS:
+		if not node.has_method(method):
+			found.append("%s (pickable): falta %s()" % [node.name, method])
+	for property: String in PICKABLE_PROPERTIES:
+		if not property in node:
+			found.append("%s (pickable): falta la propiedad %s" % [node.name, property])
 	return found
 
 

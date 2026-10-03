@@ -1,0 +1,70 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/player/sandbox/player_sandbox.gd" id="1_sxf1u"]
+[ext_resource type="Resource" path="res://data/config/round_config.tres" id="2_tjxd4"]
+[ext_resource type="Resource" path="res://data/orders/order_catalog.tres" id="3_pq58m"]
+[ext_resource type="PackedScene" path="res://entities/camera/camera_rig.tscn" id="4_yrjes"]
+[ext_resource type="Material" path="res://assets/materials/terrain.tres" id="5_qek8h"]
+[ext_resource type="Script" path="res://entities/player/sandbox/sandbox_pickable.gd" id="6_vq6lb"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/box_small.tscn" id="7_p8e7b"]
+[ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="8_efnlh"]
+
+[sub_resource type="Environment" id="Environment_ae2mo"]
+background_mode = 1
+background_color = Color(0.36, 0.17, 0.71, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.6, 0.6, 0.65, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qvn7g"]
+size = Vector3(20, 0.2, 20)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_sp6j1"]
+size = Vector2(20, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y8a8p"]
+size = Vector3(0.34, 0.28, 0.32)
+
+[node name="PlayerSandbox" type="Node3D" unique_id=373915112 node_paths=PackedStringArray("holder", "pickable")]
+script = ExtResource("1_sxf1u")
+round_config = ExtResource("2_tjxd4")
+order_catalog = ExtResource("3_pq58m")
+holder = NodePath("Player/HoldComponent")
+pickable = NodePath("Items/TestPickable")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1518121667]
+environment = SubResource("Environment_ae2mo")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=383568302]
+transform = Transform3D(0.8660254, -0.38302222, 0.32139382, 0, 0.64278764, 0.76604444, -0.5, -0.66341394, 0.5566704, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CameraRig" type="Camera3D" parent="." unique_id=697112619 instance=ExtResource("4_yrjes")]
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=412535662]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=759841461]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+shape = SubResource("BoxShape3D_qvn7g")
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor" unique_id=393611768]
+material_override = ExtResource("5_qek8h")
+mesh = SubResource("PlaneMesh_sp6j1")
+
+[node name="Items" type="Node3D" parent="." unique_id=688970816]
+
+[node name="TestPickable" type="RigidBody3D" parent="Items" unique_id=340899409 groups=["pickable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.2, 0)
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("6_vq6lb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Items/TestPickable" unique_id=1723314682]
+shape = SubResource("BoxShape3D_y8a8p")
+
+[node name="Model" type="Node3D" parent="Items/TestPickable" unique_id=1065392217 instance=ExtResource("7_p8e7b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14, 0)
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=370749224 node_paths=PackedStringArray("camera", "items_root") instance=ExtResource("8_efnlh")]
+camera = NodePath("../CameraRig")
+items_root = NodePath("../Items")

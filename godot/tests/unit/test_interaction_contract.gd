@@ -60,3 +60,10 @@ func test_ac3_scan_tree_collects_all_violations_with_node_names() -> void:
 	var found: Array[String] = InteractionContract.scan_tree(root)
 	assert_eq(found.size(), 1)
 	assert_string_contains(found[0], "Roto")
+
+
+func test_ac3_pickable_violations_checks_contract_without_group() -> void:
+	var complete: Node = add_child_autofree(FakePickable.new())
+	assert_eq(InteractionContract.pickable_violations(complete), [])
+	var incomplete: Node = add_child_autofree(IncompletePickable.new())
+	assert_eq(InteractionContract.pickable_violations(incomplete).size(), 2)
