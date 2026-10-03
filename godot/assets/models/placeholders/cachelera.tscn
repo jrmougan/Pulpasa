@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/ph_wood.tres" id="1_mmxna"]
+[ext_resource type="Material" path="res://assets/materials/ph_cachelo_raw.tres" id="2_pr8p7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_2qhfu"]
+size = Vector3(0.5, 0.32, 0.42)
+
+[sub_resource type="SphereMesh" id="SphereMesh_8e6jt"]
+radius = 0.07
+height = 0.14
+
+[sub_resource type="SphereMesh" id="SphereMesh_h2b3i"]
+radius = 0.07
+height = 0.14
+
+[sub_resource type="SphereMesh" id="SphereMesh_qervb"]
+radius = 0.07
+height = 0.14
+
+[sub_resource type="SphereMesh" id="SphereMesh_7tfke"]
+radius = 0.07
+height = 0.14
+
+[node name="Cachelera" type="Node3D" unique_id=2119440282]
+
+[node name="Front" type="Marker3D" parent="." unique_id=937695022]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.21)
+
+[node name="Crate" type="MeshInstance3D" parent="." unique_id=126964648]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+material_override = ExtResource("1_mmxna")
+mesh = SubResource("BoxMesh_2qhfu")
+
+[node name="Potato1" type="MeshInstance3D" parent="." unique_id=719762325]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1.25, -0.13, 0.33, -0.09)
+material_override = ExtResource("2_pr8p7")
+mesh = SubResource("SphereMesh_8e6jt")
+
+[node name="Potato2" type="MeshInstance3D" parent="." unique_id=58522213]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1.25, 0.13, 0.34, -0.05)
+material_override = ExtResource("2_pr8p7")
+mesh = SubResource("SphereMesh_h2b3i")
+
+[node name="Potato3" type="MeshInstance3D" parent="." unique_id=139750333]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1.25, -0.02, 0.35, 0.08)
+material_override = ExtResource("2_pr8p7")
+mesh = SubResource("SphereMesh_qervb")
+
+[node name="Potato4" type="MeshInstance3D" parent="." unique_id=132170489]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1.25, 0.1, 0.33, 0.13)
+material_override = ExtResource("2_pr8p7")
+mesh = SubResource("SphereMesh_7tfke")

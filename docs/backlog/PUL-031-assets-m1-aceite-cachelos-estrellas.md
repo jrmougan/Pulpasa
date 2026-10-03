@@ -1,14 +1,14 @@
 ---
 id: PUL-031
 title: Incorporar iconos y placeholders de aceite, cachelos y estrellas
-status: ready
+status: review
 milestone: M1
 role: asset-pipeline
 agent: kimi (fácil)
 deps: []
 orca_task: null
 unity_sources: []
-owns: [godot/assets/textures/icons/**, godot/assets/models/placeholders/**, godot/assets/materials/**, godot/assets/CREDITS.md, docs/assets/licenses-pul-031.md, godot/tests/unit/test_assets_m1.gd, docs/evidence/PUL-031/**]
+owns: [godot/assets/textures/icons/**, godot/assets/models/placeholders/**, godot/assets/materials/**, godot/assets/CREDITS.md, docs/assets/licenses-pul-031.md, godot/tests/unit/test_assets_m1.gd, godot/tests/unit/test_assets_m1.gd.uid, docs/evidence/PUL-031/**]
 touches_scenes: []
 ---
 
@@ -36,4 +36,32 @@ Assets que necesitan PUL-028/029/030, con la regla D16 (solo licencias confirmad
 
 ## Plan
 
+1. Iconos SVG de game-icons.net (repo oficial github.com/game-icons/icons), todos de Delapouite,
+   CC BY 3.0, sin el fondo negro: `oil.svg` («Wine bottle», la botella más parecida a una de
+   aceite de oliva; «Oil can» se descartó por no ser botella), `potato.svg` («Potato»),
+   `star_full.svg` («Round star») y `star_empty.svg` (modificación de «Round star»: solo contorno).
+   Elegidos tras rasterizar y comparar 12 candidatos con `Image.load_svg_from_string`.
+2. Placeholders 3D con primitivas, generados con un script GDScript tipado temporal
+   (`godot --headless -s`, se borra tras generar; mismo patrón que PUL-008): `oil_bottle.tscn`
+   (0,4 m de alto, vidrio verde + aceite + etiqueta + tapón), `cachelos_raw.tscn` y
+   `cachelos_cooked.tscn` (mismo ovoide de 0,18 m, materiales marrón y pálido) y
+   `cachelera.tscn` (caja de 0,5×0,32×0,42 m con cachelos asomando). Todos con raíz `Node3D` y
+   marcador `Front` en −Z; dimensiones coherentes con la olla (r=0,33, h=0,65).
+3. Materiales nuevos `ph_oil`, `ph_oil_liquid`, `ph_cachelo_raw`, `ph_cachelo_cooked` (la
+   cachelera reutiliza `ph_wood`).
+4. Tests GUT `godot/tests/unit/test_assets_m1.gd` (TDD sobre los AC): carga de los 4 iconos y de
+   los 4 placeholders (instancia, Front, mallas), colores crudo/cocido distintos y presencia de
+   URL, licencia y autor en `licenses-pul-031.md` y `CREDITS.md`.
+5. Atribuciones: `godot/assets/CREDITS.md` y tabla nueva `docs/assets/licenses-pul-031.md`.
+
 ## Evidence
+
+- AC1: `test_assets_m1.gd` — 4 tests, 47 aserciones, en verde (`tools/verify.sh` completo OK:
+  gdformat, gdlint, import, 3087 aserciones GUT y smoke de 120 frames). Iconos rasterizados en
+  `docs/evidence/PUL-031/ac1-iconos.png`.
+- AC2: filas con URL, autor y licencia en `docs/assets/licenses-pul-031.md`; atribución CC BY 3.0
+  a Delapouite en `godot/assets/CREDITS.md`. Test `test_ac2_atribuciones_mencionan_los_assets_nuevos`.
+- AC3: `docs/evidence/PUL-031/ac3-placeholders.png` (cachelera, olla de PUL-008 como referencia de
+  escala, botella de aceite, cachelo crudo y cocido), capturada con el MCP de Godot en una escena
+  temporal ya eliminada; 0 errores en el log de ejecución.
+- `tools/check_owns.py jrmougan/pul-031 jrmougan/agentica-migracion-godot-alpha` limpio.
