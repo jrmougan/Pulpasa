@@ -15,7 +15,7 @@ touches_scenes: [godot/entities/player/player.tscn, godot/entities/stations/slot
 Fase 5 de M0, **capa específica 3D** (`scene-tree.md` §3; ADR-003 §3).
 
 ## Change
-1. Añade a `PlayerConfig` (+ `.tres`) los parámetros de puntuación que `InteractionScoring.pick_best` recibe: cono 30°, distancia mínima 0,7 m, bonus de cocina 1,0 (valores de `InteractionDetector.cs`).
+1. Añade a `PlayerConfig` (+ `.tres`) los parámetros de puntuación que `InteractionScoring.pick_best` recibe: cono 30° (semiángulo), distancia mínima 0,7 m, bonus de cocina 1,0 y altura de origen 0,8 m (valores de `InteractionDetector.cs`). El detector calcula la distancia 3D desde el jugador + 0,8 m y la pasa al `Candidate`.
 2. `components/interaction_detector.gd` (`Area3D`, máscara `interactable`, radio de `PlayerConfig`):
    delega en `InteractionScoring` y emite `target_changed(target)`. Uno por jugador (B7).
 3. `components/highlightable.gd` + `shaders/highlight_outline.gdshader` (inverted hull en
