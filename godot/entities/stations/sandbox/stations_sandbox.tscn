@@ -1,0 +1,70 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/stations/sandbox/stations_sandbox.gd" id="1_mnawr"]
+[ext_resource type="Resource" path="res://data/config/round_config.tres" id="2_kycbk"]
+[ext_resource type="Resource" path="res://data/orders/order_catalog.tres" id="3_rubin"]
+[ext_resource type="PackedScene" path="res://entities/camera/camera_rig.tscn" id="4_dkd0p"]
+[ext_resource type="Material" path="res://assets/materials/terrain.tres" id="5_bh5bj"]
+[ext_resource type="PackedScene" path="res://entities/stations/kitchen.tscn" id="6_3awx2"]
+[ext_resource type="PackedScene" path="res://entities/stations/octopus_storage.tscn" id="7_3hpft"]
+[ext_resource type="PackedScene" path="res://entities/stations/box_shelf.tscn" id="8_pkrxw"]
+[ext_resource type="PackedScene" path="res://entities/stations/spice_shelf.tscn" id="9_m7fec"]
+[ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="10_miwge"]
+
+[sub_resource type="Environment" id="Environment_n58fo"]
+background_mode = 1
+background_color = Color(0.36, 0.17, 0.71, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.6, 0.6, 0.65, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xiktc"]
+size = Vector3(20, 0.2, 20)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yhyke"]
+size = Vector2(20, 20)
+
+[node name="StationsSandbox" type="Node3D" unique_id=2145911738 node_paths=PackedStringArray("interaction")]
+script = ExtResource("1_mnawr")
+round_config = ExtResource("2_kycbk")
+order_catalog = ExtResource("3_rubin")
+interaction = NodePath("Player/InteractionComponent")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=693180146]
+environment = SubResource("Environment_n58fo")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=907750983]
+transform = Transform3D(0.8660254, -0.38302222, 0.32139382, 0, 0.64278764, 0.76604444, -0.5, -0.66341394, 0.5566704, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CameraRig" parent="." unique_id=697112619 instance=ExtResource("4_dkd0p")]
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1906149954]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1890386800]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+shape = SubResource("BoxShape3D_xiktc")
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor" unique_id=83571276]
+material_override = ExtResource("5_bh5bj")
+mesh = SubResource("PlaneMesh_yhyke")
+
+[node name="Items" type="Node3D" parent="." unique_id=510843105]
+
+[node name="Stations" type="Node3D" parent="." unique_id=1217286770]
+
+[node name="Kitchen" parent="Stations" unique_id=784504761 instance=ExtResource("6_3awx2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.6)
+
+[node name="OctopusStorage" parent="Stations" unique_id=696420386 instance=ExtResource("7_3hpft")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0, -1.8)
+
+[node name="BoxShelf" parent="Stations" unique_id=1788334010 instance=ExtResource("8_pkrxw")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.8, 0, -1.6)
+
+[node name="SpiceShelf" parent="Stations" unique_id=480784714 instance=ExtResource("9_m7fec")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+
+[node name="Player" parent="." unique_id=370749224 node_paths=PackedStringArray("camera", "items_root") instance=ExtResource("10_miwge")]
+camera = NodePath("../CameraRig")
+items_root = NodePath("../Items")

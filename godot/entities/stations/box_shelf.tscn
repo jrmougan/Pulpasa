@@ -1,0 +1,84 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://assets/models/furniture/Mueblecajas.tscn" id="1_7ofgs"]
+[ext_resource type="Script" path="res://entities/stations/item_spawner.gd" id="2_okmic"]
+[ext_resource type="PackedScene" path="res://entities/items/box.tscn" id="3_j671c"]
+[ext_resource type="Resource" path="res://data/boxes/small.tres" id="4_ngbkk"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/box_small.tscn" id="5_8qmm5"]
+[ext_resource type="Script" path="res://components/highlightable.gd" id="6_sc6ef"]
+[ext_resource type="Resource" path="res://data/boxes/medium.tres" id="7_33sfg"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/box_medium.tscn" id="8_x0mxr"]
+[ext_resource type="Resource" path="res://data/boxes/large.tres" id="9_afmdh"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/box_large.tscn" id="10_rnn72"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_70x5y"]
+size = Vector3(1.8, 0.92, 1.14)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5xe2l"]
+size = Vector3(0.5, 0.45, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qnwu0"]
+size = Vector3(0.5, 0.45, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c30b7"]
+size = Vector3(0.5, 0.45, 0.5)
+
+[node name="BoxShelf" type="StaticBody3D" unique_id=1788334010]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2051541035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46, 0)
+shape = SubResource("BoxShape3D_70x5y")
+
+[node name="Model" parent="." unique_id=1305138250 instance=ExtResource("1_7ofgs")]
+
+[node name="SmallSpawner" type="StaticBody3D" parent="." unique_id=632342883 groups=["interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.51, 0.31, -0.78)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_okmic")
+scene = ExtResource("3_j671c")
+data = ExtResource("4_ngbkk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SmallSpawner" unique_id=1569853926]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_5xe2l")
+
+[node name="Model" parent="SmallSpawner" unique_id=1065392217 instance=ExtResource("5_8qmm5")]
+
+[node name="Highlightable" type="Node" parent="SmallSpawner" unique_id=915379132]
+script = ExtResource("6_sc6ef")
+
+[node name="MediumSpawner" type="StaticBody3D" parent="." unique_id=1736467547 groups=["interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.31, -0.78)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_okmic")
+scene = ExtResource("3_j671c")
+data = ExtResource("7_33sfg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MediumSpawner" unique_id=1945153958]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_qnwu0")
+
+[node name="Model" parent="MediumSpawner" unique_id=1077296058 instance=ExtResource("8_x0mxr")]
+
+[node name="Highlightable" type="Node" parent="MediumSpawner" unique_id=2101543581]
+script = ExtResource("6_sc6ef")
+
+[node name="LargeSpawner" type="StaticBody3D" parent="." unique_id=1598286876 groups=["interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.536, 0.31, -0.78)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("2_okmic")
+scene = ExtResource("3_j671c")
+data = ExtResource("9_afmdh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LargeSpawner" unique_id=754530577]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_c30b7")
+
+[node name="Model" parent="LargeSpawner" unique_id=1254205440 instance=ExtResource("10_rnn72")]
+
+[node name="Highlightable" type="Node" parent="LargeSpawner" unique_id=1069699526]
+script = ExtResource("6_sc6ef")
