@@ -6,7 +6,9 @@
   de 0 (`maxi(revenue, 0)`). El panel crece de 132 a 180 px para las tres secciones.
 - **Tickets** (`ui/tickets/ticket_entry.{gd,tscn}`): el texto de condimentos se sustituye por
   `%SeasoningIcons`, una fila con un `TextureRect` por condimento usando `SeasoningData.icon`
-  (tooltip con el nombre traducido). `%PatienceBar` sigue gobernada solo por
+  (sin icono: `Label` con el nombre traducido). Dulce y picante se distinguen por tinte
+  (`SeasoningData.color` → `self_modulate`: naranja / rojo) y el picante lleva además la llama
+  `small-fire.svg` superpuesta (no depender solo del tono). `%PatienceBar` sigue gobernada solo por
   `order_patience_changed`; se le fija `step = 0.01` para que decrezca de forma lineal con
   valores float (el `step` 1.0 por defecto de `Range` redondeaba a enteros).
 - **Game over** (`ui/menus/game_over.{gd,tscn}`): `%Revenue` («Recaudación: %d €») y `%Stars`
@@ -14,22 +16,23 @@
   añadidos como hijos del `Content` del `MenuPanel` instanciado.
 - **Datos** (`data/seasonings/*.tres`): asignado `icon` a los cinco condimentos
   (sal→salt, aceite→oil, cachelos→potato, pimentón y pimentón picante→pepper-hot-solid;
-  PUL-031 no trajo un icono de pimentón dulce distinto). `owns` de la ficha ampliado con
-  `godot/data/seasonings/*.tres`, como prevé la propia ficha.
+  PUL-031 no trajo un icono de pimentón dulce distinto; el SVG del pimentón pasa a `fill="#fff"`).
+  `owns` de la ficha ampliado con `godot/data/seasonings/*.tres` y otras rutas (iconos,
+  CREDITS, licencias, `tests/tools`) por decisión del coordinador en la revisión.
 
 Sin contadores propios en la UI: todo llega por señales de `EventBus`. Navegación `ui_*` y
 `tr()` intactos; textos nuevos con claves `HUD_REVENUE*` y fallback en castellano.
 
 ## Capturas (AC2)
-Generadas con `godot/ui/hud/capture_pul030.{gd,tscn}`:
-`xvfb-run -a godot --path godot res://ui/hud/capture_pul030.tscn`
+Generadas con `godot/tests/tools/capture_pul030.{gd,tscn}`:
+`xvfb-run -a godot --path godot res://tests/tools/capture_pul030.tscn`
 (ronda real con el catálogo y `RoundManager`, una entrega correcta y `board.advance(15.0)`).
 
 - `partida_hud_y_tickets.png`: vista completa — HUD con «Recaudación 11 €» tras una entrega y
   4 tickets con iconos y barras de paciencia decrecientes.
 - `hud_recaudacion.png`: detalle del HUD.
-- `ticket_iconos_y_paciencia.png`: detalle de un ticket (iconos de pimentón picante y sal,
-  barra al ~75 %).
+- `ticket_iconos_y_paciencia.png`: detalle de un ticket (iconos de condimento con tinte y barra decreciente).
+- `ticket_dulce_vs_picante.png`: pimentón dulce (naranja) frente a picante (rojo con llama).
 - `game_over_estrellas.png`: «Recaudación: 65 €» con 2 de 3 estrellas (umbrales 30/60/90).
 
 ## Tests (AC1)

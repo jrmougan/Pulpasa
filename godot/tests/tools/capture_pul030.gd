@@ -1,11 +1,16 @@
 extends Control
 ## PUL-030: capturas de evidencia (AC2) de HUD, ticket con iconos y game over con estrellas.
-## Uso: xvfb-run -a godot --path godot res://ui/hud/capture_pul030.tscn
+## Uso: xvfb-run -a godot --path godot res://tests/tools/capture_pul030.tscn
 
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
 const CONFIG: RoundConfig = preload("res://data/config/round_config.tres")
 const HUD_SCENE: PackedScene = preload("res://ui/hud/hud.tscn")
 const PANEL_SCENE: PackedScene = preload("res://ui/tickets/order_tickets_panel.tscn")
+const TICKET_ENTRY_SCENE: PackedScene = preload("res://ui/tickets/ticket_entry.tscn")
+const SAMPLE_SEASONINGS: Array[String] = [
+	"res://data/seasonings/paprika.tres",
+	"res://data/seasonings/hot_paprika.tres",
+]
 const GAME_OVER_SCENE: PackedScene = preload("res://ui/menus/game_over.tscn")
 
 var _out_dir: String = ProjectSettings.globalize_path("res://../docs/evidence/PUL-030")
@@ -50,6 +55,21 @@ func _ready() -> void:
 	_shot(Rect2i(hud.get_global_rect()).grow(6), "hud_recaudacion.png")
 	var ticket: OrderTicket = panel.get_node("%Tickets").get_child(0)
 	_shot(Rect2i(ticket.get_global_rect()).grow(6), "ticket_iconos_y_paciencia.png")
+
+	# Dulce (izquierda) frente a picante (derecha, con llama): AC4 de comandas.
+	var pair: HBoxContainer = HBoxContainer.new()
+	pair.position = Vector2(400.0, 300.0)
+	pair.add_theme_constant_override("separation", 40)
+	add_child(pair)
+	for path: String in SAMPLE_SEASONINGS:
+		var entry: TicketEntry = TICKET_ENTRY_SCENE.instantiate()
+		pair.add_child(entry)
+		var sample: OrderData = OrderData.new()
+		sample.seasonings = [load(path)] as Array[SeasoningData]
+		entry.setup(sample)
+	await _frames(5)
+	_shot(Rect2i(pair.get_global_rect()).grow(10), "ticket_dulce_vs_picante.png")
+	pair.queue_free()
 
 	var over: GameOver = GAME_OVER_SCENE.instantiate()
 	add_child(over)

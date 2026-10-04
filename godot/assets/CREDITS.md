@@ -15,6 +15,9 @@ Detalle por fichero en `docs/assets/licenses.md` (y `licenses-pul-009.md`, `lice
   - «Round star» (star_full.svg) — https://game-icons.net/1x1/delapouite/round-star.html
   - star_empty.svg es una modificación de «Round star»: solo el contorno.
   - En los cuatro se elimina el fondo negro. Licencia: https://creativecommons.org/licenses/by/3.0/
+- **Icono de Game-icons.net para PUL-030** (`textures/icons/small-fire.svg`), CC BY 3.0, por Lorc:
+  - «Small fire» — https://game-icons.net/1x1/lorc/small-fire.html (se elimina el fondo negro).
+  - Licencia: https://creativecommons.org/licenses/by/3.0/
 - **Liberation Sans** (`fonts/LiberationSans.ttf`): SIL Open Font License 1.1, texto en `fonts/OFL.txt`.
 
 ## Sin atribución obligatoria (CC0), citados por cortesía

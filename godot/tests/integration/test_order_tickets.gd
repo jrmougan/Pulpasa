@@ -114,6 +114,29 @@ func test_ac4_ticket_shows_one_icon_per_seasoning() -> void:
 			assert_eq(icon.texture, order.data.seasonings[i].icon)
 
 
+func test_ac4_sweet_and_hot_paprika_tickets_are_distinguishable() -> void:
+	var sweet: SeasoningData = load("res://data/seasonings/paprika.tres")
+	var hot: SeasoningData = load("res://data/seasonings/hot_paprika.tres")
+	var sweet_entry: TicketEntry = _entry_with(sweet)
+	var hot_entry: TicketEntry = _entry_with(hot)
+	var sweet_icon: TextureRect = sweet_entry.get_node("%SeasoningIcons").get_child(0)
+	var hot_icon: TextureRect = hot_entry.get_node("%SeasoningIcons").get_child(0)
+	assert_ne(sweet_icon.self_modulate, hot_icon.self_modulate, "tinte distinto")
+	assert_eq(sweet_icon.self_modulate, sweet.color)
+	assert_eq(hot_icon.self_modulate, hot.color)
+	assert_null(sweet_icon.get_node_or_null("HotMark"), "el dulce no lleva marca")
+	assert_not_null(hot_icon.get_node_or_null("HotMark"), "el picante lleva la llama")
+
+
+func test_ac4_seasoning_without_icon_shows_translated_name() -> void:
+	var plain: SeasoningData = SeasoningData.new()
+	plain.display_name = "Sin icono"
+	var entry: TicketEntry = _entry_with(plain)
+	var label: Label = entry.get_node("%SeasoningIcons").get_child(0) as Label
+	assert_not_null(label, "sin icono: Label con el nombre")
+	assert_eq(label.text, "Sin icono")
+
+
 func test_ac4_patience_bar_is_visible_and_decreases_linearly() -> void:
 	_mount()
 	_fill()
@@ -147,3 +170,12 @@ func test_ac2_patience_is_hidden_in_m0_and_updates_only_own_id() -> void:
 	assert_eq(bar.value, 5.0)
 	_bus.order_patience_changed.emit(order.id, 0.0, 0.0)
 	assert_false(bar.visible)
+
+
+func _entry_with(seasoning: SeasoningData) -> TicketEntry:
+	var entry: TicketEntry = preload("res://ui/tickets/ticket_entry.tscn").instantiate()
+	add_child_autofree(entry)
+	var data: OrderData = OrderData.new()
+	data.seasonings = [seasoning] as Array[SeasoningData]
+	entry.setup(data)
+	return entry

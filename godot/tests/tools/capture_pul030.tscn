@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://ui/hud/capture_pul030.gd" id="1_cap"]
+[ext_resource type="Script" path="res://tests/tools/capture_pul030.gd" id="1_cap"]
 
 [node name="CapturePul030" type="Control"]
 layout_mode = 3

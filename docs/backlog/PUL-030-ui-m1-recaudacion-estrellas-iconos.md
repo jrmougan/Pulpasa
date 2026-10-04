@@ -8,7 +8,7 @@ agent: kimi (fácil)
 deps: [PUL-027, PUL-031]
 orca_task: null
 unity_sources: []
-owns: [godot/ui/hud/**, godot/ui/tickets/**, godot/ui/menus/game_over.tscn, godot/ui/menus/game_over.gd, godot/ui/theme/**, godot/data/seasonings/*.tres, godot/tests/integration/test_hud.gd, godot/tests/integration/test_order_tickets.gd, godot/tests/integration/test_game_over.gd, docs/evidence/PUL-030/**]
+owns: [godot/ui/hud/**, godot/ui/tickets/**, godot/ui/menus/game_over.tscn, godot/ui/menus/game_over.gd, godot/ui/theme/**, godot/data/seasonings/*.tres, godot/assets/textures/icons/**, godot/assets/CREDITS.md, docs/assets/licenses-pul-030.md, godot/tests/tools/**, godot/tests/unit/test_data_integrity.gd, godot/tests/integration/test_hud.gd, godot/tests/integration/test_order_tickets.gd, godot/tests/integration/test_game_over.gd, docs/evidence/PUL-030/**]
 touches_scenes: [godot/ui/hud/hud.tscn, godot/ui/tickets/order_ticket.tscn, godot/ui/tickets/ticket_entry.tscn, godot/ui/menus/game_over.tscn]
 ---
 
@@ -44,7 +44,7 @@ M1, `entrega-y-puntuacion.md` AC9–AC11, `comandas.md` AC4, `partida-5-min.md` 
 4. Game over: `%Revenue` + `%Stars` (3 `TextureRect` star_full/star_empty) en el `Content` del
    `MenuPanel`; `game_over.gd` los rellena desde `RoundResult`.
 5. `icon` asignado en los 5 `data/seasonings/*.tres` (owns ampliado en la ficha).
-6. Capturas con `ui/hud/capture_pul030.tscn` bajo xvfb-run (ronda real, entrega y avance de
+6. Capturas con `tests/tools/capture_pul030.tscn` bajo xvfb-run (ronda real, entrega y avance de
    paciencia); `tools/verify.sh` y `check_owns` antes de cerrar.
 
 ## Evidence

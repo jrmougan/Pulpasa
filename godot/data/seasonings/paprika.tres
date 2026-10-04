@@ -9,5 +9,5 @@ display_name = "Pimentón"
 translation_key = "SEASONING_PAPRIKA"
 type = 1
 exclusivity_group = &"paprika"
-color = Color(0, 0, 0, 0)
+color = Color(0.95, 0.55, 0.2, 1)
 icon = ExtResource("2_icon")
