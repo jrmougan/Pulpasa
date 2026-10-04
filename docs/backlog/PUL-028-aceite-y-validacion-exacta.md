@@ -1,12 +1,12 @@
 ---
 id: PUL-028
 title: Añadir el aceite, la exclusividad de pimentones y la validación exacta
-status: review
+status: done
 milestone: M1
 role: gameplay-engineer
 agent: antigravity · gemini-3.8-flash-high (media)
 deps: []
-orca_task: null
+orca_task: task_7e1c51f4721f
 unity_sources: []
 owns: [godot/resources/seasoning_data.gd, godot/data/seasonings/**, godot/core/order_validator.gd, godot/core/box_contents.gd, godot/entities/items/box.gd, godot/entities/stations/spice_shelf.tscn, godot/tests/unit/test_order_validator.gd, godot/tests/unit/test_data_*.gd, godot/tests/integration/test_box.gd, godot/tests/integration/test_shelves.gd, godot/tests/integration/test_kitchen_flow.gd, godot/tests/integration/test_parity_smoke.gd, docs/evidence/PUL-028/**]
 touches_scenes: [godot/entities/stations/spice_shelf.tscn]
