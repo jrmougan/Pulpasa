@@ -44,4 +44,5 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-029 | M1 | gameplay (antigravity → kimi) | done | Cachelos y olla con varias plazas |
 | PUL-030 | M1 | ui (kimi → Claude) | done | Recaudación, estrellas, iconos y paciencia en la UI |
 | PUL-031 | M1 | asset-pipeline (kimi) | done | Iconos y placeholders de aceite, cachelos y estrellas |
-| PUL-032 | M1 | qa (kimi) | ready (dep. 030) | Novedades de M1 en level_01 y QA de M1 |
+| PUL-032 | M1 | qa (Claude) | done | Novedades de M1 en level_01 y QA de M1 |
+| PUL-033 | M1 | gameplay (Claude) | ready | Comandas con cachelos y legibilidad de cachelos |

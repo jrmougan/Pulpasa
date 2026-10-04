@@ -1,7 +1,7 @@
 ---
 id: PUL-032
 title: Integrar las novedades de M1 en level_01 y pasar el QA de M1
-status: review
+status: done
 milestone: M1
 role: qa-tester
 agent: kimi (media)
