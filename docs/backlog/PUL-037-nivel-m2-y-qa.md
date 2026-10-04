@@ -1,7 +1,7 @@
 ---
 id: PUL-037
 title: Integrar dos personajes en level_01 y pasar el QA de M2
-status: draft
+status: ready
 milestone: M2
 role: qa-tester
 deps: [PUL-034, PUL-035, PUL-036]
@@ -28,6 +28,11 @@ M2: cierre técnico del hito antes de la puerta humana de game feel. Features
    teclado + mando y con dos mandos, y qué anotar).
 
 ## Constraints
+- Notas de PUL-034..036: `character_switcher.tscn` va en el nivel con `characters` = los `%Control` de
+  Player1 y Player2 (player_index 1 y 2). Con el MCP, `simulate_input` de tipo `action` no dispara
+  `p1_switch`: simula la tecla Q. Los tests que llamen a `start_level`/`restart_level` restauran el
+  InputMap con `GameState.reset_input()` en `after_each`. La retirada de un mando en ronda emite
+  `device_assigned(p, NONE)` y luego `device_disconnected(p)` (aclaración de ADR-004).
 - Solo integración: si algo de PUL-034..036 falla, se reporta al coordinador, no se arregla fuera de `owns`.
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.
 

@@ -1,11 +1,11 @@
 ---
 id: PUL-036
 title: Menú por modo, avisos de mando y UI navegable solo con mando
-status: review
+status: done
 milestone: M2
 role: ui-engineer
 deps: []
-orca_task: null
+orca_task: task_6110a70976f0
 unity_sources: []
 owns: [godot/ui/**, godot/tests/integration/test_main_menu.gd, godot/tests/integration/test_pause_menu.gd, godot/tests/integration/test_game_over.gd, godot/tests/integration/test_hud.gd, godot/tests/integration/test_ui_gamepad.gd, godot/tests/integration/test_ui_gamepad.gd.uid, docs/evidence/PUL-036/**]
 touches_scenes: [godot/ui/menus/main_menu.tscn, godot/ui/menus/pause_menu.tscn, godot/ui/menus/game_over.tscn, godot/ui/hud/hud.tscn]
