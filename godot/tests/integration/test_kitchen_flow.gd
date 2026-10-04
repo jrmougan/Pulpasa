@@ -27,8 +27,6 @@ var _stand: OrderStand
 func before_each() -> void:
 	watch_signals(EventBus)
 	_sandbox = SANDBOX_SCENE.instantiate()
-	_sandbox.round_config = load("res://tests/helpers/m0_data/m0_round_config.tres")
-	_sandbox.order_catalog = load("res://tests/helpers/m0_data/orders/order_catalog.tres")
 	add_child_autofree(_sandbox)
 	_player = _sandbox.get_node("Player")
 	_player.global_position = FAR
@@ -173,10 +171,7 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
 
 	assert_true(_press(_stand), "consume la pulsación aunque rechace")
 	assert_signal_emit_count(EventBus, "delivery_rejected", 1)
-	assert_eq(
-		get_signal_parameters(EventBus, "delivery_rejected", 0),
-		[SLOT_ID, order.id, OrderBoard.REJECT_PENALTY]
-	)
+	assert_eq(get_signal_parameters(EventBus, "delivery_rejected", 0), [SLOT_ID, order.id, 0])
 	assert_signal_not_emitted(EventBus, "order_completed")
 	assert_eq(_hold.get_held_item(), box, "la caja rechazada se queda en la mano")
 	assert_eq(_order_for(SLOT_ID).id, order.id, "la comanda sigue viva")
@@ -199,9 +194,6 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
 	assert_true(_press(_stand))
 	assert_signal_not_emitted(EventBus, "order_completed")
 	assert_signal_emit_count(EventBus, "delivery_rejected", 2)
-	assert_eq(
-		get_signal_parameters(EventBus, "delivery_rejected", 1),
-		[SLOT_ID, order.id, OrderBoard.REJECT_PENALTY]
-	)
+	assert_eq(get_signal_parameters(EventBus, "delivery_rejected", 1), [SLOT_ID, order.id, 0])
 	assert_eq(_hold.get_held_item(), box, "la caja rechazada se queda en la mano")
 	assert_eq(_order_for(SLOT_ID).id, order.id, "la comanda sigue viva")

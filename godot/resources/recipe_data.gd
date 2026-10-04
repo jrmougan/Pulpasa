@@ -8,5 +8,4 @@ extends Resource
 @export var ingredient: IngredientData
 @export var box: BoxData
 @export var base_points: int = 0
-@export var base_price: int = 0
 @export_multiline var description: String = ""

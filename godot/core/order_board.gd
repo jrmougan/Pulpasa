@@ -17,13 +17,11 @@ const NO_ORDER: int = -1
 ## 1e-12 y debe caducar en el tick 3600. Es muy inferior a cualquier delta real, así que nunca se
 ## caduca antes del límite (advance(59,9999995) deja 5e-7 s y no caduca).
 const EXPIRY_EPSILON: float = 1e-9
-## Penalizaciones M0 (paridad): ninguna. M1 (D8) las lee de datos (RoundState).
-## Emitimos 1 como flag para que RoundState aplique el valor configurado.
-const REJECT_PENALTY: int = 1
-const EXPIRE_PENALTY: int = 1
 
 var _catalog: OrderCatalog
 var _rng: RandomNumberGenerator
+var _reject_penalty: int
+var _expire_penalty: int
 ## slot_id → comanda viva (original, nunca sale del núcleo).
 var _orders: Dictionary[int, ActiveOrder] = {}
 ## slot_id → order_id de las comandas caducadas en el último `advance` (empate, ADR-002).
@@ -32,9 +30,16 @@ var _next_order_id: int = 1
 var _stopped: bool = false
 
 
-func _init(catalog: OrderCatalog, rng: RandomNumberGenerator) -> void:
+func _init(
+	catalog: OrderCatalog,
+	rng: RandomNumberGenerator,
+	reject_penalty: int = 0,
+	expire_penalty: int = 0
+) -> void:
 	_catalog = catalog
 	_rng = rng
+	_reject_penalty = reject_penalty
+	_expire_penalty = expire_penalty
 
 
 ## Vacía el tablero y reinicia ids. Emite `orders_reset` (los puestos limpian su vista, B16).
@@ -88,7 +93,7 @@ func advance(delta: float) -> void:
 		var order: ActiveOrder = _orders[slot_id]
 		_orders.erase(slot_id)
 		_expired_this_tick[slot_id] = order.id
-		order_expired.emit(order.copy(), EXPIRE_PENALTY)
+		order_expired.emit(order.copy(), _expire_penalty)
 		request_order(slot_id)
 
 
@@ -110,7 +115,7 @@ func try_deliver(slot_id: int, contents: BoxContents) -> ActiveOrder:
 		delivery_rejected.emit(slot_id, order.id, 0)
 		return null
 	if not OrderValidator.matches(order.data, contents):
-		delivery_rejected.emit(slot_id, order.id, REJECT_PENALTY)
+		delivery_rejected.emit(slot_id, order.id, _reject_penalty)
 		return null
 	_orders.erase(slot_id)
 	var completed: ActiveOrder = order.copy()

@@ -5,7 +5,7 @@ const HUD_SCENE: PackedScene = preload("res://ui/hud/hud.tscn")
 const BusScript: GDScript = preload("res://autoload/event_bus.gd")
 const ServiceScript: GDScript = preload("res://autoload/order_service.gd")
 const ManagerScript: GDScript = preload("res://autoload/round_manager.gd")
-const CATALOG: OrderCatalog = preload("res://tests/helpers/m0_data/orders/order_catalog.tres")
+const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
 
 var _bus: Node
 var _service: Node

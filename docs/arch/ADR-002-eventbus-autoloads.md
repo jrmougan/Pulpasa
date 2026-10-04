@@ -123,9 +123,7 @@ Consecuencias de ese orden:
     misma entrega completa la repuesta (1 `order_completed`).
 - **Fin de ronda**: una comanda que caduca en el mismo `advance` que acaba la ronda caduca (paso 2
   antes que 3). Tras `round_finished`, `try_deliver` devuelve `null` sin señales.
-- **Paridad M0**: los tres `OrderData` del prototipo tienen `max_time = 0` → sin paciencia ni
-  `order_patience_changed`. M1 rellena `max_time` (40–90 s) y `first_order_delay` sin cambiar
-  contratos.
+- Los `OrderData` tienen `max_time > 0` (40-90s) y se emite `order_patience_changed` en cada tick. El tablero arranca vacío y las comandas se generan tras `first_order_delay`.
 - **Tickets**: al crearse leen el estado inicial de `order_generated(order)` (`time_left`,
   `max_time`) y luego escuchan `order_patience_changed`; `OrderService.get_active_orders()`
   devuelve copias para reconstruir la vista (p. ej. al cargar la UI tarde).

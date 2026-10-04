@@ -35,7 +35,7 @@ func _ready() -> void:
 	if rng_seed != 0:
 		rng = RandomNumberGenerator.new()
 		rng.seed = rng_seed
-	OrderService.setup(order_catalog, rng)
+	OrderService.setup(order_catalog, null, rng)
 	var slot_ids: Array[int] = []
 	for stand: OrderStand in stands:
 		slot_ids.append(stand.slot_id)

@@ -153,6 +153,7 @@ func test_ac1_level_has_one_player_four_stands_with_orders_hud_and_tickets() -> 
 		assert_eq(_level.get("stands")[i], stands[i])
 		var label: String = (stands[i].get_node("%OrderLabel") as Label3D).text
 		assert_ne(label, "–", "el puesto %d tiene comanda" % (i + 1))
+	RoundManager.round_state.advance(5.0)
 	assert_eq(_slot_ids(OrderService.get_active_orders()), [1, 2, 3, 4] as Array[int])
 
 	var hud: Control = _level.get_node("UI/HUD")
@@ -364,6 +365,7 @@ func test_ac3_retry_after_round_finished_leaves_clean_state() -> void:
 	assert_eq(after["round_started"] - before["round_started"], 1)
 	assert_eq(after["order_generated"] - before["order_generated"], STAND_COUNT)
 	assert_eq(after["round_finished"] - before["round_finished"], 0)
+	RoundManager.round_state.advance(5.0)
 	assert_eq(_slot_ids(OrderService.get_active_orders()), [1, 2, 3, 4] as Array[int])
 	assert_almost_eq(RoundManager.round_state.get_time_left(), config.duration, 0.1)
 	var new_kitchen: CookingStation = _level.get_node("Stations/Kitchen")

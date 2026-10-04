@@ -10,5 +10,4 @@ display_name = "Pulpo Individual"
 translation_key = "RECIPE_INDIVIDUAL"
 ingredient = ExtResource("2_ing")
 box = ExtResource("3_box")
-base_points = 0
-base_price = 10
+base_points = 8

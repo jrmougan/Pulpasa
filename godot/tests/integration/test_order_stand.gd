@@ -30,7 +30,7 @@ func before_each() -> void:
 	add_child_autofree(_service)
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = 5
-	_service.setup(CATALOG, rng)
+	_service.setup(CATALOG, null, rng)
 	_level = add_child_autofree(Node3D.new())
 	_stand = STAND_SCENE.instantiate()
 	_stand.slot_id = SLOT_ID

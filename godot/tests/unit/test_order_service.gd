@@ -4,7 +4,7 @@ extends GutTest
 
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 const OrderServiceScript: GDScript = preload("res://autoload/order_service.gd")
-const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
 
 var _bus: Node
 var _service: Node
@@ -18,7 +18,7 @@ func before_each() -> void:
 
 
 func _setup_default() -> void:
-	_service.setup(load(CATALOG_PATH) as OrderCatalog, _seeded_rng())
+	_service.setup(load(CATALOG_PATH) as OrderCatalog, null, _seeded_rng())
 	watch_signals(_service.board)
 	watch_signals(_bus)
 
@@ -57,7 +57,7 @@ func _assert_same_args(signal_name: String, index: int = 0) -> void:
 
 func test_ac1_setup_creates_board() -> void:
 	assert_null(_service.board)
-	_service.setup(load(CATALOG_PATH) as OrderCatalog, _seeded_rng())
+	_service.setup(load(CATALOG_PATH) as OrderCatalog, null, _seeded_rng())
 	assert_not_null(_service.board)
 	assert_eq(_service.get_active_orders().size(), 0)
 
@@ -100,7 +100,7 @@ func test_ac1_delivery_rejected_forwarded_once_with_same_args() -> void:
 
 
 func test_ac1_patience_and_expiry_forwarded_once_with_same_args() -> void:
-	_service.setup(_patient_catalog(10.0), _seeded_rng())
+	_service.setup(_patient_catalog(10.0), null, _seeded_rng())
 	watch_signals(_service.board)
 	watch_signals(_bus)
 	_service.request_order(0)
@@ -125,7 +125,7 @@ func test_ac1_get_active_orders_returns_copies() -> void:
 func test_ac1_previous_board_no_longer_forwards_after_new_setup() -> void:
 	_setup_default()
 	var previous: OrderBoard = _service.board
-	_service.setup(load(CATALOG_PATH) as OrderCatalog, _seeded_rng())
+	_service.setup(load(CATALOG_PATH) as OrderCatalog, null, _seeded_rng())
 	watch_signals(_bus)
 	previous.request_order(0)
 	assert_signal_not_emitted(_bus, "order_generated")
@@ -135,7 +135,7 @@ func test_ac1_previous_board_no_longer_forwards_after_new_setup() -> void:
 
 func test_ac1_new_setup_does_not_duplicate_forwarding() -> void:
 	_setup_default()
-	_service.setup(load(CATALOG_PATH) as OrderCatalog, _seeded_rng())
+	_service.setup(load(CATALOG_PATH) as OrderCatalog, null, _seeded_rng())
 	watch_signals(_bus)
 	_service.request_order(0)
 	assert_signal_emit_count(_bus, "order_generated", 1)

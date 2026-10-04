@@ -6,9 +6,9 @@ extends RefCounted
 var duration: float = 0.0
 var boxes_delivered: int = 0
 var boxes_per_minute: float = 0.0
-## M1 (D2).
+## Recaudación total de la ronda en euros (M1, D2).
 var revenue: int = 0
-## M1 (D2).
+## Estrellas conseguidas basadas en revenue_thresholds (M1, D2).
 var stars: int = 0
 
 ## Tramos de rendimiento inyectados desde `RoundConfig` (paridad M0: valores de Unity).
@@ -34,13 +34,11 @@ func _init(
 	boxes_per_minute = 0.0 if duration <= 0.0 else boxes_delivered / (duration / 60.0)
 
 	stars = 0
-	if _revenue_thresholds.size() == 3:
-		if revenue >= _revenue_thresholds[2]:
-			stars = 3
-		elif revenue >= _revenue_thresholds[1]:
-			stars = 2
-		elif revenue >= _revenue_thresholds[0]:
-			stars = 1
+	for threshold: int in _revenue_thresholds:
+		if revenue >= threshold:
+			stars += 1
+		else:
+			break
 
 
 ## Texto del primer tramo cuyo umbral supera el ratio (o el último). Vacío si la configuración

@@ -18,7 +18,7 @@ func before_each() -> void:
 	add_child_autofree(_service)
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = 20
-	_service.setup(CATALOG, rng)
+	_service.setup(CATALOG, null, rng)
 
 
 func after_each() -> void:
