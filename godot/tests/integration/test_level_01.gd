@@ -50,6 +50,8 @@ const GRID_MAX: Vector2 = Vector2(8.0, 6.5)
 const BLOCKING_MASK: int = 1 | (1 << 2)
 ## Cuánto puede acercarse el jugador a cada slot de especias (centro a centro, en el suelo).
 const SLOT_APPROACH: float = 0.75
+## Estantería de especias de M1: sal, pimentón, pimentón picante y aceite (4 botes).
+const SPICE_SLOTS: Array[String] = ["SaltSlot", "PaprikaSlot", "HotPaprikaSlot", "OilSlot"]
 ## Señales del bus que escuchan el nivel y la UI (AC3).
 const BUS_SIGNALS: Array[String] = [
 	"orders_reset",
@@ -450,6 +452,7 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 	var kitchen: CookingStation = _level.get_node("Stations/Kitchen")
 	var shelf: Node3D = _level.get_node("Stations/BoxShelf")
 	var spices: Node3D = _level.get_node("Stations/SpiceShelf")
+	var cachelera: Node3D = _level.get_node("Stations/CachelosStorage")
 
 	# Nevera → olla.
 	assert_true(await _reach(player, storage, reachable), "alcanza la nevera")
@@ -458,6 +461,16 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 	assert_true(await _reach(player, kitchen, reachable), "alcanza la olla")
 	assert_true(actor.interact_pressed())
 	assert_true(kitchen.is_cooking())
+	# M1: cachelera → olla (segunda plaza, D9/D10): cuecen a la vez.
+	assert_true(await _reach(player, cachelera, reachable), "alcanza la cachelera")
+	assert_true(actor.interact_pressed())
+	var cachelos: Ingredient = hold.get_held_item() as Ingredient
+	assert_not_null(cachelos, "la cachelera da cachelos")
+	assert_eq(cachelos.data.type, IngredientData.IngredientType.CACHELOS)
+	assert_true(await _reach(player, kitchen, reachable), "vuelve a la olla")
+	assert_true(actor.interact_pressed())
+	assert_null(hold.get_held_item(), "la olla acepta los cachelos junto al pulpo")
+	assert_eq(_pot_contents(kitchen), 2, "pulpo y cachelos a la vez en la olla")
 
 	# Cajas: coge cada una y la entrega (vacía) en cada puesto.
 	var stands: Array[OrderStand] = _stands()
@@ -472,7 +485,7 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 		(hold.get_held_item() as Node).free()
 
 	# Especias: coger y devolver cada bote a su slot.
-	for slot_name: String in ["SaltSlot", "PaprikaSlot", "HotPaprikaSlot"]:
+	for slot_name: String in SPICE_SLOTS:
 		var slot: Slot = spices.get_node(slot_name)
 		var jar: Node3D = slot.get_item()
 		assert_true(await _reach(player, jar, reachable, slot), "alcanza %s" % slot_name)
@@ -491,12 +504,21 @@ func test_ac4_spice_slots_do_not_stop_player_far_from_the_shelf() -> void:
 	var player: Player = _player()
 	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(player)
 	var spices: Node3D = _level.get_node("Stations/SpiceShelf")
-	for slot_name: String in ["SaltSlot", "PaprikaSlot", "HotPaprikaSlot"]:
+	for slot_name: String in SPICE_SLOTS:
 		var slot: Node3D = spices.get_node(slot_name)
 		var nearest: float = INF
 		for cell: Vector2i in reachable:
 			nearest = minf(nearest, _cell_pos(cell).distance_to(_flat(slot.global_position)))
 		assert_lt(nearest, SLOT_APPROACH, "%s: el jugador llega a %.2f m" % [slot_name, nearest])
+
+
+## Ingredientes que hay dentro de la olla (en sus anclas).
+func _pot_contents(kitchen: CookingStation) -> int:
+	var count: int = 0
+	for node: Node in kitchen.find_children("*", "", true, false):
+		if node is Ingredient:
+			count += 1
+	return count
 
 
 func _detector(player: Player) -> InteractionDetector:
