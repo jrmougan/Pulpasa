@@ -1,7 +1,7 @@
 ---
 id: PUL-042
 title: Escribir la biblia de arte y la lista de assets
-status: ready
+status: review
 milestone: M2
 role: game-designer
 deps: []
@@ -31,12 +31,19 @@ de arte común para que las piezas casen entre sí.
 - Solo documentación. Coherente con D14 (3D ortográfico) y D18.
 
 ## Acceptance
-- [ ] AC1 Biblia con estilo, paleta, reglas técnicas y de legibilidad
-- [ ] AC2 Lámina de referencia/moodboard (imágenes propias o descripciones; sin imágenes de terceros sin licencia, D16)
-- [ ] AC3 Lista de assets revisada frente a PUL-044..PUL-055
+- [x] AC1 Biblia con estilo, paleta, reglas técnicas y de legibilidad
+- [x] AC2 Lámina de referencia/moodboard (imágenes propias o descripciones; sin imágenes de terceros sin licencia, D16)
+- [x] AC3 Lista de assets revisada frente a PUL-044..PUL-055
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Leer fichas PUL-043..PUL-055, `decisions.md` (D14, D16, D18, D20), `scale_check.tscn`, cámara y placeholders para fijar medidas reales.
+2. Escribir `docs/art/art-bible.md`: estilo, referencias descritas, paleta hex, reglas técnicas, legibilidad y revisión de la lista de assets.
+3. Lámina propia `docs/art/moodboard.svg` (sin imágenes de terceros) y captura en evidencia.
+4. Comprobar contrastes de luminancia citados, `tools/verify.sh` y `check_owns`.
 
 ## Evidence
-(Lo rellena el worker.)
+- `docs/art/art-bible.md`: §1 estilo/referencias, §2 reglas técnicas y paleta, §3 legibilidad (pulpo, cachelos, cajas/distintivos D18), §4 revisión de PUL-044..055, §5 checklist por asset.
+- `docs/art/moodboard.svg` (obra propia) y su render `docs/evidence/PUL-042/moodboard.png`.
+- Contrastes calculados (WCAG): pulpo crudo/cocido 3,1:1; patata cruda/cocida 3,3:1.
+- Revisión de assets: 7 fichas con ajuste (044, 046, 047, 052, 053, 054, 055), sin fichas que quitar; faltan pegatinas (a PUL-047), botes manipulables (tras PUL-040) y VFX (ficha posterior).
+- Pendiente de coordinador: la ficha PUL-054 menciona módulos que dependen de PUL-041; las fichas de asset aún no referencian las rutas/tris de la biblia, solo `art-bible.md` en general.
