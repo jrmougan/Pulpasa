@@ -99,6 +99,19 @@ func interact(actor: InteractionComponent) -> bool:
 		return Slot.pick_up_item(actor, self)
 	if held is Ingredient and _can_cut(held as Ingredient):
 		_cut(held as Ingredient)
+	elif (
+		held is Ingredient
+		and is_full()
+		and (held as Ingredient).is_cooked()
+		and (held as Ingredient).data != null
+		and (held as Ingredient).data.type == IngredientData.IngredientType.CACHELOS
+	):
+		var cachelos_seasoning: SeasoningData = load("res://data/seasonings/cachelos.tres")
+		if can_season(cachelos_seasoning):
+			var ing: Ingredient = actor.holder.drop() as Ingredient
+			if ing != null:
+				_season(cachelos_seasoning)
+				ing.queue_free()
 	elif held is SeasoningItem and is_full() and (held as SeasoningItem).data != null:
 		_season((held as SeasoningItem).data)
 	return true
@@ -114,7 +127,13 @@ func on_dropped() -> void:
 
 
 func _can_cut(ingredient: Ingredient) -> bool:
-	return data != null and ingredient.is_cooked() and ingredient.data != null and not is_full()
+	return (
+		data != null
+		and ingredient.is_cooked()
+		and ingredient.data != null
+		and not is_full()
+		and ingredient.data.type == IngredientData.IngredientType.OCTOPUS
+	)
 
 
 ## Un corte: llena `fill_per_press` y gasta `fill_per_press * amount_per_full_box` de pulpo.

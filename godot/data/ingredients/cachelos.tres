@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="IngredientData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/ingredient_data.gd" id="1_ing"]
+
+[resource]
+script = ExtResource("1_ing")
+display_name = "Cachelos"
+type = 1
+is_cookable = true
+is_cuttable = false
+cook_time = 5.0
+total_capacity = 100.0
+amount_per_full_box = 0.0

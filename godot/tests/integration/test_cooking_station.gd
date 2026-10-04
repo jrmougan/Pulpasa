@@ -178,17 +178,18 @@ func test_ac2_rejects_box() -> void:
 	assert_null(_kitchen.get_ingredient())
 
 
-func test_ac2_capacity_one() -> void:
+func test_ac1_capacity_two() -> void:
 	var first: Ingredient = _octopus_in_hand()
 	_kitchen.interact(_actor)
 	var second: Ingredient = _octopus_in_hand()
 	_kitchen.interact(_actor)
-	assert_eq(_hold.get_held_item(), second, "el segundo se queda en la mano")
-	assert_eq(_kitchen.get_ingredient(), first)
-	_cook_for(5.0)
+	var third: Ingredient = _octopus_in_hand()
 	_kitchen.interact(_actor)
-	assert_eq(_hold.get_held_item(), second, "con la mano llena no se recoge el cocido")
-	assert_eq(_kitchen.get_ingredient(), first)
+	assert_eq(_hold.get_held_item(), third, "el tercero se queda en la mano")
+	_cook_for(5.0)
+	assert_true(first.is_cooked())
+	assert_true(second.is_cooked())
+	assert_false(third.is_cooked())
 
 
 func test_ac2_rejected_item_is_not_dropped_on_press() -> void:

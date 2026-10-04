@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/items/ingredient.gd" id="1_f587m"]
+[ext_resource type="Resource" path="res://data/ingredients/cachelos.tres" id="2_uev6n"]
+[ext_resource type="Script" path="res://components/highlightable.gd" id="3_apy0q"]
+[ext_resource type="PackedScene" path="res://ui/widgets/world_progress_bar.tscn" id="4_hxi4x"]
+[ext_resource type="Script" path="res://ui/widgets/world_progress_bar.gd" id="5_pyna5"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_deg2y"]
+radius = 0.26
+
+[node name="Cachelos" type="RigidBody3D" groups=["interactable", "pickable"] unique_id=1228922982]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_f587m")
+data = ExtResource("2_uev6n")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1950228366]
+shape = SubResource("SphereShape3D_deg2y")
+
+[node name="Model" type="Node3D" parent="." unique_id=2070337957]
+
+[node name="@CSGSphere3D@2" type="CSGSphere3D" parent="Model" unique_id=1015417990]
+radius = 0.26
+
+[node name="AnchorPoint" type="Marker3D" parent="." unique_id=449312865]
+
+[node name="Highlightable" type="Node" parent="." unique_id=1134559936]
+script = ExtResource("3_apy0q")
+
+[node name="AmountBar" type="Sprite3D" parent="." unique_id=1276433737 instance=ExtResource("4_hxi4x")]
+pixel_size = 0.003
+billboard = 1
+no_depth_test = true
+render_priority = 10
+script = ExtResource("5_pyna5")

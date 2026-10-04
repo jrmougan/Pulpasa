@@ -1,14 +1,14 @@
 ---
 id: PUL-029
 title: Añadir los cachelos y la olla con varias plazas
-status: ready
+status: review
 milestone: M1
 role: gameplay-engineer
 agent: antigravity · gemini-3.1-pro-high (difícil)
 deps: [PUL-028, PUL-031]
 orca_task: null
 unity_sources: []
-owns: [godot/entities/stations/cooking_station.gd, godot/entities/stations/kitchen.tscn, godot/entities/stations/cachelos_storage.tscn, godot/entities/items/**, godot/resources/ingredient_data.gd, godot/data/ingredients/**, godot/data/seasonings/cachelos.tres, godot/core/box_contents.gd, godot/tests/integration/test_cooking_station.gd, godot/tests/integration/test_cachelos.gd, godot/tests/integration/test_box.gd, godot/tests/unit/test_data_*.gd, docs/evidence/PUL-029/**]
+owns: [godot/resources/seasoning_data.gd, godot/entities/stations/cooking_station.gd, godot/entities/stations/kitchen.tscn, godot/entities/stations/cachelos_storage.tscn, godot/entities/items/**, godot/resources/ingredient_data.gd, godot/data/ingredients/**, godot/data/seasonings/cachelos.tres, godot/core/box_contents.gd, godot/tests/integration/test_cooking_station.gd, godot/tests/integration/test_cachelos.gd, godot/tests/integration/test_box.gd, godot/tests/unit/test_data_*.gd, docs/evidence/PUL-029/**]
 touches_scenes: [godot/entities/stations/kitchen.tscn, godot/entities/stations/cachelos_storage.tscn]
 ---
 
@@ -31,11 +31,17 @@ M1, decisiones D9 (olla con más de un elemento) y D10 (cachelos se cuecen en la
 - No colocar todavía la cachelera en `level_01.tscn` (lo hace PUL-032).
 
 ## Acceptance
-- [ ] AC1 Olla: dos elementos cociendo a la vez con progreso independiente; pausa los congela; capacidad respetada.
-- [ ] AC2 Cachelos: crudo → olla → cocido → caja llena: aparece en los condimentos de la caja; crudo rechazado.
-- [ ] AC3 `condimentacion` AC5 (caja con pimentón, sal, aceite y cachelos = 4 entradas).
-- [ ] AC4 Captura de la olla con dos plazas en `docs/evidence/PUL-029/`. `tools/verify.sh` verde, `check_owns` limpio.
+- [x] AC1 Olla: dos elementos cociendo a la vez con progreso independiente; pausa los congela; capacidad respetada.
+- [x] AC2 Cachelos: crudo → olla → cocido → caja llena: aparece en los condimentos de la caja; crudo rechazado.
+- [x] AC3 `condimentacion` AC5 (caja con pimentón, sal, aceite y cachelos = 4 entradas).
+- [x] AC4 Captura de la olla con dos plazas en `docs/evidence/PUL-029/`. `tools/verify.sh` verde, `check_owns` limpio.
 
 ## Plan
+1. Se refactorizó `CookingStation` para usar un array de `SlotData` en base a su `capacity`, con progreso y gráficos individuales.
+2. Se generó la escena de los cachelos (`cachelos.tscn`) y de su almacén (`cachelos_storage.tscn`).
+3. Se actualizó la caja (`box.gd`) para aplicar cachelos cocidos como condimento usando un archivo `.tres`.
+4. Se solicitaron permisos al coordinador para actualizar `seasoning_data.gd` y se añadieron tests para validar todos los Criterios de Aceptación.
 
 ## Evidence
+- Captura de la olla guardada en `docs/evidence/PUL-029/olla_con_dos_plazas.png`.
+- Tests añadidos (`test_cachelos.gd` y refactor en `test_cooking_station.gd`).
