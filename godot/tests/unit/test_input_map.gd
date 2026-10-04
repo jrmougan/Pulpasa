@@ -1,5 +1,6 @@
 extends GutTest
 ## PUL-004 AC3: el InputMap estático de project.godot sigue ADR-004 §1.
+## PUL-034 AC4: toda acción p<n>_* y pause tiene binding de teclado y de mando.
 
 ## Plantilla de mando de ADR-004: device 0 para J1 y 1 para J2; teclado y globales, -1.
 const ANY_DEVICE: int = -1
@@ -106,3 +107,22 @@ func test_ac3_ui_actions_have_keyboard_and_gamepad() -> void:
 func test_ac3_ui_accept_and_cancel_use_a_and_b_from_any_pad() -> void:
 	assert_true(_has_button(&"ui_accept", JOY_BUTTON_A, ANY_DEVICE))
 	assert_true(_has_button(&"ui_cancel", JOY_BUTTON_B, ANY_DEVICE))
+
+
+func test_ac4_every_player_action_and_pause_has_keyboard_and_pad() -> void:
+	var checked: int = 0
+	for action: StringName in InputMap.get_actions():
+		var name: String = String(action)
+		var is_player: bool = name.length() > 2 and name[0] == "p" and name[2] == "_"
+		if not is_player and action != &"pause":
+			continue
+		var has_key: bool = false
+		var has_pad: bool = false
+		for ev: InputEvent in InputMap.action_get_events(action):
+			has_key = has_key or ev is InputEventKey
+			has_pad = has_pad or ev is InputEventJoypadButton or ev is InputEventJoypadMotion
+		assert_true(has_key, "%s sin teclado" % action)
+		assert_true(has_pad, "%s sin mando" % action)
+		checked += 1
+	assert_eq(checked, BINDINGS.size(), "acciones p<n>_* + pause de ADR-004")
+	assert_false(InputMap.has_action(&"p2_switch"), "solo J1 cambia de personaje")

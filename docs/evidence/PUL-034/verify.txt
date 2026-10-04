@@ -1,0 +1,133 @@
+# tools/verify.sh (PUL-034, ronda de revisión, 2026-10-04)
+== gdformat --check
+113 files would be left unchanged
+== gdlint
+Success: no problems found
+== import
+== tests (GUT)
+==============================================
+==============================================
+Tests               466
+Passing Tests       466
+Asserts            3667
+== smoke run (escena principal, 120 frames)
+OK
+✓ verify OK
+
+# Suites de PUL-034 (de godot/.gut_reports/last.log)
+res://tests/unit/test_device_assignment.gd
+* test_ac1_constants_are_distinct_and_any_is_godot_wildcard
+* test_ac1_single_gives_any_to_p1_and_none_to_p2
+* test_ac1_coop_without_pads_is_keyboard_only
+* test_ac1_coop_with_one_pad_gives_it_to_p2
+* test_ac1_coop_with_two_or_more_pads_in_order
+* test_ac1_coop_never_uses_any_nor_repeats_a_pad
+* test_ac1_player_with_finds_exact_pad_only
+* test_ac1_disconnecting_p2_pad_affects_p2_only
+* test_ac1_disconnecting_unassigned_pad_affects_nobody
+* test_ac1_single_pad_loss_affects_p1_only_when_no_pad_remains
+* test_ac1_reconnection_returns_pad_to_p2_not_p1
+* test_ac1_new_pad_goes_to_first_player_in_none
+* test_ac1_lost_pad_goes_to_first_none_if_owner_has_another
+* test_ac1_connection_is_ignored_when_full_assigned_or_single
+* test_ac1_single_reconnection_returns_any_player_after_losing_all_pads
+15/15 passed.
+
+res://tests/integration/test_device_input.gd
+* test_ac2_coop_keyboard_and_one_pad_moves_only_p2
+* test_ac2_pad_of_p2_drives_p2_vector_through_input
+* test_ac2_two_pads_each_moves_only_its_player
+* test_ac2_coop_without_pads_leaves_players_keyboard_only
+* test_ac2_single_accepts_any_pad_for_p1_and_none_for_p2
+* test_ac2_keyboard_events_are_never_touched
+* test_ac2_reset_input_restores_template_devices
+7/7 passed.
+
+res://tests/unit/test_game_state.gd
+* test_ac2_set_paused_true_pauses_tree_and_emits_once
+* test_ac2_set_paused_false_resumes_tree
+* test_ac2_set_paused_without_change_does_not_emit
+* test_ac2_game_state_runs_while_paused
+* test_default_mode_is_single
+* test_start_level_sets_mode_and_tolerates_missing_scene
+* test_go_to_main_menu_tolerates_missing_scene
+* test_start_level_unpauses
+* test_restart_level_unpauses
+    390 Orphans
+        * [Level01:<Node3D#878941572755>(level.gd)] + 389
+* test_ac3_assign_devices_emits_device_assigned_per_player
+* test_ac3_get_device_before_assignment_is_none
+* test_ac3_disconnecting_assigned_pad_in_round_pauses_and_emits_once
+* test_ac3_disconnected_player_keeps_keyboard_and_loses_pad
+* test_ac3_disconnecting_unassigned_pad_does_nothing
+* test_ac3_disconnection_outside_round_does_not_pause
+* test_ac3_reconnection_emits_device_assigned_and_returns_pad_to_p2
+* test_ac3_new_pad_in_coop_goes_to_free_player
+* test_ac3_single_pad_loss_in_round_pauses_and_keeps_any
+* test_ac3_single_any_pad_reconnection_emits_device_assigned_any
+* test_ac3_hot_plug_before_any_assignment_is_ignored
+* test_ac5_move_deadzone_comes_from_input_config
+390 orphans
+21/21 passed.
+
+res://tests/unit/test_input_map.gd
+* test_ac3_input_map_has_all_adr004_actions
+* test_ac3_actions_have_keyboard_binding
+* test_ac3_actions_have_gamepad_button_binding
+* test_ac3_move_actions_have_left_stick_binding
+* test_ac3_each_action_has_exactly_its_bindings
+* test_ac3_player_actions_do_not_share_gamepad_device
+* test_ac3_ui_actions_have_keyboard_and_gamepad
+* test_ac3_ui_accept_and_cancel_use_a_and_b_from_any_pad
+* test_ac4_every_player_action_and_pause_has_keyboard_and_pad
+9/9 passed.
+
+res://tests/integration/test_level_01.gd
+* test_ac1_play_target_is_level_01
+* test_ac1_level_has_one_player_four_stands_with_orders_hud_and_tickets
+* test_ac1_level_root_only_uses_level_script
+* test_ac2_positions_and_rotations_match_unity_level
+* test_ac2_camera_matches_unity_main_camera
+* test_ac2_stand_scale_matches_unity
+* test_ac2_kitchen_layout_has_floor_and_17_tables_on_world_layer
+* test_ac2_environment_has_world_environment_and_sun
+* test_ui_does_not_cover_fridge_pot_or_shelves_with_game_camera
+* test_ui_layout_matches_unity_strip_and_corner
+* test_camera_rig_default_pose_is_unity_view_and_level_overrides_it
+* test_level_script_reports_missing_configuration
+ERROR: Level: faltan round_config u order_catalog
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scenes/levels/level.gd:18)
+       [1] add_child_autofree (res://addons/gut/test.gd:2784)
+       [2] test_level_script_reports_missing_configuration (res://tests/integration/test_level_01.gd:328)
+       [3] _run_test (res://addons/gut/gut.gd:622)
+       [4] _test_the_scripts (res://addons/gut/gut.gd:835)
+       [5] _run_test (res://addons/gut/gut.gd:650)
+       [6] test_ui_layout_matches_unity_strip_and_corner (res://tests/integration/test_level_01.gd:304)
+       [7] _end_wait (res://addons/gut/awaiter.gd:126)
+       [8] _on_tree_process_frame (res://addons/gut/awaiter.gd:68)
+[ExpectedError]Expected push_error error containing 'faltan round_config u order_catalog'.  
+* test_level_script_reports_stand_without_slot_id
+ERROR: Level: el puesto SinSlot no tiene slot_id
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] get_slot_ids (res://scenes/levels/level.gd:30)
+       [1] test_level_script_reports_stand_without_slot_id (res://tests/integration/test_level_01.gd:338)
+       [2] _run_test (res://addons/gut/gut.gd:622)
+       [3] _test_the_scripts (res://addons/gut/gut.gd:835)
+       [4] _run_test (res://addons/gut/gut.gd:650)
+       [5] test_ui_layout_matches_unity_strip_and_corner (res://tests/integration/test_level_01.gd:304)
+       [6] _end_wait (res://addons/gut/awaiter.gd:126)
+       [7] _on_tree_process_frame (res://addons/gut/awaiter.gd:68)
+[ExpectedError]Expected push_error error containing 'SinSlot no tiene slot_id'.  
+* test_ac3_retry_after_round_finished_leaves_clean_state
+* test_m1_level_wires_expire_penalty_from_data
+    30 Orphans
+        * [@PanelContainer@509:<PanelContainer#470265369061>(order_ticket.gd)] + 9
+        * [OrderTicket:<PanelContainer#469493617165>(order_ticket.gd)] + 9
+        * [OrderTicket:<PanelContainer#471154561567>(order_ticket.gd)] + 9
+* test_ac4_player_reaches_and_interacts_with_every_station_and_slot
+* test_ac4_spice_slots_do_not_stop_player_far_from_the_shelf
+17/17 passed.
+
