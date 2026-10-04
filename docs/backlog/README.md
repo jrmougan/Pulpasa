@@ -49,4 +49,5 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-034 | M2 | gameplay-engineer | done | Asignar mandos a jugadores y gestionar su conexión |
 | PUL-035 | M2 | gameplay-engineer | done | Cambiar de personaje en modo individual y marcar el activo |
 | PUL-036 | M2 | ui-engineer | done | Menú por modo, avisos de mando y UI navegable solo con mando |
-| PUL-037 | M2 | qa-tester | ready | Integrar dos personajes en level_01 y pasar el QA de M2 |
+| PUL-037 | M2 | qa-tester | done | Integrar dos personajes en level_01 y pasar el QA de M2 |
+| PUL-038 | M2 | ui-engineer | draft | Evitar que el aviso de mando desconectado tape los tickets |

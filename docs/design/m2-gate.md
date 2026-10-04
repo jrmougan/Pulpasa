@@ -10,7 +10,8 @@ Duración estimada: 30 min (tres partidas cortas y las pruebas sueltas).
 ## 1. Preparar
 
 ```sh
-cd godot && godot            # escena principal: el menú
+# Desde la raíz del repo:
+godot --path godot           # escena principal: el menú
 # o el build: tools/export.sh linux && build/linux/pulpasa.x86_64 --resolution 1280x720
 ```
 Conecta los mandos **antes** de pulsar Individual o Local 2P (el reparto se hace al empezar).
@@ -40,7 +41,7 @@ Conecta los mandos **antes** de pulsar Individual o Local 2P (el reparto se hace
 3. Entregad cada uno al menos una comanda: la recaudación del HUD es la misma para los dos.
 4. Desconecta el mando de J2 en mitad de la ronda: la partida se pausa con «Mando de J2
    desconectado». Vuelve a conectarlo y reanuda: J2 recupera su personaje.
-5. Deja acabar la ronda (o sal y entra): game over → **Reintentar** con A, sin tocar el teclado;
+5. Deja acabar la ronda: game over → **Reintentar** con A, sin tocar el teclado;
    la partida vuelve a ser Local 2P.
 
 ### C. Local 2P con teclado + un mando

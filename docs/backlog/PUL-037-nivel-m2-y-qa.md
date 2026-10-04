@@ -1,11 +1,11 @@
 ---
 id: PUL-037
 title: Integrar dos personajes en level_01 y pasar el QA de M2
-status: review
+status: done
 milestone: M2
 role: qa-tester
 deps: [PUL-034, PUL-035, PUL-036]
-orca_task: null
+orca_task: task_245617a5688c
 unity_sources: []
 owns: [godot/scenes/levels/**, godot/tests/integration/test_level_01.gd, godot/tests/integration/test_parity_smoke.gd, godot/tests/integration/test_m2_flow.gd, godot/tests/integration/test_m2_flow.gd.uid, docs/evidence/PUL-037/**, docs/design/m2-gate.md]
 touches_scenes: [godot/scenes/levels/level_01.tscn]
