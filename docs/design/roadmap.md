@@ -8,8 +8,8 @@ Propuesta completa (privada): https://claude.ai/artifact/PstRxmwwgejjsphmEXCkJe
 | F0 | Inventario (PUL-001), GDD de trabajo (PUL-002), ADRs (PUL-003) | Aprobar ADRs y alcance |
 | M0 | Migración hasta paridad con Unity, sin sus bugs — **cerrado 2026-10-04** (smoke automático PUL-025 en verde; puerta humana descartada por el responsable, D17; PUL-013 sigue bloqueada por licencia) | Archivar Unity (pendiente de decidir) |
 | M1 | Paciencia, puntuación y estrellas, aceite y cachelos, iconos en tickets — **cerrado 2026-10-04** (PUL-027..033) | — |
-| M2 | Coop local 2P, mando, cambio de personaje, menú por modo — **técnico cerrado 2026-10-04** (PUL-034..037; guía en `m2-gate.md`) | Playtest de game feel (pendiente) |
-| M3 | Audio completo, feedback, olla que se pasa, dificultad por fases | — |
+| M2 | Coop local 2P, mando, cambio de personaje, menú por modo — **técnico cerrado 2026-10-04** (PUL-034..037; guía en `m2-gate.md`) | Playtest de game feel (hecho 2026-10-05: bug de entrega PUL-039; rediseños D18 condimentos PUL-040, D19 mapa PUL-041; D20 arte PUL-042) |
+| M3 | Arte propio en Blender (D20, PUL-043..055), audio completo, feedback, olla que se pasa, dificultad por fases | — |
 | M4 | Balanceo, opciones, gallego, builds Win/Linux, playtests | Publicar alpha |
 
 ## Fases de M0

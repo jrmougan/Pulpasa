@@ -25,7 +25,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-010 | M0·3 | godot-architect | done | Exportación Linux, Windows y Web |
 | PUL-011 | M0·4 | gameplay-engineer | done | Componentes comunes: Control, Holder, PlayerInput |
 | PUL-012 | M0·4 | gameplay-engineer | done | Escena del jugador, HoldComponent y cámara |
-| PUL-013 | M0·4 | asset-pipeline | blocked (licencia del modelo) | Modelo y AnimationTree del jugador |
+| PUL-013 | M0·4 | asset-pipeline | superseded (→ PUL-044, D20) | Modelo y AnimationTree del jugador |
 | PUL-014 | M0·5 | gameplay-engineer | done | Interacción común: scoring, componente y contrato |
 | PUL-015 | M0·5 | gameplay-engineer | done | Detector 3D, resaltado por shader y slots |
 | PUL-016 | M0·6 | gameplay-engineer | done | Objetos: pulpo, caja y condimento |
@@ -51,3 +51,20 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-036 | M2 | ui-engineer | done | Menú por modo, avisos de mando y UI navegable solo con mando |
 | PUL-037 | M2 | qa-tester | done | Integrar dos personajes en level_01 y pasar el QA de M2 |
 | PUL-038 | M2 | ui-engineer | draft | Evitar que el aviso de mando desconectado tape los tickets |
+| PUL-039 | M2 | gameplay-engineer | ready | Reproducir y arreglar que no se pueda entregar en level_01 |
+| PUL-040 | M2 | game-designer | ready | Diseñar la estación de condimentos y los distintivos de la caja |
+| PUL-041 | M2 | game-designer | ready | Proponer dos o tres distribuciones de la cocina |
+| PUL-042 | M2 | game-designer | ready | Escribir la biblia de arte y la lista de assets |
+| PUL-043 | M2 | asset-pipeline | draft | Preparar el MCP de Blender y el pipeline Blender → glTF → Godot |
+| PUL-044 | M3 | asset-pipeline | draft | Modelar y animar el personaje (dos variantes) |
+| PUL-045 | M3 | asset-pipeline | draft | Modelar el pulpo crudo, cocido y troceado |
+| PUL-046 | M3 | asset-pipeline | draft | Modelar los cachelos crudos y cocidos |
+| PUL-047 | M3 | asset-pipeline | draft | Modelar las tres cajas/platos de madera y sus distintivos |
+| PUL-048 | M3 | asset-pipeline | draft | Modelar el caldero de cobre y el fogón |
+| PUL-049 | M3 | asset-pipeline | draft | Modelar el arcón de pulpo |
+| PUL-050 | M3 | asset-pipeline | draft | Modelar la cachelera (saco o cesto de patatas) |
+| PUL-051 | M3 | asset-pipeline | draft | Modelar la estantería de cajas |
+| PUL-052 | M3 | asset-pipeline | draft | Modelar la estación de condimentos |
+| PUL-053 | M3 | asset-pipeline | draft | Modelar el puesto de entrega |
+| PUL-054 | M3 | asset-pipeline | draft | Modelar las encimeras modulares |
+| PUL-055 | M3 | asset-pipeline | draft | Modelar el entorno de romería |

@@ -1,7 +1,7 @@
 ---
 id: PUL-013
 title: Sustituir la cápsula por el modelo del personaje con AnimationTree
-status: blocked
+status: superseded
 milestone: M0
 role: asset-pipeline
 deps: [PUL-012]
@@ -13,6 +13,8 @@ touches_scenes: [godot/entities/player/player.tscn]
 
 **Bloqueada:** `freakycapucha.fbx` está en «Pendientes» de `docs/assets/licenses.md` (D16). Se
 desbloquea cuando el responsable confirme que es propio, o cuando haya otro modelo con licencia.
+
+**Sustituida por PUL-044** (D20: personaje propio en Blender).
 
 ## Target
 Fase 4 de M0. `scene-tree.md` §3: `Model` + `%AnimationTree`.
