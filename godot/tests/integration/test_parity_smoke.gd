@@ -163,6 +163,19 @@ func _cooked_octopus(leftover: Ingredient) -> Ingredient:
 	return octopus
 
 
+## Cachelos de la cachelera → olla → cocidos sobre la caja llena (PUL-033).
+func _season_with_cachelos(box: Box) -> void:
+	assert_true(_press(_level.get_node("Stations/CachelosStorage")), "cachelera: da cachelos")
+	var cachelos: Ingredient = _hold().get_held_item() as Ingredient
+	assert_not_null(cachelos)
+	assert_true(_press(_kitchen()), "olla: acepta los cachelos crudos")
+	await wait_for_signal(_kitchen().cooking_finished, cachelos.data.cook_time + COOK_MARGIN)
+	assert_true(cachelos.is_cooked(), "cachelos cocidos")
+	assert_true(_press(_kitchen()), "olla: devuelve los cachelos cocidos")
+	assert_eq(_hold().get_held_item(), cachelos)
+	assert_true(_press(box), "cachelos sobre la caja llena")
+
+
 ## Flujo completo para la comanda del puesto `slot_id`: caja de la estantería al suelo, pulpo
 ## cocido, cortes hasta llenarla, condimentos de la comanda y entrega. Devuelve el pulpo que
 ## sobra en el suelo, o `null` si se gastó entero.
@@ -194,6 +207,9 @@ func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 	assert_null(_hold().get_held_item())
 
 	for seasoning: SeasoningData in order.data.seasonings:
+		if seasoning.type == SeasoningData.SeasoningType.CACHELOS:
+			await _season_with_cachelos(box)
+			continue
 		var jar_slot: Slot = _spice_slot(seasoning)
 		assert_not_null(jar_slot, "estantería de %s" % seasoning.resource_path)
 		assert_true(_press(jar_slot.get_item()), "coge el bote")

@@ -122,3 +122,15 @@ func test_ac3_four_seasonings() -> void:
 
 	var contents := box.get_contents()
 	assert_eq(contents.seasonings.size(), 4)
+
+
+func test_pul033_cachelo_material_changes_and_colors_differ() -> void:
+	var cachelo: Ingredient = CACHELOS_SCENE.instantiate()
+	_level.add_child(cachelo)
+	var mesh: MeshInstance3D = cachelo.get_node("Model").find_children("*", "MeshInstance3D")[0]
+	assert_eq(mesh.material_override, cachelo.raw_material, "crudo")
+	cachelo.set_cooked()
+	assert_eq(mesh.material_override, cachelo.cooked_material, "cocido")
+	var raw: Color = (cachelo.raw_material as StandardMaterial3D).albedo_color
+	var cooked: Color = (cachelo.cooked_material as StandardMaterial3D).albedo_color
+	assert_gt(absf(raw.v - cooked.v), 0.3, "crudo y cocido se distinguen por luminosidad")

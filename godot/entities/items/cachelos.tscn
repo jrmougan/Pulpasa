@@ -23,7 +23,7 @@ cooked_material = ExtResource("4_ccook")
 shape = SubResource("SphereShape3D_deg2y")
 
 [node name="Model" parent="." unique_id=2070337957 instance=ExtResource("5_cmod")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.26, 0)
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 0, 0, 0)
 
 [node name="AnchorPoint" type="Marker3D" parent="." unique_id=449312865]
 unique_name_in_owner = true
