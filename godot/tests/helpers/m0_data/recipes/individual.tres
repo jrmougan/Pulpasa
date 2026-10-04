@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" path="res://resources/recipe_data.gd" id="1_rec"]
 [ext_resource type="Resource" path="res://data/ingredients/octopus.tres" id="2_ing"]
-[ext_resource type="Resource" path="res://data/boxes/large.tres" id="3_box"]
+[ext_resource type="Resource" path="res://data/boxes/small.tres" id="3_box"]
 
 [resource]
 script = ExtResource("1_rec")
-display_name = "Pulpo Familiar"
-translation_key = "RECIPE_FAMILIAR"
+display_name = "Pulpo Individual"
+translation_key = "RECIPE_INDIVIDUAL"
 ingredient = ExtResource("2_ing")
 box = ExtResource("3_box")
-base_points = 12
+base_points = 0

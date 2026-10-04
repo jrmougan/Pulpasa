@@ -17,11 +17,13 @@ var _config: RoundConfig
 var _board: OrderBoard
 var _time_left: float = 0.0
 var _boxes_delivered: int = 0
-## M0: siempre 0 (paridad). M1 (D2) suma puntos y resta penalizaciones.
+## Recaudación actual en euros (M1, D2).
 var _revenue: int = 0
 var _running: bool = false
 var _finished: bool = false
 var _result: RoundResult
+var _slot_ids: Array[int] = []
+var _first_orders_filled: bool = false
 
 
 func _init(config: RoundConfig, board: OrderBoard) -> void:
@@ -34,15 +36,21 @@ func _init(config: RoundConfig, board: OrderBoard) -> void:
 
 
 ## Arranque determinista (B10, B11): reset del tablero, comandas iniciales, reloj y `round_started`.
+## Con `first_order_delay` > 0 (M1) las comandas iniciales se difieren a `advance`; si es 0
+## (paridad M0) se generan aquí, antes de `round_started` (signals.md).
 func start(slot_ids: Array[int]) -> void:
 	_time_left = _config.duration
 	_boxes_delivered = 0
 	_revenue = 0
 	_finished = false
 	_result = null
+	_slot_ids = slot_ids
+	_first_orders_filled = false
 	_board.reset()
-	_board.fill_slots(slot_ids)
 	_running = true
+	if _config.first_order_delay <= 0.0:
+		_board.fill_slots(_slot_ids)
+		_first_orders_filled = true
 	round_time_changed.emit(_time_left)
 	round_started.emit(_config.duration)
 
@@ -56,6 +64,11 @@ func advance(delta: float) -> void:
 	_board.advance(d)
 	var previous_second: int = _whole_second(_time_left)
 	_time_left -= d
+
+	if not _first_orders_filled and (_config.duration - _time_left) >= _config.first_order_delay:
+		_board.fill_slots(_slot_ids)
+		_first_orders_filled = true
+
 	if _time_left <= TIME_EPSILON:
 		_time_left = 0.0
 	if _whole_second(_time_left) != previous_second:
@@ -98,7 +111,8 @@ func _finish() -> void:
 		_boxes_delivered,
 		_revenue,
 		_config.performance_thresholds,
-		_config.performance_texts
+		_config.performance_texts,
+		_config.revenue_thresholds
 	)
 	round_finished.emit(_result)
 
@@ -107,15 +121,22 @@ func _whole_second(time_left: float) -> int:
 	return ceili(time_left - TIME_EPSILON)
 
 
-func _on_order_completed(_order: ActiveOrder, _points: int) -> void:
+func _on_order_completed(order: ActiveOrder, points: int) -> void:
+	var bonus: int = 0
+	if order.max_time > 0.0:
+		bonus = floori((order.time_left / order.max_time) * _config.time_bonus_max)
+	_revenue = maxi(0, _revenue + points + bonus)
 	_boxes_delivered += 1
 	score_changed.emit(_boxes_delivered, _revenue)
 
 
-func _on_order_expired(_order: ActiveOrder, _penalty: int) -> void:
-	score_changed.emit(_boxes_delivered, _revenue)
+func _on_order_expired(_order: ActiveOrder, penalty: int) -> void:
+	if penalty > 0:
+		_revenue = maxi(0, _revenue - penalty)
+		score_changed.emit(_boxes_delivered, _revenue)
 
 
 func _on_delivery_rejected(_slot_id: int, _order_id: int, penalty: int) -> void:
 	if penalty > 0:
+		_revenue = maxi(0, _revenue - penalty)
 		score_changed.emit(_boxes_delivered, _revenue)

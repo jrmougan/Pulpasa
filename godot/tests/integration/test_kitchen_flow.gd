@@ -38,6 +38,8 @@ func before_each() -> void:
 	_free_slot = _sandbox.get_node("Stations/FreeSlot")
 	_stand = _sandbox.get_node("Stations/OrderStand1")
 	await wait_physics_frames(2)
+	# M1: las comandas iniciales se generan tras first_order_delay (5 s, dato).
+	RoundManager.round_state.advance(5.0)
 
 
 ## Una pulsación de interactuar con `target` como objetivo del detector (`null` = nada delante).

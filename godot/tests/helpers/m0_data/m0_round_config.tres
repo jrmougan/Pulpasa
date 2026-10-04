@@ -4,11 +4,11 @@
 
 [resource]
 script = ExtResource("1_cfg")
-duration = 300.0
-first_order_delay = 5.0
-time_bonus_max = 5
-expire_penalty = 3
-wrong_delivery_penalty = 2
-revenue_thresholds = Array[int]([30, 60, 90])
+duration = 180.0
+first_order_delay = 0.0
+time_bonus_max = 0
+expire_penalty = 0
+wrong_delivery_penalty = 0
+revenue_thresholds = Array[int]([])
 performance_thresholds = Array[float]([1.0, 2.0, 3.0])
 performance_texts = Array[String](["Pulpeiro ineficiente", "Pulpeiro aceptable", "Pulpeiro eficiente", "!Pulpeiro lexendario!"])

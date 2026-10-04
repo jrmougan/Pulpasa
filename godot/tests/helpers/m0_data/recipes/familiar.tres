@@ -10,4 +10,4 @@ display_name = "Pulpo Familiar"
 translation_key = "RECIPE_FAMILIAR"
 ingredient = ExtResource("2_ing")
 box = ExtResource("3_box")
-base_points = 12
+base_points = 0

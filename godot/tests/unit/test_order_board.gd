@@ -1,7 +1,7 @@
 extends GutTest
 ## PUL-006: OrderBoard sin árbol (ADR-002). AC1 (B1), AC3 (AC5b), AC4 (paridad sin paciencia), AC6.
 
-const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
+const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
 const ORDER_1_PATH: String = "res://data/orders/order_1.tres"
 const SLOTS: Array[int] = [0, 1, 2, 3]
 const SEED: int = 12345

@@ -69,6 +69,8 @@ func _play_from_menu() -> Node:
 	_menu.free()
 	_menu = null
 	_freeze_detector()
+	# M1: las comandas iniciales se generan tras first_order_delay (5 s, dato).
+	RoundManager.round_state.advance(5.0)
 	return _level
 
 
@@ -260,7 +262,8 @@ func test_ac2_play_loads_level_with_one_controllable_player() -> void:
 	var control: ControlComponent = _player().get_node("%Control")
 	assert_eq(control.controlled_by, 1, "controlado por el jugador 1")
 	assert_true(RoundManager.round_state.is_running(), "la ronda arranca con el nivel")
-	assert_almost_eq(RoundManager.round_state.get_time_left(), ROUND_CONFIG.duration, 0.1)
+	# `_play_from_menu` ya avanzó el first_order_delay (5 s) para tener comandas.
+	assert_almost_eq(RoundManager.round_state.get_time_left(), ROUND_CONFIG.duration - 5.0, 0.1)
 	_assert_every_stand_has_its_order()
 	assert_eq(get_errors().size(), 0, "sin errores en consola")
 
@@ -377,7 +380,7 @@ func test_ac5_pause_and_resume_keeps_state_within_tolerance() -> void:
 
 
 func test_ac6_round_end_and_retry_reset_state() -> void:
-	assert_eq(ROUND_CONFIG.duration, 180.0, "M0: ronda de 180 s")
+	assert_eq(ROUND_CONFIG.duration, 300.0, "M1: ronda de 300 s")
 	await _play_from_menu()
 	watch_signals(EventBus)
 	var old_level: Node = _level
@@ -407,6 +410,8 @@ func test_ac6_round_end_and_retry_reset_state() -> void:
 	assert_almost_eq(RoundManager.round_state.get_time_left(), ROUND_CONFIG.duration, 0.1)
 	assert_eq(RoundManager.round_state.get_boxes_delivered(), 0)
 	assert_true(RoundManager.round_state.is_running())
+	# M1: las comandas de la nueva ronda llegan tras first_order_delay (5 s, dato).
+	RoundManager.round_state.advance(5.0)
 	assert_signal_emit_count(EventBus, "orders_reset", 1, "tablero vaciado")
 	assert_eq(
 		get_signal_emit_count(EventBus, "order_generated") - generated_before,
@@ -418,5 +423,7 @@ func test_ac6_round_end_and_retry_reset_state() -> void:
 	assert_null(_kitchen().get_ingredient())
 	assert_eq(_alive("Box").size() + _alive("Ingredient").size(), 0)
 	assert_false((_level.get_node("UI/GameOver") as Control).visible)
-	assert_eq((_level.get_node("UI/HUD/%TimeLeft") as Label).text, "180.0s")
+	# El HUD muestra el reloj tras avanzar el first_order_delay para tener comandas.
+	var expected_time: String = "%.1fs" % (ROUND_CONFIG.duration - ROUND_CONFIG.first_order_delay)
+	assert_eq((_level.get_node("UI/HUD/%TimeLeft") as Label).text, expected_time)
 	assert_false(get_tree().paused)

@@ -15,7 +15,7 @@ func _collect(dir_path: String, out: Array[String]) -> void:
 func test_ac3_all_tres_load() -> void:
 	var paths: Array[String] = []
 	_collect(DATA_DIR, paths)
-	assert_eq(paths.size(), 21)
+	assert_eq(paths.size(), 22)
 	for path: String in paths:
 		var res: Resource = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 		assert_not_null(res, path)
@@ -57,3 +57,27 @@ func test_ac1_player_config_has_detector_scoring_values() -> void:
 	assert_almost_eq(cfg.detector_near_distance, 0.7, 0.001)
 	assert_almost_eq(cfg.detector_kitchen_bonus, 1.0, 0.001)
 	assert_almost_eq(cfg.detector_origin_height, 0.8, 0.001)
+
+
+## Comandas AC5: el catálogo de la alpha cumple los rangos de M1 (paciencia 40–90 s,
+## base 8–14 €) y hay plantillas con aceite y con pimentón.
+func test_comandas_ac5_m1_data_ranges() -> void:
+	var catalog: OrderCatalog = load("res://data/orders/order_catalog.tres") as OrderCatalog
+	assert_gte(catalog.orders.size(), 4, "al menos 4 plantillas distintas")
+	var has_oil: bool = false
+	var has_paprika: bool = false
+
+	for order: OrderData in catalog.orders:
+		assert_between(order.max_time, 40.0, 90.0, "La paciencia debe estar entre 40 y 90")
+		assert_between(order.recipe.base_points, 8, 14, "El precio base debe estar entre 8 y 14")
+		for s: SeasoningData in order.seasonings:
+			if s.type == SeasoningData.SeasoningType.OIL:
+				has_oil = true
+			if (
+				s.type == SeasoningData.SeasoningType.PAPRIKA
+				or s.type == SeasoningData.SeasoningType.HOT_PAPRIKA
+			):
+				has_paprika = true
+
+	assert_true(has_oil, "Debe haber al menos una comanda con aceite")
+	assert_true(has_paprika, "Debe haber al menos una comanda con pimentón")

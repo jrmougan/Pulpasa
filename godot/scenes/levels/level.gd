@@ -17,7 +17,7 @@ func _ready() -> void:
 	if round_config == null or order_catalog == null:
 		push_error("Level: faltan round_config u order_catalog")
 		return
-	OrderService.setup(order_catalog)
+	OrderService.setup(order_catalog, null, round_config)
 	RoundManager.start_round(round_config, get_slot_ids())
 
 
