@@ -274,9 +274,11 @@ func test_ac2_play_loads_level_with_one_controllable_player() -> void:
 	assert_eq(_level.scene_file_path, LEVEL_SCENE)
 	assert_eq(GameState.mode, GameMode.Mode.SINGLE)
 	var players: Array[Node] = _level.get_node("Characters").get_children()
-	assert_eq(players.size(), 1, "un solo personaje")
+	assert_eq(players.size(), 2, "dos personajes desde M2 (PUL-037)")
 	var control: ControlComponent = _player().get_node("%Control")
 	assert_eq(control.controlled_by, 1, "controlado por el jugador 1")
+	var other: ControlComponent = _level.get_node("Characters/Player2/%Control")
+	assert_eq(other.controlled_by, 0, "en SINGLE el segundo empieza sin jugador")
 	assert_true(RoundManager.round_state.is_running(), "la ronda arranca con el nivel")
 	# `_play_from_menu` ya avanzó el first_order_delay (5 s) para tener comandas.
 	assert_almost_eq(RoundManager.round_state.get_time_left(), ROUND_CONFIG.duration - 5.0, 0.1)

@@ -137,11 +137,11 @@ func test_ac1_play_target_is_level_01() -> void:
 	assert_eq(ProjectSettings.get_setting("application/run/main_scene"), MENU_SCENE)
 
 
-func test_ac1_level_has_one_player_four_stands_with_orders_hud_and_tickets() -> void:
+func test_ac1_level_has_players_four_stands_with_orders_hud_and_tickets() -> void:
 	await _enter_level(func() -> Error: return GameState.start_level(GameMode.Mode.SINGLE))
 	assert_eq(_level.scene_file_path, LEVEL.resource_path, "start_level carga level_01")
 	var players: Array[Node] = _level.get_node("Characters").get_children()
-	assert_eq(players.size(), 1, "un solo personaje en M0")
+	assert_eq(players.size(), 2, "dos personajes desde M2 (PUL-037)")
 	var player: Player = _player()
 	var control: ControlComponent = player.get_node("%Control")
 	assert_eq(control.player_index, 1)
