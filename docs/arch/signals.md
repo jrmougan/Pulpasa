@@ -102,7 +102,7 @@ usan `Node` en sus firmas para valer en 3D y en 2D.
 | `item_picked_up(item: Node)` | `Holder` (base común; lo emite `HoldComponent`) | `player.gd` (parámetro `is_holding` del `AnimationTree`) | Tras `on_picked_up` del objeto | 4 |
 | `item_dropped(item: Node)` | `Holder` (ídem) | `player.gd` (ídem) | Tras `on_dropped` del objeto | 4 |
 | `target_changed(previous: Node, current: Node)` | `InteractionDetector` (específico: `Area3D`/`Area2D`) | `interaction_component.gd` (guarda el objetivo). El propio `InteractionDetector` (capa específica) desactiva el `Highlightable` de `previous` y activa el de `current` antes de emitir; ambos pueden ser `null`. *Enmienda 2026-10-03, aprobada por el responsable tras la revisión de PUL-015* | Solo cuando cambia el objetivo, no cada frame (B7) | 5 |
-| `cooking_started(ingredient: Ingredient)` | `cooking_station.gd` | barra de progreso de `kitchen.tscn`, `AudioStreamPlayer3D` de hervir | Al aceptar un pulpo crudo | 6 |
+| `cooking_started(ingredient: Ingredient)` | `cooking_station.gd` | barra de progreso de `kitchen.tscn`, `AudioStreamPlayer3D` de hervir | Al aceptar un ingrediente crudo cocinable (pulpo o cachelos, D10) en una plaza libre (D9) | 6 |
 | `cooking_finished(ingredient: Ingredient)` | `cooking_station.gd` | barra de progreso y audio de `kitchen.tscn` | Al cumplirse `cook_time` de `IngredientData` | 6 |
 | `fill_changed(fill: float)` | `box.gd` | barra en mundo de `box.tscn` | Cada corte sobre la caja (D1) | 6 |
 | `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn` | Al aplicar un condimento | 6 |

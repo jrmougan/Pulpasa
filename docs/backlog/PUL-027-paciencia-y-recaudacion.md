@@ -1,12 +1,12 @@
 ---
 id: PUL-027
 title: Activar paciencia, recaudación, penalizaciones y estrellas en los núcleos
-status: review
+status: done
 milestone: M1
 role: gameplay-engineer
 agent: antigravity · gemini-3.1-pro-high (difícil)
 deps: [PUL-028]
-orca_task: null
+orca_task: task_1c6148bc198c
 unity_sources: []
 owns: [godot/core/order_board.gd, godot/core/round_state.gd, godot/core/round_result.gd, godot/core/active_order.gd, godot/resources/round_config.gd, godot/resources/order_data.gd, godot/resources/recipe_data.gd, godot/data/config/**, godot/data/orders/**, godot/data/recipes/**, godot/autoload/round_manager.gd, godot/autoload/order_service.gd, godot/scenes/levels/level.gd, godot/tests/unit/test_order_board.gd, godot/tests/unit/test_round_state.gd, godot/tests/unit/test_data_*.gd, godot/tests/unit/test_order_service.gd, godot/tests/unit/test_round_manager.gd, godot/tests/integration/test_parity_smoke.gd, docs/arch/signals.md, docs/arch/ADR-002-eventbus-autoloads.md, godot/tests/integration/test_kitchen_flow.gd, godot/tests/integration/test_hud.gd, godot/tests/unit/test_data_integrity.gd, godot/tests/integration/test_order_stand.gd, godot/tests/integration/test_level_01.gd, godot/tests/helpers/**]
 touches_scenes: []

@@ -39,7 +39,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-024 | M0·8 | gameplay-engineer | done | Montaje de level_01 con UI integrada |
 | PUL-025 | M0·8 | qa-tester | done | Smoke de paridad M0 y guía de la puerta humana |
 | PUL-026 | M0·8 | ui-engineer | done | Layout de HUD y tickets como Unity + menores de level_01 |
-| PUL-027 | M1 | gameplay (antigravity · pro) | ready (dep. 028) | Paciencia, recaudación, penalizaciones y estrellas |
+| PUL-027 | M1 | gameplay (antigravity → kimi) | done | Paciencia, recaudación, penalizaciones y estrellas |
 | PUL-028 | M1 | gameplay (antigravity · flash) | done | Aceite, exclusividad de pimentones y validación exacta |
 | PUL-029 | M1 | gameplay (antigravity → kimi) | done | Cachelos y olla con varias plazas |
 | PUL-030 | M1 | ui (kimi) | ready (dep. 027, 031) | Recaudación, estrellas, iconos y paciencia en la UI |
