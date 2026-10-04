@@ -28,6 +28,13 @@ if ((QUICK == 0)); then
   timeout 600 "$GODOT" --headless -s addons/gut/gut_cmdln.gd 2>&1 | tee .gut_reports/last.log | tail -25
   rc=${PIPESTATUS[0]}
   if ((rc != 0)) || ! grep -q 'All tests passed' .gut_reports/last.log; then fail=1; fi
+  # GUT ignora en silencio los scripts que no compilan ("Ignoring script ... does not extend GutTest"):
+  # eso esconde suites enteras con verify en verde. Cualquier script ignorado o error de parseo falla.
+  if grep -qE "Ignoring script|Parse Error|SCRIPT ERROR" .gut_reports/last.log; then
+    echo "✗ GUT ignoró scripts o hubo errores de parseo:" >&2
+    grep -E "Ignoring script|Parse Error|SCRIPT ERROR" .gut_reports/last.log | head -10 >&2
+    fail=1
+  fi
 
   step "smoke run (escena principal, 120 frames)"
   out=$(timeout 120 "$GODOT" --headless --quit-after 120 2>&1); rc=$?
