@@ -1,11 +1,11 @@
 ---
 id: PUL-034
 title: Asignar mandos a jugadores y gestionar su conexión
-status: review
+status: done
 milestone: M2
 role: gameplay-engineer
 deps: []
-orca_task: null
+orca_task: task_81a85c31a07d
 unity_sources: []
 owns: [godot/core/device_assignment.gd, godot/core/device_assignment.gd.uid, godot/autoload/game_state.gd, godot/project.godot, godot/data/config/input_config.tres, godot/resources/input_config.gd, godot/tests/unit/test_device_assignment.gd, godot/tests/unit/test_device_assignment.gd.uid, godot/tests/unit/test_game_state.gd, godot/tests/unit/test_input_map.gd, godot/tests/integration/test_device_input.gd, godot/tests/integration/test_device_input.gd.uid, godot/tests/integration/test_level_01.gd, docs/evidence/PUL-034/**]
 touches_scenes: []
