@@ -51,8 +51,8 @@ func test_ac1_cachelos_crudo_y_cocido_tienen_color_distinto() -> void:
 func test_ac2_atribuciones_mencionan_los_assets_nuevos() -> void:
 	var credits: String = FileAccess.get_file_as_string("res://assets/CREDITS.md")
 	assert_ne(credits, "", "no se lee CREDITS.md")
-	var licenses: String = FileAccess.get_file_as_string("res://../docs/assets/licenses-pul-031.md")
-	assert_ne(licenses, "", "no se lee licenses-pul-031.md")
+	var licenses: String = FileAccess.get_file_as_string("res://../docs/assets/licenses.md")
+	assert_ne(licenses, "", "no se lee licenses.md (PUL-031 consolidado)")
 	for file_name: String in ICON_FILES:
 		assert_string_contains(credits, file_name, "CREDITS sin %s" % file_name)
 		assert_string_contains(licenses, file_name, "licenses sin %s" % file_name)
