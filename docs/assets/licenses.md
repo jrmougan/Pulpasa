@@ -31,6 +31,8 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | Propio (primitivas) | `assets/models/placeholders/cachelos_cooked.tscn` | Propio | No |
 | Propio (primitivas) | `assets/models/placeholders/cachelera.tscn` | Propio | No |
 | Propio | `assets/materials/ph_oil.tres`, `ph_oil_liquid.tres`, `ph_cachelo_raw.tres`, `ph_cachelo_cooked.tres` | Propio | No |
+| https://game-icons.net/1x1/lorc/small-fire.html («Small fire», Lorc; verificado contra https://raw.githubusercontent.com/game-icons/icons/master/lorc/small-fire.svg, sin el fondo negro) | `assets/textures/icons/small-fire.svg` | CC BY 3.0 | Sí: «Small fire» por Lorc, game-icons.net |
+| `assets/textures/icons/pepper-hot-solid.svg` (ya listado en `licenses.md`): solo se añade `fill="#fff"` | `assets/textures/icons/pepper-hot-solid.svg` | MIT (o Good Boy License) | Sí: Icons8, Line Awesome |
 
 Los SVG de game-icons.net se modifican quitando el rectángulo negro de fondo. Atribuciones completas en `godot/assets/CREDITS.md`.
 

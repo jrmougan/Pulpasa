@@ -1,12 +1,12 @@
 ---
 id: PUL-030
 title: Mostrar recaudación, estrellas, iconos y paciencia en la UI
-status: review
+status: done
 milestone: M1
 role: ui-engineer
 agent: kimi (fácil)
 deps: [PUL-027, PUL-031]
-orca_task: null
+orca_task: task_dcc4c13916ae
 unity_sources: []
 owns: [godot/ui/hud/**, godot/ui/tickets/**, godot/ui/menus/game_over.tscn, godot/ui/menus/game_over.gd, godot/ui/theme/**, godot/data/seasonings/*.tres, godot/assets/textures/icons/**, godot/assets/CREDITS.md, docs/assets/licenses-pul-030.md, godot/tests/tools/**, godot/tests/unit/test_data_integrity.gd, godot/tests/integration/test_hud.gd, godot/tests/integration/test_order_tickets.gd, godot/tests/integration/test_game_over.gd, docs/evidence/PUL-030/**]
 touches_scenes: [godot/ui/hud/hud.tscn, godot/ui/tickets/order_ticket.tscn, godot/ui/tickets/ticket_entry.tscn, godot/ui/menus/game_over.tscn]
