@@ -2,8 +2,10 @@ class_name Box
 extends RigidBody3D
 ## Caja de pulpo (porta Box.cs sin el modo spawner). Receptor de la interacción contextual
 ## (ADR-003 §4): con pulpo cocido en la mano, cada pulsación corta y llena `fill_per_press`
-## (D1/D13); con un condimento y la caja llena, lo aplica una vez por tipo; con la mano vacía, se
-## coge. Con cualquier otra cosa en la mano consume la pulsación sin efecto (paridad Unity).
+## (D1/D13); con un condimento y la caja llena, lo aplica una vez por tipo; con un ingrediente
+## cocido cuyo `IngredientData.as_seasoning` no es nulo (p. ej. cachelos cocidos, D10), lo aplica
+## como condimento y lo consume; con la mano vacía, se coge. Con cualquier otra cosa en la mano
+## consume la pulsación sin efecto (paridad Unity).
 ## La entrega lee `get_contents()`.
 
 ## Cada corte (D1).
@@ -104,13 +106,13 @@ func interact(actor: InteractionComponent) -> bool:
 		and is_full()
 		and (held as Ingredient).is_cooked()
 		and (held as Ingredient).data != null
-		and (held as Ingredient).data.type == IngredientData.IngredientType.CACHELOS
+		and (held as Ingredient).data.as_seasoning != null
 	):
-		var cachelos_seasoning: SeasoningData = load("res://data/seasonings/cachelos.tres")
-		if can_season(cachelos_seasoning):
+		var seasoning: SeasoningData = (held as Ingredient).data.as_seasoning
+		if can_season(seasoning):
 			var ing: Ingredient = actor.holder.drop() as Ingredient
 			if ing != null:
-				_season(cachelos_seasoning)
+				_season(seasoning)
 				ing.queue_free()
 	elif held is SeasoningItem and is_full() and (held as SeasoningItem).data != null:
 		_season((held as SeasoningItem).data)

@@ -3,8 +3,9 @@ extends StaticBody3D
 ## Olla (porta KitchenStation + KitchenProgress). Contrato `interactable` y marca `kitchen`
 ## (ADR-003 §4). Acepta ingredientes crudos cocinables (pulpo, cachelos) de la mano, los deja en
 ## sus `AnchorPoint`, los cuece en `IngredientData.cook_time` con su `CookBar` y `%BoilAudio`,
-## y los devuelve cocidos a una mano vacía por orden de finalización.
-## Capacidad según `capacity`. Sin quemado (M1).
+## y los devuelve cocidos a una mano vacía por orden de finalización (FIFO: el primero
+## que terminó sale primero, según `_finish_counter`). Sin quemado (M1).
+## Capacidad en datos: `KitchenData.capacity` (inyectado, `data/config/kitchen.tres`).
 ##
 ## Un solo reloj general o uno por plaza: se acumulan en `_physics_process`, así que la pausa
 ## del árbol los congela (sin el doble temporizador del prototipo). El aspecto cocido lo pone
@@ -18,7 +19,10 @@ signal cooking_finished(ingredient: Ingredient)
 ## Tolerancia de coma flotante al acumular `delta` (50 × 0,1 ≠ 5,0 exacto).
 const TIME_EPSILON: float = 0.0001
 
-@export var capacity: int = 2
+## Separación horizontal entre plazas ocupadas.
+const SLOT_SPACING: float = 0.3
+
+@export var data: KitchenData
 
 
 class SlotData:
@@ -29,6 +33,7 @@ class SlotData:
 	var cook_time: float = 0.0
 	var saved_layer: int = 0
 	var saved_freeze: bool = false
+	var finished_at: int = 0
 	var anchor: Node3D
 	var bar: WorldProgressBar
 
@@ -41,6 +46,8 @@ class SlotData:
 
 
 var _slots: Array[SlotData] = []
+## Contador monótono de finalizaciones: define el orden FIFO de devolución.
+var _finish_counter: int = 0
 
 var _elapsed: float:
 	get:
@@ -58,11 +65,12 @@ var _elapsed: float:
 
 func _ready() -> void:
 	_bar_base.visible = false
-	var total_width := float(capacity - 1) * 0.3
+	var slot_count: int = data.capacity if data != null else 1
+	var total_width := float(slot_count - 1) * SLOT_SPACING
 	var start_x := -total_width / 2.0
-	for i in capacity:
+	for i: int in slot_count:
 		var slot_data := SlotData.new()
-		var curr_x := start_x + float(i) * 0.3
+		var curr_x := start_x + float(i) * SLOT_SPACING
 		if i == 0:
 			slot_data.anchor = _anchor_base
 			slot_data.bar = _bar_base
@@ -73,9 +81,9 @@ func _ready() -> void:
 			add_child(slot_data.bar)
 			slot_data.bar.visible = false
 
-		# set local x assuming cooking station is root
+		# Anclas simétricas y barras apiladas en Y (una por plaza).
 		slot_data.anchor.position.x = curr_x
-		slot_data.bar.position.x = curr_x
+		slot_data.bar.position.y += float(i) * 0.35
 		_slots.append(slot_data)
 
 
@@ -85,6 +93,7 @@ func _physics_process(delta: float) -> void:
 			continue
 		if slot.get_ingredient() == null:
 			_stop_cooking(slot)
+			_reposition_anchors()
 			continue
 		slot.elapsed += delta
 		slot.bar.set_progress(slot.elapsed / slot.cook_time if slot.cook_time > 0.0 else 1.0)
@@ -164,10 +173,12 @@ func _get_empty_slot() -> SlotData:
 
 
 func _get_finished_slot() -> SlotData:
+	var oldest: SlotData = null
 	for slot: SlotData in _slots:
 		if slot.get_ingredient() != null and not slot.cooking:
-			return slot
-	return null
+			if oldest == null or slot.finished_at < oldest.finished_at:
+				oldest = slot
+	return oldest
 
 
 func _start(holder: Holder, slot: SlotData) -> void:
@@ -180,13 +191,17 @@ func _start(holder: Holder, slot: SlotData) -> void:
 	slot.cooking = true
 	slot.bar.set_progress(0.0)
 	slot.bar.visible = true
-	_boil_audio.play()
+	_reposition_anchors()
+	if not _boil_audio.playing:
+		_boil_audio.play()
 	cooking_started.emit(ingredient)
 
 
 func _finish(slot: SlotData) -> void:
 	var ingredient: Ingredient = slot.ingredient
 	_stop_cooking(slot)
+	_finish_counter += 1
+	slot.finished_at = _finish_counter
 	ingredient.set_cooked()
 	cooking_finished.emit(ingredient)
 
@@ -196,7 +211,7 @@ func _stop_cooking(slot: SlotData) -> void:
 	slot.bar.visible = false
 
 
-## Devuelve un ingrediente cocido a la mano (el primero que encuentre).
+## Devuelve un ingrediente cocido a la mano (FIFO por orden de finalización).
 func _give(holder: Holder) -> bool:
 	var slot := _get_finished_slot()
 	if slot == null:
@@ -206,9 +221,22 @@ func _give(holder: Holder) -> bool:
 	_restore(ingredient, slot)
 	if holder.pick_up(ingredient):
 		slot.ingredient = null
+		_reposition_anchors()
 		return true
 	_store(ingredient, slot)
 	return false
+
+
+## Centra las plazas ocupadas: con una sola pieza queda en el centro de la olla.
+func _reposition_anchors() -> void:
+	var occupied: Array[SlotData] = []
+	for slot: SlotData in _slots:
+		if slot.get_ingredient() != null:
+			occupied.append(slot)
+	var total_width := float(occupied.size() - 1) * SLOT_SPACING
+	var start_x := -total_width / 2.0
+	for i: int in occupied.size():
+		occupied[i].anchor.position.x = start_x + float(i) * SLOT_SPACING
 
 
 func _store(ingredient: Ingredient, slot: SlotData) -> void:

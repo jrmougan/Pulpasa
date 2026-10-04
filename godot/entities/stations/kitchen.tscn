@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_1hu86"]
 [ext_resource type="PackedScene" path="res://ui/widgets/world_progress_bar.tscn" id="5_b5ifj"]
 [ext_resource type="AudioStream" path="res://assets/audio/boiling_water_loop.ogg" id="6_vfll8"]
+[ext_resource type="Resource" path="res://data/config/kitchen.tres" id="7_kdata"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lbwrb"]
 size = Vector3(0.9, 1.69, 0.78)
@@ -14,6 +15,7 @@ size = Vector3(0.9, 1.69, 0.78)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("1_ydm4a")
+data = ExtResource("7_kdata")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1395532835]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.845, 0)

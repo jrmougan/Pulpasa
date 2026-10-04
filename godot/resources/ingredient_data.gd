@@ -16,3 +16,4 @@ enum CookingState { RAW, COOKED, BURNT }
 @export var amount_per_full_box: float = 50.0
 @export var scene: PackedScene
 @export_multiline var description: String = ""
+@export var as_seasoning: SeasoningData

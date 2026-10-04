@@ -1,7 +1,10 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-017 AC2: la olla (`kitchen.tscn`, `cooking_station.gd`) acepta un pulpo crudo de la mano,
 ## lo cuece en `IngredientData.cook_time` (5 s) con barra y hervor, y lo devuelve cocido a una
-## mano vacía. Capacidad 1, sin quemado (M1). La pausa del árbol congela la cocción.
+## mano vacía. Sin quemado (M1). La pausa del árbol congela la cocción.
+## PUL-029: varias plazas según `KitchenData.capacity` (2 en `data/config/kitchen.tres`),
+## progreso independiente por plaza y devolución FIFO por orden de finalización.
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const KITCHEN_SCENE: PackedScene = preload("res://entities/stations/kitchen.tscn")
@@ -178,18 +181,74 @@ func test_ac2_rejects_box() -> void:
 	assert_null(_kitchen.get_ingredient())
 
 
-func test_ac1_capacity_two() -> void:
+func test_ac1_capacity_two_staggered_start() -> void:
+	var first: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	_cook_for(2.5)
+	var second: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	_cook_for(2.5)
+
+	assert_true(first.is_cooked(), "el primero se cuece tras 5s")
+	assert_false(second.is_cooked(), "el segundo no se cuece en 2.5s")
+
+	_cook_for(2.5)
+	assert_true(second.is_cooked(), "el segundo se cuece tras otros 2.5s")
+
+
+func test_ac1_pause_freezes_two_slots() -> void:
 	var first: Ingredient = _octopus_in_hand()
 	_kitchen.interact(_actor)
 	var second: Ingredient = _octopus_in_hand()
 	_kitchen.interact(_actor)
+
+	await wait_physics_frames(2)
+	var prog1: float = _kitchen._slots[0].bar.get_progress()
+	var prog2: float = _kitchen._slots[1].bar.get_progress()
+
+	get_tree().paused = true
+	for i: int in 30:
+		await get_tree().physics_frame
+	assert_eq(_kitchen._slots[0].bar.get_progress(), prog1, "pausa congela barra 1")
+	assert_eq(_kitchen._slots[1].bar.get_progress(), prog2, "pausa congela barra 2")
+	get_tree().paused = false
+
+	await wait_physics_frames(3)
+	assert_gt(_kitchen._slots[0].bar.get_progress(), prog1, "sigue la barra 1 al reanudar")
+	assert_gt(_kitchen._slots[1].bar.get_progress(), prog2, "sigue la barra 2 al reanudar")
+
+
+func test_ac1_mix_octopus_and_cachelos_compete_for_slots() -> void:
+	var octopus: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+
+	var cachelo: Ingredient = load("res://entities/items/cachelos.tscn").instantiate()
+	_level.add_child(cachelo)
+	_hold.pick_up(cachelo)
+	_kitchen.interact(_actor)
+
 	var third: Ingredient = _octopus_in_hand()
 	_kitchen.interact(_actor)
-	assert_eq(_hold.get_held_item(), third, "el tercero se queda en la mano")
+	assert_eq(_hold.get_held_item(), third, "capacidad respetada con mezcla")
+
 	_cook_for(5.0)
-	assert_true(first.is_cooked())
-	assert_true(second.is_cooked())
-	assert_false(third.is_cooked())
+	assert_true(octopus.is_cooked())
+	assert_true(cachelo.is_cooked())
+
+
+func test_ac2_full_hand_cannot_take_cooked_item() -> void:
+	var octopus: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	_cook_for(5.0)
+	assert_true(octopus.is_cooked())
+
+	var box: Box = BOX_SCENE.instantiate() as Box
+	_level.add_child(box)
+	_hold.pick_up(box)
+
+	_kitchen.interact(_actor)
+	assert_eq(_hold.get_held_item(), box, "con mano llena no se recoge el cocido")
+	assert_not_null(_kitchen._slots[0].get_ingredient(), "el cocido sigue en la olla")
 
 
 func test_ac2_rejected_item_is_not_dropped_on_press() -> void:
@@ -231,3 +290,23 @@ func test_ac2_kitchen_scene_contract() -> void:
 	assert_false(_bar().visible, "barra oculta en reposo")
 	var audio: AudioStreamPlayer3D = _kitchen.get_node("%BoilAudio")
 	assert_eq(audio.stream, preload("res://assets/audio/boiling_water_loop.ogg"))
+
+
+func test_ac1_fifo_by_finish_order() -> void:
+	var first: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	_cook_for(2.5)
+	var second: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	_cook_for(2.5)
+
+	# Wait enough for both to finish (second takes another 2.5s)
+	_cook_for(3.0)
+	assert_true(first.is_cooked())
+	assert_true(second.is_cooked())
+
+	_kitchen.interact(_actor)
+	assert_eq(_hold.get_held_item(), first, "devuelve primero el que terminó antes")
+	_hold.drop()
+	_kitchen.interact(_actor)
+	assert_eq(_hold.get_held_item(), second, "devuelve el segundo")
