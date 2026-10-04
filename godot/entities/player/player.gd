@@ -3,6 +3,8 @@ extends CharacterBody3D
 ## Personaje 3D (scene-tree.md §3). Porta el movimiento de PlayerController: input del jugador
 ## que lo controla, mapeado al suelo según la cámara, con giro suave. Solo se mueve durante la
 ## ronda, que conoce por `EventBus` (`round_started` / `round_finished`), sin consultar sistemas.
+## Sin jugador que lo controle (`controlled_by == 0`, ADR-004 §3) se queda quieto, sin input y
+## con lo que lleve en la mano; `%ActiveIndicator` marca con el color del jugador que lo controla.
 
 ## Números de movimiento (PlayerConfig.tres).
 @export var config: PlayerConfig
@@ -10,6 +12,8 @@ extends CharacterBody3D
 @export var camera: Camera3D
 ## Nodo `Items` del nivel, donde la mano deja lo que suelta (ADR-003 §6).
 @export var items_root: Node
+## Material del aro `%ActiveIndicator` por jugador: índice 0 = J1, 1 = J2.
+@export var indicator_materials: Array[Material] = []
 
 ## Velocidad horizontal actual (m/s), para el futuro AnimationTree (PUL-013).
 var speed: float = 0.0
@@ -21,6 +25,7 @@ var _round_active: bool = false
 
 @onready var _control: ControlComponent = %Control
 @onready var _hold: HoldComponent = %HoldComponent
+@onready var _indicator: GeometryInstance3D = %ActiveIndicator
 
 
 func _ready() -> void:
@@ -32,6 +37,8 @@ func _ready() -> void:
 		_bus = EventBus
 	_bus.round_started.connect(_on_round_started)
 	_bus.round_finished.connect(_on_round_finished)
+	_control.control_changed.connect(_on_control_changed)
+	_on_control_changed(_control.controlled_by)
 
 
 func _physics_process(delta: float) -> void:
@@ -72,6 +79,13 @@ func _move_direction() -> Vector3:
 func _flat(v: Vector3, fallback: Vector3) -> Vector3:
 	var flat: Vector3 = Vector3(v.x, 0.0, v.z)
 	return flat.normalized() if flat.length_squared() > 0.0001 else fallback
+
+
+func _on_control_changed(controlled_by: int) -> void:
+	var slot: int = controlled_by - 1
+	_indicator.visible = slot >= 0
+	if slot >= 0 and slot < indicator_materials.size():
+		_indicator.material_override = indicator_materials[slot]
 
 
 func _on_round_started(_duration: float) -> void:
