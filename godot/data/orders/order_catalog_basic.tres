@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="OrderCatalog" load_steps=8 format=3]
+[gd_resource type="Resource" script_class="OrderCatalog" load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://resources/order_catalog.gd" id="1_cat"]
 [ext_resource type="Resource" path="res://data/orders/order_1.tres" id="2_o1"]
@@ -6,10 +6,7 @@
 [ext_resource type="Resource" path="res://data/orders/order_3.tres" id="4_o3"]
 [ext_resource type="Resource" path="res://data/orders/order_4.tres" id="5_o4"]
 
-[ext_resource type="Resource" path="res://data/orders/order_5.tres" id="6_o5"]
-[ext_resource type="Resource" path="res://data/orders/order_6.tres" id="7_o6"]
-
 [resource]
 script = ExtResource("1_cat")
-orders = [ExtResource("2_o1"), ExtResource("3_o2"), ExtResource("4_o3"), ExtResource("5_o4"), ExtResource("6_o5"), ExtResource("7_o6")]
+orders = [ExtResource("2_o1"), ExtResource("3_o2"), ExtResource("4_o3"), ExtResource("5_o4")]
 max_active_orders = 4

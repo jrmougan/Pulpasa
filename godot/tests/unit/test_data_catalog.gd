@@ -15,7 +15,7 @@ func _seasoning_types(order: OrderData) -> Array:
 func test_ac1_catalog_has_four_orders() -> void:
 	var catalog: OrderCatalog = load(CATALOG_PATH) as OrderCatalog
 	assert_not_null(catalog)
-	assert_eq(catalog.orders.size(), 4)
+	assert_gte(catalog.orders.size(), 4)
 	assert_eq(catalog.max_active_orders, 4)
 
 
@@ -106,3 +106,31 @@ func test_pul028_ac1_seasoning_data_oil_and_exclusivity_groups() -> void:
 	assert_eq(hot_paprika.exclusivity_group, &"paprika")
 	assert_eq(paprika.exclusivity_group, hot_paprika.exclusivity_group)
 	assert_eq(salt.exclusivity_group, &"")
+
+
+func test_pul033_ac1_at_least_two_orders_with_cachelos_and_valid_ranges() -> void:
+	var catalog: OrderCatalog = load(CATALOG_PATH) as OrderCatalog
+	var with_cachelos: int = 0
+	var with_cachelos_and_oil_or_salt: int = 0
+	for order: OrderData in catalog.orders:
+		assert_between(order.max_time, 40.0, 90.0, order.display_name)
+		assert_between(order.recipe.base_points, 8, 14, order.display_name)
+		var types: Array = _seasoning_types(order)
+		if types.has(SeasoningData.SeasoningType.CACHELOS):
+			with_cachelos += 1
+			if (
+				types.has(SeasoningData.SeasoningType.OIL)
+				or types.has(SeasoningData.SeasoningType.SALT)
+			):
+				with_cachelos_and_oil_or_salt += 1
+	assert_gte(with_cachelos, 2, "al menos 2 comandas con cachelos")
+	assert_gte(with_cachelos_and_oil_or_salt, 1, "una con cachelos + aceite o sal")
+	var hot: bool = false
+	for order: OrderData in catalog.orders:
+		var t: Array = _seasoning_types(order)
+		if (
+			t.has(SeasoningData.SeasoningType.HOT_PAPRIKA)
+			and t.has(SeasoningData.SeasoningType.CACHELOS)
+		):
+			hot = true
+	assert_true(hot, "pimentón picante + cachelos")

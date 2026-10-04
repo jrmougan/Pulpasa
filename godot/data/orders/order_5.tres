@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="OrderData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://resources/order_data.gd" id="1_ord"]
+[ext_resource type="Resource" path="res://data/recipes/individual.tres" id="2_rec"]
+[ext_resource type="Resource" path="res://data/seasonings/hot_paprika.tres" id="3_sea"]
+[ext_resource type="Resource" path="res://data/seasonings/cachelos.tres" id="4_sea"]
+
+[resource]
+script = ExtResource("1_ord")
+display_name = "Order 5"
+recipe = ExtResource("2_rec")
+seasonings = [ExtResource("3_sea"), ExtResource("4_sea")]
+max_time = 70.0

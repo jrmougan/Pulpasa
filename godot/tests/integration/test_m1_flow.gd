@@ -5,8 +5,7 @@ extends GutTest
 ## por tiempo (D2). Después una caducidad (−expire_penalty), una caja errónea
 ## (−wrong_delivery_penalty, D8) y el fin de ronda: recaudación y estrellas en el game over.
 ##
-## El catálogo real no tiene ninguna comanda con cachelos, así que el test monta una con las
-## `.tres` reales (receta individual, `oil.tres`, `cachelos.tres`) y `max_active_orders = 1`.
+## Usa la comanda del catálogo real con aceite y cachelos (PUL-033) y `max_active_orders = 1`.
 ## Como en `test_kitchen_flow.gd`, cada pulsación pasa por `InteractionComponent.interact_pressed()`
 ## con el objetivo que publicaría el detector (`target_changed`).
 
@@ -16,7 +15,6 @@ const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
 const CACHELOS_SEASONING: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 const STAR_FULL: Texture2D = preload("res://assets/textures/icons/star_full.svg")
 const STAR_EMPTY: Texture2D = preload("res://assets/textures/icons/star_empty.svg")
-const ORDER_TIME: float = 60.0
 const COOK_STEP: float = 0.1
 ## Margen sobre `cook_time` al avanzar la olla a mano.
 const COOK_MARGIN: float = 0.5
@@ -34,10 +32,7 @@ var _expected_revenue: int = 0
 
 func before_each() -> void:
 	watch_signals(EventBus)
-	_order_data = OrderData.new()
-	_order_data.recipe = RECIPE
-	_order_data.seasonings = [OIL, CACHELOS_SEASONING] as Array[SeasoningData]
-	_order_data.max_time = ORDER_TIME
+	_order_data = _real_cachelos_order()
 	var catalog: OrderCatalog = OrderCatalog.new()
 	catalog.orders = [_order_data] as Array[OrderData]
 	catalog.max_active_orders = 1
@@ -57,6 +52,14 @@ func before_each() -> void:
 
 func after_each() -> void:
 	GameState.set_paused(false)
+
+
+func _real_cachelos_order() -> OrderData:
+	var real: OrderCatalog = load("res://data/orders/order_catalog.tres") as OrderCatalog
+	for order: OrderData in real.orders:
+		if order.seasonings.has(OIL) and order.seasonings.has(CACHELOS_SEASONING):
+			return order
+	return null
 
 
 func _press(target: Node) -> bool:
@@ -190,7 +193,7 @@ func test_m1_full_round_oil_cachelos_bonus_expiry_wrong_box_and_stars() -> void:
 
 	# --- Caducidad: resta expire_penalty ------------------------------------------------------
 	var before_expiry: int = RoundManager.round_state.get_revenue()
-	RoundManager.round_state.advance(ORDER_TIME + 1.0)
+	RoundManager.round_state.advance(_order_data.max_time + 1.0)
 	assert_signal_emit_count(EventBus, "order_expired", 1)
 	_expected_revenue = before_expiry - _config.expire_penalty
 	assert_eq(RoundManager.round_state.get_revenue(), _expected_revenue, "caducidad −3")

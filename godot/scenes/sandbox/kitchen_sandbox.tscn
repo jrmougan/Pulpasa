@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Resource" path="res://data/config/round_config.tres" id="1_n85gq"]
-[ext_resource type="Resource" path="res://data/orders/order_catalog.tres" id="2_loorw"]
+[ext_resource type="Resource" path="res://data/orders/order_catalog_basic.tres" id="2_loorw"]
 [ext_resource type="PackedScene" path="res://entities/camera/camera_rig.tscn" id="3_2vtye"]
 [ext_resource type="Material" path="res://assets/materials/terrain.tres" id="4_twsqm"]
 [ext_resource type="PackedScene" path="res://entities/stations/octopus_storage.tscn" id="5_ypo87"]
