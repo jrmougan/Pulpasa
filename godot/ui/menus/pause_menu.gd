@@ -4,8 +4,10 @@ extends Control
 
 var _round_finished: bool = false
 var _game_state: Node
+var _disconnected: Dictionary[int, bool] = {}
 
 @onready var panel: MenuPanel = %MenuPanel
+@onready var _warning: Label = %DeviceWarning
 
 
 func _ready() -> void:
@@ -19,6 +21,8 @@ func _ready() -> void:
 	EventBus.pause_changed.connect(_on_pause_changed)
 	EventBus.round_started.connect(_on_round_started)
 	EventBus.round_finished.connect(_on_round_finished)
+	EventBus.device_disconnected.connect(_on_device_disconnected)
+	EventBus.device_assigned.connect(_on_device_assigned)
 	_on_pause_changed(get_tree().paused)
 
 
@@ -60,3 +64,28 @@ func _on_round_started(_duration: float) -> void:
 func _on_round_finished(_result: RoundResult) -> void:
 	_round_finished = true
 	hide()
+
+
+func _on_device_disconnected(player_index: int) -> void:
+	_disconnected[player_index] = true
+	_refresh_warning()
+
+
+func _on_device_assigned(player_index: int, _device: int) -> void:
+	_disconnected.erase(player_index)
+	_refresh_warning()
+
+
+func _refresh_warning() -> void:
+	var keys: Array[int] = _disconnected.keys()
+	keys.sort()
+	var lines: PackedStringArray = []
+	for index: int in keys:
+		lines.append(_text("PAUSE_DEVICE_DISCONNECTED", "Mando de J%d desconectado") % index)
+	_warning.text = "\n".join(lines)
+	_warning.visible = not lines.is_empty()
+
+
+func _text(key: String, fallback: String) -> String:
+	var translated: String = tr(key)
+	return fallback if translated == key else translated

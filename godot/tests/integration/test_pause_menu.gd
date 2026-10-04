@@ -136,3 +136,22 @@ func _tap(action: String) -> void:
 	event.pressed = false
 	Input.parse_input_event(event)
 	await get_tree().process_frame
+
+
+func test_ac3_disconnect_warning_shows_same_frame_and_hides_on_assign() -> void:
+	assert_false(_menu.get_node("%DeviceWarning").visible)
+	GameState.set_paused(true)
+	EventBus.device_disconnected.emit(2)
+	assert_true(_menu.get_node("%DeviceWarning").visible)
+	assert_eq(_menu.get_node("%DeviceWarning").text, "Mando de J2 desconectado")
+	EventBus.device_assigned.emit(1, 0)
+	assert_true(_menu.get_node("%DeviceWarning").visible)
+	EventBus.device_assigned.emit(2, 3)
+	assert_false(_menu.get_node("%DeviceWarning").visible)
+
+
+func test_ac3_warning_appears_with_pause_already_open() -> void:
+	GameState.set_paused(true)
+	assert_true(_menu.visible)
+	EventBus.device_disconnected.emit(2)
+	assert_true(_menu.get_node("%DeviceWarning").visible)

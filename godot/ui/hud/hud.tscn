@@ -20,7 +20,7 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 6.0
-offset_top = -238.0
+offset_top = -270.0
 offset_right = 192.0
 offset_bottom = -58.0
 grow_vertical = 0
@@ -39,6 +39,18 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_4d6w6")
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 2
+
+[node name="ActiveCharacter" type="Label" parent="Background/Stats" unique_id=1410909401]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="DeviceNotice" type="Label" parent="Background/Stats" unique_id=1410909402]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
 
 [node name="Time" type="VBoxContainer" parent="Background/Stats" unique_id=415250434]
 layout_mode = 2
