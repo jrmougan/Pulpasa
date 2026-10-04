@@ -2,7 +2,7 @@ class_name IngredientData
 extends Resource
 ## Ingrediente (porta IngredientSO). `scene` queda vacía hasta la fase 6.
 
-enum IngredientType { OCTOPUS }
+enum IngredientType { OCTOPUS, CACHELOS }
 enum CookingState { RAW, COOKED, BURNT }
 
 @export var display_name: String = ""
@@ -16,3 +16,4 @@ enum CookingState { RAW, COOKED, BURNT }
 @export var amount_per_full_box: float = 50.0
 @export var scene: PackedScene
 @export_multiline var description: String = ""
+@export var as_seasoning: SeasoningData

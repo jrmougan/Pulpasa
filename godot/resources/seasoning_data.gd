@@ -2,7 +2,7 @@ class_name SeasoningData
 extends Resource
 ## Condimento (porta SpicesSO). `scene` queda vacía hasta la fase 6.
 
-enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL }
+enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL, CACHELOS }
 
 @export var display_name: String = ""
 ## Clave tr() explícita; no se deriva del nombre del fichero.

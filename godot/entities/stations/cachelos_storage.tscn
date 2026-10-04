@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/stations/item_spawner.gd" id="1_d6uvc"]
+[ext_resource type="PackedScene" path="res://entities/items/cachelos.tscn" id="2_7y4y7"]
+[ext_resource type="PackedScene" path="res://assets/models/placeholders/cachelera.tscn" id="3_plchld"]
+[ext_resource type="Script" path="res://components/highlightable.gd" id="3_2k76u"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c1wrc"]
+size = Vector3(1.61, 2.33, 0.91)
+
+[node name="CachelosStorage" type="StaticBody3D" unique_id=2011447575 groups=["interactable"]]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_d6uvc")
+scene = ExtResource("2_7y4y7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1349150385]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.165, 0)
+shape = SubResource("BoxShape3D_c1wrc")
+
+[node name="Model" parent="." unique_id=837607216 instance=ExtResource("3_plchld")]
+
+[node name="Highlightable" type="Node" parent="." unique_id=624963848]
+unique_name_in_owner = true
+script = ExtResource("3_2k76u")
