@@ -49,6 +49,7 @@ Contrato: ADR-004 §5, `scene-tree.md` §4, `signals.md` (`character_switched`, 
 4. Tests en los 4 ficheros existentes + `test_ui_gamepad.gd` con eventos `InputEventJoypadButton`.
 
 ## Evidence
-- `tools/verify.sh` verde (440 tests). Capturas: `docs/evidence/PUL-036/menu.png` y `pausa_aviso.png`.
-- Jugadores 1-based (J1/J2) según `signals.md`. `DeviceAssignment` aún no existe (PUL-034): el HUD usa la constante local `NO_DEVICE = -2`; sustituir al mergear PUL-034.
+- `tools/verify.sh` verde (499 tests tras la revisión). Capturas: `docs/evidence/PUL-036/menu.png` y `pausa_aviso.png`.
+- Jugadores 1-based (J1/J2) según `signals.md`. El HUD usa `DeviceAssignment.NONE` (PUL-034 integrado).
+- Revisión: el indicador «Controlas» solo se procesa en SINGLE y para el jugador 1 (oculto en COOP_2P); el modo se lee de `GameState.mode` inyectable (`set_game_state`). Regresiones de la secuencia real de GameState en `test_pause_menu.gd`.
 - El HUD sube 32 px su borde superior para alojar las etiquetas nuevas.

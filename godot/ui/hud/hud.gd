@@ -2,9 +2,8 @@ class_name RoundHUD
 extends Control
 ## Presentación del reloj único y la recaudación. No arranca rondas ni acumula delta.
 
-const NO_DEVICE: int = -2  ## DeviceAssignment.NONE (ADR-004): solo teclado.
-
 var _bus: Node
+var _game_state: Node
 var _duration: float = 0.0
 var _time_left: float = 0.0
 var _boxes: int = 0
@@ -21,6 +20,8 @@ var _notice_tween: Tween
 func _ready() -> void:
 	if _bus == null:
 		_bus = EventBus
+	if _game_state == null:
+		_game_state = GameState
 	_bus.round_started.connect(_on_round_started)
 	_bus.round_time_changed.connect(_on_time_changed)
 	_bus.score_changed.connect(_on_score_changed)
@@ -35,6 +36,11 @@ func _ready() -> void:
 
 func set_bus(bus: Node) -> void:
 	_bus = bus
+
+
+## Inyección para pruebas (solo se lee `mode`); por defecto se usa el autoload.
+func set_game_state(state: Node) -> void:
+	_game_state = state
 
 
 func _on_round_started(duration: float) -> void:
@@ -56,13 +62,16 @@ func _on_score_changed(boxes_delivered: int, revenue: int) -> void:
 	_render()
 
 
-func _on_character_switched(_player_index: int, character_index: int) -> void:
+func _on_character_switched(player_index: int, character_index: int) -> void:
+	# En COOP_2P cada jugador tiene su personaje fijo: el indicador solo tiene sentido en SINGLE.
+	if _game_state.mode != GameMode.Mode.SINGLE or player_index != 1:
+		return
 	_active_label.text = _text("HUD_ACTIVE_CHARACTER", "Controlas: P%d") % character_index
 	_active_label.show()
 
 
 func _on_device_assigned(player_index: int, device: int) -> void:
-	if device == NO_DEVICE:
+	if device == DeviceAssignment.NONE:
 		return
 	_notice.text = _text("HUD_DEVICE_CONNECTED", "J%d conectado") % player_index
 	_notice.show()

@@ -150,6 +150,22 @@ func test_ac3_disconnect_warning_shows_same_frame_and_hides_on_assign() -> void:
 	assert_false(_menu.get_node("%DeviceWarning").visible)
 
 
+func test_ac3_real_sequence_withdrawal_then_disconnect_shows_warning() -> void:
+	GameState.set_paused(true)
+	EventBus.device_assigned.emit(2, DeviceAssignment.NONE)
+	EventBus.device_disconnected.emit(2)
+	assert_true(_menu.get_node("%DeviceWarning").visible)
+	assert_eq(_menu.get_node("%DeviceWarning").text, "Mando de J2 desconectado")
+
+
+func test_ac3_single_reconnect_with_any_hides_warning() -> void:
+	GameState.set_paused(true)
+	EventBus.device_disconnected.emit(1)
+	assert_true(_menu.get_node("%DeviceWarning").visible)
+	EventBus.device_assigned.emit(1, DeviceAssignment.ANY)
+	assert_false(_menu.get_node("%DeviceWarning").visible)
+
+
 func test_ac3_warning_appears_with_pause_already_open() -> void:
 	GameState.set_paused(true)
 	assert_true(_menu.visible)
