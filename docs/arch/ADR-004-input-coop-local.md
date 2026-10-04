@@ -102,6 +102,14 @@ Hot-plug (M2), `GameState` escucha `Input.joy_connection_changed`:
   primer jugador en `NONE`; si no hay ninguno, queda sin asignar. Se emite `device_assigned`.
   En `SINGLE` no hace falta reasignar (`ANY` ya lo acepta).
 
+*Aclaración 2026-10-04, ratificada por el responsable tras la revisión de PUL-034:*
+- «Durante la ronda» = entre `round_started` y `round_finished`. Fuera de ese tramo, retirar un
+  mando no pausa: solo emite `device_assigned(p, NONE)`.
+- Al retirar un mando en ronda se emiten `device_disconnected(p)` y `device_assigned(p, NONE)`.
+- En `SINGLE`, J1 conserva `ANY`. Si se desconecta el último mando conectado durante la ronda, se
+  pausa y se emite `device_disconnected(1)`; al conectarse cualquier mando se emite
+  `device_assigned(1, ANY)` para retirar el aviso.
+
 Casos de test (unitarios sobre `DeviceAssignment` + uno de integración sobre el InputMap):
 teclado + un mando (J1 no responde al mando de J2), dos mandos (cada uno mueve solo a su
 jugador), desconexión del mando de J2 (J2 sigue con K2, J1 no gana el mando), reconexión (vuelve a
