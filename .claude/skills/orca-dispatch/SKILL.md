@@ -61,6 +61,9 @@ Para alcance, ADRs, game feel y fin de hito:
   y la entrada se pierde): libera el worker y lanza uno nuevo sobre la misma rama con
   `--task <task de la ronda> --retry-of <dispatch fallido> --worktree branch:<rama> --agent antigravity --model <id>`.
   Modelos: `agy models` (p. ej. `gemini-3.1-pro-high` para fichas difíciles, `gemini-3.8-flash-high` para medias).
+- Con `gemini-3.1-pro-*`, el «Signing in…» del arranque supera la espera de Orca y `worker-start` falla en
+  `agent_readiness` (aunque `ok:true` al lanzar): comprueba el `stage` y, si falla, usa la vía de kimi
+  (terminal propio con `agy --dangerously-skip-permissions --model <id>` + `task-create` + `dispatch --inject` + Enter).
 - **kimi** (`kimi`, K3): Orca no lo reconoce como agente, `worker-start --terminal` falla en `agent_readiness`.
   Receta (vía no supervisada, low-level-topology):
   1. `orca-ide worktree create --name pul-0xx --base-branch <rama-integración> --setup skip --json`
