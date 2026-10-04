@@ -1,8 +1,9 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-006 AC5: RoundState con reloj único (B2), fin exacto y textos de rendimiento del prototipo.
 
-const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
-const CONFIG_PATH: String = "res://data/config/round_config.tres"
+const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+const CONFIG_PATH: String = "res://tests/helpers/m0_data/m0_round_config.tres"
 const SLOTS: Array[int] = [0, 1, 2, 3]
 const TICK: float = 1.0 / 60.0
 
@@ -298,3 +299,86 @@ func test_ac5_trace_final_tick_with_delta_beyond_time_left() -> void:
 	_round.advance(100.0)
 	assert_eq(_trace, expected)
 	assert_eq(_round.get_time_left(), 0.0)
+
+
+# --- M1: entrega-y-puntuacion ---
+
+
+func test_entrega_ac4_time_bonus() -> void:
+	# Given receta base 10, max_time 60, time_bonus_max 5
+	var round_state: RoundState = RoundState.new(load(CONFIG_PATH) as RoundConfig, _board)
+	round_state._config.time_bonus_max = 5
+	round_state.start([0])
+	var order: ActiveOrder = _board.get_order_for_slot(0)
+	order.data.recipe.base_price = 10
+	order.max_time = 60.0
+	order.time_left = 30.0  # 30s remaining
+	watch_signals(round_state)
+
+	# When
+	_board.order_completed.emit(order, 10)
+
+	# Then 10 + floor(30/60 * 5) = 12
+	assert_eq(round_state.get_revenue(), 12)
+	assert_signal_emitted_with_parameters(round_state, "score_changed", [1, 12])
+
+
+func test_entrega_ac5_time_bonus_1s() -> void:
+	var round_state: RoundState = RoundState.new(load(CONFIG_PATH) as RoundConfig, _board)
+	round_state._config.time_bonus_max = 5
+	round_state.start([0])
+	var order: ActiveOrder = _board.get_order_for_slot(0)
+	order.data.recipe.base_price = 10
+	order.max_time = 60.0
+	order.time_left = 1.0
+	watch_signals(round_state)
+
+	_board.order_completed.emit(order, 10)
+
+	# 10 + floor(1/60 * 5) = 10
+	assert_eq(round_state.get_revenue(), 10)
+
+
+func test_entrega_ac6_stars() -> void:
+	var c: RoundConfig = RoundConfig.new()
+	c.revenue_thresholds = [30, 60, 90]
+	assert_eq(RoundResult.new(10.0, 1, 29, [], [], c.revenue_thresholds).stars, 0)
+	assert_eq(RoundResult.new(10.0, 1, 30, [], [], c.revenue_thresholds).stars, 1)
+	assert_eq(RoundResult.new(10.0, 1, 59, [], [], c.revenue_thresholds).stars, 1)
+	assert_eq(RoundResult.new(10.0, 1, 60, [], [], c.revenue_thresholds).stars, 2)
+	assert_eq(RoundResult.new(10.0, 1, 90, [], [], c.revenue_thresholds).stars, 3)
+
+
+func test_entrega_ac7_revenue_not_negative() -> void:
+	var round_state: RoundState = RoundState.new(load(CONFIG_PATH) as RoundConfig, _board)
+	round_state._config.expire_penalty = 3
+	round_state.start([0])
+	round_state._revenue = 2
+	var order: ActiveOrder = _board.get_order_for_slot(0)
+
+	_board.order_expired.emit(order, 3)
+
+	assert_eq(round_state.get_revenue(), 0)
+
+
+func test_entrega_ac2_caja_erronea_d8() -> void:
+	# AC2 Caja errónea: delivery_rejected con penalty > 0 y recaudación reducida sin bajar de 0
+	var round_state: RoundState = RoundState.new(load(CONFIG_PATH) as RoundConfig, _board)
+	round_state._config.wrong_delivery_penalty = 5
+	round_state.start([0])
+	round_state._revenue = 2
+
+	_board.delivery_rejected.emit(0, 1, 1)  # penalty > 0 flag
+
+	assert_eq(round_state.get_revenue(), 0)
+
+
+func test_partida_5_min_ac6_duration() -> void:
+	var c: RoundConfig = RoundConfig.new()
+	c.duration = 60.0
+	var rs: RoundState = RoundState.new(c, _board)
+	rs.start([0])
+	assert_eq(rs.get_time_left(), 60.0)
+	c.duration = 120.0
+	rs.start([0])
+	assert_eq(rs.get_time_left(), 120.0)

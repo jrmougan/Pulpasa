@@ -377,7 +377,7 @@ func test_ac5_pause_and_resume_keeps_state_within_tolerance() -> void:
 
 
 func test_ac6_round_end_and_retry_reset_state() -> void:
-	assert_eq(ROUND_CONFIG.duration, 180.0, "M0: ronda de 180 s")
+	assert_eq(ROUND_CONFIG.duration, 300.0, "M1: ronda de 300 s")
 	await _play_from_menu()
 	watch_signals(EventBus)
 	var old_level: Node = _level
@@ -418,5 +418,5 @@ func test_ac6_round_end_and_retry_reset_state() -> void:
 	assert_null(_kitchen().get_ingredient())
 	assert_eq(_alive("Box").size() + _alive("Ingredient").size(), 0)
 	assert_false((_level.get_node("UI/GameOver") as Control).visible)
-	assert_eq((_level.get_node("UI/HUD/%TimeLeft") as Label).text, "180.0s")
+	assert_eq((_level.get_node("UI/HUD/%TimeLeft") as Label).text, "300.0s")
 	assert_false(get_tree().paused)

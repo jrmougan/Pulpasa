@@ -4,7 +4,7 @@ extends GutTest
 
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 const OrderServiceScript: GDScript = preload("res://autoload/order_service.gd")
-const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
+const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
 
 var _bus: Node
 var _service: Node

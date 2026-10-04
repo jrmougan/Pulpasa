@@ -17,9 +17,10 @@ const NO_ORDER: int = -1
 ## 1e-12 y debe caducar en el tick 3600. Es muy inferior a cualquier delta real, así que nunca se
 ## caduca antes del límite (advance(59,9999995) deja 5e-7 s y no caduca).
 const EXPIRY_EPSILON: float = 1e-9
-## Penalizaciones M0 (paridad): ninguna. M1 (D8) las lee de datos.
-const REJECT_PENALTY: int = 0
-const EXPIRE_PENALTY: int = 0
+## Penalizaciones M0 (paridad): ninguna. M1 (D8) las lee de datos (RoundState).
+## Emitimos 1 como flag para que RoundState aplique el valor configurado.
+const REJECT_PENALTY: int = 1
+const EXPIRE_PENALTY: int = 1
 
 var _catalog: OrderCatalog
 var _rng: RandomNumberGenerator

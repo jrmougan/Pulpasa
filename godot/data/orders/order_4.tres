@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" path="res://resources/order_data.gd" id="1_ord"]
 [ext_resource type="Resource" path="res://data/recipes/individual.tres" id="2_rec"]
-[ext_resource type="Resource" path="res://data/seasonings/paprika.tres" id="3_sea"]
-[ext_resource type="Resource" path="res://data/seasonings/salt.tres" id="4_sea"]
+[ext_resource type="Resource" path="res://data/seasonings/oil.tres" id="3_sea"]
+[ext_resource type="Resource" path="res://data/seasonings/paprika.tres" id="4_sea"]
 
 [resource]
 script = ExtResource("1_ord")
-display_name = "Order 2"
+display_name = "Order 4"
 recipe = ExtResource("2_rec")
 seasonings = [ExtResource("3_sea"), ExtResource("4_sea")]
-max_time = 40.0
+max_time = 75.0

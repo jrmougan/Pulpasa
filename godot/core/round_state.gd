@@ -98,7 +98,8 @@ func _finish() -> void:
 		_boxes_delivered,
 		_revenue,
 		_config.performance_thresholds,
-		_config.performance_texts
+		_config.performance_texts,
+		_config.revenue_thresholds
 	)
 	round_finished.emit(_result)
 
@@ -107,15 +108,22 @@ func _whole_second(time_left: float) -> int:
 	return ceili(time_left - TIME_EPSILON)
 
 
-func _on_order_completed(_order: ActiveOrder, _points: int) -> void:
+func _on_order_completed(order: ActiveOrder, _points: int) -> void:
+	var base: int = order.data.recipe.base_price
+	var bonus: int = 0
+	if order.max_time > 0.0:
+		bonus = floori((order.time_left / order.max_time) * _config.time_bonus_max)
+	_revenue = maxi(0, _revenue + base + bonus)
 	_boxes_delivered += 1
 	score_changed.emit(_boxes_delivered, _revenue)
 
 
 func _on_order_expired(_order: ActiveOrder, _penalty: int) -> void:
+	_revenue = maxi(0, _revenue - _config.expire_penalty)
 	score_changed.emit(_boxes_delivered, _revenue)
 
 
 func _on_delivery_rejected(_slot_id: int, _order_id: int, penalty: int) -> void:
 	if penalty > 0:
+		_revenue = maxi(0, _revenue - _config.wrong_delivery_penalty)
 		score_changed.emit(_boxes_delivered, _revenue)

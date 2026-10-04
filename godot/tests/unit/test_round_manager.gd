@@ -5,8 +5,8 @@ extends GutTest
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 const OrderServiceScript: GDScript = preload("res://autoload/order_service.gd")
 const RoundManagerScript: GDScript = preload("res://autoload/round_manager.gd")
-const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
-const CONFIG_PATH: String = "res://data/config/round_config.tres"
+const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+const CONFIG_PATH: String = "res://tests/helpers/m0_data/m0_round_config.tres"
 const SLOTS: Array[int] = [0, 1, 2, 3]
 const TICK: float = 1.0 / 60.0
 
