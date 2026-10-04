@@ -8,5 +8,5 @@ const CONFIG: RoundConfig = preload("res://data/config/round_config.tres")
 func _ready() -> void:
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = 20
-	OrderService.setup(CATALOG, null, rng)
+	OrderService.setup(CATALOG, rng)
 	RoundManager.start_round(CONFIG, [1, 2, 3, 4] as Array[int])

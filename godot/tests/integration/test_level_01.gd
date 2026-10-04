@@ -148,12 +148,13 @@ func test_ac1_level_has_one_player_four_stands_with_orders_hud_and_tickets() -> 
 
 	var stands: Array[OrderStand] = _stands()
 	assert_eq(_level.get("stands").size(), STAND_COUNT)
+	# M1: las comandas iniciales se generan tras first_order_delay (5 s, dato).
+	RoundManager.round_state.advance(5.0)
 	for i: int in STAND_COUNT:
 		assert_eq(stands[i].slot_id, i + 1)
 		assert_eq(_level.get("stands")[i], stands[i])
 		var label: String = (stands[i].get_node("%OrderLabel") as Label3D).text
 		assert_ne(label, "–", "el puesto %d tiene comanda" % (i + 1))
-	RoundManager.round_state.advance(5.0)
 	assert_eq(_slot_ids(OrderService.get_active_orders()), [1, 2, 3, 4] as Array[int])
 
 	var hud: Control = _level.get_node("UI/HUD")
@@ -269,6 +270,9 @@ func _ui_rects() -> Array[Rect2]:
 
 func test_ui_does_not_cover_fridge_pot_or_shelves_with_game_camera() -> void:
 	await _load_level_at_project_size()
+	# M1: los tickets aparecen con las comandas, tras first_order_delay (5 s, dato).
+	RoundManager.round_state.advance(5.0)
+	await wait_process_frames(2)
 	var camera: Camera3D = _level.get_node("CameraRig")
 	var screen: Rect2 = Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
 	var rects: Array[Rect2] = _ui_rects()
@@ -283,6 +287,9 @@ func test_ui_does_not_cover_fridge_pot_or_shelves_with_game_camera() -> void:
 
 func test_ui_layout_matches_unity_strip_and_corner() -> void:
 	await _load_level_at_project_size()
+	# M1: los tickets aparecen con las comandas, tras first_order_delay (5 s, dato).
+	RoundManager.round_state.advance(5.0)
+	await wait_process_frames(2)
 	var screen_size: Vector2 = get_viewport().get_visible_rect().size
 	var hud: Rect2 = (_level.get_node("UI/HUD") as Control).get_global_rect()
 	assert_lt(hud.position.x, screen_size.x * 0.25, "HUD a la izquierda")
@@ -363,16 +370,54 @@ func test_ac3_retry_after_round_finished_leaves_clean_state() -> void:
 	var after: Dictionary[String, int] = _emit_counts()
 	assert_eq(after["orders_reset"] - before["orders_reset"], 1)
 	assert_eq(after["round_started"] - before["round_started"], 1)
-	assert_eq(after["order_generated"] - before["order_generated"], STAND_COUNT)
 	assert_eq(after["round_finished"] - before["round_finished"], 0)
-	RoundManager.round_state.advance(5.0)
-	assert_eq(_slot_ids(OrderService.get_active_orders()), [1, 2, 3, 4] as Array[int])
 	assert_almost_eq(RoundManager.round_state.get_time_left(), config.duration, 0.1)
+	# M1: las comandas iniciales se generan tras first_order_delay (5 s, dato).
+	RoundManager.round_state.advance(5.0)
+	var after_delay: Dictionary[String, int] = _emit_counts()
+	assert_eq(after_delay["order_generated"] - after["order_generated"], STAND_COUNT)
+	assert_eq(_slot_ids(OrderService.get_active_orders()), [1, 2, 3, 4] as Array[int])
 	var new_kitchen: CookingStation = _level.get_node("Stations/Kitchen")
 	assert_false(new_kitchen.is_cooking(), "olla libre")
 	assert_null(new_kitchen.get_ingredient())
 	assert_eq(_level.get_node("Items").get_child_count(), 0)
 	assert_false((_level.get_node("UI/GameOver") as GameOver).visible)
+
+
+# --- M1: penalizaciones cableadas en el nivel (PUL-027, D2/D8) -----------------------------------
+
+
+## La configuración real del nivel llega al tablero (`OrderService.setup(order_catalog, null,
+## round_config)`): una entrega ingresa y cada caducidad resta el `expire_penalty` de los datos.
+## Robusto al rng del nivel: cuenta las caducidades emitidas en vez de asumir plantillas.
+func test_m1_level_wires_expire_penalty_from_data() -> void:
+	await _enter_level(func() -> Error: return GameState.start_level(GameMode.Mode.SINGLE))
+	RoundManager.round_state.advance(5.0)
+	var order: ActiveOrder = OrderService.get_active_orders()[0]
+	var contents: BoxContents = BoxContents.new(
+		order.data.recipe.box,
+		order.data.recipe.ingredient,
+		IngredientData.CookingState.COOKED,
+		1.0,
+		order.data.seasonings.duplicate()
+	)
+	OrderService.try_deliver(order.slot_id, contents)
+	var revenue: int = RoundManager.round_state.get_revenue()
+	assert_gt(revenue, 0, "la entrega ingresa base + bonus")
+
+	var config: RoundConfig = _level.get("round_config")
+	var max_times: Array[float] = []
+	for active: ActiveOrder in OrderService.get_active_orders():
+		max_times.append(active.max_time)
+	watch_signals(EventBus)
+	RoundManager.round_state.advance(max_times.min() + 0.1)
+	var expiries: int = get_signal_emit_count(EventBus, "order_expired")
+	assert_gt(expiries, 0, "al menos la comanda más impaciente caduca")
+	assert_eq(
+		RoundManager.round_state.get_revenue(),
+		maxi(0, revenue - config.expire_penalty * expiries),
+		"cada caducidad resta expire_penalty de los datos"
+	)
 
 
 ## Conexiones por señal del bus que usan nivel y UI.

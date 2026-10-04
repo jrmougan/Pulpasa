@@ -5,8 +5,8 @@ extends GutTest
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 const OrderServiceScript: GDScript = preload("res://autoload/order_service.gd")
 const RoundManagerScript: GDScript = preload("res://autoload/round_manager.gd")
-const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
-const CONFIG_PATH: String = "res://data/config/round_config.tres"
+const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+const CONFIG_PATH: String = "res://tests/helpers/m0_data/m0_round_config.tres"
 const SLOTS: Array[int] = [0, 1, 2, 3]
 const TICK: float = 1.0 / 60.0
 
@@ -22,7 +22,7 @@ func before_each() -> void:
 	_service = OrderServiceScript.new()
 	_service.set_bus(_bus)
 	add_child_autofree(_service)
-	_service.setup(load(CATALOG_PATH) as OrderCatalog, null, _seeded_rng())
+	_service.setup(load(CATALOG_PATH) as OrderCatalog, _seeded_rng())
 	_manager = RoundManagerScript.new()
 	_manager.set_bus(_bus)
 	_manager.set_order_service(_service)
@@ -39,6 +39,8 @@ func _seeded_rng() -> RandomNumberGenerator:
 	return rng
 
 
+## Copia del config M0 con la duración dada (estos tests son de paridad M0: sin paciencia,
+## penalizaciones ni recaudación; la integración M1 con datos reales es el último test).
 func _config(duration: float = 180.0) -> RoundConfig:
 	var config: RoundConfig = (load(CONFIG_PATH) as RoundConfig).duplicate() as RoundConfig
 	config.duration = duration
@@ -166,7 +168,7 @@ func test_ac3_paused_tree_does_not_advance_round_clock() -> void:
 
 
 func test_ac3_paused_tree_does_not_advance_patience() -> void:
-	_service.setup(_patient_catalog(30.0), null, _seeded_rng())
+	_service.setup(_patient_catalog(30.0), _seeded_rng())
 	_manager.start_round(_config(), [0] as Array[int])
 	await get_tree().physics_frame
 	get_tree().paused = true
@@ -190,7 +192,7 @@ func test_ac1_physics_process_without_round_is_noop() -> void:
 
 
 func test_ac1_previous_round_state_is_fully_detached_on_restart() -> void:
-	_service.setup(_patient_catalog(10.0), null, _seeded_rng())
+	_service.setup(_patient_catalog(10.0), _seeded_rng())
 	_manager.start_round(_config(), [0] as Array[int])
 	var previous: RoundState = _manager.round_state
 	_manager.start_round(_config(), [0] as Array[int])
@@ -203,29 +205,29 @@ func test_ac1_previous_round_state_is_fully_detached_on_restart() -> void:
 	assert_eq(previous.get_boxes_delivered(), 0)
 	_service.board.advance(10.0)
 	assert_signal_emit_count(_bus, "order_expired", 1)
-	assert_signal_emit_count(_bus, "score_changed", 2)
+	# Con penalización 0 (datos M0) la caducidad no dispara `score_changed` (H2).
+	assert_signal_emit_count(_bus, "score_changed", 1)
 	_manager.round_state.advance(1.0)
 	assert_signal_emit_count(_bus, "round_time_changed", 1)
 
 
+## H5: integración RoundManager+OrderService con los datos reales (recaudación D2, caducidad −3).
 func test_m1_ac2_ac4_integration_with_real_data() -> void:
 	var config: RoundConfig = load("res://data/config/round_config.tres") as RoundConfig
-	_service.setup(load("res://data/orders/order_catalog.tres") as OrderCatalog, config)
-	_manager.start_round(config, [1])
+	_service.setup(
+		load("res://data/orders/order_catalog.tres") as OrderCatalog, _seeded_rng(), config
+	)
+	_manager.start_round(config, [1] as Array[int])
 	watch_signals(_bus)
 
 	_manager.round_state.advance(5.0)
-	var order: ActiveOrder = _manager.round_state._board.get_order_for_slot(1)
+	var order: ActiveOrder = _service.board.get_order_for_slot(1)
 	var base: int = order.data.recipe.base_points
-	var bonus: int = floori((order.time_left / order.max_time) * 5)
+	var bonus: int = floori((order.time_left / order.max_time) * 5.0)
 
-	var box: BoxContents = order.data.recipe.box.duplicate()
-	box.seasonings = order.data.seasonings.duplicate()
-	_service.board.try_deliver(1, box)
+	_service.try_deliver(1, _contents_for(order))
+	assert_signal_emitted_with_parameters(_bus, "score_changed", [1, base + bonus])
 
-	var expected_revenue: int = base + bonus
-	assert_signal_emitted_with_parameters(_bus, "score_changed", [1, expected_revenue])
-
-	var next_order: ActiveOrder = _manager.round_state._board.get_order_for_slot(1)
-	_manager.round_state.advance(next_order.time_left + 0.1)
-	assert_signal_emitted_with_parameters(_bus, "score_changed", [1, expected_revenue - 3])
+	var next_order: ActiveOrder = _service.board.get_order_for_slot(1)
+	_manager.round_state.advance(next_order.max_time + 0.1)
+	assert_signal_emitted_with_parameters(_bus, "score_changed", [1, base + bonus - 3])

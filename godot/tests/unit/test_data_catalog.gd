@@ -40,11 +40,12 @@ func test_ac1_order_2_individual_with_two_spices() -> void:
 	)
 
 
-func test_ac1_order_3_combo_duo_without_spices() -> void:
+func test_ac1_order_3_combo_duo_with_oil() -> void:
 	var order: OrderData = (load(CATALOG_PATH) as OrderCatalog).orders[2]
 	assert_eq(order.recipe.display_name, "Pulpo Doble")
 	assert_eq(order.recipe.box.display_name, "Mediana")
-	assert_eq(order.seasonings.size(), 0)
+	# M1 (PUL-027): el combo duo lleva aceite (comandas AC5: plantillas con aceite y pimentón).
+	assert_eq(_seasoning_types(order), [SeasoningData.SeasoningType.OIL])
 
 
 func test_ac1_parity_values() -> void:

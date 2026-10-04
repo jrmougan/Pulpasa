@@ -36,6 +36,8 @@ func _init(config: RoundConfig, board: OrderBoard) -> void:
 
 
 ## Arranque determinista (B10, B11): reset del tablero, comandas iniciales, reloj y `round_started`.
+## Con `first_order_delay` > 0 (M1) las comandas iniciales se difieren a `advance`; si es 0
+## (paridad M0) se generan aquí, antes de `round_started` (signals.md).
 func start(slot_ids: Array[int]) -> void:
 	_time_left = _config.duration
 	_boxes_delivered = 0
@@ -46,12 +48,11 @@ func start(slot_ids: Array[int]) -> void:
 	_first_orders_filled = false
 	_board.reset()
 	_running = true
-	round_time_changed.emit(_time_left)
-	round_started.emit(_config.duration)
-
 	if _config.first_order_delay <= 0.0:
 		_board.fill_slots(_slot_ids)
 		_first_orders_filled = true
+	round_time_changed.emit(_time_left)
+	round_started.emit(_config.duration)
 
 
 ## Un paso de reloj, en el orden de ADR-002: paciencia y caducidad del tablero, luego el reloj y,

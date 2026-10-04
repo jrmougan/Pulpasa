@@ -12,6 +12,8 @@ const TICK: float = 1.0 / 60.0
 var _board: OrderBoard
 var _round: RoundState
 var _trace: Array[String] = []
+var _m1_board: OrderBoard
+var _m1_round: RoundState
 
 
 func before_each() -> void:
@@ -235,17 +237,16 @@ func _traced(catalog: OrderCatalog) -> void:
 	_round.score_changed.connect(func(b: int, _r: int) -> void: _trace.append("score:%d" % b))
 
 
-## Traza esperada del tick final: paciencia de todas (por slot) → expired/score/generated por
-## slot ascendente → time_changed(0) → finished.
+## Traza esperada del tick final: paciencia de todas (por slot) → expired/generated por
+## slot ascendente → time_changed(0) → finished. Con penalización 0 (datos M0) `order_expired`
+## no dispara `score_changed` (H2: la señal solo sale con `penalty` > 0).
 func _expected_final_tick() -> Array[String]:
 	var expected: Array[String] = []
 	var orders: Array[ActiveOrder] = _board.get_active_orders()
 	for order: ActiveOrder in orders:
 		expected.append("patience:%d" % order.id)
 	for order: ActiveOrder in orders:
-		expected.append_array(
-			["expired:%d" % order.slot_id, "score:0", "generated:%d" % order.slot_id]
-		)
+		expected.append_array(["expired:%d" % order.slot_id, "generated:%d" % order.slot_id])
 	expected.append_array(["time:0.000", "finished"])
 	return expected
 
@@ -303,138 +304,122 @@ func test_ac5_trace_final_tick_with_delta_beyond_time_left() -> void:
 	assert_eq(_round.get_time_left(), 0.0)
 
 
-# --- M1: entrega-y-puntuacion ---
+# --- M1: entrega-y-puntuacion (flujo real con los datos de res://data) ---
 
 
-func _setup_m1_state() -> RoundState:
+func _seeded_rng() -> RandomNumberGenerator:
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = 7
+	return rng
+
+
+## Crea tablero y ronda con los datos reales de M1 (paciencia, `first_order_delay` y
+## penalizaciones de `round_config.tres`) y arranca la ronda. Sin mutar los recursos cargados.
+func _start_m1_round(slot_ids: Array[int]) -> void:
 	var catalog: OrderCatalog = load(M1_CATALOG_PATH) as OrderCatalog
 	var config: RoundConfig = load(M1_CONFIG_PATH) as RoundConfig
-	var board: OrderBoard = OrderBoard.new(
+	_m1_board = OrderBoard.new(
 		catalog, _seeded_rng(), config.wrong_delivery_penalty, config.expire_penalty
 	)
-	var rs: RoundState = RoundState.new(config, board)
-	return rs
+	_m1_round = RoundState.new(config, _m1_board)
+	_m1_round.start(slot_ids)
+
+
+## Avanza hasta que se generan las comandas iniciales (`first_order_delay` = 5 s).
+func _advance_past_first_order_delay() -> void:
+	_m1_round.advance(5.0)
+
+
+## Entrega correcta por el flujo real (`try_deliver`) y devuelve la recaudación resultante.
+func _m1_deliver(slot: int) -> int:
+	var order: ActiveOrder = _m1_board.get_order_for_slot(slot)
+	_m1_board.try_deliver(slot, _contents_for(order))
+	return _m1_round.get_revenue()
 
 
 func test_comandas_ac1_first_order_delay() -> void:
-	var rs: RoundState = _setup_m1_state()
-	watch_signals(rs._board)
-	rs.start([1])
-	# At 0s, no order generated yet
-	assert_eq(rs._board.get_active_orders().size(), 0)
-
-	# Advance just before 5s
-	rs.advance(4.9)
-	assert_eq(rs._board.get_active_orders().size(), 0)
-
-	# Advance exactly to 5s
-	rs.advance(0.1)
-	assert_eq(rs._board.get_active_orders().size(), 1)
-	assert_signal_emitted(rs._board, "order_generated")
+	_start_m1_round([1] as Array[int])
+	watch_signals(_m1_board)
+	assert_eq(_m1_board.get_active_orders().size(), 0, "sin comandas antes del retardo")
+	_m1_round.advance(4.9)
+	assert_eq(_m1_board.get_active_orders().size(), 0, "a 4,9 s aún no hay comandas")
+	assert_signal_not_emitted(_m1_board, "order_generated")
+	_m1_round.advance(0.1)
+	assert_eq(_m1_board.get_active_orders().size(), 1, "a 5,0 s ya hay comanda")
+	assert_signal_emit_count(_m1_board, "order_generated", 1)
 
 
 func test_entrega_ac4_time_bonus() -> void:
-	var rs: RoundState = _setup_m1_state()
-	rs.start([1])
-	rs.advance(5.0)  # spawn order
-	watch_signals(rs)
-
-	var order: ActiveOrder = rs._board.get_order_for_slot(1)
+	_start_m1_round([1] as Array[int])
+	_advance_past_first_order_delay()
+	var order: ActiveOrder = _m1_board.get_order_for_slot(1)
 	var base: int = order.data.recipe.base_points
-	var bonus: int = floori((order.time_left / order.max_time) * 5)
-
-	var box: BoxContents = order.data.recipe.box.duplicate()
-	box.seasonings = order.data.seasonings.duplicate()
-
-	rs._board.try_deliver(1, box)
-
-	assert_eq(rs.get_revenue(), base + bonus)
-	assert_signal_emitted_with_parameters(rs, "score_changed", [1, base + bonus])
+	var bonus: int = floori((order.time_left / order.max_time) * 5.0)
+	watch_signals(_m1_round)
+	_m1_board.try_deliver(1, _contents_for(order))
+	assert_eq(_m1_round.get_revenue(), base + bonus)
+	assert_signal_emitted_with_parameters(_m1_round, "score_changed", [1, base + bonus])
 
 
-func test_entrega_ac5_time_bonus_1s() -> void:
-	var rs: RoundState = _setup_m1_state()
-	rs.start([1])
-	rs.advance(5.0)
-	var order: ActiveOrder = rs._board.get_order_for_slot(1)
-	rs.advance(order.time_left - 1.0)  # 1s remaining
-
-	var base: int = order.data.recipe.base_points
-	var box: BoxContents = order.data.recipe.box.duplicate()
-	box.seasonings = order.data.seasonings.duplicate()
-
-	rs._board.try_deliver(1, box)
-	assert_eq(rs.get_revenue(), base)  # bonus is 0 because 1/max_time * 5 is < 1
-
-
+## AC5b: la comanda caducó en el último `advance` (empate): rechazo con `penalty` 0, sin restar
+## y sin redirigir a la repuesta (ADR-002).
 func test_entrega_ac5b_tie_break_penalty_0() -> void:
-	var rs: RoundState = _setup_m1_state()
-	rs.start([1])
-	rs.advance(5.0)
-	var order: ActiveOrder = rs._board.get_order_for_slot(1)
-
-	# advance until just expired
-	rs.advance(order.time_left + 0.1)
-
-	var box: BoxContents = order.data.recipe.box.duplicate()
-	box.seasonings = order.data.seasonings.duplicate()
-
-	watch_signals(rs._board)
-	# delivery rejected with 0 penalty, no revenue subtracted
-	rs._board.try_deliver(1, box)
-	assert_signal_emitted_with_parameters(rs._board, "delivery_rejected", [1, order.id, 0])
-	assert_eq(rs.get_revenue(), 0)
+	_start_m1_round([1] as Array[int])
+	_advance_past_first_order_delay()
+	var order: ActiveOrder = _m1_board.get_order_for_slot(1)
+	_m1_round.advance(order.max_time + 0.1)
+	watch_signals(_m1_board)
+	assert_null(_m1_board.try_deliver(1, _contents_for(order)))
+	assert_signal_emitted_with_parameters(_m1_board, "delivery_rejected", [1, order.id, 0])
+	assert_eq(_m1_round.get_revenue(), 0)
 
 
+## AC5c: entrega a tiempo (sin `order_expired`): suma base + bonus completo.
 func test_entrega_ac5c_deliver_before_expire() -> void:
-	var rs: RoundState = _setup_m1_state()
-	rs.start([1])
-	rs.advance(5.0)
-	var order: ActiveOrder = rs._board.get_order_for_slot(1)
-	var base: int = order.data.recipe.base_points
-
-	var box: BoxContents = order.data.recipe.box.duplicate()
-	box.seasonings = order.data.seasonings.duplicate()
-
-	watch_signals(rs._board)
-	rs._board.try_deliver(1, box)
-	assert_signal_not_emitted(rs._board, "order_expired")
-	assert_eq(rs.get_revenue(), base + 5)  # full bonus
+	_start_m1_round([1] as Array[int])
+	_advance_past_first_order_delay()
+	var order: ActiveOrder = _m1_board.get_order_for_slot(1)
+	watch_signals(_m1_board)
+	_m1_board.try_deliver(1, _contents_for(order))
+	assert_signal_not_emitted(_m1_board, "order_expired")
+	assert_eq(_m1_round.get_revenue(), order.data.recipe.base_points + 5)
 
 
+## Comandas AC3: al agotarse la paciencia, `order_expired` una vez, −3 € (datos) y reposición
+## del puesto en el mismo `advance`. El ingreso previo se gana con una entrega real.
 func test_comandas_ac3_expire_replenish() -> void:
-	var rs: RoundState = _setup_m1_state()
-	rs.start([1])
-	rs.advance(5.0)
-	# make revenue 10 first
-	rs._revenue = 10
-	var order: ActiveOrder = rs._board.get_order_for_slot(1)
-
-	watch_signals(rs._board)
-	rs.advance(order.time_left + 0.1)
-
-	# penalty 3 subtracted
-	assert_eq(rs.get_revenue(), 7)
-	assert_signal_emitted(rs._board, "order_expired")
-	# new order spawned
-	assert_not_null(rs._board.get_order_for_slot(1))
+	_start_m1_round([1] as Array[int])
+	_advance_past_first_order_delay()
+	var revenue: int = _m1_deliver(1)
+	assert_gt(revenue, 3, "la entrega real deja recaudación suficiente")
+	var replenished: ActiveOrder = _m1_board.get_order_for_slot(1)
+	watch_signals(_m1_board)
+	_m1_round.advance(replenished.max_time + 0.1)
+	assert_signal_emit_count(_m1_board, "order_expired", 1)
+	assert_eq(_m1_round.get_revenue(), revenue - 3)
+	assert_not_null(_m1_board.get_order_for_slot(1), "repuesta en el mismo advance")
 
 
+## D8: caja errónea por `try_deliver` real: `delivery_rejected` con `penalty` 2 (datos) y −2 €.
 func test_entrega_d8_wrong_box_penalty() -> void:
-	var rs: RoundState = _setup_m1_state()
-	rs.start([1])
-	rs.advance(5.0)
-	rs._revenue = 1
-	var order: ActiveOrder = rs._board.get_order_for_slot(1)
+	_start_m1_round([1] as Array[int])
+	_advance_past_first_order_delay()
+	var revenue: int = _m1_deliver(1)
+	var order: ActiveOrder = _m1_board.get_order_for_slot(1)
+	watch_signals(_m1_board)
+	assert_null(_m1_board.try_deliver(1, BoxContents.new()))
+	assert_signal_emitted_with_parameters(_m1_board, "delivery_rejected", [1, order.id, 2])
+	assert_eq(_m1_round.get_revenue(), revenue - 2)
 
-	var wrong_box: BoxContents = BoxContents.new()
 
-	watch_signals(rs._board)
-	rs._board.try_deliver(1, wrong_box)
-
-	# penalty 2 subtracted, min 0
-	assert_signal_emitted_with_parameters(rs._board, "delivery_rejected", [1, order.id, 2])
-	assert_eq(rs.get_revenue(), 0)
+## D8: la recaudación nunca baja de 0 aunque la penalización supere lo recaudado.
+func test_entrega_d8_wrong_box_penalty_min_zero() -> void:
+	_start_m1_round([1] as Array[int])
+	_advance_past_first_order_delay()
+	watch_signals(_m1_round)
+	assert_null(_m1_board.try_deliver(1, BoxContents.new()))
+	assert_eq(_m1_round.get_revenue(), 0)
+	assert_signal_emitted_with_parameters(_m1_round, "score_changed", [0, 0])
 
 
 func test_entrega_ac6_stars() -> void:
@@ -447,6 +432,5 @@ func test_entrega_ac6_stars() -> void:
 
 
 func test_partida_5_min_ac6_duration() -> void:
-	var rs: RoundState = _setup_m1_state()
-	rs.start([1])
-	assert_eq(rs.get_time_left(), 300.0)
+	_start_m1_round([1] as Array[int])
+	assert_eq(_m1_round.get_time_left(), 300.0)

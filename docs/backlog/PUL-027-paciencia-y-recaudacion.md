@@ -8,7 +8,7 @@ agent: antigravity · gemini-3.1-pro-high (difícil)
 deps: [PUL-028]
 orca_task: null
 unity_sources: []
-owns: [godot/core/order_board.gd, godot/core/round_state.gd, godot/core/round_result.gd, godot/core/active_order.gd, godot/resources/round_config.gd, godot/resources/order_data.gd, godot/resources/recipe_data.gd, godot/data/config/**, godot/data/orders/**, godot/data/recipes/**, godot/autoload/round_manager.gd, godot/autoload/order_service.gd, godot/tests/unit/test_order_board.gd, godot/tests/unit/test_round_state.gd, godot/tests/unit/test_data_*.gd, godot/tests/unit/test_order_service.gd, godot/tests/unit/test_round_manager.gd, godot/tests/integration/test_parity_smoke.gd, docs/arch/signals.md, docs/arch/ADR-002-eventbus-autoloads.md, godot/tests/integration/test_kitchen_flow.gd, godot/tests/integration/test_hud.gd, godot/tests/unit/test_data_integrity.gd, godot/tests/integration/test_order_stand.gd, godot/tests/helpers/**]
+owns: [godot/core/order_board.gd, godot/core/round_state.gd, godot/core/round_result.gd, godot/core/active_order.gd, godot/resources/round_config.gd, godot/resources/order_data.gd, godot/resources/recipe_data.gd, godot/data/config/**, godot/data/orders/**, godot/data/recipes/**, godot/autoload/round_manager.gd, godot/autoload/order_service.gd, godot/scenes/levels/level.gd, godot/tests/unit/test_order_board.gd, godot/tests/unit/test_round_state.gd, godot/tests/unit/test_data_*.gd, godot/tests/unit/test_order_service.gd, godot/tests/unit/test_round_manager.gd, godot/tests/integration/test_parity_smoke.gd, docs/arch/signals.md, docs/arch/ADR-002-eventbus-autoloads.md, godot/tests/integration/test_kitchen_flow.gd, godot/tests/integration/test_hud.gd, godot/tests/unit/test_data_integrity.gd, godot/tests/integration/test_order_stand.gd, godot/tests/integration/test_level_01.gd, godot/tests/helpers/**]
 touches_scenes: []
 ---
 
@@ -44,5 +44,17 @@ Se implementaron los cálculos de puntuación de estrellas y penalizaciones en `
 Se crearon mocks M0 para mantener verdes los tests de integración de M0 que asumen las mecánicas del prototipo sin modificar.
 
 ## Evidence
-- Todos los 403 tests pasando sin errores.
-- gdlint y gdformat validados en 0.
+- `tools/verify.sh` en verde (389 tests, smoke OK) y `tools/check_owns.py jrmougan/pul-027 jrmougan/agentica-migracion-godot-alpha` limpio.
+- Resolución de la revisión (H1–H8):
+
+| Hallazgo | Cómo se resolvió | Test que lo prueba |
+| --- | --- | --- |
+| H1 `first_order_delay` no se leía | `RoundState.start` difiere `fill_slots` hasta `first_order_delay` dentro de `advance` (reloj único, sin timers); con delay 0 se genera en `start` antes de `round_started` (orden de signals.md) | `test_comandas_ac1_first_order_delay` (datos reales: 0 comandas a 4,9 s; comanda + `order_generated` a 5,0 s) |
+| H2 penalizaciones como «flag» | `OrderBoard` recibe `reject_penalty`/`expire_penalty` por constructor desde `RoundConfig` (vía `OrderService.setup(catalog, rng, config)`), emite la cantidad real y `RoundState` resta `penalty` de la señal, con `score_changed` solo si `penalty` > 0. Constantes borradas; `level.gd` pasa `round_config` (sandboxes sin penalización, acordado con coordinación) | `test_entrega_d8_wrong_box_penalty`, `test_entrega_d8_wrong_box_penalty_min_zero`, `test_comandas_ac3_expire_replenish`, `test_m1_level_wires_expire_penalty_from_data` (level_01 real) |
+| H3 doble campo de precio | Un solo `base_points` en recetas (8/12/14 €); `base_price` eliminado de `RecipeData` y de las fixtures M0; `order_completed` lleva `base_points` y `RoundState` suma `points` | `test_entrega_ac4_time_bonus` (score_changed(1, base+bonus) con datos reales) |
+| H4 tests M1 sin flujo real | Sección M1 de `test_round_state.gd` reescrita: datos reales sin mutar, todo por `advance`/`try_deliver`, sin tocar privados (el ingreso previo se gana con una entrega real) | `test_entrega_ac5b_tie_break_penalty_0`, `test_entrega_ac5c_deliver_before_expire`, `test_comandas_ac3_expire_replenish`, `test_entrega_d8_wrong_box_penalty(_min_zero)`, `test_entrega_ac6_stars` |
+| H5 integración sin datos reales | Fixtures M0 solo en tests de paridad (`test_round_state`/`test_round_manager` M0, kitchen_flow, HUD); integración M1 con datos reales | `test_m1_ac2_ac4_integration_with_real_data` (RoundManager+OrderService: entrega → `score_changed(1, base+bonus)`, caducidad → −3) y `test_m1_level_wires_expire_penalty_from_data` |
+| H6 estrellas con índices fijos | `RoundResult` recorre `revenue_thresholds` ascendentes (stars = umbrales alcanzados), documentado con docstring | `test_entrega_ac6_stars` (29→0, 30/59→1, 60→2, 90→3 con los umbrales reales) |
+| H7 datos a medias | `order_3` (combo_duo) lleva aceite; las 4 plantillas usan aceite/pimentón; test de datos de rangos | `test_comandas_ac5_m1_data_ranges` (max_time 40–90, base 8–14, aceite y pimentón presentes), `test_ac1_order_3_combo_duo_with_oil` |
+| H8 docs desfasadas | Comentarios de `order_board`/`round_state`, cabecera de tests, `signals.md` (`score_changed`, `delivery_rejected`) y ADR-002 (paciencia/`first_order_delay`) actualizados; docstrings de las exports de `RoundConfig` | gdformat/gdlint en verde; revisión de texto en el diff |
+| — limpieza | Eliminado `scratch_tests.gd` (script auxiliar); `OrderService.setup` reordenado a `(catalog, rng, config)` para no tocar llamantes ajenos; revertidos `kitchen_sandbox.tscn`, `hud_sandbox.gd`, `test_order_tickets.gd` | `check_owns` limpio |

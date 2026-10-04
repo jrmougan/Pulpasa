@@ -59,17 +59,18 @@ func test_ac1_player_config_has_detector_scoring_values() -> void:
 	assert_almost_eq(cfg.detector_origin_height, 0.8, 0.001)
 
 
-func test_m1_data_ranges() -> void:
-	# Valida rangos 40-90s de paciencia y base 8-14
+## Comandas AC5: el catálogo de la alpha cumple los rangos de M1 (paciencia 40–90 s,
+## base 8–14 €) y hay plantillas con aceite y con pimentón.
+func test_comandas_ac5_m1_data_ranges() -> void:
 	var catalog: OrderCatalog = load("res://data/orders/order_catalog.tres") as OrderCatalog
-	assert_gt(catalog.orders.size(), 0)
+	assert_gte(catalog.orders.size(), 4, "al menos 4 plantillas distintas")
 	var has_oil: bool = false
 	var has_paprika: bool = false
 
 	for order: OrderData in catalog.orders:
 		assert_between(order.max_time, 40.0, 90.0, "La paciencia debe estar entre 40 y 90")
 		assert_between(order.recipe.base_points, 8, 14, "El precio base debe estar entre 8 y 14")
-		for s in order.seasonings:
+		for s: SeasoningData in order.seasonings:
 			if s.type == SeasoningData.SeasoningType.OIL:
 				has_oil = true
 			if (
