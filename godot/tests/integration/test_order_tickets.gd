@@ -98,10 +98,38 @@ func test_ac3_late_panel_reconstructs_active_orders_and_text() -> void:
 		assert_eq((ticket.get_node("%OrderId") as Label).text, "#%d" % order.id)
 		var entry: TicketEntry = ticket.get_node("%Entry")
 		assert_eq((entry.get_node("%Recipe") as Label).text, order.data.recipe.display_name)
-		for seasoning: SeasoningData in order.data.seasonings:
-			assert_string_contains(
-				(entry.get_node("%Seasonings") as Label).text, seasoning.display_name
-			)
+
+
+func test_ac4_ticket_shows_one_icon_per_seasoning() -> void:
+	_mount()
+	_fill()
+	for order: ActiveOrder in _service.get_active_orders():
+		var entry: TicketEntry = _ticket(order.id).get_node("%Entry")
+		var icons: Array[Node] = (entry.get_node("%SeasoningIcons") as HBoxContainer).get_children()
+		assert_eq(icons.size(), order.data.seasonings.size(), "un icono por condimento")
+		for i: int in range(order.data.seasonings.size()):
+			var icon: TextureRect = icons[i] as TextureRect
+			assert_not_null(icon, "el icono es un TextureRect")
+			assert_not_null(order.data.seasonings[i].icon, "SeasoningData.icon asignado (PUL-031)")
+			assert_eq(icon.texture, order.data.seasonings[i].icon)
+
+
+func test_ac4_patience_bar_is_visible_and_decreases_linearly() -> void:
+	_mount()
+	_fill()
+	var order: ActiveOrder = _service.get_active_orders()[0]
+	var bar: TextureProgressBar = _ticket(order.id).get_node("%PatienceBar")
+	_bus.order_patience_changed.emit(order.id, 10.0, 10.0)
+	assert_true(bar.visible, "max_time > 0: la barra se muestra")
+	assert_eq(bar.max_value, 10.0)
+	assert_eq(bar.value, 10.0)
+	_bus.order_patience_changed.emit(order.id, 7.5, 10.0)
+	assert_eq(bar.value, 7.5)
+	_bus.order_patience_changed.emit(order.id, 5.0, 10.0)
+	assert_eq(bar.value, 5.0)
+	_bus.order_patience_changed.emit(order.id, 0.0, 10.0)
+	assert_eq(bar.value, 0.0)
+	assert_true(bar.visible, "decrece hasta 0 sin ocultarse mientras max_time > 0")
 
 
 func test_ac2_patience_is_hidden_in_m0_and_updates_only_own_id() -> void:

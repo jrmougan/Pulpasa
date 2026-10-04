@@ -1,14 +1,16 @@
 class_name RoundHUD
 extends Control
-## Presentación del reloj único. No arranca rondas ni acumula delta.
+## Presentación del reloj único y la recaudación. No arranca rondas ni acumula delta.
 
 var _bus: Node
 var _duration: float = 0.0
 var _time_left: float = 0.0
 var _boxes: int = 0
+var _revenue: int = 0
 
 @onready var _time_label: Label = %TimeLeft
 @onready var _rate_label: Label = %BoxesPerMinute
+@onready var _revenue_label: Label = %Revenue
 
 
 func _ready() -> void:
@@ -20,6 +22,7 @@ func _ready() -> void:
 	_bus.pause_changed.connect(_on_pause_changed)
 	%TimeTitle.text = _text("HUD_TIME_LEFT", "Tiempo restante")
 	%RateTitle.text = _text("HUD_BOXES_PER_MINUTE", "Cajas / minuto")
+	%RevenueTitle.text = _text("HUD_REVENUE", "Recaudación")
 	_render()
 
 
@@ -31,6 +34,7 @@ func _on_round_started(duration: float) -> void:
 	_duration = duration
 	_time_left = duration
 	_boxes = 0
+	_revenue = 0
 	_render()
 
 
@@ -39,8 +43,9 @@ func _on_time_changed(time_left: float) -> void:
 	_render()
 
 
-func _on_score_changed(boxes_delivered: int, _revenue: int) -> void:
+func _on_score_changed(boxes_delivered: int, revenue: int) -> void:
 	_boxes = boxes_delivered
+	_revenue = maxi(revenue, 0)
 	_render()
 
 
@@ -55,6 +60,7 @@ func _render() -> void:
 	_rate_label.text = "%.2f" % rate
 	var tone: StringName = &"ratio_good_color" if rate > 1.0 else &"ratio_bad_color"
 	_rate_label.add_theme_color_override(&"font_color", get_theme_color(tone, &"RoundHUD"))
+	_revenue_label.text = _text("HUD_REVENUE_FORMAT", "%d €") % _revenue
 
 
 func _text(key: String, fallback: String) -> String:

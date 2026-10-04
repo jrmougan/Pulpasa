@@ -2,6 +2,9 @@ class_name GameOver
 extends Control
 ## Resultado por señal, sin sondeo ni cálculo local de productividad.
 
+const STAR_FULL: Texture2D = preload("res://assets/textures/icons/star_full.svg")
+const STAR_EMPTY: Texture2D = preload("res://assets/textures/icons/star_empty.svg")
+
 var _game_state: Node
 
 @onready var panel: MenuPanel = %MenuPanel
@@ -40,5 +43,9 @@ func _on_round_finished(result: RoundResult) -> void:
 		return
 	panel.description.text = tr(result.get_performance_description())
 	panel.ratio.text = tr("Rendimiento: %.2f cajas/minuto") % result.boxes_per_minute
+	%Revenue.text = tr("Recaudación: %d €") % result.revenue
+	var stars: Array[Node] = %Stars.get_children()
+	for i: int in range(stars.size()):
+		(stars[i] as TextureRect).texture = STAR_FULL if i < result.stars else STAR_EMPTY
 	show()
 	panel.focus_primary()

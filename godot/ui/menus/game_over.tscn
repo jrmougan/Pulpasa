@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://ui/menus/game_over.gd" id="1_k5c08"]
 [ext_resource type="PackedScene" path="res://ui/menus/menu_panel.tscn" id="2_ghdab"]
+[ext_resource type="Texture2D" path="res://assets/textures/icons/star_empty.svg" id="3_stare"]
 
 [node name="GameOver" type="Control" unique_id=1599561603]
 process_mode = 3
@@ -18,3 +19,42 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[node name="Revenue" type="Label" parent="MenuPanel/Center/Card/Content" index="4"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Recaudación: 0 €"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Stars" type="HBoxContainer" parent="MenuPanel/Center/Card/Content" index="5"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Star1" type="TextureRect" parent="MenuPanel/Center/Card/Content/Stars"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_stare")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="MenuPanel/Center/Card/Content/Stars"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_stare")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="MenuPanel/Center/Card/Content/Stars"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_stare")
+expand_mode = 1
+stretch_mode = 5

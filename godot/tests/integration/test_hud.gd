@@ -1,5 +1,6 @@
 extends GutTest
 ## PUL-020: HUD dirigido exclusivamente por eventos del reloj de ronda.
+## PUL-030: recaudación en € (AC9–AC11 de entrega-y-puntuacion).
 
 const HUD_SCENE: PackedScene = preload("res://ui/hud/hud.tscn")
 const BusScript: GDScript = preload("res://autoload/event_bus.gd")
@@ -87,6 +88,30 @@ func test_ac1_productivity_uses_reported_boxes_and_elapsed_time() -> void:
 	assert_eq(_text("BoxesPerMinute"), "1.50")
 	_start()
 	assert_eq(_text("BoxesPerMinute"), "0.00", "reinicio sin score_changed inicial")
+
+
+func test_ac9_revenue_starts_at_zero_euros() -> void:
+	assert_eq(_text("Revenue"), "0 €", "recién montado")
+	_start()
+	assert_eq(_text("Revenue"), "0 €", "partida recién iniciada")
+
+
+func test_ac10_delivery_updates_revenue_on_the_signal() -> void:
+	_start()
+	_bus.score_changed.emit(1, 12)
+	assert_eq(_text("Revenue"), "12 €", "≤ 0,2 s: se actualiza al recibir score_changed")
+	_bus.score_changed.emit(2, 24)
+	assert_eq(_text("Revenue"), "24 €")
+
+
+func test_ac11_expiry_subtracts_revenue_but_never_below_zero() -> void:
+	_start()
+	_bus.score_changed.emit(2, 20)
+	assert_eq(_text("Revenue"), "20 €")
+	_bus.score_changed.emit(2, 17)
+	assert_eq(_text("Revenue"), "17 €", "caducidad con penalización de 3 €")
+	_bus.score_changed.emit(2, -5)
+	assert_eq(_text("Revenue"), "0 €", "nunca por debajo de 0")
 
 
 func test_pause_changed_dims_and_restores_hud() -> void:
