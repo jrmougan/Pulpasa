@@ -53,19 +53,29 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 focus_neighbor_top = NodePath("../Exit")
-focus_neighbor_bottom = NodePath("../Exit")
-focus_next = NodePath("../Exit")
+focus_neighbor_bottom = NodePath("../Local2P")
+focus_next = NodePath("../Local2P")
 focus_previous = NodePath("../Exit")
 theme_type_variation = &"MenuPrimaryButton"
+
+[node name="Local2P" type="Button" parent="Center/Column" unique_id=258324275]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+focus_neighbor_top = NodePath("../Play")
+focus_neighbor_bottom = NodePath("../Exit")
+focus_next = NodePath("../Exit")
+focus_previous = NodePath("../Play")
+theme_type_variation = &"MenuSecondaryButton"
 
 [node name="Exit" type="Button" parent="Center/Column" unique_id=1959124435]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-focus_neighbor_top = NodePath("../Play")
+focus_neighbor_top = NodePath("../Local2P")
 focus_neighbor_bottom = NodePath("../Play")
 focus_next = NodePath("../Play")
-focus_previous = NodePath("../Play")
+focus_previous = NodePath("../Local2P")
 theme_type_variation = &"MenuSecondaryButton"
 
 [node name="Mode" type="Label" parent="Center/Column" unique_id=1007240839]

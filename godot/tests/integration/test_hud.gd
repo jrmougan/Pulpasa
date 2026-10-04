@@ -12,6 +12,12 @@ var _bus: Node
 var _service: Node
 var _manager: Node
 var _hud: RoundHUD
+var _state: StateSpy
+
+
+class StateSpy:
+	extends Node
+	var mode: GameMode.Mode = GameMode.Mode.SINGLE
 
 
 func before_each() -> void:
@@ -27,7 +33,9 @@ func before_each() -> void:
 	add_child_autofree(_manager)
 	_manager.set_physics_process(false)
 	_hud = HUD_SCENE.instantiate()
+	_state = add_child_autofree(StateSpy.new())
 	_hud.set_bus(_bus)
+	_hud.set_game_state(_state)
 	add_child_autofree(_hud)
 
 
@@ -136,3 +144,40 @@ func test_ratio_is_green_above_one_and_red_otherwise() -> void:
 	_manager.round_state.advance(60.0)
 	assert_eq(_text("BoxesPerMinute"), "1.00")
 	assert_eq(rate.get_theme_color(&"font_color"), bad, "1.00 no es mayor que 1")
+
+
+func test_ac5_character_switched_updates_indicator() -> void:
+	assert_false((_hud.get_node("%ActiveCharacter") as Label).visible)
+	_bus.character_switched.emit(1, 2)
+	assert_true((_hud.get_node("%ActiveCharacter") as Label).visible)
+	assert_string_contains(_text("ActiveCharacter"), "2")
+	_bus.character_switched.emit(1, 1)
+	assert_string_contains(_text("ActiveCharacter"), "1")
+
+
+func test_ac5_coop_initial_assignments_keep_indicator_hidden() -> void:
+	_state.mode = GameMode.Mode.COOP_2P
+	_bus.character_switched.emit(1, 1)
+	_bus.character_switched.emit(2, 2)
+	assert_false((_hud.get_node("%ActiveCharacter") as Label).visible)
+
+
+func test_ac5_single_ignores_other_players_switch() -> void:
+	_bus.character_switched.emit(2, 2)
+	assert_false((_hud.get_node("%ActiveCharacter") as Label).visible)
+	_bus.character_switched.emit(1, 2)
+	_bus.character_switched.emit(2, 1)
+	assert_string_contains(_text("ActiveCharacter"), "2")
+
+
+func test_ac5_device_assigned_shows_brief_notice() -> void:
+	_bus.device_assigned.emit(2, 4)
+	assert_true((_hud.get_node("%DeviceNotice") as Label).visible)
+	assert_eq(_text("DeviceNotice"), "J2 conectado")
+	await wait_seconds(2.3)
+	assert_false((_hud.get_node("%DeviceNotice") as Label).visible)
+
+
+func test_ac5_keyboard_only_assignment_shows_no_notice() -> void:
+	_bus.device_assigned.emit(2, DeviceAssignment.NONE)
+	assert_false((_hud.get_node("%DeviceNotice") as Label).visible)

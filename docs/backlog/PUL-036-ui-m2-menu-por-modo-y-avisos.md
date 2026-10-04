@@ -1,7 +1,7 @@
 ---
 id: PUL-036
 title: Menú por modo, avisos de mando y UI navegable solo con mando
-status: ready
+status: review
 milestone: M2
 role: ui-engineer
 deps: []
@@ -34,16 +34,22 @@ Contrato: ADR-004 §5, `scene-tree.md` §4, `signals.md` (`character_switched`, 
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.
 
 ## Acceptance
-- [ ] AC1 Individual → `start_level(SINGLE)`; Local 2P → `start_level(COOP_2P)`; Salir → `quit` → `test_main_menu.gd`
-- [ ] AC2 Foco inicial en Individual; las 3 opciones se alcanzan y activan con eventos de mando (`ui_down`/`ui_accept` como `InputEventJoypadButton`) → `test_ui_gamepad.gd`
-- [ ] AC3 `device_disconnected(2)` muestra el aviso en la pausa en el mismo frame; `device_assigned(2, id)` lo oculta → `test_pause_menu.gd`
-- [ ] AC4 Pausa y game over dan foco a un botón al mostrarse y se completan con eventos de mando → `test_ui_gamepad.gd`
-- [ ] AC5 HUD refleja `character_switched` y `device_assigned` → `test_hud.gd`
-- [ ] AC6 Capturas del menú con las 3 opciones y de la pausa con el aviso → `docs/evidence/PUL-036/`
-- [ ] AC7 `tools/verify.sh` verde, `check_owns` limpio.
+- [x] AC1 Individual → `start_level(SINGLE)`; Local 2P → `start_level(COOP_2P)`; Salir → `quit` → `test_main_menu.gd`
+- [x] AC2 Foco inicial en Individual; las 3 opciones se alcanzan y activan con eventos de mando (`ui_down`/`ui_accept` como `InputEventJoypadButton`) → `test_ui_gamepad.gd`
+- [x] AC3 `device_disconnected(2)` muestra el aviso en la pausa en el mismo frame; `device_assigned(2, id)` lo oculta → `test_pause_menu.gd`
+- [x] AC4 Pausa y game over dan foco a un botón al mostrarse y se completan con eventos de mando → `test_ui_gamepad.gd`
+- [x] AC5 HUD refleja `character_switched` y `device_assigned` → `test_hud.gd`
+- [x] AC6 Capturas del menú con las 3 opciones y de la pausa con el aviso → `docs/evidence/PUL-036/`
+- [x] AC7 `tools/verify.sh` verde, `check_owns` limpio.
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Menú: botón `Local2P` entre Individual y Salir, foco cíclico, `_start(mode, source)` común.
+2. Pausa: `DeviceWarning` (Label) con el conjunto de jugadores desconectados; `device_disconnected` lo añade, `device_assigned` lo quita.
+3. HUD: `ActiveCharacter` (`character_switched`) y `DeviceNotice` temporal 2 s (`device_assigned`, ignora solo-teclado).
+4. Tests en los 4 ficheros existentes + `test_ui_gamepad.gd` con eventos `InputEventJoypadButton`.
 
 ## Evidence
-(Lo rellena el worker.)
+- `tools/verify.sh` verde (499 tests tras la revisión). Capturas: `docs/evidence/PUL-036/menu.png` y `pausa_aviso.png`.
+- Jugadores 1-based (J1/J2) según `signals.md`. El HUD usa `DeviceAssignment.NONE` (PUL-034 integrado).
+- Revisión: el indicador «Controlas» solo se procesa en SINGLE y para el jugador 1 (oculto en COOP_2P); el modo se lee de `GameState.mode` inyectable (`set_game_state`). Regresiones de la secuencia real de GameState en `test_pause_menu.gd`.
+- El HUD sube 32 px su borde superior para alojar las etiquetas nuevas.

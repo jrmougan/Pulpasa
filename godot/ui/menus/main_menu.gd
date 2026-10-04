@@ -2,10 +2,11 @@ extends Control
 ## Menú común: órdenes al autoload y foco nativo compartido por teclado y mando.
 
 const TEXT: Dictionary[StringName, String] = {
-	&"MENU_PLAY": "Jugar",
+	&"MENU_PLAY": "Individual",
+	&"MENU_LOCAL_2P": "Local 2P",
 	&"MENU_EXIT": "Salir",
 	&"MENU_TAGLINE": "Pulpo á feira · Romerías gallegas",
-	&"MENU_MODE": "Individual · Un personaje",
+	&"MENU_MODE": "Individual: un personaje · Local 2P: dos jugadores",
 	&"MENU_LEVEL_UNAVAILABLE": "La cocina todavía no está disponible. Vuelve pronto.",
 	&"MENU_LOAD_FAILED": "No se pudo abrir la cocina. Inténtalo de nuevo.",
 }
@@ -14,6 +15,7 @@ var _start_level: Callable
 var _quit: Callable
 
 @onready var _play: Button = %Play
+@onready var _local_2p: Button = %Local2P
 @onready var _exit: Button = %Exit
 @onready var _status: Label = %Status
 
@@ -24,10 +26,12 @@ func _ready() -> void:
 	if not _quit.is_valid():
 		_quit = get_tree().quit
 	_play.text = _text(&"MENU_PLAY")
+	_local_2p.text = _text(&"MENU_LOCAL_2P")
 	_exit.text = _text(&"MENU_EXIT")
 	%Tagline.text = _text(&"MENU_TAGLINE")
 	%Mode.text = _text(&"MENU_MODE")
-	_play.pressed.connect(_on_play_pressed)
+	_play.pressed.connect(_start.bind(GameMode.Mode.SINGLE, _play))
+	_local_2p.pressed.connect(_start.bind(GameMode.Mode.COOP_2P, _local_2p))
 	_exit.pressed.connect(_on_exit_pressed)
 	_play.grab_focus()
 	%Column.item_rect_changed.connect(queue_redraw)
@@ -61,16 +65,18 @@ func _text(key: StringName) -> String:
 	return TEXT[key] if translated == String(key) else translated
 
 
-func _on_play_pressed() -> void:
+func _start(mode: GameMode.Mode, source: Button) -> void:
 	_play.disabled = true
-	var error: Error = _start_level.call(GameMode.Mode.SINGLE)
+	_local_2p.disabled = true
+	var error: Error = _start_level.call(mode)
 	if error != OK:
 		_status.text = _text(
 			&"MENU_LEVEL_UNAVAILABLE" if error == ERR_FILE_NOT_FOUND else &"MENU_LOAD_FAILED"
 		)
 		_status.show()
 		_play.disabled = false
-		_play.grab_focus()
+		_local_2p.disabled = false
+		source.grab_focus()
 
 
 func _on_exit_pressed() -> void:

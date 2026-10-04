@@ -22,7 +22,8 @@ func before_each() -> void:
 func test_ac1_startup_scene_and_initial_focus() -> void:
 	assert_eq(ProjectSettings.get_setting("application/run/main_scene"), MENU.resource_path)
 	assert_eq(_menu.get_viewport().gui_get_focus_owner(), _menu.get_node("%Play"))
-	assert_eq(_menu.get_node("%Play").text, "Jugar")
+	assert_eq(_menu.get_node("%Local2P").text, "Local 2P")
+	assert_eq(_menu.get_node("%Play").text, "Individual")
 	assert_eq(_menu.theme, load("res://ui/theme/default_theme.tres"))
 
 
@@ -41,24 +42,39 @@ func test_double_accept_starts_level_once() -> void:
 
 func test_ac2_exit_invokes_tree_quit_action_once() -> void:
 	await _tap(&"ui_down")
+	await _tap(&"ui_down")
 	await _tap(&"ui_accept")
 	assert_eq(_quit_calls, 1)
 	assert_eq(_calls.size(), 0)
 
 
+func test_ac1_local_2p_starts_coop() -> void:
+	await _tap(&"ui_down")
+	await _tap(&"ui_accept")
+	assert_eq(_calls, [GameMode.Mode.COOP_2P] as Array[GameMode.Mode])
+	assert_eq(_quit_calls, 0)
+
+
 func test_ac3_native_navigation_wraps_and_tabs() -> void:
-	for action: StringName in [&"ui_down", &"ui_up", &"ui_focus_next", &"ui_focus_prev"]:
-		await _tap(action)
-		assert_eq(_menu.get_viewport().gui_get_focus_owner(), _menu.get_node("%Exit"))
-		await _tap(action)
-		assert_eq(_menu.get_viewport().gui_get_focus_owner(), _menu.get_node("%Play"))
+	var order: Array[String] = ["%Play", "%Local2P", "%Exit"]
+	for pair: Array in [[&"ui_down", &"ui_up"], [&"ui_focus_next", &"ui_focus_prev"]]:
+		for i: int in range(1, 4):
+			await _tap(pair[0])
+			assert_eq(_focus(), _menu.get_node(order[i % 3]))
+		for i: int in range(1, 4):
+			await _tap(pair[1])
+			assert_eq(_focus(), _menu.get_node(order[(3 - i) % 3]))
+
+
+func _focus() -> Control:
+	return _menu.get_viewport().gui_get_focus_owner()
 
 
 func test_ac3_joypad_dpad_and_accept_use_native_actions() -> void:
 	await _joypad(JOY_BUTTON_DPAD_DOWN)
-	assert_eq(_menu.get_viewport().gui_get_focus_owner(), _menu.get_node("%Exit"))
+	assert_eq(_focus(), _menu.get_node("%Local2P"))
 	await _joypad(JOY_BUTTON_DPAD_UP)
-	assert_eq(_menu.get_viewport().gui_get_focus_owner(), _menu.get_node("%Play"))
+	assert_eq(_focus(), _menu.get_node("%Play"))
 	await _joypad(JOY_BUTTON_A)
 	assert_eq(_calls.size(), 1)
 	assert_eq(_calls[0], GameMode.Mode.SINGLE)
@@ -71,7 +87,7 @@ func test_missing_level_keeps_menu_usable() -> void:
 	assert_false(_menu.get_node("%Play").disabled)
 	assert_true(_menu.get_node("%Status").visible)
 	assert_eq(_menu.get_viewport().gui_get_focus_owner(), _menu.get_node("%Play"))
-	await _tap(&"ui_down")
+	await _tap(&"ui_up")
 	await _tap(&"ui_accept")
 	assert_eq(_quit_calls, 1)
 
