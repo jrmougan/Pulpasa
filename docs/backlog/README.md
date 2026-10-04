@@ -46,7 +46,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-031 | M1 | asset-pipeline (kimi) | done | Iconos y placeholders de aceite, cachelos y estrellas |
 | PUL-032 | M1 | qa (Claude) | done | Novedades de M1 en level_01 y QA de M1 |
 | PUL-033 | M1 | gameplay (Claude) | done | Comandas con cachelos y legibilidad de cachelos |
-| PUL-034 | M2 | gameplay-engineer | ready | Asignar mandos a jugadores y gestionar su conexión |
-| PUL-035 | M2 | gameplay-engineer | ready | Cambiar de personaje en modo individual y marcar el activo |
+| PUL-034 | M2 | gameplay-engineer | done | Asignar mandos a jugadores y gestionar su conexión |
+| PUL-035 | M2 | gameplay-engineer | done | Cambiar de personaje en modo individual y marcar el activo |
 | PUL-036 | M2 | ui-engineer | ready | Menú por modo, avisos de mando y UI navegable solo con mando |
 | PUL-037 | M2 | qa-tester | draft | Integrar dos personajes en level_01 y pasar el QA de M2 |

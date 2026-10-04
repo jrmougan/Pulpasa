@@ -8,6 +8,8 @@
 [ext_resource type="Script" path="res://components/hold_component.gd" id="6_7thud"]
 [ext_resource type="Script" path="res://components/interaction_detector.gd" id="7_26q78"]
 [ext_resource type="Script" path="res://components/interaction_component.gd" id="8_bectd"]
+[ext_resource type="Material" path="res://assets/materials/active_indicator_p1.tres" id="9_actp1"]
+[ext_resource type="Material" path="res://assets/materials/active_indicator_p2.tres" id="10_actp2"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a1qjk"]
 radius = 0.21
@@ -16,11 +18,18 @@ height = 1.54
 [sub_resource type="SphereShape3D" id="SphereShape3D_wvtmh"]
 radius = 2.2
 
+[sub_resource type="TorusMesh" id="TorusMesh_actind"]
+inner_radius = 0.36
+outer_radius = 0.46
+rings = 32
+ring_segments = 8
+
 [node name="Player" type="CharacterBody3D" unique_id=370749224]
 collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_8fjmc")
 config = ExtResource("2_qiwj3")
+indicator_materials = Array[Material]([ExtResource("9_actp1"), ExtResource("10_actp2")])
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=318568288]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.77, 0)
@@ -62,3 +71,10 @@ script = ExtResource("8_bectd")
 control = NodePath("../Control")
 holder = NodePath("../HoldComponent")
 detector = NodePath("../InteractionDetector")
+
+[node name="ActiveIndicator" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 0.25, 0, 0, 0, 1, 0, 0.02, 0)
+cast_shadow = 0
+mesh = SubResource("TorusMesh_actind")
+material_override = ExtResource("9_actp1")

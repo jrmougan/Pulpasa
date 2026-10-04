@@ -79,6 +79,7 @@ func before_each() -> void:
 
 func after_each() -> void:
 	GameState.set_paused(false)
+	GameState.reset_input()
 	get_tree().root.size = _window_size
 	if is_instance_valid(_level):
 		var was_current: bool = _level == get_tree().current_scene
