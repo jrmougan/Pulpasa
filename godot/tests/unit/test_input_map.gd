@@ -28,15 +28,6 @@ const UI_ACTIONS: Array[StringName] = [
 ]
 
 
-func before_all() -> void:
-	# Otros tests llaman a start_level sobre el autoload, que reescribe los mandos.
-	GameState.reset_input()
-
-
-func after_all() -> void:
-	GameState.reset_input()
-
-
 func _has_key(action: StringName, physical_keycode: Key) -> bool:
 	for ev: InputEvent in InputMap.action_get_events(action):
 		var key: InputEventKey = ev as InputEventKey

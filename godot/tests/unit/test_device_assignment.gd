@@ -89,3 +89,9 @@ func test_ac1_connection_is_ignored_when_full_assigned_or_single() -> void:
 	assert_eq(DeviceAssignment.on_connected(_pads([0, 1]), COOP, 2, {}), 0)
 	assert_eq(DeviceAssignment.on_connected(_pads([NONE, 1]), COOP, 1, {}), 0, "ya asignado")
 	assert_eq(DeviceAssignment.on_connected(_pads([ANY, NONE]), SINGLE, 0, {}), 0)
+
+
+func test_ac1_single_reconnection_returns_any_player_after_losing_all_pads() -> void:
+	var devices: Array[int] = _pads([ANY, NONE])
+	assert_eq(DeviceAssignment.on_connected(devices, SINGLE, 5, {0: 1}), 1, "cualquier mando")
+	assert_eq(DeviceAssignment.on_connected(devices, SINGLE, 5, {}), 0, "no había perdido nada")

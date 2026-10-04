@@ -126,10 +126,11 @@ func _on_pad_connected(device: int) -> void:
 	var player: int = DeviceAssignment.on_connected(_devices, mode, device, _lost_by)
 	if player == 0:
 		return
-	_lost_by.erase(device)
-	_devices[player - 1] = device
-	apply_devices()
-	_bus.device_assigned.emit(player, device)
+	_forget_losses_of(player)
+	if _devices[player - 1] != DeviceAssignment.ANY:
+		_devices[player - 1] = device
+		apply_devices()
+	_bus.device_assigned.emit(player, _devices[player - 1])
 
 
 func _on_pad_disconnected(device: int) -> void:
@@ -138,15 +139,21 @@ func _on_pad_disconnected(device: int) -> void:
 	var player: int = DeviceAssignment.on_disconnected(_devices, device, remaining)
 	if player == 0:
 		return
+	_lost_by[device] = player
 	if _devices[player - 1] != DeviceAssignment.ANY:
-		_lost_by[device] = player
 		_devices[player - 1] = DeviceAssignment.NONE
 		apply_devices()
+		# Retirada (signals.md): antes del aviso, para que el último hecho sea la desconexión.
+		_bus.device_assigned.emit(player, DeviceAssignment.NONE)
 	if _round_active:
 		set_paused(true)
 		_bus.device_disconnected.emit(player)
-	else:
-		_bus.device_assigned.emit(player, _devices[player - 1])
+
+
+func _forget_losses_of(player: int) -> void:
+	for lost: int in _lost_by.keys():
+		if _lost_by[lost] == player:
+			_lost_by.erase(lost)
 
 
 func _on_round_started(_duration: float) -> void:

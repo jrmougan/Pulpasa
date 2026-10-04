@@ -46,12 +46,21 @@ static func on_disconnected(devices: Array[int], device: int, remaining: Array[i
 
 
 ## Jugador (1..n) que recibe un mando recién conectado; 0 si queda sin asignar.
-## Solo en `COOP_2P`: al que lo perdió (`lost_by`: id de mando -> jugador) si sigue en `NONE`;
-## si no, al primer jugador en `NONE`. Un id nunca se asigna a dos jugadores.
+## `lost_by`: id de mando perdido -> jugador que lo tenía.
+## `SINGLE`: si J1 (con `ANY`) se quedó sin mandos, cualquier mando lo recupera (sigue en `ANY`).
+## `COOP_2P`: al que lo perdió si sigue en `NONE`; si no, al primer jugador en `NONE`.
+## Un id nunca se asigna a dos jugadores.
 static func on_connected(
 	devices: Array[int], mode: GameMode.Mode, device: int, lost_by: Dictionary
 ) -> int:
-	if mode != GameMode.Mode.COOP_2P or device < 0 or player_with(devices, device) > 0:
+	if device < 0:
+		return 0
+	if mode == GameMode.Mode.SINGLE:
+		for player: int in lost_by.values():
+			if player > 0 and player <= devices.size() and devices[player - 1] == ANY:
+				return player
+		return 0
+	if mode != GameMode.Mode.COOP_2P or player_with(devices, device) > 0:
 		return 0
 	var previous: int = lost_by.get(device, 0)
 	if previous > 0 and previous <= devices.size() and devices[previous - 1] == NONE:

@@ -137,7 +137,8 @@ func test_ac3_disconnecting_assigned_pad_in_round_pauses_and_emits_once() -> voi
 	assert_true(get_tree().paused)
 	assert_signal_emit_count(_bus, "device_disconnected", 1)
 	assert_signal_emitted_with_parameters(_bus, "device_disconnected", [2])
-	assert_signal_not_emitted(_bus, "device_assigned")
+	assert_signal_emit_count(_bus, "device_assigned", 1, "la retirada también se anuncia")
+	assert_signal_emitted_with_parameters(_bus, "device_assigned", [2, DeviceAssignment.NONE])
 	assert_eq(_state.get_device(2), DeviceAssignment.NONE)
 	_state.handle_joy_connection(3, false)
 	assert_signal_emit_count(_bus, "device_disconnected", 1, "un mando ya quitado no repite")
@@ -171,8 +172,8 @@ func test_ac3_reconnection_emits_device_assigned_and_returns_pad_to_p2() -> void
 	_coop_round_with_p2_pad()
 	_state.handle_joy_connection(3, false)
 	_state.handle_joy_connection(3, true)
-	assert_signal_emit_count(_bus, "device_assigned", 1)
-	assert_signal_emitted_with_parameters(_bus, "device_assigned", [2, 3])
+	assert_signal_emit_count(_bus, "device_assigned", 2, "retirada y reasignación")
+	assert_signal_emitted_with_parameters(_bus, "device_assigned", [2, 3], 1)
 	assert_eq(_state.get_device(1), DeviceAssignment.NONE, "nunca a ambos")
 	assert_eq(_state.get_device(2), 3)
 	assert_true(InputMap.event_is_action(_stick_left(3), &"p2_move_left"))
@@ -194,6 +195,22 @@ func test_ac3_single_pad_loss_in_round_pauses_and_keeps_any() -> void:
 	assert_true(get_tree().paused)
 	assert_signal_emitted_with_parameters(_bus, "device_disconnected", [1])
 	assert_eq(_state.get_device(1), DeviceAssignment.ANY)
+
+
+func test_ac3_single_any_pad_reconnection_emits_device_assigned_any() -> void:
+	_state.assign_devices(GameMode.Mode.SINGLE, _pads([0]))
+	_bus.round_started.emit(60.0)
+	clear_signal_watcher()
+	watch_signals(_bus)
+	_state.handle_joy_connection(0, false)
+	assert_signal_not_emitted(_bus, "device_assigned", "J1 conserva ANY: no hay retirada")
+	_state.handle_joy_connection(2, true)  # otro mando distinto del perdido
+	assert_signal_emit_count(_bus, "device_assigned", 1)
+	assert_signal_emitted_with_parameters(_bus, "device_assigned", [1, DeviceAssignment.ANY])
+	assert_eq(_state.get_device(1), DeviceAssignment.ANY)
+	assert_eq(_state.get_device(2), DeviceAssignment.NONE)
+	_state.handle_joy_connection(3, true)
+	assert_signal_emit_count(_bus, "device_assigned", 1, "solo tras haberse quedado sin mandos")
 
 
 func test_ac3_hot_plug_before_any_assignment_is_ignored() -> void:
