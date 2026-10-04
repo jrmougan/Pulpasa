@@ -84,7 +84,28 @@ func test_translation_keys_are_explicit() -> void:
 		"res://data/seasonings/salt.tres": "SEASONING_SALT",
 		"res://data/seasonings/paprika.tres": "SEASONING_PAPRIKA",
 		"res://data/seasonings/hot_paprika.tres": "SEASONING_HOT_PAPRIKA",
+		"res://data/seasonings/oil.tres": "SEASONING_OIL",
 	}
 	for path: String in expected:
 		var data: Resource = load(path)
 		assert_eq(data.get("translation_key"), expected[path], path)
+
+
+func test_pul028_ac1_seasoning_data_oil_and_exclusivity_groups() -> void:
+	var salt: SeasoningData = load("res://data/seasonings/salt.tres") as SeasoningData
+	var paprika: SeasoningData = load("res://data/seasonings/paprika.tres") as SeasoningData
+	var hot_paprika: SeasoningData = load("res://data/seasonings/hot_paprika.tres") as SeasoningData
+	var oil: SeasoningData = load("res://data/seasonings/oil.tres") as SeasoningData
+
+	assert_not_null(oil)
+	assert_eq(oil.display_name, "Aceite")
+	assert_eq(oil.translation_key, "SEASONING_OIL")
+	assert_eq(oil.type, SeasoningData.SeasoningType.OIL)
+	assert_true(oil.same_as(oil))
+	assert_false(oil.same_as(salt))
+	assert_eq(oil.exclusivity_group, &"")
+
+	assert_eq(paprika.exclusivity_group, &"paprika")
+	assert_eq(hot_paprika.exclusivity_group, &"paprika")
+	assert_eq(paprika.exclusivity_group, hot_paprika.exclusivity_group)
+	assert_eq(salt.exclusivity_group, &"")

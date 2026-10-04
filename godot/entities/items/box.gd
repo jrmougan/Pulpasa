@@ -41,7 +41,34 @@ func is_full() -> bool:
 
 
 func has_seasoning(seasoning: SeasoningData) -> bool:
-	return _seasonings.has(seasoning)
+	if seasoning == null:
+		return false
+	for existing: SeasoningData in _seasonings:
+		if existing != null and existing.same_as(seasoning):
+			return true
+	return false
+
+
+func has_seasoning_in_group(group: StringName) -> bool:
+	if group.is_empty():
+		return false
+	for existing: SeasoningData in _seasonings:
+		if existing != null and existing.exclusivity_group == group:
+			return true
+	return false
+
+
+func can_season(seasoning: SeasoningData) -> bool:
+	if seasoning == null or not is_full():
+		return false
+	if has_seasoning(seasoning):
+		return false
+	if (
+		not seasoning.exclusivity_group.is_empty()
+		and has_seasoning_in_group(seasoning.exclusivity_group)
+	):
+		return false
+	return true
 
 
 ## Copia de lo que lleva la caja, para `OrderService.try_deliver`.
@@ -107,9 +134,10 @@ func _cut(ingredient: Ingredient) -> void:
 	fill_changed.emit(fill)
 
 
-## Una vez por tipo (Box.CanReceiveSeasoning); repetir consume la pulsación sin efecto.
+## Una vez por tipo (Box.CanReceiveSeasoning); repetir no tiene efecto (idempotente).
+## Grupos de exclusividad: pimentón dulce y picante son excluyentes (D4).
 func _season(seasoning: SeasoningData) -> void:
-	if has_seasoning(seasoning):
+	if not can_season(seasoning):
 		return
 	_seasonings.append(seasoning)
 	if _season_audio != null:

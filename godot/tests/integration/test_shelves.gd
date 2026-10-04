@@ -12,9 +12,10 @@ const LARGE: BoxData = preload("res://data/boxes/large.tres")
 const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
 const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
 const HOT_PAPRIKA: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
+const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
 const INTERACTABLE_LAYER: int = 1 << 2
 const SPAWNERS: Array[String] = ["SmallSpawner", "MediumSpawner", "LargeSpawner"]
-const SPICE_SLOTS: Array[String] = ["SaltSlot", "PaprikaSlot", "HotPaprikaSlot"]
+const SPICE_SLOTS: Array[String] = ["SaltSlot", "PaprikaSlot", "HotPaprikaSlot", "OilSlot"]
 
 var _level: Node3D
 var _hold: HoldComponent
@@ -80,7 +81,7 @@ func test_ac3_box_spawners_are_interactable() -> void:
 
 func test_ac3_spice_slots_are_preloaded() -> void:
 	var shelf: Node3D = _spice_shelf()
-	var expected: Array[SeasoningData] = [SALT, PAPRIKA, HOT_PAPRIKA]
+	var expected: Array[SeasoningData] = [SALT, PAPRIKA, HOT_PAPRIKA, OIL]
 	for i: int in SPICE_SLOTS.size():
 		var slot: Slot = shelf.get_node(SPICE_SLOTS[i]) as Slot
 		assert_not_null(slot, SPICE_SLOTS[i])
@@ -136,7 +137,9 @@ func test_ac3_spices_sit_on_the_shelf_in_order() -> void:
 		assert_almost_eq(local.y, 0.15, 0.001, "%s: sobre el estante" % slot_name)
 		assert_almost_eq(local.z, -0.78, 0.001, slot_name)
 		assert_gt(
-			local.x, previous_x, "%s: sal, pimentón, picante de izquierda a derecha" % slot_name
+			local.x,
+			previous_x,
+			"%s: sal, pimentón, picante, aceite de izquierda a derecha" % slot_name
 		)
 		previous_x = local.x
 

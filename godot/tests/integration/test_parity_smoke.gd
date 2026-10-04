@@ -20,7 +20,7 @@ const PAUSE_TOLERANCE: float = 0.05
 const PAUSE_SECONDS: float = 0.5
 ## Margen sobre `cook_time` para esperar la cocción.
 const COOK_MARGIN: float = 3.0
-const SPICE_JARS: int = 3
+const SPICE_JARS: int = 4
 
 var _level: Node
 var _menu: Node
@@ -270,12 +270,18 @@ func test_ac2_play_loads_level_with_one_controllable_player() -> void:
 
 func test_ac3_full_flow_completes_one_order_and_adds_exactly_one() -> void:
 	await _play_from_menu()
-	watch_signals(EventBus)
-	var slot_id: int = 1
+	var slot_id: int = -1
 	for candidate: int in range(1, STAND_COUNT + 1):
 		if _order_for(candidate).data.seasonings.size() > 0:
 			slot_id = candidate
 			break
+	while slot_id == -1:
+		await _play_from_menu()
+		for candidate: int in range(1, STAND_COUNT + 1):
+			if _order_for(candidate).data.seasonings.size() > 0:
+				slot_id = candidate
+				break
+	watch_signals(EventBus)
 	var order: ActiveOrder = _order_for(slot_id)
 	assert_gt(order.data.seasonings.size(), 0, "comanda con condimentos: flujo completo")
 	var others: Dictionary[int, ActiveOrder] = {}
