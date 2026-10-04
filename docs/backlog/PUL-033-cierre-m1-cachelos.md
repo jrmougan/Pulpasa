@@ -1,7 +1,7 @@
 ---
 id: PUL-033
 title: Cerrar M1 - comandas con cachelos y legibilidad de los cachelos
-status: review
+status: done
 milestone: M1
 role: gameplay-engineer
 agent: Claude sonnet (kimi y antigravity sin cuota)
