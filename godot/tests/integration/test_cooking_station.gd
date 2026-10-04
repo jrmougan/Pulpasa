@@ -310,3 +310,35 @@ func test_ac1_fifo_by_finish_order() -> void:
 	_hold.drop()
 	_kitchen.interact(_actor)
 	assert_eq(_hold.get_held_item(), second, "devuelve el segundo")
+
+
+## PUL-032: discrimina orden de finalización de orden por plaza. A en plaza 0 (t=0), B en plaza 1
+## (t=2,5); A termina a los 5 s y se recoge; C ocupa la plaza 0 (t=5) y termina a los 10 s, después
+## de B (7,5 s). Si la olla devolviera por índice de plaza saldría C; por finalización, sale B.
+func test_ac3_fifo_discriminates_finish_order_from_slot_index() -> void:
+	var a: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	_cook_for(2.5)
+	var b: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	_cook_for(2.5)
+	assert_true(a.is_cooked())
+	assert_false(b.is_cooked())
+
+	_kitchen.interact(_actor)
+	assert_eq(_hold.get_held_item(), a, "recoge A de la plaza 0")
+	_hold.drop()
+	var c: Ingredient = _octopus_in_hand()
+	_kitchen.interact(_actor)
+	assert_eq(_kitchen._slots[0].get_ingredient(), c, "C ocupa la plaza 0")
+	assert_eq(_kitchen._slots[1].get_ingredient(), b, "B sigue en la plaza 1")
+
+	_cook_for(5.0)
+	assert_true(b.is_cooked())
+	assert_true(c.is_cooked())
+	_hold.drop()
+	_kitchen.interact(_actor)
+	assert_eq(_hold.get_held_item(), b, "sale B (terminó antes), no C (plaza 0)")
+	_hold.drop()
+	_kitchen.interact(_actor)
+	assert_eq(_hold.get_held_item(), c, "después, C")

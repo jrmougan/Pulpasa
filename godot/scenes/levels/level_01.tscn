@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" path="res://ui/tickets/order_tickets_panel.tscn" id="14_qy4h0"]
 [ext_resource type="PackedScene" path="res://ui/menus/pause_menu.tscn" id="15_e5bmj"]
 [ext_resource type="PackedScene" path="res://ui/menus/game_over.tscn" id="16_iqf6e"]
+[ext_resource type="PackedScene" path="res://entities/stations/cachelos_storage.tscn" id="17_cache1"]
 
 [node name="Level01" type="Node3D" unique_id=441971169 node_paths=PackedStringArray("stands")]
 script = ExtResource("1_cwffn")
@@ -31,6 +32,9 @@ stands = [NodePath("Stations/OrderStand1"), NodePath("Stations/OrderStand2"), No
 
 [node name="OctopusStorage" parent="Stations" unique_id=696420386 instance=ExtResource("6_vrcmr")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4.758, 0.021377772, -4.076)
+
+[node name="CachelosStorage" parent="Stations" instance=ExtResource("17_cache1")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -5.7, 0.021377772, -2.45)
 
 [node name="Kitchen" parent="Stations" unique_id=784504761 instance=ExtResource("7_svp4f")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -3.426, 0, -3.917)
