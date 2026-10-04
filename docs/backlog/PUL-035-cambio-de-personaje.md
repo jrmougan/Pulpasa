@@ -1,11 +1,11 @@
 ---
 id: PUL-035
 title: Cambiar de personaje en modo individual y marcar el activo
-status: review
+status: done
 milestone: M2
 role: gameplay-engineer
 deps: []
-orca_task: null
+orca_task: task_bb9b52a4fed0
 unity_sources: []
 owns: [godot/entities/player/**, godot/components/control_component.gd, godot/assets/materials/active_indicator*, godot/tests/unit/test_character_switcher.gd, godot/tests/unit/test_character_switcher.gd.uid, godot/tests/unit/test_control_component.gd, godot/tests/integration/test_player.gd, docs/evidence/PUL-035/**]
 touches_scenes: [godot/entities/player/player.tscn, godot/entities/player/character_switcher.tscn]
