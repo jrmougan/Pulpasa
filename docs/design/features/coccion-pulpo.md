@@ -20,7 +20,7 @@ Solo si ese Should entra en la alpha, sustituye a AC2 (liberación) y AC6:
 - **AC6'** Given un pulpo cocido sin recoger, When pasan `burn_time` s, Then pasa a `BURNT` (ver `olla-que-se-pasa.md`).
 
 ## Datos (`.tres`)
-`cook_time` (5,0 s; valor del prototipo). Capacidad de la olla: 1 (regla de paridad, GDD §9).
+`cook_time` (5,0 s; valor del prototipo). Capacidad de la olla: `KitchenData.capacity` en `data/config/kitchen.tres` (D9, M1: 2 plazas, cada una con su progreso; devuelve lo cocido por orden de finalización). Acepta pulpo y cachelos crudos (D10).
 
 ## Verificación
 GUT con reloj simulado para AC2–AC3 y AC6; AC1/AC4/AC5 por estado.

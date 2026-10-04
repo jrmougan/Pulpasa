@@ -54,3 +54,6 @@ caja (cada pulsación llena la caja y gasta pulpo) → condimentos sobre la caja
 - Colocar Mueblecajas con la rotación de Level_01 (−90° en Unity) sobre el envoltorio con frente −Z (PUL-008).
 - Con un bote en la mano, el detector prefiere un bote u objeto suelto al slot vacío de la estantería; devolver especias cuesta (PUL-019). Revisar colocación y, si hace falta, prioridad del slot vacío en `InteractionScoring` (decisión de diseño).
 - La caja pequeña del `SmallSpawner` no coincide en color con su cajón de la estantería (PUL-019). Solo visual.
+
+## Pendientes detectados en M1
+- PUL-029: el test FIFO no distingue orden de finalización de orden por índice (caso: A en plaza 0, B en plaza 1 a t=2,5, recoger A, C en plaza 0 → debe salir B). Sin test del cambio de material crudo/cocido del cachelo ni de la posición de las plazas. El cachelo no se ve en la captura.

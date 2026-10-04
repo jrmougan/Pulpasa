@@ -41,6 +41,6 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-026 | M0·8 | ui-engineer | done | Layout de HUD y tickets como Unity + menores de level_01 |
 | PUL-027 | M1 | gameplay (antigravity · pro) | ready (dep. 028) | Paciencia, recaudación, penalizaciones y estrellas |
 | PUL-028 | M1 | gameplay (antigravity · flash) | done | Aceite, exclusividad de pimentones y validación exacta |
-| PUL-029 | M1 | gameplay (antigravity · pro) | ready (dep. 028, 031) | Cachelos y olla con varias plazas |
+| PUL-029 | M1 | gameplay (antigravity → kimi) | done | Cachelos y olla con varias plazas |
 | PUL-030 | M1 | ui (kimi) | ready (dep. 027, 031) | Recaudación, estrellas, iconos y paciencia en la UI |
 | PUL-031 | M1 | asset-pipeline (kimi) | done | Iconos y placeholders de aceite, cachelos y estrellas |

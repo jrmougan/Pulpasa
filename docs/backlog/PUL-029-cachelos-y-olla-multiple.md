@@ -1,12 +1,12 @@
 ---
 id: PUL-029
 title: Añadir los cachelos y la olla con varias plazas
-status: review
+status: done
 milestone: M1
 role: gameplay-engineer
 agent: antigravity · gemini-3.1-pro-high (difícil)
 deps: [PUL-028, PUL-031]
-orca_task: null
+orca_task: task_2542cc41502f
 unity_sources: []
 owns: [godot/tests/integration/test_cachelos.gd.uid, godot/resources/kitchen_data.gd, godot/resources/kitchen_data.gd.uid, godot/data/config/kitchen.tres, godot/assets/materials/**, godot/tests/integration/test_stations_contract.gd, godot/tests/integration/test_stations_contract.gd.uid, godot/resources/seasoning_data.gd, godot/entities/stations/cooking_station.gd, godot/entities/stations/kitchen.tscn, godot/entities/stations/cachelos_storage.tscn, godot/entities/items/**, godot/resources/ingredient_data.gd, godot/data/ingredients/**, godot/data/seasonings/cachelos.tres, godot/core/box_contents.gd, godot/tests/integration/test_cooking_station.gd, godot/tests/integration/test_cachelos.gd, godot/tests/integration/test_box.gd, godot/tests/unit/test_data_*.gd, docs/evidence/PUL-029/**]
 touches_scenes: [godot/entities/stations/kitchen.tscn, godot/entities/stations/cachelos_storage.tscn]
