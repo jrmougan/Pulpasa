@@ -53,6 +53,7 @@ custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 mouse_filter = 2
 nine_patch_stretch = true
+step = 0.01
 texture_under = SubResource("GradientTexture2D_oad86")
 texture_progress = SubResource("GradientTexture2D_oad86")
 tint_under = Color(0.09019608, 0.15686275, 0.15686275, 1)

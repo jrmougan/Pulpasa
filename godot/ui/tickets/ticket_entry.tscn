@@ -18,8 +18,8 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 23
 
-[node name="Seasonings" type="Label" parent="Details" unique_id=774199072]
+[node name="SeasoningIcons" type="HBoxContainer" parent="Details" unique_id=869064649]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.84705883, 0.7647059, 0.64705884, 1)
-theme_override_font_sizes/font_size = 18
+mouse_filter = 2
+theme_override_constants/separation = 6

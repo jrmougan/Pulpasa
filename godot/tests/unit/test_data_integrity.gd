@@ -37,17 +37,21 @@ func test_ac3_references_are_filled() -> void:
 		assert_not_null(recipe.box, id)
 
 
-func test_ac3_seasoning_colors_match_prototype() -> void:
+func test_ac3_seasoning_colors_are_distinct_and_opaque() -> void:
 	var expected: Dictionary = {
 		"salt": Color(0.5931827, 0.8113208, 0.7928984, 1.0),
-		"paprika": Color(0, 0, 0, 0),
-		"hot_paprika": Color(0, 0, 0, 0),
+		"paprika": Color(0.95, 0.55, 0.2, 1.0),
+		"hot_paprika": Color(0.85, 0.12, 0.1, 1.0),
 	}
 	for id: String in expected:
 		var seasoning: SeasoningData = load("res://data/seasonings/%s.tres" % id) as SeasoningData
 		assert_not_null(seasoning, id)
 		if seasoning:
 			assert_eq(seasoning.color, expected[id] as Color, id)
+			assert_eq(seasoning.color.a, 1.0, "%s: color opaco" % id)
+	var sweet: SeasoningData = load("res://data/seasonings/paprika.tres")
+	var hot: SeasoningData = load("res://data/seasonings/hot_paprika.tres")
+	assert_ne(sweet.color, hot.color, "dulce y picante se distinguen")
 
 
 ## PUL-015: parámetros de puntuación del detector (InteractionDetector.cs).
