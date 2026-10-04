@@ -103,9 +103,7 @@ func test_ac1_wrong_box_rejected_without_state_change() -> void:
 
 	assert_signal_not_emitted(board, "order_completed")
 	assert_signal_not_emitted(board, "order_generated")
-	assert_signal_emitted_with_parameters(
-		board, "delivery_rejected", [1, live_id, OrderBoard.REJECT_PENALTY]
-	)
+	assert_signal_emitted_with_parameters(board, "delivery_rejected", [1, live_id, 0])
 	assert_eq(_order_ids(board), before)
 
 

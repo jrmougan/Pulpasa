@@ -41,7 +41,7 @@ así el servicio valida datos y nunca recibe un nodo.
 
 | Señal | Emisor | Receptores | Cuándo | Fase |
 |---|---|---|---|---|
-| `round_started(duration: float)` | `RoundManager` (en `start_round`, después de `OrderBoard.reset()` y `fill_slots()`) | `hud.gd` (inicia la vista del tiempo), `player.gd` (habilita input), `game_over.gd` (se oculta) | Una vez por ronda | 2 (emisor), 4/7 (receptores) |
+| `round_started(duration: float)` | `RoundManager` (en `start_round`, después de `OrderBoard.reset()`; las comandas iniciales llegan con `fill_slots()` antes de `round_started` si `first_order_delay` = 0, o tras ese retardo dentro de `RoundState.advance()` si es > 0) | `hud.gd` (inicia la vista del tiempo), `player.gd` (habilita input), `game_over.gd` (se oculta) | Una vez por ronda | 2 (emisor), 4/7 (receptores) |
 | `round_time_changed(time_left: float)` | `RoundManager` | `hud.gd` | Al empezar y cada vez que cambia el segundo entero de `time_left`, dentro de `RoundState.advance()`; es el **único reloj** (B2) | 2 / 7 |
 | `round_finished(result: RoundResult)` | `RoundManager` | `game_over.gd` (muestra resultado), `player.gd` (bloquea input), `character_switcher.gd` (bloquea cambio, M2), `pause_menu.gd` (no permite pausar) | Exactamente al llegar `time_left` a 0 (no antes por redondeo, B2), después de procesar la paciencia de ese mismo `advance` (ADR-002) | 2 / 4, 7 |
 | `score_changed(boxes_delivered: int, revenue: int)` | `RoundManager` (tras `order_completed`, `order_expired` o `delivery_rejected` con `penalty` > 0) | `hud.gd` | Recaudación en euros (D2) | 2 / 7 |
