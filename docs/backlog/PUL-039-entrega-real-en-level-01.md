@@ -1,11 +1,11 @@
 ---
 id: PUL-039
 title: Reproducir y arreglar que no se pueda entregar en level_01
-status: review
+status: done
 milestone: M2
 role: gameplay-engineer
 deps: []
-orca_task: null
+orca_task: task_74c9ca7565fa
 unity_sources: []
 owns: [godot/entities/stations/order_stand.gd, godot/entities/stations/order_stand.tscn, godot/components/interaction_detector.gd, godot/components/interaction_component.gd, godot/core/interaction_scoring.gd, godot/entities/items/box.gd, godot/core/order_validator.gd, godot/tests/integration/test_delivery_e2e.gd, godot/tests/integration/test_delivery_e2e.gd.uid, godot/tests/integration/test_order_stand.gd, godot/tests/unit/test_interaction_scoring.gd, godot/tests/unit/test_order_validator.gd, godot/data/orders/order_1.tres, godot/data/orders/order_2.tres, godot/data/orders/order_3.tres, godot/data/orders/order_4.tres, godot/data/orders/order_5.tres, godot/data/orders/order_6.tres, godot/tests/unit/test_data_catalog.gd, godot/tests/unit/test_data_integrity.gd, godot/components/highlightable.gd, godot/tests/integration/test_highlightable.gd, godot/tests/integration/test_highlightable.gd.uid, docs/evidence/PUL-039/**]
 touches_scenes: [godot/entities/stations/order_stand.tscn]

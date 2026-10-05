@@ -51,7 +51,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-036 | M2 | ui-engineer | done | Menú por modo, avisos de mando y UI navegable solo con mando |
 | PUL-037 | M2 | qa-tester | done | Integrar dos personajes en level_01 y pasar el QA de M2 |
 | PUL-038 | M2 | ui-engineer | draft | Evitar que el aviso de mando desconectado tape los tickets |
-| PUL-039 | M2 | gameplay-engineer | ready | Reproducir y arreglar que no se pueda entregar en level_01 |
+| PUL-039 | M2 | gameplay-engineer | done | Reproducir y arreglar que no se pueda entregar en level_01 |
 | PUL-040 | M2 | game-designer | done | Diseñar la estación de condimentos y los distintivos de la caja |
 | PUL-041 | M2 | game-designer | done | Proponer dos o tres distribuciones de la cocina |
 | PUL-042 | M2 | game-designer | done | Escribir la biblia de arte y la lista de assets |
