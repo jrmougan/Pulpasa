@@ -1,7 +1,7 @@
 ---
 id: PUL-063
 title: Hacer inequívoca la selección de dispensadores y bandeja en la estación
-status: draft
+status: ready
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-061]
