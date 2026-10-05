@@ -63,7 +63,7 @@ sandbox propio.
   La pegatina de AC1 es de `BadgeRow` (PUL-059).
 
 ## Evidence
-- `tools/verify.sh` verde (589/589 tests, gdformat/gdlint limpios, import y smoke OK):
+- `tools/verify.sh` verde (593/593 tests, gdformat/gdlint limpios, import y smoke OK):
   `docs/evidence/PUL-058/verify.log`. `tools/check_owns.py` limpio contra
   `jrmougan/agentica-migracion-godot-alpha`.
 - AC1 → `tests/integration/test_seasoning_station.gd` (36 tests): `test_scene_contract_*` (nodos de
@@ -93,3 +93,8 @@ sandbox propio.
   se oculta y sin colisión mediante hijos editables; la bandeja visible es `Tray/TrayMesh`.
   `condiment_jar.tscn` no se usa: PUL-061 puede borrarlo. En tests, liberar una caja recién soltada
   con `free()` colgaba a veces el teardown de GUT; se usa `queue_free()`.
+- Revisión (CHANGES): la sacudida se prueba sin tiempo real (`SeasoningStation.get_shake()` +
+  `Tween.pause()`/`custom_step()`; también que una segunda sacudida vuelve al reposo original).
+  Regresiones nuevas: quitar cachelos con el cuenco lleno → `BOWL_FULL`, caja y stock intactos, sin
+  `seasoning_removed` ni `stock_changed`; un rechazo no arma el antirrebote (dispensador y cuenco).
+  `test_seasoning_station.gd`: 40 tests.

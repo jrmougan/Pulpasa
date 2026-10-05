@@ -59,6 +59,14 @@ func get_tray() -> Slot:
 	return _tray
 
 
+## Sacudida en curso del `Model` de `emitter`, o `null` (para avanzarla a mano en tests).
+func get_shake(emitter: Node3D) -> Tween:
+	var model: Node = emitter.get_node_or_null(^"Model")
+	if model == null or not _shakes.has(model.get_instance_id()):
+		return null
+	return _shakes[model.get_instance_id()][&"tween"] as Tween
+
+
 func _on_rejected(_reason: SeasoningRules.Rejection, emitter: Node3D) -> void:
 	_error_audio.play()
 	_shake(emitter)

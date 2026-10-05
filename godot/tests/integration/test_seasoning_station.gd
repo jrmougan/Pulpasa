@@ -305,10 +305,31 @@ func test_ac6_rejection_shakes_emitter_and_returns_to_rest() -> void:
 	var model: Node3D = _dispenser("Salt").get_node("Model")
 	var rest: Vector3 = model.position
 	_press(_dispenser("Salt"))
-	await wait_physics_frames(2)
+	var shake: Tween = _station.get_shake(_dispenser("Salt"))
+	assert_not_null(shake)
+	shake.pause()
+	shake.custom_step(SeasoningStation.SHAKE_STEP_TIME / 2.0)
 	assert_ne(model.position, rest, "se sacude")
-	await wait_seconds(0.4)
-	assert_eq(model.position, rest, "vuelve a su sitio")
+	var total: float = SeasoningStation.SHAKE_STEP_TIME * (SeasoningStation.SHAKE_STEPS + 1)
+	shake.custom_step(total)
+	assert_true(model.position.is_equal_approx(rest), "vuelve a su sitio")
+	assert_null(_station.get_shake(_dispenser("Salt")), "la sacudida terminó")
+
+
+func test_ac6_repeated_rejection_restarts_shake_from_rest() -> void:
+	var salt: SeasoningDispenser = _dispenser("Salt")
+	var model: Node3D = salt.get_node("Model")
+	var rest: Vector3 = model.position
+	_press(salt)
+	var first: Tween = _station.get_shake(salt)
+	first.pause()
+	first.custom_step(SeasoningStation.SHAKE_STEP_TIME / 2.0)
+	_press(salt)
+	assert_false(first.is_valid(), "la primera se cancela")
+	var second: Tween = _station.get_shake(salt)
+	second.pause()
+	second.custom_step(SeasoningStation.SHAKE_STEP_TIME * (SeasoningStation.SHAKE_STEPS + 1))
+	assert_true(model.position.is_equal_approx(rest), "reposo original, no el desplazado")
 
 
 # --- AC7 ---
@@ -543,6 +564,48 @@ func test_ac11_toggle_rejects_without_box_or_not_full() -> void:
 			as Array[SeasoningRules.Rejection]
 		)
 	)
+
+
+func test_ac11_removing_cachelos_with_full_bowl_is_rejected() -> void:
+	_station_with_stock(1)
+	var bowl: CachelosBowl = _bowl()
+	var box: Box = _box_on_tray()
+	_press(bowl)
+	assert_true(box.has_seasoning(CACHELOS))
+	assert_eq(bowl.stock, 0)
+	for i: int in STATION_DATA.cachelos_stock_max:
+		_held_cachelos(IngredientData.CookingState.COOKED)
+		_press(bowl)
+	assert_eq(bowl.stock, STATION_DATA.cachelos_stock_max)
+	_rejections.clear()
+	watch_signals(box)
+	watch_signals(bowl)
+	_press(bowl)
+	assert_true(box.has_seasoning(CACHELOS), "la caja sigue con cachelos")
+	assert_eq(bowl.stock, STATION_DATA.cachelos_stock_max)
+	assert_eq(_rejections, [SeasoningRules.Rejection.BOWL_FULL] as Array[SeasoningRules.Rejection])
+	assert_signal_not_emitted(box, "seasoning_removed")
+	assert_signal_not_emitted(bowl, "stock_changed")
+
+
+func test_ac3_rejection_does_not_arm_guard() -> void:
+	var salt: SeasoningDispenser = _dispenser("Salt")
+	assert_true(salt.interact(_actor), "bandeja vacía: rechazo")
+	assert_eq(_rejections, [SeasoningRules.Rejection.NO_BOX] as Array[SeasoningRules.Rejection])
+	var box: Box = _box_on_tray()
+	_now += 0.1
+	assert_true(salt.interact(_actor))
+	assert_true(box.has_seasoning(SALT), "0,1 s tras un rechazo sí condimenta")
+
+
+func test_ac11_bowl_rejection_does_not_arm_guard() -> void:
+	_station_with_stock(1)
+	assert_true(_bowl().interact(_actor), "bandeja vacía: rechazo")
+	var box: Box = _box_on_tray()
+	_now += 0.1
+	assert_true(_bowl().interact(_actor))
+	assert_true(box.has_seasoning(CACHELOS))
+	assert_eq(_bowl().stock, 0)
 
 
 func test_ac11_toggle_has_guard() -> void:
