@@ -70,8 +70,8 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-055 | M3 | asset-pipeline | draft | Modelar el entorno de romería |
 | PUL-056 | M2 | godot-architect | done | Enmendar los contratos para la estación de condimentos |
 | PUL-057 | M2 | gameplay-engineer | done | Implementar las reglas de condimento como núcleo |
-| PUL-058 | M2 | gameplay-engineer | ready | Crear la escena de la estación de condimentos |
+| PUL-058 | M2 | gameplay-engineer | done | Crear la escena de la estación de condimentos |
 | PUL-059 | M2 | gameplay-engineer | done | Mostrar los distintivos de condimento sobre la caja |
 | PUL-060 | M2 | ui-engineer | done | Ordenar los iconos del ticket y darles estilo de pegatina |
-| PUL-061 | M2 | gameplay-engineer | draft | Montar level_01 con la planta B y la estación, y retirar los botes |
+| PUL-061 | M2 | gameplay-engineer | ready | Montar level_01 con la planta B y la estación, y retirar los botes |
 | PUL-062 | M2 | qa-tester | draft | Pasar el QA de la estación y la planta B y preparar el playtest |

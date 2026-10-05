@@ -1,11 +1,11 @@
 ---
 id: PUL-058
 title: Crear la escena de la estación de condimentos
-status: review
+status: done
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-057]
-orca_task: null
+orca_task: task_35271b0a02b5
 unity_sources: []
 owns: [godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_station.gd, godot/entities/stations/seasoning_station.gd.uid, godot/entities/stations/seasoning_dispenser.gd, godot/entities/stations/seasoning_dispenser.gd.uid, godot/entities/stations/cachelos_bowl.gd, godot/entities/stations/cachelos_bowl.gd.uid, godot/resources/seasoning_station_data.gd, godot/resources/seasoning_station_data.gd.uid, godot/data/config/seasoning_station.tres, godot/entities/stations/sandbox/seasoning_station_sandbox.*, godot/tests/integration/test_seasoning_station.gd, godot/tests/integration/test_seasoning_station.gd.uid, docs/evidence/PUL-058/**, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn, godot/entities/stations/slot.gd, godot/components/interaction_detector.gd, godot/components/interaction_contract.gd, godot/tests/integration/test_interaction_detector.gd, godot/tests/unit/test_interaction_contract.gd, godot/tests/integration/test_slot.gd, godot/tests/unit/test_data_integrity.gd]
 touches_scenes: [godot/entities/stations/seasoning_station.tscn, godot/entities/stations/sandbox/seasoning_station_sandbox.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn]

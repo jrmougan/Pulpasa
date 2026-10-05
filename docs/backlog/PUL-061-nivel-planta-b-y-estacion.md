@@ -1,7 +1,7 @@
 ---
 id: PUL-061
 title: Montar level_01 con la planta B y la estación, y retirar los botes
-status: draft
+status: ready
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-039, PUL-058, PUL-059, PUL-060]
