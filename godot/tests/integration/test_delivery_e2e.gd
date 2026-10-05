@@ -213,8 +213,6 @@ func _prepare_box(order: ActiveOrder) -> Box:
 		var part: Node3D = bowl if seasoning.same_as(CACHELOS_SEASONING) else _dispenser(seasoning)
 		var at: Vector2 = Walker.xz(part.global_position)
 		var stand: Vector2 = Walker.station_stand(at, station.global_position.z, 1.0)
-		if part is SeasoningDispenser:
-			stand = Walker.dispenser_stand(at, tray, station.global_position.z)
 		assert_eq(await _service.use(at, stand), part, "objetivo %s" % part.name)
 		assert_true(box.has_seasoning(seasoning), "caja con %s" % seasoning.display_name)
 	assert_eq(await _service.use(tray, Vector2(tray.x, ACCESS)), box, "recoge la caja")
