@@ -8,5 +8,6 @@ script = ExtResource("1_sea")
 display_name = "Aceite"
 translation_key = "SEASONING_OIL"
 type = 3
-color = Color(0, 0, 0, 0)
+sort_order = 2
+color = Color(0.9490196, 0.7607843, 0.1882353, 1)
 icon = ExtResource("2_icon")

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BoxBadgeStyle" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/box_badge_style.gd" id="1_style"]
+[ext_resource type="Texture2D" path="res://assets/textures/icons/small-fire.svg" id="2_fire"]
+
+[resource]
+script = ExtResource("1_style")
+badge_icon_px = 24
+badge_gap_px = 3
+badge_height = 0.35
+hot_mark = ExtResource("2_fire")

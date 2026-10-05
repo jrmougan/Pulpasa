@@ -7,11 +7,17 @@ extends RigidBody3D
 ## como condimento y lo consume; con la mano vacía, se coge. Con cualquier otra cosa en la mano
 ## consume la pulsación sin efecto (paridad Unity).
 ## La entrega lee `get_contents()`.
+## Estación de condimentos (D18, ADR-003 §8.3): dispensadores y cuenco alternan condimentos con
+## `toggle_seasoning()` y `remove_seasoning()`. Las ramas de bote y cachelos de `interact()` se
+## retiran en PUL-061.
 
 ## Cada corte (D1).
 signal fill_changed(fill: float)
 ## Al aplicar un condimento nuevo.
 signal seasoned(seasoning: SeasoningData)
+## Al quitar un condimento (alternar uno que ya lleva, intercambio de exclusivos o
+## `remove_seasoning`). En el intercambio se emite antes que el `seasoned` del nuevo.
+signal seasoning_removed(seasoning: SeasoningData)
 
 ## Tolerancia de coma flotante al sumar `fill_per_press` (0,1 × 10 ≠ 1,0 exacto).
 const FULL_EPSILON: float = 0.0001
@@ -43,21 +49,11 @@ func is_full() -> bool:
 
 
 func has_seasoning(seasoning: SeasoningData) -> bool:
-	if seasoning == null:
-		return false
-	for existing: SeasoningData in _seasonings:
-		if existing != null and existing.same_as(seasoning):
-			return true
-	return false
+	return SeasoningRules.find(_seasonings, seasoning) != null
 
 
 func has_seasoning_in_group(group: StringName) -> bool:
-	if group.is_empty():
-		return false
-	for existing: SeasoningData in _seasonings:
-		if existing != null and existing.exclusivity_group == group:
-			return true
-	return false
+	return SeasoningRules.find_in_group(_seasonings, group) != null
 
 
 func can_season(seasoning: SeasoningData) -> bool:
@@ -70,6 +66,35 @@ func can_season(seasoning: SeasoningData) -> bool:
 		and has_seasoning_in_group(seasoning.exclusivity_group)
 	):
 		return false
+	return true
+
+
+## Alterna `seasoning` (SeasoningRules.toggle): lo quita si ya lo lleva, si no lo añade; con
+## `swap_exclusive` sustituye al del mismo grupo de exclusividad. `NONE` = cambió algo; otro valor
+## = rechazo sin cambios ni señales.
+func toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection:
+	var result: SeasoningRules.Toggle = SeasoningRules.toggle(
+		_seasonings, seasoning, is_full(), swap_exclusive
+	)
+	if result.rejection != SeasoningRules.Rejection.NONE:
+		return result.rejection
+	_seasonings = result.seasonings
+	if result.removed != null:
+		seasoning_removed.emit(result.removed)
+	if result.added != null:
+		if _season_audio != null:
+			_season_audio.play()
+		seasoned.emit(result.added)
+	return SeasoningRules.Rejection.NONE
+
+
+## Quita `seasoning` si lo lleva y emite `seasoning_removed`; `false` si no lo llevaba.
+func remove_seasoning(seasoning: SeasoningData) -> bool:
+	var existing: SeasoningData = SeasoningRules.find(_seasonings, seasoning)
+	if existing == null:
+		return false
+	_seasonings = SeasoningRules.remove(_seasonings, existing)
+	seasoning_removed.emit(existing)
 	return true
 
 
