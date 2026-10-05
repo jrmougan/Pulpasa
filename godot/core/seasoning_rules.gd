@@ -9,6 +9,7 @@ enum Rejection {
 	NONE,
 	NO_BOX,
 	BOX_NOT_FULL,
+	# En desuso desde PUL-064: con la mano ocupada el dispensador no es objetivo.
 	HAND_BUSY,
 	EXCLUSIVE_TAKEN,
 	BOWL_EMPTY,

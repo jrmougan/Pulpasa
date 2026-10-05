@@ -4,6 +4,7 @@ extends GutTest
 ## del mostrador y desplazado ±0,1 m) y se lee el objetivo del `InteractionDetector` real, sin
 ## llamar a `interact()` ni publicar `target_changed`.
 ## AC1: con una caja en la bandeja, cada dispensador y el cuenco desde el lado de condimentar.
+## AC8 (PUL-064): con caja en la mano, ningún dispensador es objetivo y gana la bandeja a 0–0,4 m.
 ## AC2: de frente a la bandeja, por los dos lados: mano vacía → la caja; caja en la mano → bandeja.
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
@@ -13,6 +14,8 @@ const RECIPE: RecipeData = preload("res://data/recipes/individual.tres")
 const DEPTHS: Array[float] = [0.8, 1.0, 1.2]
 ## Desplazamientos laterales respecto a la pieza (m).
 const OFFSETS: Array[float] = [-0.1, 0.0, 0.1]
+## Desplazamientos laterales respecto al centro de la bandeja para AC8 (m).
+const TRAY_OFFSETS: Array[float] = [-0.4, -0.3, -0.2, 0.2, 0.3, 0.4, 0.0]
 const SETTLE_FRAMES: int = 3
 
 var _level: Node
@@ -124,5 +127,25 @@ func test_ac2_front_of_tray_with_box_in_hand_selects_the_tray_from_both_sides() 
 			for offset: float in OFFSETS:
 				var got: Node = await _target_from(tray, side, depth, offset)
 				var where: String = "lado %+d a %.1f m, %+.1f" % [int(side), depth, offset]
+				assert_eq(got, tray, where)
+				assert_true(_is_lit(tray), "%s: bandeja resaltada" % where)
+
+
+# --- AC8 (PUL-064) -------------------------------------------------------------------------------
+
+
+func test_ac8_box_in_hand_no_dispenser_is_target_and_tray_wins_near_tray_centre() -> void:
+	var box: Box = _new_box()
+	assert_true(_hold.pick_up(box))
+	var tray: Slot = _station.get_tray()
+	for side: float in [1.0, -1.0]:
+		for depth: float in DEPTHS:
+			for offset: float in TRAY_OFFSETS:
+				# Desde el pase a 0,8 m y ±0,4 m la bandeja queda fuera del alcance (no hay objetivo).
+				if side < 0.0 and depth < 1.0 and absf(offset) > 0.3:
+					continue
+				var got: Node = await _target_from(tray, side, depth, offset)
+				var where: String = "lado %+d a %.1f m, %+.2f" % [int(side), depth, offset]
+				assert_false(got is SeasoningDispenser, "%s: ningún dispensador" % where)
 				assert_eq(got, tray, where)
 				assert_true(_is_lit(tray), "%s: bandeja resaltada" % where)
