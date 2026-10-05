@@ -72,7 +72,7 @@ func test_comandas_ac5_m1_data_ranges() -> void:
 	var has_paprika: bool = false
 
 	for order: OrderData in catalog.orders:
-		assert_between(order.max_time, 40.0, 90.0, "La paciencia debe estar entre 40 y 90")
+		assert_between(order.max_time, 80.0, 180.0, "La paciencia debe estar entre 80 y 180")
 		assert_between(order.recipe.base_points, 8, 14, "El precio base debe estar entre 8 y 14")
 		for s: SeasoningData in order.seasonings:
 			if s.type == SeasoningData.SeasoningType.OIL:

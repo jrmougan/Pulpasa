@@ -1,7 +1,10 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-018: el puesto de entrega llama a `OrderService.try_deliver` al entrar el portador en
 ## `%DeliveryZone` y al interactuar (B12); una entrega = una `order_completed` (B1). La caja
 ## entregada se libera; la rechazada se queda en la mano. El label vive de señales (B16).
+## PUL-039: la zona solo entrega una caja que coincide con la comanda viva del puesto; con otra
+## no hace nada (sin rechazo ni penalización). E sigue rechazando (D8). El puesto se resalta.
 
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 const OrderServiceScript: GDScript = preload("res://autoload/order_service.gd")
@@ -152,10 +155,123 @@ func test_ac1_ok_sound_only_for_own_slot() -> void:
 	assert_true(ok.playing)
 
 
-func test_ac2_wrong_box_is_rejected_error_sounds_and_box_stays_in_hand() -> void:
+func test_pul039_wrong_box_in_zone_does_nothing() -> void:
 	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
 	var box: Box = _box_in_hand(null)
 	await _enter_zone()
+	assert_signal_not_emitted(_bus, "delivery_rejected", "sin rechazo ni penalización")
+	assert_signal_not_emitted(_bus, "order_completed")
+	assert_false((_stand.get_node("%ErrorAudio") as AudioStreamPlayer3D).playing)
+	assert_eq(_hold.get_held_item(), box)
+
+
+func test_pul039_box_of_another_stand_in_zone_does_nothing() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var own: OrderData = _order_for(SLOT_ID).data
+	var other: ActiveOrder = null
+	for order: ActiveOrder in _service.get_active_orders():
+		if order.slot_id != SLOT_ID and order.data != own:
+			other = order
+	assert_not_null(other, "con la semilla 5 hay otra receta en otro puesto")
+	if other == null:
+		return
+	var box: Box = _box_in_hand(other)
+	assert_false(OrderValidator.matches(own, box.get_contents()))
+	await _enter_zone()
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+	assert_signal_not_emitted(_bus, "order_completed")
+	assert_eq(_hold.get_held_item(), box)
+
+
+func test_pul039_zone_ignores_box_of_expired_order() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var old: ActiveOrder = _order_for(SLOT_ID)
+	var box: Box = _box_in_hand(old)
+	_bus.order_expired.emit(old, 0)
+	await _enter_zone()
+	assert_signal_not_emitted(_bus, "order_completed")
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+	assert_eq(_hold.get_held_item(), box)
+
+
+## Tablero con un catálogo de una sola comanda (`first`) y penalizaciones reales; tras llenar los
+## puestos, el catálogo pasa a `replacement` (la reposición del mismo tick sale de él).
+func _expiring_board(first: OrderData, replacement: OrderData) -> ActiveOrder:
+	var catalog: OrderCatalog = OrderCatalog.new()
+	catalog.orders = [first] as Array[OrderData]
+	catalog.max_active_orders = 4
+	var config: RoundConfig = RoundConfig.new()
+	config.wrong_delivery_penalty = 2
+	config.expire_penalty = 3
+	_service.setup(catalog, null, config)
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	catalog.orders = [replacement] as Array[OrderData]
+	return _order_for(SLOT_ID)
+
+
+## Caduca de verdad con `advance` (reposición en el mismo tick) con la caja de la caducada en la
+## mano: la zona no entrega ni rechaza; E rechaza con penalización 0 (AC5b).
+func _assert_expiry_tick(first: OrderData, replacement: OrderData) -> void:
+	var old: ActiveOrder = _expiring_board(first, replacement)
+	var box: Box = _box_in_hand(old)
+	_service.board.advance(first.max_time + 0.01)
+	var fresh: ActiveOrder = _order_for(SLOT_ID)
+	assert_ne(fresh.id, old.id, "repuesta en el mismo tick")
+	assert_eq(fresh.data, replacement)
+	assert_eq(_label(), "#%d" % fresh.id)
+	_stand._on_body_entered(_player)
+	assert_signal_not_emitted(_bus, "order_completed", "la zona no entrega a la repuesta")
+	assert_signal_not_emitted(_bus, "delivery_rejected", "la zona no rechaza")
+	assert_eq(_hold.get_held_item(), box)
+	assert_true(_stand.interact(_actor))
+	assert_signal_not_emitted(_bus, "order_completed")
+	assert_signal_emit_count(_bus, "delivery_rejected", 1)
+	assert_eq(
+		get_signal_parameters(_bus, "delivery_rejected"),
+		[SLOT_ID, old.id, 0],
+		"AC5b: va a la caducada, penalización 0"
+	)
+	assert_eq(_hold.get_held_item(), box)
+
+
+func test_pul039_expiry_tick_same_recipe_zone_does_not_deliver() -> void:
+	var data: OrderData = CATALOG.orders[0]
+	await _assert_expiry_tick(data, data)
+
+
+func test_pul039_expiry_tick_other_recipe_zone_does_not_deliver() -> void:
+	var first: OrderData = CATALOG.orders[0]
+	var other: OrderData = null
+	for data: OrderData in CATALOG.orders:
+		if data.recipe != first.recipe or data.seasonings != first.seasonings:
+			other = data
+	assert_not_null(other)
+	await _assert_expiry_tick(first, other)
+
+
+func test_pul039_zone_delivers_replacement_in_a_later_tick() -> void:
+	var data: OrderData = CATALOG.orders[0]
+	var old: ActiveOrder = _expiring_board(data, data)
+	_box_in_hand(old)
+	_service.board.advance(data.max_time + 0.01)
+	# Tick siguiente: como `RoundManager`, un `advance` por tick de física.
+	await wait_physics_frames(1)
+	_service.board.advance(0.01)
+	_stand._on_body_entered(_player)
+	assert_signal_emit_count(_bus, "order_completed", 1, "misma receta: entrega a la repuesta")
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+
+
+func test_pul039_stand_has_highlightable() -> void:
+	var highlight: Highlightable = _stand.get_node_or_null("%Highlightable") as Highlightable
+	assert_not_null(highlight)
+	assert_eq(highlight.get_parent(), _stand)
+
+
+func test_ac2_wrong_box_is_rejected_error_sounds_and_box_stays_in_hand() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var box: Box = _box_in_hand(null)
+	assert_true(_stand.interact(_actor))
 	assert_signal_emit_count(_bus, "delivery_rejected", 1)
 	assert_eq(get_signal_parameters(_bus, "delivery_rejected", 0)[0], SLOT_ID)
 	assert_signal_not_emitted(_bus, "order_completed")
@@ -254,7 +370,7 @@ func test_review_box_staying_in_zone_does_not_retry_by_itself() -> void:
 	_box_in_hand(null)
 	await _enter_zone()
 	await wait_physics_frames(10)
-	assert_signal_emit_count(_bus, "delivery_rejected", 1)
+	assert_signal_not_emitted(_bus, "delivery_rejected")
 
 
 func test_review_late_stand_shows_current_order_id() -> void:

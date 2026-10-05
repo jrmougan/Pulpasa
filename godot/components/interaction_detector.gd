@@ -47,6 +47,11 @@ func _ready() -> void:
 			(child as CollisionShape3D).shape = sphere
 
 
+## Al salir del árbol (jugador liberado) suelta su resaltado: no deja propietarios colgados.
+func _exit_tree() -> void:
+	_set_lit(null)
+
+
 func _physics_process(_delta: float) -> void:
 	refresh()
 
@@ -138,16 +143,18 @@ func _highlightable_of(target: Node) -> Highlightable:
 	return null
 
 
+## Pide el resaltado de `highlight` y suelta el anterior. El `Highlightable` lleva la cuenta de
+## los detectores que lo apuntan: con dos jugadores, que uno se vaya no apaga el del otro.
 func _set_lit(highlight: Highlightable) -> void:
 	if not is_instance_valid(_lit):
 		_lit = null
 	elif _lit.is_queued_for_deletion():
-		_lit.hide()
+		_lit.release(self)
 		_lit = null
 	if highlight == _lit:
 		return
 	if _lit != null:
-		_lit.hide()
+		_lit.release(self)
 	_lit = highlight
 	if _lit != null:
-		_lit.show()
+		_lit.acquire(self)
