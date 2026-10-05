@@ -1,11 +1,13 @@
 class_name TicketEntry
 extends HBoxContainer
-## Receta en texto y un icono por condimento (M1, PUL-030/PUL-031).
+## Receta en texto y una pegatina por condimento en orden canónico (M1, PUL-030/031; PUL-060).
 
-const ICON_SIZE: Vector2 = Vector2(28.0, 28.0)
-const MARK_SIZE: Vector2 = Vector2(14.0, 14.0)
-## Marca de forma del picante: no depender solo del tono (daltonismo).
-const HOT_MARK: Texture2D = preload("res://assets/textures/icons/small-fire.svg")
+## Mismo estilo que la fila de pegatinas de la caja: tamaño y marca de llama (D18).
+const BADGE_STYLE: BoxBadgeStyle = preload("res://data/config/box_badges.tres")
+## Fracción de la pegatina que ocupa el icono blanco sobre el disco.
+const ICON_FRACTION: float = 0.7
+## Fracción de la pegatina que ocupa la marca de llama.
+const MARK_FRACTION: float = 0.5
 
 
 func setup(data: OrderData) -> void:
@@ -17,7 +19,7 @@ func setup(data: OrderData) -> void:
 		return
 	if data.recipe != null:
 		%Recipe.text = _translated(data.recipe.translation_key, data.recipe.display_name)
-	for seasoning: SeasoningData in data.seasonings:
+	for seasoning: SeasoningData in SeasoningRules.canonical_order(data.seasonings):
 		%SeasoningIcons.add_child(_make_seasoning_widget(seasoning))
 
 
@@ -28,26 +30,44 @@ func _make_seasoning_widget(seasoning: SeasoningData) -> Control:
 		label.text = name_text
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		return label
+	var side: float = float(BADGE_STYLE.badge_icon_px)
+	var sticker: Control = Control.new()
+	sticker.name = "Sticker"
+	sticker.custom_minimum_size = Vector2(side, side)
+	sticker.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sticker.tooltip_text = name_text
+	var disc: Panel = Panel.new()
+	disc.name = "Disc"
+	disc.set_anchors_preset(Control.PRESET_FULL_RECT)
+	disc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = seasoning.color if seasoning.color.a > 0.0 else Color.GRAY
+	style.set_corner_radius_all(int(side / 2.0))
+	disc.add_theme_stylebox_override("panel", style)
+	sticker.add_child(disc)
 	var icon: TextureRect = TextureRect.new()
-	icon.custom_minimum_size = ICON_SIZE
+	icon.name = "Icon"
 	icon.texture = seasoning.icon
+	icon.self_modulate = Color.WHITE
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if seasoning.color.a > 0.0:
-		icon.self_modulate = seasoning.color
-	if seasoning.type == SeasoningData.SeasoningType.HOT_PAPRIKA:
+	var icon_side: float = side * ICON_FRACTION
+	icon.size = Vector2(icon_side, icon_side)
+	icon.position = Vector2(side - icon_side, side - icon_side) / 2.0
+	sticker.add_child(icon)
+	if BADGE_STYLE.has_hot_mark(seasoning) and BADGE_STYLE.hot_mark != null:
+		var mark_side: float = side * MARK_FRACTION
 		var mark: TextureRect = TextureRect.new()
 		mark.name = "HotMark"
-		mark.texture = HOT_MARK
+		mark.texture = BADGE_STYLE.hot_mark
 		mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		mark.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		mark.custom_minimum_size = MARK_SIZE
-		mark.size = MARK_SIZE
-		mark.position = ICON_SIZE - MARK_SIZE
-		icon.add_child(mark)
-	return icon
+		mark.size = Vector2(mark_side, mark_side)
+		mark.position = Vector2(side - mark_side, side - mark_side)
+		sticker.add_child(mark)
+	return sticker
 
 
 func _translated(key: String, fallback: String) -> String:

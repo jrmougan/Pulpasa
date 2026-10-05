@@ -4,6 +4,12 @@ extends GutTest
 const PANEL_SCENE: PackedScene = preload("res://ui/tickets/order_tickets_panel.tscn")
 const BusScript: GDScript = preload("res://autoload/event_bus.gd")
 const ServiceScript: GDScript = preload("res://autoload/order_service.gd")
+const ENTRY_SCENE: PackedScene = preload("res://ui/tickets/ticket_entry.tscn")
+const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
+const HOT: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
+const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
+const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/paprika.tres")
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
 
 var _bus: Node
@@ -100,32 +106,52 @@ func test_ac3_late_panel_reconstructs_active_orders_and_text() -> void:
 		assert_eq((entry.get_node("%Recipe") as Label).text, order.data.recipe.display_name)
 
 
-func test_ac4_ticket_shows_one_icon_per_seasoning() -> void:
+func test_ac4_ticket_shows_one_sticker_per_seasoning_in_canonical_order() -> void:
 	_mount()
 	_fill()
 	for order: ActiveOrder in _service.get_active_orders():
 		var entry: TicketEntry = _ticket(order.id).get_node("%Entry")
 		var icons: Array[Node] = (entry.get_node("%SeasoningIcons") as HBoxContainer).get_children()
-		assert_eq(icons.size(), order.data.seasonings.size(), "un icono por condimento")
-		for i: int in range(order.data.seasonings.size()):
-			var icon: TextureRect = icons[i] as TextureRect
-			assert_not_null(icon, "el icono es un TextureRect")
-			assert_not_null(order.data.seasonings[i].icon, "SeasoningData.icon asignado (PUL-031)")
-			assert_eq(icon.texture, order.data.seasonings[i].icon)
+		var expected: Array[SeasoningData] = SeasoningRules.canonical_order(order.data.seasonings)
+		assert_eq(icons.size(), expected.size(), "una pegatina por condimento")
+		for i: int in range(expected.size()):
+			assert_not_null(expected[i].icon, "SeasoningData.icon asignado (PUL-031)")
+			assert_eq((icons[i].get_node("Icon") as TextureRect).texture, expected[i].icon)
+
+
+func test_ac14_ticket_orders_stickers_canonically_whatever_the_tres_order() -> void:
+	var entry: TicketEntry = ENTRY_SCENE.instantiate()
+	add_child_autofree(entry)
+	var data: OrderData = OrderData.new()
+	data.seasonings = [CACHELOS, OIL, SALT, HOT] as Array[SeasoningData]
+	entry.setup(data)
+	var stickers: Array[Node] = entry.get_node("%SeasoningIcons").get_children()
+	assert_eq(stickers.size(), 4)
+	var want: Array[SeasoningData] = [HOT, SALT, OIL, CACHELOS]
+	for i: int in range(4):
+		assert_eq((stickers[i].get_node("Icon") as TextureRect).texture, want[i].icon)
+	assert_not_null(stickers[0].get_node_or_null("HotMark"), "el picante lleva la llama")
+	for i: int in range(1, 4):
+		assert_null(stickers[i].get_node_or_null("HotMark"))
+	assert_eq(data.seasonings[0], CACHELOS, "no muta la comanda")
+
+
+func test_ac4_sticker_uses_box_badge_style_and_seasoning_color() -> void:
+	var style: BoxBadgeStyle = load("res://data/config/box_badges.tres")
+	var sticker: Control = _entry_with(SALT).get_node("%SeasoningIcons").get_child(0)
+	assert_eq(sticker.custom_minimum_size, Vector2(style.badge_icon_px, style.badge_icon_px))
+	var disc: Panel = sticker.get_node("Disc")
+	var box: StyleBoxFlat = disc.get_theme_stylebox("panel") as StyleBoxFlat
+	assert_eq(box.bg_color, SALT.color)
+	assert_eq((sticker.get_node("Icon") as TextureRect).self_modulate, Color.WHITE)
 
 
 func test_ac4_sweet_and_hot_paprika_tickets_are_distinguishable() -> void:
-	var sweet: SeasoningData = load("res://data/seasonings/paprika.tres")
-	var hot: SeasoningData = load("res://data/seasonings/hot_paprika.tres")
-	var sweet_entry: TicketEntry = _entry_with(sweet)
-	var hot_entry: TicketEntry = _entry_with(hot)
-	var sweet_icon: TextureRect = sweet_entry.get_node("%SeasoningIcons").get_child(0)
-	var hot_icon: TextureRect = hot_entry.get_node("%SeasoningIcons").get_child(0)
-	assert_ne(sweet_icon.self_modulate, hot_icon.self_modulate, "tinte distinto")
-	assert_eq(sweet_icon.self_modulate, sweet.color)
-	assert_eq(hot_icon.self_modulate, hot.color)
-	assert_null(sweet_icon.get_node_or_null("HotMark"), "el dulce no lleva marca")
-	assert_not_null(hot_icon.get_node_or_null("HotMark"), "el picante lleva la llama")
+	var sweet_sticker: Control = _entry_with(SWEET).get_node("%SeasoningIcons").get_child(0)
+	var hot_sticker: Control = _entry_with(HOT).get_node("%SeasoningIcons").get_child(0)
+	assert_ne(_disc_color(sweet_sticker), _disc_color(hot_sticker), "tinte distinto")
+	assert_null(sweet_sticker.get_node_or_null("HotMark"), "el dulce no lleva marca")
+	assert_not_null(hot_sticker.get_node_or_null("HotMark"), "el picante lleva la llama")
 
 
 func test_ac4_seasoning_without_icon_shows_translated_name() -> void:
@@ -172,8 +198,13 @@ func test_ac2_patience_is_hidden_in_m0_and_updates_only_own_id() -> void:
 	assert_false(bar.visible)
 
 
+func _disc_color(sticker: Control) -> Color:
+	var box: StyleBoxFlat = (sticker.get_node("Disc") as Panel).get_theme_stylebox("panel")
+	return box.bg_color
+
+
 func _entry_with(seasoning: SeasoningData) -> TicketEntry:
-	var entry: TicketEntry = preload("res://ui/tickets/ticket_entry.tscn").instantiate()
+	var entry: TicketEntry = ENTRY_SCENE.instantiate()
 	add_child_autofree(entry)
 	var data: OrderData = OrderData.new()
 	data.seasonings = [seasoning] as Array[SeasoningData]
