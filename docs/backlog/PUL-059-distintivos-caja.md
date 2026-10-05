@@ -1,11 +1,11 @@
 ---
 id: PUL-059
 title: Mostrar los distintivos de condimento sobre la caja
-status: review
+status: done
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-057]
-orca_task: null
+orca_task: task_29e1047a4d55
 unity_sources: []
 owns: [godot/entities/items/box.tscn, godot/entities/items/badge_row.gd, godot/entities/items/badge_row.gd.uid, godot/tests/integration/test_box_badges.gd, godot/tests/integration/test_box_badges.gd.uid, docs/evidence/PUL-059/**]
 touches_scenes: [godot/entities/items/box.tscn]
