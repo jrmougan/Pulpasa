@@ -113,7 +113,7 @@ func test_pul033_ac1_at_least_two_orders_with_cachelos_and_valid_ranges() -> voi
 	var with_cachelos: int = 0
 	var with_cachelos_and_oil_or_salt: int = 0
 	for order: OrderData in catalog.orders:
-		assert_between(order.max_time, 40.0, 90.0, order.display_name)
+		assert_between(order.max_time, 80.0, 180.0, order.display_name)
 		assert_between(order.recipe.base_points, 8, 14, order.display_name)
 		var types: Array = _seasoning_types(order)
 		if types.has(SeasoningData.SeasoningType.CACHELOS):

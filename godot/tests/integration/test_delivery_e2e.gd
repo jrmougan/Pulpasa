@@ -6,7 +6,9 @@ extends GutTest
 ##
 ## Prepara de verdad la caja de la comanda de un puesto (estantería de cajas, nevera, olla, corte,
 ## condimentos de la estantería o cachelos cocidos) y la entrega en su puesto pulsando E delante
-## de él o entrando en `%DeliveryZone`.
+## de él o entrando en `%DeliveryZone`, con la paciencia real de los `.tres` (sin caducar).
+## La zona no hace nada con una caja que no es la del puesto (E sí la rechaza, D8) y el puesto al
+## que apunta E se resalta.
 
 const LEVEL_SCENE: String = "res://scenes/levels/level_01.tscn"
 const OCTOPUS: IngredientData = preload("res://data/ingredients/octopus.tres")
@@ -49,19 +51,8 @@ func before_each() -> void:
 	_player = _scene.get_node("Characters/Player1") as Player
 	_hold = _player.get_node("%HoldComponent") as Holder
 	_detector = _player.get_node("%InteractionDetector") as InteractionDetector
-	# Paciencia fuera: preparar con teclado tarda más que algunos `max_time` del catálogo (hallazgo
-	# de balance de PUL-039, ver la ficha); aquí se prueba la entrega, no el balance. Mismas
-	# recetas y condimentos del catálogo real, mismo nivel y mismos puestos.
+	# Paciencia REAL del catálogo (PUL-039: `max_time` ×2): la ruta de bot llega a tiempo.
 	var config: RoundConfig = _scene.get("round_config")
-	var catalog: OrderCatalog = (_scene.get("order_catalog") as OrderCatalog).duplicate()
-	var orders: Array[OrderData] = []
-	for data: OrderData in catalog.orders:
-		var copy: OrderData = data.duplicate()
-		copy.max_time = 0.0
-		orders.append(copy)
-	catalog.orders = orders
-	OrderService.setup(catalog, null, config)
-	RoundManager.start_round(config, _scene.call(&"get_slot_ids"))
 	RoundManager.round_state.advance(config.first_order_delay)
 
 
@@ -96,6 +87,10 @@ func test_ac3_deliver_with_e_in_front_of_the_stand() -> void:
 			break
 		await _push_towards(_xz(stand.global_position), 1)
 	assert_signal_emit_count(EventBus, "order_completed", 0, "aún no ha entregado")
+	assert_true(_highlight(stand).is_highlighted(), "el puesto apuntado se resalta")
+	for other: int in [1, 2, 3, 4]:
+		if other != order.slot_id:
+			assert_false(_highlight(_stand(other)).is_highlighted(), "solo uno resaltado")
 	assert_eq(_detector.get_target(), stand, "el detector elige el puesto")
 	await _tap(KEY_E)
 	assert_signal_emit_count(EventBus, "order_completed", 1)
@@ -103,6 +98,7 @@ func test_ac3_deliver_with_e_in_front_of_the_stand() -> void:
 	assert_eq((get_signal_parameters(EventBus, "order_completed")[0] as ActiveOrder).id, order.id)
 	assert_gt(RoundManager.round_state.get_revenue(), revenue, "sube la recaudación")
 	assert_null(_hold.get_held_item(), "la caja se ha entregado")
+	_assert_not_expired(order)
 
 
 func test_ac3_deliver_by_walking_into_the_delivery_zone() -> void:
@@ -122,6 +118,35 @@ func test_ac3_deliver_by_walking_into_the_delivery_zone() -> void:
 	assert_signal_emit_count(EventBus, "delivery_rejected", 0)
 	assert_gt(RoundManager.round_state.get_revenue(), revenue, "sube la recaudación")
 	assert_null(_hold.get_held_item(), "la caja se ha entregado")
+	_assert_not_expired(order)
+
+
+func test_pul039_wrong_box_in_zone_does_nothing_and_e_rejects() -> void:
+	var order: ActiveOrder = _order_with_most_seasonings()
+	assert_not_null(order)
+	# Caja vacía de la estantería: no coincide con ninguna comanda.
+	await _use_station(_box_spawner(order.data.recipe.box))
+	var box: Box = _hold.get_held_item() as Box
+	assert_not_null(box)
+	var stand: OrderStand = _stand(order.slot_id)
+	var stand_xz: Vector2 = _xz(stand.global_position)
+	# Cruza las zonas de los cuatro puestos y se para dentro de la suya.
+	await _walk_to(_xz(_stand(1).global_position) + Vector2(0.0, -STAND_FRONT))
+	await _walk_to(_xz(_stand(1).global_position) + Vector2(0.0, -1.4))
+	var crossing: Vector2 = _xz(_stand(4).global_position) + Vector2(0.0, -1.4)
+	await _walk_to(crossing)
+	assert_almost_eq(
+		_xz(_player.global_position).distance_to(crossing), 0.0, 0.2, "cruzó las zonas"
+	)
+	await _walk_to(stand_xz + Vector2(0.0, -1.4))
+	await _push_towards(stand_xz, 4)
+	assert_signal_not_emitted(EventBus, "delivery_rejected", "la zona no rechaza ni penaliza")
+	assert_signal_not_emitted(EventBus, "order_completed")
+	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
+	assert_eq(_detector.get_target(), stand)
+	await _tap(KEY_E)
+	assert_signal_emit_count(EventBus, "delivery_rejected", 1, "E valida y rechaza (D8)")
+	assert_eq(_hold.get_held_item(), box)
 
 
 # --- Preparación de la caja, solo con teclas ----------------------------------------------------
@@ -236,6 +261,16 @@ func _spice_item(seasoning: SeasoningData) -> Node3D:
 			if item != null and item.data != null and item.data.same_as(seasoning):
 				return item
 	return null
+
+
+func _highlight(stand: OrderStand) -> Highlightable:
+	return stand.get_node("%Highlightable") as Highlightable
+
+
+func _assert_not_expired(order: ActiveOrder) -> void:
+	for i: int in get_signal_emit_count(EventBus, "order_expired"):
+		var expired: ActiveOrder = get_signal_parameters(EventBus, "order_expired", i)[0]
+		assert_ne(expired.id, order.id, "la comanda no caduca con la paciencia real")
 
 
 func _stand(slot_id: int) -> OrderStand:

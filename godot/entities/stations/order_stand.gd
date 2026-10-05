@@ -1,9 +1,12 @@
 class_name OrderStand
 extends StaticBody3D
-## Puesto de entrega (porta OrderStand.cs; scene-tree.md §3). Al entrar el portador con una caja en
-## `%DeliveryZone`, o al interactuar con ella en la mano (B12), pide `OrderService.try_deliver`.
-## No completa nada por su cuenta (B1): solo reacciona a las señales de `EventBus`. El label sale
-## de esas señales, sin consultar sistemas (B16). Contrato `interactable` (ADR-003 §4).
+## Puesto de entrega (porta OrderStand.cs; scene-tree.md §3). Al interactuar con una caja en la
+## mano (B12) pide `OrderService.try_deliver`, que valida y rechaza con penalización (D8). Al entrar
+## el portador en `%DeliveryZone` solo lo pide si la caja ya coincide con la comanda viva del puesto
+## (`OrderValidator.matches`): con otra caja la zona no hace nada (PUL-039), así cruzar un puesto
+## vecino no penaliza. No completa nada por su cuenta (B1): solo reacciona a las señales de
+## `EventBus`. La comanda viva y el label salen de esas señales, sin consultar sistemas (B16).
+## Contrato `interactable` (ADR-003 §4).
 
 ## Texto del label cuando el puesto no tiene comanda.
 const EMPTY_LABEL: String = "–"
@@ -17,6 +20,8 @@ var _service: Node
 ## tick no deben pedir dos veces lo mismo al servicio.
 var _last_box_id: int = 0
 var _last_attempt_frame: int = -1
+## Copia de la comanda viva de este puesto, o `null` (sale de las señales del bus).
+var _order: ActiveOrder
 
 @onready var _zone: Area3D = %DeliveryZone
 @onready var _label: Label3D = %OrderLabel
@@ -68,9 +73,12 @@ func _held_box(holder: Holder) -> Box:
 
 
 ## Entrega lo que lleva `holder`; la caja aceptada se suelta y se libera, la rechazada no se toca.
-func _try_deliver(holder: Holder) -> void:
+## Con `only_if_valid` (zona) no pide nada si la caja no coincide con la comanda viva.
+func _try_deliver(holder: Holder, only_if_valid: bool = false) -> void:
 	var box: Box = _held_box(holder)
 	if box == null:
+		return
+	if only_if_valid and not _matches_live_order(box):
 		return
 	var frame: int = Engine.get_physics_frames()
 	if box.get_instance_id() == _last_box_id and frame == _last_attempt_frame:
@@ -83,40 +91,49 @@ func _try_deliver(holder: Holder) -> void:
 	box.queue_free()
 
 
+func _matches_live_order(box: Box) -> bool:
+	return _order != null and OrderValidator.matches(_order.data, box.get_contents())
+
+
 ## Una sola consulta al cargar (puesto creado con la ronda en marcha); luego, solo señales (B16).
 func _rebuild_label() -> void:
-	_label.text = EMPTY_LABEL
+	_set_order(null)
 	for order: ActiveOrder in _service.get_active_orders():
 		if order.slot_id == slot_id:
-			_label.text = "#%d" % order.id
+			_set_order(order)
+
+
+func _set_order(order: ActiveOrder) -> void:
+	_order = order
+	_label.text = EMPTY_LABEL if order == null else "#%d" % order.id
 
 
 func _on_body_entered(body: Node3D) -> void:
 	var node: Node = body.get_node_or_null(^"%InteractionComponent")
 	var actor: InteractionComponent = node as InteractionComponent
 	if actor != null:
-		_try_deliver(actor.holder)
+		_try_deliver(actor.holder, true)
 
 
 func _on_orders_reset() -> void:
-	_label.text = EMPTY_LABEL
+	_set_order(null)
 
 
 func _on_order_generated(order: ActiveOrder) -> void:
 	if order.slot_id == slot_id:
-		_label.text = "#%d" % order.id
+		_set_order(order)
 
 
 func _on_order_completed(order: ActiveOrder, _points: int) -> void:
 	if order.slot_id != slot_id:
 		return
-	_label.text = EMPTY_LABEL
+	_set_order(null)
 	_ok_audio.play()
 
 
 func _on_order_expired(order: ActiveOrder, _penalty: int) -> void:
 	if order.slot_id == slot_id:
-		_label.text = EMPTY_LABEL
+		_set_order(null)
 
 
 func _on_delivery_rejected(rejected_slot_id: int, _order_id: int, _penalty: int) -> void:

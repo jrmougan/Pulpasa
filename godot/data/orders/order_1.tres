@@ -10,4 +10,4 @@ script = ExtResource("1_ord")
 display_name = "Order 1"
 recipe = ExtResource("2_rec")
 seasonings = [ExtResource("3_sea"), ExtResource("4_sea")]
-max_time = 60.0
+max_time = 120.0
