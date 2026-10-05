@@ -13,7 +13,6 @@
 [ext_resource type="PackedScene" path="res://assets/models/placeholders/box_small.tscn" id="11_pqokn"]
 [ext_resource type="PackedScene" path="res://assets/models/placeholders/box_medium.tscn" id="12_mb5n5"]
 [ext_resource type="PackedScene" path="res://assets/models/placeholders/box_large.tscn" id="13_4ghq1"]
-[ext_resource type="PackedScene" path="res://assets/models/placeholders/condiment_jar.tscn" id="14_n03bi"]
 [ext_resource type="PackedScene" path="res://assets/models/placeholders/octopus_raw.tscn" id="15_kpggr"]
 [ext_resource type="PackedScene" path="res://assets/models/placeholders/octopus_cooked.tscn" id="16_k8h5d"]
 [ext_resource type="PackedScene" path="res://assets/models/placeholders/character.tscn" id="17_x5ptr"]
@@ -102,9 +101,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2, 0, -3.5)
 
 [node name="BoxLarge" type="Node3D" parent="." unique_id=1254205440 instance=ExtResource("13_4ghq1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, -3.5)
-
-[node name="CondimentJar" type="Node3D" parent="." unique_id=1421912409 instance=ExtResource("14_n03bi")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -3.5)
 
 [node name="OctopusRaw" type="Node3D" parent="." unique_id=1635490825 instance=ExtResource("15_kpggr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, -3.5)

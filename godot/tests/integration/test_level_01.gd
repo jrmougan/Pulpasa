@@ -342,6 +342,7 @@ func _assert_walk(
 	label: String
 ) -> void:
 	var walked: float = _walk_distance(reachable, from, to)
+	gut.p("AC2 %s: %.1f m (planta B: %.1f m)" % [label, walked, expected])
 	assert_almost_eq(walked, expected, DISTANCE_TOLERANCE, "%s: %.1f m" % [label, walked])
 
 

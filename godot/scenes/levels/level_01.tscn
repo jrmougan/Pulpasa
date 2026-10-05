@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" path="res://entities/stations/octopus_storage.tscn" id="6_vrcmr"]
 [ext_resource type="PackedScene" path="res://entities/stations/kitchen.tscn" id="7_svp4f"]
 [ext_resource type="PackedScene" path="res://entities/stations/box_shelf.tscn" id="8_1b0o8"]
-[ext_resource type="PackedScene" path="res://entities/stations/spice_shelf.tscn" id="9_w4kkx"]
 [ext_resource type="PackedScene" path="res://entities/stations/order_stand.tscn" id="10_mhiu8"]
 [ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="11_lswbx"]
 [ext_resource type="PackedScene" path="res://entities/camera/camera_rig.tscn" id="12_uujh0"]
@@ -77,9 +76,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7, -0.04, 0)
 
 [node name="BoxShelf" parent="Stations" unique_id=1788334010 instance=ExtResource("8_1b0o8")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.3, 0, 2.5)
-
-[node name="SpiceShelf" parent="Stations" unique_id=1955367660 instance=ExtResource("9_w4kkx")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5.5, 1.0, -4)
 
 [node name="OrderStand1" parent="Stations" unique_id=116681693 instance=ExtResource("10_mhiu8")]
 transform = Transform3D(-0.78, 0, -8.523721e-08, 0, 0.9750001, 0, 6.818976e-08, 0, -0.9750001, -3.3, -0.04, 5.75)
