@@ -1,8 +1,9 @@
 # ADR-003 — Árbol de escenas y composición
 
-- **Estado:** aceptado (2026-10-03)
-- **Fecha:** 2026-10-03
-- **Ficha:** PUL-003
+- **Estado:** aceptado (2026-10-03); enmienda §8 (estación de condimentos) **propuesta**, pendiente
+  del gate humano (PUL-056)
+- **Fecha:** 2026-10-03; enmienda 2026-10-05
+- **Ficha:** PUL-003; enmienda PUL-056 (D18, D19)
 - **Relacionado:** `docs/arch/scene-tree.md` (árbol objetivo de M0), ADR-001 (carpetas), ADR-002
   (autoloads), ADR-005 (3D o 2D, D14 pendiente), inventario §1 (Characters, Game, Interaction,
   Interfaces) y §3 (prefabs, escenas)
@@ -56,9 +57,10 @@ Reglas de la capa común:
 - Cada entidad, estación o pieza de UI es su propia escena con su script al lado
   (`entities/stations/kitchen.tscn` + `cooking_station.gd`, ADR-001).
 - Las variantes que solo difieren en datos son **una escena + un `Resource`**: una `box.tscn` con
-  `@export var data: BoxData` (S/M/L), una `seasoning.tscn` con `SeasoningData`. Nada de escenas
-  heredadas para variar un número.
-- Las escenas compuestas (`box_shelf.tscn`, `spice_shelf.tscn`) instancian escenas hijas; no
+  `@export var data: BoxData` (S/M/L), una `seasoning_dispenser.tscn` con `SeasoningData` (§8; hasta
+  PUL-061, también la `seasoning.tscn` de los botes, que se da de baja). Nada de escenas heredadas
+  para variar un número.
+- Las escenas compuestas (`box_shelf.tscn`, `seasoning_station.tscn`) instancian escenas hijas; no
   copian sus nodos.
 
 ### 2. `level_01.tscn` solo instancia
@@ -94,9 +96,10 @@ Godot no tiene interfaces; se usa **grupo + métodos con firma fija**, verificad
 
 | Grupo | Métodos obligatorios en el script raíz | Lo implementan |
 |---|---|---|
-| `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación) | estaciones, slots, caja, puesto de entrega, pulpo, condimento |
-| `pickable` | `on_picked_up(holder: Holder) -> void`; `on_dropped() -> void`; `var is_held: bool` | pulpo, caja, condimento |
+| `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación). **Opcional** (§8): `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool` | estaciones, slots, caja, puesto de entrega, pulpo y cachelos; dispensadores y cuenco de la estación de condimentos (§8). Condimento (bote): baja en PUL-061 |
+| `pickable` | `on_picked_up(holder: Holder) -> void`; `on_dropped() -> void`; `var is_held: bool` | pulpo, cachelos, caja. Condimento (bote): baja en PUL-061 |
 | `kitchen` | Ninguno (marca). Lo usa `InteractionDetector` para el bonus de puntuación con mano vacía (`PlayerConfig.kitchen_bonus`, equivale al tag `Kitchen` de Unity). No es una capa de física | raíz de `kitchen.tscn` (obligatorio) |
+| `box` | Ninguno (marca, §8). Lo usa `Slot.accepted_group` para que la bandeja de la estación solo acepte cajas. No es una capa de física | raíz de `box.tscn` |
 
 *Enmienda 2026-10-03 (grupo `kitchen`), aprobada por el responsable tras la revisión de PUL-015.*
 
@@ -106,8 +109,9 @@ Godot no tiene interfaces; se usa **grupo + métodos con firma fija**, verificad
   con `actor.holder` y al jugador con `actor.control.controlled_by`, sin conocer `Player`. El
   contrato no cambia con D14.
 - La interacción contextual va en el **receptor**: la caja decide si el objeto en la mano del
-  actor la llena (pulpo cocido, corte D1/D13) o la condimenta; no el controlador del jugador como
-  en `PlayerInteractionController.cs:41,80`.
+  actor la llena (pulpo cocido, corte D1/D13); no el controlador del jugador como en
+  `PlayerInteractionController.cs:41,80`. Desde D18 la caja **no** se condimenta al interactuar con
+  ella: el condimento cambia solo en los dispensadores y el cuenco de la estación (§8).
 - Un test de integración recorre las escenas de `entities/` y falla si un nodo de un grupo no
   implementa sus métodos (`has_method`), para que el contrato no dependa de la disciplina.
 - `InteractionDetector` solo ve cuerpos en la capa de física `interactable`; el nodo raíz de la
@@ -137,6 +141,90 @@ alternativa que salta al menú) → `scenes/levels/level_01.tscn`. Los cambios d
 `GameState` (`start_level(mode)`, `go_to_main_menu()`, `restart_level()` para Reintentar), que usa
 `get_tree().change_scene_to_file()` / `reload_current_scene()`; ninguna
 escena cambia de escena por su cuenta. Pausa y game over son overlays dentro del nivel, no escenas.
+
+### 8. Estación de condimentos (D18) — *enmienda 2026-10-05, PUL-056, pendiente del gate humano*
+Diseño: `docs/design/features/estacion-condimentos.md` (aprobado el 2026-10-05, `paprika_swap` =
+intercambiar). Árbol de nodos en `scene-tree.md` §3 y planta del nivel en `scene-tree.md` §2.
+
+#### 8.1 Cómo sabe un dispensador desde qué lado se le usa
+**Problema.** El dispensador solo responde desde el lado de condimentar (AC7: desde el pase «ni
+se resalta ni responde»). El actor del contrato es `InteractionComponent` (común), que no tiene
+posición, y el resaltado lo decide `InteractionDetector` antes de que nadie llame a
+`can_interact`. Por tanto el filtro tiene que actuar **en la elección del objetivo**, y la capa común
+no puede ver `Vector3` ni `Node3D` (§0).
+
+**Decisión: geometría común en el plano del suelo + método opcional del contrato que consulta el
+detector.**
+
+| Pieza | Capa | Qué hace |
+|---|---|---|
+| `core/station_side.gd` (`class_name StationSide extends RefCounted`) | Común | `enum Side { PASS, OPERATOR }`; `static func classify(point: Vector2, pass_point: Vector2, operator_point: Vector2) -> Side`: `OPERATOR` si `(point − (pass_point + operator_point) / 2) · (operator_point − pass_point) ≥ 0`, si no `PASS`. Pura, test unitario. Es la misma regla en 3D (`(x, z)`) y en 2D |
+| `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool` | Común (contrato `interactable`, opcional) | Si la entidad lo implementa y devuelve `false`, **no es candidata** para ese jugador: no se resalta ni llega a ser objetivo. Sin el método, la entidad es alcanzable (todo lo existente sigue igual). Solo usa tipos comunes (`Vector2` del suelo y `Holder`) |
+| `InteractionDetector` | Específica | Antes de crear el `Candidate` de una entidad, si `has_method(&"is_reachable_from")`, la llama con `Vector2(carrier.x, carrier.z)` y su `holder`; si devuelve `false`, la salta |
+| `SeasoningStation.side_of(floor_position: Vector2) -> StationSide.Side` | Específica | Proyecta al suelo sus marcadores `%PassSide` y `%OperatorSide` (`Marker3D`, uno a cada lado del mostrador) y llama a `StationSide.classify`. Rotar o mover la estación en el nivel no cambia código |
+| `SeasoningDispenser.is_reachable_from` | Específica | `true` si `station.side_of(floor_position) == OPERATOR` o si `SeasoningStationData.operator_side_only` es `false` (válvula de balance de la feature) |
+| `CachelosBowl.is_reachable_from` | Específica | `true` desde el lado de condimentar, o desde cualquier lado si la mano lleva algo (reponer cachelos cocidos vale por los dos lados; lo demás se rechaza, §8.2) |
+| `Tray` (bandeja) | Específica | No implementa el método: se coge y se deja la caja desde los dos lados (AC9) |
+
+`interact()` no repite la comprobación de lado: el detector recalcula el objetivo en cada tick de
+física y la pulsación solo llega al objetivo publicado. Los tests de integración que llaman a
+`interact()` a mano comprueban el lado con `is_reachable_from` (o pasan por el detector real).
+`InteractionContract` (común) lo declara en una constante de métodos opcionales del grupo
+`interactable` (solo nombres, sin tipos de mundo); el test de integración de la estación exige que
+dispensadores y cuenco lo implementen.
+
+**Alternativas descartadas.**
+1. *Un `Area3D` por lado que registra quién está dentro.* Hay que mapear cuerpo → `InteractionComponent`
+   (búsqueda por ruta o grupo), va un tick de física por detrás y en los extremos del mostrador los
+   dos lados se solapan.
+2. *Guardar la posición en `InteractionComponent` (`var floor_position: Vector2`, la escribe el
+   detector).* Mete estado de mundo en un componente común y solo resuelve `interact()`, no el
+   resaltado (AC7).
+3. *Que el detector filtre con `can_interact(actor)`.* Cambia el resaltado de todas las entidades
+   (hoy la caja se resalta aunque lo que llevas no le sirva y consume la pulsación) y el detector no
+   tiene el `InteractionComponent`.
+4. *Que el dispensador lea `actor.detector as Node3D`.* Funciona en la capa específica, pero ata la
+   estación a cómo está montado el jugador y tampoco quita el resaltado.
+5. *Colisión física por lado.* Imposible: el detector es una esfera sobre la capa `interactable`.
+
+#### 8.2 Consumir y rechazar
+`InteractionComponent.interact_pressed()` suelta lo que lleva la mano si el objetivo no consume la
+pulsación. En la estación un rechazo **no debe tirar nada** (AC8: «la mano no cambia»). Regla:
+- Dispensador y cuenco: `can_interact(actor)` es `true` siempre que haya `actor.holder`; `interact()`
+  devuelve `true` aunque rechace y, al rechazar, emite su señal local `rejected(reason)` sin cambiar
+  nada (`signals.md` §4). La estación oye esas señales, suena `%ErrorAudio` y sacude el emisor.
+- Antirrebote (`toggle_guard`): la segunda pulsación se **consume en silencio** (sin `rejected`).
+- `Slot` gana `@export var accepted_group: StringName = &""` (vacío = acepta cualquier cosa, como
+  hoy). Si no está vacío y lo que lleva la mano no está en ese grupo, `interact()` consume la
+  pulsación sin guardar nada. La bandeja usa `accepted_group = &"box"`. Con la bandeja ocupada, el
+  detector sustituye el slot por la caja guardada, que ya consume la pulsación de una mano llena:
+  no se suelta la segunda caja (AC9).
+
+#### 8.3 Reglas en el núcleo y API de la caja
+- `core/seasoning_rules.gd` (`class_name SeasoningRules`, común, puro): `enum Rejection { NONE,
+  NO_BOX, BOX_NOT_FULL, HAND_BUSY, EXCLUSIVE_TAKEN, BOWL_EMPTY, BOWL_FULL, NOT_ACCEPTED }`; alternar
+  con o sin intercambio de exclusivos; `static func canonical_order(seasonings: Array[SeasoningData])
+  -> Array[SeasoningData]` (por `SeasoningData.sort_order`, estable), que usan la fila de la caja y el
+  ticket: comparten dato y regla, no nodos.
+- `Box` (específica) expone `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) ->
+  SeasoningRules.Rejection` (`NONE` = cambió algo) y `remove_seasoning(seasoning: SeasoningData) ->
+  bool`. La caja deja de condimentar en `interact()` (sin botes ni cachelos en la mano, AC12).
+- Los dispensadores y el cuenco alcanzan la caja con `station.get_box() -> Box` (la caja de la
+  bandeja o `null`); referencias `@export` dentro de la escena de la estación, sin rutas.
+
+#### 8.4 Escenas y bajas
+- Cada dispensador es una instancia de `seasoning_dispenser.tscn` con `@export var seasoning:
+  SeasoningData` (§1: variante de datos = una escena + `Resource`); el cuenco es
+  `cachelos_bowl.tscn`. Así cada uno tiene su `%Highlightable` (un nombre único no se repite dentro
+  de una escena) y el detector lo encuentra como hijo directo.
+- La estación es `StaticBody3D` en la capa `world` (mostrador que no se cruza); no es
+  `interactable`: lo son sus hijos (bandeja, dispensadores, cuenco).
+- La fila de pegatinas de la caja (`%BadgeRow`) es 3D de mundo (`Sprite3D` en billboard, sin test de
+  profundidad): vive en `entities/items/`, no en `ui/` (regla 4 de CLAUDE.md).
+- Se dan de baja `spice_shelf.tscn`, `seasoning.tscn`, `seasoning_item.gd` (`SeasoningItem`), el
+  placeholder `condiment_jar.tscn`, `Slot.initial_item_data` y la rama de condimentar de `box.gd`.
+  Lista completa con la ficha que ejecuta cada baja en `scene-tree.md` §7.
+- Ninguna señal nueva en `EventBus` (`signals.md` §4).
 
 ## Alternativas consideradas
 1. **Nivel monolítico como `Level_01.unity`.** Un solo dueño para casi todo, conflictos de merge en
@@ -170,5 +258,9 @@ escena cambia de escena por su cuenta. Pausa y game over son overlays dentro del
   (`Vector2(p.x, p.z)`); se encapsula en el detector y en `player.gd`.
 - (−) `level.gd` es el único script del nivel; si un nivel necesita lógica propia, va en una escena
   instanciada, no en la raíz.
+- (§8, +) La regla de lado es pura y común; el resto del contrato no cambia para las entidades
+  existentes (el método nuevo es opcional).
+- (§8, −) El detector hace una llamada dinámica más por candidato con el método; son 5 nodos en el
+  nivel y solo dentro del radio del detector.
 - El árbol concreto de M0 está en `docs/arch/scene-tree.md`. Cambiarlo en algo que afecte a otra
   ficha (nombres de escena, `@export` públicos, grupos, capas) requiere enmienda.
