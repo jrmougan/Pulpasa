@@ -205,3 +205,70 @@ func test_ac1_candidate_on_top_of_player_uses_zero_direction() -> void:
 func test_ac1_score_formula() -> void:
 	assert_almost_eq(InteractionScoring.score(1.0, 2.0), 2.5, 0.0001)
 	assert_almost_eq(InteractionScoring.score(1.0, 0.0), 12.0, 0.0001)
+
+
+# --- PUL-063: objetos guardados en un slot -------------------------------------------------------
+
+
+func _stored(pos: Vector2) -> InteractionScoring.Candidate:
+	var cand: InteractionScoring.Candidate = _cand(pos, true, true)
+	cand.in_slot = true
+	return cand
+
+
+func test_pul063_candidate_defaults_to_not_in_slot() -> void:
+	assert_false(_cand(Vector2(1.0, 0.0), true, true).in_slot)
+	var stored: InteractionScoring.Candidate = InteractionScoring.Candidate.new(
+		Vector2.ZERO, 1.0, true, true, false, true
+	)
+	assert_true(stored.in_slot)
+
+
+func test_pul063_stored_item_loses_to_better_scored_interactable_with_empty_hand() -> void:
+	# Mismo caso que el de prioridad de cogible, pero el cogible está en un slot.
+	var cands: Array[InteractionScoring.Candidate] = [
+		_cand(Vector2(0.5, 0.0)),
+		_stored(Vector2(1.5, 0.0)),
+	]
+	assert_eq(_pick(cands, false), 0)
+
+
+func test_pul063_stored_item_wins_when_better_scored_with_empty_hand() -> void:
+	var cands: Array[InteractionScoring.Candidate] = [
+		_cand(Vector2(1.5, 0.0)),
+		_stored(Vector2(0.5, 0.0)),
+	]
+	assert_eq(_pick(cands, false), 1)
+
+
+func test_pul063_loose_pickable_keeps_priority_over_stored_and_interactable() -> void:
+	var cands: Array[InteractionScoring.Candidate] = [
+		_cand(Vector2(0.5, 0.0)),
+		_stored(Vector2(0.6, 0.0)),
+		_cand(Vector2(1.8, 0.0), true, true),
+	]
+	assert_eq(_pick(cands, false), 2)
+
+
+func test_pul063_stored_item_with_full_hand_is_unchanged() -> void:
+	# Con la mano llena ya competía como interactuable: el campo no cambia nada.
+	var cands: Array[InteractionScoring.Candidate] = [
+		_cand(Vector2(0.5, 0.0)),
+		_stored(Vector2(1.5, 0.0)),
+	]
+	assert_eq(_pick(cands, true), 0)
+	cands[1].in_slot = false
+	assert_eq(_pick(cands, true), 0)
+	var swapped: Array[InteractionScoring.Candidate] = [
+		_cand(Vector2(1.5, 0.0)),
+		_stored(Vector2(0.5, 0.0)),
+	]
+	assert_eq(_pick(swapped, true), 1)
+
+
+func test_pul063_kitchen_bonus_counts_against_stored_item() -> void:
+	var cands: Array[InteractionScoring.Candidate] = [
+		_stored(Vector2(1.0, 0.0)),
+		_cand(Vector2(1.0, 0.0), false, true, true),
+	]
+	assert_eq(_pick(cands, false), 1)

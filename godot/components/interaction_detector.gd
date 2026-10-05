@@ -7,8 +7,9 @@ extends Area3D
 ## distancia 3D desde el portador + `detector_origin_height`), delega la elección en
 ## `InteractionScoring.pick_best` y emite `target_changed` solo cuando cambia. Como
 ## InteractionDetector.cs:57, un slot ocupado se sustituye por su objeto guardado (con la posición
-## del slot para puntuar), con la mano vacía o llena, y ese objeto compite como cualquier otro: él
-## decide qué hacer con la mano (la caja corta o condimenta). Las entidades con
+## del slot para puntuar), con la mano vacía o llena; él decide qué hacer con la mano (la caja
+## corta). Ese objeto va marcado `in_slot`: compite por puntuación, sin la prioridad de cogible de
+## los objetos sueltos (PUL-063). Las entidades con
 ## `is_reachable_from` que devuelve `false` (dispensador desde el lado de pase) no son candidatas:
 ## ni objetivo ni resaltado (ADR-003 §8.1). Enciende el `Highlightable` del
 ## objetivo y apaga el anterior: nunca hay dos.
@@ -76,7 +77,8 @@ func refresh() -> void:
 		if entity == null or not _is_alive(entity) or entity in entities:
 			continue
 		var pos: Vector3 = entity.global_position
-		if entity is Slot and (entity as Slot).has_item():
+		var stored: bool = entity is Slot and (entity as Slot).has_item()
+		if stored:
 			entity = (entity as Slot).get_item()
 		if not _is_reachable(entity):
 			continue
@@ -86,7 +88,8 @@ func refresh() -> void:
 				pos.distance_to(eye),
 				entity.is_in_group(InteractionContract.GROUP_PICKABLE),
 				entity.is_in_group(InteractionContract.GROUP_INTERACTABLE),
-				entity.is_in_group(KITCHEN_GROUP)
+				entity.is_in_group(KITCHEN_GROUP),
+				stored
 			)
 		)
 		entities.append(entity)

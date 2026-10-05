@@ -10,6 +10,12 @@ extends RefCounted
 ## Los números (cono, distancia mínima, bonus de cocina) llegan por parámetro desde el
 ## detector (que los lee de `PlayerConfig`). El detector resuelve antes los casos de slot
 ## (slot vacío, slot ocupado con la mano llena) y construye un `Candidate` por cuerpo.
+##
+## Prioridad de cogible (PUL-063): con la mano vacía, un cogible suelto gana a cualquier
+## interactuable del cono, como en Unity. Un objeto **guardado en un slot** (`in_slot`) no tiene esa
+## prioridad: compite por puntuación con los interactuables. Así, en la estación de condimentos, la
+## caja de la bandeja no roba el objetivo al dispensador que el jugador tiene delante, y un objeto
+## en un pasaplatos no se lo roba a lo que está mejor apuntado. Con la mano llena no cambia nada.
 
 ## Mínimo de distancia en `score` para no dividir por cero (`Mathf.Max(dist, 0.1f)`).
 const MIN_SCORE_DISTANCE: float = 0.1
@@ -26,19 +32,23 @@ class Candidate:
 	var is_interactable: bool
 	## Equivale al tag `Kitchen` del prototipo.
 	var is_kitchen: bool
+	## Objeto guardado en un slot: sin prioridad de cogible (compite por puntuación).
+	var in_slot: bool
 
 	func _init(
 		new_position: Vector2 = Vector2.ZERO,
 		new_distance: float = 0.0,
 		pickable: bool = false,
 		interactable: bool = true,
-		kitchen: bool = false
+		kitchen: bool = false,
+		stored: bool = false
 	) -> void:
 		position = new_position
 		distance = new_distance
 		is_pickable = pickable
 		is_interactable = interactable
 		is_kitchen = kitchen
+		in_slot = stored
 
 
 ## `dot * 2 + 1 / max(dist, 0.1)`.
@@ -47,9 +57,10 @@ static func score(dot: float, dist: float) -> float:
 
 
 ## Índice del mejor candidato o -1 (`InteractionDetector.cs:99`). Con la mano vacía el mejor
-## cogible gana sobre cualquier interactuable, pero solo si además es interactuable
+## cogible suelto gana sobre cualquier interactuable, pero solo si además es interactuable
 ## (`bestPickable as IInteractable`); si no, se usa el mejor interactuable (con `kitchen_bonus`
-## a la cocina) o -1. Con la mano llena solo cuentan los interactuables, sin bonus.
+## a la cocina) o -1. Un cogible `in_slot` compite como interactuable. Con la mano llena solo
+## cuentan los interactuables, sin bonus.
 static func pick_best(
 	origin: Vector2,
 	forward: Vector2,
@@ -76,7 +87,7 @@ static func pick_best(
 		if dist > near_distance and dot < cos_limit:
 			continue
 		var cand_score: float = score(dot, dist)
-		if cand.is_pickable and not holding:
+		if cand.is_pickable and not holding and not cand.in_slot:
 			if cand_score > best_pickable_score:
 				best_pickable = i
 				best_pickable_score = cand_score

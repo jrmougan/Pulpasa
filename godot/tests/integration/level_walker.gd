@@ -16,13 +16,9 @@ const BAR_HALF_DEPTH: float = 0.5
 const GAP_X: float = 7.7
 ## Distancia a la barra de los puntos de paso a cada lado del hueco (m).
 const GAP_CLEARANCE: float = 0.9
-## Puntos de uso de la estación de condimentos (PUL-061): distancia al centro del mostrador en z.
-## Con una caja en la bandeja, mirar de frente a Sal o Pimentón picante hace que el detector elija
-## la caja (prioridad de cogibles, `InteractionScoring`); se usan en diagonal, apartándose
-## `DISPENSER_SIDESTEP` m hacia la bandeja (medido en
-## `docs/evidence/PUL-061/sonda-detector-dispensadores.txt`). Pendiente de PUL-063.
+## Puntos de uso de la estación de condimentos: distancia al centro del mostrador en z. Todas las
+## piezas (bandeja, dispensadores, cuenco) se usan de frente desde ahí (PUL-063).
 const STATION_ACCESS: float = 1.0
-const DISPENSER_SIDESTEP: float = 0.7
 ## Teclas de cada jugador: arriba, abajo, izquierda, derecha, interactuar.
 const KEYS: Dictionary[int, Array] = {
 	1: [KEY_W, KEY_S, KEY_A, KEY_D, KEY_E],
@@ -52,13 +48,6 @@ static func xz(v: Vector3) -> Vector2:
 ## Punto desde el que se usa una pieza de la estación por un lado (−1 pase, +1 condimentar).
 static func station_stand(part: Vector2, station_z: float, side: float) -> Vector2:
 	return Vector2(part.x, station_z + side * STATION_ACCESS)
-
-
-## Punto desde el que se pulsa un dispensador (lado de condimentar), en diagonal: ver
-## `DISPENSER_SIDESTEP`.
-static func dispenser_stand(dispenser: Vector2, tray: Vector2, station_z: float) -> Vector2:
-	var away: float = signf(dispenser.x - tray.x)
-	return Vector2(dispenser.x - away * DISPENSER_SIDESTEP, station_z + STATION_ACCESS)
 
 
 ## −1 si `point` está en la cocina (detrás de la barra), +1 en el servicio.

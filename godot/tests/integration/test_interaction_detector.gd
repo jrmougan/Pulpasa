@@ -226,6 +226,34 @@ func test_ac1_occupied_slot_resolves_to_its_item_with_full_hand() -> void:
 	assert_eq(_detector.get_target(), stored)
 
 
+## PUL-063: con la mano vacía, un objeto guardado en un slot no tiene prioridad de cogible:
+## un interactuable mejor apuntado le gana. Uno suelto en el mismo sitio sí la conserva.
+func test_pul063_stored_item_loses_to_better_aimed_interactable_with_empty_hand() -> void:
+	var slot: Slot = SLOT_SCENE.instantiate()
+	slot.position = Vector3(0.6, 0.0, -1.5)
+	_level.add_child(slot)
+	var stored: Item = Item.new()
+	_level.add_child(stored)
+	stored.global_position = AWAY
+	_hold.pick_up(stored)
+	slot.interact(_player.get_node("%InteractionComponent"))
+	var front: Target = _add_target(Vector3(0.0, 0.8, -1.0))
+	await _settle()
+	assert_eq(_detector.get_target(), front, "gana lo que está delante")
+	assert_false((stored.get_child(1) as Highlightable).is_highlighted())
+
+
+func test_pul063_loose_item_keeps_priority_over_better_aimed_interactable() -> void:
+	var loose: Item = Item.new()
+	_level.add_child(loose)
+	loose.global_position = Vector3(0.6, 1.0, -1.5)
+	loose.freeze = true
+	var front: Target = _add_target(Vector3(0.0, 0.8, -1.0))
+	await _settle()
+	assert_eq(_detector.get_target(), loose, "el cogible suelto conserva la prioridad")
+	assert_false(front.highlight.is_highlighted())
+
+
 func test_ac1_taking_item_from_slot_moves_highlight_off_the_item() -> void:
 	var slot: Slot = SLOT_SCENE.instantiate()
 	# Colocado antes de entrar al árbol: nunca existe en el origen, dentro del jugador.

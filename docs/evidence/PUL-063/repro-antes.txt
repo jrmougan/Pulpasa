@@ -1,0 +1,54 @@
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 0.8 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 0.8 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 0.8 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.0 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.0 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.0 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.2 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.2 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.2 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 0.8 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 0.8 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 0.8 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.0 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.0 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.0 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.2 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.2 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.2 m, +0.1
+    [Failed]:  [HotPaprika:<StaticBody3D#186461981091>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 0.8 m, -0.1
+    [Failed]:  [Salt:<StaticBody3D#186579421610>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 0.8 m, +0.1
+    [Failed]:  [HotPaprika:<StaticBody3D#186461981091>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.0 m, -0.1
+    [Failed]:  [Salt:<StaticBody3D#186579421610>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.0 m, +0.1
+    [Failed]:  [HotPaprika:<StaticBody3D#186461981091>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.2 m, -0.1
+    [Failed]:  [HotPaprika:<StaticBody3D#186461981091>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.2 m, +0.0
+    [Failed]:  [Salt:<StaticBody3D#186579421610>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.2 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 0.8 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 0.8 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 0.8 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.0 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.0 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.0 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.2 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.2 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [HotPaprika:<StaticBody3D#118094825935>(seasoning_dispenser.gd)]:  HotPaprika a 1.2 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 0.8 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 0.8 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 0.8 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.0 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.0 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.0 m, +0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.2 m, -0.1
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.2 m, +0.0
+    [Failed]:  [Box:<RigidBody3D#124587607761>(box.gd)] expected to equal [Salt:<StaticBody3D#118212266454>(seasoning_dispenser.gd)]:  Salt a 1.2 m, +0.1
+    [Failed]:  [HotPaprika:<StaticBody3D#186461981091>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 0.8 m, -0.1
+    [Failed]:  [Salt:<StaticBody3D#186579421610>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 0.8 m, +0.1
+    [Failed]:  [HotPaprika:<StaticBody3D#186461981091>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.0 m, -0.1
+    [Failed]:  [Salt:<StaticBody3D#186579421610>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.0 m, +0.1
+    [Failed]:  [HotPaprika:<StaticBody3D#186461981091>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.2 m, -0.1
+    [Failed]:  [HotPaprika:<StaticBody3D#186461981091>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.2 m, +0.0
+    [Failed]:  [Salt:<StaticBody3D#186579421610>(seasoning_dispenser.gd)] expected to equal [Tray:<StaticBody3D#186076105100>(slot.gd)]:  lado +1 a 1.2 m, +0.1
+Tests                 3
+Passing Tests         1
+Failing Tests         2
+Asserts           147/215

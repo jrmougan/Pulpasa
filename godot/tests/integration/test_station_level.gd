@@ -121,7 +121,7 @@ func _season_and_deliver(walker: Walker, box: Box) -> void:
 	for seasoning: SeasoningData in [SALT, OIL]:
 		var dispenser: SeasoningDispenser = _dispenser(seasoning)
 		var at: Vector2 = Walker.xz(dispenser.global_position)
-		var stand: Vector2 = Walker.dispenser_stand(at, _tray_xz(), _station.global_position.z)
+		var stand: Vector2 = Walker.station_stand(at, _station.global_position.z, 1.0)
 		assert_eq(await walker.use(at, stand), dispenser, dispenser.name)
 		assert_true(box.has_seasoning(seasoning), "caja con %s" % seasoning.display_name)
 	var tray: Vector2 = _tray_xz()

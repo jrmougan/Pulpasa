@@ -65,7 +65,7 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
 
 [node name="Tray" parent="." instance=ExtResource("3_slot")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0, -0.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, -0.25)
 accepted_group = &"box"
 
 [node name="TrayMesh" type="MeshInstance3D" parent="Tray"]
@@ -76,22 +76,22 @@ mesh = SubResource("BoxMesh_tray")
 [node name="Dispensers" type="Node3D" parent="."]
 
 [node name="SweetPaprika" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.1, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 1.1, 0.45)
 seasoning = ExtResource("6_sweet")
 station = NodePath("../..")
 
 [node name="HotPaprika" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 1.1, 0.45)
 seasoning = ExtResource("7_hot")
 station = NodePath("../..")
 
 [node name="Salt" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 1.1, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 1.1, 0.45)
 seasoning = ExtResource("8_salt")
 station = NodePath("../..")
 
 [node name="Oil" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 1.1, 0.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.85, 1.1, 0.45)
 seasoning = ExtResource("9_oil")
 station = NodePath("../..")
 
