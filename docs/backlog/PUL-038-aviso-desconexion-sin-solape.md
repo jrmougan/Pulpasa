@@ -1,11 +1,11 @@
 ---
 id: PUL-038
 title: Evitar que el aviso de mando desconectado tape los tickets
-status: review
+status: done
 milestone: M2
 role: ui-engineer
 deps: [PUL-037]
-orca_task: null
+orca_task: task_344f08f82bfb
 unity_sources: []
 owns: [godot/ui/menus/pause_menu.gd, godot/ui/menus/pause_menu.tscn, godot/tests/integration/test_pause_menu.gd, docs/evidence/PUL-038/**]
 touches_scenes: [godot/ui/menus/pause_menu.tscn]
