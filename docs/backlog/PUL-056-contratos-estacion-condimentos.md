@@ -1,11 +1,11 @@
 ---
 id: PUL-056
 title: Enmendar los contratos para la estación de condimentos
-status: review
+status: done
 milestone: M2
 role: godot-architect
 deps: [PUL-040]
-orca_task: null
+orca_task: task_f8eea586e3ef
 unity_sources: []
 owns: [docs/arch/signals.md, docs/arch/scene-tree.md, docs/arch/ADR-003-arbol-escenas-composicion.md]
 touches_scenes: []

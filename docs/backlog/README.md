@@ -68,8 +68,8 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-053 | M3 | asset-pipeline | draft | Modelar el puesto de entrega |
 | PUL-054 | M3 | asset-pipeline | draft | Modelar las encimeras modulares |
 | PUL-055 | M3 | asset-pipeline | draft | Modelar el entorno de romería |
-| PUL-056 | M2 | godot-architect | ready | Enmendar los contratos para la estación de condimentos |
-| PUL-057 | M2 | gameplay-engineer | draft | Implementar las reglas de condimento como núcleo |
+| PUL-056 | M2 | godot-architect | done | Enmendar los contratos para la estación de condimentos |
+| PUL-057 | M2 | gameplay-engineer | ready | Implementar las reglas de condimento como núcleo |
 | PUL-058 | M2 | gameplay-engineer | draft | Crear la escena de la estación de condimentos |
 | PUL-059 | M2 | gameplay-engineer | draft | Mostrar los distintivos de condimento sobre la caja |
 | PUL-060 | M2 | ui-engineer | draft | Ordenar los iconos del ticket y darles estilo de pegatina |

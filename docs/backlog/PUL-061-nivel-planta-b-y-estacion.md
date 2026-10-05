@@ -7,8 +7,8 @@ role: gameplay-engineer
 deps: [PUL-039, PUL-058, PUL-059, PUL-060]
 orca_task: null
 unity_sources: []
-owns: [godot/scenes/levels/**, godot/entities/environment/kitchen_layout.tscn, godot/entities/stations/spice_shelf.tscn, godot/entities/items/seasoning.tscn, godot/entities/items/seasoning_item.gd, godot/entities/items/seasoning_item.gd.uid, godot/entities/items/box.gd, godot/entities/items/sandbox/**, godot/entities/stations/sandbox/stations_sandbox.*, godot/entities/player/sandbox/**, godot/tests/integration/*.gd, godot/tests/integration/*.gd.uid, docs/evidence/PUL-061/**]
-touches_scenes: [godot/scenes/levels/level_01.tscn, godot/entities/environment/kitchen_layout.tscn]
+owns: [godot/scenes/levels/**, godot/entities/environment/kitchen_layout.tscn, godot/entities/stations/spice_shelf.tscn, godot/entities/items/seasoning.tscn, godot/entities/items/seasoning_item.gd, godot/entities/items/seasoning_item.gd.uid, godot/entities/items/box.gd, godot/entities/items/sandbox/**, godot/entities/stations/sandbox/stations_sandbox.*, godot/entities/player/sandbox/**, godot/tests/integration/*.gd, godot/tests/integration/*.gd.uid, docs/evidence/PUL-061/**, godot/assets/models/placeholders/condiment_jar.tscn, godot/scenes/scale_check.tscn, godot/scenes/sandbox/**]
+touches_scenes: [godot/scenes/levels/level_01.tscn, godot/entities/environment/kitchen_layout.tscn, godot/scenes/scale_check.tscn]
 ---
 
 ## Target

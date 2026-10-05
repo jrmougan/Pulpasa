@@ -1,14 +1,14 @@
 ---
 id: PUL-057
 title: Implementar las reglas de condimento como núcleo
-status: draft
+status: ready
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-056, PUL-039]
 orca_task: null
 unity_sources: []
-owns: [godot/core/seasoning_rules.gd, godot/core/seasoning_rules.gd.uid, godot/resources/seasoning_data.gd, godot/data/seasonings/*.tres, godot/resources/box_badge_style.gd, godot/resources/box_badge_style.gd.uid, godot/data/config/box_badges.tres, godot/entities/items/box.gd, godot/tests/unit/test_seasoning_rules.gd, godot/tests/unit/test_seasoning_rules.gd.uid, godot/tests/unit/test_data_*.gd, godot/tests/integration/test_box.gd, docs/evidence/PUL-057/**]
-touches_scenes: []
+owns: [godot/core/seasoning_rules.gd, godot/core/seasoning_rules.gd.uid, godot/resources/seasoning_data.gd, godot/data/seasonings/*.tres, godot/resources/box_badge_style.gd, godot/resources/box_badge_style.gd.uid, godot/data/config/box_badges.tres, godot/entities/items/box.gd, godot/tests/unit/test_seasoning_rules.gd, godot/tests/unit/test_seasoning_rules.gd.uid, godot/tests/unit/test_data_*.gd, godot/tests/integration/test_box.gd, docs/evidence/PUL-057/**, godot/core/station_side.gd, godot/core/station_side.gd.uid, godot/tests/unit/test_station_side.gd, godot/tests/unit/test_station_side.gd.uid, godot/entities/items/box.tscn]
+touches_scenes: [godot/entities/items/box.tscn]
 ---
 
 ## Target
