@@ -92,3 +92,39 @@ func test_badges_use_style_size_and_seasoning_color() -> void:
 	assert_eq(disc.billboard, BaseMaterial3D.BILLBOARD_ENABLED)
 	var side: float = disc.pixel_size * disc.texture.get_width()
 	assert_almost_eq(side, 24.0 * 12.74 / 720.0, 0.001)
+
+
+func _tilted_camera() -> Camera3D:
+	var camera: Camera3D = Camera3D.new()
+	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	camera.size = 12.74
+	add_child_autofree(camera)
+	camera.rotation_degrees = Vector3(-45, 45, 0)
+	camera.position = camera.basis.z * 20.0
+	camera.current = true
+	return camera
+
+
+func test_row_keeps_a_screen_gap_above_the_box() -> void:
+	_tilted_camera()
+	_box.toggle_seasoning(SALT, true)
+	for height: float in [0.0, 1.0]:
+		_box.global_position = Vector3(0, height, 0)
+		_row._follow()
+		var gap: float = _box_top_y() - _row.get_bottom_screen_y()
+		assert_gte(gap, 6.0, "hueco en pantalla con la caja a %s m" % height)
+
+
+func test_row_rebuilds_when_camera_size_changes() -> void:
+	var camera: Camera3D = _tilted_camera()
+	_box.toggle_seasoning(SALT, true)
+	var disc: Sprite3D = _row.get_child(0).get_child(0) as Sprite3D
+	var before: float = disc.pixel_size
+	camera.size = 6.37
+	_row._process(0.0)
+	disc = _row.get_child(0).get_child(0) as Sprite3D
+	assert_almost_eq(disc.pixel_size, before / 2.0, before * 0.01)
+
+
+func _box_top_y() -> float:
+	return _row.get_box_top_screen_y()

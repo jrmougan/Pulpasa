@@ -35,3 +35,10 @@ touches_scenes: [godot/entities/items/box.tscn]
 ## Evidence
 - `docs/evidence/PUL-059/box_badges_1280x720.png`: 1280×720, caja con 4 condimentos (picante con llama → sal → aceite → cachelos) y otra con 2; pegatinas de 24 px (≥ 22). Captura hecha con la caja suelta, sin personaje ni mostrador; la caja en mano usa la misma fila (top_level, sin depth test).
 - `tools/verify.sh` verde (GUT 553/553 en la pasada previa; gdformat corregido después).
+
+### Revisión del coordinador
+- `BadgeRow._follow` proyecta las 8 esquinas de la colisión de la caja y sube la fila por el eje «arriba» de la cámara hasta dejar ≥ 8 px (mínimo exigido 6) entre su borde inferior y lo más alto de la caja; vale en mesa, en mano y con la caja grande.
+- La llama (0,34 × lado, centrada a 0,2 × lado) queda dentro del disco.
+- La fila se rehace al cambiar `size_changed` del viewport, o el tamaño/orientación de la cámara.
+- Captura nueva `docs/evidence/PUL-059/box_badges_1280x720.png` (sandbox de items): caja pequeña sobre mesa, mediana en la mano del personaje y grande en el suelo, las tres con 4 condimentos; huecos medidos 8,0 / 8,0 / 9,1 px. La caja en mano queda tapada por el propio personaje en esa vista, pero la fila se ve entera.
+- Tests nuevos: hueco ≥ 6 px (`unproject_position`) a dos alturas y recálculo al cambiar `camera.size`.
