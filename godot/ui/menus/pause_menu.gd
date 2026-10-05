@@ -16,6 +16,9 @@ func _ready() -> void:
 	panel.configure("Pausa", "Reanudar")
 	panel.description.text = tr("La romería puede esperar un momento.")
 	panel.ratio.hide()
+	# El aviso vive en la tarjeta (centrada), no en el borde superior donde van los tickets.
+	_warning.reparent(panel.description.get_parent(), false)
+	_warning.get_parent().move_child(_warning, panel.description.get_index() + 1)
 	panel.primary_button.pressed.connect(_resume)
 	panel.exit_button.pressed.connect(_exit)
 	EventBus.pause_changed.connect(_on_pause_changed)
