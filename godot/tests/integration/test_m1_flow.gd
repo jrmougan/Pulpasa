@@ -1,8 +1,9 @@
 extends GutTest
 ## PUL-032: partida M1 completa sobre `level_01.tscn` con los datos reales y los autoloads reales.
 ## Una comanda con aceite y cachelos (D10): pulpo y cachelos cuecen juntos en la olla (D9), la caja
-## se llena, se condimenta con el bote de aceite y con los cachelos cocidos, y se entrega con bonus
-## por tiempo (D2). Después una caducidad (−expire_penalty), una caja errónea
+## se llena sobre la bandeja de la estación, los cachelos cocidos van al cuenco y la caja se
+## condimenta en el dispensador de aceite y el cuenco (PUL-061), y se entrega con bonus por tiempo
+## (D2). Después una caducidad (−expire_penalty), una caja errónea
 ## (−wrong_delivery_penalty, D8) y el fin de ronda: recaudación y estrellas en el game over.
 ##
 ## Usa la comanda del catálogo real con aceite y cachelos (PUL-033) y `max_active_orders = 1`.
@@ -78,12 +79,14 @@ func _small_box_spawner() -> ItemSpawner:
 	return null
 
 
-func _spice_slot(seasoning: SeasoningData) -> Slot:
-	for child: Node in _station("SpiceShelf").get_children():
-		var slot: Slot = child as Slot
-		if slot != null and slot.get_item() is SeasoningItem:
-			if (slot.get_item() as SeasoningItem).data == seasoning:
-				return slot
+func _seasoning_station() -> SeasoningStation:
+	return _station("SeasoningStation") as SeasoningStation
+
+
+func _dispenser(seasoning: SeasoningData) -> SeasoningDispenser:
+	for child: Node in _seasoning_station().get_node("Dispensers").get_children():
+		if (child as SeasoningDispenser).seasoning == seasoning:
+			return child as SeasoningDispenser
 	return null
 
 
@@ -95,8 +98,9 @@ func _bonus(order: ActiveOrder) -> int:
 	return floori((order.time_left / order.max_time) * _config.time_bonus_max)
 
 
-## Nevera y cachelera → olla (dos plazas), una caja de la comanda en el suelo, cocción, FIFO,
-## cortes hasta llenar, cachelos cocidos y aceite. Devuelve la caja lista para entregar.
+## Nevera y cachelera → olla (dos plazas), la caja de la comanda a la bandeja, cocción, FIFO,
+## cortes sobre la bandeja hasta llenar, cachelos cocidos al cuenco y, en la estación, cachelos y
+## aceite. Devuelve la caja lista para entregar.
 func _prepare_box() -> Box:
 	var kitchen: CookingStation = _station("Kitchen")
 	assert_true(_press(_station("OctopusStorage")), "nevera: da un pulpo")
@@ -109,13 +113,15 @@ func _prepare_box() -> Box:
 	assert_true(_press(kitchen), "olla: cachelos crudos junto al pulpo")
 	assert_null(_hold.get_held_item())
 
-	# Mientras cuecen: la caja de la comanda, al suelo.
+	# Mientras cuecen: la caja de la comanda, a la bandeja de la estación.
 	var spawner: ItemSpawner = _small_box_spawner()
 	assert_not_null(spawner)
 	assert_true(_press(spawner), "estantería: da la caja")
 	var box: Box = _hold.get_held_item() as Box
 	assert_eq(box.data, RECIPE.box)
-	_hold.drop()
+	var station: SeasoningStation = _seasoning_station()
+	assert_true(_press(station.get_tray()), "bandeja: guarda la caja")
+	assert_eq(station.get_box(), box)
 
 	simulate(kitchen, roundi((octopus.data.cook_time + COOK_MARGIN) / COOK_STEP), COOK_STEP)
 	assert_true(octopus.is_cooked(), "pulpo cocido")
@@ -133,16 +139,15 @@ func _prepare_box() -> Box:
 
 	assert_true(_press(kitchen), "olla: devuelve los cachelos cocidos")
 	assert_eq(_hold.get_held_item(), cachelos)
-	assert_true(_press(box), "cachelos cocidos sobre la caja llena")
-	assert_true(box.has_seasoning(CACHELOS_SEASONING), "cachelos aplicados como condimento")
+	var bowl: CachelosBowl = station.get_node("CachelosBowl")
+	assert_true(_press(bowl), "cachelos cocidos al cuenco")
 	assert_true(_is_released(cachelos), "los cachelos se consumen")
-
-	var oil_slot: Slot = _spice_slot(OIL)
-	assert_not_null(oil_slot, "la estantería tiene el bote de aceite")
-	assert_true(_press(oil_slot.get_item()), "coge el aceite")
-	assert_true(_press(box), "aceite sobre la caja")
+	assert_eq(bowl.stock, 1)
+	assert_true(_press(bowl), "cuenco: cachelos a la caja")
+	assert_true(box.has_seasoning(CACHELOS_SEASONING), "cachelos aplicados como condimento")
+	assert_eq(bowl.stock, 0)
+	assert_true(_press(_dispenser(OIL)), "dispensador de aceite")
 	assert_true(box.has_seasoning(OIL))
-	assert_true(_press(oil_slot), "devuelve el bote")
 	assert_null(_hold.get_held_item())
 	assert_eq(box.get_contents().seasonings.size(), 2)
 	return box

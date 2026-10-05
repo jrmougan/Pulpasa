@@ -12,7 +12,6 @@ const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const STAND_SCENE: PackedScene = preload("res://entities/stations/order_stand.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
-const SEASONING_SCENE: PackedScene = preload("res://entities/items/seasoning.tscn")
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
 const SLOT_ID: int = 2
 const FAR: Vector3 = Vector3(20, 0, 20)
@@ -78,14 +77,9 @@ func _box_in_hand(order: ActiveOrder) -> Box:
 			if is_instance_valid(octopus):
 				_hold.drop()
 				octopus.free()
+		# Condimentos con la API que usan los dispensadores y el cuenco (ADR-003 §8.3).
 		for seasoning: SeasoningData in order.data.seasonings:
-			var item: SeasoningItem = SEASONING_SCENE.instantiate()
-			item.data = seasoning
-			_level.add_child(item)
-			assert_true(_hold.pick_up(item))
-			assert_true(box.interact(_actor))
-			_hold.drop()
-			item.free()
+			assert_eq(box.toggle_seasoning(seasoning, true), SeasoningRules.Rejection.NONE)
 	assert_true(_hold.pick_up(box))
 	return box
 
