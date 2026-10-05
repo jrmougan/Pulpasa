@@ -15,8 +15,8 @@ Opciones (tras `--`):
                     godot/assets/models/_pipeline/test_cube/test_cube.glb
 
 Reglas que comprueba antes de exportar (art-bible §2): existe la colección `export`, hay una sola
-raíz, todas las escalas y rotaciones de malla están aplicadas, no hay cámaras ni luces y existe el
-marcador `Anchor_Front` en +Y (frente −Z en Godot). Sale con código 1 si algo falla.
+raíz, escalas y rotaciones aplicadas en todos los objetos (local y mundo), no hay cámaras ni luces y existe el
+marcador `Anchor_Front` en +Y con ≤ 1° de desviación (frente −Z en Godot). Sale con código 1 si algo falla.
 """
 
 import argparse
@@ -33,6 +33,8 @@ CATEGORIES = ("characters", "food", "items", "stations", "furniture", "environme
 EXPORT_COLLECTION = "export"
 FRONT_ANCHOR = "Anchor_Front"
 EPS = 1e-4
+ROT_EPS = math.radians(0.01)
+FRONT_MAX_ANGLE_DEG = 1.0
 
 # Ajustes de import que el pipeline fija en cada .glb.import (pipeline.md §4).
 IMPORT_PARAMS = {
@@ -121,13 +123,17 @@ def validate(objs: list, max_tris: int) -> int:
     for o in objs:
         if o.type in {"CAMERA", "LIGHT"}:
             errors.append(f"{o.name}: cámaras y luces no se exportan")
-        if any(abs(s - 1.0) > EPS for s in o.scale):
-            errors.append(f"{o.name}: escala {tuple(round(s, 4) for s in o.scale)} sin aplicar")
+        if o.name.endswith(("-col", "-colonly", "-convcol", "-navmesh")):
+            errors.append(f"{o.name}: sufijos de colisión prohibidos")
+        # Se comprueban la transformación local y la de mundo de TODOS los objetos (también
+        # Empty y raíz): una rotación o escala en un padre se propaga a lo exportado.
+        for label, matrix in (("local", o.matrix_basis), ("mundo", o.matrix_world)):
+            _loc, rot, scale = matrix.decompose()
+            if any(abs(s - 1.0) > EPS for s in scale):
+                errors.append(f"{o.name}: escala {label} {tuple(round(s, 4) for s in scale)} sin aplicar")
+            if abs(rot.angle) > ROT_EPS:
+                errors.append(f"{o.name}: rotación {label} de {math.degrees(rot.angle):.2f}° sin aplicar")
         if o.type == "MESH":
-            if any(abs(r) > EPS for r in o.rotation_euler):
-                errors.append(f"{o.name}: rotación sin aplicar")
-            if o.name.endswith(("-col", "-colonly", "-convcol", "-navmesh")):
-                errors.append(f"{o.name}: sufijos de colisión prohibidos")
             mesh = o.evaluated_get(depsgraph).to_mesh()
             tris += sum(len(p.vertices) - 2 for p in mesh.polygons)
             o.evaluated_get(depsgraph).to_mesh_clear()
@@ -136,8 +142,13 @@ def validate(objs: list, max_tris: int) -> int:
         errors.append(f"falta el marcador {FRONT_ANCHOR} (frente en +Y de Blender)")
     else:
         p = front.matrix_world.translation
-        if p.y <= abs(p.x):
-            errors.append(f"{FRONT_ANCHOR} debe estar delante (+Y), está en {tuple(round(c, 3) for c in p)}")
+        where = tuple(round(c, 3) for c in p)
+        if math.hypot(p.x, p.y) < EPS:
+            errors.append(f"{FRONT_ANCHOR} sobre el origen: no define frente ({where})")
+        else:
+            deviation = math.degrees(math.atan2(p.x, p.y))
+            if abs(deviation) > FRONT_MAX_ANGLE_DEG:
+                errors.append(f"{FRONT_ANCHOR} desviado {deviation:.1f}° de +Y, está en {where}")
     if max_tris and tris > max_tris:
         errors.append(f"{tris} triángulos > presupuesto {max_tris}")
     if errors:

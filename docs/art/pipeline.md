@@ -36,7 +36,10 @@ tools/blender_mcp.sh status
 tools/blender_mcp.sh stop
 ```
 
-- El PID y el log quedan en `$XDG_RUNTIME_DIR/pulpasa_blender_mcp/` (fuera del repo).
+- El PID y el log quedan en `$XDG_RUNTIME_DIR/pulpasa_blender_mcp/` (fuera del repo). `stop` solo
+  actúa si el PID sigue siendo ese Blender (`-c blender_mcp --port <puerto>`), envía TERM, espera
+  10 s y escala a KILL; si el arranque falla (puerto sin abrir en `BLENDER_MCP_START_TIMEOUT`, 30 s
+  por defecto) mata el proceso lanzado y borra el PID.
 - No uses `--factory-startup`: desactiva las extensiones y `-c blender_mcp` deja de existir.
 - En modo `-b` no hay respuestas diferidas: cada petición debe terminar antes de devolver.
 - Dos agentes a la vez: cada uno con su `BLENDER_MCP_PORT` (exportado antes de lanzar Claude).
@@ -61,8 +64,8 @@ por ficha, art-bible §2.4). Contiene:
 
 - **Unidades**: métrico, `Unit Scale = 1.0`, longitud en metros (1 u Blender = 1 m = 1 u Godot), 30 fps.
 - **Colección `export`**: lo único que se exporta. Trae un `Empty` raíz `asset` (renómbralo con el
-  nombre del asset; todo lo exportable cuelga de él) y el marcador **`Anchor_Front`** en (0, 0,5, 0)
-  apuntando a **+Y**. Modela el frente hacia +Y; el exportador lo convierte en −Z de Godot. No lo
+  nombre del asset; todo lo exportable cuelga de él) y el marcador **`Anchor_Front`** en (0, 0,5, 0),
+  delante (+Y) y sin rotación (una esfera pequeña). Modela el frente hacia +Y; el exportador lo convierte en −Z de Godot. No lo
   borres: `test_assets_models.gd` lo usa para comprobar la orientación.
 - **Colección `reference`** (no se exporta, no renderiza): `ref_character_1_8m` (caja de 0,6 × 0,3
   × 1,8 m, origen en la base) y `ref_counter_1m` (encimera de 1 × 0,8 × 1 m) en alámbrico, y la
@@ -87,10 +90,10 @@ Categorías: `characters`, `food`, `items`, `stations`, `furniture`, `environmen
 para pruebas del pipeline). El script **valida antes de exportar** y sale con código 1 si:
 
 - falta la colección `export`, está vacía o tiene más de una raíz;
-- algún objeto tiene escala distinta de (1,1,1), o una malla tiene rotación sin aplicar
-  (`Ctrl+A → All Transforms`);
+- algún objeto exportado (mallas, `Empty`, la raíz incluida) tiene escala distinta de (1,1,1) o
+  rotación distinta de cero, en local o en mundo (`Ctrl+A → All Transforms`);
 - hay cámaras, luces o sufijos de colisión (`-col`, `-colonly`…);
-- falta `Anchor_Front` o no está delante (+Y);
+- falta `Anchor_Front`, está sobre el origen o se desvía más de 1° del eje +Y;
 - se pasa `--max-tris` y la colección lo supera (presupuestos de art-bible §2.2).
 
 Exporta glTF 2.0 binario solo de la colección `export` (incluidas anidadas), `+Y Up`,
@@ -122,9 +125,12 @@ Después de exportar: `godot --headless --path godot --import` (o abrir el edito
 
 Recorre todos los `.glb` de `godot/assets/models/**` salvo `placeholders/` y comprueba que cada uno:
 importa y su raíz es `Node3D`; tiene `.import` con `root_scale = 1`, sufijos desactivados y
-materiales embebidos; ningún nodo tiene escala sin aplicar; su caja de mallas mide entre 0,05 m y
-6 m de alto y ≤ 12 m de planta, con la base en y = 0 (±0,05); tiene `Anchor_Front` en −Z (y no
-ladeado); no trae cámaras ni luces. Además exige el cubo de humo `_pipeline/test_cube` y que mida
+materiales embebidos; ningún nodo, **raíz incluida**, tiene escala sin aplicar; su caja de mallas
+mide entre 0,05 m y 6 m de alto y ≤ 12 m de planta, con la base en y = 0 (±0,05); tiene
+`Anchor_Front` en −Z con ≤ 1° de desviación; no trae cámaras ni luces. Todo se mide en el espacio
+del padre de la instancia, así que la transformación de la raíz cuenta. Casos negativos generados en
+memoria (raíz escalada y girada, raíz girada, frente ladeado, hijo escalado, base desplazada, sin
+marcador, cámara/luz) comprueban que el validador los rechaza. Además exige el cubo de humo `_pipeline/test_cube` y que mida
 1 m. Las medidas finas de cada pieza (±10 % de art-bible §2.1) las revisa la ficha del asset con
 la captura en `scale_check`.
 

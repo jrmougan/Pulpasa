@@ -64,3 +64,18 @@ D20. Requisito de todas las fichas de asset (PUL-044..PUL-055).
   el de la derecha está girado 90° y la nariz asoma hacia −X, como corresponde.
 - Avisos de Blender 5.2.2 de Fedora (OCIO 2.5 vs 2.4, sin Draco/MeshOptimizer) inocuos; anotados en
   `docs/art/pipeline.md` §1.
+
+### Revisión 1 (CHANGES del revisor, aplicados)
+- [P1] `test_assets_models.gd`: el validador `_model_errors()` mide en el espacio del padre de la
+  instancia (incluye la transformación de la raíz), exige escala 1 en la raíz y en todos los nodos y
+  frente −Z con ≤ 1° de desviación. 8 casos negativos/positivo con escenas generadas en memoria; el
+  caso del revisor (raíz escala 2 + giro PI) ahora falla por escala y por frente. 11/11 en verde.
+- [P2] `blender_export.py`: escala y rotación aplicadas en **todos** los objetos exportados, en local
+  y en mundo, y `Anchor_Front` alineado con +Y (≤ 1°). Empty raíz girado 30° → rechazado (local,
+  mundo y frente desviado −30°); `Anchor_Front` en (0,2, 0,5, 0) → rechazado (21,8°). El marcador de
+  la plantilla ya no lleva rotación de visualización (esfera); cubo de humo re-exportado.
+- [P2] `blender_mcp.sh`: `stop` comprueba que el PID es nuestro Blender (`/proc/<pid>/cmdline`),
+  envía TERM, espera 10 s y escala a KILL; solo borra el PID si el proceso terminó. Un arranque
+  fallido mata el proceso lanzado. Probado: arranque/parada real; Blender falso que ignora TERM sin
+  abrir puerto → KILL y limpio; PID reciclado (un `sleep`) → no se toca.
+
