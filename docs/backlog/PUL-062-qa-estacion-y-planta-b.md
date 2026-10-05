@@ -1,7 +1,7 @@
 ---
 id: PUL-062
 title: Pasar el QA de la estación y la planta B y preparar el playtest
-status: draft
+status: ready
 milestone: M2
 role: qa-tester
 deps: [PUL-061, PUL-063]

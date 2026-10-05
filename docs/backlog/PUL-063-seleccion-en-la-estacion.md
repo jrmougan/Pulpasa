@@ -1,11 +1,11 @@
 ---
 id: PUL-063
 title: Hacer inequívoca la selección de dispensadores y bandeja en la estación
-status: review
+status: done
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-061]
-orca_task: null
+orca_task: task_6e45d49e9294
 unity_sources: []
 owns: [godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_station.gd, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/seasoning_dispenser.gd, godot/core/interaction_scoring.gd, godot/components/interaction_detector.gd, godot/tests/unit/test_interaction_scoring.gd, godot/tests/integration/test_seasoning_station.gd, godot/tests/integration/test_interaction_detector.gd, godot/tests/integration/test_m2b_station_selection.gd, godot/tests/integration/test_m2b_station_selection.gd.uid, godot/tests/integration/*flow*.gd, godot/tests/integration/test_level_01.gd, godot/tests/integration/level_walker.gd, godot/tests/integration/test_station_level.gd, godot/tests/integration/test_delivery_e2e.gd, godot/scenes/levels/level_01.tscn, docs/evidence/PUL-063/**]
 touches_scenes: [godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/scenes/levels/level_01.tscn]

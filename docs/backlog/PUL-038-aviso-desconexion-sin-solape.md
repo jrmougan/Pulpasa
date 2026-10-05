@@ -1,7 +1,7 @@
 ---
 id: PUL-038
 title: Evitar que el aviso de mando desconectado tape los tickets
-status: draft
+status: ready
 milestone: M2
 role: ui-engineer
 deps: [PUL-037]
