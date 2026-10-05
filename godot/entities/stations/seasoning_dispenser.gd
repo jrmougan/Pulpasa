@@ -2,8 +2,9 @@ class_name SeasoningDispenser
 extends StaticBody3D
 ## Dispensador fijo de un condimento en la estación (D18, ADR-003 §8; scene-tree.md §3). Con la
 ## mano vacía y desde el lado de condimentar, alterna su condimento en la caja de la bandeja
-## (`Box.toggle_seasoning`; con `paprika_swap`, intercambia el pimentón). Siempre consume la
-## pulsación: al rechazar emite `rejected` sin cambiar nada (ADR-003 §8.2).
+## (`Box.toggle_seasoning`; con `paprika_swap`, intercambia el pimentón). Con algo en la mano no es
+## objetivo (AC8). Siempre consume la pulsación: al rechazar emite `rejected` sin cambiar nada
+## (ADR-003 §8.2).
 ##
 ## Antirrebote: tras un cambio, otra pulsación antes de `toggle_guard` s se consume en silencio.
 ## El reloj es inyectable (`clock`) para probarlo sin esperar.
@@ -44,16 +45,18 @@ func _ready() -> void:
 
 
 ## Lado de condimentar (o los dos con `operator_side_only` = false). ADR-003 §8.1.
-func is_reachable_from(floor_position: Vector2, _holder: Holder) -> bool:
-	if station == null:
+## Con algo en la mano tampoco (AC8, PUL-064): el detector no lo resalta y gana la bandeja.
+func is_reachable_from(floor_position: Vector2, holder: Holder) -> bool:
+	if station == null or (holder != null and holder.get_held_item() != null):
 		return false
 	if not station.data.operator_side_only:
 		return true
 	return station.side_of(floor_position) == StationSide.Side.OPERATOR
 
 
+## Defensa en profundidad: con algo en la mano no consume la pulsación (AC8, PUL-064).
 func can_interact(actor: InteractionComponent) -> bool:
-	return actor != null and actor.holder != null
+	return actor != null and actor.holder != null and actor.holder.get_held_item() == null
 
 
 func interact(actor: InteractionComponent) -> bool:
@@ -63,7 +66,7 @@ func interact(actor: InteractionComponent) -> bool:
 		return true
 	if clock.call() - _last_change < station.data.toggle_guard:
 		return true
-	var result: SeasoningRules.Rejection = _toggle(actor.holder)
+	var result: SeasoningRules.Rejection = _toggle()
 	if result == SeasoningRules.Rejection.NONE:
 		_last_change = clock.call()
 	else:
@@ -72,9 +75,7 @@ func interact(actor: InteractionComponent) -> bool:
 
 
 ## Alterna el condimento en la caja de la bandeja; `NONE` si cambió algo.
-func _toggle(holder: Holder) -> SeasoningRules.Rejection:
-	if holder.get_held_item() != null:
-		return SeasoningRules.Rejection.HAND_BUSY
+func _toggle() -> SeasoningRules.Rejection:
 	var box: Box = station.get_box()
 	if box == null:
 		return SeasoningRules.Rejection.NO_BOX

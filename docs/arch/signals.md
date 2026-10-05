@@ -28,7 +28,7 @@ posterior (M1, M2…). Todas se **declaran** en `event_bus.gd` en la fase 0, aun
 | `BoxContents` | `RefCounted` | `core/box_contents.gd` | `box: BoxData`, `ingredient: IngredientData` (o `null`), `fill: float` (0–1), `seasonings: Array[SeasoningData]` |
 | `OrderData`, `BoxData`, `IngredientData`, `SeasoningData` | `Resource` | `resources/*.gd` | Ver inventario §1 (ScriptableObjects) |
 | `GameMode.Mode` | enum | `core/game_mode.gd` | `SINGLE`, `COOP_2P` |
-| `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX`, `BOX_NOT_FULL`, `HAND_BUSY`, `EXCLUSIVE_TAKEN` (solo con `paprika_swap` = `false`), `BOWL_EMPTY`, `BOWL_FULL`, `NOT_ACCEPTED` (cachelos crudos o quemados, u otra cosa en el cuenco). Solo en señales locales (§4) |
+| `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX`, `BOX_NOT_FULL`, `HAND_BUSY` (en desuso desde PUL-064: nadie lo emite), `EXCLUSIVE_TAKEN` (solo con `paprika_swap` = `false`), `BOWL_EMPTY`, `BOWL_FULL`, `NOT_ACCEPTED` (cachelos crudos o quemados, u otra cosa en el cuenco). Solo en señales locales (§4) |
 | `StationSide.Side` | enum | `core/station_side.gd` | `PASS`, `OPERATOR` (ADR-003 §8.1). No aparece en ninguna señal; lo devuelve `SeasoningStation.side_of()` |
 
 `Player` (`entities/player/player.gd`, `CharacterBody3D` o `CharacterBody2D` según D14) es de la
@@ -110,7 +110,7 @@ usan `Node` en sus firmas para valer en 3D y en 2D.
 | `fill_changed(fill: float)` | `box.gd` | barra en mundo de `box.tscn` | Cada corte sobre la caja (D1) | 6 |
 | `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn`; `%BadgeRow` de `box.tscn` (M2, PUL-059) | Al aplicar un condimento. Desde D18 solo la emite `Box.toggle_seasoning()` (la llaman dispensadores y cuenco); `interact()` ya no condimenta | 6 / M2 |
 | `seasoning_removed(seasoning: SeasoningData)` | `box.gd` | `%BadgeRow` de `box.tscn` (rehace la fila) | Al quitar un condimento: `toggle_seasoning()` sobre uno que ya lleva, o `remove_seasoning()`. En el intercambio de pimentón (`paprika_swap`) se emite **antes** que el `seasoned` del nuevo, una vez cada una, en la misma llamada (AC4). *Enmienda PUL-056* | M2 |
-| `rejected(reason: SeasoningRules.Rejection)` | `seasoning_dispenser.gd` (`SeasoningDispenser`) | `seasoning_station.gd` (suena `%ErrorAudio` y sacude el emisor) | Al consumir una pulsación sin cambiar nada: bandeja vacía, caja sin llenar, mano ocupada, pimentón exclusivo con `paprika_swap` = `false`. **No** se emite por el antirrebote ni desde el lado de pase (ahí el dispensador no es objetivo, ADR-003 §8.1). *Enmienda PUL-056* | M2 |
+| `rejected(reason: SeasoningRules.Rejection)` | `seasoning_dispenser.gd` (`SeasoningDispenser`) | `seasoning_station.gd` (suena `%ErrorAudio` y sacude el emisor) | Al consumir una pulsación sin cambiar nada: bandeja vacía, caja sin llenar, pimentón exclusivo con `paprika_swap` = `false`. **No** se emite por el antirrebote, ni desde el lado de pase (ADR-003 §8.1), ni con la mano ocupada (el dispensador no es objetivo, `is_reachable_from` = `false`). *Enmienda PUL-056; PUL-064 (aprobada por el responsable, 2026-10-05) quita «mano ocupada»* | M2 |
 | `rejected(reason: SeasoningRules.Rejection)` | `cachelos_bowl.gd` (`CachelosBowl`) | `seasoning_station.gd` (ídem) | Al consumir una pulsación sin cambiar nada: cuenco vacío al poner, cuenco lleno al reponer, cachelos crudos o quemados u otro objeto, bandeja vacía o caja sin llenar al alternar. *Enmienda PUL-056* | M2 |
 | `stock_changed(stock: int)` | `cachelos_bowl.gd` | visual de raciones de `cachelos_bowl.tscn` (`%Portions`) | Al reponer (+`cachelos_portions_per_item`), al poner cachelos en la caja (−1) y al quitarlos (+1). También una vez en `_ready()` con `cachelos_initial_stock`. *Enmienda PUL-056* | M2 |
 | `amount_changed(remaining: float)` | `ingredient.gd` | barra en mundo de `octopus.tscn` | Cada corte; a 0 el pulpo se libera solo (B9) | 6 |
@@ -129,8 +129,8 @@ tests de integración y la guía de playtest de PUL-062 (pulsaciones de error) s
 señales locales de la instancia del nivel. Si una métrica o el audio global (Must 9) los necesita
 fuera de la escena, se promueven con enmienda.
 
-**Secuencia de un dispensador** (`SeasoningDispenser.interact`, lado de condimentar):
-antirrebote (`toggle_guard`, reloj inyectable) → mano llena: `rejected(HAND_BUSY)` → `station.get_box()`
+**Secuencia de un dispensador** (`SeasoningDispenser.interact`, lado de condimentar, mano vacía; con algo en la mano no es objetivo, PUL-064):
+antirrebote (`toggle_guard`, reloj inyectable) → `station.get_box()`
 nulo: `rejected(NO_BOX)` → `box.toggle_seasoning(seasoning, data.paprika_swap)` → `NONE`: la caja
 emite `seasoning_removed(anterior)` (solo si intercambia o quita) y/o `seasoned(nuevo)`; otro valor:
 `rejected(valor)`. **Cuenco** al alternar: si la caja no lleva cachelos y `stock` = 0,

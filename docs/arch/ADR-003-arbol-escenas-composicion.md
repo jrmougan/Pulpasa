@@ -162,7 +162,7 @@ detector.**
 | `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool` | Común (contrato `interactable`, opcional) | Si la entidad lo implementa y devuelve `false`, **no es candidata** para ese jugador: no se resalta ni llega a ser objetivo. Sin el método, la entidad es alcanzable (todo lo existente sigue igual). Solo usa tipos comunes (`Vector2` del suelo y `Holder`) |
 | `InteractionDetector` | Específica | Antes de crear el `Candidate` de una entidad, si `has_method(&"is_reachable_from")`, la llama con `Vector2(carrier.x, carrier.z)` y su `holder`; si devuelve `false`, la salta |
 | `SeasoningStation.side_of(floor_position: Vector2) -> StationSide.Side` | Específica | Proyecta al suelo sus marcadores `%PassSide` y `%OperatorSide` (`Marker3D`, uno a cada lado del mostrador) y llama a `StationSide.classify`. Rotar o mover la estación en el nivel no cambia código |
-| `SeasoningDispenser.is_reachable_from` | Específica | `true` si `station.side_of(floor_position) == OPERATOR` o si `SeasoningStationData.operator_side_only` es `false` (válvula de balance de la feature) |
+| `SeasoningDispenser.is_reachable_from` | Específica | `false` si `holder` lleva algo (AC8, enmienda PUL-064); si no, `true` si `station.side_of(floor_position) == OPERATOR` o si `SeasoningStationData.operator_side_only` es `false` (válvula de balance de la feature) |
 | `CachelosBowl.is_reachable_from` | Específica | `true` desde el lado de condimentar, o desde cualquier lado si la mano lleva algo (reponer cachelos cocidos vale por los dos lados; lo demás se rechaza, §8.2) |
 | `Tray` (bandeja) | Específica | No implementa el método: se coge y se deja la caja desde los dos lados (AC9) |
 
@@ -190,7 +190,10 @@ dispensadores y cuenco lo implementen.
 #### 8.2 Consumir y rechazar
 `InteractionComponent.interact_pressed()` suelta lo que lleva la mano si el objetivo no consume la
 pulsación. En la estación un rechazo **no debe tirar nada** (AC8: «la mano no cambia»). Regla:
-- Dispensador y cuenco: `can_interact(actor)` es `true` siempre que haya `actor.holder`; `interact()`
+- Dispensador: `can_interact(actor)` es `true` solo con `actor.holder` y la mano vacía (**enmienda
+  PUL-064, aprobada por el responsable el 2026-10-05**: con algo en la mano no es objetivo —
+  `is_reachable_from` devuelve `false`, §8.1—, así que el detector no lo resalta y gana la bandeja o el cuenco; `HAND_BUSY` queda en desuso). Cuenco:
+  `can_interact(actor)` es `true` siempre que haya `actor.holder`. Ambos: `interact()`
   devuelve `true` aunque rechace y, al rechazar, emite su señal local `rejected(reason)` sin cambiar
   nada (`signals.md` §4). La estación oye esas señales, suena `%ErrorAudio` y sacude el emisor.
 - Antirrebote (`toggle_guard`): la segunda pulsación se **consume en silencio** (sin `rejected`).
@@ -202,7 +205,7 @@ pulsación. En la estación un rechazo **no debe tirar nada** (AC8: «la mano no
 
 #### 8.3 Reglas en el núcleo y API de la caja
 - `core/seasoning_rules.gd` (`class_name SeasoningRules`, común, puro): `enum Rejection { NONE,
-  NO_BOX, BOX_NOT_FULL, HAND_BUSY, EXCLUSIVE_TAKEN, BOWL_EMPTY, BOWL_FULL, NOT_ACCEPTED }`; alternar
+  NO_BOX, BOX_NOT_FULL, HAND_BUSY (en desuso, PUL-064), EXCLUSIVE_TAKEN, BOWL_EMPTY, BOWL_FULL, NOT_ACCEPTED }`; alternar
   con o sin intercambio de exclusivos; `static func canonical_order(seasonings: Array[SeasoningData])
   -> Array[SeasoningData]` (por `SeasoningData.sort_order`, estable), que usan la fila de la caja y el
   ticket: comparten dato y regla, no nodos.

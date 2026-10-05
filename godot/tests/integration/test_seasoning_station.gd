@@ -378,27 +378,28 @@ func test_ac7_operator_side_only_false_reaches_from_both_sides() -> void:
 # --- AC8 ---
 
 
-func test_ac8_busy_hand_is_rejected_and_hand_unchanged() -> void:
+func test_ac8_busy_hand_dispensers_are_not_interactable_and_hand_unchanged() -> void:
 	var box: Box = _box_on_tray()
 	var cachelos: Ingredient = _held_cachelos(IngredientData.CookingState.COOKED)
 	for dispenser: SeasoningDispenser in _dispensers():
-		_press(dispenser)
+		assert_false(dispenser.can_interact(_actor), "%s no es objetivo" % dispenser.name)
+		assert_false(dispenser.interact(_actor), "%s no consume" % dispenser.name)
 	assert_eq(_hold.get_held_item(), cachelos, "la mano no cambia")
 	assert_eq(box.get_contents().seasonings, [] as Array[SeasoningData])
-	assert_eq(_rejections.size(), 4)
-	for reason: SeasoningRules.Rejection in _rejections:
-		assert_eq(reason, SeasoningRules.Rejection.HAND_BUSY)
+	assert_eq(_rejections.size(), 0, "sin rechazos: ya no hay HAND_BUSY")
 
 
-func test_ac8_busy_hand_through_interaction_component_does_not_drop() -> void:
+func test_ac8_busy_hand_detector_does_not_pick_a_dispenser() -> void:
 	_box_on_tray()
 	var cachelos: Ingredient = _held_cachelos(IngredientData.CookingState.COOKED)
 	var salt: SeasoningDispenser = _dispenser("Salt")
 	_player.global_position = Vector3(salt.global_position.x, 0.0, OPERATOR_Z)
 	await _settle()
-	assert_eq((_player.get_node("%InteractionDetector") as InteractionDetector).get_target(), salt)
-	assert_true(_actor.interact_pressed())
-	assert_eq(_hold.get_held_item(), cachelos, "no se suelta")
+	var target: Node = (
+		(_player.get_node("%InteractionDetector") as InteractionDetector).get_target()
+	)
+	assert_false(target is SeasoningDispenser, "el detector no elige un dispensador")
+	assert_eq(_hold.get_held_item(), cachelos)
 
 
 # --- AC9 ---
