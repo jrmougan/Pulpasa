@@ -74,5 +74,6 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-059 | M2 | gameplay-engineer | done | Mostrar los distintivos de condimento sobre la caja |
 | PUL-060 | M2 | ui-engineer | done | Ordenar los iconos del ticket y darles estilo de pegatina |
 | PUL-061 | M2 | gameplay-engineer | done | Montar level_01 con la planta B y la estación, y retirar los botes |
-| PUL-062 | M2 | qa-tester | ready | Pasar el QA de la estación y la planta B y preparar el playtest |
+| PUL-062 | M2 | qa-tester | done | Pasar el QA de la estación y la planta B y preparar el playtest |
 | PUL-063 | M2 | gameplay-engineer | done | Hacer inequívoca la selección de dispensadores y bandeja en la estación |
+| PUL-064 | M2 | gameplay-engineer | ready | Ignorar los dispensadores cuando el jugador lleva algo en la mano |

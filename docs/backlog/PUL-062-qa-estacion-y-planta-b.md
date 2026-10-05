@@ -1,11 +1,11 @@
 ---
 id: PUL-062
 title: Pasar el QA de la estación y la planta B y preparar el playtest
-status: review
+status: done
 milestone: M2
 role: qa-tester
 deps: [PUL-061, PUL-063]
-orca_task: null
+orca_task: task_ece2c63d3ea4
 unity_sources: []
 owns: [docs/design/m2b-gate.md, godot/tests/integration/test_m2b_flow.gd, godot/tests/integration/test_m2b_flow.gd.uid, docs/evidence/PUL-062/**]
 touches_scenes: []

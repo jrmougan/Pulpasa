@@ -46,7 +46,7 @@ InputMap (contrato).
   alterna cachelos en la caja: ponerlos gasta 1 ración; quitarlos la devuelve al cuenco (no se
   pierde el trabajo de la olla, D10). Los cachelos crudos o quemados se rechazan.
 - **Rechazos** (sonido de error y sacudida del objetivo, sin cambiar nada): bandeja vacía, caja sin
-  llenar, mano ocupada en un dispensador, dispensador usado desde el pase, cuenco vacío o lleno.
+  llenar, dispensador usado desde el pase, cuenco vacío o lleno.
 - **Antirrebote**: el mismo dispensador ignora una segunda pulsación durante `toggle_guard` s
   (0,25 s), para que un doble toque no ponga y quite a la vez.
 - Fuera de la estación ya **no se condimenta**: la caja no acepta botes ni cachelos en ninguna otra
@@ -115,7 +115,7 @@ instanciada en un test de integración.
 - **AC5** Given una caja a medio llenar (fill 0,6) o vacía en la bandeja, When se interactúa con cualquier dispensador, Then se rechaza: el contenido no cambia, no se emite `seasoned` y suena el error.
 - **AC6** Given la bandeja vacía, When se interactúa con un dispensador, Then se rechaza sin errores en consola.
 - **AC7** Given un jugador en el lado de pase con la mano vacía y una caja llena en la bandeja, When intenta usar un dispensador, Then el dispensador no se resalta ni responde (la caja no cambia).
-- **AC8** Given un jugador en el lado de condimentar con algo en la mano, When interactúa con un dispensador, Then se rechaza y la mano no cambia.
+- **AC8** Given un jugador en el lado de condimentar con algo en la mano, Then ningún dispensador se resalta ni es objetivo (la bandeja o el cuenco ganan) y pulsar no cambia la mano. *Cambiado el 2026-10-05 por el responsable tras el QA de PUL-062: antes el dispensador se seleccionaba y rechazaba con `HAND_BUSY`.*
 - **AC9** Given una caja en la bandeja, When un jugador con la mano vacía interactúa con ella desde cualquiera de los dos lados, Then la coge; Given un jugador con una caja en la mano y la bandeja libre, When interactúa con la bandeja desde cualquier lado, Then la caja queda en la bandeja. Con la bandeja ocupada, dejar otra se rechaza.
 - **AC10** Given un cuenco con 0 raciones y un jugador con cachelos cocidos en la mano, When interactúa con el cuenco (cualquier lado), Then el cuenco tiene 1 ración y la mano queda vacía; con cachelos crudos o quemados, se rechaza y siguen en la mano; con el cuenco en `cachelos_stock_max` (3), se rechaza.
 - **AC11** Given un cuenco con 2 raciones y una caja llena en la bandeja, When se alterna cachelos desde el lado de condimentar, Then la caja lleva cachelos y el cuenco queda en 1; When se alterna otra vez, Then la caja no lleva cachelos y el cuenco vuelve a 2. Con el cuenco a 0 y la caja sin cachelos, poner cachelos se rechaza.
