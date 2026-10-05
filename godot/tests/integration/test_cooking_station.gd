@@ -50,12 +50,16 @@ func _cook_for(seconds: float) -> void:
 	simulate(_kitchen, roundi(seconds / STEP), STEP)
 
 
-func _meshes_using(octopus: Ingredient, material: Material) -> int:
-	var count: int = 0
-	for node: Node in octopus.find_children("*", "MeshInstance3D"):
-		if (node as MeshInstance3D).material_override == material:
-			count += 1
-	return count
+func _state_mesh(octopus: Ingredient, mesh_name: String) -> MeshInstance3D:
+	return octopus.get_node("Model").find_child(mesh_name) as MeshInstance3D
+
+
+## Nombres de los materiales de superficie de la malla (los `mat_*` de la paleta, PUL-045).
+func _material_names(mesh: MeshInstance3D) -> Array[String]:
+	var names: Array[String] = []
+	for i: int in mesh.get_surface_override_material_count():
+		names.append(mesh.get_active_material(i).resource_name)
+	return names
 
 
 func _bar() -> WorldProgressBar:
@@ -101,13 +105,19 @@ func test_ac2_cooked_after_five_seconds_of_game() -> void:
 	assert_signal_emit_count(_kitchen, "cooking_finished", 1, "sin quemado ni doble aviso")
 
 
-func test_ac2_cooked_octopus_uses_cooked_material() -> void:
+func test_ac2_cooked_octopus_shows_cooked_mesh() -> void:
+	# PUL-045: el pulpo cambia de malla (octopus_raw → octopus_cooked) con su material de paleta.
 	var octopus: Ingredient = _octopus_in_hand()
 	_kitchen.interact(_actor)
-	assert_false(_meshes_using(octopus, octopus.cooked_material) > 0, "crudo antes de cocer")
+	var raw: MeshInstance3D = _state_mesh(octopus, "octopus_raw")
+	var cooked: MeshInstance3D = _state_mesh(octopus, "octopus_cooked")
+	assert_true(raw.visible and not cooked.visible, "crudo antes de cocer")
 	_cook_for(5.0)
-	assert_gt(_meshes_using(octopus, octopus.cooked_material), 0, "material cocido en datos")
-	assert_eq(_meshes_using(octopus, octopus.raw_material), 0, "sin restos del crudo")
+	assert_true(cooked.visible, "malla cocida al terminar")
+	assert_false(raw.visible, "sin restos del crudo")
+	var names: Array[String] = _material_names(cooked)
+	assert_has(names, "mat_octopus_cooked", "material cocido de la paleta")
+	assert_does_not_have(names, "mat_octopus_raw", "el cocido no usa el material crudo")
 
 
 func test_ac2_octopus_anchor_point_sits_on_pot_anchor() -> void:
