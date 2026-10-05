@@ -1,11 +1,11 @@
 ---
 id: PUL-060
 title: Ordenar los iconos del ticket y darles estilo de pegatina
-status: review
+status: done
 milestone: M2
 role: ui-engineer
 deps: [PUL-057]
-orca_task: null
+orca_task: task_430b1b1e1cdc
 unity_sources: []
 owns: [godot/ui/tickets/**, godot/tests/integration/test_order_tickets.gd, docs/evidence/PUL-060/**]
 touches_scenes: [godot/ui/tickets/ticket_entry.tscn, godot/ui/tickets/order_ticket.tscn]
