@@ -1,7 +1,7 @@
 ---
 id: PUL-061
 title: Montar level_01 con la planta B y la estación, y retirar los botes
-status: in_progress
+status: review
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-039, PUL-058, PUL-059, PUL-060]
@@ -27,10 +27,10 @@ el responsable el 2026-10-05).
 - Contratos de PUL-056. No cambiar firmas de `EventBus`. Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.
 
 ## Acceptance
-- [ ] AC1 Feature AC16–AC18 → tests de integración en el nivel real
-- [ ] AC2 Distancias de la planta B (±1 m) frente a `docs/evidence/PUL-041/distancias.md`
-- [ ] AC3 Captura del nivel en Individual y Local 2P en `docs/evidence/PUL-061/`
-- [ ] AC4 `tools/verify.sh` verde, `check_owns` limpio.
+- [x] AC1 Feature AC16–AC18 → tests de integración en el nivel real
+- [x] AC2 Distancias de la planta B (±1 m) frente a `docs/evidence/PUL-041/distancias.md`
+- [x] AC3 Captura del nivel en Individual y Local 2P en `docs/evidence/PUL-061/`
+- [x] AC4 `tools/verify.sh` verde, `check_owns` limpio.
 
 ## Plan
 `slot.gd` entra en owns por decisión del coordinador (2026-10-05): §7 de scene-tree le asigna a
@@ -72,4 +72,17 @@ esta ficha quitar `Slot.initial_item_data`.
 - AC4: `tools/verify.sh` y `tools/check_owns.py`.
 
 ## Evidence
-(Lo rellena el worker.)
+Detalle en `docs/evidence/PUL-061/README.md`.
+- AC1: `tests/integration/test_station_level.gd` (AC16 con cambio y sin rodear, AC17 rodeando por el
+  hueco, AC18 sin botes y barrido de todos los `interactable`).
+- AC2: `test_level_01.gd::test_ac2_planta_b_distances_match_pul041_within_one_metre`; todos los
+  tramos dentro de ±1 m (p. ej. nevera → olla 3,2/3,0; salida J2 → J1 17,6/18,2).
+- AC3: partidas con el MCP en Individual (cambio con Q, +8 €) y Local 2P (+17 €), capturas
+  `ac3-*.png`.
+- AC4: `tools/verify.sh` verde (584 tests); `check_owns` limpio.
+- Hallazgo para PUL-063: con caja en la bandeja, Sal y Pimentón picante no se pueden usar de frente
+  (el detector elige la caja); con caja en la mano, la bandeja pierde contra los dispensadores
+  desde el servicio. Tests con posiciones en diagonal (`level_walker.gd::dispenser_stand`) y caja
+  por el pase; sonda en `sonda-detector-dispensadores.txt`.
+- Pasos: 1) planta B y estación (commit e8f2f9a), 2) tests de flujo (53b3584), 3) bajas (último).
+  Los pasos 1–2 se verificaron por fichero de test; verify completo en verde tras el paso 3.
