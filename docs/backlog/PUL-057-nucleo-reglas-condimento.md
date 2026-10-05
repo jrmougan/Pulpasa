@@ -54,7 +54,7 @@ touches_scenes: [godot/entities/items/box.tscn]
   `seasoning_removed` y su orden.
 
 ## Evidence
-- `tools/verify.sh` verde (546/546 tests, gdlint y gdformat limpios, smoke OK):
+- `tools/verify.sh` verde (547/547 tests, gdlint y gdformat limpios, smoke OK):
   `docs/evidence/PUL-057/verify.log`. `tools/check_owns.py` limpio contra
   `jrmougan/agentica-migracion-godot-alpha`.
 - AC1 → `tests/unit/test_seasoning_rules.gd` (18 tests): `test_feature_ac2_*` (quitar),
@@ -70,6 +70,6 @@ touches_scenes: [godot/entities/items/box.tscn]
   `tests/unit/test_data_integrity.gd` `test_pul057_*`.
 - Notas para las fichas siguientes: las ramas de bote y cachelos de `Box.interact()` siguen (las
   quita PUL-061). `BoxBadgeStyle.has_hot_mark()` decide la marca de llama (tipo `HOT_PAPRIKA`) para
-  `BadgeRow` y el ticket. `data/seasonings/oil.tres` tiene `color` transparente (`Color(0,0,0,0)`):
-  la pegatina de aceite de PUL-059/PUL-060 necesitará un color opaco (no se cambió aquí porque no
-  lo pide la ficha y `test_order_tickets.gd` lee esos colores).
+  `BadgeRow` y el ticket. Revisión: `data/seasonings/oil.tres` pasa de `Color(0,0,0,0)` a
+  `#F2C230` (art-bible §2.6) y `test_pul057_every_seasoning_color_is_opaque` exige color opaco en
+  todo `SeasoningData`; `test_order_tickets.gd` no dependía del transparente.

@@ -111,3 +111,20 @@ func test_pul057_box_badge_style_values() -> void:
 	assert_true(style.has_hot_mark(hot))
 	assert_false(style.has_hot_mark(sweet))
 	assert_false(style.has_hot_mark(null))
+
+
+## PUL-057 (revisión): toda pegatina necesita un color de fondo visible
+## (aceite #F2C230, art-bible §2.6).
+func test_pul057_every_seasoning_color_is_opaque() -> void:
+	var count: int = 0
+	for file: String in DirAccess.get_files_at("res://data/seasonings"):
+		if not file.ends_with(".tres"):
+			continue
+		var seasoning: SeasoningData = load("res://data/seasonings/%s" % file) as SeasoningData
+		assert_not_null(seasoning, file)
+		if seasoning:
+			assert_eq(seasoning.color.a, 1.0, "%s: color opaco" % file)
+			count += 1
+	assert_eq(count, 5, "los cinco condimentos")
+	var oil: SeasoningData = load("res://data/seasonings/oil.tres") as SeasoningData
+	assert_eq(oil.color, Color(0.9490196, 0.7607843, 0.1882353, 1.0))

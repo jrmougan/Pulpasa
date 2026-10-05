@@ -15,10 +15,10 @@ res://tests/unit/test_station_side.gd
 Totals
 ------
 Scripts              55
-Tests               546
-Passing Tests       546
-Asserts            4434
-Time              212.785s
+Tests               547
+Passing Tests       547
+Asserts            4437
+Time              202.712s
 ---- All tests passed! ----
 Results saved to res://.gut_reports/junit.xml
 == smoke run (escena principal, 120 frames)
