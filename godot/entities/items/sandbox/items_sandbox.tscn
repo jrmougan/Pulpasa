@@ -6,8 +6,6 @@
 [ext_resource type="PackedScene" path="res://entities/camera/camera_rig.tscn" id="4_dpaqa"]
 [ext_resource type="Material" path="res://assets/materials/terrain.tres" id="5_y1iff"]
 [ext_resource type="PackedScene" path="res://entities/items/octopus.tscn" id="6_x15j2"]
-[ext_resource type="PackedScene" path="res://entities/items/seasoning.tscn" id="7_xx3kv"]
-[ext_resource type="Resource" path="res://data/seasonings/paprika.tres" id="8_7kqk3"]
 [ext_resource type="PackedScene" path="res://entities/stations/slot.tscn" id="9_cmrg4"]
 [ext_resource type="PackedScene" path="res://entities/items/box.tscn" id="10_aam0k"]
 [ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="11_l7k0q"]
@@ -55,13 +53,6 @@ mesh = SubResource("PlaneMesh_sp6j1")
 
 [node name="CookedOctopus" parent="Items" unique_id=1885777515 instance=ExtResource("6_x15j2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.26, 0)
-
-[node name="Salt" parent="Items" unique_id=477639773 instance=ExtResource("7_xx3kv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 1.3)
-
-[node name="Paprika" parent="Items" unique_id=1213040189 instance=ExtResource("7_xx3kv")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.35, 1.3)
-data = ExtResource("8_7kqk3")
 
 [node name="Stations" type="Node3D" parent="." unique_id=1650969320]
 

@@ -20,10 +20,11 @@ const PAUSE_TOLERANCE: float = 0.05
 const PAUSE_SECONDS: float = 0.5
 ## Margen sobre `cook_time` para esperar la cocción.
 const COOK_MARGIN: float = 3.0
-const SPICE_JARS: int = 4
 
 var _level: Node
 var _menu: Node
+## Reloj de los dispensadores y del cuenco: cada pulsación avanza 1 s (antirrebote sin esperas).
+var _now: float = 100.0
 
 
 func before_each() -> void:
@@ -69,9 +70,17 @@ func _play_from_menu() -> Node:
 	_menu.free()
 	_menu = null
 	_freeze_detector()
+	_inject_station_clock()
 	# M1: las comandas iniciales se generan tras first_order_delay (5 s, dato).
 	RoundManager.round_state.advance(5.0)
 	return _level
+
+
+func _inject_station_clock() -> void:
+	var clock: Callable = func() -> float: return _now
+	for dispenser: Node in _station().get_node("Dispensers").get_children():
+		(dispenser as SeasoningDispenser).clock = clock
+	(_station().get_node("CachelosBowl") as CachelosBowl).clock = clock
 
 
 func _tap(action: StringName) -> void:
@@ -123,20 +132,28 @@ func _box_spawner(box_data: BoxData) -> ItemSpawner:
 	return null
 
 
-func _spice_slot(seasoning: SeasoningData) -> Slot:
-	for child: Node in _level.get_node("Stations/SpiceShelf").get_children():
-		var slot: Slot = child as Slot
-		if slot != null and slot.get_item() is SeasoningItem:
-			if (slot.get_item() as SeasoningItem).data == seasoning:
-				return slot
+func _station() -> SeasoningStation:
+	return _level.get_node("Stations/SeasoningStation") as SeasoningStation
+
+
+func _dispenser(seasoning: SeasoningData) -> SeasoningDispenser:
+	for child: Node in _station().get_node("Dispensers").get_children():
+		if (child as SeasoningDispenser).seasoning == seasoning:
+			return child as SeasoningDispenser
 	return null
+
+
+## Pulsa `target` de la estación y avanza su reloj.
+func _press_station(target: Node, message: String) -> void:
+	assert_true(_press(target), message)
+	_now += 1.0
 
 
 func _released(node: Variant) -> bool:
 	return not is_instance_valid(node) or (node as Node).is_queued_for_deletion()
 
 
-## Nodos vivos de `type` en todo el nivel (cajas, pulpos, botes).
+## Nodos vivos de `type` en todo el nivel (cajas, pulpos).
 func _alive(type: String) -> Array[Node]:
 	var alive: Array[Node] = []
 	for node: Node in _level.find_children("*", type, true, false):
@@ -163,7 +180,8 @@ func _cooked_octopus(leftover: Ingredient) -> Ingredient:
 	return octopus
 
 
-## Cachelos de la cachelera → olla → cocidos sobre la caja llena (PUL-033).
+## Cachelos de la cachelera → olla → cocidos al cuenco → alternados en la caja de la bandeja
+## (PUL-033, PUL-061).
 func _season_with_cachelos(box: Box) -> void:
 	assert_true(_press(_level.get_node("Stations/CachelosStorage")), "cachelera: da cachelos")
 	var cachelos: Ingredient = _hold().get_held_item() as Ingredient
@@ -173,11 +191,15 @@ func _season_with_cachelos(box: Box) -> void:
 	assert_true(cachelos.is_cooked(), "cachelos cocidos")
 	assert_true(_press(_kitchen()), "olla: devuelve los cachelos cocidos")
 	assert_eq(_hold().get_held_item(), cachelos)
-	assert_true(_press(box), "cachelos sobre la caja llena")
+	var bowl: CachelosBowl = _station().get_node("CachelosBowl")
+	_press_station(bowl, "cachelos cocidos al cuenco")
+	_press_station(bowl, "cuenco: cachelos a la caja")
+	assert_true(box.has_seasoning(bowl.seasoning), "caja con cachelos")
 
 
-## Flujo completo para la comanda del puesto `slot_id`: caja de la estantería al suelo, pulpo
-## cocido, cortes hasta llenarla, condimentos de la comanda y entrega. Devuelve el pulpo que
+## Flujo completo para la comanda del puesto `slot_id`: caja de la estantería a la bandeja de la
+## estación, pulpo cocido, cortes hasta llenarla, condimentos de la comanda en los dispensadores y
+## el cuenco, y entrega. Devuelve el pulpo que
 ## sobra en el suelo, o `null` si se gastó entero.
 func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 	var order: ActiveOrder = _order_for(slot_id)
@@ -187,8 +209,8 @@ func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 	assert_true(_press(spawner), "estantería: da la caja")
 	var box: Box = _hold().get_held_item() as Box
 	assert_not_null(box)
-	assert_not_null(_press(null), "suelta la caja delante")
-	assert_null(_hold().get_held_item())
+	assert_true(_press(_station().get_tray()), "deja la caja en la bandeja")
+	assert_eq(_station().get_box(), box)
 
 	var octopus: Ingredient = leftover
 	var presses: int = 0
@@ -210,11 +232,8 @@ func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 		if seasoning.type == SeasoningData.SeasoningType.CACHELOS:
 			await _season_with_cachelos(box)
 			continue
-		var jar_slot: Slot = _spice_slot(seasoning)
-		assert_not_null(jar_slot, "estantería de %s" % seasoning.resource_path)
-		assert_true(_press(jar_slot.get_item()), "coge el bote")
-		assert_true(_press(box), "condimenta la caja")
-		assert_true(_press(jar_slot), "devuelve el bote")
+		_press_station(_dispenser(seasoning), "dispensador de %s" % seasoning.resource_path)
+		assert_true(box.has_seasoning(seasoning))
 	assert_true(_press(box), "coge la caja")
 	assert_eq(_hold().get_held_item(), box)
 	assert_true(_press(_stand(slot_id)), "puesto %d: entrega" % slot_id)
@@ -347,12 +366,8 @@ func test_ac4_twenty_deliveries_leave_no_empty_stands_duplicates_or_ghosts() -> 
 
 	assert_eq(_alive("Box").size(), 0, "sin cajas fantasma")
 	assert_eq(_alive("Ingredient").size(), 0, "20 cajas = 10 pulpos exactos, sin sobrantes")
-	assert_eq(_alive("SeasoningItem").size(), SPICE_JARS, "ni botes duplicados ni perdidos")
-	var jars: Array[Node] = []
-	for child: Node in _level.get_node("Stations/SpiceShelf").get_children():
-		if child is Slot and (child as Slot).get_item() is SeasoningItem:
-			jars.append((child as Slot).get_item())
-	assert_eq(jars.size(), SPICE_JARS, "cada bote vuelve a su slot")
+	assert_null(_station().get_box(), "la bandeja queda libre")
+	assert_eq((_station().get_node("CachelosBowl") as CachelosBowl).stock, 0, "cuenco sin sobras")
 	assert_eq(_level.get_node("Items").get_child_count(), 0)
 	assert_null(_hold().get_held_item())
 	assert_false(_kitchen().is_cooking())

@@ -1,9 +1,10 @@
 extends GutTest
 ## PUL-019: flujo completo de cocina sobre `kitchen_sandbox.tscn` con los autoloads reales
-## (`OrderService`, `RoundManager`, `EventBus`). Nevera → olla → esperar cocción → caja → llenar →
-## condimentos de la comanda → entrega. Sin física de movimiento: el jugador se aparta para que su
-## detector no vea nada y cada pulsación pasa por `InteractionComponent.interact_pressed()` con el
-## objetivo que publicaría el detector (`target_changed`).
+## (`OrderService`, `RoundManager`, `EventBus`). Nevera → olla → esperar cocción → caja a la bandeja
+## de la estación → llenar → condimentos de la comanda en los dispensadores (PUL-061) → entrega.
+## Sin física de movimiento: el jugador se aparta para que su detector no vea nada y cada
+## pulsación pasa por `InteractionComponent.interact_pressed()` con el objetivo que publicaría el
+## detector (`target_changed`).
 
 const SANDBOX_SCENE: PackedScene = preload("res://scenes/sandbox/kitchen_sandbox.tscn")
 const SLOT_ID: int = 1
@@ -20,7 +21,9 @@ var _detector: Node
 var _hold: Holder
 var _storage: Node
 var _kitchen: CookingStation
-var _free_slot: Slot
+var _station: SeasoningStation
+## Reloj de los dispensadores: cada pulsación avanza 1 s (antirrebote sin esperas reales).
+var _now: float = 100.0
 var _stand: OrderStand
 
 
@@ -35,7 +38,9 @@ func before_each() -> void:
 	_hold = _player.get_node("%HoldComponent")
 	_storage = _sandbox.get_node("Stations/OctopusStorage")
 	_kitchen = _sandbox.get_node("Stations/Kitchen")
-	_free_slot = _sandbox.get_node("Stations/FreeSlot")
+	_station = _sandbox.get_node("Stations/SeasoningStation")
+	for dispenser: Node in _station.get_node("Dispensers").get_children():
+		(dispenser as SeasoningDispenser).clock = func() -> float: return _now
 	_stand = _sandbox.get_node("Stations/OrderStand1")
 	await wait_physics_frames(2)
 	# M1: las comandas iniciales se generan tras first_order_delay (5 s, dato).
@@ -66,12 +71,10 @@ func _box_spawner(box_data: BoxData) -> ItemSpawner:
 	return null
 
 
-func _spice_slot(seasoning: SeasoningData) -> Slot:
-	for child: Node in _sandbox.get_node("Stations/SpiceShelf").get_children():
-		var slot: Slot = child as Slot
-		if slot != null and slot.get_item() is SeasoningItem:
-			if (slot.get_item() as SeasoningItem).data == seasoning:
-				return slot
+func _dispenser(seasoning: SeasoningData) -> SeasoningDispenser:
+	for child: Node in _station.get_node("Dispensers").get_children():
+		if (child as SeasoningDispenser).seasoning == seasoning:
+			return child as SeasoningDispenser
 	return null
 
 
@@ -87,8 +90,9 @@ func _seasoned_order() -> ActiveOrder:
 	return order
 
 
-## Nevera → olla; mientras cuece, caja de la comanda al slot libre; tras la cocción, pulpo cocido
-## a la mano y cortes hasta llenar la caja; el resto del pulpo se suelta. Devuelve la caja llena.
+## Nevera → olla; mientras cuece, caja de la comanda a la bandeja de la estación; tras la cocción,
+## pulpo cocido a la mano y cortes sobre la bandeja hasta llenar la caja; el resto del pulpo se
+## suelta. Devuelve la caja llena.
 func _cook_and_fill(order: ActiveOrder) -> Box:
 	assert_true(_press(_storage), "nevera: da un pulpo")
 	var octopus: Ingredient = _hold.get_held_item() as Ingredient
@@ -104,8 +108,8 @@ func _cook_and_fill(order: ActiveOrder) -> Box:
 	var box: Box = _hold.get_held_item() as Box
 	assert_not_null(box)
 	assert_eq(box.data, order.data.recipe.box)
-	assert_true(_press(_free_slot), "slot libre: guarda la caja")
-	assert_eq(_free_slot.get_item(), box)
+	assert_true(_press(_station.get_tray()), "bandeja: guarda la caja")
+	assert_eq(_station.get_box(), box)
 
 	await wait_for_signal(_kitchen.cooking_finished, octopus.data.cook_time + COOK_MARGIN)
 	assert_true(octopus.is_cooked(), "cocido tras cook_time")
@@ -123,15 +127,15 @@ func _cook_and_fill(order: ActiveOrder) -> Box:
 	return box
 
 
-## Coge el bote de cada condimento de su estantería, lo aplica a `box` y lo devuelve.
+## Pulsa con la mano vacía el dispensador de cada condimento sobre la caja de la bandeja.
 func _season(box: Box, seasonings: Array[SeasoningData]) -> void:
+	assert_eq(_station.get_box(), box, "la caja está en la bandeja")
 	for seasoning: SeasoningData in seasonings:
-		var slot: Slot = _spice_slot(seasoning)
-		assert_not_null(slot, "estantería de %s" % seasoning.resource_path)
-		assert_true(_press(slot.get_item()), "coge el bote")
-		assert_true(_press(box), "condimenta la caja")
+		var dispenser: SeasoningDispenser = _dispenser(seasoning)
+		assert_not_null(dispenser, "dispensador de %s" % seasoning.resource_path)
+		assert_true(_press(dispenser), "pulsa el dispensador")
+		_now += 1.0
 		assert_true(box.has_seasoning(seasoning))
-		assert_true(_press(slot), "devuelve el bote")
 	assert_null(_hold.get_held_item())
 
 
@@ -178,15 +182,16 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
 	assert_eq(_hold.get_held_item(), box, "la caja rechazada se queda en la mano")
 	assert_eq(_order_for(SLOT_ID).id, order.id, "la comanda sigue viva")
 
-	assert_true(_press(_free_slot), "deja la caja para condimentarla")
+	assert_true(_press(_station.get_tray()), "devuelve la caja a la bandeja")
 	_season(box, [missing])
 	var extra: Array[SeasoningData] = []
-	for slot: Node in _sandbox.get_node("Stations/SpiceShelf").get_children():
-		if slot is Slot and (slot as Slot).get_item() is SeasoningItem:
-			var data: SeasoningData = ((slot as Slot).get_item() as SeasoningItem).data
-			if not wanted.has(data) and box.can_season(data):
-				extra.append(data)
-				break
+	for child: Node in _station.get_node("Dispensers").get_children():
+		var data: SeasoningData = (child as SeasoningDispenser).seasoning
+		var group: StringName = data.exclusivity_group
+		if wanted.has(data) or (not group.is_empty() and box.has_seasoning_in_group(group)):
+			continue
+		extra.append(data)
+		break
 	assert_gt(extra.size(), 0, "hay al menos un condimento que la comanda no pide")
 	_season(box, extra)
 	assert_true(_press(box))

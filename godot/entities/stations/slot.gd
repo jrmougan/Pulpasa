@@ -10,11 +10,8 @@ extends StaticBody3D
 ## al soltarlo. Los cogibles se cogen siempre con `Slot.pick_up_item` (como
 ## `Box.OnPickedUp` → `ForceClearSlot`), que pasa por aquí si el objeto está guardado.
 
-## Objeto con el que empieza el slot (p. ej. el bote de cada especia).
+## Objeto con el que empieza el slot (`null`: vacío).
 @export var initial_item: PackedScene
-## Datos opcionales del objeto inicial (p. ej. la `SeasoningData` de cada especia): se asignan a su
-## propiedad `data` antes de que entre al árbol. `null` deja los de la escena.
-@export var initial_item_data: Resource
 ## Grupo que acepta al dejar (ADR-003 §8.2). Vacío = cualquier objeto; si no, lo que no esté en el
 ## grupo se rechaza consumiendo la pulsación (no se guarda ni se suelta). La bandeja usa `&"box"`.
 @export var accepted_group: StringName = &""
@@ -63,8 +60,6 @@ func _ready() -> void:
 	if initial_item != null:
 		var item: Node3D = initial_item.instantiate() as Node3D
 		if item != null:
-			if initial_item_data != null and &"data" in item:
-				item.set(&"data", initial_item_data)
 			_anchor.add_child(item)
 			_store(item)
 

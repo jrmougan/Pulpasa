@@ -2,14 +2,11 @@ class_name Box
 extends RigidBody3D
 ## Caja de pulpo (porta Box.cs sin el modo spawner). Receptor de la interacción contextual
 ## (ADR-003 §4): con pulpo cocido en la mano, cada pulsación corta y llena `fill_per_press`
-## (D1/D13); con un condimento y la caja llena, lo aplica una vez por tipo; con un ingrediente
-## cocido cuyo `IngredientData.as_seasoning` no es nulo (p. ej. cachelos cocidos, D10), lo aplica
-## como condimento y lo consume; con la mano vacía, se coge. Con cualquier otra cosa en la mano
-## consume la pulsación sin efecto (paridad Unity).
+## (D1/D13); con la mano vacía, se coge. Con cualquier otra cosa en la mano consume la pulsación
+## sin efecto: fuera de la estación ya no se condimenta (D18, feature estacion-condimentos AC12).
 ## La entrega lee `get_contents()`.
 ## Estación de condimentos (D18, ADR-003 §8.3): dispensadores y cuenco alternan condimentos con
-## `toggle_seasoning()` y `remove_seasoning()`. Las ramas de bote y cachelos de `interact()` se
-## retiran en PUL-061.
+## `toggle_seasoning()` y `remove_seasoning()`; son los únicos que cambian sus condimentos.
 
 ## Cada corte (D1).
 signal fill_changed(fill: float)
@@ -54,19 +51,6 @@ func has_seasoning(seasoning: SeasoningData) -> bool:
 
 func has_seasoning_in_group(group: StringName) -> bool:
 	return SeasoningRules.find_in_group(_seasonings, group) != null
-
-
-func can_season(seasoning: SeasoningData) -> bool:
-	if seasoning == null or not is_full():
-		return false
-	if has_seasoning(seasoning):
-		return false
-	if (
-		not seasoning.exclusivity_group.is_empty()
-		and has_seasoning_in_group(seasoning.exclusivity_group)
-	):
-		return false
-	return true
 
 
 ## Alterna `seasoning` (SeasoningRules.toggle): lo quita si ya lo lleva, si no lo añade; con
@@ -126,21 +110,6 @@ func interact(actor: InteractionComponent) -> bool:
 		return Slot.pick_up_item(actor, self)
 	if held is Ingredient and _can_cut(held as Ingredient):
 		_cut(held as Ingredient)
-	elif (
-		held is Ingredient
-		and is_full()
-		and (held as Ingredient).is_cooked()
-		and (held as Ingredient).data != null
-		and (held as Ingredient).data.as_seasoning != null
-	):
-		var seasoning: SeasoningData = (held as Ingredient).data.as_seasoning
-		if can_season(seasoning):
-			var ing: Ingredient = actor.holder.drop() as Ingredient
-			if ing != null:
-				_season(seasoning)
-				ing.queue_free()
-	elif held is SeasoningItem and is_full() and (held as SeasoningItem).data != null:
-		_season((held as SeasoningItem).data)
 	return true
 
 
@@ -178,17 +147,6 @@ func _cut(ingredient: Ingredient) -> void:
 		_fill_bar.visible = fill > 0.0 and not is_full()
 		_fill_bar.set_progress(fill)
 	fill_changed.emit(fill)
-
-
-## Una vez por tipo (Box.CanReceiveSeasoning); repetir no tiene efecto (idempotente).
-## Grupos de exclusividad: pimentón dulce y picante son excluyentes (D4).
-func _season(seasoning: SeasoningData) -> void:
-	if not can_season(seasoning):
-		return
-	_seasonings.append(seasoning)
-	if _season_audio != null:
-		_season_audio.play()
-	seasoned.emit(seasoning)
 
 
 func _set_open(open: bool) -> void:

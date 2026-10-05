@@ -4,7 +4,6 @@ extends GutTest
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const SLOT_SCENE: PackedScene = preload("res://entities/stations/slot.tscn")
-const SEASONING_SCENE: PackedScene = preload("res://entities/items/seasoning.tscn")
 const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
 const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
 const INTERACTABLE_LAYER: int = 1 << 2
@@ -208,26 +207,13 @@ func test_ac2_initial_item_is_stored_on_ready() -> void:
 	assert_eq(slot.get_item().get_parent(), slot.get_node("%Anchor"))
 
 
-## PUL-017: `initial_item_data` se asigna a `data` del objeto inicial antes de entrar al árbol.
-func test_pul017_initial_item_data_is_applied_before_ready() -> void:
+## PUL-061: `initial_item_data` desaparece con los botes (scene-tree.md §7); `initial_item` se
+## mantiene.
+func test_pul061_initial_item_data_is_gone() -> void:
 	var slot: Slot = SLOT_SCENE.instantiate()
-	slot.initial_item = SEASONING_SCENE
-	slot.initial_item_data = PAPRIKA
-	_level.add_child(slot)
-	var item: SeasoningItem = slot.get_item() as SeasoningItem
-	assert_not_null(item)
-	assert_eq(item.data, PAPRIKA)
-	var cap: MeshInstance3D = item.get_node("Model/Cap") as MeshInstance3D
-	var material: StandardMaterial3D = cap.material_override as StandardMaterial3D
-	assert_eq(material.albedo_color, PAPRIKA.color, "_ready ya vio los datos")
-
-
-func test_pul017_without_initial_item_data_keeps_scene_data() -> void:
-	var slot: Slot = SLOT_SCENE.instantiate()
-	slot.initial_item = SEASONING_SCENE
-	_level.add_child(slot)
-	var item: SeasoningItem = slot.get_item() as SeasoningItem
-	assert_eq(item.data, SALT)
+	assert_false(&"initial_item_data" in slot)
+	assert_true(&"initial_item" in slot)
+	slot.free()
 
 
 func test_ac2_slot_scene_fulfils_interaction_contract() -> void:

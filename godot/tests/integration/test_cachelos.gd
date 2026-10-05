@@ -5,7 +5,6 @@ const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
 const SMALL_BOX: Resource = preload("res://data/boxes/small.tres")
-const SEASONING_SCENE: PackedScene = preload("res://entities/items/seasoning.tscn")
 
 const STEP: float = 0.1
 const INTERACTABLE_LAYER: int = 1 << 2
@@ -48,7 +47,9 @@ func test_ac2_cachelo_raw_to_pot_to_cooked() -> void:
 	assert_true(cachelo.is_cooked())
 
 
-func test_ac2_cachelo_cooked_applied_to_full_box() -> void:
+## PUL-061 (AC12 de la estación): los cachelos cocidos ya no se echan sobre la caja; van al cuenco
+## de la estación. La caja llena consume la pulsación sin cambiar y los cachelos siguen en la mano.
+func test_ac2_cachelo_cooked_no_longer_seasons_a_full_box() -> void:
 	var cachelo: Ingredient = CACHELOS_SCENE.instantiate()
 	_level.add_child(cachelo)
 	cachelo.set_cooked()
@@ -59,15 +60,11 @@ func test_ac2_cachelo_cooked_applied_to_full_box() -> void:
 	box.data = SMALL_BOX
 	box.fill = 1.0  # full
 
-	box.interact(_actor)
+	assert_true(box.interact(_actor))
 
-	var contents := box.get_contents()
-	assert_eq(contents.seasonings.size(), 1)
-	assert_eq(contents.seasonings[0].type, SeasoningData.SeasoningType.CACHELOS)
-
-	# cachelo is consumed, not in hand
-	assert_null(_hold.get_held_item())
-	assert_true(not is_instance_valid(cachelo) or cachelo.is_queued_for_deletion())
+	assert_eq(box.get_contents().seasonings.size(), 0)
+	assert_eq(_hold.get_held_item(), cachelo)
+	assert_true(is_instance_valid(cachelo) and not cachelo.is_queued_for_deletion())
 
 
 func test_ac2_cachelo_raw_rejected_by_box() -> void:
@@ -87,38 +84,16 @@ func test_ac2_cachelo_raw_rejected_by_box() -> void:
 	assert_eq(_hold.get_held_item(), cachelo)
 
 
+## Los cuatro condimentos caben a la vez (pimentón, sal, aceite y cachelos) con la API de la
+## estación (`toggle_seasoning`, ADR-003 §8.3).
 func test_ac3_four_seasonings() -> void:
 	var box: Box = BOX_SCENE.instantiate()
 	_level.add_child(box)
 	box.data = SMALL_BOX
 	box.fill = 1.0  # full
-
-	var salt: SeasoningItem = SEASONING_SCENE.instantiate()
-	salt.data = load("res://data/seasonings/salt.tres")
-	_level.add_child(salt)
-	_hold.pick_up(salt)
-	box.interact(_actor)
-	_hold.drop()
-
-	var paprika: SeasoningItem = SEASONING_SCENE.instantiate()
-	paprika.data = load("res://data/seasonings/paprika.tres")
-	_level.add_child(paprika)
-	_hold.pick_up(paprika)
-	box.interact(_actor)
-	_hold.drop()
-
-	var oil: SeasoningItem = SEASONING_SCENE.instantiate()
-	oil.data = load("res://data/seasonings/oil.tres")
-	_level.add_child(oil)
-	_hold.pick_up(oil)
-	box.interact(_actor)
-	_hold.drop()
-
-	var cachelo: Ingredient = CACHELOS_SCENE.instantiate()
-	_level.add_child(cachelo)
-	cachelo.set_cooked()
-	_hold.pick_up(cachelo)
-	box.interact(_actor)
+	for path: String in ["salt", "paprika", "oil", "cachelos"]:
+		var seasoning: SeasoningData = load("res://data/seasonings/%s.tres" % path)
+		assert_eq(box.toggle_seasoning(seasoning, true), SeasoningRules.Rejection.NONE, path)
 
 	var contents := box.get_contents()
 	assert_eq(contents.seasonings.size(), 4)

@@ -7,14 +7,14 @@
 [ext_resource type="PackedScene" path="res://entities/stations/octopus_storage.tscn" id="5_ypo87"]
 [ext_resource type="PackedScene" path="res://entities/stations/kitchen.tscn" id="8_jnr2r"]
 [ext_resource type="PackedScene" path="res://entities/stations/box_shelf.tscn" id="10_ybocv"]
-[ext_resource type="PackedScene" path="res://entities/stations/spice_shelf.tscn" id="11_b3nmj"]
+[ext_resource type="PackedScene" path="res://entities/stations/seasoning_station.tscn" id="11_season"]
 [ext_resource type="PackedScene" path="res://entities/stations/slot.tscn" id="12_y5yxu"]
 [ext_resource type="PackedScene" path="res://entities/stations/order_stand.tscn" id="14_5sk5m"]
 [ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="16_u78r7"]
 
 [sub_resource type="GDScript" id="GDScript_p51g6"]
 script/source = "extends Node3D
-## Sandbox de cocina de PUL-019: nevera, olla, estanterías de cajas y especias, un slot libre y
+## Sandbox de cocina de PUL-019: nevera, olla, estantería de cajas, estación de condimentos (PUL-061), un slot libre y
 ## dos puestos de entrega con un jugador. Arranca la ronda como lo hará `level.gd` (fase 8):
 ## `OrderService.setup` + `RoundManager.start_round` con los `slot_id` de `stands`.
 ##
@@ -101,7 +101,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.6)
 [node name="BoxShelf" parent="Stations" unique_id=1788334010 instance=ExtResource("10_ybocv")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.8, 0, -1.6)
 
-[node name="SpiceShelf" parent="Stations" unique_id=1955367660 instance=ExtResource("11_b3nmj")]
+[node name="SeasoningStation" parent="Stations" instance=ExtResource("11_season")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
 
 [node name="FreeSlot" parent="Stations" unique_id=781638945 instance=ExtResource("12_y5yxu")]

@@ -19,8 +19,6 @@ const PLACEHOLDERS: Dictionary = {
 	"box_small": Vector3(0.338, 0.284, 0.320),
 	"box_medium": Vector3(0.396, 0.333, 0.375),
 	"box_large": Vector3(0.491, 0.414, 0.466),
-	# Bote: OBJ 4,764×4,764×9,8015 × escala de Pepper.prefab 0,071, rotación X −90°.
-	"condiment_jar": Vector3(0.338, 0.696, 0.338),
 	"octopus_raw": Vector3(0.63, 0.58, 0.42),
 	"octopus_cooked": Vector3(0.63, 0.58, 0.42),
 	"character": Vector3(0.42, 1.54, 0.5),

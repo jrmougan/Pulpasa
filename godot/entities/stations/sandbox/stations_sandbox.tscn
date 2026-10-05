@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" path="res://entities/stations/kitchen.tscn" id="6_3awx2"]
 [ext_resource type="PackedScene" path="res://entities/stations/octopus_storage.tscn" id="7_3hpft"]
 [ext_resource type="PackedScene" path="res://entities/stations/box_shelf.tscn" id="8_pkrxw"]
-[ext_resource type="PackedScene" path="res://entities/stations/spice_shelf.tscn" id="9_m7fec"]
+[ext_resource type="PackedScene" path="res://entities/stations/seasoning_station.tscn" id="9_season"]
 [ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="10_miwge"]
 
 [sub_resource type="Environment" id="Environment_n58fo"]
@@ -62,7 +62,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0, -1.8)
 [node name="BoxShelf" parent="Stations" unique_id=1788334010 instance=ExtResource("8_pkrxw")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.8, 0, -1.6)
 
-[node name="SpiceShelf" parent="Stations" unique_id=480784714 instance=ExtResource("9_m7fec")]
+[node name="SeasoningStation" parent="Stations" instance=ExtResource("9_season")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
 
 [node name="Player" parent="." unique_id=370749224 node_paths=PackedStringArray("camera", "items_root") instance=ExtResource("10_miwge")]

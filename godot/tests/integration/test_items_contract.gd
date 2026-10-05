@@ -1,12 +1,12 @@
 extends GutTest
-## PUL-016 AC4: pulpo, caja y condimento cumplen el contrato `pickable`/`interactable`
+## PUL-016 AC4: pulpo, caja y cachelos cumplen el contrato `pickable`/`interactable`
 ## (ADR-003 §4) y están en la capa de física `interactable`.
 
 const INTERACTABLE_LAYER: int = 1 << 2
 const SCENES: Array[String] = [
 	"res://entities/items/octopus.tscn",
 	"res://entities/items/box.tscn",
-	"res://entities/items/seasoning.tscn",
+	"res://entities/items/cachelos.tscn",
 ]
 
 

@@ -1,57 +1,62 @@
 extends GutTest
-## PUL-024: `level_01.tscn` montado como `Level_01.unity`, con los autoloads reales.
+## PUL-024: `level_01.tscn` montado con los autoloads reales; PUL-061: planta B · barra partida
+## (D19, `docs/design/level-layouts.md`; scene-tree.md §2).
 ##
-## Conversión Unity → Godot (Unity zurdo, +Z adelante; Godot diestro, −Z adelante): espejo
-## en Z. Posición `(x, y, z)` → `(x, y, −z)`; cuaternión `(x, y, z, w)` → `(−x, −y, z, w)`:
-## yaw y pitch cambian de signo. El frente +Z de un prefab queda en −Z, el de las escenas Godot.
-##
-## Tabla de referencia (`REFERENCE`): valores de `Level_01.unity` ya convertidos.
-## - OctopusStorage: raíz del prefab (−4,758; 0,021; 4,076), yaw 180°.
-## - Kitchen: la raíz del prefab está desplazada (0,604; −0,382; 4,38) y la olla cuelga a
-##   (−4,03; …; −0,463) de ella; la escena Godot tiene el origen en el fogón, así que la
-##   referencia es el centro del collider (−3,426; 3,917) apoyado en el suelo (Y 0). Fogón con
-##   yaw 180° en Unity.
-## - BoxShelf / SpiceShelf: `Mueblecajas.fbx` tiene el frente en −X local; con yaw −90° de
-##   Unity mira a −Z Unity (+Z Godot). El envoltorio `Mueblecajas.tscn` tiene el frente en −Z,
-##   de ahí yaw 180°. Raíces (3,42; 0; 4,73) y (5,249; 0,075; 4,646).
-## - OrderStand1..4: `DeliverySlots` (2,37; −0,04; −5,38) + x local −4,68 / −3,12 / −1,56 / 0,
-##   yaw 180° y escala (0,78; 0,975; 0,975), con `deliverySlotId` 1–4.
-## - Player1: (3,62; 0,005; 0), yaw 0.
-## - CameraRig: `Main Camera` (0,7; 7,49; −5,86), pitch 37,7° hacia abajo, ortográfica de
-##   tamaño 6,37 (semialto en Unity; `Camera3D.size` es el alto total, 12,74).
+## Cuadrícula de 16 × 11 celdas de 1 m: columna `c` → x = c − 6,3 (centro); fila `r` → z = r − 4,0.
+## Arriba (z−) la cocina, abajo (z+) el servicio; la barra de la fila 4 los separa y solo se cruza
+## por el hueco de la columna 14. Las posiciones son orientativas (±1 m, AC2 de PUL-061); la cámara
+## sigue siendo la del prototipo (D14).
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const LEVEL_SCRIPT: GDScript = preload("res://scenes/levels/level.gd")
 const CAMERA_RIG: PackedScene = preload("res://entities/camera/camera_rig.tscn")
 const MENU_SCENE: String = "res://ui/menus/main_menu.tscn"
-const POSITION_TOLERANCE: float = 0.1
+## Tolerancia de las posiciones de la planta (AC2 de PUL-061: ±1 m).
+const POSITION_TOLERANCE: float = 1.0
 const ANGLE_TOLERANCE_DEG: float = 2.0
 const STAND_COUNT: int = 4
-## Nodo → [posición Godot, yaw en grados].
-const REFERENCE: Dictionary[String, Array] = {
-	"Stations/OctopusStorage": [Vector3(-4.758, 0.021, -4.076), 180.0],
-	"Stations/Kitchen": [Vector3(-3.426, 0.0, -3.917), 180.0],
-	"Stations/BoxShelf": [Vector3(3.42, 0.0, -4.73), 180.0],
-	"Stations/SpiceShelf": [Vector3(5.249, 0.075, -4.646), 180.0],
-	"Stations/OrderStand1": [Vector3(-2.31, -0.04, 5.38), 180.0],
-	"Stations/OrderStand2": [Vector3(-0.75, -0.04, 5.38), 180.0],
-	"Stations/OrderStand3": [Vector3(0.81, -0.04, 5.38), 180.0],
-	"Stations/OrderStand4": [Vector3(2.37, -0.04, 5.38), 180.0],
-	"Characters/Player1": [Vector3(3.62, 0.005, 0.0), 0.0],
-	"CameraRig": [Vector3(0.7, 7.49, 5.86), 0.0],
+## Celdas de la planta B (scene-tree.md §2): nodo → [columna, fila, yaw en grados]. El yaw 180
+## pone el frente de las estaciones de la fila 0 hacia el servicio (+Z); la estantería de cajas
+## mira a +X (yaw −90).
+const PLAN: Dictionary[String, Array] = {
+	"Stations/OctopusStorage": [2, 0, 180.0],
+	"Stations/CachelosStorage": [3, 0, 180.0],
+	"Stations/Kitchen": [5, 0, 180.0],
+	"Stations/Kitchen2": [7, 0, 180.0],
+	"Stations/SeasoningStation": [6.5, 4, 0.0],
+	"Stations/BoxShelf": [0, 6.5, -90.0],
+	"Stations/OrderStand1": [3, 10, 180.0],
+	"Stations/OrderStand2": [5, 10, 180.0],
+	"Stations/OrderStand3": [8, 10, 180.0],
+	"Stations/OrderStand4": [10, 10, 180.0],
+	"Characters/Player1": [11, 7, 0.0],
+	"Characters/Player2": [2, 2, 0.0],
 }
+## Pasaplatos: columnas de la fila 4 (la estación ocupa 5–8 y el hueco es la 14).
+const PASS_COLUMNS: Array[int] = [1, 2, 3, 4, 9, 10, 11, 12, 13]
+const GAP_COLUMN: int = 14
+const BAR_ROW: int = 4
 const CAMERA_PITCH_DEG: float = -37.7
 const CAMERA_SIZE: float = 12.74
 ## Rejilla del recorrido (AC4): paso y límites del suelo jugable (Godot).
 const GRID_STEP: float = 0.2
-const GRID_MIN: Vector2 = Vector2(-7.0, -6.0)
-const GRID_MAX: Vector2 = Vector2(8.0, 6.5)
+const GRID_MIN: Vector2 = Vector2(-7.0, -5.0)
+const GRID_MAX: Vector2 = Vector2(9.4, 6.6)
 ## Capas que frenan al jugador (`world` + `interactable`, máscara de `player.tscn`).
 const BLOCKING_MASK: int = 1 | (1 << 2)
-## Cuánto puede acercarse el jugador a cada slot de especias (centro a centro, en el suelo).
-const SLOT_APPROACH: float = 0.75
-## Estantería de especias de M1: sal, pimentón, pimentón picante y aceite (4 botes).
-const SPICE_SLOTS: Array[String] = ["SaltSlot", "PaprikaSlot", "HotPaprikaSlot", "OilSlot"]
+## AC2 de PUL-061: distancias de la columna B de `docs/evidence/PUL-041/distancias.md` (m) y
+## tolerancia (±1 m: la cuadrícula del diseño no modela la cápsula).
+const DISTANCE_TOLERANCE: float = 1.0
+const B_BOXES_TO_PASS: float = 1.0
+const B_FRIDGE_TO_POT: float = 3.0
+const B_CACHELERA_TO_POT: float = 2.0
+const B_POT_TO_PASS: float = 2.0
+const B_PASS_TO_STATION: float = 1.0
+const B_POT_TO_STATION: float = 2.0
+const B_STATION_TO_STANDS: Array[float] = [5.0, 4.0, 4.0, 5.0]
+const B_EXIT_J2_TO_J1: float = 18.2
+## Del centro de una estación a la celda desde la que se usa (la de al lado, 1 m).
+const ACCESS_OFFSET: float = 1.0
 ## Señales del bus que escuchan el nivel y la UI (AC3).
 const BUS_SIGNALS: Array[String] = [
 	"orders_reset",
@@ -189,14 +194,19 @@ func _level_script_path(state: SceneState) -> String:
 # --- AC2 ---------------------------------------------------------------------------------------
 
 
-func test_ac2_positions_and_rotations_match_unity_level() -> void:
+## Centro de la celda (`col`, `row`) en el suelo (`x`, `z`).
+static func _cell_center(col: float, row: float) -> Vector2:
+	return Vector2(col - 6.3, row - 4.0)
+
+
+func test_ac2_positions_and_rotations_follow_planta_b() -> void:
 	await _load_level()
-	for path: String in REFERENCE:
+	for path: String in PLAN:
 		var node: Node3D = _level.get_node(path) as Node3D
 		assert_not_null(node, path)
-		var expected: Vector3 = REFERENCE[path][0]
-		var expected_yaw: float = REFERENCE[path][1]
-		var actual: Vector3 = node.global_position
+		var expected: Vector2 = _cell_center(PLAN[path][0], PLAN[path][1])
+		var expected_yaw: float = PLAN[path][2]
+		var actual: Vector2 = _flat(node.global_position)
 		assert_lt(actual.distance_to(expected), POSITION_TOLERANCE, "%s: %s" % [path, actual])
 		var yaw: float = rad_to_deg(node.global_basis.get_euler().y)
 		assert_lt(
@@ -204,6 +214,191 @@ func test_ac2_positions_and_rotations_match_unity_level() -> void:
 			ANGLE_TOLERANCE_DEG,
 			"%s: yaw %.1f" % [path, yaw]
 		)
+
+
+func test_ac2_pass_slots_sit_on_the_bar_without_their_own_table() -> void:
+	await _load_level()
+	for i: int in PASS_COLUMNS.size():
+		var slot: Slot = _level.get_node("Stations/PassSlot%02d" % (i + 1)) as Slot
+		assert_not_null(slot, "PassSlot%02d" % (i + 1))
+		var expected: Vector2 = _cell_center(PASS_COLUMNS[i], BAR_ROW)
+		assert_lt(_flat(slot.global_position).distance_to(expected), 0.05, slot.name)
+		assert_null(slot.initial_item, "%s sin objeto inicial" % slot.name)
+		assert_eq(slot.accepted_group, &"", "%s acepta cualquier objeto" % slot.name)
+		assert_false(
+			(slot.get_node("Model") as Node3D).visible, "%s: la barra es la mesa" % slot.name
+		)
+		var table: StaticBody3D = slot.get_node("Model/Body") as StaticBody3D
+		assert_eq(table.collision_layer, 0, "%s: la mesa oculta no choca" % slot.name)
+		var anchor: Node3D = slot.get_node("%Anchor")
+		assert_almost_eq(
+			anchor.global_position.y, 1.1, 0.02, "%s: a la altura de la barra" % slot.name
+		)
+
+
+func test_ac2_kitchen_layout_bar_blocks_except_the_gap() -> void:
+	await _load_level()
+	var layout: Node3D = _level.get_node("KitchenLayout")
+	var bodies: Array[Node] = layout.find_children("*", "StaticBody3D", true, false)
+	assert_gt(bodies.size(), 2, "suelo, barra y paredes")
+	for body: Node in bodies:
+		assert_eq((body as StaticBody3D).collision_layer, 1, "%s en capa world" % body.name)
+	var player: Player = _player()
+	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(player)
+	# La fila de la barra está cerrada salvo el hueco de la columna 14.
+	for col: int in range(0, 16):
+		var cell: Vector2i = _cell_of(_cell_center(col, BAR_ROW))
+		if col == GAP_COLUMN:
+			assert_true(reachable.has(cell), "hueco de la barra en la columna 14")
+		else:
+			assert_false(reachable.has(cell), "la barra cierra la columna %d" % col)
+	# Cocina y servicio quedan conectados (por el hueco) desde la salida de J1.
+	var kitchen_exit: Vector2i = _cell_of(
+		_flat(_level.get_node("Characters/Player2").global_position)
+	)
+	assert_true(reachable.has(kitchen_exit), "desde el servicio se llega a la cocina")
+
+
+## AC2 de PUL-061: recorridos más cortos andando (8 direcciones, sin cortar esquinas) sobre las
+## celdas libres para la cápsula real, entre los puntos de acceso de cada estación, frente a la
+## columna B de `docs/evidence/PUL-041/distancias.md` (±1 m).
+func test_ac2_planta_b_distances_match_pul041_within_one_metre() -> void:
+	await _load_level()
+	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(_player())
+	var fridge: Array[Vector2] = _front_access("Stations/OctopusStorage")
+	var cachelera: Array[Vector2] = _front_access("Stations/CachelosStorage")
+	var pots: Array[Vector2] = _front_access("Stations/Kitchen")
+	pots.append_array(_front_access("Stations/Kitchen2"))
+	var pass_kitchen: Array[Vector2] = _pass_access(-1.0)
+	var pass_service: Array[Vector2] = _pass_access(1.0)
+	var pass_both: Array[Vector2] = pass_kitchen + pass_service
+	var station_pass: Array[Vector2] = _station_access(-1.0)
+	var station_operator: Array[Vector2] = _station_access(1.0)
+	var boxes: Array[Vector2] = []
+	for spawner: Node in _level.get_node("Stations/BoxShelf").get_children():
+		if spawner is ItemSpawner:
+			boxes.append(_flat((spawner as Node3D).global_position) + Vector2(ACCESS_OFFSET, 0.0))
+	assert_eq(boxes.size(), 3)
+
+	_assert_walk(reachable, boxes, pass_service, B_BOXES_TO_PASS, "cajas → pasaplatos")
+	_assert_walk(reachable, fridge, pots, B_FRIDGE_TO_POT, "nevera → olla")
+	_assert_walk(reachable, cachelera, pots, B_CACHELERA_TO_POT, "cachelera → olla")
+	_assert_walk(reachable, pots, pass_kitchen, B_POT_TO_PASS, "olla → pasaplatos")
+	_assert_walk(
+		reachable, pass_both, station_pass + station_operator, B_PASS_TO_STATION, "pase → estación"
+	)
+	_assert_walk(reachable, pots, station_pass, B_POT_TO_STATION, "olla → estación (cachelos)")
+	for i: int in STAND_COUNT:
+		var stand: Node3D = _stands()[i]
+		var front: Array[Vector2] = [_flat(stand.global_position) + Vector2(0.0, -ACCESS_OFFSET)]
+		_assert_walk(
+			reachable,
+			station_operator,
+			front,
+			B_STATION_TO_STANDS[i],
+			"estación → puesto %d" % (i + 1)
+		)
+	var exit_j2: Array[Vector2] = [_flat(_level.get_node("Characters/Player2").global_position)]
+	var exit_j1: Array[Vector2] = [_flat(_player().global_position)]
+	_assert_walk(reachable, exit_j2, exit_j1, B_EXIT_J2_TO_J1, "salida J2 → salida J1")
+
+
+## Celda de acceso delante (+Z) de una estación de la fila 0.
+func _front_access(path: String) -> Array[Vector2]:
+	var node: Node3D = _level.get_node(path)
+	return [_flat(node.global_position) + Vector2(0.0, ACCESS_OFFSET)]
+
+
+## Celdas de acceso de los pasaplatos por un lado (`side` −1 cocina, +1 servicio).
+func _pass_access(side: float) -> Array[Vector2]:
+	var points: Array[Vector2] = []
+	for i: int in PASS_COLUMNS.size():
+		var slot: Node3D = _level.get_node("Stations/PassSlot%02d" % (i + 1))
+		points.append(_flat(slot.global_position) + Vector2(0.0, side * ACCESS_OFFSET))
+	return points
+
+
+## Celdas de acceso de la estación por un lado: bandeja, cuenco y, del lado de condimentar,
+## los dispensadores.
+func _station_access(side: float) -> Array[Vector2]:
+	var station: SeasoningStation = _level.get_node("Stations/SeasoningStation")
+	var parts: Array[Node3D] = [station.get_tray(), station.get_node("CachelosBowl")]
+	if side > 0.0:
+		for dispenser: Node in station.get_node("Dispensers").get_children():
+			parts.append(dispenser as Node3D)
+	var points: Array[Vector2] = []
+	for part: Node3D in parts:
+		points.append(
+			Vector2(part.global_position.x, station.global_position.z + side * ACCESS_OFFSET)
+		)
+	return points
+
+
+func _assert_walk(
+	reachable: Dictionary[Vector2i, bool],
+	from: Array[Vector2],
+	to: Array[Vector2],
+	expected: float,
+	label: String
+) -> void:
+	var walked: float = _walk_distance(reachable, from, to)
+	gut.p("AC2 %s: %.1f m (planta B: %.1f m)" % [label, walked, expected])
+	assert_almost_eq(walked, expected, DISTANCE_TOLERANCE, "%s: %.1f m" % [label, walked])
+
+
+## Dijkstra de varias fuentes sobre `reachable` (8 vecinos, diagonal √2, sin cortar esquinas).
+## Cada punto se lleva a la celda libre más cercana.
+func _walk_distance(
+	reachable: Dictionary[Vector2i, bool], from: Array[Vector2], to: Array[Vector2]
+) -> float:
+	var goals: Dictionary[Vector2i, bool] = {}
+	for point: Vector2 in to:
+		goals[_nearest_reachable(reachable, point)] = true
+	var dist: Dictionary[Vector2i, float] = {}
+	var open: Array[Vector2i] = []
+	for point: Vector2 in from:
+		var cell: Vector2i = _nearest_reachable(reachable, point)
+		dist[cell] = 0.0
+		open.append(cell)
+	while not open.is_empty():
+		var best: int = 0
+		for i: int in open.size():
+			if dist[open[i]] < dist[open[best]]:
+				best = i
+		var cell: Vector2i = open[best]
+		open.remove_at(best)
+		if goals.has(cell):
+			return dist[cell] * GRID_STEP
+		for dx: int in [-1, 0, 1]:
+			for dz: int in [-1, 0, 1]:
+				if dx == 0 and dz == 0:
+					continue
+				var next: Vector2i = cell + Vector2i(dx, dz)
+				if not reachable.has(next):
+					continue
+				if dx != 0 and dz != 0:
+					if not reachable.has(cell + Vector2i(dx, 0)):
+						continue
+					if not reachable.has(cell + Vector2i(0, dz)):
+						continue
+				var step: float = sqrt(2.0) if dx != 0 and dz != 0 else 1.0
+				var candidate: float = dist[cell] + step
+				if candidate < dist.get(next, INF):
+					if not dist.has(next):
+						open.append(next)
+					dist[next] = candidate
+	return INF
+
+
+func _nearest_reachable(reachable: Dictionary[Vector2i, bool], point: Vector2) -> Vector2i:
+	var best: Vector2i = _cell_of(point)
+	var best_d: float = INF
+	for cell: Vector2i in reachable:
+		var d: float = _cell_pos(cell).distance_squared_to(point)
+		if d < best_d:
+			best_d = d
+			best = cell
+	return best
 
 
 func test_ac2_camera_matches_unity_main_camera() -> void:
@@ -223,17 +418,6 @@ func test_ac2_stand_scale_matches_unity() -> void:
 		assert_almost_eq(scale.x, 0.78, 0.01)
 		assert_almost_eq(scale.y, 0.975, 0.01)
 		assert_almost_eq(scale.z, 0.975, 0.01)
-
-
-func test_ac2_kitchen_layout_has_floor_and_17_tables_on_world_layer() -> void:
-	await _load_level()
-	var layout: Node3D = _level.get_node("KitchenLayout")
-	var tables: Node = layout.get_node("Tables")
-	assert_eq(tables.get_child_count(), 17)
-	var bodies: Array[Node] = layout.find_children("*", "StaticBody3D", true, false)
-	assert_eq(bodies.size(), 18, "suelo + 17 mesas")
-	for body: Node in bodies:
-		assert_eq((body as StaticBody3D).collision_layer, 1, "%s en capa world" % body.name)
 
 
 func test_ac2_environment_has_world_environment_and_sun() -> void:
@@ -280,7 +464,9 @@ func test_ui_does_not_cover_fridge_pot_or_shelves_with_game_camera() -> void:
 	var screen: Rect2 = Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
 	var rects: Array[Rect2] = _ui_rects()
 	assert_eq(rects.size(), STAND_COUNT + 1)
-	for path: String in ["OctopusStorage", "Kitchen", "BoxShelf", "SpiceShelf"]:
+	for path: String in [
+		"OctopusStorage", "CachelosStorage", "Kitchen", "Kitchen2", "BoxShelf", "SeasoningStation"
+	]:
 		var station: Node3D = _level.get_node("Stations/%s" % path)
 		var pos: Vector2 = camera.unproject_position(station.global_position + Vector3.UP * 0.5)
 		assert_true(screen.has_point(pos), "%s en pantalla: %s" % [path, pos])
@@ -451,8 +637,8 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 
 	var storage: Node3D = _level.get_node("Stations/OctopusStorage")
 	var kitchen: CookingStation = _level.get_node("Stations/Kitchen")
+	var kitchen2: CookingStation = _level.get_node("Stations/Kitchen2")
 	var shelf: Node3D = _level.get_node("Stations/BoxShelf")
-	var spices: Node3D = _level.get_node("Stations/SpiceShelf")
 	var cachelera: Node3D = _level.get_node("Stations/CachelosStorage")
 
 	# Nevera → olla.
@@ -472,6 +658,12 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 	assert_true(actor.interact_pressed())
 	assert_null(hold.get_held_item(), "la olla acepta los cachelos junto al pulpo")
 	assert_eq(_pot_contents(kitchen), 2, "pulpo y cachelos a la vez en la olla")
+	# La segunda olla (D9) también se alcanza y cuece.
+	assert_true(await _reach(player, storage, reachable), "vuelve a la nevera")
+	assert_true(actor.interact_pressed())
+	assert_true(await _reach(player, kitchen2, reachable), "alcanza la segunda olla")
+	assert_true(actor.interact_pressed())
+	assert_true(kitchen2.is_cooking())
 
 	# Cajas: coge cada una y la entrega (vacía) en cada puesto.
 	var stands: Array[OrderStand] = _stands()
@@ -485,32 +677,42 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 		assert_true(actor.interact_pressed(), "interactúa con %s" % stands[i].name)
 		(hold.get_held_item() as Node).free()
 
-	# Especias: coger y devolver cada bote a su slot.
-	for slot_name: String in SPICE_SLOTS:
-		var slot: Slot = spices.get_node(slot_name)
-		var jar: Node3D = slot.get_item()
-		assert_true(await _reach(player, jar, reachable, slot), "alcanza %s" % slot_name)
+	# Pasaplatos: una caja en cada slot de la barra, dejada desde un lado y recogida desde el otro.
+	for i: int in PASS_COLUMNS.size():
+		var slot: Slot = _level.get_node("Stations/PassSlot%02d" % (i + 1))
+		var spawner: Node3D = shelf.get_node(spawners[i % spawners.size()])
+		assert_true(await _reach(player, spawner, reachable), "alcanza %s" % spawner.name)
 		assert_true(actor.interact_pressed())
-		assert_eq(hold.get_held_item(), jar)
-		await wait_physics_frames(2)
-		assert_eq(
-			_detector(player).get_target(), slot, "%s: el slot vacío gana al resto" % slot_name
-		)
+		var box: Box = hold.get_held_item() as Box
+		assert_not_null(box)
+		var side: float = 1.0 if i % 2 == 0 else -1.0
+		assert_true(await _reach(player, slot, reachable, null, side), "deja en %s" % slot.name)
 		assert_true(actor.interact_pressed())
-		assert_eq(slot.get_item(), jar, "%s: bote devuelto" % slot_name)
+		assert_eq(slot.get_item(), box, "%s guarda la caja" % slot.name)
+		assert_true(await _reach(player, box, reachable, slot, -side), "recoge de %s" % slot.name)
+		assert_true(actor.interact_pressed())
+		assert_eq(hold.get_held_item(), box, "%s: caja recogida por el otro lado" % slot.name)
+		box.free()
 
-
-func test_ac4_spice_slots_do_not_stop_player_far_from_the_shelf() -> void:
-	await _load_level()
-	var player: Player = _player()
-	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(player)
-	var spices: Node3D = _level.get_node("Stations/SpiceShelf")
-	for slot_name: String in SPICE_SLOTS:
-		var slot: Node3D = spices.get_node(slot_name)
-		var nearest: float = INF
-		for cell: Vector2i in reachable:
-			nearest = minf(nearest, _cell_pos(cell).distance_to(_flat(slot.global_position)))
-		assert_lt(nearest, SLOT_APPROACH, "%s: el jugador llega a %.2f m" % [slot_name, nearest])
+	# Estación: caja llena a la bandeja por el pase, sal por el lado de condimentar, cuenco.
+	var station: SeasoningStation = _level.get_node("Stations/SeasoningStation")
+	assert_true(await _reach(player, shelf.get_node("SmallSpawner"), reachable))
+	assert_true(actor.interact_pressed())
+	var full: Box = hold.get_held_item() as Box
+	full.fill = 1.0
+	assert_true(await _reach(player, station.get_tray(), reachable, null, -1.0), "bandeja (pase)")
+	assert_true(actor.interact_pressed())
+	assert_eq(station.get_box(), full)
+	for dispenser: Node in station.get_node("Dispensers").get_children():
+		var target: SeasoningDispenser = dispenser as SeasoningDispenser
+		assert_true(await _reach(player, target, reachable, null, 1.0), "alcanza %s" % target.name)
+		assert_true(actor.interact_pressed())
+		assert_true(full.has_seasoning(target.seasoning), "%s condimenta" % target.name)
+	var bowl: CachelosBowl = station.get_node("CachelosBowl")
+	assert_true(await _reach(player, bowl, reachable, null, 1.0), "alcanza el cuenco")
+	assert_true(await _reach(player, full, reachable, station.get_tray(), 1.0), "caja (servicio)")
+	assert_true(actor.interact_pressed())
+	assert_eq(hold.get_held_item(), full, "la caja sale por el lado de condimentar")
 
 
 ## Ingredientes que hay dentro de la olla (en sus anclas).
@@ -527,14 +729,23 @@ func _detector(player: Player) -> InteractionDetector:
 
 
 ## Lleva al jugador a la celda alcanzable más cercana desde la que su detector elige `target`
-## mirándolo. `aim` es el nodo al que mira (por defecto, `target`).
+## mirándolo. `aim` es el nodo al que mira (por defecto, `target`). `side` limita las celdas a un
+## lado de la barra: −1 cocina (z menor que `aim`), +1 servicio, 0 cualquiera.
 func _reach(
-	player: Player, target: Node3D, reachable: Dictionary[Vector2i, bool], aim: Node3D = null
+	player: Player,
+	target: Node3D,
+	reachable: Dictionary[Vector2i, bool],
+	aim: Node3D = null,
+	side: float = 0.0
 ) -> bool:
 	if aim == null:
 		aim = target
 	var goal: Vector2 = _flat(aim.global_position)
 	var cells: Array[Vector2i] = reachable.keys()
+	if side != 0.0:
+		cells = cells.filter(
+			func(c: Vector2i) -> bool: return (_cell_pos(c).y - goal.y) * side > 0.0
+		)
 	cells.sort_custom(
 		func(a: Vector2i, b: Vector2i) -> bool:
 			return _cell_pos(a).distance_squared_to(goal) < _cell_pos(b).distance_squared_to(goal)
