@@ -55,7 +55,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-040 | M2 | game-designer | done | Diseñar la estación de condimentos y los distintivos de la caja |
 | PUL-041 | M2 | game-designer | done | Proponer dos o tres distribuciones de la cocina |
 | PUL-042 | M2 | game-designer | done | Escribir la biblia de arte y la lista de assets |
-| PUL-043 | M2 | asset-pipeline | draft | Preparar el MCP de Blender y el pipeline Blender → glTF → Godot |
+| PUL-043 | M2 | asset-pipeline | ready | Preparar el MCP de Blender y el pipeline Blender → glTF → Godot |
 | PUL-044 | M3 | asset-pipeline | draft | Modelar y animar el personaje (dos variantes) |
 | PUL-045 | M3 | asset-pipeline | draft | Modelar el pulpo crudo, cocido y troceado |
 | PUL-046 | M3 | asset-pipeline | draft | Modelar los cachelos crudos y cocidos |

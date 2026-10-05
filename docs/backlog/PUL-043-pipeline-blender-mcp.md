@@ -1,13 +1,13 @@
 ---
 id: PUL-043
 title: Preparar el MCP de Blender y el pipeline Blender → glTF → Godot
-status: draft
+status: ready
 milestone: M2
 role: asset-pipeline
 deps: [PUL-042]
 orca_task: null
 unity_sources: []
-owns: [art/README.md, art/blender/_template.blend, tools/blender_export.py, docs/art/pipeline.md, godot/tests/unit/test_assets_models.gd, godot/tests/unit/test_assets_models.gd.uid, docs/evidence/PUL-043/**]
+owns: [art/README.md, art/blender/_template.blend, tools/blender_export.py, docs/art/pipeline.md, godot/tests/unit/test_assets_models.gd, godot/tests/unit/test_assets_models.gd.uid, docs/evidence/PUL-043/**, tools/blender_mcp.sh]
 touches_scenes: []
 ---
 
