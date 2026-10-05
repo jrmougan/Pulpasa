@@ -24,6 +24,9 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
    (`scene-tree.md` §3) salvo que se pida. 
 4. Registrar la licencia (propia) en `docs/assets/licenses.md` → pedirlo al coordinador (fuera de `owns`).
 
+## Ajustes de la biblia de arte (PUL-042)
+Ajuste de la biblia (§4): separar `pot_body` y `stove_base`. La planta B usa dos ollas: el mismo modelo instanciado dos veces.
+
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.

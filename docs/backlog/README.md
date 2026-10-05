@@ -52,9 +52,9 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-037 | M2 | qa-tester | done | Integrar dos personajes en level_01 y pasar el QA de M2 |
 | PUL-038 | M2 | ui-engineer | draft | Evitar que el aviso de mando desconectado tape los tickets |
 | PUL-039 | M2 | gameplay-engineer | ready | Reproducir y arreglar que no se pueda entregar en level_01 |
-| PUL-040 | M2 | game-designer | ready | Diseñar la estación de condimentos y los distintivos de la caja |
-| PUL-041 | M2 | game-designer | ready | Proponer dos o tres distribuciones de la cocina |
-| PUL-042 | M2 | game-designer | ready | Escribir la biblia de arte y la lista de assets |
+| PUL-040 | M2 | game-designer | done | Diseñar la estación de condimentos y los distintivos de la caja |
+| PUL-041 | M2 | game-designer | done | Proponer dos o tres distribuciones de la cocina |
+| PUL-042 | M2 | game-designer | done | Escribir la biblia de arte y la lista de assets |
 | PUL-043 | M2 | asset-pipeline | draft | Preparar el MCP de Blender y el pipeline Blender → glTF → Godot |
 | PUL-044 | M3 | asset-pipeline | draft | Modelar y animar el personaje (dos variantes) |
 | PUL-045 | M3 | asset-pipeline | draft | Modelar el pulpo crudo, cocido y troceado |
@@ -68,3 +68,10 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-053 | M3 | asset-pipeline | draft | Modelar el puesto de entrega |
 | PUL-054 | M3 | asset-pipeline | draft | Modelar las encimeras modulares |
 | PUL-055 | M3 | asset-pipeline | draft | Modelar el entorno de romería |
+| PUL-056 | M2 | godot-architect | ready | Enmendar los contratos para la estación de condimentos |
+| PUL-057 | M2 | gameplay-engineer | draft | Implementar las reglas de condimento como núcleo |
+| PUL-058 | M2 | gameplay-engineer | draft | Crear la escena de la estación de condimentos |
+| PUL-059 | M2 | gameplay-engineer | draft | Mostrar los distintivos de condimento sobre la caja |
+| PUL-060 | M2 | ui-engineer | draft | Ordenar los iconos del ticket y darles estilo de pegatina |
+| PUL-061 | M2 | gameplay-engineer | draft | Montar level_01 con la planta B y la estación, y retirar los botes |
+| PUL-062 | M2 | qa-tester | draft | Pasar el QA de la estación y la planta B y preparar el playtest |

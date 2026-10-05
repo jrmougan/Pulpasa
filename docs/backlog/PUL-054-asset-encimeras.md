@@ -24,6 +24,9 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
    (`scene-tree.md` §3) salvo que se pida. Depende de la planta elegida (PUL-041).
 4. Registrar la licencia (propia) en `docs/assets/licenses.md` → pedirlo al coordinador (fuera de `owns`).
 
+## Ajustes de la biblia de arte (PUL-042)
+Ajuste de la biblia (§4) y planta B elegida: kit de 1 m repetible más módulos de 2 y 3 m, módulo de pasaplatos (mesa a dos caras) y tablero a 1,0 m de altura. Cantidad y disposición según `docs/design/level-layouts.md` (planta B).
+
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.

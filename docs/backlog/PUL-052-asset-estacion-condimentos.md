@@ -5,7 +5,7 @@ status: draft
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
-deps: [PUL-042, PUL-043, PUL-040]
+deps: [PUL-042, PUL-043, PUL-040, PUL-058]
 orca_task: null
 unity_sources: []
 owns: [art/blender/seasoning_station.blend, godot/assets/models/stations/seasoning_station/**, docs/evidence/PUL-052/**]
@@ -23,6 +23,9 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
 3. Sustituir el placeholder en su escena (`Model`), sin cambiar colisiones ni nodos de contrato
    (`scene-tree.md` §3) salvo que se pida. Depende del diseño de PUL-040; la escena de la estación la crea su ficha de gameplay.
 4. Registrar la licencia (propia) en `docs/assets/licenses.md` → pedirlo al coordinador (fuera de `owns`).
+
+## Ajustes de la biblia de arte (PUL-042)
+Ajuste de la biblia (§4) y PUL-040 aprobada: recipientes **fijos** (no se manipulan); aceitera como pieza propia; anclas `Anchor_Tray` y por dispensador; dos lados (pase y condimentar) según la feature. Respeta los nodos de la escena de PUL-058.
 
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.

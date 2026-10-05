@@ -1,11 +1,11 @@
 ---
 id: PUL-041
 title: Proponer dos o tres distribuciones de la cocina
-status: review
+status: done
 milestone: M2
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_c8ab24113ece
 unity_sources: []
 owns: [docs/design/level-layouts.md, docs/design/level-layouts/**, docs/evidence/PUL-041/**]
 touches_scenes: []

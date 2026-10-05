@@ -1,11 +1,11 @@
 ---
 id: PUL-040
 title: Diseñar la estación de condimentos y los distintivos de la caja
-status: review
+status: done
 milestone: M2
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_a3222f975d9a
 unity_sources: []
 owns: [docs/design/features/condimentacion.md, docs/design/features/estacion-condimentos.md, docs/evidence/PUL-040/**]
 touches_scenes: []

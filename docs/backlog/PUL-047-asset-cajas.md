@@ -24,6 +24,9 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
    (`scene-tree.md` §3) salvo que se pida. Depende también del diseño de distintivos (PUL-040).
 4. Registrar la licencia (propia) en `docs/assets/licenses.md` → pedirlo al coordinador (fuera de `owns`).
 
+## Ajustes de la biblia de arte (PUL-042)
+Ajuste de la biblia (§4): objeto `sticker` reutilizable (disco 0,10 m con atlas de 5 iconos ≤ 256×256) y anclas `Anchor_Sticker_*`; tres niveles de relleno como objetos ocultables. La fila de pegatinas en juego es la de PUL-059 (billboard): las pegatinas de la tapa son decorativas.
+
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.

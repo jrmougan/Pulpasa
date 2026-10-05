@@ -1,11 +1,11 @@
 ---
 id: PUL-042
 title: Escribir la biblia de arte y la lista de assets
-status: review
+status: done
 milestone: M2
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_dad4b30f62dd
 unity_sources: []
 owns: [docs/art/**]
 touches_scenes: []
