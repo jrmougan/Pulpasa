@@ -1,7 +1,7 @@
 ---
 id: PUL-040
 title: Diseñar la estación de condimentos y los distintivos de la caja
-status: ready
+status: review
 milestone: M2
 role: game-designer
 deps: []
@@ -36,13 +36,33 @@ descripción, AC Given/When/Then verificables, datos en `.tres`, verificación) 
 - Coherente con D1 (corte sobre la caja), D4, D10, D12.
 
 ## Acceptance
-- [ ] AC1 Feature con AC verificables y datos en `.tres` identificados
-- [ ] AC2 Variante coop y variante Individual descritas, con el porqué de cada una
-- [ ] AC3 Boceto de la estación y de los distintivos (imagen o ASCII) en la feature o en `docs/evidence/PUL-040/`
-- [ ] AC4 Lista de fichas de implementación propuestas
+- [x] AC1 Feature con AC verificables y datos en `.tres` identificados
+- [x] AC2 Variante coop y variante Individual descritas, con el porqué de cada una
+- [x] AC3 Boceto de la estación y de los distintivos (imagen o ASCII) en la feature o en `docs/evidence/PUL-040/`
+- [x] AC4 Lista de fichas de implementación propuestas
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Leer D1, D3, D4, D10–D12, D18, `condimentacion.md`, `jugadores-y-cambio.md` y el código actual
+   (`box.gd`, `seasoning_item.gd`, `spice_shelf.tscn`, `ticket_entry.gd`, cámara, InputMap) para
+   partir de lo que existe y de sus límites (una sola tecla de acción, `size` 12,74 m a 720p).
+2. Elegir una mecánica de coordinación que funcione en Individual con el inactivo quieto (D3):
+   mostrador de pase con dos lados (dejar/recoger desde los dos; dispensadores solo desde uno).
+3. Escribir `estacion-condimentos.md` (interacción, coop/Individual con su porqué, distintivos
+   medidos en píxeles, AC Given/When/Then, datos `.tres`, qué desaparece, contratos afectados,
+   fichas propuestas, preguntas abiertas) y adaptar `condimentacion.md` (alternar, intercambio de
+   pimentón, orden canónico, solo en la estación).
+4. Boceto SVG (+ PNG) en `docs/evidence/PUL-040/` y ASCII dentro de la feature.
 
 ## Evidence
-(Lo rellena el worker.)
+- Feature: `docs/design/features/estacion-condimentos.md` (18 AC; datos nuevos `SeasoningStationData`,
+  `BoxBadgeStyle` y `SeasoningData.sort_order`) → AC1.
+- Coop vs Individual con su porqué y alternativas descartadas: sección «Por qué un mostrador de pase
+  con dos lados» (AC16–AC17 lo verifican) → AC2.
+- Boceto: `docs/evidence/PUL-040/boceto-estacion.svg` (+ `.png`) y ASCII en la feature → AC3.
+- 7 fichas propuestas en orden (contratos → núcleo → estación ∥ distintivos ∥ ticket → nivel → QA)
+  más PUL-052 de arte → AC4.
+- `condimentacion.md` actualizada a D18 (alternar, intercambio de pimentón, solo en la estación).
+- Para el producer: AC2 de `condimentacion.md` cambia de «rechaza» a «intercambia» (pregunta abierta
+  2, `paprika_swap` en datos); las fichas 1 y 6 necesitan gate humano (contratos) y la planta de
+  PUL-041; PUL-052 puede citar los nodos `Tray`, `Dispensers/*` y `CachelosBowl`.
+- `tools/verify.sh` verde y `tools/check_owns.py` limpio (ver commit).
