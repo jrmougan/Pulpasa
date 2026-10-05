@@ -1,0 +1,65 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/stations/sandbox/seasoning_station_sandbox.gd" id="1_sbx"]
+[ext_resource type="Resource" path="res://data/config/round_config.tres" id="2_round"]
+[ext_resource type="Resource" path="res://data/orders/order_catalog.tres" id="3_catalog"]
+[ext_resource type="PackedScene" path="res://entities/camera/camera_rig.tscn" id="4_camera"]
+[ext_resource type="Material" path="res://assets/materials/terrain.tres" id="5_terrain"]
+[ext_resource type="PackedScene" path="res://entities/stations/seasoning_station.tscn" id="6_station"]
+[ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="7_player"]
+[ext_resource type="PackedScene" path="res://entities/items/box.tscn" id="8_box"]
+[ext_resource type="Resource" path="res://data/boxes/medium.tres" id="9_medium"]
+[ext_resource type="PackedScene" path="res://entities/items/cachelos.tscn" id="10_cachelos"]
+
+[sub_resource type="Environment" id="Environment_sbx"]
+background_mode = 1
+background_color = Color(0.36, 0.17, 0.71, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.6, 0.6, 0.65, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(20, 0.2, 20)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+size = Vector2(20, 20)
+
+[node name="SeasoningStationSandbox" type="Node3D" node_paths=PackedStringArray("station", "player", "items_root")]
+script = ExtResource("1_sbx")
+round_config = ExtResource("2_round")
+order_catalog = ExtResource("3_catalog")
+station = NodePath("SeasoningStation")
+player = NodePath("Player")
+items_root = NodePath("Items")
+box_scene = ExtResource("8_box")
+box_data = ExtResource("9_medium")
+cachelos_scene = ExtResource("10_cachelos")
+staged_dispensers = Array[NodePath]([NodePath("Dispensers/Oil"), NodePath("Dispensers/Salt"), NodePath("Dispensers/HotPaprika")])
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_sbx")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8660254, -0.38302222, 0.32139382, 0, 0.64278764, 0.76604444, -0.5, -0.66341394, 0.5566704, 0, 0, 0)
+shadow_enabled = true
+
+[node name="CameraRig" parent="." instance=ExtResource("4_camera")]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+shape = SubResource("BoxShape3D_floor")
+
+[node name="Mesh" type="MeshInstance3D" parent="Floor"]
+material_override = ExtResource("5_terrain")
+mesh = SubResource("PlaneMesh_floor")
+
+[node name="Items" type="Node3D" parent="."]
+
+[node name="SeasoningStation" parent="." instance=ExtResource("6_station")]
+
+[node name="Player" parent="." node_paths=PackedStringArray("camera", "items_root") instance=ExtResource("7_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0, 1.5)
+camera = NodePath("../CameraRig")
+items_root = NodePath("../Items")

@@ -67,3 +67,12 @@ func test_ac3_pickable_violations_checks_contract_without_group() -> void:
 	assert_eq(InteractionContract.pickable_violations(complete), [])
 	var incomplete: Node = add_child_autofree(IncompletePickable.new())
 	assert_eq(InteractionContract.pickable_violations(incomplete).size(), 2)
+
+
+## PUL-058 (ADR-003 §8.1): `is_reachable_from` es opcional: no es una violación que falte.
+func test_pul058_is_reachable_from_is_optional() -> void:
+	assert_true("is_reachable_from" in InteractionContract.INTERACTABLE_OPTIONAL_METHODS)
+	assert_false("is_reachable_from" in InteractionContract.INTERACTABLE_METHODS)
+	var node: Node = _in_group(FakeInteractable.new(), &"interactable")
+	assert_false(node.has_method(&"is_reachable_from"))
+	assert_eq(InteractionContract.violations(node), [])
