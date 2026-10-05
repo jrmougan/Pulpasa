@@ -15,7 +15,7 @@ func _collect(dir_path: String, out: Array[String]) -> void:
 func test_ac3_all_tres_load() -> void:
 	var paths: Array[String] = []
 	_collect(DATA_DIR, paths)
-	assert_eq(paths.size(), 25)
+	assert_eq(paths.size(), 26)
 	for path: String in paths:
 		var res: Resource = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 		assert_not_null(res, path)
@@ -85,3 +85,29 @@ func test_comandas_ac5_m1_data_ranges() -> void:
 
 	assert_true(has_oil, "Debe haber al menos una comanda con aceite")
 	assert_true(has_paprika, "Debe haber al menos una comanda con pimentón")
+
+
+## PUL-057: orden canónico de caja y ticket (pimentón → sal → aceite → cachelos).
+func test_pul057_seasoning_sort_order() -> void:
+	var expected: Dictionary = {"paprika": 0, "hot_paprika": 0, "salt": 1, "oil": 2, "cachelos": 3}
+	for id: String in expected:
+		var seasoning: SeasoningData = load("res://data/seasonings/%s.tres" % id) as SeasoningData
+		assert_eq(seasoning.sort_order, expected[id] as int, id)
+
+
+## PUL-057: estilo de pegatinas compartido por BadgeRow y el ticket.
+func test_pul057_box_badge_style_values() -> void:
+	var style: BoxBadgeStyle = load("res://data/config/box_badges.tres") as BoxBadgeStyle
+	assert_not_null(style)
+	assert_eq(style.badge_icon_px, 24)
+	assert_eq(style.badge_gap_px, 3)
+	assert_almost_eq(style.badge_height, 0.35, 0.0001)
+	assert_not_null(style.hot_mark)
+	assert_eq(style.hot_mark.resource_path, "res://assets/textures/icons/small-fire.svg")
+	var hot: SeasoningData = SeasoningData.new()
+	hot.type = SeasoningData.SeasoningType.HOT_PAPRIKA
+	var sweet: SeasoningData = SeasoningData.new()
+	sweet.type = SeasoningData.SeasoningType.PAPRIKA
+	assert_true(style.has_hot_mark(hot))
+	assert_false(style.has_hot_mark(sweet))
+	assert_false(style.has_hot_mark(null))

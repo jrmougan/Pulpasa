@@ -8,6 +8,7 @@ script = ExtResource("1_sea")
 display_name = "Cachelos"
 translation_key = "SEASONING_CACHELOS"
 type = 4
+sort_order = 3
 exclusivity_group = &""
 color = Color(0.9, 0.8, 0.5, 1.0)
 icon = ExtResource("2_icon")

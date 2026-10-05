@@ -11,6 +11,9 @@ enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL, CACHELOS }
 ## Condimentos con el mismo grupo de exclusividad son mutuamente excluyentes (D4).
 ## Cadena vacía = sin exclusividad.
 @export var exclusivity_group: StringName = &""
+## Posición en el orden canónico de caja y ticket (`SeasoningRules.canonical_order`): pimentón 0,
+## sal 1, aceite 2, cachelos 3. Iguales = sin orden entre ellos (dulce y picante son exclusivos).
+@export var sort_order: int = 0
 @export var color: Color = Color.WHITE
 @export var icon: Texture2D
 @export var scene: PackedScene
