@@ -1,7 +1,7 @@
 ---
 id: PUL-060
 title: Ordenar los iconos del ticket y darles estilo de pegatina
-status: draft
+status: ready
 milestone: M2
 role: ui-engineer
 deps: [PUL-057]

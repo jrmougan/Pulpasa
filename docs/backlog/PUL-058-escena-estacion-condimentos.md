@@ -1,7 +1,7 @@
 ---
 id: PUL-058
 title: Crear la escena de la estación de condimentos
-status: draft
+status: ready
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-057]

@@ -1,7 +1,7 @@
 ---
 id: PUL-059
 title: Mostrar los distintivos de condimento sobre la caja
-status: draft
+status: ready
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-057]
