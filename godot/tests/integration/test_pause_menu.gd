@@ -2,6 +2,7 @@ extends GutTest
 ## PUL-021: pausa real, foco y navegación sin ratón.
 
 const MENU: PackedScene = preload("res://ui/menus/pause_menu.tscn")
+const TICKETS: PackedScene = preload("res://ui/tickets/order_tickets_panel.tscn")
 
 var _menu: Control
 var _state: SessionSpy
@@ -171,3 +172,29 @@ func test_ac3_warning_appears_with_pause_already_open() -> void:
 	assert_true(_menu.visible)
 	EventBus.device_disconnected.emit(2)
 	assert_true(_menu.get_node("%DeviceWarning").visible)
+
+
+func _assert_warning_clear_of_tickets(size: Vector2i) -> void:
+	get_tree().root.size = size
+	var tickets: Control = add_child_autofree(TICKETS.instantiate())
+	await get_tree().process_frame
+	GameState.set_paused(true)
+	EventBus.device_disconnected.emit(2)
+	await get_tree().process_frame
+	var warning: Control = _menu.get_node("%DeviceWarning")
+	assert_true(warning.visible)
+	var strip: Rect2 = tickets.get_global_rect()
+	assert_gt(strip.size.y, 0.0)
+	assert_false(
+		warning.get_global_rect().intersects(strip),
+		"aviso %s vs tickets %s a %s" % [warning.get_global_rect(), strip, size]
+	)
+	assert_true(Rect2(Vector2.ZERO, Vector2(size)).encloses(warning.get_global_rect()))
+
+
+func test_ac1_warning_does_not_overlap_tickets_at_720p() -> void:
+	await _assert_warning_clear_of_tickets(Vector2i(1280, 720))
+
+
+func test_ac1_warning_does_not_overlap_tickets_at_1080p() -> void:
+	await _assert_warning_clear_of_tickets(Vector2i(1920, 1080))
