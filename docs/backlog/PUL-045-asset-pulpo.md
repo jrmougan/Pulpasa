@@ -1,7 +1,7 @@
 ---
 id: PUL-045
 title: Modelar el pulpo crudo, cocido y troceado
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
