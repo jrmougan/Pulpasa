@@ -15,6 +15,9 @@ extends StaticBody3D
 ## Datos opcionales del objeto inicial (p. ej. la `SeasoningData` de cada especia): se asignan a su
 ## propiedad `data` antes de que entre al árbol. `null` deja los de la escena.
 @export var initial_item_data: Resource
+## Grupo que acepta al dejar (ADR-003 §8.2). Vacío = cualquier objeto; si no, lo que no esté en el
+## grupo se rechaza consumiendo la pulsación (no se guarda ni se suelta). La bandeja usa `&"box"`.
+@export var accepted_group: StringName = &""
 
 var _item: Node3D
 var _saved_layer: int = 0
@@ -82,11 +85,18 @@ func interact(actor: InteractionComponent) -> bool:
 	var holder: Holder = actor.holder
 	if has_item():
 		return _give(holder)
+	if not accepts(holder.get_held_item()):
+		return true
 	var item: Node3D = holder.drop() as Node3D
 	if item == null:
 		return false
 	_store(item)
 	return true
+
+
+## Si `item` se puede dejar aquí según `accepted_group`.
+func accepts(item: Node) -> bool:
+	return item != null and (accepted_group.is_empty() or item.is_in_group(accepted_group))
 
 
 func has_item() -> bool:

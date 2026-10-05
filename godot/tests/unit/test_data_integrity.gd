@@ -15,7 +15,7 @@ func _collect(dir_path: String, out: Array[String]) -> void:
 func test_ac3_all_tres_load() -> void:
 	var paths: Array[String] = []
 	_collect(DATA_DIR, paths)
-	assert_eq(paths.size(), 26)
+	assert_eq(paths.size(), 27)
 	for path: String in paths:
 		var res: Resource = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 		assert_not_null(res, path)
@@ -128,3 +128,17 @@ func test_pul057_every_seasoning_color_is_opaque() -> void:
 	assert_eq(count, 5, "los cinco condimentos")
 	var oil: SeasoningData = load("res://data/seasonings/oil.tres") as SeasoningData
 	assert_eq(oil.color, Color(0.9490196, 0.7607843, 0.1882353, 1.0))
+
+
+## PUL-058: balance de la estación de condimentos (feature estacion-condimentos, Datos).
+func test_pul058_seasoning_station_values() -> void:
+	var data: SeasoningStationData = (
+		load("res://data/config/seasoning_station.tres") as SeasoningStationData
+	)
+	assert_not_null(data)
+	assert_almost_eq(data.toggle_guard, 0.25, 0.0001)
+	assert_eq(data.cachelos_stock_max, 3)
+	assert_eq(data.cachelos_initial_stock, 0)
+	assert_eq(data.cachelos_portions_per_item, 1)
+	assert_true(data.paprika_swap)
+	assert_true(data.operator_side_only)

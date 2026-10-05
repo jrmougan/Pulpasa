@@ -7,6 +7,9 @@ const GROUP_INTERACTABLE: StringName = &"interactable"
 const GROUP_PICKABLE: StringName = &"pickable"
 
 const INTERACTABLE_METHODS: PackedStringArray = ["can_interact", "interact"]
+## Métodos opcionales de `interactable` (ADR-003 §8.1): si existen, el detector los consulta.
+## `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool`.
+const INTERACTABLE_OPTIONAL_METHODS: PackedStringArray = ["is_reachable_from"]
 const PICKABLE_METHODS: PackedStringArray = ["on_picked_up", "on_dropped"]
 const PICKABLE_PROPERTIES: PackedStringArray = ["is_held"]
 

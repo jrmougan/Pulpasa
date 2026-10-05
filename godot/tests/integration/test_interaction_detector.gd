@@ -1,3 +1,4 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-015 AC1: el detector del jugador elige el objetivo que dicta `InteractionScoring`, lo
 ## resalta y, al girar, cambia el resaltado sin dejar dos objetos resaltados.
@@ -342,3 +343,40 @@ func test_ac1_kitchen_bonus_ignored_with_full_hand() -> void:
 	assert_true(_hold.pick_up(carried))
 	await _settle()
 	assert_eq(_detector.get_target(), targets[1])
+
+
+class SidedTarget:
+	extends Target
+	## Interactuable con `is_reachable_from` (ADR-003 §8.1): solo desde z > 0.
+
+	var asked_holder: Holder
+
+	func is_reachable_from(floor_position: Vector2, holder: Holder) -> bool:
+		asked_holder = holder
+		return floor_position.y > 0.0
+
+
+## PUL-058 (ADR-003 §8.1): una entidad que no es alcanzable desde la posición del portador no es
+## candidata: ni objetivo ni resaltado; desde el otro lado sí.
+func test_pul058_unreachable_entity_is_neither_target_nor_highlighted() -> void:
+	var sided: SidedTarget = SidedTarget.new()
+	_level.add_child(sided)
+	sided.global_position = Vector3(0.0, 0.8, -1.0)
+	_player.global_position = Vector3(0.0, 0.0, -0.1)
+	await _settle()
+	assert_null(_detector.get_target())
+	assert_false(sided.highlight.is_highlighted())
+	assert_eq(sided.asked_holder, _hold, "recibe la mano del detector")
+	_player.global_position = Vector3(0.0, 0.0, 0.1)
+	sided.global_position = Vector3(0.0, 0.8, -0.8)
+	await _settle()
+	assert_eq(_detector.get_target(), sided)
+	assert_true(sided.highlight.is_highlighted())
+
+
+## PUL-058: sin el método, todo sigue igual (alcanzable desde cualquier sitio).
+func test_pul058_entity_without_method_is_reachable() -> void:
+	var target: Target = _add_target(Vector3(0.0, 0.8, -1.0))
+	_player.global_position = Vector3(0.0, 0.0, -0.1)
+	await _settle()
+	assert_eq(_detector.get_target(), target)

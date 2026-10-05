@@ -8,7 +8,9 @@ extends Area3D
 ## `InteractionScoring.pick_best` y emite `target_changed` solo cuando cambia. Como
 ## InteractionDetector.cs:57, un slot ocupado se sustituye por su objeto guardado (con la posición
 ## del slot para puntuar), con la mano vacía o llena, y ese objeto compite como cualquier otro: él
-## decide qué hacer con la mano (la caja corta o condimenta). Enciende el `Highlightable` del
+## decide qué hacer con la mano (la caja corta o condimenta). Las entidades con
+## `is_reachable_from` que devuelve `false` (dispensador desde el lado de pase) no son candidatas:
+## ni objetivo ni resaltado (ADR-003 §8.1). Enciende el `Highlightable` del
 ## objetivo y apaga el anterior: nunca hay dos.
 
 ## Objetivo nuevo; ambos pueden ser `null` (signals.md).
@@ -76,6 +78,8 @@ func refresh() -> void:
 		var pos: Vector3 = entity.global_position
 		if entity is Slot and (entity as Slot).has_item():
 			entity = (entity as Slot).get_item()
+		if not _is_reachable(entity):
+			continue
 		candidates.append(
 			InteractionScoring.Candidate.new(
 				Vector2(pos.x, pos.z),
@@ -98,6 +102,15 @@ func refresh() -> void:
 	)
 	_set_target(entities[best] if best >= 0 else null)
 	_set_lit(_highlightable_of(_target))
+
+
+## Método opcional del contrato (ADR-003 §8.1): sin él, la entidad es alcanzable desde cualquier
+## sitio; con él, decide por la posición del portador en el suelo y la mano.
+func _is_reachable(entity: Node3D) -> bool:
+	if not entity.has_method(&"is_reachable_from"):
+		return true
+	var floor_position: Vector2 = Vector2(carrier.global_position.x, carrier.global_position.z)
+	return entity.call(&"is_reachable_from", floor_position, holder)
 
 
 ## Raíz de la entidad del contrato a la que pertenece `body` (él mismo o su padre directo).
