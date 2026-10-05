@@ -22,6 +22,9 @@ var _last_box_id: int = 0
 var _last_attempt_frame: int = -1
 ## Copia de la comanda viva de este puesto, o `null` (sale de las señales del bus).
 var _order: ActiveOrder
+## Tick de física en que caducó la comanda de este puesto: en ese tick la zona no entrega a la
+## repuesta, aunque sea la misma receta (AC5b: la entrega de ese tick va a la caducada).
+var _expired_frame: int = -1
 
 @onready var _zone: Area3D = %DeliveryZone
 @onready var _label: Label3D = %OrderLabel
@@ -78,7 +81,7 @@ func _try_deliver(holder: Holder, only_if_valid: bool = false) -> void:
 	var box: Box = _held_box(holder)
 	if box == null:
 		return
-	if only_if_valid and not _matches_live_order(box):
+	if only_if_valid and not _zone_accepts(box):
 		return
 	var frame: int = Engine.get_physics_frames()
 	if box.get_instance_id() == _last_box_id and frame == _last_attempt_frame:
@@ -91,8 +94,10 @@ func _try_deliver(holder: Holder, only_if_valid: bool = false) -> void:
 	box.queue_free()
 
 
-func _matches_live_order(box: Box) -> bool:
-	return _order != null and OrderValidator.matches(_order.data, box.get_contents())
+func _zone_accepts(box: Box) -> bool:
+	if _order == null or Engine.get_physics_frames() == _expired_frame:
+		return false
+	return OrderValidator.matches(_order.data, box.get_contents())
 
 
 ## Una sola consulta al cargar (puesto creado con la ronda en marcha); luego, solo señales (B16).
@@ -133,6 +138,7 @@ func _on_order_completed(order: ActiveOrder, _points: int) -> void:
 
 func _on_order_expired(order: ActiveOrder, _penalty: int) -> void:
 	if order.slot_id == slot_id:
+		_expired_frame = Engine.get_physics_frames()
 		_set_order(null)
 
 

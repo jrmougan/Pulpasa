@@ -6,6 +6,10 @@ extends Node
 ## `show()` pone el contorno (inverted hull) en `material_overlay` de las mallas de su entidad y
 ## enseña la retícula opcional; `hide()` lo deshace. No baja a otras entidades colgadas de la
 ## suya (un objeto guardado en un slot tiene su propio `Highlightable`).
+##
+## Varios detectores (un jugador cada uno) pueden apuntar al mismo objeto: cada uno lo pide con
+## `acquire(self)` y lo suelta con `release(self)`; el contorno sigue mientras quede alguno
+## (PUL-039). `show()`/`hide()` fuerzan el estado sin propietarios.
 
 const DEFAULT_MATERIAL: Material = preload("res://shaders/highlight_outline.tres")
 
@@ -18,6 +22,8 @@ const DEFAULT_MATERIAL: Material = preload("res://shaders/highlight_outline.tres
 
 var _highlighted: bool = false
 var _meshes: Array[GeometryInstance3D] = []
+## Propietarios que lo tienen encendido (instance id → true).
+var _owners: Dictionary = {}
 
 
 func _ready() -> void:
@@ -50,6 +56,19 @@ func hide() -> void:
 	_meshes.clear()
 	if reticle != null:
 		reticle.visible = false
+
+
+## Enciende el contorno a nombre de `requester` (idempotente por propietario).
+func acquire(requester: Object) -> void:
+	_owners[requester.get_instance_id()] = true
+	show()
+
+
+## Retira a `requester`; el contorno se apaga cuando no queda ningún propietario.
+func release(requester: Object) -> void:
+	_owners.erase(requester.get_instance_id())
+	if _owners.is_empty():
+		hide()
 
 
 func is_highlighted() -> bool:

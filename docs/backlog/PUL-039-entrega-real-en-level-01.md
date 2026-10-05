@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: []
 orca_task: null
 unity_sources: []
-owns: [godot/entities/stations/order_stand.gd, godot/entities/stations/order_stand.tscn, godot/components/interaction_detector.gd, godot/components/interaction_component.gd, godot/core/interaction_scoring.gd, godot/entities/items/box.gd, godot/core/order_validator.gd, godot/tests/integration/test_delivery_e2e.gd, godot/tests/integration/test_delivery_e2e.gd.uid, godot/tests/integration/test_order_stand.gd, godot/tests/unit/test_interaction_scoring.gd, godot/tests/unit/test_order_validator.gd, godot/data/orders/order_1.tres, godot/data/orders/order_2.tres, godot/data/orders/order_3.tres, godot/data/orders/order_4.tres, godot/data/orders/order_5.tres, godot/data/orders/order_6.tres, godot/tests/unit/test_data_catalog.gd, godot/tests/unit/test_data_integrity.gd, docs/evidence/PUL-039/**]
+owns: [godot/entities/stations/order_stand.gd, godot/entities/stations/order_stand.tscn, godot/components/interaction_detector.gd, godot/components/interaction_component.gd, godot/core/interaction_scoring.gd, godot/entities/items/box.gd, godot/core/order_validator.gd, godot/tests/integration/test_delivery_e2e.gd, godot/tests/integration/test_delivery_e2e.gd.uid, godot/tests/integration/test_order_stand.gd, godot/tests/unit/test_interaction_scoring.gd, godot/tests/unit/test_order_validator.gd, godot/data/orders/order_1.tres, godot/data/orders/order_2.tres, godot/data/orders/order_3.tres, godot/data/orders/order_4.tres, godot/data/orders/order_5.tres, godot/data/orders/order_6.tres, godot/tests/unit/test_data_catalog.gd, godot/tests/unit/test_data_integrity.gd, godot/components/highlightable.gd, godot/tests/integration/test_highlightable.gd, godot/tests/integration/test_highlightable.gd.uid, docs/evidence/PUL-039/**]
 touches_scenes: [godot/entities/stations/order_stand.tscn]
 ---
 
@@ -71,4 +71,15 @@ Detalle, tablas y capturas: `docs/evidence/PUL-039/README.md`.
 - **AC3:** `test_delivery_e2e.gd` con la paciencia REAL: entrega con E (puesto resaltado, los
   demás no) y entrando en la zona, sin caducar la comanda; y caja errónea cruzando las cuatro zonas
   = nada, E = un rechazo. 6/6 ejecuciones en verde.
-- **AC4:** `tools/verify.sh` verde (511/511); `check_owns` limpio.
+- **Revisión (CHANGES):**
+  - Resaltado con dos personajes: `Highlightable` lleva propietarios (`acquire`/`release`); el
+    detector pide y suelta el suyo (y lo suelta en `_exit_tree`). Si un detector deja de apuntar,
+    el contorno sigue mientras otro apunte; se apaga con el último. Vale para todas las estaciones.
+    `test_highlightable.gd`: recuento, dos jugadores sobre el mismo objetivo (falla con el
+    detector anterior) y jugador liberado.
+  - Caducidad real: `test_order_stand.gd` caduca con `OrderBoard.advance` y repone en el mismo
+    tick (misma receta y receta distinta). La zona no entrega ni rechaza en ese tick (el puesto
+    recuerda el tick de física de su `order_expired`; sin esto, con la misma receta la zona pedía la
+    entrega y salía un `delivery_rejected`); E mantiene AC5b (`delivery_rejected` a la caducada con
+    penalización 0). En el tick siguiente la zona entrega a la repuesta.
+- **AC4:** `tools/verify.sh` verde (517/517); `check_owns` limpio.

@@ -194,6 +194,74 @@ func test_pul039_zone_ignores_box_of_expired_order() -> void:
 	assert_eq(_hold.get_held_item(), box)
 
 
+## Tablero con un catálogo de una sola comanda (`first`) y penalizaciones reales; tras llenar los
+## puestos, el catálogo pasa a `replacement` (la reposición del mismo tick sale de él).
+func _expiring_board(first: OrderData, replacement: OrderData) -> ActiveOrder:
+	var catalog: OrderCatalog = OrderCatalog.new()
+	catalog.orders = [first] as Array[OrderData]
+	catalog.max_active_orders = 4
+	var config: RoundConfig = RoundConfig.new()
+	config.wrong_delivery_penalty = 2
+	config.expire_penalty = 3
+	_service.setup(catalog, null, config)
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	catalog.orders = [replacement] as Array[OrderData]
+	return _order_for(SLOT_ID)
+
+
+## Caduca de verdad con `advance` (reposición en el mismo tick) con la caja de la caducada en la
+## mano: la zona no entrega ni rechaza; E rechaza con penalización 0 (AC5b).
+func _assert_expiry_tick(first: OrderData, replacement: OrderData) -> void:
+	var old: ActiveOrder = _expiring_board(first, replacement)
+	var box: Box = _box_in_hand(old)
+	_service.board.advance(first.max_time + 0.01)
+	var fresh: ActiveOrder = _order_for(SLOT_ID)
+	assert_ne(fresh.id, old.id, "repuesta en el mismo tick")
+	assert_eq(fresh.data, replacement)
+	assert_eq(_label(), "#%d" % fresh.id)
+	_stand._on_body_entered(_player)
+	assert_signal_not_emitted(_bus, "order_completed", "la zona no entrega a la repuesta")
+	assert_signal_not_emitted(_bus, "delivery_rejected", "la zona no rechaza")
+	assert_eq(_hold.get_held_item(), box)
+	assert_true(_stand.interact(_actor))
+	assert_signal_not_emitted(_bus, "order_completed")
+	assert_signal_emit_count(_bus, "delivery_rejected", 1)
+	assert_eq(
+		get_signal_parameters(_bus, "delivery_rejected"),
+		[SLOT_ID, old.id, 0],
+		"AC5b: va a la caducada, penalización 0"
+	)
+	assert_eq(_hold.get_held_item(), box)
+
+
+func test_pul039_expiry_tick_same_recipe_zone_does_not_deliver() -> void:
+	var data: OrderData = CATALOG.orders[0]
+	await _assert_expiry_tick(data, data)
+
+
+func test_pul039_expiry_tick_other_recipe_zone_does_not_deliver() -> void:
+	var first: OrderData = CATALOG.orders[0]
+	var other: OrderData = null
+	for data: OrderData in CATALOG.orders:
+		if data.recipe != first.recipe or data.seasonings != first.seasonings:
+			other = data
+	assert_not_null(other)
+	await _assert_expiry_tick(first, other)
+
+
+func test_pul039_zone_delivers_replacement_in_a_later_tick() -> void:
+	var data: OrderData = CATALOG.orders[0]
+	var old: ActiveOrder = _expiring_board(data, data)
+	_box_in_hand(old)
+	_service.board.advance(data.max_time + 0.01)
+	# Tick siguiente: como `RoundManager`, un `advance` por tick de física.
+	await wait_physics_frames(1)
+	_service.board.advance(0.01)
+	_stand._on_body_entered(_player)
+	assert_signal_emit_count(_bus, "order_completed", 1, "misma receta: entrega a la repuesta")
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+
+
 func test_pul039_stand_has_highlightable() -> void:
 	var highlight: Highlightable = _stand.get_node_or_null("%Highlightable") as Highlightable
 	assert_not_null(highlight)
