@@ -1,11 +1,11 @@
 ---
 id: PUL-064
 title: Ignorar los dispensadores cuando el jugador lleva algo en la mano
-status: review
+status: done
 milestone: M2
 role: gameplay-engineer
 deps: [PUL-062]
-orca_task: null
+orca_task: task_e7c8be214ba1
 unity_sources: []
 owns: [godot/entities/stations/seasoning_dispenser.gd, godot/core/seasoning_rules.gd, godot/tests/integration/test_seasoning_station.gd, godot/tests/integration/test_m2b_station_selection.gd, godot/tests/unit/test_seasoning_rules.gd, docs/arch/signals.md, docs/arch/ADR-003-arbol-escenas-composicion.md, docs/evidence/PUL-064/**]
 touches_scenes: []
