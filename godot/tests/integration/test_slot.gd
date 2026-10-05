@@ -214,3 +214,51 @@ func test_pul061_initial_item_data_is_gone() -> void:
 	assert_false(&"initial_item_data" in slot)
 	assert_true(&"initial_item" in slot)
 	slot.free()
+
+
+func test_ac2_slot_scene_fulfils_interaction_contract() -> void:
+	assert_true(_slot.is_in_group(&"interactable"))
+	assert_eq(InteractionContract.scan_tree(_slot), [])
+	assert_eq(_slot.collision_layer, INTERACTABLE_LAYER)
+
+
+func test_pul024_interactable_shape_matches_unity_slot_and_hugs_the_anchor() -> void:
+	# `InteractableSlot.prefab`: collider 0,43 × 0,1 × 0,475 a la altura del ancla. Una caja de
+	# 1,37 m frenaba al jugador ~0,7 m antes de la estantería (roadmap, fase 8).
+	var shape_node: CollisionShape3D = _slot.get_node("CollisionShape3D")
+	var box: BoxShape3D = shape_node.shape as BoxShape3D
+	assert_lte(box.size.x, 0.5)
+	assert_lte(box.size.z, 0.5)
+	assert_lte(box.size.y, 0.2)
+	var anchor: Marker3D = _slot.get_node("%Anchor")
+	assert_almost_eq(shape_node.position.y, anchor.position.y - box.size.y / 2.0, 0.06)
+
+
+func test_pul024_standalone_slot_table_still_blocks_on_world_layer() -> void:
+	var bodies: Array[Node] = _slot.get_node("Model").find_children("*", "StaticBody3D")
+	assert_eq(bodies.size(), 1)
+	assert_eq((bodies[0] as StaticBody3D).collision_layer, 1)
+
+
+## PUL-058 (ADR-003 §8.2): con `accepted_group`, lo que no está en el grupo se rechaza consumiendo
+## la pulsación; ni se guarda ni se suelta.
+func test_pul058_accepted_group_rejects_other_items_consuming_press() -> void:
+	_slot.accepted_group = &"box"
+	var item: Item = _held_item()
+	assert_true(_slot.can_interact(_actor))
+	assert_true(_slot.interact(_actor), "consume la pulsación")
+	assert_false(_slot.has_item())
+	assert_eq(_hold.get_held_item(), item, "sigue en la mano")
+	assert_false(_slot.accepts(item))
+
+
+func test_pul058_accepted_group_stores_items_in_group() -> void:
+	_slot.accepted_group = &"box"
+	var item: Item = _held_item()
+	item.add_to_group(&"box")
+	assert_true(_slot.accepts(item))
+	assert_true(_slot.interact(_actor))
+	assert_eq(_slot.get_item(), item)
+	var fresh: Slot = SLOT_SCENE.instantiate()
+	assert_eq(fresh.accepted_group, &"", "por defecto acepta todo")
+	fresh.free()
