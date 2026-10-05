@@ -1,0 +1,68 @@
+# PUL-062 · Registro de las dos partidas con el MCP (godot-mcp-runtime 3.8.1, 2026-10-05)
+# Grabador de solo lectura conectado por run_script a EventBus y a las señales locales de la
+# estación (rejected de dispensadores/cuenco, stock_changed del cuenco). Tiempos en s desde que se
+# instaló el grabador (≈ 2 s después de cargar el nivel). REJ <pieza> <motivo>: SeasoningRules.Rejection
+# (3 = HAND_BUSY: dispensador pulsado con la caja en la mano).
+#
+# Errores de consola: 0 del juego. Los dos únicos SCRIPT ERROR del log son del primer script de
+# grabación del QA (lambdas sin tipar rechazadas por el bridge), antes de jugar.
+
+## Individual (cambio con Q; P2 en la cocina/pase, P1 en el lado de condimentar)
+REC 13.1 switch p1->c2
+REC 29.2 switch p1->c1
+REC 45.7 switch p1->c2
+REC 76.5 bowl stock 1
+REC 76.7 switch p1->c1
+REC 84.6 bowl stock 0
+REC 85.6 EXPIRED #2 slot2 max100 left0 box=small seas=oil,cachelos
+REC 85.6 gen #5 slot2 max180 left180 box=medium seas=oil
+REC 103.0 DONE #3 slot3 max140 left23 box=small seas=hot_paprika,cachelos pts8
+REC 103.0 gen #6 slot3 max120 left120 box=large seas=hot_paprika,salt
+REC 105.6 EXPIRED #1 slot1 max120 left0 box=large seas=hot_paprika,salt
+REC 105.6 gen #7 slot1 max80 left80 box=small seas=paprika,salt
+REC 119.2 REJ HotPaprika 3
+REC 129.8 switch p1->c2
+REC 135.7 EXPIRED #4 slot4 max150 left0 box=small seas=oil,paprika
+REC 135.7 gen #8 slot4 max140 left140 box=small seas=hot_paprika,cachelos
+REC 146.5 switch p1->c1
+REC 152.3 DONE #5 slot2 max180 left113 box=medium seas=oil pts14
+REC 152.3 gen #9 slot2 max120 left120 box=large seas=hot_paprika,salt
+REC 162.5 switch p1->c2
+REC 170.7 switch p1->c1
+REC 179.4 switch p1->c2
+REC 185.7 EXPIRED #7 slot1 max80 left0 box=small seas=paprika,salt
+REC 185.7 gen #10 slot1 max150 left150 box=small seas=oil,paprika
+REC 198.8 switch p1->c1
+REC 206.8 DONE #6 slot3 max120 left16 box=large seas=hot_paprika,salt pts12
+REC 206.8 gen #11 slot3 max180 left180 box=medium seas=oil
+REC 272.3 EXPIRED #9 slot2 max120 left0 box=large seas=hot_paprika,salt
+REC 272.3 gen #12 slot2 max140 left140 box=small seas=hot_paprika,cachelos
+REC 275.6 EXPIRED #8 slot4 max140 left0 box=small seas=hot_paprika,cachelos
+REC 275.6 gen #13 slot4 max150 left150 box=small seas=oil,paprika
+REC 280.6 ROUND_FINISHED
+# Fin: 3 entregas, 22 €, 0,60 cajas/min, 1 estrella de 3 vacía (Pulpeiro ineficiente).
+
+## Local 2P (J1 WASD+E en el servicio, J2 flechas+Intro en la cocina; teclas a la vez)
+REC2 47.6 DONE #4 slot4 max180 left130 box=medium seas=oil pts14
+REC2 47.6 gen #5 slot4 max150 left150 box=small seas=oil,paprika
+REC2 62.9 REJ HotPaprika 3
+REC2 79.0 DONE #2 slot2 max150 left69 box=small seas=oil,paprika pts8
+REC2 79.0 gen #6 slot2 max100 left100 box=small seas=oil,cachelos
+REC2 118.0 EXPIRED #3 slot3 max120 left0 box=large seas=hot_paprika,salt
+REC2 118.0 gen #7 slot3 max120 left120 box=large seas=hot_paprika,salt
+REC2 126.9 bowl stock 1
+REC2 131.4 bowl stock 0
+REC2 136.8 DONE #1 slot1 max140 left1 box=small seas=hot_paprika,cachelos pts8
+REC2 136.8 gen #8 slot1 max120 left120 box=large seas=hot_paprika,salt
+REC2 179.0 EXPIRED #6 slot2 max100 left0 box=small seas=oil,cachelos
+REC2 179.0 gen #9 slot2 max100 left100 box=small seas=oil,cachelos
+REC2 197.6 EXPIRED #5 slot4 max150 left0 box=small seas=oil,paprika
+REC2 197.6 gen #10 slot4 max100 left100 box=small seas=oil,cachelos
+REC2 238.0 EXPIRED #7 slot3 max120 left0 box=large seas=hot_paprika,salt
+REC2 238.0 gen #11 slot3 max120 left120 box=large seas=hot_paprika,salt
+REC2 256.8 EXPIRED #8 slot1 max120 left0 box=large seas=hot_paprika,salt
+REC2 256.8 gen #12 slot1 max180 left180 box=medium seas=oil
+REC2 279.0 EXPIRED #9 slot2 max100 left0 box=small seas=oil,cachelos
+REC2 279.0 gen #13 slot2 max140 left140 box=small seas=hot_paprika,cachelos
+REC2 293.0 ROUND_FINISHED
+# Tras la 3.ª entrega (137 s) se dejó correr el reloj sin jugar hasta el game over.
