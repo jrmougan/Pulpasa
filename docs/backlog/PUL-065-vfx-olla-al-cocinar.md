@@ -1,7 +1,7 @@
 ---
 id: PUL-065
 title: Encender fuego y vapor de la olla solo al cocinar
-status: draft
+status: superseded
 milestone: M3
 role: gameplay-engineer
 deps: [PUL-048]
@@ -10,6 +10,8 @@ unity_sources: []
 owns: [godot/entities/stations/kitchen.tscn, godot/entities/stations/cooking_station.gd, godot/tests/integration/test_cooking_station.gd, docs/evidence/PUL-065/**]
 touches_scenes: [godot/entities/stations/kitchen.tscn]
 ---
+
+**Absorbida por PUL-069.**
 
 ## Target
 Hallazgo de PUL-048: las partículas de fuego y vapor del caldeiro están siempre encendidas. Must 9
