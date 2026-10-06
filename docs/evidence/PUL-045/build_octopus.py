@@ -14,6 +14,12 @@ from mathutils import Matrix, Vector
 
 M = bpy.data.materials
 
+# Ronda del responsable: el pulpo entero y las rodajas se exageran ×1,4 (art-bible §2.1 permite
+# agrandar lo que se sostiene). Se aplica a los vértices: la escala del objeto sigue en (1, 1, 1).
+WHOLE_SCALE = 1.4
+PIECES_SCALE = 1.4
+PIECES_SPREAD = 1.2
+
 
 def srgb_to_linear(c: float) -> float:
     return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
@@ -33,7 +39,7 @@ def palette_material(name: str, hex_color: str, roughness: float) -> bpy.types.M
     return mat
 
 
-def add_tube(bm, pts, radii, sides, dark_idx, body_idx, twists=None):
+def add_tube(bm, pts, radii, sides, dark_idx, body_idx, twists=None, dark_faces=(0,)):
     """Tubo de `sides` caras con marcos de rotación mínima; la cara ventral (−N) lleva ventosas."""
     n = len(pts)
     tangents = [(pts[min(i + 1, n - 1)] - pts[max(i - 1, 0)]).normalized() for i in range(n)]
@@ -53,16 +59,16 @@ def add_tube(bm, pts, radii, sides, dark_idx, body_idx, twists=None):
     for i in range(n - 1):
         for k in range(sides):
             f = bm.faces.new((rings[i][k], rings[i][(k + 1) % sides], rings[i + 1][(k + 1) % sides], rings[i + 1][k]))
-            f.material_index = dark_idx if k == 0 else body_idx
+            f.material_index = dark_idx if k in dark_faces else body_idx
             f.smooth = True
     tip = bm.verts.new(pts[-1] + tangents[-1] * radii[-1] * 1.5)
     for k in range(sides):
         f = bm.faces.new((rings[-1][k], rings[-1][(k + 1) % sides], tip))
-        f.material_index = dark_idx if k == 0 else body_idx
+        f.material_index = dark_idx if k in dark_faces else body_idx
         f.smooth = True
 
 
-def add_ellipsoid(bm, center, radii, segs, rings, mat_idx, tilt=0.0):
+def add_ellipsoid(bm, center, radii, segs, rings, mat_idx, tilt=0.0, low_idx=None):
     rot = Matrix.Rotation(tilt, 3, "X")
     top = bm.verts.new(center + rot @ Vector((0, 0, radii[2])))
     bot = bm.verts.new(center + rot @ Vector((0, 0, -radii[2])))
@@ -78,10 +84,17 @@ def add_ellipsoid(bm, center, radii, segs, rings, mat_idx, tilt=0.0):
     fs = []
     for k in range(segs):
         fs.append(bm.faces.new((top, rr[0][k], rr[0][(k + 1) % segs])))
-        fs.append(bm.faces.new((bot, rr[-1][(k + 1) % segs], rr[-1][k])))
+        low = bm.faces.new((bot, rr[-1][(k + 1) % segs], rr[-1][k]))
+        low.material_index = mat_idx if low_idx is None else low_idx
+        low.smooth = True
     for j in range(len(rr) - 1):
         for k in range(segs):
-            fs.append(bm.faces.new((rr[j][k], rr[j + 1][k], rr[j + 1][(k + 1) % segs], rr[j][(k + 1) % segs])))
+            f = bm.faces.new((rr[j][k], rr[j + 1][k], rr[j + 1][(k + 1) % segs], rr[j][(k + 1) % segs]))
+            if low_idx is not None and j == len(rr) - 2:
+                f.material_index = low_idx
+                f.smooth = True
+            else:
+                fs.append(f)
     for f in fs:
         f.material_index = mat_idx
         f.smooth = True
@@ -136,7 +149,7 @@ def build_whole(parent, coll, name, state):
                 pts.append(u * s + v * w + Vector((0, 0, h)))
                 radii.append(0.036 * (1 - t) + 0.012 * t)
                 tw.append(side * math.radians(150) * max(0.0, t - 0.25) / 0.75)
-            add_tube(bm, pts, radii, 4, 1, 0, tw)
+            add_tube(bm, pts, radii, 4, 1, 0, tw, dark_faces=(0, 1, 3))
     else:
         # Cuerpo más pequeño, patas enroscadas hacia arriba (ventosas por fuera del rizo).
         mc, mr, tilt = Vector((0, -0.01, 0.135)), (0.085, 0.09, 0.11), math.radians(8)
@@ -161,10 +174,11 @@ def build_whole(parent, coll, name, state):
                 pts.append(u * s + v * w + Vector((0, 0, h)))
                 radii.append(0.031 * (1 - tt) + 0.011 * tt)
             add_tube(bm, pts, radii, 4, 1, 0)
-    add_ellipsoid(bm, mc, mr, 8, 5, 0, tilt)
+    add_ellipsoid(bm, mc, mr, 8, 5, 0, tilt, low_idx=1 if state == "raw" else None)
     for sx in (-1, 1):
         p, n = ellipsoid_point(mr, Vector((0.38 * sx, 1.0, 0.25)), tilt)
         add_eye(bm, mc + p, n, 0.03, 0.016, 2, 3)
+    bmesh.ops.scale(bm, vec=Vector((WHOLE_SCALE,) * 3), verts=bm.verts)
     bm.to_mesh(me)
     bm.free()
     ob = bpy.data.objects.new(name, me)
@@ -252,7 +266,8 @@ def build_pieces():
         for x, y in spots:
             axis = "X" if i % 2 else "Y"
             tilt = math.radians(8 + 7 * (i % 3)) * (1 if i % 4 < 2 else -1)
-            add_slice(bm, Vector((x, y, PIECE_BASE_Z[layer])), 0.03, 0.02, axis, tilt, 0, 1, sides=8)
+            center = Vector((x * PIECES_SPREAD, y * PIECES_SPREAD, PIECE_BASE_Z[layer] * PIECES_SCALE))
+            add_slice(bm, center, 0.03 * PIECES_SCALE, 0.02 * PIECES_SCALE, axis, tilt, 0, 1, sides=8)
             i += 1
         bm.to_mesh(me)
         bm.free()

@@ -57,9 +57,9 @@ Ajuste de la biblia (§4): separar `octopus_pieces` (rodajas) para el contenido 
   `mat_octopus_pieces[_cut]` con hex exacto, no estaban en la plantilla).
   | Malla | Triángulos | Medidas (ancho × fondo × alto, m) |
   |---|---|---|
-  | `octopus_raw` | 440 (≤ 600) | 0,46 × 0,47 × 0,19 |
-  | `octopus_cooked` | 568 (≤ 600) | 0,42 × 0,42 × 0,24 |
-  | `octopus_pieces` (a+b+c: 7+5+3 rodajas Ø 0,06) | 420 (≤ 600) | 0,22 × 0,21 × 0,08 |
+  | `octopus_raw` | 440 (≤ 600) | 0,65 × 0,66 × 0,26 |
+  | `octopus_cooked` | 568 (≤ 600) | 0,59 × 0,59 × 0,33 |
+  | `octopus_pieces` (a+b+c: 7+5+3 rodajas Ø 0,084) | 420 (≤ 600) | 0,28 × 0,27 × 0,11 |
   Ventosas: cara ventral de cada pata en el tono oscuro; en el cocido quedan por fuera del rizo
   (visibles desde arriba), en el crudo asoman en las puntas giradas. Base en z = 0, frente +Y
   (ojos) → −Z en Godot. Geometría reproducible: `docs/evidence/PUL-045/build_octopus.py`.
@@ -77,8 +77,25 @@ Ajuste de la biblia (§4): separar `octopus_pieces` (rodajas) para el contenido 
   quemado con/sin malla propia, cachelos mantiene el cambio de material) y
   `test_cooking_station.gd::test_ac2_cooked_octopus_shows_cooked_mesh` (visibilidad + el cocido
   usa `mat_octopus_cooked` y no `mat_octopus_raw`).
-- **Observaciones**: el crudo sobre la encimera (`wood_light`, L ≈ 0,44) se separa por forma y
-  sombreado más que por luminosidad (§3.1.3); si en la revisión se ve flojo, opción barata: borde
-  oscuro o sombra de contacto. `ph_octopus_*.tres` y los placeholders `octopus_raw/cooked.tscn`
+- **Observaciones**: `ph_octopus_*.tres` y los placeholders `octopus_raw/cooked.tscn`
   siguen usados por `scale_check.tscn`, no se tocan. Pendiente del coordinador: licencia propia en
   `docs/assets/licenses.md` (Change 4).
+
+### Ronda del responsable (estilo aprobado; fija el de los demás assets)
+- **Tamaño ×1,4** (§2.1, exagerar lo que se sostiene): aplicado a los vértices en el `.blend`
+  (`WHOLE_SCALE`/`PIECES_SCALE` en `build_octopus.py`); escala de objeto y de nodo en (1, 1, 1).
+  Crudo 0,46 → 0,65 m, cocido 0,42 → 0,59 m; rodajas Ø 0,06 → 0,084 m con el montón a 0,28 m
+  (cabe en la caja pequeña de 0,34 m de §3.4). Triángulos sin cambios.
+- **Crudo legible sobre `wood_light`**: los costados y la cara ventral de cada pata y la banda
+  inferior del manto pasan a `octopus_raw_dark` `#9A8294` (L ≈ 0,25, 1,6:1 frente a la madera);
+  el manto sigue `#C9B0BC`, así que el par crudo/cocido mantiene 3,1:1 (§3.2) y la silueta.
+- **Capturas nuevas** (cámara de `level_01`, 1920×1080): `level_camera_raw_cooked_pieces.png`
+  (crudo, cocido y rodajas sobre la mesa de pase, y J1/J2 con pulpo en la mano),
+  `level_camera_zoom_crop.png` (mesa, ×3), `level_camera_in_hand.png` (J1 de frente con el crudo,
+  J2 de lado con el cocido, ×3) y `blender_render.png` (sobre `wood_light`).
+- **Encaje**: en la mano (`HoldPoint` a 0,45 m del eje, cápsula placeholder de r 0,21) el pulpo
+  entra 6–9 cm por detrás en la cápsula; de frente queda tapado por el propio pulpo y de lado se
+  ve en el borde de la cápsula. No toco `HoldPoint` (fuera de `owns`): lo resuelve el
+  `Anchor_Hold` del personaje definitivo (PUL-044) o adelantar `HoldPoint` ~0,1 m. Colisión del
+  pulpo sin cambios (esfera r 0,26; las patas sobresalen en planta, no se ve). La caja actual es
+  un cubo macizo placeholder: el encaje de las rodajas se comprueba por medidas y queda para PUL-047.
