@@ -1,7 +1,7 @@
 ---
 id: PUL-054
 title: Modelar las encimeras modulares
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)

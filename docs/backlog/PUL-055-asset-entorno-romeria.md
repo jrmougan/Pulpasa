@@ -1,7 +1,7 @@
 ---
 id: PUL-055
 title: Modelar el entorno de romería
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)

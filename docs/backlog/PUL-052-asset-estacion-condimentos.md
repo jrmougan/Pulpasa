@@ -1,7 +1,7 @@
 ---
 id: PUL-052
 title: Modelar la estación de condimentos
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
