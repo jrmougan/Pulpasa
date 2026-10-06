@@ -1,12 +1,12 @@
 ---
 id: PUL-055
 title: Modelar el entorno de romería
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043, PUL-041]
-orca_task: null
+orca_task: task_0fc2042b0bf3
 unity_sources: []
 owns: [art/blender/romeria.blend, godot/assets/models/environment/romeria/**, godot/entities/environment/environment.tscn, docs/evidence/PUL-055/**]
 touches_scenes: [godot/entities/environment/environment.tscn]
