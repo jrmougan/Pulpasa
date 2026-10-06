@@ -4,7 +4,7 @@ title: Convertir el arcón en tanque de pulpos
 status: draft
 milestone: M3b
 role: asset-pipeline
-deps: [PUL-072, PUL-074]
+deps: [PUL-072, PUL-074, PUL-076]
 orca_task: null
 unity_sources: []
 owns: [art/blender/octopus_storage.blend, godot/assets/models/stations/octopus_storage/**, godot/entities/stations/octopus_storage.tscn, docs/evidence/PUL-079/**]
