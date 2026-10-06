@@ -83,20 +83,18 @@ func test_burnt_state_uses_burnt_mesh_or_falls_back_to_cooked() -> void:
 
 
 func test_model_without_state_meshes_keeps_material_swap() -> void:
-	# Sin mallas hermanas `_raw`/`_cooked` (cachelos con su placeholder) se cambia el material.
-	var scene: PackedScene = load("res://entities/items/cachelos.tscn")
-	var cachelos: Ingredient = scene.instantiate()
-	add_child_autofree(cachelos)
-	assert_not_null(cachelos.cooked_material)
-	cachelos.set_cooked()
-	var cooked: int = 0
-	for mesh: Node in cachelos.get_node("Model").find_children("*", "MeshInstance3D"):
-		if (mesh as MeshInstance3D).material_override == cachelos.cooked_material:
-			cooked += 1
-	assert_gt(cooked, 0, "el cuerpo usa el material de cocido")
+	# Sin mallas hermanas `_raw`/`_cooked` (un modelo de un solo estado) se cambia el material.
+	var raw_material: StandardMaterial3D = StandardMaterial3D.new()
+	var cooked_material: StandardMaterial3D = StandardMaterial3D.new()
+	var ingredient: Ingredient = _variant_ingredient(["body"], raw_material)
+	ingredient.raw_material = raw_material
+	ingredient.cooked_material = cooked_material
+	ingredient.set_cooked()
+	var body: MeshInstance3D = ingredient.get_node("Model/body")
+	assert_eq(body.material_override, cooked_material, "el cuerpo usa el material de cocido")
 
 
-func _variant_ingredient(mesh_names: Array[String]) -> Ingredient:
+func _variant_ingredient(mesh_names: Array[String], material: Material = null) -> Ingredient:
 	var ingredient: Ingredient = Ingredient.new()
 	var model: Node3D = Node3D.new()
 	model.name = "Model"
@@ -104,6 +102,7 @@ func _variant_ingredient(mesh_names: Array[String]) -> Ingredient:
 	for mesh_name: String in mesh_names:
 		var mesh: MeshInstance3D = MeshInstance3D.new()
 		mesh.name = mesh_name
+		mesh.material_override = material
 		model.add_child(mesh)
 		mesh.owner = ingredient
 	add_child_autofree(ingredient)
