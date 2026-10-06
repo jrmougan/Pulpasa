@@ -4,6 +4,9 @@
 - **Ficha:** PUL-003; enmienda de la estación de condimentos y la planta B en PUL-056
   (2026-10-05, D18/D19, ADR-003 §8), **pendiente del gate humano**: §2, §3 (caja, slot, estación),
   §5, §6 y §7 (bajas). Lo marcado **M2b** lo implementan PUL-057..PUL-061.
+- **Enmienda M3** (PUL-066, 2026-10-06, ADR-006), **pendiente del gate humano**: `AudioDirector`
+  (§1), `LevelAudio` (§2), `%Feedback` y quemado en las entidades (§3), datos de audio, fases y
+  quemado (§5), equivalencia 2D (§6) y §8 (buses). Lo marcado **M3** lo implementan PUL-069..071.
 
 Árbol que debe existir al cerrar M0 (fase 8). Rutas relativas a `godot/` (estructura de ADR-001).
 `%Nombre` = nodo con nombre único de escena. Entre corchetes, la fase de M0 en que se crea la
@@ -23,6 +26,7 @@ nombres de escena, `class_name`, `@export` públicos, grupos, capas y señales l
 ├── GameState       autoload/game_state.gd       [0]   process_mode ALWAYS
 ├── OrderService    autoload/order_service.gd    [0, lógica en 2]  adaptador de core/order_board.gd
 ├── RoundManager    autoload/round_manager.gd    [0, lógica en 2]  adaptador de core/round_state.gd; único reloj (_physics_process)
+├── AudioDirector   autoload/audio_director.gd   [M3]  process_mode ALWAYS; adaptador de core/audio_mix.gd; volumen de buses y bajada en pausa (no reproduce)
 └── <escena actual> main_menu.tscn → level_01.tscn  (boot.tscn: entrada alternativa que salta al menú)
 ```
 
@@ -87,6 +91,7 @@ Level01 (Node3D)                         scenes/levels/level.gd  (común, extend
 │   └── Player2          entities/player/player.tscn  player_index = 2, celda (2, 2) (cocina)                                         [M2]
 ├── CharacterSwitcher    entities/player/character_switcher.tscn  (común) characters = [Player1/%Control, Player2/%Control]  [M2]
 ├── Items (Node3D)       destino de los objetos soltados (ADR-003 §6)
+├── LevelAudio           entities/environment/level_audio.tscn  (común) BG, FOL y cue de fase; process_mode ALWAYS  [M3]
 ├── CameraRig            entities/camera/camera_rig.tscn  Camera3D ortográfica fija (size 12,74, D14) [4]
 └── UI (CanvasLayer)
     ├── HUD              ui/hud/hud.tscn                          [7]
@@ -112,7 +117,8 @@ Player (CharacterBody3D, capa player)     player.gd  class_name Player
 ├── %InteractionDetector (Area3D)          components/interaction_detector.gd  máscara interactable
 │   └── CollisionShape3D (Sphere, radio de PlayerConfig)
 ├── %InteractionComponent (Node)           components/interaction_component.gd  (común) @export control, holder, detector
-└── %ActiveIndicator (MeshInstance3D)      aro bajo el personaje [M2]
+├── %ActiveIndicator (MeshInstance3D)      aro bajo el personaje [M2]
+└── %Feedback (FeedbackPlayer)             cues pick_up / drop desde item_picked_up / item_dropped de %HoldComponent [M3]
 ```
 Un único detector (B7). Movimiento 5 m/s y giro en `PlayerConfig.tres`.
 
@@ -125,7 +131,7 @@ octopus.tscn [6]   Octopus (RigidBody3D, capa interactable; grupos pickable, int
 box.tscn [6]       Box (RigidBody3D; grupos pickable, interactable, box [M2b])  box.gd  class_name Box  @export data: BoxData
                    ├── CollisionShape3D, Model, %AnchorPoint, %AnimationPlayer (box_open / box_close), Lid
                    ├── %Highlightable, %FillBar (world_progress_bar.tscn)
-                   ├── %CutAudio, %SeasonAudio (AudioStreamPlayer3D)
+                   ├── %CutAudio, %SeasonAudio (AudioStreamPlayer3D)  → M3: un %Feedback (FeedbackPlayer): cut, season, unseason
                    └── %BadgeRow (Node3D)  badge_row.gd  class_name BadgeRow  [M2b, PUL-059]
                        @export box: Box (el padre), @export style: BoxBadgeStyle = data/config/box_badges.tres
                        hijos Sprite3D creados en código, uno por condimento: billboard, no_depth_test,
@@ -155,8 +161,13 @@ octopus_storage.tscn  OctopusStorage (StaticBody3D; grupo interactable)  item_sp
                       ├── CollisionShape3D, Model (nevera), %Highlightable
 kitchen.tscn          Kitchen (StaticBody3D; grupos interactable, kitchen)  cooking_station.gd
                       ├── CollisionShape3D, Model (olla + fogón), %AnchorPoint, %Highlightable
-                      ├── %CookBar (world_progress_bar.tscn), %BoilAudio (AudioStreamPlayer3D)
+                      ├── %CookBar (world_progress_bar.tscn), %BoilAudio (AudioStreamPlayer3D, bus SFX)
+                      ├── Model/Fire, Model/Steam (GPUParticles3D)  [M3] vapor solo con plazas cociendo; fuego bajo en reposo, vivo al cocer
+                      ├── %Feedback (FeedbackPlayer)  [M3] cook_start, cook_done, burn_warning, burnt, discard
                       └── (reloj interno en _physics_process, sin nodo Timer; cook_time desde IngredientData; se congela con la pausa)
+                          [M3] tras cooking_finished la plaza sigue contando: warn_time → burn_warned (barra visible y
+                          parpadeando), burn_time → Ingredient.set_burnt() + burnt; mano vacía: desecha el BURNT más
+                          antiguo (discarded, queue_free) antes de dar un cocido FIFO
 box_shelf.tscn        BoxShelf (StaticBody3D)  Model (mueble)
                       ├── SmallSpawner  (StaticBody3D; interactable)  item_spawner.gd  scene = box.tscn, data = small.tres
                       ├── MediumSpawner …                                                 data = medium.tres
@@ -172,8 +183,11 @@ order_stand.tscn      OrderStand (StaticBody3D; grupo interactable)  order_stand
                       ├── CollisionShape3D, Model (order_stand)
                       ├── %DeliveryZone (Area3D, capa delivery_zone)   body_entered → intenta entregar (B12: también al interactuar)
                       ├── %OrderLabel (Label3D, billboard)             "#id" o "–"
-                      └── %OkAudio, %ErrorAudio (AudioStreamPlayer3D)
+                      └── %OkAudio, %ErrorAudio (AudioStreamPlayer3D)  → M3: un %Feedback (FeedbackPlayer), pulse_target = el puesto:
+                          deliver_ok (POP), deliver_error (SHAKE), order_new (POP de %OrderLabel, delay), order_expired (SHAKE de %OrderLabel)
 ```
+Un puesto sin comanda (también los que una fase aún no abre, M3) muestra «–»; entregar en él da
+`delivery_rejected(slot_id, −1, 0)` como hoy.
 Los modelos de nevera, olla, fogón y mesas dependen de D6 (Pandazole o sustitutos).
 
 ### `entities/stations/` — estación de condimentos [M2b] (D18, ADR-003 §8)
@@ -201,7 +215,7 @@ SeasoningStation (StaticBody3D, capa world; sin grupos)   seasoning_station.gd  
 │   └── Oil           seasoning_dispenser.tscn  seasoning = data/seasonings/oil.tres
 │                     (cada uno: station = SeasoningStation, override de referencia dentro de la escena)
 ├── CachelosBowl  cachelos_bowl.tscn     extremo del mostrador; station = SeasoningStation
-└── %ErrorAudio (AudioStreamPlayer3D)    sonido de rechazo (dispensadores, cuenco)
+└── %ErrorAudio (AudioStreamPlayer3D)    sonido de rechazo (dispensadores, cuenco) → M3: %Feedback (FeedbackPlayer), cue season_error
 
 seasoning_dispenser.tscn
 SeasoningDispenser (StaticBody3D, capa interactable; grupo interactable)   seasoning_dispenser.gd  class_name SeasoningDispenser
@@ -232,6 +246,24 @@ Cada dispensador y el cuenco son escenas propias para que cada uno tenga su `%Hi
 (hijo directo, como lo busca `InteractionDetector`) y para que las 4 variantes sean una escena +
 `SeasoningData` (ADR-003 §1). La caja en la bandeja se sigue pudiendo cortar (D1): el detector
 sustituye `Tray` por la caja guardada, como en cualquier `Slot`.
+
+### `entities/environment/level_audio.tscn` [M3] (común, ADR-006 §2)
+```
+LevelAudio (Node, process_mode ALWAYS)   level_audio.gd
+│   @export music: AudioStream, @export ambience: AudioStream (bucles de PUL-068)
+│   @export map: AudioFeedbackMap = data/audio/feedback_map.tres
+│   round_started → arranca %Music y %Ambience; phase_changed(n ≥ 2) → %PhaseCue con la cue phase_up
+├── %Music     (AudioStreamPlayer, bus Music)
+├── %Ambience  (AudioStreamPlayer, bus Ambience)
+└── %PhaseCue  (AudioStreamPlayer, bus SFX, process_mode INHERIT)
+```
+`ALWAYS` en la raíz para que BG y FOL sigan en pausa, atenuados por `AudioDirector` (AC3).
+
+### `components/feedback_player.gd` [M3] (específico, ADR-006 §4)
+`FeedbackPlayer extends AudioStreamPlayer3D` (`class_name`). `@export map: AudioFeedbackMap`,
+`@export pulse_target: Node3D` (por defecto el padre). `bus` = `SFX`, `max_polyphony` ≥ 2.
+`play_cue(cue: StringName, target: Node3D = null)`: un `play()` por llamada, `signal played(cue)`,
+respuesta visual `POP`/`SHAKE` con un `Tween` del nodo (`visual_time` ≥ 0,3 s, se congela en pausa).
 
 ## 4. Escenas de UI [7]
 ```
@@ -264,6 +296,16 @@ data/config/round_config.tres                    RoundConfig    (duration 180 en
 data/config/player_config.tres                   PlayerConfig   (speed 5, rotation_speed 20, detector_radius 2.2: valor efectivo en Level_01 del prototipo; 1,5 en el prefab)
 data/config/input_config.tres                    InputConfig    (deadzone 0.2, switch_cooldown 0.2)
 ```
+**M3** (ADR-006):
+```
+data/config/round_config.tres                    RoundConfig    + phases: Array[PhaseData] (sub-recursos: 0 / ⅓ / ⅔ ·
+                                                 2 / 3 / 4 puestos · max_time 90 / 70 / 50), + rng_seed: int (0 = aleatoria)
+data/ingredients/{octopus,cachelos}.tres         IngredientData + burn_time (10; 0 = no se quema), warn_time (7)
+data/audio/feedback_map.tres                     AudioFeedbackMap (cues: Dictionary[StringName, AudioCue]; claves de ADR-006 §4)
+data/audio/audio_mix.tres                        AudioMixConfig (music 0.7, ambience 0.7, sfx 1.0, pause_duck_db −12)
+resources/{phase_data,audio_cue,audio_feedback_map,audio_mix_config}.gd   PhaseData, AudioCue, AudioFeedbackMap, AudioMixConfig
+core/audio_mix.gd                                AudioMix (núcleo de AudioDirector)
+```
 
 ## 6. Equivalencias si D14 = 2D
 
@@ -283,6 +325,7 @@ Misma estructura y nombres; cambian el nodo base y los hijos visuales/físicos.
 | `Label3D` billboard (`OrderLabel`) | `Label` bajo un `Node2D` | |
 | `world_progress_bar` (`Sprite3D` + `SubViewport`) | `TextureProgressBar` bajo un `Node2D` | Más simple en 2D |
 | `AudioStreamPlayer3D` | `AudioStreamPlayer2D` | |
+| `FeedbackPlayer extends AudioStreamPlayer3D` (`pulse_target: Node3D`) | `extends AudioStreamPlayer2D` (`pulse_target: Node2D`) | Misma API `play_cue()` / `played` y mismo `AudioFeedbackMap` |
 | `CameraRig` (`Camera3D` fija) | `Camera2D` fija | |
 | `%ActiveIndicator` (aro `MeshInstance3D`) | `Sprite2D` bajo los pies | |
 | `%BadgeRow` (`Sprite3D` billboard sin test de profundidad) | `HBoxContainer` o `Sprite2D` bajo un `Node2D` con `z_index` alto | Misma API `get_shown()` |
@@ -302,3 +345,10 @@ Misma estructura y nombres; cambian el nodo base y los hijos visuales/físicos.
 
 Se mantienen: `SeasoningData` y los cinco `.tres`, `BoxContents`, `OrderValidator` (coincidencia
 exacta), `IngredientData.as_seasoning` y la señal local `seasoned`.
+
+## 8. Buses de audio (M3, ADR-006 §1)
+
+`godot/default_bus_layout.tres` (lo carga Godot sin tocar `project.godot`):
+`Master` ← `Music`, `Ambience`, `SFX`. Todo `AudioStreamPlayer*` de las escenas declara bus
+(`SFX` salvo `%Music`/`%Ambience` de `LevelAudio`); ninguno en `Master`. Solo `AudioDirector`
+escribe `AudioServer.set_bus_volume_db`.
