@@ -78,6 +78,7 @@ var _window_size: Vector2i
 
 
 func before_each() -> void:
+	PhaselessConfig.disable()
 	GameState.set_paused(false)
 	_window_size = get_tree().root.size
 
@@ -92,6 +93,7 @@ func after_each() -> void:
 		if was_current:
 			get_tree().current_scene = null
 	_level = null
+	PhaselessConfig.restore()
 
 
 func _load_level() -> Node:

@@ -32,6 +32,7 @@ var _expected_revenue: int = 0
 
 
 func before_each() -> void:
+	PhaselessConfig.disable()
 	watch_signals(EventBus)
 	_order_data = _real_cachelos_order()
 	var catalog: OrderCatalog = OrderCatalog.new()
@@ -53,6 +54,7 @@ func before_each() -> void:
 
 func after_each() -> void:
 	GameState.set_paused(false)
+	PhaselessConfig.restore()
 
 
 func _real_cachelos_order() -> OrderData:

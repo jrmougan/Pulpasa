@@ -28,6 +28,7 @@ var _now: float = 100.0
 
 
 func before_each() -> void:
+	PhaselessConfig.disable()
 	GameState.set_paused(false)
 
 
@@ -42,6 +43,7 @@ func after_each() -> void:
 		if was_current:
 			get_tree().current_scene = null
 	_level = null
+	PhaselessConfig.restore()
 
 
 # --- Utilidades --------------------------------------------------------------------------------
@@ -456,7 +458,10 @@ func test_ac6_round_end_and_retry_reset_state() -> void:
 	assert_null(_kitchen().get_ingredient())
 	assert_eq(_alive("Box").size() + _alive("Ingredient").size(), 0)
 	assert_false((_level.get_node("UI/GameOver") as Control).visible)
-	# El HUD muestra el reloj tras avanzar el first_order_delay para tener comandas.
-	var expected_time: String = "%.1fs" % (ROUND_CONFIG.duration - ROUND_CONFIG.first_order_delay)
-	assert_eq((_level.get_node("UI/HUD/%TimeLeft") as Label).text, expected_time)
+	# El HUD muestra el reloj tras avanzar el first_order_delay para tener comandas. Margen de unos
+	# ticks: entre el reintento y la lectura corre el reloj real (PUL-070, flaky «294.9s»).
+	var expected_time: float = ROUND_CONFIG.duration - ROUND_CONFIG.first_order_delay
+	var shown: String = (_level.get_node("UI/HUD/%TimeLeft") as Label).text
+	assert_true(shown.ends_with("s"), "formato del reloj: %s" % shown)
+	assert_almost_eq(shown.trim_suffix("s").to_float(), expected_time, 0.25)
 	assert_false(get_tree().paused)
