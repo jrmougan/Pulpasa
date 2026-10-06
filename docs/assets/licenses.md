@@ -19,8 +19,6 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `art/blender/seasoning_station.blend` (PUL-052, D20) | `assets/models/stations/seasoning_station/*.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/counters.blend` (PUL-054, D20) | `assets/models/furniture/counters/*.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/romeria.blend` (PUL-055, D20) | `assets/models/environment/romeria/{ground,tent,decor}.glb` | Propio (equipo Pulpasa) | No |
-| `Art/Furniture/Mueblecajas.fbx` | `assets/models/furniture/Mueblecajas.fbx` (+ envoltorio `Mueblecajas.tscn`) | Propio (equipo Pulpasa) | No |
-| `Art/Furniture/order_stand.fbx` | `assets/models/furniture/order_stand.fbx` | Propio (equipo Pulpasa) | No |
 | `Art/Materials/**` (colores y parámetros; sin texturas) | `assets/materials/*.tres` | Propio | No |
 | `Animations/Packaging/Box/*.anim` | — | Propio | No |
 | https://opengameart.org/content/boiling-water-loops (`cooking_without_cover_01.ogg`, TinyWorlds) | `assets/audio/boiling_water_loop.ogg` (loop en import) | CC0 | No |
@@ -38,10 +36,6 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | https://game-icons.net/1x1/delapouite/potato.html («Potato», Delapouite) | `assets/textures/icons/potato.svg` | CC BY 3.0 | Sí: «Potato» por Delapouite, game-icons.net |
 | https://game-icons.net/1x1/delapouite/round-star.html («Round star», Delapouite) | `assets/textures/icons/star_full.svg` | CC BY 3.0 | Sí: «Round star» por Delapouite, game-icons.net |
 | Derivado de https://game-icons.net/1x1/delapouite/round-star.html («Round star», Delapouite) | `assets/textures/icons/star_empty.svg` | CC BY 3.0 | Sí: modificación de «Round star» por Delapouite, game-icons.net |
-| Propio (primitivas; dimensiones junto a la olla de PUL-008) | `assets/models/placeholders/oil_bottle.tscn` | Propio | No |
-| Propio (primitivas) | `assets/models/placeholders/cachelos_raw.tscn` | Propio | No |
-| Propio (primitivas) | `assets/models/placeholders/cachelos_cooked.tscn` | Propio | No |
-| Propio (primitivas) | `assets/models/placeholders/cachelera.tscn` | Propio | No |
 | Propio | `assets/materials/ph_oil.tres`, `ph_oil_liquid.tres`, `ph_cachelo_raw.tres`, `ph_cachelo_cooked.tres` | Propio | No |
 | https://game-icons.net/1x1/lorc/small-fire.html («Small fire», Lorc; verificado contra https://raw.githubusercontent.com/game-icons/icons/master/lorc/small-fire.svg, sin el fondo negro) | `assets/textures/icons/small-fire.svg` | CC BY 3.0 | Sí: «Small fire» por Lorc, game-icons.net |
 | `assets/textures/icons/pepper-hot-solid.svg` (ya listado en `licenses.md`): solo se añade `fill="#fff"` | `assets/textures/icons/pepper-hot-solid.svg` | MIT (o Good Boy License) | Sí: Icons8, Line Awesome |
@@ -52,7 +46,7 @@ Los SVG de game-icons.net se modifican quitando el rectángulo negro de fondo. A
 
 | Asset | Destino en `godot/` | Licencia | Atribución requerida |
 |---|---|---|---|
-| Placeholders de primitivas (olla, fogón, nevera, 3 mesas, 3 cajas, bote, 2 pulpos, personaje); dimensiones tomadas de prefabs Unity y Pandazole solo como medida | `assets/models/placeholders/*.tscn` | Propio (creados por el equipo) | No |
+| Placeholders de primitivas que siguen en uso (`box_small`, `table_square`; el resto, en «Retirados»); dimensiones tomadas de prefabs Unity y Pandazole solo como medida | `assets/models/placeholders/*.tscn` | Propio (creados por el equipo) | No |
 | Materiales `ph_*` de los placeholders | `assets/materials/ph_*.tres` | Propio | No |
 
 Los materiales `hot_pepper_quad`, `salt_quad`, `octopus_symbol` y `reticule` conservan solo el color
@@ -70,6 +64,18 @@ de Unity; sus texturas (iconos sin origen) no se importan.
 | `Art/UI/ticket_dentado.png` | Propio probable |
 | `Audio/SFX/*` | Sin metadatos |
 | `OCRAEXT.TTF` | Licencia desconocida |
+
+## Retirados
+Quitados del repositorio en PUL-067 (sustituidos por el arte propio de M3, D20); todos eran propios, sin atribución.
+
+| Asset | Antes en `godot/` | Sustituido por |
+|---|---|---|
+| Placeholders de primitivas: olla, fogón, nevera, 2 mesas (larga, media), 2 cajas (media, grande), 2 pulpos, personaje | `assets/models/placeholders/{pot,stove,fridge,table_long,table_medium,box_medium,box_large,octopus_raw,octopus_cooked,character}.tscn` | `.glb` de PUL-045..055 |
+| Placeholders de PUL-031: bote de aceite, cachelos crudo/cocido, cachelera | `assets/models/placeholders/{oil_bottle,cachelos_raw,cachelos_cooked,cachelera}.tscn` | PUL-046, PUL-050 |
+| `Art/Furniture/Mueblecajas.fbx` (+ envoltorio `Mueblecajas.tscn`) | `assets/models/furniture/Mueblecajas.*` | `box_shelf.glb` (PUL-051) |
+| `Art/Furniture/order_stand.fbx` | `assets/models/furniture/order_stand.fbx` | `order_stand.glb` (PUL-053) |
+
+Los materiales `ph_*` se conservan por ahora (fuera de `owns` de PUL-067).
 
 ## Descartados
 Pandazole Kitchen Assets (D15), Kevin Iglesias Human Animations (sin uso).

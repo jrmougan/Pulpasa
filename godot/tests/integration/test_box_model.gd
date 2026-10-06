@@ -132,3 +132,19 @@ func test_contract_nodes_survive_the_new_model() -> void:
 		(box.get_node("CollisionShape3D") as CollisionShape3D).shape as BoxShape3D
 	)
 	assert_eq(shape.size, Vector3(0.396, 0.333, 0.375))
+
+
+func test_collision_matches_the_model_of_each_size() -> void:
+	var expected: Dictionary[BoxData, Vector3] = {
+		SMALL: Vector3(0.338, 0.284, 0.320),
+		MEDIUM: Vector3(0.396, 0.333, 0.375),
+		LARGE: Vector3(0.491, 0.414, 0.466),
+	}
+	var shapes: Array[Shape3D] = []
+	for data: BoxData in expected:
+		var box: Box = _box(data)
+		var body: CollisionShape3D = box.get_node("CollisionShape3D") as CollisionShape3D
+		assert_eq((body.shape as BoxShape3D).size, expected[data], str(data.display_name))
+		shapes.append(body.shape)
+	assert_ne(shapes[0], shapes[1], "las cajas no comparten la forma")
+	assert_ne(shapes[1], shapes[2], "las cajas no comparten la forma")
