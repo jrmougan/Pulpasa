@@ -1,8 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://entities/stations/cooking_station.gd" id="1_ydm4a"]
-[ext_resource type="PackedScene" path="res://assets/models/placeholders/stove.tscn" id="2_stuuy"]
-[ext_resource type="PackedScene" path="res://assets/models/placeholders/pot.tscn" id="3_ul6k6"]
+[ext_resource type="PackedScene" path="res://assets/models/stations/pot/pot.glb" id="2_potglb"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_1hu86"]
 [ext_resource type="PackedScene" path="res://ui/widgets/world_progress_bar.tscn" id="5_b5ifj"]
 [ext_resource type="AudioStream" path="res://assets/audio/boiling_water_loop.ogg" id="6_vfll8"]
@@ -10,6 +9,84 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_lbwrb"]
 size = Vector3(0.9, 1.69, 0.78)
+
+[sub_resource type="Gradient" id="Gradient_fire"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(1, 0.6901961, 0.18039216, 1, 0.78431374, 0.40392157, 0.18039216, 0.8, 0.78431374, 0.40392157, 0.18039216, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fire"]
+gradient = SubResource("Gradient_fire")
+
+[sub_resource type="Curve" id="Curve_fire"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.2), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_fire"]
+curve = SubResource("Curve_fire")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fire"]
+emission_shape = 1
+emission_sphere_radius = 0.1
+direction = Vector3(0, 1, 0)
+spread = 15.0
+initial_velocity_min = 0.35
+initial_velocity_max = 0.6
+gravity = Vector3(0, 0, 0)
+scale_min = 0.7
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_fire")
+color_ramp = SubResource("GradientTexture1D_fire")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fire"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_fire"]
+material = SubResource("StandardMaterial3D_fire")
+radius = 0.05
+height = 0.14
+radial_segments = 6
+rings = 3
+
+[sub_resource type="Gradient" id="Gradient_steam"]
+offsets = PackedFloat32Array(0, 0.25, 1)
+colors = PackedColorArray(0.95686275, 0.96862745, 0.972549, 0, 0.95686275, 0.96862745, 0.972549, 0.4, 0.95686275, 0.96862745, 0.972549, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_steam"]
+gradient = SubResource("Gradient_steam")
+
+[sub_resource type="Curve" id="Curve_steam"]
+_data = [Vector2(0, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_steam"]
+curve = SubResource("Curve_steam")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_steam"]
+emission_shape = 1
+emission_sphere_radius = 0.25
+direction = Vector3(0, 1, 0)
+spread = 10.0
+initial_velocity_min = 0.2
+initial_velocity_max = 0.35
+gravity = Vector3(0, 0, 0)
+scale_min = 0.8
+scale_max = 1.3
+scale_curve = SubResource("CurveTexture_steam")
+color_ramp = SubResource("GradientTexture1D_steam")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_steam"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_steam"]
+material = SubResource("StandardMaterial3D_steam")
+radius = 0.07
+height = 0.14
+radial_segments = 8
+rings = 4
 
 [node name="Kitchen" type="StaticBody3D" unique_id=784504761 groups=["interactable", "kitchen"]]
 collision_layer = 4
@@ -23,14 +100,27 @@ shape = SubResource("BoxShape3D_lbwrb")
 
 [node name="Model" type="Node3D" parent="." unique_id=656174515]
 
-[node name="Stove" parent="Model" unique_id=1602477015 instance=ExtResource("2_stuuy")]
+[node name="Pot" parent="Model" unique_id=23962942 instance=ExtResource("2_potglb")]
 
-[node name="Pot" parent="Model" unique_id=23962942 instance=ExtResource("3_ul6k6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04, 0)
+[node name="Fire" type="GPUParticles3D" parent="Model" unique_id=1602477015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+amount = 14
+lifetime = 0.5
+visibility_aabb = AABB(-0.3, -0.1, -0.3, 0.6, 0.5, 0.6)
+process_material = SubResource("ParticleProcessMaterial_fire")
+draw_pass_1 = SubResource("SphereMesh_fire")
+
+[node name="Steam" type="GPUParticles3D" parent="Model" unique_id=1219733114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+amount = 8
+lifetime = 1.6
+visibility_aabb = AABB(-0.5, -0.1, -0.5, 1, 1, 1)
+process_material = SubResource("ParticleProcessMaterial_steam")
+draw_pass_1 = SubResource("SphereMesh_steam")
 
 [node name="AnchorPoint" type="Marker3D" parent="." unique_id=1694837291]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0.86, 0)
 
 [node name="Highlightable" type="Node" parent="." unique_id=1778785007]
 unique_name_in_owner = true
@@ -38,7 +128,7 @@ script = ExtResource("4_1hu86")
 
 [node name="CookBar" parent="." unique_id=1276433737 instance=ExtResource("5_b5ifj")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 
 [node name="BoilAudio" type="AudioStreamPlayer3D" parent="." unique_id=1018274005]
 unique_name_in_owner = true
