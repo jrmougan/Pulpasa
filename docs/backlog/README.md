@@ -80,7 +80,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-065 | M3 | gameplay-engineer | superseded | Encender fuego y vapor de la olla solo al cocinar |
 | PUL-066 | M3 | godot-architect | ready | Enmendar los contratos para audio, quemado y fases |
 | PUL-067 | M3 | gameplay-engineer | ready | Retirar placeholders y escalas heredadas tras el arte |
-| PUL-068 | M3 | asset-pipeline | ready | Conseguir música, ambiente y efectos libres para M3 |
+| PUL-068 | M3 | asset-pipeline | done | Conseguir música, ambiente y efectos libres para M3 |
 | PUL-069 | M3 | gameplay-engineer | draft | Quemar el pulpo que se deja en la olla y encender sus efectos |
 | PUL-070 | M3 | gameplay-engineer | draft | Subir la dificultad por fases |
 | PUL-071 | M3 | gameplay-engineer | draft | Integrar música, ambiente y feedback de las acciones |

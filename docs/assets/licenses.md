@@ -19,6 +19,9 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `art/blender/seasoning_station.blend` (PUL-052, D20) | `assets/models/stations/seasoning_station/*.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/counters.blend` (PUL-054, D20) | `assets/models/furniture/counters/*.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/romeria.blend` (PUL-055, D20) | `assets/models/environment/romeria/{ground,tent,decor}.glb` | Propio (equipo Pulpasa) | No |
+| https://opengameart.org/node/114926 («Celtic Loop», stereoscopic) | `assets/audio/bg_romeria_loop.ogg` | CC0 | No |
+| https://opengameart.org/content/crowd-shoutingspeaking-ambience (StarNinjas) | `assets/audio/fol_feria_loop.ogg` | CC0 | No |
+| Kenney (RPG Audio, Music Jingles, Interface Sounds, UI Audio; kenney.nl) | `assets/audio/fx_{grab,drop,order_new,order_expired,burn_warning,burned,phase_change,ui_click}.ogg` | CC0 | No (detalle en `docs/assets/audio-sources.md`) |
 | `Art/Materials/**` (colores y parámetros; sin texturas) | `assets/materials/*.tres` | Propio | No |
 | `Animations/Packaging/Box/*.anim` | — | Propio | No |
 | https://opengameart.org/content/boiling-water-loops (`cooking_without_cover_01.ogg`, TinyWorlds) | `assets/audio/boiling_water_loop.ogg` (loop en import) | CC0 | No |
@@ -73,7 +76,6 @@ Quitados del repositorio en PUL-067 (sustituidos por el arte propio de M3, D20);
 | Placeholders de primitivas: olla, fogón, nevera, 2 mesas (larga, media), 2 cajas (media, grande), 2 pulpos, personaje | `assets/models/placeholders/{pot,stove,fridge,table_long,table_medium,box_medium,box_large,octopus_raw,octopus_cooked,character}.tscn` | `.glb` de PUL-045..055 |
 | Placeholders de PUL-031: bote de aceite, cachelos crudo/cocido, cachelera | `assets/models/placeholders/{oil_bottle,cachelos_raw,cachelos_cooked,cachelera}.tscn` | PUL-046, PUL-050 |
 | `Art/Furniture/Mueblecajas.fbx` (+ envoltorio `Mueblecajas.tscn`) | `assets/models/furniture/Mueblecajas.*` | `box_shelf.glb` (PUL-051) |
-| `Art/Furniture/order_stand.fbx` | `assets/models/furniture/order_stand.fbx` | `order_stand.glb` (PUL-053) |
 
 Los materiales `ph_*` se conservan por ahora (fuera de `owns` de PUL-067).
 
