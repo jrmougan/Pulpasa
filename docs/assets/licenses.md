@@ -10,6 +10,8 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | Montserrat Black y Bold (Julieta Ulanovsky y colaboradores; github.com/JulietaUla/Montserrat), convertidas a trazados en `art/brand/*.svg` (PUL-088) | `assets/textures/brand/pulpasa_*.png` | SIL OFL 1.1 | No en el dibujo; si se distribuye la fuente, incluir `OFL.txt` |
 | Símbolo, placas y maquetas de `art/brand/` (PUL-088) | `assets/textures/brand/pulpasa_*.png` | Propio (equipo Pulpasa) | No |
 | `docs/evidence/PUL-073/luz_v2.blend` (PUL-073, escena de luz de referencia) | — (solo evidencia) | Propio (equipo Pulpasa) | No |
+| `art/blender/environment_v2.blend` (PUL-085) | `assets/models/environment/romeria_v2/*` y texturas | Propio (equipo Pulpasa) | No |
+| `art/blender/order_stand.blend` v2 (PUL-083) | `assets/models/stations/order_stand/**` | Propio (equipo Pulpasa) | No |
 | `art/blender/octopus.blend`, `cachelos.blend` v2 (PUL-076) | `assets/models/food/**` | Propio (equipo Pulpasa) | No |
 | `art/blender/cook.blend` v2 (PUL-075) | `assets/models/characters/cook/cook.glb` y calcas | Propio (equipo Pulpasa) | No |
 | `art/blender/seasoning_station.blend` v2 (PUL-082) | `assets/models/stations/seasoning_station/*` | Propio (equipo Pulpasa) | No |
@@ -26,7 +28,6 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `art/blender/order_stand.blend` (PUL-053, D20) | `assets/models/stations/order_stand/order_stand.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/seasoning_station.blend` (PUL-052, D20) | `assets/models/stations/seasoning_station/*.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/counters.blend` (PUL-054, D20) | `assets/models/furniture/counters/*.glb` | Propio (equipo Pulpasa) | No |
-| `art/blender/romeria.blend` (PUL-055, D20) | `assets/models/environment/romeria/{ground,tent,decor}.glb` | Propio (equipo Pulpasa) | No |
 | https://opengameart.org/node/114926 («Celtic Loop», stereoscopic) | `assets/audio/bg_romeria_loop.ogg` | CC0 | No |
 | https://opengameart.org/content/crowd-shoutingspeaking-ambience (StarNinjas) | `assets/audio/fol_feria_loop.ogg` | CC0 | No |
 | Kenney (RPG Audio, Music Jingles, Interface Sounds, UI Audio; kenney.nl) | `assets/audio/fx_{grab,drop,order_new,order_expired,burn_warning,burned,phase_change,ui_click}.ogg` | CC0 | No (detalle en `docs/assets/audio-sources.md`) |

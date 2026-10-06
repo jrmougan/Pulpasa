@@ -19,6 +19,8 @@ Capturas del mismo plano que `docs/art/style-refs/actual-2026-10-06/` (con `capt
 
 Notas de PUL-073: la energía del sol (1,34) la fija `test_level_01`; `scene-tree.md` no recoge aún los nodos `Bulbs` y `Vignette` de `environment.tscn` (pedir enmienda al arquitecto); costes de rendimiento estimados a medir aquí. Si el ambiente queda lejos de la referencia, proponer ajuste de `render_config.tres`.
 
+Nota de PUL-085: los materiales embebidos de los .glb suman 83 recursos de material y 98 superficies en el entorno; comprobar frente al límite de §4.3 de la biblia v2 y proponer atlas/merge si afecta al rendimiento.
+
 ## Constraints
 - Referencia visual: `docs/art/style-refs/referencia-elegida-2026-10-06.png`; reglas en `docs/art/art-bible.md` v2 (PUL-072) y materiales de PUL-074.
 - Modela con el MCP de Blender (por CLI; no uses el puerto 9876 si hay un Blender del responsable).

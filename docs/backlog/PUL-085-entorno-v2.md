@@ -1,11 +1,11 @@
 ---
 id: PUL-085
 title: Rehacer el entorno con la estética de referencia
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-073, PUL-088]
-orca_task: null
+orca_task: task_aae2ba40e769
 unity_sources: []
 owns: [art/blender/**, godot/assets/models/environment/**, godot/entities/environment/environment.tscn, docs/evidence/PUL-085/**]
 touches_scenes: [godot/entities/environment/environment.tscn]

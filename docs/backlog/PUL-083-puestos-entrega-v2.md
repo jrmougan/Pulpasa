@@ -1,11 +1,11 @@
 ---
 id: PUL-083
 title: Rehacer los puestos de entrega como kioscos
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-088]
-orca_task: null
+orca_task: task_2fcad1c2849f
 unity_sources: []
 owns: [art/blender/order_stand.blend, godot/assets/models/stations/order_stand/**, godot/entities/stations/order_stand.tscn, docs/evidence/PUL-083/**]
 touches_scenes: [godot/entities/stations/order_stand.tscn]
