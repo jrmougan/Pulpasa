@@ -1,7 +1,7 @@
 ---
 id: PUL-047
 title: Modelar las tres cajas/platos de madera y sus distintivos
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)

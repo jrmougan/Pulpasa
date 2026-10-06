@@ -58,8 +58,8 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-043 | M2 | asset-pipeline | done | Preparar el MCP de Blender y el pipeline Blender → glTF → Godot |
 | PUL-044 | M3 | asset-pipeline | draft | Modelar y animar el personaje (dos variantes) |
 | PUL-045 | M3 | asset-pipeline | done | Modelar el pulpo crudo, cocido y troceado |
-| PUL-046 | M3 | asset-pipeline | ready | Modelar los cachelos crudos y cocidos |
-| PUL-047 | M3 | asset-pipeline | draft | Modelar las tres cajas/platos de madera y sus distintivos |
+| PUL-046 | M3 | asset-pipeline | done | Modelar los cachelos crudos y cocidos |
+| PUL-047 | M3 | asset-pipeline | ready | Modelar las tres cajas/platos de madera y sus distintivos |
 | PUL-048 | M3 | asset-pipeline | draft | Modelar el caldero de cobre y el fogón |
 | PUL-049 | M3 | asset-pipeline | draft | Modelar el arcón de pulpo |
 | PUL-050 | M3 | asset-pipeline | draft | Modelar la cachelera (saco o cesto de patatas) |

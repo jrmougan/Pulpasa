@@ -27,6 +27,8 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
 ## Ajustes de la biblia de arte (PUL-042)
 Ajuste de la biblia (§4): separar `pot_body` y `stove_base`. La planta B usa dos ollas: el mismo modelo instanciado dos veces.
 
+Nota de PUL-046: el caldeiro debe ser abierto y dejar ver su contenido (pulpo y cachelos cociendo) desde la cámara del nivel; el placeholder macizo lo tapa.
+
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.
