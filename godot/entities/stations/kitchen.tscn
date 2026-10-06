@@ -12,8 +12,8 @@
 size = Vector3(0.9, 1.69, 0.78)
 
 [sub_resource type="Gradient" id="Gradient_fire"]
-offsets = PackedFloat32Array(0, 0.6, 1)
-colors = PackedColorArray(1, 0.6901961, 0.18039216, 1, 0.78431374, 0.40392157, 0.18039216, 0.8, 0.78431374, 0.40392157, 0.18039216, 0)
+offsets = PackedFloat32Array(0, 0.35, 1)
+colors = PackedColorArray(0.3529412, 0.627451, 1, 1, 1, 0.6901961, 0.18039216, 0.9, 0.78431374, 0.40392157, 0.18039216, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_fire"]
 gradient = SubResource("Gradient_fire")
@@ -26,12 +26,15 @@ point_count = 2
 curve = SubResource("Curve_fire")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fire"]
-emission_shape = 1
-emission_sphere_radius = 0.1
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.01
+emission_ring_radius = 0.25
+emission_ring_inner_radius = 0.23
 direction = Vector3(0, 1, 0)
 spread = 15.0
-initial_velocity_min = 0.35
-initial_velocity_max = 0.6
+initial_velocity_min = 0.15
+initial_velocity_max = 0.3
 gravity = Vector3(0, 0, 0)
 scale_min = 0.7
 scale_max = 1.2
@@ -105,9 +108,9 @@ shape = SubResource("BoxShape3D_lbwrb")
 
 [node name="Fire" type="GPUParticles3D" parent="Model" unique_id=1602477015]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
-amount = 14
+amount = 28
 lifetime = 0.5
-visibility_aabb = AABB(-0.3, -0.1, -0.3, 0.6, 0.5, 0.6)
+visibility_aabb = AABB(-0.4, -0.1, -0.4, 0.8, 0.5, 0.8)
 process_material = SubResource("ParticleProcessMaterial_fire")
 draw_pass_1 = SubResource("SphereMesh_fire")
 
