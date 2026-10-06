@@ -1,12 +1,12 @@
 ---
 id: PUL-050
 title: Modelar la cachelera (saco o cesto de patatas)
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043]
-orca_task: null
+orca_task: task_c9f876910be5
 unity_sources: []
 owns: [art/blender/cachelos_storage.blend, godot/assets/models/stations/cachelos_storage/**, godot/entities/stations/cachelos_storage.tscn, godot/assets/models/placeholders/cachelera*, docs/evidence/PUL-050/**]
 touches_scenes: [godot/entities/stations/cachelos_storage.tscn]

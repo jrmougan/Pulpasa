@@ -1,7 +1,7 @@
 ---
 id: PUL-051
 title: Modelar la estantería de cajas
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)

@@ -13,6 +13,7 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `art/blender/cook.blend` (PUL-044, D20) | `assets/models/characters/cook/cook.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/pot.blend` (PUL-048, D20) | `assets/models/stations/pot/pot.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/octopus_storage.blend` (PUL-049, D20) | `assets/models/stations/octopus_storage/octopus_storage.glb` | Propio (equipo Pulpasa) | No |
+| `art/blender/cachelos_storage.blend` (PUL-050, D20) | `assets/models/stations/cachelos_storage/cachelos_storage.glb` | Propio (equipo Pulpasa) | No |
 | `Art/Furniture/Mueblecajas.fbx` | `assets/models/furniture/Mueblecajas.fbx` (+ envoltorio `Mueblecajas.tscn`) | Propio (equipo Pulpasa) | No |
 | `Art/Furniture/order_stand.fbx` | `assets/models/furniture/order_stand.fbx` | Propio (equipo Pulpasa) | No |
 | `Art/Materials/**` (colores y parámetros; sin texturas) | `assets/materials/*.tres` | Propio | No |

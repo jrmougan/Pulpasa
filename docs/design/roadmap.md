@@ -57,3 +57,7 @@ caja (cada pulsación llena la caja y gasta pulpo) → condimentos sobre la caja
 
 ## Pendientes detectados en M1
 - PUL-029: el test FIFO no distingue orden de finalización de orden por índice (caso: A en plaza 0, B en plaza 1 a t=2,5, recoger A, C en plaza 0 → debe salir B). Sin test del cambio de material crudo/cocido del cachelo ni de la posición de las plazas. El cachelo no se ve en la captura.
+
+## Pendientes detectados en el arte (M3)
+- Retirar el placeholder `cachelera*` y su comprobación en `tests/unit/test_assets_m1.gd` (PUL-050), y los demás placeholders que queden sin uso al terminar PUL-055.
+- Colisión del plato grande menor que el modelo (PUL-047).
