@@ -1,12 +1,12 @@
 ---
 id: PUL-045
 title: Modelar el pulpo crudo, cocido y troceado
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043]
-orca_task: null
+orca_task: task_fa8dfd795309
 unity_sources: []
 owns: [art/blender/octopus.blend, godot/entities/items/ingredient.gd, godot/tests/integration/test_octopus.gd, godot/tests/integration/test_cooking_station.gd, godot/assets/models/food/octopus/**, godot/entities/items/octopus.tscn, docs/evidence/PUL-045/**]
 touches_scenes: [godot/entities/items/octopus.tscn]

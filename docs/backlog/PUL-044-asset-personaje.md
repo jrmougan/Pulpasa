@@ -27,6 +27,8 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
 ## Ajustes de la biblia de arte (PUL-042)
 Ajuste de la biblia (§4): `Idle` en bucle de 1–2 s y `Cut` con ciclo corto (D13); dos variantes en un mismo `.blend` con malla y rig compartidos y materiales distintos; marcador `Anchor_Hold` en las manos.
 
+Nota de PUL-045: con el pulpo ×1,4 en la mano entra 6–9 cm en la cápsula; el `Anchor_Hold` del personaje (o adelantar `%HoldPoint` ~0,1 m) debe resolverlo.
+
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.

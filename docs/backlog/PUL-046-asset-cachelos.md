@@ -1,7 +1,7 @@
 ---
 id: PUL-046
 title: Modelar los cachelos crudos y cocidos
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)

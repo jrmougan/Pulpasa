@@ -7,6 +7,7 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 
 | Asset (origen) | Destino en `godot/` | Licencia | Atribución requerida |
 |---|---|---|---|
+| `art/blender/octopus.blend` (PUL-045, D20) | `assets/models/food/octopus/octopus.glb`, `octopus_pieces.glb` | Propio (equipo Pulpasa) | No |
 | `Art/Furniture/Mueblecajas.fbx` | `assets/models/furniture/Mueblecajas.fbx` (+ envoltorio `Mueblecajas.tscn`) | Propio (equipo Pulpasa) | No |
 | `Art/Furniture/order_stand.fbx` | `assets/models/furniture/order_stand.fbx` | Propio (equipo Pulpasa) | No |
 | `Art/Materials/**` (colores y parámetros; sin texturas) | `assets/materials/*.tres` | Propio | No |
