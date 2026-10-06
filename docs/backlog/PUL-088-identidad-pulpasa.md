@@ -1,7 +1,7 @@
 ---
 id: PUL-088
 title: Diseñar la identidad de la marca PulpaSA
-status: ready
+status: review
 milestone: M3b
 role: asset-pipeline
 deps: []
@@ -36,13 +36,28 @@ D21: la marca ficticia del juego es **PulpaSA**. Estética de referencia:
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.
 
 ## Acceptance
-- [ ] AC1 `brand.md` completo con colores, versiones y usos
-- [ ] AC2 2–3 propuestas en láminas y SVG fuente
-- [ ] AC3 Fuentes y licencias listadas
-- [ ] AC4 `tools/verify.sh` verde, `check_owns` limpio.
+- [x] AC1 `brand.md` completo con colores, versiones y usos
+- [x] AC2 2–3 propuestas en láminas y SVG fuente
+- [x] AC3 Fuentes y licencias listadas
+- [x] AC4 `tools/verify.sh` verde, `check_owns` limpio.
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Generador reproducible `art/brand/build_brand.py`: texto a trazados (fontTools + HarfBuzz) con
+   fuentes OFL instaladas, símbolo de pulpo dibujado en SVG, rasterizado con ImageMagick/librsvg.
+2. Tres propuestas (A Mariña: marino + pimentón, Montserrat; B Romaría: morado + turquesa,
+   Comfortaa; C Caldeiro: verde mar + cobre, Inter), todas con la placa «SA» como rasgo común y
+   sin amarillo.
+3. Por propuesta: SVG horizontal, compacta, monocromo negro/blanco y símbolo; PNG en
+   `godot/assets/textures/brand/propuesta_<x>/` importados por Godot; lámina con cartel luminoso,
+   toldo, gorra, delantal, bandeja, vaso y ticket/HUD.
+4. `docs/art/brand.md` con colores, versiones, usos, fuentes y licencias.
 
 ## Evidence
-(Lo rellena el worker.)
+- Resumen: `docs/evidence/PUL-088/propuestas_resumo.png`.
+- Láminas: `lamina_a_marina.png`, `lamina_b_romaria.png`, `lamina_c_caldeiro.png` (misma carpeta).
+- SVG fuente: `art/brand/propuesta_{a,b,c}/` y `art/brand/propuestas.svg`; PNG + `.import` en
+  `godot/assets/textures/brand/propuesta_{a,b,c}/`.
+- Fuentes: Montserrat, Comfortaa e Inter (SIL OFL 1.1), convertidas a trazados; tabla en
+  `docs/art/brand.md` § Fuentes y licencias (el coordinador las pasa a `licenses.md`).
+- Pendiente del responsable: elegir propuesta (y lema). Después se borran las otras dos carpetas.
+- `tools/verify.sh` verde y `tools/check_owns.py` limpio (ver commit).
