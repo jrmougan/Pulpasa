@@ -8,8 +8,8 @@ agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043, PUL-040, PUL-058]
 orca_task: null
 unity_sources: []
-owns: [art/blender/seasoning_station.blend, godot/assets/models/stations/seasoning_station/**, docs/evidence/PUL-052/**]
-touches_scenes: []
+owns: [art/blender/seasoning_station.blend, godot/assets/models/stations/seasoning_station/**, docs/evidence/PUL-052/**, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn]
+touches_scenes: [godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn]
 ---
 
 ## Target
