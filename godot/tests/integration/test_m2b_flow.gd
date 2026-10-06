@@ -49,6 +49,7 @@ var _sides: Dictionary[String, Dictionary] = {}
 
 
 func before_each() -> void:
+	PhaselessConfig.disable()
 	GameState.set_paused(false)
 	watch_signals(EventBus)
 	_rejections.clear()
@@ -65,6 +66,7 @@ func after_each() -> void:
 	Input.flush_buffered_events()
 	GameState.set_paused(false)
 	GameState.reset_input()
+	PhaselessConfig.restore()
 
 
 ## Nivel real con una comanda activa a la vez, sacada de `ORDERS` sin caducidad práctica.

@@ -12,6 +12,8 @@ signal round_time_changed(time_left: float)
 signal round_finished(result: RoundResult)
 @warning_ignore("unused_signal")
 signal score_changed(boxes_delivered: int, revenue: int)
+@warning_ignore("unused_signal")
+signal phase_changed(phase: int)
 
 # --- Comandas: emisor OrderService (reenvía OrderBoard) ---
 @warning_ignore("unused_signal")

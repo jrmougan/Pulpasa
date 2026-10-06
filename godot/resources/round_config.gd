@@ -17,3 +17,9 @@ extends Resource
 @export var performance_thresholds: Array[float] = []
 ## Un texto por tramo: `performance_thresholds.size() + 1` (el último, por encima del mayor umbral).
 @export var performance_texts: Array[String] = []
+
+## Fases de dificultad (M3, ADR-006 §6), ordenadas y la primera con `start_fraction` = 0.
+## Vacía = sin fases: todos los puestos, `max_time` de la receta y ninguna `phase_changed`.
+@export var phases: Array[PhaseData] = []
+## Semilla del generador de comandas (AC5). 0 = aleatoria.
+@export var rng_seed: int = 0

@@ -12,6 +12,7 @@ const CATALOG: Dictionary = {
 	"round_time_changed": [["time_left", TYPE_FLOAT, []]],
 	"round_finished": [["result", TYPE_OBJECT, RESULT_CLASSES]],
 	"score_changed": [["boxes_delivered", TYPE_INT, []], ["revenue", TYPE_INT, []]],
+	"phase_changed": [["phase", TYPE_INT, []]],
 	"orders_reset": [],
 	"order_generated": [["order", TYPE_OBJECT, ORDER_CLASSES]],
 	"order_completed": [["order", TYPE_OBJECT, ORDER_CLASSES], ["points", TYPE_INT, []]],

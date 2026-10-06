@@ -28,6 +28,7 @@ var _now: float = 100.0
 
 
 func before_each() -> void:
+	PhaselessConfig.disable()
 	GameState.set_paused(false)
 
 
@@ -42,6 +43,7 @@ func after_each() -> void:
 		if was_current:
 			get_tree().current_scene = null
 	_level = null
+	PhaselessConfig.restore()
 
 
 # --- Utilidades --------------------------------------------------------------------------------

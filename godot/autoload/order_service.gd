@@ -19,14 +19,18 @@ func set_bus(bus: Node) -> void:
 
 
 ## Crea un `OrderBoard` nuevo con el catálogo que inyecta el nivel (ADR-002 regla 7).
-## `rng` es opcional: sin él, se usa uno aleatorio. `config` aporta las penalizaciones de M1
-## (`wrong_delivery_penalty`, `expire_penalty`); sin él, 0 (paridad M0).
+## `rng` es opcional: sin él, se usa uno con `config.rng_seed` (AC5 de fases) o, si es 0 o no hay
+## `config`, uno aleatorio. `config` aporta las penalizaciones de M1 (`wrong_delivery_penalty`,
+## `expire_penalty`); sin él, 0 (paridad M0).
 func setup(
 	catalog: OrderCatalog, rng: RandomNumberGenerator = null, config: RoundConfig = null
 ) -> void:
 	if rng == null:
 		rng = RandomNumberGenerator.new()
-		rng.randomize()
+		if config != null and config.rng_seed != 0:
+			rng.seed = config.rng_seed
+		else:
+			rng.randomize()
 	_disconnect_board()
 	var reject: int = config.wrong_delivery_penalty if config != null else 0
 	var expire: int = config.expire_penalty if config != null else 0

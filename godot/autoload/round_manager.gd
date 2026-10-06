@@ -35,7 +35,8 @@ func set_order_service(service: Node) -> void:
 
 
 ## Arranque determinista (ADR-002 regla 6): crea un `RoundState` nuevo sobre el tablero de
-## `OrderService` y lo arranca (orders_reset, order_generated por puesto, round_started).
+## `OrderService` y lo arranca (orders_reset, phase_changed(1) con fases, order_generated por
+## puesto, round_started).
 func start_round(config: RoundConfig, slot_ids: Array[int]) -> void:
 	var service: Node = _order_service if _order_service != null else OrderService
 	var board: OrderBoard = service.board
@@ -48,6 +49,7 @@ func start_round(config: RoundConfig, slot_ids: Array[int]) -> void:
 	round_state.round_time_changed.connect(_on_round_time_changed)
 	round_state.round_finished.connect(_on_round_finished)
 	round_state.score_changed.connect(_on_score_changed)
+	round_state.phase_changed.connect(_on_phase_changed)
 	round_state.start(slot_ids)
 
 
@@ -61,6 +63,7 @@ func _detach_round_state(board: OrderBoard) -> void:
 	previous.round_time_changed.disconnect(_on_round_time_changed)
 	previous.round_finished.disconnect(_on_round_finished)
 	previous.score_changed.disconnect(_on_score_changed)
+	previous.phase_changed.disconnect(_on_phase_changed)
 	for board_signal: Signal in [
 		board.order_completed, board.order_expired, board.delivery_rejected
 	]:
@@ -94,3 +97,7 @@ func _on_round_finished(result: RoundResult) -> void:
 
 func _on_score_changed(boxes_delivered: int, revenue: int) -> void:
 	_get_bus().score_changed.emit(boxes_delivered, revenue)
+
+
+func _on_phase_changed(phase: int) -> void:
+	_get_bus().phase_changed.emit(phase)
