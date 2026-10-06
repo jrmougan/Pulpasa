@@ -10,6 +10,7 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `art/blender/octopus.blend` (PUL-045, D20) | `assets/models/food/octopus/octopus.glb`, `octopus_pieces.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/cachelos.blend` (PUL-046, D20) | `assets/models/food/cachelos/cachelos.glb`, `cachelos_pieces.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/box.blend` (PUL-047, D20) | `assets/models/items/box/box.glb`, `box_box_stickers.png` | Propio (equipo Pulpasa); iconos del atlas derivados de los ya registrados (Lorc, Delapouite: CC BY 3.0; Line Awesome: MIT) | Sí, la de esos iconos |
+| `art/blender/cook.blend` (PUL-044, D20) | `assets/models/characters/cook/cook.glb` | Propio (equipo Pulpasa) | No |
 | `Art/Furniture/Mueblecajas.fbx` | `assets/models/furniture/Mueblecajas.fbx` (+ envoltorio `Mueblecajas.tscn`) | Propio (equipo Pulpasa) | No |
 | `Art/Furniture/order_stand.fbx` | `assets/models/furniture/order_stand.fbx` | Propio (equipo Pulpasa) | No |
 | `Art/Materials/**` (colores y parámetros; sin texturas) | `assets/materials/*.tres` | Propio | No |

@@ -1,12 +1,12 @@
 ---
 id: PUL-044
 title: Modelar y animar el personaje (dos variantes)
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043]
-orca_task: null
+orca_task: task_f939e1617273
 unity_sources: []
 owns: [art/blender/cook.blend, godot/assets/models/characters/cook/**, godot/entities/player/player.tscn, godot/entities/player/player_animation.gd, godot/entities/player/player_animation.gd.uid, godot/tests/integration/test_player_animation.gd, godot/tests/integration/test_player_animation.gd.uid, godot/assets/materials/active_indicator_p1.tres, godot/assets/materials/active_indicator_p2.tres, docs/evidence/PUL-044/**]
 touches_scenes: [godot/entities/player/player.tscn]

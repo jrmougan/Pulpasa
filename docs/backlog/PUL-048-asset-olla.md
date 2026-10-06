@@ -1,7 +1,7 @@
 ---
 id: PUL-048
 title: Modelar el caldero de cobre y el fogón
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
