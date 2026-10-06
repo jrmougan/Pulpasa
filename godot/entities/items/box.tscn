@@ -2,9 +2,12 @@
 
 [ext_resource type="Script" path="res://entities/items/box.gd" id="1_g4ra2"]
 [ext_resource type="Resource" path="res://data/boxes/small.tres" id="2_g7iey"]
-[ext_resource type="PackedScene" path="res://assets/models/placeholders/box_medium.tscn" id="3_1xsyi"]
+[ext_resource type="Script" path="res://entities/items/box_model.gd" id="3_model"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_hjnlo"]
-[ext_resource type="Material" path="res://assets/materials/medium_box.tres" id="5_o5fxu"]
+[ext_resource type="PackedScene" path="res://assets/models/items/box/box.glb" id="5_plate"]
+[ext_resource type="PackedScene" path="res://assets/models/food/octopus/octopus_pieces.glb" id="10_octo"]
+[ext_resource type="PackedScene" path="res://assets/models/food/cachelos/cachelos_pieces.glb" id="11_cach"]
+[ext_resource type="Resource" path="res://data/seasonings/cachelos.tres" id="12_cach"]
 [ext_resource type="PackedScene" path="res://ui/widgets/world_progress_bar.tscn" id="6_rn5qa"]
 [ext_resource type="AudioStream" path="res://assets/audio/cut.ogg" id="7_j1y55"]
 [ext_resource type="AudioStream" path="res://assets/audio/pepper_mill.ogg" id="8_chijy"]
@@ -13,9 +16,6 @@
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_im475"]
 size = Vector3(0.396, 0.333, 0.375)
-
-[sub_resource type="BoxMesh" id="BoxMesh_mgu21"]
-size = Vector3(0.396, 0.02, 0.375)
 
 [sub_resource type="Animation" id="Animation_kgge7"]
 tracks/0/type = "value"
@@ -60,8 +60,16 @@ data = ExtResource("2_g7iey")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=576248195]
 shape = SubResource("BoxShape3D_im475")
 
-[node name="Model" parent="." unique_id=1077296058 instance=ExtResource("3_1xsyi")]
+[node name="Model" type="Node3D" parent="." unique_id=1077296058]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1665, 0)
+script = ExtResource("3_model")
+cachelos = ExtResource("12_cach")
+
+[node name="Plate" parent="Model" unique_id=1077296101 instance=ExtResource("5_plate")]
+
+[node name="Octopus" parent="Model" unique_id=1077296102 instance=ExtResource("10_octo")]
+
+[node name="Cachelos" parent="Model" unique_id=1077296103 instance=ExtResource("11_cach")]
 
 [node name="AnchorPoint" type="Marker3D" parent="." unique_id=153702120]
 unique_name_in_owner = true
@@ -74,11 +82,6 @@ script = ExtResource("4_hjnlo")
 [node name="Lid" type="Node3D" parent="." unique_id=1317625187]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1665, 0.1875)
-
-[node name="LidMesh" type="MeshInstance3D" parent="Lid" unique_id=39794888]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, -0.1875)
-material_override = ExtResource("5_o5fxu")
-mesh = SubResource("BoxMesh_mgu21")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=306874495]
 unique_name_in_owner = true
