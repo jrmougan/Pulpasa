@@ -1,11 +1,11 @@
 ---
 id: PUL-071
 title: Integrar música, ambiente y feedback de las acciones
-status: review
+status: done
 milestone: M3
 role: gameplay-engineer
 deps: [PUL-066, PUL-068, PUL-069]
-orca_task: null
+orca_task: task_a96cf3d7d628
 unity_sources: []
 owns: [godot/default_bus_layout.tres, godot/autoload/audio_director.gd, godot/autoload/audio_director.gd.uid, godot/project.godot, godot/data/audio/**, godot/resources/audio_*.gd, godot/entities/**/*.tscn, godot/components/**, godot/ui/menus/pause_menu.gd, godot/tests/integration/test_audio_feedback.gd, godot/tests/integration/test_audio_feedback.gd.uid, docs/evidence/PUL-071/**, godot/core/audio_mix.gd, godot/core/audio_mix.gd.uid, godot/entities/**/*.gd, godot/scenes/levels/level_01.tscn, godot/tests/unit/test_audio_mix.gd, godot/tests/unit/test_audio_mix.gd.uid, godot/tests/integration/test_order_stand.gd, godot/tests/integration/test_seasoning_station.gd, godot/tests/unit/test_data_integrity.gd, godot/resources/audio_*.gd.uid, godot/entities/**/*.gd.uid]
 touches_scenes: [godot/scenes/levels/level_01.tscn]

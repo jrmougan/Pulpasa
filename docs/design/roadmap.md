@@ -9,7 +9,7 @@ Propuesta completa (privada): https://claude.ai/artifact/PstRxmwwgejjsphmEXCkJe
 | M0 | Migración hasta paridad con Unity, sin sus bugs — **cerrado 2026-10-04** (smoke automático PUL-025 en verde; puerta humana descartada por el responsable, D17; PUL-013 sigue bloqueada por licencia) | Archivar Unity (pendiente de decidir) |
 | M1 | Paciencia, puntuación y estrellas, aceite y cachelos, iconos en tickets — **cerrado 2026-10-04** (PUL-027..033) | — |
 | M2 | Coop local 2P, mando, cambio de personaje, menú por modo — **técnico cerrado 2026-10-04** (PUL-034..037; guía en `m2-gate.md`) | Playtest de game feel (hecho 2026-10-05: bug de entrega PUL-039; rediseños D18 condimentos PUL-040, D19 mapa PUL-041; D20 arte PUL-042). Rediseños hechos (PUL-038..064); segundo playtest con `m2b-gate.md` pendiente |
-| M3 | Arte propio en Blender (D20, PUL-043..055) — **arte hecho 2026-10-06**, audio completo, feedback, olla que se pasa, dificultad por fases | — |
+| M3 | **Técnico cerrado 2026-10-06** (PUL-043..071): arte propio en Blender (D20), audio completo, feedback, olla que se pasa, dificultad por fases | — |
 | M4 | Balanceo, opciones, gallego, builds Win/Linux, playtests | Publicar alpha |
 
 ## Fases de M0
@@ -62,3 +62,9 @@ caja (cada pulsación llena la caja y gasta pulpo) → condimentos sobre la caja
 - Retirar el placeholder `cachelera*` y su comprobación en `tests/unit/test_assets_m1.gd` (PUL-050), y los demás placeholders que queden sin uso al terminar PUL-055.
 - Colisión del plato grande menor que el modelo (PUL-047).
 - Quitar la escala 0,78×0,975 de las instancias de `OrderStand` en `level_01.tscn` (y su aserción en `test_level_01`) y retirar `order_stand.fbx` de `scale_check.tscn` (PUL-053).
+
+## Pendientes detectados en M3
+- Escucha humana del audio: BG celta (no gaita), FOL de multitud, `cook_start`/`cook_done` reutilizan `fx_drop`/`fx_ui_click` (PUL-068, PUL-071).
+- Balance de la fase 3: `order_2` (80 s × 0,7 = 56 s) frente a ~54 s de ruta óptima (PUL-070) → M4.
+- El POP del puesto tapa un instante el número del puesto (PUL-071).
+- Segundo playtest de M2b (`m2b-gate.md`) pendiente; ahora con arte y audio.
