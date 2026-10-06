@@ -90,7 +90,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-075 | M3b | asset-pipeline | ready | Rehacer el personaje con la estética de referencia |
 | PUL-076 | M3b | asset-pipeline | ready | Rehacer pulpo, cachelos y raciones con la estética de referencia |
 | PUL-077 | M3b | asset-pipeline | draft | Rehacer platos/cajas como bandejas de la referencia |
-| PUL-078 | M3b | asset-pipeline | ready | Rehacer las ollas como cocedores de acero |
+| PUL-078 | M3b | asset-pipeline | done | Rehacer las ollas como cocedores de acero |
 | PUL-079 | M3b | asset-pipeline | draft | Convertir el arcón en tanque de pulpos |
 | PUL-080 | M3b | asset-pipeline | draft | Rehacer la cachelera como sacos de patatas |
 | PUL-081 | M3b | asset-pipeline | draft | Rehacer la estantería como rack de bandejas |
@@ -101,3 +101,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-086 | M3b | ui-engineer | draft | Adaptar HUD y tickets a la estética de referencia |
 | PUL-087 | M3b | qa-tester | draft | Pasar el QA visual y de rendimiento de la estética v2 |
 | PUL-088 | M3b | asset-pipeline | done | Diseñar la identidad de la marca PulpaSA |
+| PUL-089 | M3b | asset-pipeline | ready | Ajustar el cielo y los reflejos para que el acero se lea claro |

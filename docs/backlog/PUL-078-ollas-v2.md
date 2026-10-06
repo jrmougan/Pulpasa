@@ -1,11 +1,11 @@
 ---
 id: PUL-078
 title: Rehacer las ollas como cocedores de acero
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074]
-orca_task: null
+orca_task: task_01a7802e4777
 unity_sources: []
 owns: [art/blender/pot.blend, godot/assets/models/stations/pot/**, godot/entities/stations/kitchen.tscn, docs/evidence/PUL-078/**]
 touches_scenes: [godot/entities/stations/kitchen.tscn]
