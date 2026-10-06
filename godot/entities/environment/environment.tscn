@@ -1,5 +1,9 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" uid="uid://bumwjtgycwqt8" path="res://assets/models/environment/romeria/ground.glb" id="1_ground"]
+[ext_resource type="PackedScene" uid="uid://cpuq5q5lir32v" path="res://assets/models/environment/romeria/tent.glb" id="2_tent"]
+[ext_resource type="PackedScene" uid="uid://c1emu3exusl1v" path="res://assets/models/environment/romeria/decor.glb" id="3_decor"]
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_t6v1q"]
 
 [sub_resource type="Sky" id="Sky_y6xmm"]
@@ -20,3 +24,20 @@ environment = SubResource("Environment_0cxh4")
 transform = Transform3D(0.90451455, -0.3925826, 0.16653006, 0.071978584, 0.5254562, 0.8477705, -0.4203242, -0.75483423, 0.5035403, 3.9, 20.1, 3.01)
 light_energy = 1.34
 shadow_enabled = true
+
+[node name="Model" type="Node3D" parent="."]
+
+[node name="GroundWest" parent="Model" instance=ExtResource("1_ground")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -2.8, 0, 1)
+
+[node name="GroundEast" parent="Model" instance=ExtResource("1_ground")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5.2, 0, 1)
+
+[node name="Tent" parent="Model" instance=ExtResource("2_tent")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.2, 0, -6.5)
+
+[node name="DecorWest" parent="Model" instance=ExtResource("3_decor")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -8.7, 0, -2)
+
+[node name="DecorEast" parent="Model" instance=ExtResource("3_decor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.7, 0, -2)
