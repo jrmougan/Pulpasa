@@ -9,6 +9,7 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 |---|---|---|---|
 | Montserrat Black y Bold (Julieta Ulanovsky y colaboradores; github.com/JulietaUla/Montserrat), convertidas a trazados en `art/brand/*.svg` (PUL-088) | `assets/textures/brand/pulpasa_*.png` | SIL OFL 1.1 | No en el dibujo; si se distribuye la fuente, incluir `OFL.txt` |
 | Símbolo, placas y maquetas de `art/brand/` (PUL-088) | `assets/textures/brand/pulpasa_*.png` | Propio (equipo Pulpasa) | No |
+| `docs/evidence/PUL-073/luz_v2.blend` (PUL-073, escena de luz de referencia) | — (solo evidencia) | Propio (equipo Pulpasa) | No |
 | `art/blender/_materials_v2.blend` (PUL-074, texturas procedurales propias) | `assets/materials/v2/*.tres`, `assets/textures/v2/*` | Propio (equipo Pulpasa) | No |
 | `art/blender/octopus.blend` (PUL-045, D20) | `assets/models/food/octopus/octopus.glb`, `octopus_pieces.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/cachelos.blend` (PUL-046, D20) | `assets/models/food/cachelos/cachelos.glb`, `cachelos_pieces.glb` | Propio (equipo Pulpasa) | No |

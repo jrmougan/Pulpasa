@@ -1,7 +1,7 @@
 ---
 id: PUL-085
 title: Rehacer el entorno con la estética de referencia
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-073, PUL-088]

@@ -1,11 +1,11 @@
 ---
 id: PUL-073
 title: Ajustar luz, sombras y post-proceso a la estética de referencia
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072]
-orca_task: null
+orca_task: task_207e5a30a8d1
 unity_sources: []
 owns: [godot/entities/environment/environment.tscn, godot/entities/environment/environment.gd, godot/entities/environment/environment.gd.uid, godot/resources/render_config.gd, godot/resources/render_config.gd.uid, godot/tests/unit/test_render_config.gd, godot/tests/unit/test_render_config.gd.uid, godot/data/config/render*.tres, godot/assets/materials/env_*, godot/project.godot, docs/evidence/PUL-073/**]
 touches_scenes: [godot/entities/environment/environment.tscn]

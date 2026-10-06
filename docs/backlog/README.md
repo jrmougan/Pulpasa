@@ -85,7 +85,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-070 | M3 | gameplay-engineer | done | Subir la dificultad por fases |
 | PUL-071 | M3 | gameplay-engineer | done | Integrar música, ambiente y feedback de las acciones |
 | PUL-072 | M3b | game-designer | done | Reescribir la biblia de arte con la estética de referencia |
-| PUL-073 | M3b | asset-pipeline | ready | Ajustar luz, sombras y post-proceso a la estética de referencia |
+| PUL-073 | M3b | asset-pipeline | done | Ajustar luz, sombras y post-proceso a la estética de referencia |
 | PUL-074 | M3b | asset-pipeline | done | Crear la biblioteca de materiales estilizados |
 | PUL-075 | M3b | asset-pipeline | ready | Rehacer el personaje con la estética de referencia |
 | PUL-076 | M3b | asset-pipeline | ready | Rehacer pulpo, cachelos y raciones con la estética de referencia |
@@ -97,7 +97,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-082 | M3b | asset-pipeline | ready | Rehacer la estación de condimentos |
 | PUL-083 | M3b | asset-pipeline | draft | Rehacer los puestos de entrega como kioscos |
 | PUL-084 | M3b | asset-pipeline | draft | Rehacer encimeras y suelo de la cocina |
-| PUL-085 | M3b | asset-pipeline | draft | Rehacer el entorno con la estética de referencia |
+| PUL-085 | M3b | asset-pipeline | ready | Rehacer el entorno con la estética de referencia |
 | PUL-086 | M3b | ui-engineer | draft | Adaptar HUD y tickets a la estética de referencia |
 | PUL-087 | M3b | qa-tester | draft | Pasar el QA visual y de rendimiento de la estética v2 |
 | PUL-088 | M3b | asset-pipeline | done | Diseñar la identidad de la marca PulpaSA |
