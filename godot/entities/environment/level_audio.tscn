@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://entities/environment/level_audio.gd" id="1_script"]
+[ext_resource type="AudioStream" path="res://assets/audio/bg_romeria_loop.ogg" id="2_bg"]
+[ext_resource type="AudioStream" path="res://assets/audio/fol_feria_loop.ogg" id="3_fol"]
+
+[node name="LevelAudio" type="Node"]
+process_mode = 3
+script = ExtResource("1_script")
+music = ExtResource("2_bg")
+ambience = ExtResource("3_fol")
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+bus = &"Music"
+
+[node name="Ambience" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+bus = &"Ambience"
+
+[node name="PhaseCue" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+bus = &"SFX"

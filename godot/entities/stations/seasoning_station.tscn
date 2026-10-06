@@ -9,8 +9,8 @@
 [ext_resource type="Resource" path="res://data/seasonings/hot_paprika.tres" id="7_hot"]
 [ext_resource type="Resource" path="res://data/seasonings/salt.tres" id="8_salt"]
 [ext_resource type="Resource" path="res://data/seasonings/oil.tres" id="9_oil"]
-[ext_resource type="AudioStream" path="res://assets/audio/delivery_error.ogg" id="10_err"]
 [ext_resource type="PackedScene" path="res://assets/models/stations/seasoning_station/seasoning_station.glb" id="11_model"]
+[ext_resource type="Script" path="res://components/feedback_player.gd" id="12_fb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_counter"]
 size = Vector3(4, 1.1, 1.1)
@@ -64,10 +64,10 @@ station = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1.1, 0)
 station = NodePath("..")
 
-[node name="ErrorAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="Feedback" type="AudioStreamPlayer3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
-stream = ExtResource("10_err")
+script = ExtResource("12_fb")
 
 [node name="Model" parent="Tray" index="1"]
 visible = false

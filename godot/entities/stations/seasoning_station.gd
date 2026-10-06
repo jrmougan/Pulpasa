@@ -3,24 +3,18 @@ extends StaticBody3D
 ## Estación de condimentos (D18, ADR-003 §8; scene-tree.md §3): mostrador de pase con la bandeja
 ## (`Tray`, un `Slot` de cajas), cuatro dispensadores y el cuenco de cachelos. No es `interactable`:
 ## lo son sus hijos. Da a los hijos el lado del jugador (`side_of`) y la caja de la bandeja
-## (`get_box`), y oye sus rechazos para sonar `%ErrorAudio` y sacudir al emisor.
+## (`get_box`), y oye sus rechazos: `%Feedback` suena `season_error` y sacude al emisor.
 
 const DEFAULT_DATA: SeasoningStationData = preload("res://data/config/seasoning_station.tres")
-## Sacudida del emisor al rechazar: amplitud (m), vaivenes y duración de cada uno (s).
-const SHAKE_AMPLITUDE: float = 0.04
-const SHAKE_STEPS: int = 4
-const SHAKE_STEP_TIME: float = 0.04
 
 @export var data: SeasoningStationData = DEFAULT_DATA
-
-var _shakes: Dictionary = {}
 
 @onready var _tray: Slot = $Tray
 @onready var _dispensers: Node3D = $Dispensers
 @onready var _bowl: CachelosBowl = $CachelosBowl
 @onready var _pass_side: Node3D = %PassSide
 @onready var _operator_side: Node3D = %OperatorSide
-@onready var _error_audio: AudioStreamPlayer3D = %ErrorAudio
+@onready var _feedback: FeedbackPlayer = %Feedback
 
 
 func _ready() -> void:
@@ -61,34 +55,8 @@ func get_tray() -> Slot:
 
 ## Sacudida en curso del `Model` de `emitter`, o `null` (para avanzarla a mano en tests).
 func get_shake(emitter: Node3D) -> Tween:
-	var model: Node = emitter.get_node_or_null(^"Model")
-	if model == null or not _shakes.has(model.get_instance_id()):
-		return null
-	return _shakes[model.get_instance_id()][&"tween"] as Tween
+	return _feedback.get_visual_tween(emitter)
 
 
 func _on_rejected(_reason: SeasoningRules.Rejection, emitter: Node3D) -> void:
-	_error_audio.play()
-	_shake(emitter)
-
-
-## Vaivén lateral del `Model` del emisor; vuelve siempre a su posición de reposo.
-func _shake(emitter: Node3D) -> void:
-	var model: Node3D = emitter.get_node_or_null(^"Model") as Node3D
-	if model == null:
-		return
-	var key: int = model.get_instance_id()
-	var rest: Vector3 = model.position
-	if _shakes.has(key):
-		var previous: Dictionary = _shakes[key]
-		(previous[&"tween"] as Tween).kill()
-		rest = previous[&"rest"]
-	var tween: Tween = create_tween()
-	_shakes[key] = {&"tween": tween, &"rest": rest}
-	for step: int in SHAKE_STEPS:
-		var side: float = 1.0 if step % 2 == 0 else -1.0
-		tween.tween_property(
-			model, ^"position", rest + Vector3.RIGHT * SHAKE_AMPLITUDE * side, SHAKE_STEP_TIME
-		)
-	tween.tween_property(model, ^"position", rest, SHAKE_STEP_TIME)
-	tween.finished.connect(func() -> void: _shakes.erase(key))
+	_feedback.play_cue(&"season_error", emitter)

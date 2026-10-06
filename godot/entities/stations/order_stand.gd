@@ -5,7 +5,9 @@ extends StaticBody3D
 ## el portador en `%DeliveryZone` solo lo pide si la caja ya coincide con la comanda viva del puesto
 ## (`OrderValidator.matches`): con otra caja la zona no hace nada (PUL-039), así cruzar un puesto
 ## vecino no penaliza. No completa nada por su cuenta (B1): solo reacciona a las señales de
-## `EventBus`. La comanda viva y el label salen de esas señales, sin consultar sistemas (B16).
+## `EventBus`. Cada hecho de su `slot_id` suena y se ve en `%Feedback` (ADR-006 §4): entrega
+## correcta (`POP` del puesto) y errónea (`SHAKE`), nueva comanda y caducada (sobre el label).
+## La comanda viva y el label salen de esas señales, sin consultar sistemas (B16).
 ## Contrato `interactable` (ADR-003 §4).
 
 ## Texto del label cuando el puesto no tiene comanda.
@@ -28,8 +30,7 @@ var _expired_frame: int = -1
 
 @onready var _zone: Area3D = %DeliveryZone
 @onready var _label: Label3D = %OrderLabel
-@onready var _ok_audio: AudioStreamPlayer3D = %OkAudio
-@onready var _error_audio: AudioStreamPlayer3D = %ErrorAudio
+@onready var _feedback: FeedbackPlayer = %Feedback
 
 
 func _ready() -> void:
@@ -127,21 +128,23 @@ func _on_orders_reset() -> void:
 func _on_order_generated(order: ActiveOrder) -> void:
 	if order.slot_id == slot_id:
 		_set_order(order)
+		_feedback.play_cue(&"order_new", _label)
 
 
 func _on_order_completed(order: ActiveOrder, _points: int) -> void:
 	if order.slot_id != slot_id:
 		return
 	_set_order(null)
-	_ok_audio.play()
+	_feedback.play_cue(&"deliver_ok")
 
 
 func _on_order_expired(order: ActiveOrder, _penalty: int) -> void:
 	if order.slot_id == slot_id:
 		_expired_frame = Engine.get_physics_frames()
 		_set_order(null)
+		_feedback.play_cue(&"order_expired", _label)
 
 
 func _on_delivery_rejected(rejected_slot_id: int, _order_id: int, _penalty: int) -> void:
 	if rejected_slot_id == slot_id:
-		_error_audio.play()
+		_feedback.play_cue(&"deliver_error")

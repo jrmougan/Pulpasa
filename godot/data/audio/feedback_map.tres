@@ -1,0 +1,147 @@
+[gd_resource type="Resource" script_class="AudioFeedbackMap" format=3]
+
+[ext_resource type="Script" path="res://resources/audio_cue.gd" id="1_3p1oc"]
+[ext_resource type="AudioStream" path="res://assets/audio/fx_grab.ogg" id="2_yci3c"]
+[ext_resource type="AudioStream" path="res://assets/audio/fx_drop.ogg" id="3_aj3yj"]
+[ext_resource type="AudioStream" path="res://assets/audio/cut.ogg" id="4_f3qps"]
+[ext_resource type="AudioStream" path="res://assets/audio/fx_ui_click.ogg" id="5_5c82b"]
+[ext_resource type="AudioStream" path="res://assets/audio/pepper_mill.ogg" id="6_fmt7o"]
+[ext_resource type="AudioStream" path="res://assets/audio/delivery_error.ogg" id="7_ye7ix"]
+[ext_resource type="AudioStream" path="res://assets/audio/delivery_ok.ogg" id="8_w88wo"]
+[ext_resource type="AudioStream" path="res://assets/audio/fx_order_new.ogg" id="9_2p18u"]
+[ext_resource type="AudioStream" path="res://assets/audio/fx_order_expired.ogg" id="10_66efs"]
+[ext_resource type="AudioStream" path="res://assets/audio/fx_burn_warning.ogg" id="11_5drf2"]
+[ext_resource type="AudioStream" path="res://assets/audio/fx_burned.ogg" id="12_qg6pt"]
+[ext_resource type="AudioStream" path="res://assets/audio/fx_phase_change.ogg" id="13_f7mvv"]
+[ext_resource type="Script" path="res://resources/audio_feedback_map.gd" id="14_lxye3"]
+
+[sub_resource type="Resource" id="Resource_af6f2"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("2_yci3c")
+volume_db = -2.0
+visual = 1
+visual_time = 0.35
+pop_scale = 0.3
+
+[sub_resource type="Resource" id="Resource_n615q"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("3_aj3yj")
+volume_db = -8.0
+
+[sub_resource type="Resource" id="Resource_l6o6f"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("4_f3qps")
+visual = 1
+visual_time = 0.3
+pop_scale = 0.08
+
+[sub_resource type="Resource" id="Resource_hfrm7"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("3_aj3yj")
+visual = 1
+pop_scale = 0.1
+
+[sub_resource type="Resource" id="Resource_xggkn"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("5_5c82b")
+visual = 1
+pop_scale = 0.25
+
+[sub_resource type="Resource" id="Resource_rtr1p"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("6_fmt7o")
+visual = 1
+visual_time = 0.35
+pop_scale = 0.2
+
+[sub_resource type="Resource" id="Resource_iru8r"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("5_5c82b")
+volume_db = -6.0
+
+[sub_resource type="Resource" id="Resource_lgxhl"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("7_ye7ix")
+volume_db = -3.0
+visual = 2
+visual_time = 0.3
+
+[sub_resource type="Resource" id="Resource_h6mb1"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("8_w88wo")
+pitch_jitter = 0.0
+visual = 1
+visual_time = 0.5
+pop_scale = 0.2
+
+[sub_resource type="Resource" id="Resource_s2vi7"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("7_ye7ix")
+pitch_jitter = 0.0
+visual = 2
+visual_time = 0.5
+shake_amplitude = 0.12
+
+[sub_resource type="Resource" id="Resource_sdx7x"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("9_2p18u")
+volume_db = -2.0
+pitch_jitter = 0.0
+delay = 0.5
+visual = 1
+pop_scale = 0.3
+
+[sub_resource type="Resource" id="Resource_boktb"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("10_66efs")
+pitch_jitter = 0.0
+visual = 2
+visual_time = 0.5
+shake_amplitude = 0.08
+
+[sub_resource type="Resource" id="Resource_l3wg6"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("11_5drf2")
+volume_db = -2.0
+pitch_jitter = 0.0
+
+[sub_resource type="Resource" id="Resource_elxnh"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("12_qg6pt")
+visual = 2
+visual_time = 0.5
+shake_amplitude = 0.08
+
+[sub_resource type="Resource" id="Resource_dgmik"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("3_aj3yj")
+volume_db = -2.0
+visual = 1
+visual_time = 0.35
+pop_scale = 0.1
+
+[sub_resource type="Resource" id="Resource_kjbxn"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("13_f7mvv")
+pitch_jitter = 0.0
+
+[resource]
+script = ExtResource("14_lxye3")
+cues = Dictionary[StringName, ExtResource("1_3p1oc")]({
+&"burn_warning": SubResource("Resource_l3wg6"),
+&"burnt": SubResource("Resource_elxnh"),
+&"cook_done": SubResource("Resource_xggkn"),
+&"cook_start": SubResource("Resource_hfrm7"),
+&"cut": SubResource("Resource_l6o6f"),
+&"deliver_error": SubResource("Resource_s2vi7"),
+&"deliver_ok": SubResource("Resource_h6mb1"),
+&"discard": SubResource("Resource_dgmik"),
+&"drop": SubResource("Resource_n615q"),
+&"order_expired": SubResource("Resource_boktb"),
+&"order_new": SubResource("Resource_sdx7x"),
+&"phase_up": SubResource("Resource_kjbxn"),
+&"pick_up": SubResource("Resource_af6f2"),
+&"season": SubResource("Resource_rtr1p"),
+&"season_error": SubResource("Resource_lgxhl"),
+&"unseason": SubResource("Resource_iru8r")
+})

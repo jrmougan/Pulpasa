@@ -9,10 +9,9 @@
 [ext_resource type="PackedScene" path="res://assets/models/food/cachelos/cachelos_pieces.glb" id="11_cach"]
 [ext_resource type="Resource" path="res://data/seasonings/cachelos.tres" id="12_cach"]
 [ext_resource type="PackedScene" path="res://ui/widgets/world_progress_bar.tscn" id="6_rn5qa"]
-[ext_resource type="AudioStream" path="res://assets/audio/cut.ogg" id="7_j1y55"]
-[ext_resource type="AudioStream" path="res://assets/audio/pepper_mill.ogg" id="8_chijy"]
 
 [ext_resource type="Script" path="res://entities/items/badge_row.gd" id="9_badge"]
+[ext_resource type="Script" path="res://components/feedback_player.gd" id="13_fb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_im475"]
 size = Vector3(0.396, 0.333, 0.375)
@@ -91,14 +90,10 @@ libraries/ = SubResource("AnimationLibrary_1bfvp")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
-[node name="CutAudio" type="AudioStreamPlayer3D" parent="." unique_id=1876531795]
-unique_name_in_owner = true
-stream = ExtResource("7_j1y55")
-
-[node name="SeasonAudio" type="AudioStreamPlayer3D" parent="." unique_id=1433359820]
-unique_name_in_owner = true
-stream = ExtResource("8_chijy")
-
 [node name="BadgeRow" type="Node3D" parent="." unique_id=1590211477]
 unique_name_in_owner = true
 script = ExtResource("9_badge")
+
+[node name="Feedback" type="AudioStreamPlayer3D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("13_fb")
