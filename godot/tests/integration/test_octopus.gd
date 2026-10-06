@@ -107,3 +107,18 @@ func _variant_ingredient(mesh_names: Array[String], material: Material = null) -
 		mesh.owner = ingredient
 	add_child_autofree(ingredient)
 	return ingredient
+
+
+func test_pul069_glb_burnt_mesh_shown_when_burnt() -> void:
+	# PUL-069: octopus.glb trae octopus_burnt; solo se ve al quemarse.
+	var octopus: Ingredient = _octopus()
+	var burnt: Node3D = octopus.get_node("Model").find_child("octopus_burnt") as Node3D
+	assert_not_null(burnt)
+	assert_false(burnt.visible, "oculta en crudo")
+	octopus.set_cooked()
+	assert_false(burnt.visible, "oculta en cocido")
+	octopus.set_burnt()
+	assert_eq(octopus.state, IngredientData.CookingState.BURNT)
+	assert_false(octopus.is_cooked())
+	assert_true(burnt.visible)
+	assert_false((octopus.get_node("Model").find_child("octopus_cooked") as Node3D).visible)
