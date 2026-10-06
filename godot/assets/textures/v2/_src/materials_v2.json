@@ -1,0 +1,1261 @@
+{
+ "uv_meters_per_unit": 2.0,
+ "textures": {
+  "steel_brushed": {
+   "files": {
+    "albedo": "steel_brushed/steel_brushed_albedo.png",
+    "orm": "steel_brushed/steel_brushed_orm.png",
+    "normal": "steel_brushed/steel_brushed_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.8000000000000086,
+    0.8000000000000086,
+    0.8000000000000086
+   ],
+   "alpha": false
+  },
+  "steel_brushed_top": {
+   "files": {
+    "albedo": "steel_brushed_top/steel_brushed_top_albedo.png",
+    "orm": "steel_brushed_top/steel_brushed_top_orm.png",
+    "normal": "steel_brushed_top/steel_brushed_top_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.8000000000000025,
+    0.8000000000000025,
+    0.8000000000000025
+   ],
+   "alpha": false
+  },
+  "plastic": {
+   "files": {
+    "albedo": "plastic/plastic_albedo.png",
+    "orm": "plastic/plastic_orm.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.7999999999999992,
+    0.7999999999999992,
+    0.7999999999999992
+   ],
+   "alpha": false
+  },
+  "wood_used": {
+   "files": {
+    "albedo": "wood_used/wood_used_albedo.png",
+    "orm": "wood_used/wood_used_orm.png",
+    "normal": "wood_used/wood_used_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.7999714990689558,
+    0.7999714990689558,
+    0.7999714990689558
+   ],
+   "alpha": false
+  },
+  "wood_dark": {
+   "files": {
+    "albedo": "wood_dark/wood_dark_albedo.png",
+    "orm": "wood_dark/wood_dark_orm.png",
+    "normal": "wood_dark/wood_dark_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.7999999999999673,
+    0.7999999999999673,
+    0.7999999999999673
+   ],
+   "alpha": false
+  },
+  "burlap": {
+   "files": {
+    "albedo": "burlap/burlap_albedo.png",
+    "orm": "burlap/burlap_orm.png",
+    "normal": "burlap/burlap_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.33245153634619107,
+    0.20507873639031332,
+    0.09989872824711686
+   ],
+   "alpha": false
+  },
+  "canvas": {
+   "files": {
+    "albedo": "canvas/canvas_albedo.png",
+    "orm": "canvas/canvas_orm.png",
+    "normal": "canvas/canvas_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.8000000000000164,
+    0.8000000000000164,
+    0.8000000000000164
+   ],
+   "alpha": false
+  },
+  "cardboard": {
+   "files": {
+    "albedo": "cardboard/cardboard_albedo.png",
+    "orm": "cardboard/cardboard_orm.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.47932018310082725,
+    0.2917706498175441,
+    0.11443537382697266
+   ],
+   "alpha": false
+  },
+  "clay": {
+   "files": {
+    "albedo": "clay/clay_albedo.png",
+    "orm": "clay/clay_orm.png",
+    "normal": "clay/clay_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.39157247774972076,
+    0.10224173308810022,
+    0.04231141062081137
+   ],
+   "alpha": false
+  },
+  "paint_grey": {
+   "files": {
+    "albedo": "paint_grey/paint_grey_albedo.png",
+    "orm": "paint_grey/paint_grey_orm.png",
+    "normal": "paint_grey/paint_grey_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.11443537382694337,
+    0.14412847085810113,
+    0.1559264637078575
+   ],
+   "alpha": false
+  },
+  "paint_beige": {
+   "files": {
+    "albedo": "paint_beige/paint_beige_albedo.png",
+    "orm": "paint_beige/paint_beige_orm.png",
+    "normal": "paint_beige/paint_beige_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.44520119451633433,
+    0.30946892281739896,
+    0.16202937563907546
+   ],
+   "alpha": false
+  },
+  "granite": {
+   "files": {
+    "albedo": "granite/granite_albedo.png",
+    "orm": "granite/granite_orm.png",
+    "normal": "granite/granite_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.2622506575298634,
+    0.25415209433078007,
+    0.230740048524336
+   ],
+   "alpha": false
+  },
+  "ground_dirt": {
+   "files": {
+    "albedo": "ground_dirt/ground_dirt_albedo.png",
+    "orm": "ground_dirt/ground_dirt_orm.png",
+    "normal": "ground_dirt/ground_dirt_normal.png"
+   },
+   "size": 1024,
+   "mean_lin": [
+    0.35640014414595045,
+    0.23839757381226628,
+    0.13843161503245022
+   ],
+   "alpha": false
+  },
+  "grass": {
+   "files": {
+    "albedo": "grass/grass_albedo.png",
+    "orm": "grass/grass_orm.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.13286832155381673,
+    0.1651321945016717,
+    0.045186204385674694
+   ],
+   "alpha": false
+  },
+  "foliage": {
+   "files": {
+    "albedo": "foliage/foliage_albedo.png",
+    "orm": "foliage/foliage_orm.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.04753025183749076,
+    0.10103958792518788,
+    0.027155655751606878
+   ],
+   "alpha": true
+  },
+  "cloth": {
+   "files": {
+    "albedo": "cloth/cloth_albedo.png",
+    "orm": "cloth/cloth_orm.png",
+    "normal": "cloth/cloth_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.7999480118173816,
+    0.7999480118173816,
+    0.7999480118173816
+   ],
+   "alpha": false
+  },
+  "burnt_octopus": {
+   "files": {
+    "albedo": "burnt_octopus/burnt_octopus_albedo.png",
+    "orm": "burnt_octopus/burnt_octopus_orm.png",
+    "normal": "burnt_octopus/burnt_octopus_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.023153366178110243,
+    0.016807375752887776,
+    0.014443843596092182
+   ],
+   "alpha": false
+  },
+  "burnt_potato": {
+   "files": {
+    "albedo": "burnt_potato/burnt_potato_albedo.png",
+    "orm": "burnt_potato/burnt_potato_orm.png",
+    "normal": "burnt_potato/burnt_potato_normal.png"
+   },
+   "size": 512,
+   "mean_lin": [
+    0.02732089163907548,
+    0.019382360956935758,
+    0.014443843596092257
+   ],
+   "alpha": false
+  }
+ },
+ "materials": [
+  {
+   "name": "mat_steel_brushed",
+   "texture": "steel_brushed",
+   "hex": "#B9BEC2",
+   "factor_lin": [
+    0.6064374250700815,
+    0.6436470817206448,
+    0.6743493612651268
+   ],
+   "factor_srgb": [
+    0.8015379786930239,
+    0.8230563301235735,
+    0.8402710112680132
+   ],
+   "roughness": 0.4,
+   "metallic": 1.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#B9BEC2",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_steel_brushed_top",
+   "texture": "steel_brushed_top",
+   "hex": "#9EA5AA",
+   "factor_lin": [
+    0.42739303113582483,
+    0.47032765373863167,
+    0.5024722247902432
+   ],
+   "factor_srgb": [
+    0.685338880968059,
+    0.7154645729708285,
+    0.7369829244013779
+   ],
+   "roughness": 0.42,
+   "metallic": 1.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#9EA5AA",
+   "max_channel_diff": 2.220446049250313e-16,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_steel_brushed_mid",
+   "texture": "steel_brushed",
+   "hex": "#7D868D",
+   "factor_lin": [
+    0.2563484204878934,
+    0.29799696726533553,
+    0.3329445060035745
+   ],
+   "factor_srgb": [
+    0.5433177615264296,
+    0.5820507941014187,
+    0.6121764861041882
+   ],
+   "roughness": 0.45,
+   "metallic": 1.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#7D868D",
+   "max_channel_diff": 0.0,
+   "lum_diff": 1.1895286177257378e-16
+  },
+  {
+   "name": "mat_steel_dark",
+   "texture": "steel_brushed",
+   "hex": "#4E5458",
+   "factor_lin": [
+    0.0952317268516338,
+    0.11081948285721499,
+    0.12198418392732677
+   ],
+   "factor_srgb": [
+    0.3410452580792641,
+    0.36686727979592354,
+    0.3840819609403632
+   ],
+   "roughness": 0.5,
+   "metallic": 0.8,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#4E5458",
+   "max_channel_diff": 5.551115123125783e-17,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_copper",
+   "texture": "steel_brushed",
+   "hex": "#C8672E",
+   "factor_lin": [
+    0.7219755505370555,
+    0.16954166206900526,
+    0.03415111454884325
+   ],
+   "factor_srgb": [
+    0.8660930329846727,
+    0.44863701523201177,
+    0.20332780892374708
+   ],
+   "roughness": 0.4,
+   "metallic": 1.0,
+   "normal_strength": 1.0,
+   "extras": {
+    "note": "solo atrezo de fondo (\u00a73.1)"
+   },
+   "mean_srgb": "#C8672E",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_paint_worn_grey",
+   "texture": "paint_grey",
+   "hex": "#5F6A6E",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.6,
+   "metallic": 1.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#5F6A6E",
+   "max_channel_diff": 5.900835375882707e-14,
+   "lum_diff": 1.925531021270477e-13
+  },
+  {
+   "name": "mat_paint_worn_beige",
+   "texture": "paint_beige",
+   "hex": "#B29770",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.6,
+   "metallic": 1.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#B29770",
+   "max_channel_diff": 9.547918011776346e-14,
+   "lum_diff": 1.7770725827115644e-13
+  },
+  {
+   "name": "mat_plastic_red",
+   "texture": "plastic",
+   "hex": "#C8402F",
+   "factor_lin": [
+    0.7219755505370641,
+    0.06408682296755411,
+    0.03553254938052603
+   ],
+   "factor_srgb": [
+    0.8660930329846772,
+    0.2807938740737271,
+    0.2076314792098583
+   ],
+   "roughness": 0.45,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#C8402F",
+   "max_channel_diff": 0.0,
+   "lum_diff": 1.7184638190167682e-16
+  },
+  {
+   "name": "mat_plastic_blue",
+   "texture": "plastic",
+   "hex": "#3E78B0",
+   "factor_lin": [
+    0.06021478028361184,
+    0.23477596537584758,
+    0.5426920452184367
+   ],
+   "factor_srgb": [
+    0.27218653350150723,
+    0.521799410095883,
+    0.762804946118039
+   ],
+   "roughness": 0.45,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#3E78B0",
+   "max_channel_diff": 5.551115123125783e-17,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_wood_used",
+   "texture": "wood_used",
+   "hex": "#B58A5C",
+   "factor_lin": [
+    0.5776168278397341,
+    0.31770143639694765,
+    0.13378364492088293
+   ],
+   "factor_srgb": [
+    0.7843357569752071,
+    0.5992751875613682,
+    0.40130341563028493
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#B58A5C",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_wood_dark",
+   "texture": "wood_dark",
+   "hex": "#553E30",
+   "factor_lin": [
+    0.11355213897926425,
+    0.06021478028361424,
+    0.03694604304726251
+   ],
+   "factor_srgb": [
+    0.3711709500820426,
+    0.2721865335015127,
+    0.21193514949597264
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#553E30",
+   "max_channel_diff": 2.7755575615628914e-17,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_burlap",
+   "texture": "burlap",
+   "hex": "#9C7D59",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#9C7D59",
+   "max_channel_diff": 9.880984919163893e-15,
+   "lum_diff": 6.179875504955724e-16
+  },
+  {
+   "name": "mat_cardboard",
+   "texture": "cardboard",
+   "hex": "#B8935F",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.85,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#B8935F",
+   "max_channel_diff": 7.327471962526033e-15,
+   "lum_diff": 1.845496384076866e-14
+  },
+  {
+   "name": "mat_clay",
+   "texture": "clay",
+   "hex": "#A85A3A",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.75,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#A85A3A",
+   "max_channel_diff": 4.746203430272544e-15,
+   "lum_diff": 7.312048631892791e-15
+  },
+  {
+   "name": "mat_canvas_red",
+   "texture": "canvas",
+   "hex": "#C8402F",
+   "factor_lin": [
+    0.7219755505370485,
+    0.06408682296755273,
+    0.03553254938052527
+   ],
+   "factor_srgb": [
+    0.8660930329846689,
+    0.2807938740737241,
+    0.20763147920985592
+   ],
+   "roughness": 0.85,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#C8402F",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_canvas_paper",
+   "texture": "canvas",
+   "hex": "#F4EFE6",
+   "factor_lin": [
+    1.0,
+    1.0,
+    0.9891224254157676
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9952031415679655
+   ],
+   "roughness": 0.85,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#E7E7E6",
+   "max_channel_diff": 0.05053099175397169,
+   "lum_diff": 0.07778215424642285
+  },
+  {
+   "name": "mat_canvas_stand_1",
+   "texture": "canvas",
+   "hex": "#D2473F",
+   "factor_lin": [
+    0.8055996024632112,
+    0.07876252206645798,
+    0.06213320748015777
+   ],
+   "factor_srgb": [
+    0.9091297358457677,
+    0.3109195660764933,
+    0.2764902037876142
+   ],
+   "roughness": 0.85,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#D2473F",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_canvas_stand_2",
+   "texture": "canvas",
+   "hex": "#3F7CC8",
+   "factor_lin": [
+    0.06213320748015777,
+    0.2519453172429912,
+    0.7219755505370485
+   ],
+   "factor_srgb": [
+    0.2764902037876142,
+    0.5390140912403173,
+    0.8660930329846689
+   ],
+   "roughness": 0.85,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#3F7CC8",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_canvas_stand_3",
+   "texture": "canvas",
+   "hex": "#E8C23A",
+   "factor_lin": [
+    1.0,
+    0.6743493612651202,
+    0.05288926327601101
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.8402710112680095,
+    0.25497185235706477
+   ],
+   "roughness": 0.85,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#E7C23A",
+   "max_channel_diff": 0.0034721682245598684,
+   "lum_diff": 0.0026372620267446716
+  },
+  {
+   "name": "mat_canvas_stand_4",
+   "texture": "canvas",
+   "hex": "#4FA05A",
+   "factor_lin": [
+    0.09773427725648091,
+    0.43941574937554023,
+    0.12780216636012404
+   ],
+   "factor_srgb": [
+    0.34534892836537234,
+    0.6939462215402733,
+    0.3926893015125812
+   ],
+   "roughness": 0.85,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#4FA05A",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_granite",
+   "texture": "granite",
+   "hex": "#8C8A84",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.85,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#8C8A84",
+   "max_channel_diff": 1.6053824936079764e-13,
+   "lum_diff": 4.804581458375797e-15
+  },
+  {
+   "name": "mat_rubber",
+   "texture": null,
+   "hex": "#24272A",
+   "factor_lin": [
+    0.017641954488384078,
+    0.0202885630566524,
+    0.02315336617811041
+   ],
+   "factor_srgb": [
+    0.1411764705882353,
+    0.15294117647058825,
+    0.16470588235294117
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#24272A",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_rubber_hose_red",
+   "texture": null,
+   "hex": "#8E2F2A",
+   "factor_lin": [
+    0.2704977910130658,
+    0.028426039504420793,
+    0.02315336617811041
+   ],
+   "factor_srgb": [
+    0.5568627450980392,
+    0.1843137254901961,
+    0.16470588235294117
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#8E2F2A",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_rubber_hose_green",
+   "texture": null,
+   "hex": "#3F6B45",
+   "factor_lin": [
+    0.04970656598412723,
+    0.14702726649759498,
+    0.0595112381629812
+   ],
+   "factor_srgb": [
+    0.24705882352941178,
+    0.4196078431372549,
+    0.27058823529411763
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#3F6B45",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_ground_dirt",
+   "texture": "ground_dirt",
+   "hex": "#A18668",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {
+    "uv_m": 4.0
+   },
+   "mean_srgb": "#A18668",
+   "max_channel_diff": 5.551115123125783e-15,
+   "lum_diff": 7.798110940219502e-15
+  },
+  {
+   "name": "mat_grass",
+   "texture": "grass",
+   "hex": "#66713C",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#66713C",
+   "max_channel_diff": 5.162537064506978e-15,
+   "lum_diff": 1.7252993226255143e-14
+  },
+  {
+   "name": "mat_foliage",
+   "texture": "foliage",
+   "hex": "#3E5A2E",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {
+    "alpha": "scissor",
+    "cull": "disabled"
+   },
+   "mean_srgb": "#3E592E",
+   "max_channel_diff": 0.002005446620299778,
+   "lum_diff": 0.011813168352939246
+  },
+  {
+   "name": "mat_glass_water",
+   "texture": null,
+   "hex": "#8FC6D8",
+   "factor_lin": [
+    0.27467731206038465,
+    0.5647115057049292,
+    0.6866853124353135
+   ],
+   "factor_srgb": [
+    0.5607843137254902,
+    0.7764705882352942,
+    0.8470588235294118
+   ],
+   "roughness": 0.05,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {
+    "alpha": "blend",
+    "alpha_value": 0.55
+   },
+   "mean_srgb": "#8FC6D8",
+   "max_channel_diff": 1.1102230246251565e-16,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_emissive_bulb",
+   "texture": null,
+   "hex": "#FFD58A",
+   "factor_lin": [
+    1.0,
+    0.665387298282272,
+    0.25415209433082675
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.8352941176470589,
+    0.5411764705882353
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {
+    "emission": 2.0
+   },
+   "mean_srgb": "#FFD58A",
+   "max_channel_diff": 1.1102230246251565e-16,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_emissive_screen",
+   "texture": null,
+   "hex": "#8FD3F0",
+   "factor_lin": [
+    0.27467731206038465,
+    0.6514056374198242,
+    0.8713671191987972
+   ],
+   "factor_srgb": [
+    0.5607843137254902,
+    0.8274509803921568,
+    0.9411764705882353
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {
+    "emission": 0.6
+   },
+   "mean_srgb": "#8FD3F0",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_emissive_neon",
+   "texture": null,
+   "hex": "#FF6B57",
+   "factor_lin": [
+    1.0,
+    0.14702726649759498,
+    0.0953074666309647
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.4196078431372549,
+    0.3411764705882353
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {
+    "emission": 2.5
+   },
+   "mean_srgb": "#FF6B57",
+   "max_channel_diff": 1.1102230246251565e-16,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_cloth_shirt",
+   "texture": "cloth",
+   "hex": "#F2F0EC",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#E7E7E7",
+   "max_channel_diff": 0.04271388514390306,
+   "lum_diff": 0.08319145151951313
+  },
+  {
+   "name": "mat_cloth_pants",
+   "texture": "cloth",
+   "hex": "#1D3557",
+   "factor_lin": [
+    0.015359108561320766,
+    0.0445045357311891,
+    0.1191420757636963
+   ],
+   "factor_srgb": [
+    0.13017042804763962,
+    0.2334613117929819,
+    0.3797900637655501
+   ],
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#1D3557",
+   "max_channel_diff": 2.7755575615628914e-17,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_cloth_player_1",
+   "texture": "cloth",
+   "hex": "#2F6FB5",
+   "factor_lin": [
+    0.03553485862142515,
+    0.19871395729797656,
+    0.5776337872315302
+   ],
+   "factor_srgb": [
+    0.20763859085664627,
+    0.4830809475108923,
+    0.7843460251014739
+   ],
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#2F6FB5",
+   "max_channel_diff": 5.551115123125783e-17,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_cloth_player_2",
+   "texture": "cloth",
+   "hex": "#E0A02E",
+   "factor_lin": [
+    0.9318158161890077,
+    0.43944430676413754,
+    0.034153334011050605
+   ],
+   "factor_srgb": [
+    0.9694088584785453,
+    0.6939665018242995,
+    0.20333480403392368
+   ],
+   "roughness": 0.9,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#E0A02E",
+   "max_channel_diff": 2.7755575615628914e-17,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_skin_light",
+   "texture": null,
+   "hex": "#EBC49A",
+   "factor_lin": [
+    0.8307698767746546,
+    0.5520114015120001,
+    0.32314320911295075
+   ],
+   "factor_srgb": [
+    0.9215686274509803,
+    0.7686274509803922,
+    0.6039215686274509
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#EBC49A",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_skin_dark",
+   "texture": null,
+   "hex": "#A8734D",
+   "factor_lin": [
+    0.39157247774972326,
+    0.1714411007328226,
+    0.07421356838014963
+   ],
+   "factor_srgb": [
+    0.6588235294117647,
+    0.45098039215686275,
+    0.30196078431372547
+   ],
+   "roughness": 0.7,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#A8734D",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_food_octopus_raw",
+   "texture": null,
+   "hex": "#E0AFB2",
+   "factor_lin": [
+    0.7454042095403874,
+    0.4286904966139066,
+    0.44520119451622786
+   ],
+   "factor_srgb": [
+    0.8784313725490196,
+    0.6862745098039216,
+    0.6980392156862745
+   ],
+   "roughness": 0.4,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#E0AFB2",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_food_octopus_cooked",
+   "texture": null,
+   "hex": "#B8283D",
+   "factor_lin": [
+    0.4793201831008268,
+    0.021219010376003555,
+    0.046665086336880095
+   ],
+   "factor_srgb": [
+    0.7215686274509804,
+    0.1568627450980392,
+    0.23921568627450984
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#B8283D",
+   "max_channel_diff": 2.7755575615628914e-17,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_food_octopus_pieces",
+   "texture": null,
+   "hex": "#D4506A",
+   "factor_lin": [
+    0.6583748172794485,
+    0.08021982031446832,
+    0.14412847085805777
+   ],
+   "factor_srgb": [
+    0.8313725490196079,
+    0.3137254901960784,
+    0.41568627450980394
+   ],
+   "roughness": 0.5,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#D4506A",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_food_octopus_burnt",
+   "texture": "burnt_octopus",
+   "hex": "#2A2320",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#2A2320",
+   "max_channel_diff": 1.8596235662471372e-15,
+   "lum_diff": 1.2152593115576588e-14
+  },
+  {
+   "name": "mat_food_potato_raw",
+   "texture": null,
+   "hex": "#8E6B47",
+   "factor_lin": [
+    0.2704977910130658,
+    0.14702726649759498,
+    0.06301001765316767
+   ],
+   "factor_srgb": [
+    0.5568627450980392,
+    0.4196078431372549,
+    0.2784313725490196
+   ],
+   "roughness": 0.8,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#8E6B47",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_food_potato_cooked",
+   "texture": null,
+   "hex": "#F2D56B",
+   "factor_lin": [
+    0.8879231178819663,
+    0.665387298282272,
+    0.14702726649759498
+   ],
+   "factor_srgb": [
+    0.9490196078431371,
+    0.8352941176470589,
+    0.4196078431372549
+   ],
+   "roughness": 0.6,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#F2D56B",
+   "max_channel_diff": 1.1102230246251565e-16,
+   "lum_diff": 0.0
+  },
+  {
+   "name": "mat_food_potato_burnt",
+   "texture": "burnt_potato",
+   "hex": "#2E2620",
+   "factor_lin": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "factor_srgb": [
+    0.9999999999999999,
+    0.9999999999999999,
+    0.9999999999999999
+   ],
+   "roughness": 0.95,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#2E2620",
+   "max_channel_diff": 2.1094237467877974e-15,
+   "lum_diff": 6.19737568353715e-15
+  },
+  {
+   "name": "mat_food_tray_liner",
+   "texture": null,
+   "hex": "#F4EFE6",
+   "factor_lin": [
+    0.9046611743911496,
+    0.8631572134541023,
+    0.7912979403326302
+   ],
+   "factor_srgb": [
+    0.9568627450980393,
+    0.9372549019607843,
+    0.9019607843137255
+   ],
+   "roughness": 0.8,
+   "metallic": 0.0,
+   "normal_strength": 1.0,
+   "extras": {},
+   "mean_srgb": "#F4EFE6",
+   "max_channel_diff": 0.0,
+   "lum_diff": 0.0
+  }
+ ]
+}

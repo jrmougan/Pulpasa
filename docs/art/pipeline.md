@@ -70,9 +70,11 @@ por ficha, art-bible §2.4). Contiene:
 - **Colección `reference`** (no se exporta, no renderiza): `ref_character_1_8m` (caja de 0,6 × 0,3
   × 1,8 m, origen en la base) y `ref_counter_1m` (encimera de 1 × 0,8 × 1 m) en alámbrico, y la
   flecha `ref_front_+Y`.
-- **Materiales de la paleta** (art-bible §2.6): `mat_<nombre>` para los 32 colores, con `Base Color`
-  en el hex exacto (convertido a lineal), `Roughness` 0,8 y `Metallic` 0 (0,3 en `mat_copper`),
-  marcados con *fake user* para que no se pierdan. Reutilízalos; no crees colores a mano.
+- **Materiales v2** (art-bible v2 §3, PUL-074): los 45 `mat_*` de `art/blender/_materials_v2.blend`,
+  **enlazados** (link, ruta relativa `//_materials_v2.blend`; por eso el `.blend` del asset debe vivir
+  en `art/blender/`). La tira `ref_materials_v2` de `reference` los mantiene vivos y sirve de muestrario.
+  Reutilízalos; no crees materiales a mano. Catálogo y convenciones en [`materials-v2.md`](materials-v2.md).
+  Los 32 colores planos de la v1 ya no están en la plantilla (los `.blend` de M3 conservan su copia).
 
 ## 4. Export headless: `tools/blender_export.py`
 
@@ -84,6 +86,8 @@ blender -b art/blender/character.blend --python tools/blender_export.py -- --cat
 blender -b art/blender/x.blend --python tools/blender_export.py -- --out godot/assets/models/items/x/x.glb
 # Prueba de humo: cubo de 1 m sobre la plantilla → godot/assets/models/_pipeline/test_cube/test_cube.glb
 blender -b art/blender/_template.blend --python tools/blender_export.py -- --smoke-cube
+# Asset de prueba de la biblioteca v2 → godot/assets/models/_pipeline/materials_v2_test/ (PUL-074)
+blender -b art/blender/_template.blend --python tools/blender_export.py -- --materials-test
 ```
 
 Categorías: `characters`, `food`, `items`, `stations`, `furniture`, `environment` (y `_pipeline`
@@ -94,10 +98,12 @@ para pruebas del pipeline). El script **valida antes de exportar** y sale con c�
   rotación distinta de cero, en local o en mundo (`Ctrl+A → All Transforms`);
 - hay cámaras, luces o sufijos de colisión (`-col`, `-colonly`…);
 - falta `Anchor_Front`, está sobre el origen o se desvía más de 1° del eje +Y;
-- se pasa `--max-tris` y la colección lo supera (presupuestos de art-bible §2.2).
+- se pasa `--max-tris` y la colección lo supera (presupuestos de art-bible §2.2);
+- una textura de un material exportado no existe en disco o mide más de 1024 px (art-bible v2 §4.2).
 
 Exporta glTF 2.0 binario solo de la colección `export` (incluidas anidadas), `+Y Up`,
-modificadores aplicados, materiales, sin cámaras, luces ni *extras*; animaciones y skins solo con
+modificadores aplicados, materiales con sus texturas embebidas y tangentes (para los normal maps),
+sin cámaras, luces ni *extras*; animaciones y skins solo con
 `--animations`. Escribe un resumen `blender_export: OK <ruta> (N objetos, T triángulos, K KiB)`.
 
 ## 5. Import en Godot (`.glb.import`)
@@ -111,14 +117,14 @@ Si el `.import` ya existe no se toca (los cambios a mano en el editor se respeta
 | `nodes/root_scale`, `nodes/apply_root_scale` | `1.0`, `true` | 1 u = 1 m; la escala se fija en Blender |
 | `nodes/use_name_suffixes`, `nodes/use_node_type_suffixes` | `false` | **Sin generación de colisiones** ni nodos por sufijo: colisiones y nodos de contrato los pone la escena (art-bible §2.3) |
 | `materials/extract` | `0` | Materiales embebidos en el `.glb` (`StandardMaterial3D` importado); se sustituyen en la escena si hace falta |
-| `meshes/ensure_tangents` | `false` | Sin normal maps (art-bible §1.1) |
+| `meshes/ensure_tangents` | `true` | Normal maps de la biblioteca v2 (art-bible v2 §3.2); los `.import` anteriores a PUL-074 siguen con `false` (no tienen normal maps) |
 | `meshes/generate_lods`, `meshes/create_shadow_meshes` | `true` | Por defecto de Godot |
 | `meshes/light_baking` | `1` (static) | Por defecto |
 | `animation/import`, `animation/fps` | `true`, `30` | Clips del personaje (PUL-044) |
-| `gltf/naming_version`, `gltf/embedded_image_handling` | `2`, `1` (extraer texturas) | Por defecto de Godot 4.7 |
+| `gltf/naming_version`, `gltf/embedded_image_handling` | `2`, `1` (extraer texturas) | Las texturas embebidas se extraen como `<asset>_<imagen>.png` junto al `.glb` (§8) |
 
 Después de exportar: `godot --headless --path godot --import` (o abrir el editor) y versionar
-`.glb` y `.glb.import`. Los `.glb` **no se envuelven en `.tscn`**: la escena de gameplay instancia el
+`.glb`, `.glb.import` y las texturas extraídas con sus `.png.import` (§8). Los `.glb` **no se envuelven en `.tscn`**: la escena de gameplay instancia el
 `.glb` bajo su nodo `Model` (`docs/arch/scene-tree.md` §3).
 
 ## 6. Comprobación automática: `godot/tests/unit/test_assets_models.gd`
@@ -138,7 +144,8 @@ la captura en `scale_check`.
 
 1. `tools/blender_mcp.sh start` (si se usa el MCP).
 2. Copiar la plantilla a `art/blender/<asset>.blend`, renombrar `asset`, modelar en `export` con el
-   frente a +Y y el origen en el centro de la base; materiales `mat_*`.
+   frente a +Y y el origen en el centro de la base; materiales `mat_*` enlazados de la biblioteca v2 y
+   UV a 1 unidad = 2 m (§8).
 3. `blender -b art/blender/<asset>.blend --python tools/blender_export.py -- --category <cat> --max-tris <N>`.
 4. `godot --headless --path godot --import` y `tools/verify.sh` (incluye `test_assets_models.gd`).
 5. Captura frente a `godot/scenes/scale_check.tscn` en `docs/evidence/<id>/` (con una escena
@@ -146,3 +153,25 @@ la captura en `scale_check`.
 6. `tools/blender_mcp.sh stop`.
 
 Evidencia del cubo de humo: [`docs/evidence/PUL-043/`](../evidence/PUL-043/).
+
+## 8. Texturas de la biblioteca v2 (PUL-074)
+
+Resumen para las fichas de la v2 (PUL-075..PUL-085); el detalle está en [`materials-v2.md`](materials-v2.md).
+
+1. **Materiales**: solo los `mat_*` enlazados de `_materials_v2.blend` (vienen en la plantilla) más el
+   atlas propio del asset (art-bible v2 §3.3). Un color nuevo de una textura neutra se añade al
+   generador de la biblioteca, no al `.blend` del asset.
+2. **UV**: 1 unidad de UV = 2 m (512 px → 256 px/m); el suelo, 1 UV = 4 m. `box_uv()` de
+   `tools/blender_export.py` es la proyección de referencia (la usa `--materials-test`).
+3. **Atlas propio**: hornéalo en Blender (≤ 1024², art-bible v2 §4.2) y guárdalo en
+   `art/blender/textures/<asset>/` o empaquetado en el `.blend`; conéctalo con los mismos nodos que la
+   biblioteca (Image → Mix MULTIPLY → Base Color; ORM → Separate Color G/B × factor; Normal Map).
+4. **Export**: el `.glb` **embebe** todas las texturas (las de la biblioteca y el atlas) y
+   `blender_export.py` falla si alguna falta en disco o pasa de 1024 px. Así cada `.glb` es
+   autocontenido y cumple «materiales embebidos» de `test_assets_models.gd`.
+5. **Import**: Godot extrae las imágenes junto al `.glb` (`<asset>_<imagen>.png`). Tras el primer
+   import, deja sus `.png.import` con `compress/mode=2`, `mipmaps/generate=true`,
+   `detect_3d/compress_to=0` y, en los `_normal`, `compress/normal_map=1`; reimporta y versiona PNG e
+   `.import`. Ejemplo: [`godot/assets/models/_pipeline/materials_v2_test/`](../../godot/assets/models/_pipeline/materials_v2_test/).
+6. **En escena** (decals, sustituciones, mallas sin UV v2): `godot/assets/materials/v2/mat_*.tres`
+   apuntan a las mismas texturas de `godot/assets/textures/v2/`.

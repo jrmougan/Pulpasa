@@ -5,6 +5,7 @@ Se ejecuta dentro de Blender, sin pantalla, desde la raíz del repo:
   blender -b art/blender/<asset>.blend --python tools/blender_export.py -- --category <cat>
   blender -b art/blender/<asset>.blend --python tools/blender_export.py -- --out <ruta.glb>
   blender -b art/blender/_template.blend --python tools/blender_export.py -- --smoke-cube
+  blender -b art/blender/_template.blend --python tools/blender_export.py -- --materials-test
 
 Opciones (tras `--`):
   --category CAT    destino godot/assets/models/CAT/<asset>/<asset>.glb (<asset> = nombre del .blend)
@@ -13,10 +14,15 @@ Opciones (tras `--`):
   --max-tris N      falla si la colección supera N triángulos (presupuesto de art-bible §2.2)
   --smoke-cube      construye el cubo de prueba sobre la plantilla y lo exporta a
                     godot/assets/models/_pipeline/test_cube/test_cube.glb
+  --materials-test  construye un taburete con tres materiales v2 (PUL-074) y lo exporta a
+                    godot/assets/models/_pipeline/materials_v2_test/materials_v2_test.glb
 
 Reglas que comprueba antes de exportar (art-bible §2): existe la colección `export`, hay una sola
 raíz, escalas y rotaciones aplicadas en todos los objetos (local y mundo), no hay cámaras ni luces y existe el
-marcador `Anchor_Front` en +Y con ≤ 1° de desviación (frente −Z en Godot). Sale con código 1 si algo falla.
+marcador `Anchor_Front` en +Y con ≤ 1° de desviación (frente −Z en Godot). Texturas (biblioteca v2,
+docs/art/materials-v2.md): cada imagen de los materiales exportados existe en disco y mide ≤ 1024 px por
+lado (art-bible v2 §4.2); el .glb las embebe y Godot las extrae junto a él al importar. Sale con código 1
+si algo falla.
 """
 
 import argparse
@@ -44,7 +50,7 @@ IMPORT_PARAMS = {
     "nodes/root_scale": "1.0",
     "nodes/use_name_suffixes": "false",
     "nodes/use_node_type_suffixes": "false",
-    "meshes/ensure_tangents": "false",
+    "meshes/ensure_tangents": "true",
     "meshes/generate_lods": "true",
     "meshes/create_shadow_meshes": "true",
     "meshes/light_baking": "1",
@@ -69,6 +75,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--animations", action="store_true")
     p.add_argument("--max-tris", type=int, default=0)
     p.add_argument("--smoke-cube", action="store_true")
+    p.add_argument("--materials-test", action="store_true")
     return p.parse_args(argv)
 
 
@@ -92,8 +99,8 @@ def build_smoke_cube() -> None:
     bmesh.ops.scale(bm, verts=nose, vec=(0.3, 0.2, 0.3))
     bmesh.ops.translate(bm, verts=nose, vec=(0.0, 0.6, 0.5))
     nose_set = set(nose)
-    me.materials.append(hex_material("mat_wood_light"))
-    me.materials.append(hex_material("mat_canvas_stripe"))
+    me.materials.append(hex_material("mat_wood_used"))
+    me.materials.append(hex_material("mat_plastic_red"))
     for face in bm.faces:
         face.material_index = 1 if all(v in nose_set for v in face.verts) else 0
     bm.to_mesh(me)
@@ -101,6 +108,83 @@ def build_smoke_cube() -> None:
     body = bpy.data.objects.new("test_cube_body", me)
     body.parent = root
     coll.objects.link(body)
+
+
+def box_uv(bm: bmesh.types.BMesh, meters_per_unit: float = 2.0) -> None:
+    """Proyección de caja a la densidad de la biblioteca v2: 1 unidad de UV = 2 m (256 px/m)."""
+    uv = bm.loops.layers.uv.verify()
+    for face in bm.faces:
+        n = face.normal
+        ax = max(range(3), key=lambda i: abs(n[i]))
+        for loop in face.loops:
+            co = loop.vert.co
+            u, v = ((co.y, co.z), (co.x, co.z), (co.x, co.y))[ax]
+            loop[uv].uv = (u / meters_per_unit, v / meters_per_unit)
+
+
+def build_materials_test() -> None:
+    """Taburete de 0,45 m: patas y travesaños de acero, asiento de plástico rojo y balda de madera.
+
+    Prueba de AC2 de PUL-074: un asset con materiales enlazados de _materials_v2.blend importa en
+    Godot con sus texturas (albedo, ORM y normal) y pasa test_assets_models.gd.
+    """
+    coll = bpy.data.collections[EXPORT_COLLECTION]
+    root = bpy.data.objects["asset"]
+    root.name = "materials_v2_test"
+    parts = (
+        ("materials_v2_test_frame", "mat_steel_brushed"),
+        ("materials_v2_test_seat", "mat_plastic_red"),
+        ("materials_v2_test_shelf", "mat_wood_used"),
+    )
+    for name, mat_name in parts:
+        bm = bmesh.new()
+        if name.endswith("frame"):
+            for sx in (-1, 1):
+                for sy in (-1, 1):
+                    leg = bmesh.ops.create_cube(bm, size=1.0)["verts"]
+                    bmesh.ops.scale(bm, verts=leg, vec=(0.04, 0.04, 0.42))
+                    bmesh.ops.translate(bm, verts=leg, vec=(sx * 0.15, sy * 0.15, 0.21))
+        elif name.endswith("seat"):
+            seat = bmesh.ops.create_cone(bm, segments=24, radius1=0.21, radius2=0.2, depth=0.04, cap_ends=True)
+            bmesh.ops.translate(bm, verts=seat["verts"], vec=(0.0, 0.0, 0.44))
+        else:
+            shelf = bmesh.ops.create_cube(bm, size=1.0)["verts"]
+            bmesh.ops.scale(bm, verts=shelf, vec=(0.34, 0.34, 0.025))
+            bmesh.ops.translate(bm, verts=shelf, vec=(0.0, 0.0, 0.15))
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        box_uv(bm)
+        me = bpy.data.meshes.new(name)
+        bm.to_mesh(me)
+        bm.free()
+        for poly in me.polygons:
+            poly.use_smooth = name.endswith("seat")
+        me.materials.append(hex_material(mat_name))
+        ob = bpy.data.objects.new(name, me)
+        ob.parent = root
+        coll.objects.link(ob)
+
+
+def check_textures(objs: list) -> list:
+    """Imágenes de los materiales exportados: deben existir y medir ≤ 1024 px (art-bible v2 §4.2)."""
+    errors, seen = [], set()
+    for o in objs:
+        if o.type != "MESH":
+            continue
+        for slot in o.material_slots:
+            mat = slot.material
+            if mat is None or mat.node_tree is None or mat.name in seen:
+                continue
+            seen.add(mat.name)
+            for node in mat.node_tree.nodes:
+                img = getattr(node, "image", None)
+                if node.type != "TEX_IMAGE" or img is None:
+                    continue
+                path = Path(bpy.path.abspath(img.filepath, library=img.library))
+                if img.packed_file is None and not path.is_file():
+                    errors.append(f"{mat.name}: falta la textura {path}")
+                elif max(img.size) > 1024:
+                    errors.append(f"{mat.name}: textura {img.name} de {tuple(img.size)} > 1024 px")
+    return errors
 
 
 def collection_objects() -> list:
@@ -149,6 +233,7 @@ def validate(objs: list, max_tris: int) -> int:
             deviation = math.degrees(math.atan2(p.x, p.y))
             if abs(deviation) > FRONT_MAX_ANGLE_DEG:
                 errors.append(f"{FRONT_ANCHOR} desviado {deviation:.1f}° de +Y, está en {where}")
+    errors += check_textures(objs)
     if max_tris and tris > max_tris:
         errors.append(f"{tris} triángulos > presupuesto {max_tris}")
     if errors:
@@ -159,6 +244,8 @@ def validate(objs: list, max_tris: int) -> int:
 def resolve_out(args: argparse.Namespace) -> Path:
     if args.smoke_cube:
         return MODELS_DIR / "_pipeline" / "test_cube" / "test_cube.glb"
+    if args.materials_test:
+        return MODELS_DIR / "_pipeline" / "materials_v2_test" / "materials_v2_test.glb"
     if args.out:
         out = Path(args.out)
         return out if out.is_absolute() else ROOT / out
@@ -204,6 +291,8 @@ def main() -> None:
     args = parse_args()
     if args.smoke_cube:
         build_smoke_cube()
+    if args.materials_test:
+        build_materials_test()
     objs = collection_objects()
     tris = validate(objs, args.max_tris)
     out = resolve_out(args)
@@ -223,6 +312,8 @@ def main() -> None:
         export_lights=False,
         export_extras=False,
         export_materials="EXPORT",
+        export_image_format="AUTO",
+        export_tangents=True,
         export_animations=args.animations,
         export_skins=args.animations,
         export_morph=False,
