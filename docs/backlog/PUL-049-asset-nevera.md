@@ -48,3 +48,6 @@ Ajuste de la biblia (§4): tapa separada (`Lid`).
 - `octopus_storage.tscn`: solo cambia la instancia de `Model` (fridge.tscn → .glb). Colisión, `%Highlightable`, grupo `interactable` y script intactos: la huella en planta (1,61×0,91) no cambia, así que el acceso desde la planta B (navegación plana) no se ve afectado. La caja sigue siendo más alta (2,33 m) que el modelo; no se ha tocado para no alterar el contrato.
 - Capturas en `docs/evidence/PUL-049/`: `blender_render.png`, `level_camera_plain*.png`, `level_camera_highlight*.png` (con personaje al lado), scripts `build_octopus_storage.py` y `capture_storage.gd`.
 - Licencia (propia): pendiente de registrar por el coordinador en `docs/assets/licenses.md`.
+
+### Corrección del resaltado (ronda del coordinador)
+El inverted hull de `highlight_outline` rellenaba el arcón entero (cuba abierta, tapa fina, hielo). Sin tocar el shader ni `highlightable.gd`: la escena añade `OutlineHull` con dos cajas cerradas escondidas dentro del modelo (cuba y tapa) y `Highlightable.root` apunta a ese nodo, así el contorno sale de volúmenes cerrados. Capturas nuevas en `docs/evidence/PUL-049/level_camera_{plain,highlight}*.png`.
