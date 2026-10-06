@@ -120,7 +120,7 @@ por un `%Feedback` (`FeedbackPlayer`) por escena. Los bucles (`%BoilAudio`) sigu
 
 | Resource | Campos |
 |---|---|
-| `AudioCue` | `stream: AudioStream`, `volume_db: float = 0`, `pitch_jitter: float = 0.05`, `delay: float = 0`, `visual: Visual` (`NONE`, `POP`, `SHAKE`), `visual_time: float = 0.4`, `pop_scale: float = 0.15` |
+| `AudioCue` | `stream: AudioStream`, `volume_db: float = 0`, `pitch_jitter: float = 0.05`, `delay: float = 0`, `visual: Visual` (`NONE`, `POP`, `SHAKE`), `visual_time: float = 0.4`, `pop_scale: float = 0.15`, `shake_amplitude: float` (enmienda menor de PUL-071: amplitud del SHAKE en datos; el valor del ADR no se veía en el puesto) |
 | `AudioFeedbackMap` (`data/audio/feedback_map.tres`) | `cues: Dictionary[StringName, AudioCue]` |
 | `AudioMixConfig` (`data/audio/audio_mix.tres`) | `music_volume: float = 0.7`, `ambience_volume: float = 0.7`, `sfx_volume: float = 1.0` (defaults de `opciones-de-volumen` AC4), `pause_duck_db: float = -12.0` |
 

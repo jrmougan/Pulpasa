@@ -7,6 +7,8 @@ signal round_started(duration: float)
 signal round_time_changed(time_left: float)
 signal round_finished(result: RoundResult)
 signal score_changed(boxes_delivered: int, revenue: int)
+## Fase de dificultad alcanzada (desde 1; M3, ADR-006 §6). Sin `RoundConfig.phases` no se emite.
+signal phase_changed(phase: int)
 
 ## Residuo de coma flotante que se absorbe al llegar a 0: acumular 1/60 s deja restos del orden
 ## de 1e-12, así que 10800 × 1/60 acaba en el tick 10800. Es muy inferior a cualquier delta real:
@@ -24,6 +26,12 @@ var _finished: bool = false
 var _result: RoundResult
 var _slot_ids: Array[int] = []
 var _first_orders_filled: bool = false
+## Fases de la ronda en curso (copia de `RoundConfig.phases` al arrancar).
+var _phases: Array[PhaseData] = []
+## Fase actual (1..n), o 0 sin fases.
+var _phase: int = 0
+## Puestos que abre la fase actual (con fases); sin fases, `_slot_ids`.
+var _active_slot_ids: Array[int] = []
 
 
 func _init(config: RoundConfig, board: OrderBoard) -> void:
@@ -35,9 +43,9 @@ func _init(config: RoundConfig, board: OrderBoard) -> void:
 	_board.delivery_rejected.connect(_on_delivery_rejected)
 
 
-## Arranque determinista (B10, B11): reset del tablero, comandas iniciales, reloj y `round_started`.
-## Con `first_order_delay` > 0 (M1) las comandas iniciales se difieren a `advance`; si es 0
-## (paridad M0) se generan aquí, antes de `round_started` (signals.md).
+## Arranque determinista (B10, B11): reset del tablero, fase 1 (si hay fases), comandas iniciales,
+## reloj y `round_started`. Con `first_order_delay` > 0 (M1) las comandas iniciales se difieren a
+## `advance`; si es 0 (paridad M0) se generan aquí, antes de `round_started` (signals.md).
 func start(slot_ids: Array[int]) -> void:
 	_time_left = _config.duration
 	_boxes_delivered = 0
@@ -46,17 +54,23 @@ func start(slot_ids: Array[int]) -> void:
 	_result = null
 	_slot_ids = slot_ids
 	_first_orders_filled = false
+	_phases = _config.phases.duplicate()
+	_phase = 0
+	_active_slot_ids = _slot_ids
 	_board.reset()
 	_running = true
+	if not _phases.is_empty():
+		_enter_phase(0)
 	if _config.first_order_delay <= 0.0:
-		_board.fill_slots(_slot_ids)
+		_board.fill_slots(_active_slot_ids)
 		_first_orders_filled = true
 	round_time_changed.emit(_time_left)
 	round_started.emit(_config.duration)
 
 
-## Un paso de reloj, en el orden de ADR-002: paciencia y caducidad del tablero, luego el reloj y,
-## si llega a 0, `OrderBoard.stop()` y `round_finished` (exactamente en `duration`, B2).
+## Un paso de reloj, en el orden de ADR-002: paciencia y caducidad del tablero, luego el reloj,
+## las fases alcanzadas (ADR-006 §6) y, si llega a 0, `OrderBoard.stop()` y `round_finished`
+## (exactamente en `duration`, B2).
 func advance(delta: float) -> void:
 	if not _running or _finished or delta <= 0.0:
 		return
@@ -64,17 +78,23 @@ func advance(delta: float) -> void:
 	_board.advance(d)
 	var previous_second: int = _whole_second(_time_left)
 	_time_left -= d
-
-	if not _first_orders_filled and (_config.duration - _time_left) >= _config.first_order_delay:
-		_board.fill_slots(_slot_ids)
-		_first_orders_filled = true
-
 	if _time_left <= TIME_EPSILON:
 		_time_left = 0.0
+
+	_advance_phases()
+	if not _first_orders_filled and (_config.duration - _time_left) >= _config.first_order_delay:
+		_board.fill_slots(_active_slot_ids)
+		_first_orders_filled = true
+
 	if _whole_second(_time_left) != previous_second:
 		round_time_changed.emit(_time_left)
 	if _time_left <= 0.0:
 		_finish()
+
+
+## Fase actual (desde 1), o 0 si la ronda no tiene fases.
+func get_phase() -> int:
+	return _phase
 
 
 func get_time_left() -> float:
@@ -115,6 +135,30 @@ func _finish() -> void:
 		_config.revenue_thresholds
 	)
 	round_finished.emit(_result)
+
+
+## Entra en cada fase cuyo inicio (`start_fraction × duration`) ya se alcanzó, una vez por fase
+## aunque un `delta` grande salte varias. Una fase que empieza en `duration` nunca se activa.
+func _advance_phases() -> void:
+	var elapsed: float = _config.duration - _time_left
+	while _phase < _phases.size() and _time_left > 0.0:
+		var phase: PhaseData = _phases[_phase]
+		if elapsed < phase.start_fraction * _config.duration - TIME_EPSILON:
+			return
+		_enter_phase(_phase)
+		if _first_orders_filled:
+			_board.fill_slots(_active_slot_ids)
+
+
+## Aplica la fase de índice `index` al tablero (puestos y paciencia) y emite `phase_changed`.
+func _enter_phase(index: int) -> void:
+	var phase: PhaseData = _phases[index]
+	var count: int = clampi(phase.active_slots, 0, _slot_ids.size())
+	_active_slot_ids = _slot_ids.slice(0, count)
+	_board.set_active_slots(_active_slot_ids)
+	_board.set_new_order_patience_multiplier(phase.patience_multiplier)
+	_phase = index + 1
+	phase_changed.emit(_phase)
 
 
 func _whole_second(time_left: float) -> int:

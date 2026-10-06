@@ -33,7 +33,7 @@ posterior (M1, M2…). Todas se **declaran** en `event_bus.gd` en la fase 0, aun
 | `OrderData`, `BoxData`, `IngredientData`, `SeasoningData` | `Resource` | `resources/*.gd` | Ver inventario §1 (ScriptableObjects) |
 | `GameMode.Mode` | enum | `core/game_mode.gd` | `SINGLE`, `COOP_2P` |
 | `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX`, `BOX_NOT_FULL`, `HAND_BUSY` (en desuso desde PUL-064: nadie lo emite), `EXCLUSIVE_TAKEN` (solo con `paprika_swap` = `false`), `BOWL_EMPTY`, `BOWL_FULL`, `NOT_ACCEPTED` (cachelos crudos o quemados, u otra cosa en el cuenco). Solo en señales locales (§4) |
-| `PhaseData` | `Resource` | `resources/phase_data.gd` | `start_fraction: float` (0–1 de `duration`), `active_slots: int`, `max_time: float` (0 = el de `OrderData`). En `RoundConfig.phases`; no aparece en señales (M3, ADR-006 §6) |
+| `PhaseData` | `Resource` | `resources/phase_data.gd` | `start_fraction: float` (0–1 de `duration`), `active_slots: int`, `patience_multiplier: float` (1,0 = el `max_time` de `OrderData`; cambio del responsable al aprobar ADR-006). En `RoundConfig.phases`; no aparece en señales (M3, ADR-006 §6) |
 | `IngredientData.CookingState` | enum | `resources/ingredient_data.gd` | `RAW`, `COOKED`, `BURNT` (M3: `BURNT` lo pone la olla tras `burn_time`). No aparece en señales |
 | `StationSide.Side` | enum | `core/station_side.gd` | `PASS`, `OPERATOR` (ADR-003 §8.1). No aparece en ninguna señal; lo devuelve `SeasoningStation.side_of()` |
 

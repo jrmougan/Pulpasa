@@ -29,6 +29,9 @@ Sin pantalla (worker en segundo plano), lanza Claude bajo `xvfb-run -a`. Está c
 esta máquina con Vulkan.
 
 ## Reglas
+- Todo `godot` que lances para capturas o scripts (`xvfb-run godot … -s`, escenas sueltas) va con
+  `--audio-driver Dummy`: el audio sale por los altavoces del responsable aunque la ventana sea
+  virtual. Comprueba el audio por señales/estado de los reproductores, no escuchándolo.
 - Las capturas son evidencia para revisión humana, no comparación de píxeles.
 - No uses `run_script` para modificar estado que el AC debería alcanzar por input.
 - Si no puedes verificar algo, dilo en `## Evidence` como «no verificable» con el motivo.

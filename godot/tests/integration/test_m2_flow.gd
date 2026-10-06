@@ -25,6 +25,7 @@ var _now: float = 100.0
 
 
 func before_each() -> void:
+	PhaselessConfig.disable()
 	GameState.set_paused(false)
 	watch_signals(EventBus)
 
@@ -39,6 +40,7 @@ func after_each() -> void:
 		if was_current:
 			get_tree().current_scene = null
 	_scene = null
+	PhaselessConfig.restore()
 
 
 ## Cambia de escena como el juego y devuelve la escena actual ya lista (ver `test_level_01.gd`).

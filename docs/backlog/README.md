@@ -82,5 +82,5 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-067 | M3 | gameplay-engineer | done | Retirar placeholders y escalas heredadas tras el arte |
 | PUL-068 | M3 | asset-pipeline | done | Conseguir música, ambiente y efectos libres para M3 |
 | PUL-069 | M3 | gameplay-engineer | done | Quemar el pulpo que se deja en la olla y encender sus efectos |
-| PUL-070 | M3 | gameplay-engineer | ready | Subir la dificultad por fases |
+| PUL-070 | M3 | gameplay-engineer | done | Subir la dificultad por fases |
 | PUL-071 | M3 | gameplay-engineer | ready | Integrar música, ambiente y feedback de las acciones |

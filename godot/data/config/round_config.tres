@@ -1,6 +1,25 @@
-[gd_resource type="Resource" script_class="RoundConfig" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="RoundConfig" load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://resources/round_config.gd" id="1_cfg"]
+[ext_resource type="Script" path="res://resources/phase_data.gd" id="2_phase"]
+
+[sub_resource type="Resource" id="Resource_phase1"]
+script = ExtResource("2_phase")
+start_fraction = 0.0
+active_slots = 2
+patience_multiplier = 1.0
+
+[sub_resource type="Resource" id="Resource_phase2"]
+script = ExtResource("2_phase")
+start_fraction = 0.3333333333333333
+active_slots = 3
+patience_multiplier = 0.85
+
+[sub_resource type="Resource" id="Resource_phase3"]
+script = ExtResource("2_phase")
+start_fraction = 0.6666666666666666
+active_slots = 4
+patience_multiplier = 0.7
 
 [resource]
 script = ExtResource("1_cfg")
@@ -12,3 +31,5 @@ wrong_delivery_penalty = 2
 revenue_thresholds = Array[int]([30, 60, 90])
 performance_thresholds = Array[float]([1.0, 2.0, 3.0])
 performance_texts = Array[String](["Pulpeiro ineficiente", "Pulpeiro aceptable", "Pulpeiro eficiente", "!Pulpeiro lexendario!"])
+phases = Array[ExtResource("2_phase")]([SubResource("Resource_phase1"), SubResource("Resource_phase2"), SubResource("Resource_phase3")])
+rng_seed = 0
