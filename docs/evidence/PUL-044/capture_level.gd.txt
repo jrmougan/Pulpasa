@@ -1,0 +1,89 @@
+extends SceneTree
+## PUL-044 (ajustes del responsable): capturas desde la cámara de level_01 y fotogramas de los clips.
+
+const OUT: String = "user://pul044_capture/"
+const CLIPS: Array[String] = ["Idle", "Walk", "Pick", "IdleHolding", "WalkWhileHolding", "Cut"]
+const HOLDING: Array[String] = ["IdleHolding", "WalkWhileHolding", "Cut"]
+
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+
+func _frames(n: int) -> void:
+	for i in n:
+		await process_frame
+
+
+func _shot(name: String) -> void:
+	await RenderingServer.frame_post_draw
+	root.get_texture().get_image().save_png(OUT + name + ".png")
+
+
+func _make(kind: String) -> Node3D:
+	if kind == "octopus":
+		return (load("res://entities/items/octopus.tscn") as PackedScene).instantiate()
+	var b: Node3D = (load("res://entities/items/box.tscn") as PackedScene).instantiate()
+	b.set("data", load("res://data/boxes/large.tres"))
+	return b
+
+
+func _give(level: Node3D, player: Node3D, kind: String) -> void:
+	var hold: Node = player.get_node("%HoldComponent")
+	var held: Node = hold.call("get_held_item")
+	if held != null:
+		hold.call("drop")
+		held.queue_free()
+	if kind == "":
+		return
+	var item: Node3D = _make(kind)
+	level.get_node("Items").add_child(item)
+	await _frames(1)
+	if item is Ingredient:
+		(item as Ingredient).set_cooked()
+	if item is Box:
+		(item as Box).fill = 1.0
+		(item as Box).fill_changed.emit(1.0)
+	hold.call("pick_up", item)
+
+
+func _run() -> void:
+	DirAccess.make_dir_recursive_absolute(OUT + "frames")
+	var level: Node3D = (load("res://scenes/levels/level_01.tscn") as PackedScene).instantiate()
+	root.add_child(level)
+	(level.get_node("UI") as CanvasLayer).visible = false
+	level.get_node("Characters/Player2/Control").set("controlled_by", 2)
+	var players: Array[Node3D] = [level.get_node("Characters/Player1"), level.get_node("Characters/Player2")]
+	await _frames(10)
+	for kinds: Array in [["octopus", "plate"], ["plate", "octopus"]]:
+		for facing: Array in [["front", PI], ["back", 0.0], ["side", -PI / 2.0], ["three_quarter", PI * 0.75]]:
+			for i in 2:
+				await _give(level, players[i], "")
+				players[i].global_position = Vector3(-0.6 + 2.2 * i, 0.005, 1.6)
+				players[i].rotation.y = facing[1]
+			await _frames(5)
+			for i in 2:
+				await _give(level, players[i], kinds[i])
+			await _frames(90)
+			await _shot("j1_%s_j2_%s_%s" % [kinds[0], kinds[1], facing[0]])
+	# Fotogramas: J1 de tres cuartos, AnimationTree parado y clips muestreados en el AnimationPlayer.
+	var p: Node3D = players[0]
+	await _give(level, players[1], "")
+	await _frames(3)
+	players[1].global_position = Vector3(6, 0.005, -3)
+	p.global_position = Vector3(0.5, 0.005, 1.6)
+	p.rotation.y = PI * 0.75
+	(p.get_node("%AnimationTree") as AnimationTree).active = false
+	var ap: AnimationPlayer = p.get_node("Model/AnimationPlayer")
+	for clip in CLIPS:
+		await _give(level, p, "octopus" if clip in HOLDING else "")
+		await _frames(5)
+		var length: float = ap.get_animation(clip).length
+		for k in 12:
+			ap.play(clip)
+			ap.seek(length * k / 12.0, true)
+			ap.pause()
+			await _frames(2)
+			await _shot("frames/%s_%02d" % [clip, k])
+	print("DONE")
+	quit()

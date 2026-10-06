@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://entities/player/player.gd" id="1_8fjmc"]
 [ext_resource type="Resource" path="res://data/config/player_config.tres" id="2_qiwj3"]
-[ext_resource type="PackedScene" path="res://assets/models/placeholders/character.tscn" id="3_26q78"]
+[ext_resource type="PackedScene" path="res://assets/models/characters/cook/cook.glb" id="3_26q78"]
 [ext_resource type="Script" path="res://components/control_component.gd" id="4_bectd"]
 [ext_resource type="Resource" path="res://data/config/input_config.tres" id="5_wvtmh"]
 [ext_resource type="Script" path="res://components/hold_component.gd" id="6_7thud"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://components/interaction_component.gd" id="8_bectd"]
 [ext_resource type="Material" path="res://assets/materials/active_indicator_p1.tres" id="9_actp1"]
 [ext_resource type="Material" path="res://assets/materials/active_indicator_p2.tres" id="10_actp2"]
+[ext_resource type="Script" path="res://entities/player/player_animation.gd" id="11_anim"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a1qjk"]
 radius = 0.21
@@ -23,6 +24,124 @@ inner_radius = 0.36
 outer_radius = 0.46
 rings = 32
 ring_segments = 8
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_Idle"]
+animation = &"Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_Walk"]
+animation = &"Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_IdleHolding"]
+animation = &"IdleHolding"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_WalkWhileHolding"]
+animation = &"WalkWhileHolding"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_Pick"]
+animation = &"Pick"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_Cut"]
+animation = &"Cut"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_0"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1"]
+xfade_time = 0.12
+advance_mode = 2
+advance_expression = "speed > 0.1 and not is_holding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2"]
+xfade_time = 0.12
+advance_mode = 2
+advance_expression = "speed <= 0.1 and not is_holding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_3"]
+xfade_time = 0.12
+advance_mode = 2
+advance_expression = "is_holding and speed <= 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4"]
+xfade_time = 0.12
+advance_mode = 2
+advance_expression = "is_holding and speed > 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5"]
+xfade_time = 0.12
+advance_mode = 2
+advance_expression = "is_holding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_6"]
+xfade_time = 0.12
+advance_mode = 2
+advance_expression = "is_holding and speed > 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_7"]
+xfade_time = 0.12
+advance_mode = 2
+advance_expression = "is_holding and speed <= 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8"]
+xfade_time = 0.12
+advance_mode = 2
+advance_expression = "not is_holding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_9"]
+xfade_time = 0.12
+advance_mode = 2
+advance_expression = "not is_holding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_10"]
+xfade_time = 0.12
+switch_mode = 2
+advance_mode = 2
+advance_expression = "is_holding and speed <= 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_11"]
+xfade_time = 0.12
+switch_mode = 2
+advance_mode = 2
+advance_expression = "is_holding and speed > 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_12"]
+xfade_time = 0.12
+switch_mode = 2
+advance_mode = 2
+advance_expression = "not is_holding"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_13"]
+xfade_time = 0.12
+switch_mode = 2
+advance_mode = 2
+advance_expression = "is_holding and speed <= 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_14"]
+xfade_time = 0.12
+switch_mode = 2
+advance_mode = 2
+advance_expression = "is_holding and speed > 0.1"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_15"]
+xfade_time = 0.12
+switch_mode = 2
+advance_mode = 2
+advance_expression = "not is_holding"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_cook"]
+states/Idle/node = SubResource("AnimationNodeAnimation_Idle")
+states/Idle/position = Vector2(300, 100)
+states/Walk/node = SubResource("AnimationNodeAnimation_Walk")
+states/Walk/position = Vector2(550, 100)
+states/IdleHolding/node = SubResource("AnimationNodeAnimation_IdleHolding")
+states/IdleHolding/position = Vector2(300, 300)
+states/WalkWhileHolding/node = SubResource("AnimationNodeAnimation_WalkWhileHolding")
+states/WalkWhileHolding/position = Vector2(550, 300)
+states/Pick/node = SubResource("AnimationNodeAnimation_Pick")
+states/Pick/position = Vector2(150, 450)
+states/Cut/node = SubResource("AnimationNodeAnimation_Cut")
+states/Cut/position = Vector2(700, 450)
+states/Start/position = Vector2(100, 100)
+transitions = ["Start", "Idle", SubResource("AnimationNodeStateMachineTransition_0"), "Idle", "Walk", SubResource("AnimationNodeStateMachineTransition_1"), "Walk", "Idle", SubResource("AnimationNodeStateMachineTransition_2"), "Idle", "IdleHolding", SubResource("AnimationNodeStateMachineTransition_3"), "Idle", "WalkWhileHolding", SubResource("AnimationNodeStateMachineTransition_4"), "Walk", "WalkWhileHolding", SubResource("AnimationNodeStateMachineTransition_5"), "IdleHolding", "WalkWhileHolding", SubResource("AnimationNodeStateMachineTransition_6"), "WalkWhileHolding", "IdleHolding", SubResource("AnimationNodeStateMachineTransition_7"), "IdleHolding", "Idle", SubResource("AnimationNodeStateMachineTransition_8"), "WalkWhileHolding", "Walk", SubResource("AnimationNodeStateMachineTransition_9"), "Pick", "IdleHolding", SubResource("AnimationNodeStateMachineTransition_10"), "Pick", "WalkWhileHolding", SubResource("AnimationNodeStateMachineTransition_11"), "Pick", "Idle", SubResource("AnimationNodeStateMachineTransition_12"), "Cut", "IdleHolding", SubResource("AnimationNodeStateMachineTransition_13"), "Cut", "WalkWhileHolding", SubResource("AnimationNodeStateMachineTransition_14"), "Cut", "Idle", SubResource("AnimationNodeStateMachineTransition_15")]
 
 [node name="Player" type="CharacterBody3D" unique_id=370749224]
 collision_layer = 2
@@ -39,7 +158,7 @@ shape = SubResource("CapsuleShape3D_a1qjk")
 
 [node name="HoldPoint" type="Marker3D" parent="." unique_id=1680575663]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -0.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.62)
 
 [node name="Control" type="Node" parent="." unique_id=769118530]
 unique_name_in_owner = true
@@ -78,3 +197,15 @@ transform = Transform3D(1, 0, 0, 0, 0.25, 0, 0, 0, 1, 0, 0.02, 0)
 cast_shadow = 0
 mesh = SubResource("TorusMesh_actind")
 material_override = ExtResource("9_actp1")
+
+[node name="AnimationTree" type="AnimationTree" parent="." node_paths=PackedStringArray("player", "holder", "control", "model")]
+unique_name_in_owner = true
+root_node = NodePath("../Model")
+tree_root = SubResource("AnimationNodeStateMachine_cook")
+callback_mode_process = 0
+anim_player = NodePath("../Model/AnimationPlayer")
+script = ExtResource("11_anim")
+player = NodePath("..")
+holder = NodePath("../HoldComponent")
+control = NodePath("../Control")
+model = NodePath("../Model")
