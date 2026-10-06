@@ -1,0 +1,18 @@
+## despues/00_nivel_sin_hud.png
+zona                    mediana    p05    p95  <0.08  >0.95
+encimera_fondo            0.561  0.516  0.686   0.0%   0.0%
+encimera_barra            0.487  0.314  0.514   1.6%   0.0%
+frente_condimentos        0.192  0.133  0.512   4.3%   0.0%
+pegatinas_comanda         0.375  0.150  0.716   0.0%   0.0%
+pegatinas_nevera          0.537  0.150  0.716   0.8%   0.0%
+olla_1                    0.184  0.026  0.581  19.1%   0.0%
+olla_2                    0.233  0.029  0.609  12.7%   0.0%
+estanteria_platos         0.353  0.091  0.527   4.4%   0.0%
+kiosco_1_numero           0.264  0.103  0.585   4.1%   0.0%
+kiosco_2_numero           0.292  0.094  0.643   4.6%   0.0%
+kiosco_3_numero           0.317  0.092  0.678   4.9%   0.0%
+kiosco_4_numero           0.311  0.123  0.657   3.7%   0.0%
+kiosco_cartel_1           0.713  0.022  0.713   9.1%   0.0%
+aro_jugador               0.268  0.030  0.327  19.9%   0.0%
+suelo_jugable             0.332  0.330  0.349   0.0%   0.0%
+jugador_1                 0.327  0.020  0.719  16.7%   0.0%

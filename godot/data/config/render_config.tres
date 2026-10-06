@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="RenderConfig" format=3]
+
+[ext_resource type="Script" uid="uid://b0vdhspvsfdsl" path="res://resources/render_config.gd" id="1_oeisn"]
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_8f1we"]
+dof_blur_far_distance = 12.8
+dof_blur_far_transition = 3.0
+dof_blur_near_distance = 2.5
+dof_blur_near_transition = 0.5
+dof_blur_amount = 0.3
+
+[sub_resource type="Gradient" id="Gradient_grade"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0.01, 0.005, 0, 1, 0.51, 0.5, 0.48, 1, 1, 0.995, 0.97, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_grade"]
+gradient = SubResource("Gradient_grade")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
+sky_top_color = Color(0.52, 0.58, 0.6, 1)
+sky_horizon_color = Color(0.68, 0.71, 0.7, 1)
+ground_bottom_color = Color(0.3, 0.33, 0.2, 1)
+ground_horizon_color = Color(0.5, 0.53, 0.42, 1)
+sun_angle_max = 10.0
+
+[sub_resource type="Sky" id="Sky_sky"]
+sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_8fqw2"]
+background_mode = 1
+background_color = Color(0.29, 0.37, 0.22, 1)
+sky = SubResource("Sky_sky")
+ambient_light_source = 2
+ambient_light_color = Color(0.604, 0.651, 0.659, 1)
+ambient_light_energy = 0.5
+reflected_light_source = 2
+tonemap_mode = 2
+tonemap_white = 6.0
+ssao_enabled = true
+ssao_radius = 0.8
+ssao_intensity = 2.5
+ssao_light_affect = 0.15
+glow_enabled = true
+glow_intensity = 0.6
+glow_strength = 0.9
+glow_hdr_threshold = 1.2
+adjustment_enabled = true
+adjustment_contrast = 1.1
+adjustment_saturation = 1.1
+adjustment_color_correction = SubResource("GradientTexture1D_grade")
+
+[resource]
+script = ExtResource("1_oeisn")
+environment = SubResource("Environment_8fqw2")
+camera_attributes = SubResource("CameraAttributesPractical_8f1we")
