@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1260" viewBox="0 0 1200 1260">
-<style>.t{font:bold 22px sans-serif;fill:#1C2424}.h{font:bold 15px sans-serif;fill:#1C2424}.n{font:11px monospace;fill:#1C2424}</style>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1442" viewBox="0 0 1200 1442">
+<style>.t{font:bold 22px sans-serif;fill:#1C2424}.h{font:bold 15px sans-serif;fill:#1C2424}.n{font:10px monospace;fill:#1C2424}</style>
 <rect width="100%" height="100%" fill="#F2F0EC"/>
-<text x="20" y="36" class="t">Pulpasa · paleta v2 (art-bible.md §2, PUL-072) — lámina propia</text>
+<text x="20" y="36" class="t">Pulpasa · paleta v2 con marca A · Mariña (art-bible.md §2, PUL-072) — lámina propia</text>
 <text x="20" y="70" class="h">Estructura y mobiliario</text>
 <rect x="20" y="82" width="110" height="80" rx="6" fill="#B9BEC2" stroke="#00000033"/>
 <text x="20" y="176" class="n">steel_light</text><text x="20" y="189" class="n">#B9BEC2</text>
@@ -15,8 +15,8 @@
 <text x="480" y="176" class="n">paint_grey</text><text x="480" y="189" class="n">#5F6A6E</text>
 <rect x="595" y="82" width="110" height="80" rx="6" fill="#B29770" stroke="#00000033"/>
 <text x="595" y="176" class="n">paint_beige</text><text x="595" y="189" class="n">#B29770</text>
-<rect x="710" y="82" width="110" height="80" rx="6" fill="#C93A33" stroke="#00000033"/>
-<text x="710" y="176" class="n">plastic_red</text><text x="710" y="189" class="n">#C93A33</text>
+<rect x="710" y="82" width="110" height="80" rx="6" fill="#C8402F" stroke="#00000033"/>
+<text x="710" y="176" class="n">plastic_red</text><text x="710" y="189" class="n">#C8402F</text>
 <rect x="825" y="82" width="110" height="80" rx="6" fill="#3E78B0" stroke="#00000033"/>
 <text x="825" y="176" class="n">plastic_blue</text><text x="825" y="189" class="n">#3E78B0</text>
 <rect x="940" y="82" width="110" height="80" rx="6" fill="#B58A5C" stroke="#00000033"/>
@@ -29,10 +29,10 @@
 <text x="135" y="316" class="n">burlap</text><text x="135" y="329" class="n">#9C7D59</text>
 <rect x="250" y="222" width="110" height="80" rx="6" fill="#A85A3A" stroke="#00000033"/>
 <text x="250" y="316" class="n">clay</text><text x="250" y="329" class="n">#A85A3A</text>
-<rect x="365" y="222" width="110" height="80" rx="6" fill="#C33E39" stroke="#00000033"/>
-<text x="365" y="316" class="n">canvas_red</text><text x="365" y="329" class="n">#C33E39</text>
-<rect x="480" y="222" width="110" height="80" rx="6" fill="#6E7578" stroke="#00000033"/>
-<text x="480" y="316" class="n">concrete_block</text><text x="480" y="329" class="n">#6E7578</text>
+<rect x="365" y="222" width="110" height="80" rx="6" fill="#C8402F" stroke="#00000033"/>
+<text x="365" y="316" class="n">canvas_red</text><text x="365" y="329" class="n">#C8402F</text>
+<rect x="480" y="222" width="110" height="80" rx="6" fill="#8C8A84" stroke="#00000033"/>
+<text x="480" y="316" class="n">granite</text><text x="480" y="329" class="n">#8C8A84</text>
 <rect x="595" y="222" width="110" height="80" rx="6" fill="#24272A" stroke="#00000033"/>
 <text x="595" y="316" class="n">rubber_black</text><text x="595" y="329" class="n">#24272A</text>
 <rect x="710" y="222" width="110" height="80" rx="6" fill="#8E2F2A" stroke="#00000033"/>
@@ -84,8 +84,8 @@
 <text x="825" y="862" class="n">potato_cooked</text><text x="825" y="875" class="n">#F2D56B</text>
 <rect x="940" y="768" width="110" height="80" rx="6" fill="#2E2620" stroke="#00000033"/>
 <text x="940" y="862" class="n">potato_burnt</text><text x="940" y="875" class="n">#2E2620</text>
-<rect x="1055" y="768" width="110" height="80" rx="6" fill="#EFE4CC" stroke="#00000033"/>
-<text x="1055" y="862" class="n">tray_liner</text><text x="1055" y="875" class="n">#EFE4CC</text>
+<rect x="1055" y="768" width="110" height="80" rx="6" fill="#F4EFE6" stroke="#00000033"/>
+<text x="1055" y="862" class="n">tray_liner</text><text x="1055" y="875" class="n">#F4EFE6</text>
 <text x="20" y="938" class="h">Puestos, jugadores y UI</text>
 <rect x="20" y="950" width="110" height="80" rx="6" fill="#D2473F" stroke="#00000033"/>
 <text x="20" y="1044" class="n">stand_1</text><text x="20" y="1057" class="n">#D2473F</text>
@@ -101,18 +101,35 @@
 <text x="595" y="1044" class="n">player_2</text><text x="595" y="1057" class="n">#E0A02E</text>
 <rect x="710" y="950" width="110" height="80" rx="6" fill="#F2F0EC" stroke="#00000033"/>
 <text x="710" y="1044" class="n">uniform_shirt</text><text x="710" y="1057" class="n">#F2F0EC</text>
-<rect x="825" y="950" width="110" height="80" rx="6" fill="#2E3A55" stroke="#00000033"/>
-<text x="825" y="1044" class="n">uniform_pants</text><text x="825" y="1057" class="n">#2E3A55</text>
-<rect x="940" y="950" width="110" height="80" rx="6" fill="#2B3636" stroke="#00000033"/>
-<text x="940" y="1044" class="n">ui_panel</text><text x="940" y="1057" class="n">#2B3636</text>
-<rect x="1055" y="950" width="110" height="80" rx="6" fill="#8E9494" stroke="#00000033"/>
-<text x="1055" y="1044" class="n">ui_border</text><text x="1055" y="1057" class="n">#8E9494</text>
-<rect x="20" y="1090" width="110" height="80" rx="6" fill="#E6E6E2" stroke="#00000033"/>
-<text x="20" y="1184" class="n">ui_text</text><text x="20" y="1197" class="n">#E6E6E2</text>
-<rect x="135" y="1090" width="110" height="80" rx="6" fill="#E8A44E" stroke="#00000033"/>
-<text x="135" y="1184" class="n">ui_amber</text><text x="135" y="1197" class="n">#E8A44E</text>
-<rect x="250" y="1090" width="110" height="80" rx="6" fill="#1C2424" stroke="#00000033"/>
-<text x="250" y="1184" class="n">ui_track</text><text x="250" y="1197" class="n">#1C2424</text>
-<rect x="365" y="1090" width="110" height="80" rx="6" fill="#D2473F" stroke="#00000033"/>
-<text x="365" y="1184" class="n">ui_alert</text><text x="365" y="1197" class="n">#D2473F</text>
+<rect x="825" y="950" width="110" height="80" rx="6" fill="#1D3557" stroke="#00000033"/>
+<text x="825" y="1044" class="n">uniform_pants</text><text x="825" y="1057" class="n">#1D3557</text>
+<rect x="940" y="950" width="110" height="80" rx="6" fill="#13202F" stroke="#00000033"/>
+<text x="940" y="1044" class="n">ui_panel</text><text x="940" y="1057" class="n">#13202F</text>
+<rect x="1055" y="950" width="110" height="80" rx="6" fill="#1D3557" stroke="#00000033"/>
+<text x="1055" y="1044" class="n">ui_header</text><text x="1055" y="1057" class="n">#1D3557</text>
+<rect x="20" y="1090" width="110" height="80" rx="6" fill="#8E9494" stroke="#00000033"/>
+<text x="20" y="1184" class="n">ui_border</text><text x="20" y="1197" class="n">#8E9494</text>
+<rect x="135" y="1090" width="110" height="80" rx="6" fill="#F4EFE6" stroke="#00000033"/>
+<text x="135" y="1184" class="n">ui_text</text><text x="135" y="1197" class="n">#F4EFE6</text>
+<rect x="250" y="1090" width="110" height="80" rx="6" fill="#C8402F" stroke="#00000033"/>
+<text x="250" y="1184" class="n">ui_bar</text><text x="250" y="1197" class="n">#C8402F</text>
+<rect x="365" y="1090" width="110" height="80" rx="6" fill="#5B8DB8" stroke="#00000033"/>
+<text x="365" y="1184" class="n">ui_digits</text><text x="365" y="1197" class="n">#5B8DB8</text>
+<rect x="480" y="1090" width="110" height="80" rx="6" fill="#0B141E" stroke="#00000033"/>
+<text x="480" y="1184" class="n">ui_track</text><text x="480" y="1197" class="n">#0B141E</text>
+<rect x="595" y="1090" width="110" height="80" rx="6" fill="#FF6B57" stroke="#00000033"/>
+<text x="595" y="1184" class="n">ui_alert</text><text x="595" y="1197" class="n">#FF6B57</text>
+<text x="20" y="1260" class="h">Marca (propuesta A · Mariña, PUL-088)</text>
+<rect x="20" y="1272" width="110" height="80" rx="6" fill="#1D3557" stroke="#00000033"/>
+<text x="20" y="1366" class="n">brand_navy</text><text x="20" y="1379" class="n">#1D3557</text>
+<rect x="135" y="1272" width="110" height="80" rx="6" fill="#C8402F" stroke="#00000033"/>
+<text x="135" y="1366" class="n">brand_red</text><text x="135" y="1379" class="n">#C8402F</text>
+<rect x="250" y="1272" width="110" height="80" rx="6" fill="#F4EFE6" stroke="#00000033"/>
+<text x="250" y="1366" class="n">brand_paper</text><text x="250" y="1379" class="n">#F4EFE6</text>
+<rect x="365" y="1272" width="110" height="80" rx="6" fill="#13202F" stroke="#00000033"/>
+<text x="365" y="1366" class="n">brand_night</text><text x="365" y="1379" class="n">#13202F</text>
+<rect x="480" y="1272" width="110" height="80" rx="6" fill="#5B8DB8" stroke="#00000033"/>
+<text x="480" y="1366" class="n">brand_support</text><text x="480" y="1379" class="n">#5B8DB8</text>
+<rect x="595" y="1272" width="110" height="80" rx="6" fill="#FF6B57" stroke="#00000033"/>
+<text x="595" y="1366" class="n">brand_neon</text><text x="595" y="1379" class="n">#FF6B57</text>
 </svg>

@@ -6,6 +6,12 @@ fija), D16 (solo licencias confirmadas), D18 (estación de condimentos y distint
 hecho en Blender por un agente con MCP) y D21 (marca **PulpaSA**). Si algo choca con
 `docs/design/decisions.md`, manda `decisions.md`.
 
+**Decisiones del responsable (2026-10-06)**, ya incorporadas: tono de **franquicia satírica** con raíz
+de romería gallega (§7); marca **propuesta A · Mariña** de [`brand.md`](brand.md) (PUL-088), con la
+paleta ajustada para que encaje (§2.7); muro del fondo de **granito gallego** (§1.4); **tilt-shift
+opcional**, apagado por defecto (§1.3); objetivo de **60 fps a 1080p en la RTX 3090** de desarrollo,
+sin máquina modesta de referencia (§4.3); comensales con **ropa de romería** (§1.4).
+
 Todas las fichas de la estética v2 (PUL-073..PUL-087) deben cumplirla. Los criterios medibles
 (medidas, triángulos, texturas, contrastes, píxeles) están en §2, §4 y §5 para que un test o una
 captura los comprueben.
@@ -42,8 +48,8 @@ es pequeño, macizo y un poco gastado, como si alguien lo hubiera usado todo el 
 **superficies cuentan historias**: acero cepillado con arañazos, pintura descascarillada en las aristas,
 plástico rojo con roces, madera clara gastada, arpillera, tierra apisonada con rodadas y charcos.
 
-Tono: caos cooperativo con humor; la «franquicia» PulpaSA montada en un campo de feria gallego
-(§7). El pilar de identidad gallega se mantiene con atrezo y vegetación (§1.4), no con el cobre de la v1.
+Tono (decidido): **franquicia satírica** con raíz de romería; la «franquicia» PulpaSA montada en un
+campo de feria gallego (§7). El pilar de identidad gallega se mantiene con atrezo y vegetación (§1.4), no con el cobre de la v1.
 
 Principios (por orden de prioridad):
 1. **Lo jugable se lee primero.** Silueta, color y estado de cada objeto con el que se interactúa se
@@ -103,6 +109,9 @@ Qué **no** se toma de la referencia:
 - La marca «McPULPO», el lema «American octopus franchise» y la combinación rojo/amarillo con
   diagonales del toldo: se sustituyen por PulpaSA (D21, §7).
 - Los textos en inglés de la UI (los textos siguen el idioma del juego).
+- El gris pizarra y el ámbar de la UI: se usan los colores de la marca (§2.6, §2.7); se conserva
+  la forma (paneles, reloj de 7 segmentos, barra).
+- El muro de bloques de hormigón: es de granito (§1.4).
 - Las patatas sueltas en el suelo jugable y la comida de atrezo en encimeras jugables (rompen §6.1).
 - Los charcos tan oscuros como un objeto (se aclaran, §5).
 
@@ -121,7 +130,7 @@ Qué **no** se toma de la referencia:
   la referencia para que la comida y las pegatinas sigan vivas.
 - **Tilt-shift** (desenfoque de profundidad de campo arriba y abajo de la pantalla): **opcional y
   desactivado por defecto**; si se activa, la banda nítida cubre todo el perímetro de encimeras y los
-  cuatro kioscos. Valor en `.tres` (PUL-073).
+  cuatro kioscos, y se apaga si resta legibilidad. Valor en `.tres` (PUL-073), apagado por defecto (decidido).
 - El arte no incluye luces ni cámaras en los `.glb` (sigue la regla de la v1, comprobada por
   `test_assets_models.gd`).
 
@@ -133,8 +142,12 @@ atrezo de fondo, sin tocar lo jugable:
 - **Barro y madera**: **cuncas** y jarras de barro (vino), platos de madera en las mesas de los
   comensales, barriles y bancos corridos.
 - **Romería**: banderines y guirnaldas de bombillas, mesas largas con mantel de papel.
-- **Granito** como alternativa al muro de bloques (pregunta abierta §10: la referencia usa bloques
-  de hormigón).
+- **Granito** (decidido): el muro del fondo es de **sillares de granito gallego** gris claro con
+  mica, juntas oscuras y musgo abajo, en lugar de los bloques de hormigón de la referencia.
+- **Comensales** (decidido): figuras **estáticas** con ropa de romería —boinas, pañuelos, chalecos,
+  rebecas— en tonos apagados de Z3 (§5); nunca con `player_*`, `stand_*` ni el azul marino de la
+  marca como color principal, para que no se lean como cocineros ni puestos. Comen pulpo en platos
+  de madera y beben en cuncas; algunos con vaso de PulpaSA (guiño satírico).
 
 ## 2. Paleta v2 (hex sRGB)
 
@@ -156,15 +169,15 @@ Jerarquía: **lo jugable saturado y cálido** (comida, bandejas, pegatinas, told
 | `steel_dark` | `#4E5458` | Cuerpo de kiosco, rejillas, sombras de acero |
 | `paint_grey` | `#5F6A6E` | Metal pintado (postes, marcos); desconcha a `steel_mid` |
 | `paint_beige` | `#B29770` | Metal pintado del generador y cajas eléctricas |
-| `plastic_red` | `#C93A33` | **Bandejas**, toldo grande, tapas de tanque |
+| `plastic_red` | `#C8402F` | **Bandejas**, tapas de tanque (= acento pimentón de la marca, §2.7) |
 | `plastic_blue` | `#3E78B0` | Tanque de pulpos, bombona azul |
 | `wood_used` | `#B58A5C` | Tablas de corte, cajas de fruta, bancos |
 | `wood_dark` | `#553E30` | Barriles, vigas, mangos de cuchillo |
 | `cardboard` | `#B8935F` | Cajas de cartón (bajo encimeras, fondo) |
 | `burlap` | `#9C7D59` | Sacos de patatas |
 | `clay` | `#A85A3A` | Cuncas, jarras y cuencos de barro |
-| `canvas_red` | `#C33E39` | Lona del toldo grande |
-| `concrete_block` | `#6E7578` | Muro de bloques (juntas `#4A4F4C` con musgo `#5E6B3A`) |
+| `canvas_red` | `#C8402F` | Rayas rojas del toldo grande (alternan con `brand_paper`) |
+| `granite` | `#8C8A84` | Muro de sillares de granito (moteado de mica `#B5B2AA` y `#4F4D49`, juntas `#5E5C57`, musgo `#5E6B3A`) |
 | `rubber_black` | `#24272A` | Cables, mangueras de agua, neumáticos |
 | `hose_red` / `hose_green` | `#8E2F2A` / `#3F6B45` | Mangueras de gas de los cocedores |
 
@@ -203,7 +216,7 @@ Jerarquía: **lo jugable saturado y cálido** (comida, bandejas, pegatinas, told
 | `potato_raw` | `#8E6B47` | Patata cruda con piel |
 | `potato_cooked` | `#F2D56B` | Cachelo cocido (borde `#D8A93C`) |
 | `potato_burnt` | `#2E2620` | Cachelo quemado |
-| `tray_liner` | `#EFE4CC` | Papel antigrasa dentro de la bandeja |
+| `tray_liner` | `#F4EFE6` | Papel salvamanteles dentro de la bandeja (= `brand_paper`; patrón de símbolos al 15 %, §6.4) |
 
 ### 2.5 Condimentos (pegatinas, dispensadores y etiquetas)
 
@@ -223,16 +236,50 @@ exactamente estos valores.
 | `player_1` | `#2F6FB5` | Gorra/delantal J1 y su aro (igual que la v1 y PUL-035) |
 | `player_2` | `#E0A02E` | Gorra/delantal J2 y su aro |
 | `uniform_shirt` | `#F2F0EC` | Camiseta |
-| `uniform_pants` | `#2E3A55` | Pantalón azul marino |
-| `ui_panel` | `#2B3636` | Fondo de tickets y HUD (alfa 0,92) |
+| `uniform_pants` | `#1D3557` | Pantalón (= `brand_navy`) |
+| `ui_panel` | `#13202F` | Cuerpo de tickets y HUD (= `brand_night`, alfa 0,92) |
+| `ui_header` | `#1D3557` | Cabecera de ticket y paneles con la insignia (= `brand_navy`) |
 | `ui_border` | `#8E9494` | Borde de panel (2–3 px a 1080p) |
-| `ui_text` | `#E6E6E2` | Texto principal (contraste 10:1 sobre el panel) |
-| `ui_amber` | `#E8A44E` | Títulos, barra de paciencia, dígitos (5,9:1 sobre el panel) |
-| `ui_track` | `#1C2424` | Fondo de barras |
-| `ui_alert` | `#D2473F` | Paciencia baja / aviso |
+| `ui_text` | `#F4EFE6` | Texto principal (= `brand_paper`; 14,4:1 sobre el panel) |
+| `ui_bar` | `#C8402F` | Barra de paciencia (= `brand_red`; 3,3:1 sobre el panel) |
+| `ui_digits` | `#5B8DB8` | Reloj de 7 segmentos y cifras del HUD (= `brand_support`; 4,7:1) |
+| `ui_track` | `#0B141E` | Fondo de barras |
+| `ui_alert` | `#FF6B57` | Paciencia baja: la barra pasa a neón y parpadea (5,9:1); nunca solo color |
 
-Los colores de **marca** (rojo, crema, etc.) los fija PUL-088 en [`brand.md`](brand.md); deben convivir
-con esta tabla (§7) y no reutilizar `player_1/2` ni los cuatro `stand_*` como color principal.
+### 2.7 Marca (propuesta A · Mariña, PUL-088)
+
+Colores de [`brand.md`](brand.md), elegidos por el responsable; esta biblia los adopta tal cual y
+**reajusta la paleta v2 alrededor de ellos** (no al revés):
+
+| Nombre | Hex | Rol en la marca | Dónde entra en la v2 |
+|---|---|---|---|
+| `brand_navy` | `#1D3557` | Principal | Símbolo y «Pulpa»; pantalón del uniforme; cabecera de UI; marco de cartel y pizarras |
+| `brand_red` | `#C8402F` | Acento (pimentón) | Placa «SA»; **bandejas** (`plastic_red`), rayas del toldo (`canvas_red`), visera de gorra, barra de paciencia |
+| `brand_paper` | `#F4EFE6` | Papel | Papel de bandeja (`tray_liner`), rayas claras del toldo, vasos, texto de UI |
+| `brand_night` | `#13202F` | Noche | Caja del cartel luminoso, cuerpo de tickets/HUD |
+| `brand_support` | `#5B8DB8` | Apoyo | Patrón del papel de bandeja (al 15 %), cifras del HUD |
+| `brand_neon` | `#FF6B57` | Neón | Tubo del cartel luminoso (emisivo), aviso de paciencia baja |
+
+Tipografía: **Montserrat** Black (logotipo) y Bold (lema y textos de UI), OFL; el reloj de 7
+segmentos usa una fuente de display libre aparte (PUL-086). Lema: **«Franquicia galega de polbo»**.
+
+Ajustes hechos para que la marca encaje sin romper §6:
+- Los rojos de plástico y lona se unifican en `brand_red` (antes `#C93A33`/`#C33E39`, diferencia
+  imperceptible); papel/bandeja sigue en **4,3:1**.
+- El papel de la bandeja pasa a `brand_paper`; rodajas sobre él **3,6:1**. El patrón de símbolos se
+  pinta al **15 %** (no al 30 % de `brand.md`): al 30 % las rodajas bajan a 2,6:1; al 15 % el patrón
+  queda en 1,16:1 contra el papel y las rodajas en ≥ 3,0:1. Símbolos ≥ 0,06 m (sin ruido fino, §3.2).
+- La UI abandona el gris pizarra y el ámbar de la referencia por noche/marino/rojo/apoyo de la marca,
+  con los contrastes de la tabla de §2.6.
+- **Uniforme**: `brand.md` pone gorra y delantal en marino, pero gorra y delantal identifican al
+  jugador (`player_1/2`, §6.5). Manda la legibilidad: copa de gorra y peto del delantal en el color del
+  jugador; marino en pantalón, cinta del delantal y ribetes; visera en `brand_red`; insignia compacta
+  y logotipo en `brand_paper`. `player_1` (`#2F6FB5`) y `brand_navy` se separan 2,4:1 y por saturación.
+- `stand_1` (`#D2473F`) es casi igual que `brand_red`: no pasa nada porque el puesto se identifica por
+  número y posición, pero **ningún toldillo de kiosco lleva el logo** sobre la lona (va en la caja).
+
+Reglas de convivencia: el color **principal** de marca (`brand_navy`) no se usa como color de jugador
+ni de puesto; nada de «Mc», arcos ni amarillo junto a `brand_red` en piezas de marca (PUL-088).
 
 ## 3. Materiales (biblioteca v2, la crea PUL-074)
 
@@ -253,7 +300,7 @@ materiales de aquí (más su atlas propio, §3.3). Nombres `mat_<nombre>`:
 | `mat_cardboard` | `cardboard` | 0,85 | 0 | Ondulado en el canto, cinta y garabatos sin texto legible |
 | `mat_clay` | `clay` | 0,75 | 0 | Vidriado parcial más claro en el borde |
 | `mat_canvas` | `canvas_red` / toldillos | 0,85 | 0 | Trama de lona, costuras, borde de festón más oscuro |
-| `mat_concrete` | `concrete_block` | 0,9 | 0 | Bloques con juntas y musgo en la parte baja |
+| `mat_granite` | `granite` | 0,85 | 0 | Sillares irregulares de granito, moteado grueso de mica (≥ 4 px), juntas y musgo abajo (Z3: el moteado no afecta a lo jugable) |
 | `mat_rubber` | `rubber_black`, mangueras | 0,7 | 0 | Liso |
 | `mat_ground_dirt` | `ground_dirt` | 0,95 | 0 | Tierra con piedrecitas pintadas, rodadas y zonas pisadas (`ground_track`), charcos con roughness 0,1 |
 | `mat_grass` / `mat_foliage` | `grass` / `foliage` | 0,9 | 0 | Pintado, hojas por tarjetas con alfa en el fondo |
@@ -343,7 +390,8 @@ según decida PUL-074 (el test exige materiales embebidos).
 
 - **Objetivo**: **60 fps estables a 1920×1080** en la máquina de desarrollo (Forward+, RTX 3090,
   24 hilos) con todos los efectos de §1.3 activos; **tiempo de frame de GPU ≤ 12 ms** de media y
-  ≤ 16,6 ms en el percentil 99 durante una partida completa, para dejar margen a equipos más modestos.
+  ≤ 16,6 ms en el percentil 99 durante una partida completa. No se fija una máquina modesta de
+  referencia para la alpha (decidido): el margen de 12 ms es solo higiene.
 - Límites de escena: **≤ 1 000 draw calls**, ≤ 60 materiales distintos en pantalla, ≤ 8 luces
   dinámicas (§1.3), ≤ 2 con sombra además de la direccional.
 - Si no se cumple, el orden de recorte es: tilt-shift → sombras de luces puntuales → SSAO a calidad
@@ -408,7 +456,7 @@ Cámara (`camera_rig.tscn`, sin cambios): ortográfica, `size = 12.74` m, inclin
 | Extra | — | — | Humo de PUL-069 |
 
 Relaciones: crudo/cocido **3,2:1**, cocido/quemado **2,5:1**, crudo/quemado **8,1:1**. Rodajas
-`#D4506A` con corte `#F4C6CC`, ≈ 0,05 m, sobre `tray_liner`: **3,2:1**.
+`#D4506A` con corte `#F4C6CC`, ≈ 0,05 m, sobre `tray_liner`: **3,6:1** (≥ 3,0:1 sobre el patrón).
 El crudo sobre acero (`steel_top`) solo da 1,3:1: se separa por saturación (rosa frente a gris) y por
 el contorno de ventosas `#9A6E7A`; dentro del tanque, el agua no baja su luminancia más de un 15 %.
 
@@ -420,13 +468,15 @@ el contorno de ventosas `#9A6E7A`; dentro del tanque, el agua no baja su luminan
 | Forma | Patata **entera**, ovalada | **Partida** en 2–3 trozos, caras de corte claras | Trozos encogidos y agrietados |
 
 Relaciones: crudo/cocido **3,3:1**, cocido/quemado **10,3:1**, crudo/quemado **3,1:1** (más forma).
-El cocido dentro de la bandeja se lee sobre `tray_liner` por **saturación y borde** (solo 1,15:1 de
+El cocido dentro de la bandeja se lee sobre `tray_liner` por **saturación y borde** (solo 1,26:1 de
 luminancia): el borde `#D8A93C` de 0,01 m es obligatorio.
 
 ### 6.4 Bandejas (sustituyen a los platos de madera) y pegatinas
 
-- **Bandeja de plástico rojo** `plastic_red` con **papel antigrasa** `tray_liner` en el fondo: el papel
-  existe porque el pulpo cocido sobre rojo (1,2:1) no se leería. Liner/bandeja: **4,0:1**.
+- **Bandeja de plástico rojo** `plastic_red` (`brand_red`) con **papel salvamanteles** `tray_liner`
+  (`brand_paper`) en el fondo: el papel existe porque el pulpo cocido sobre rojo (1,2:1) no se leería.
+  Papel/bandeja: **4,3:1**. El papel lleva el símbolo de la marca repetido en `brand_support` **al 15 %**
+  (§2.7), nunca más fuerte. `brand.md` sugiere un marco marino: no se usa, la bandeja es roja entera.
 - **Tres tallas distinguibles por forma**, no solo por tamaño (proporción de diámetro de la v1,
   0,34 : 0,42 : 0,49): pequeña **redonda**, mediana **ovalada**, grande **rectangular con asas**.
   Se mantiene el aro de color por talla de la v1 como banda fina en el canto (azul, verde, rojo) para
@@ -444,7 +494,8 @@ luminancia): el borde `#D8A93C` de 0,01 m es obligatorio.
 - **Kioscos**: toldillo `stand_1..4` y número negro en disco blanco ≥ 0,25 m en el frente (Z2);
   `%OrderLabel` del motor sigue mostrando el `#id` de la comanda encima. El TPV no puede ser más
   llamativo que el número.
-- **Jugadores**: gorra y delantal `player_1`/`player_2`, aro del mismo color (PUL-035); rasgo de forma
+- **Jugadores**: copa de gorra y peto del delantal `player_1`/`player_2`, aro del mismo color (PUL-035);
+  pantalón y ribetes `brand_navy`, visera `brand_red` (§2.7); rasgo de forma
   para daltónicos (v1 §3.1-6: J1 gorra redonda, J2 gorro alto, o el que fije PUL-075). La camiseta
   blanca debe destacar sobre el suelo (`uniform_shirt` / `ground_dirt`: 3,0:1).
 - **Cocedores**: abiertos o con tapa levantada para ver lo que cuece desde la cámara (plazas
@@ -457,31 +508,30 @@ luminancia): el borde `#D8A93C` de 0,01 m es obligatorio.
 ## 7. Marca PulpaSA (D21)
 
 La identidad (logotipo, símbolo, colores de marca, versiones) la diseña **PUL-088** en
-[`docs/art/brand.md`](brand.md); esta biblia solo fija **dónde aparece y con qué reglas**. Mientras
-`brand.md` no exista, los assets dejan el hueco del logo con un material provisional `mat_brand_placeholder`.
+[`docs/art/brand.md`](brand.md); el responsable eligió la **propuesta A · Mariña** (colores en §2.7).
+Las fichas usan los SVG/PNG de `art/brand/propuesta_a/` y `godot/assets/textures/brand/propuesta_a/`.
+Esta biblia fija **dónde aparece y con qué reglas**.
 Punto de partida permitido: `godot/assets/textures/logo/PulpaSA.png` (propio, del prototipo).
 
 | Lugar | Asset / ficha | Versión del logo | Regla |
 |---|---|---|---|
-| Cartel luminoso sobre el toldo | Entorno, PUL-085 | Horizontal, emisivo | El elemento más llamativo del fondo, pero por encima del plano de juego y sin tapar la cocina |
-| Toldo grande | Entorno, PUL-085 | Horizontal grande sobre `canvas_red` | Sin diagonales rojo/amarillo de la referencia |
-| Uniformes (gorra, delantal) | Personaje, PUL-075 | Compacta / símbolo, monocromo | Pequeño; no cambia el color de gorra/delantal que identifica al jugador |
+| Cartel luminoso sobre el toldo | Entorno, PUL-085 | Horizontal sin lema; caja `brand_night`, tubo `brand_neon`, «SA» en blanco | El elemento más llamativo del fondo, pero por encima del plano de juego y sin tapar la cocina |
+| Toldo grande | Entorno, PUL-085 | Horizontal con lema «Franquicia galega de polbo», sobre placa `brand_paper` con borde marino | Rayas anchas `canvas_red`/`brand_paper` con faldón festoneado; el logo nunca directamente sobre las rayas; sin diagonales ni amarillo |
+| Uniformes (gorra, delantal) | Personaje, PUL-075 | Compacta en la gorra; símbolo + logotipo en `brand_paper` en el delantal | Pequeño; no cambia el color de jugador de gorra y peto (§2.7) |
 | Bandejas | PUL-077 | Símbolo en el canto frontal-inferior | Nunca en la zona de pegatinas ni en el fondo de la bandeja |
 | Kioscos de entrega | PUL-083 | Compacta en la caja de llevar o el frente | Más pequeña que el número del puesto |
 | Vasos y servilleteros de los comensales | Entorno, PUL-085 | Símbolo | Atrezo Z3 |
 | Pizarras de menú | Entorno, PUL-085 | Horizontal pequeña | Sin texto inventado legible aparte de la marca |
 | Tickets, HUD y menús | UI, PUL-086 | Compacta o monocromo | En cabecera de menús y pantalla de título; en tickets como mucho un símbolo pequeño |
 
-Reglas de convivencia: el color principal de marca no puede ser `player_1/2` ni un `stand_*`, para que
-no se confunda con un jugador o un puesto; nada de «Mc», arcos ni la combinación rojo/amarillo de
-una cadena conocida (restricción de PUL-088).
+Reglas de convivencia: ver §2.7.
 
-**Tono propuesto** (lo decide el responsable, pregunta en Evidence de PUL-072): **franquicia satírica
-con raíz de romería**. «PulpaSA» se lee como *Pulpa, S.A.*: una sociedad anónima que ha convertido la
+**Tono (decidido por el responsable el 2026-10-06): franquicia satírica con raíz de romería**. «PulpaSA» se lee como *Pulpa, S.A.*: una sociedad anónima que ha convertido la
 pulpería de feria en franquicia (uniformes, TPV, cámaras de vigilancia, cartel luminoso, «empregado do
 mes»), pero montada en un campo de romería gallego con barro, fentos y cuncas. El humor sale del choque
-entre lo corporativo y lo tradicional; la alternativa es una **romería con marca** (pulpería
-tradicional con logo pintado a mano, sin guiños corporativos).
+entre lo corporativo y lo tradicional: el lema «Franquicia galega de polbo» con rótulo de neón sobre un
+muro de granito, cámaras de vigilancia apuntando a unos comensales con boina. La sátira va en el
+atrezo de fondo y en los textos de marca, nunca en lo jugable.
 
 ## 8. Tabla asset → cambio (PUL-073..PUL-086)
 
@@ -497,19 +547,19 @@ de `level_01`.
 | PUL-076 | Pulpo, cachelos (crudo/cocido/quemado), rodajas | **Rehacer** | Colores y formas de §6.2/§6.3, más detalle de ventosas y cortes, sin ruido; mismos nombres de malla | — | 1 500 c/u, atlas 512² | PUL-074 |
 | PUL-077 | Platos de madera (3 tallas) | **Rehacer** | Bandejas de plástico rojo con papel, tres formas (§6.4), relleno por capas, logo en canto | — | 2 000 c/u, atlas 512² | PUL-074, PUL-076, PUL-088 |
 | PUL-078 | Caldeiros de cobre con fogón | **Rehacer** | Cocedores cilíndricos de acero con quemador de gas, tapa levantada, piloto; boca abierta para ver las plazas | Mangueras de gas roja/verde al suelo, bombona junto al muro | 6 000 (cada cocedor + quemador) | PUL-074 |
-| PUL-079 | Arcón de pulpo | **Rehacer** | Tanque azul de plástico con agua `mat_glass_water`, burbujas y pulpos crudos dentro; misma huella | Mangueras de agua, cartel pequeño sin texto inventado | 6 000 | PUL-074, PUL-076 (pulpo crudo) |
+| PUL-079 | Arcón de pulpo | **Rehacer** | Tanque azul de plástico con agua `mat_glass_water`, burbujas y pulpos crudos dentro (el modelo crudo de PUL-076); misma huella | Mangueras de agua, cartel pequeño sin texto inventado | 6 000 | PUL-074, **PUL-076** (pulpos del tanque: añadir a `deps` de la ficha) |
 | PUL-080 | Cesta/cachelera | **Rehacer** | 1–2 sacos de arpillera abiertos con patatas crudas de PUL-076, cesto opcional | — | 6 000 | PUL-074, PUL-076 |
 | PUL-081 | Estantería de platos | **Rehacer** | Rack de acero con pilas de bandejas por talla delante de cada spawner | — | 6 000 (sin contar las bandejas instanciadas) | PUL-074, PUL-077 |
 | PUL-082 | Estación de condimentos (dispensadores, cuenco de cachelos) | **Rehacer** | Mostrador de acero, botes/latas de pimentón dulce y picante, salero, aceitera, cuenco de barro de cachelos, etiquetas de color en el frente | Tabla de corte y cuchillo en la franja trasera (Z1) | 6 000 el conjunto | PUL-074 |
 | PUL-083 | Puestos de entrega 1–4 | **Rehacer** | Kiosco de acero oscuro, toldillo `stand_1..4` con festón, TPV, número en disco, logo compacto | Caja de llevar con faja de marca | 6 000 c/u (malla común + 4 materiales) | PUL-074, PUL-088 |
 | PUL-084 | Encimeras de madera (kit) y suelo de la cocina | **Rehacer** | Encimeras de acero con tornillos, cajones/puertas, balda con cajas de cartón; tablero `steel_top` limpio (Z1) | Rejillas de desagüe, utensilios en franja trasera, cajas de cartón en baldas | 1 500 por módulo | PUL-074, PUL-073 |
-| PUL-085 | Entorno de romería (carpa, cartel, mesas, decoración) | **Rehacer + nuevo** | Suelo de tierra con rodadas/charcos (Z0, decals), muro de bloques (o granito, §10), toldo rojo y cartel luminoso PulpaSA, valla | Tanques de gas, generador, bombonas, cables, barriles, cajas, sacos, carballos y fentos, mesas largas con comensales **estáticos**, cuncas, postes con guirnaldas de bombillas, pizarras de menú, cámaras de vigilancia, banderines. Dividido en `ground`, `tent`, `back`, `props` | 80 000 el entorno | PUL-074, PUL-073, PUL-088 |
-| PUL-086 | HUD, tickets y menús | **Retexturizar (UI)** | Paneles `ui_panel` con borde, título ámbar, reloj de 7 segmentos (fuente libre OFL), barra ámbar, pegatinas de PUL-060; HUD compacto | Fuentes OFL (registro del coordinador) | — | PUL-088 |
+| PUL-085 | Entorno de romería (carpa, cartel, mesas, decoración) | **Rehacer + nuevo** | Suelo de tierra con rodadas/charcos (Z0, decals), muro de **granito** (§1.4), toldo a rayas `canvas_red`/`brand_paper` y cartel luminoso PulpaSA (§7), valla | Tanques de gas, generador, bombonas, cables, barriles, cajas, sacos, carballos y fentos, mesas largas con comensales **estáticos con ropa de romería** (§1.4), cuncas, postes con guirnaldas de bombillas, pizarras de menú, cámaras de vigilancia, banderines. Dividido en `ground`, `tent`, `back`, `props` | 80 000 el entorno | PUL-074, PUL-073, PUL-088 |
+| PUL-086 | HUD, tickets y menús | **Retexturizar (UI)** | Paneles `ui_panel` (noche) con cabecera `ui_header` (marino) e insignia compacta, textos en Montserrat Bold, reloj de 7 segmentos en `ui_digits` (fuente libre OFL), barra `ui_bar` con aviso `ui_alert`, pegatinas de PUL-060; HUD compacto | Fuentes OFL: Montserrat y la de display (registro del coordinador) | — | PUL-088 |
 
 Orden recomendado: PUL-073 y PUL-074 primero (luz y materiales fijan el juicio); después
 PUL-076 → PUL-077 → PUL-081 (comida, bandeja, rack); PUL-075; estaciones PUL-078/079/080/082/083;
-por último PUL-084 y PUL-085 (lo más grande) y PUL-086 en paralelo cuando exista `brand.md`.
-PUL-079 depende también de PUL-076 (pulpos dentro del tanque): conviene añadirlo a su `deps`.
+por último PUL-084 y PUL-085 (lo más grande) y PUL-086 en paralelo.
+PUL-079 depende también de PUL-076 (pulpos dentro del tanque); su ficha debe llevarlo en `deps`.
 
 ## 9. Lista de comprobación por asset (reviewer y asset-pipeline)
 
@@ -525,12 +575,11 @@ PUL-079 depende también de PUL-076 (pulpos dentro del tanque): conviene añadir
 - [ ] Captura antes/después desde la cámara de `level_01` junto a la referencia y render del `.blend`
 - [ ] Licencia propia anotada (a través del coordinador)
 
-## 10. Preguntas abiertas
+## 10. Decisiones cerradas y preguntas abiertas
 
-- **Tono de la marca**: franquicia satírica con raíz de romería (propuesta) o romería con marca (§7).
-- **Muro del fondo**: bloques de hormigón como la referencia o **granito** gallego (más identidad).
-- **Equipo mínimo**: la medición es en una RTX 3090; ¿hay que fijar una máquina de referencia modesta
-  (p. ej. gráfica integrada) para la alpha? Cambiaría §4.
-- **Tilt-shift**: se deja desactivado por defecto; ¿lo quiere el responsable como opción de ajustes?
-- **Comensales estáticos**: ¿con el uniforme de cliente genérico o con trajes de romería (boina,
-  pañuelo)? Afecta solo a PUL-085.
+Cerradas por el responsable el 2026-10-06: tono (franquicia satírica, §7), marca (propuesta A ·
+Mariña, §2.7), muro de granito (§1.4), tilt-shift opcional y apagado por defecto (§1.3), rendimiento en
+la RTX 3090 sin máquina modesta (§4.3), comensales con ropa de romería (§1.4).
+
+Abiertas: ninguna para lanzar PUL-073..PUL-086. Lo que salga al medir (PUL-087) se resuelve con el
+orden de recorte de §4.3.

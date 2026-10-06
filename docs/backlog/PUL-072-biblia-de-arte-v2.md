@@ -78,10 +78,21 @@ Reescribe `docs/art/art-bible.md` (v2; conserva la v1 como `docs/art/art-bible-v
   de PUL-079 (pulpos dentro del tanque).
 - AC3: §7 enlaza `docs/art/brand.md` (PUL-088, en paralelo; aún no existe en esta rama) y fija dónde
   aparece la marca y en qué versión (cartel, toldo, uniformes, bandejas, kioscos, menús, UI).
-- **Pregunta de tono para el responsable**: ¿PulpaSA como **franquicia satírica con raíz de romería**
-  (propuesta: «Pulpa, S.A.», uniformes, TPV, cámaras, cartel luminoso, en un campo de feria gallego con
-  barro, fentos y cuncas) o como **romería con marca** (pulpería tradicional con logo pintado, sin guiños
-  corporativos)?
-- Otras decisiones del responsable (§10): muro de bloques o granito; si se fija una máquina de
-  referencia modesta además de la RTX 3090; tilt-shift como opción de ajustes; vestuario de los comensales.
-- **Gate humano** antes de lanzar PUL-073..PUL-086.
+- **Decisiones del responsable (2026-10-06), incorporadas en la biblia** (ronda 2):
+  1. Tono: **franquicia satírica** PulpaSA con raíz de romería gallega (§1.1, §7).
+  2. Marca: **propuesta A · Mariña** de `docs/art/brand.md` (PUL-088): nueva §2.7 con sus colores;
+     `plastic_red`/`canvas_red` → `brand_red` `#C8402F`, `tray_liner` → `brand_paper` `#F4EFE6`,
+     pantalón → `brand_navy`, UI en noche/marino/rojo/apoyo con Montserrat. Contrastes recalculados:
+     papel/bandeja 4,3:1, rodajas/papel 3,6:1, patrón de símbolos al 15 % (no al 30 % de brand.md, que
+     bajaba las rodajas a 2,6:1), texto UI 14,4:1, cifras 4,7:1, barra 3,3:1, aviso 5,9:1. Desvíos de
+     brand.md por legibilidad: gorra y peto siguen en color de jugador (marino solo en pantalón y
+     ribetes) y la bandeja es roja entera (sin marco marino).
+  3. Muro de **granito gallego** (`granite`, `mat_granite`; §1.4, PUL-085).
+  4. **Tilt-shift opcional**, apagado por defecto (§1.3); **60 fps a 1080p en la RTX 3090**, sin máquina
+     modesta de referencia (§4.3).
+  5. Comensales: **estáticos con ropa de romería** (boinas, pañuelos, chalecos) en tonos apagados, sin
+     colores de jugador, puesto ni marino de marca (§1.4).
+- Tabla §8: PUL-079 depende también de PUL-076 (pulpos del tanque); el coordinador debe añadirlo a los
+  `deps` de la ficha PUL-079 (fuera de mis `owns`).
+- Paleta regenerada con la marca: `docs/art/moodboard-v2.svg` y `docs/evidence/PUL-072/moodboard-v2.png`.
+- Sin preguntas abiertas para lanzar PUL-073..PUL-086 (§10). **Gate humano** antes de lanzarlas.
