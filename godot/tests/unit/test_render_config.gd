@@ -56,3 +56,12 @@ func test_light_budget() -> void:
 	assert_true(sun.shadow_enabled)
 	var elevation: float = rad_to_deg(asin(sun.global_basis.z.y))
 	assert_between(elevation, 50.0, 60.0, "elevación del sol")
+
+
+func test_sky_reflects_light_for_steel() -> void:
+	# PUL-089: el suelo del cielo procedural es lo que refleja el acero en sus caras verticales.
+	var env: Environment = CONFIG.environment
+	assert_eq(env.reflected_light_source, Environment.REFLECTION_SOURCE_SKY)
+	var sky: ProceduralSkyMaterial = env.sky.sky_material as ProceduralSkyMaterial
+	assert_gt(sky.ground_bottom_color.get_luminance(), 0.55, "suelo del cielo claro")
+	assert_gt(sky.ground_horizon_color.get_luminance(), 0.7, "horizonte del suelo claro")
