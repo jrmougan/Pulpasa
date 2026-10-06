@@ -1,12 +1,12 @@
 ---
 id: PUL-054
 title: Modelar las encimeras modulares
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043, PUL-041]
-orca_task: null
+orca_task: task_d66fdf5940e1
 unity_sources: []
 owns: [art/blender/counters.blend, godot/assets/models/furniture/counters/**, godot/entities/environment/kitchen_layout.tscn, godot/assets/models/furniture/**, docs/evidence/PUL-054/**]
 touches_scenes: [godot/entities/environment/kitchen_layout.tscn]
