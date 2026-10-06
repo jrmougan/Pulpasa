@@ -28,9 +28,6 @@ EVI_DIR = ROOT / "docs" / "evidence" / "PUL-088"
 FONTS = {
     "montserrat_black": "/usr/share/fonts/julietaula-montserrat-fonts/Montserrat-Black.otf",
     "montserrat_bold": "/usr/share/fonts/julietaula-montserrat-fonts/Montserrat-Bold.otf",
-    "comfortaa_bold": "/usr/share/fonts/aajohan-comfortaa-fonts/Comfortaa-Bold.otf",
-    "inter_black": "/usr/share/fonts/rsms-inter-fonts/InterDisplay-Black.ttf",
-    "inter_bold": "/usr/share/fonts/rsms-inter-fonts/Inter-Bold.ttf",
 }
 
 
@@ -76,13 +73,11 @@ def text_path(font: str, text: str, size: float, x: float, y: float, track: floa
     return pen.getCommands(), width, face.cap * s
 
 
-# --------------------------------------------------------------------------- propuestas
+# --------------------------------------------------------------------------- marca
 
 
 @dataclass
 class Brand:
-    key: str
-    name: str
     tagline: str
     word_font: str
     tag_font: str
@@ -93,60 +88,23 @@ class Brand:
     extra: str  # color de apoyo
     neon: str  # tubo del cartel luminoso
     stripe: str  # rayas del toldo (con paper)
-    symbol: str  # "redondo" | "romaria" | "caldeiro"
     track: float = 0.0
 
 
-BRANDS = [
-    Brand(
-        "a",
-        "Mariña",
-        "FRANQUICIA GALEGA DE POLBO",
-        "montserrat_black",
-        "montserrat_bold",
-        main="#1D3557",
-        accent="#C8402F",
-        paper="#F4EFE6",
-        dark="#13202F",
-        extra="#5B8DB8",
-        neon="#FF6B57",
-        stripe="#C8402F",
-        symbol="redondo",
-        track=-0.01,
-    ),
-    Brand(
-        "b",
-        "Romaría",
-        "POLBO DE FESTA",
-        "comfortaa_bold",
-        "comfortaa_bold",
-        main="#5E2A6E",
-        accent="#1C9C8F",
-        paper="#FFF4E2",
-        dark="#24132B",
-        extra="#F28C9B",
-        neon="#FF8FB1",
-        stripe="#5E2A6E",
-        symbol="romaria",
-        track=-0.02,
-    ),
-    Brand(
-        "c",
-        "Caldeiro",
-        "SOCIEDADE ANÓNIMA DO POLBO",
-        "inter_black",
-        "inter_bold",
-        main="#12403C",
-        accent="#C1722F",
-        paper="#F3E6CC",
-        dark="#0D2523",
-        extra="#7FA89A",
-        neon="#FFB27A",
-        stripe="#12403C",
-        symbol="caldeiro",
-        track=-0.02,
-    ),
-]
+# Identidad oficial: propuesta A «Mariña», elegida por el responsable (PUL-088).
+BRAND = Brand(
+    "FRANQUICIA GALEGA DE POLBO",
+    "montserrat_black",
+    "montserrat_bold",
+    main="#1D3557",
+    accent="#C8402F",
+    paper="#F4EFE6",
+    dark="#13202F",
+    extra="#5B8DB8",
+    neon="#FF6B57",
+    stripe="#C8402F",
+    track=-0.01,
+)
 
 _uid = [0]
 
@@ -157,89 +115,30 @@ def uid(prefix: str) -> str:
 
 
 # --------------------------------------------------------------------------- símbolo
-# Todos los símbolos se dibujan en una caja de 100 × 100 y se cortan los ojos con una máscara,
-# así funcionan sobre cualquier fondo y en monocromo.
+# El símbolo se dibuja en una caja de 100 × 100 y se le cortan los ojos con una máscara,
+# así funciona sobre cualquier fondo y en monocromo.
 
 
-def symbol(b: Brand, x: float, y: float, size: float, col: str, col2: str | None = None) -> str:
-    col2 = col2 or col
+def symbol(x: float, y: float, size: float, col: str) -> str:
     m = uid("eyes")
     k = size / 100.0
     t = f'transform="translate({x:.2f},{y:.2f}) scale({k:.4f})"'
     st = 'fill="none" stroke-linecap="round" stroke-linejoin="round"'
-    if b.symbol == "redondo":
-        mask = (
-            f'<mask id="{m}" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">'
-            '<rect width="100" height="100" fill="#fff"/>'
-            '<circle cx="40" cy="40" r="5.5" fill="#000"/><circle cx="60" cy="40" r="5.5" fill="#000"/>'
-            "</mask>"
-        )
-        head = "M21,50 C21,22 35,8 50,8 C65,8 79,22 79,50 C79,60 70,64 50,64 C30,64 21,60 21,50 Z"
-        arms = (
-            "M30,59 C22,70 12,72 9,64",
-            "M41,62 C38,78 28,88 20,83",
-            "M59,62 C62,78 72,88 80,83",
-            "M70,59 C78,70 88,72 91,64",
-        )
-        body = f'<path d="{head}" fill="{col}" mask="url(#{m})"/>'
-        body += "".join(f'<path d="{a}" stroke="{col}" stroke-width="9" {st}/>' for a in arms)
-    elif b.symbol == "romaria":
-        mask = (
-            f'<mask id="{m}" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">'
-            '<rect width="100" height="100" fill="#fff"/>'
-            '<ellipse cx="39" cy="38" rx="5" ry="6.5" fill="#000"/>'
-            '<ellipse cx="61" cy="38" rx="5" ry="6.5" fill="#000"/>'
-            '<path d="M42,50 Q50,57 58,50" stroke="#000" stroke-width="4" fill="none" '
-            'stroke-linecap="round"/>'
-            # hueco alrededor del lazo para que se lea en monocromo
-            '<path d="M50,10 L38,2 L38,18 Z M50,10 L62,2 L62,18 Z" fill="#000" stroke="#000" '
-            'stroke-width="9" stroke-linejoin="round"/>'
-            "</mask>"
-        )
-        head = "M16,46 C16,20 32,6 50,6 C68,6 84,20 84,46 C84,58 72,62 50,62 C28,62 16,58 16,46 Z"
-        arms = (
-            "M24,56 C12,64 10,80 20,82 C27,83 28,74 22,73",
-            "M40,61 C36,74 38,90 48,90",
-            "M60,61 C66,72 72,86 81,84 C88,82 86,73 79,74",
-            "M76,56 C88,62 94,74 92,80",
-        )
-        body = f'<path d="{head}" fill="{col}" mask="url(#{m})"/>'
-        body += "".join(f'<path d="{a}" stroke="{col}" stroke-width="8" {st}/>' for a in arms)
-        # Lazo de romaría sobre la cabeza
-        body += (
-            f'<path d="M50,10 L38,2 L38,18 Z M50,10 L62,2 L62,18 Z" fill="{col2}" '
-            f'stroke="{col2}" stroke-width="3" stroke-linejoin="round"/>'
-            f'<circle cx="50" cy="10" r="4.5" fill="{col2}"/>'
-        )
-    else:  # caldeiro
-        mask = (
-            f'<mask id="{m}" maskUnits="userSpaceOnUse" x="-10" y="-10" width="120" height="120">'
-            '<rect x="-10" y="-10" width="120" height="120" fill="#fff"/>'
-            '<circle cx="42" cy="36" r="4.5" fill="#000"/><circle cx="58" cy="36" r="4.5" fill="#000"/>'
-            # hueco alrededor del caldero para que se lea también en monocromo
-            '<rect x="10" y="43" width="80" height="17" rx="8" fill="#000"/>'
-            "</mask>"
-        )
-        head = "M31,50 C31,26 40,16 50,16 C60,16 69,26 69,50 Z"
-        body = f'<g mask="url(#{m})"><path d="{head}" fill="{col}"/>'
-        # vapor
-        body += (
-            f'<path d="M22,30 C17,24 27,20 22,12 M78,30 C83,24 73,20 78,12" stroke="{col}" '
-            f'stroke-width="4" {st} opacity="0.8"/>'
-        )
-        # tentáculos que cuelgan por fuera del caldero
-        body += (
-            f'<path d="M34,40 C22,38 8,44 7,58 C6,68 14,71 17,65" stroke="{col}" '
-            f'stroke-width="7" {st}/>'
-            f'<path d="M66,40 C78,38 92,44 93,58 C94,68 86,71 83,65" stroke="{col}" '
-            f'stroke-width="7" {st}/></g>'
-        )
-        pot = (
-            f'<path d="M18,56 L82,56 L77,88 C76,92 73,94 69,94 L31,94 C27,94 24,92 23,88 Z" '
-            f'fill="{col2}"/>'
-            f'<rect x="14" y="47" width="72" height="9" rx="4.5" fill="{col2}"/>'
-        )
-        body += pot
+    mask = (
+        f'<mask id="{m}" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">'
+        '<rect width="100" height="100" fill="#fff"/>'
+        '<circle cx="40" cy="40" r="5.5" fill="#000"/><circle cx="60" cy="40" r="5.5" fill="#000"/>'
+        "</mask>"
+    )
+    head = "M21,50 C21,22 35,8 50,8 C65,8 79,22 79,50 C79,60 70,64 50,64 C30,64 21,60 21,50 Z"
+    arms = (
+        "M30,59 C22,70 12,72 9,64",
+        "M41,62 C38,78 28,88 20,83",
+        "M59,62 C62,78 72,88 80,83",
+        "M70,59 C78,70 88,72 91,64",
+    )
+    body = f'<path d="{head}" fill="{col}" mask="url(#{m})"/>'
+    body += "".join(f'<path d="{a}" stroke="{col}" stroke-width="9" {st}/>' for a in arms)
     return f"<g {t}>{mask}{body}</g>"
 
 
@@ -343,8 +242,7 @@ def horizontal(
         sc, wc, tg, tt, tl, ko = b.paper, b.paper, b.accent, b.paper, b.extra, False
     else:
         sc, wc, tg, tt, tl, ko = b.main, b.main, b.accent, b.paper, b.accent, False
-    s2 = b.accent if not mono and b.symbol in ("caldeiro", "romaria") else sc
-    out = symbol(b, x, y, h, sc, s2)
+    out = symbol(x, y, h, sc)
     size = h * 0.52
     wx = x + h * 1.06
     wy = y + h * (0.16 if with_tag else 0.26)
@@ -365,13 +263,13 @@ def compact(b: Brand, cx: float, cy: float, r: float, *, mono: str | None = None
     if mono:
         # monocromo: anillo + símbolo + texto en un solo color, fondo transparente
         out += f'<circle cx="{cx}" cy="{cy}" r="{r * 0.95:.2f}" fill="none" stroke="{mono}" stroke-width="{r * 0.07:.2f}"/>'
-        out += symbol(b, cx - r * 0.5, cy - r * 0.72, r, mono, mono)
+        out += symbol(cx - r * 0.5, cy - r * 0.72, r, mono)
         wm, ww, _ = wordmark(b, 0, 0, r * 0.26, mono, mono, mono, knockout=True)
         out += f'<g transform="translate({cx - ww / 2:.2f},{cy + r * 0.38:.2f})">{wm}</g>'
         return out
     out += f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{bg}"/>'
     out += f'<circle cx="{cx}" cy="{cy}" r="{r * 0.88:.2f}" fill="none" stroke="{b.accent}" stroke-width="{r * 0.04:.2f}"/>'
-    out += symbol(b, cx - r * 0.5, cy - r * 0.72, r, fg, b.accent)
+    out += symbol(cx - r * 0.5, cy - r * 0.72, r, fg)
     wm, ww, _ = wordmark(b, 0, 0, r * 0.26, fg, b.accent, b.paper)
     out += f'<g transform="translate({cx - ww / 2:.2f},{cy + r * 0.38:.2f})">{wm}</g>'
     return out
@@ -395,9 +293,8 @@ def neon_sign(b: Brand, x: float, y: float, w: float, h: float) -> str:
     sym = h * 0.56
     total = sym * 1.05 + ww
     ox = x + (w - total) / 2
-    sa_col = "#FFFFFF" if b.key == "a" else b.extra
-    wm, _, _ = wordmark(b, ox + sym * 1.05, y + h * 0.33, size, "", sa_col, "", outline=b.neon)
-    sym_glow = symbol(b, ox, y + (h - sym) / 2, sym, b.neon, sa_col)
+    wm, _, _ = wordmark(b, ox + sym * 1.05, y + h * 0.33, size, "", "#FFFFFF", "", outline=b.neon)
+    sym_glow = symbol(ox, y + (h - sym) / 2, sym, b.neon)
     out += f'<g filter="url(#{f})">{sym_glow}{wm}</g>'
     # soportes
     out += f'<rect x="{x + w * 0.2 - 4}" y="{y + h}" width="8" height="{h * 0.25:.2f}" fill="#555"/>'
@@ -458,7 +355,7 @@ def apron(b: Brand, cx: float, top: float, s: float) -> str:
         f'fill="none" stroke="{b.accent}" stroke-width="4"/>'
     )
     sym = s * 0.34
-    out += symbol(b, cx - sym / 2, top + s * 0.12, sym, b.paper, b.accent)
+    out += symbol(cx - sym / 2, top + s * 0.12, sym, b.paper)
     wm, ww, _ = wordmark(b, 0, 0, s * 0.1, b.paper, b.accent, b.paper)
     out += f'<g transform="translate({cx - ww / 2:.1f},{top + s * 0.5:.1f})">{wm}</g>'
     return out
@@ -474,7 +371,7 @@ def tray(b: Brand, cx: float, cy: float, w: float, h: float) -> str:
         for j in range(2):
             sx = cx - w / 2 + 26 + i * (w - 52) / 4
             sy = cy - h / 2 + 22 + j * (h - 44) / 2
-            out += symbol(b, sx, sy, (h - 44) / 2.4, b.extra, b.extra).replace("<g ", '<g opacity="0.3" ', 1)
+            out += symbol(sx, sy, (h - 44) / 2.4, b.extra).replace("<g ", '<g opacity="0.3" ', 1)
     lh = h * 0.3
     _, lw = horizontal(b, 0, 0, lh, with_tag=False)
     hs, _ = horizontal(b, cx - lw / 2, cy - lh / 2, lh, with_tag=False)
@@ -519,7 +416,7 @@ def ticket(b: Brand, x: float, y: float, w: float, h: float) -> str:
 
 
 def label(text: str, x: float, y: float, col: str = "#333", size: float = 18) -> str:
-    d, _, _ = text_path("inter_bold", text, size, 0, 0, 0.02)
+    d, _, _ = text_path("montserrat_bold", text, size, 0, 0, 0.02)
     return f'<path transform="translate({x:.1f},{y:.1f})" d="{d}" fill="{col}"/>'
 
 
@@ -534,7 +431,7 @@ def svg_doc(w: float, h: float, body: str, bg: str | None = None) -> str:
 def sheet(b: Brand) -> str:
     W, H = 1800, 1300
     o = f'<rect width="{W}" height="{H}" fill="#ECE8E1"/>'
-    o += label(f"PulpaSA · Propuesta {b.key.upper()} · {b.name}", 40, 62, "#222", 34)
+    o += label("PulpaSA · Identidad oficial", 40, 62, "#222", 34)
     o += label(f"Lema: «{b.tagline.capitalize()}»", 40, 98, "#555", 20)
     # paleta
     for i, (n, c) in enumerate(
@@ -592,25 +489,6 @@ def sheet(b: Brand) -> str:
     return svg_doc(W, H, o)
 
 
-def overview() -> str:
-    W, H = 1800, 720
-    o = f'<rect width="{W}" height="{H}" fill="#ECE8E1"/>'
-    o += label("PulpaSA · tres propuestas (PUL-088)", 40, 60, "#222", 34)
-    for i, b in enumerate(BRANDS):
-        x = 40 + i * 590
-        o += f'<rect x="{x}" y="100" width="560" height="580" rx="16" fill="#fff"/>'
-        o += label(f"{b.key.upper()} · {b.name}", x + 20, 140, "#333", 24)
-        hs, hw = horizontal(b, 0, 0, 110)
-        o += f'<g transform="translate({x + (560 - hw) / 2:.1f},175)">{hs}</g>'
-        o += compact(b, x + 140, 420, 100)
-        o += f'<rect x="{x + 270}" y="320" width="260" height="200" rx="12" fill="{b.dark}"/>'
-        ds, dw = horizontal(b, 0, 0, 60, on_dark=True)
-        o += f'<g transform="translate({x + 270 + (260 - dw) / 2:.1f},385)">{ds}</g>'
-        for j, c in enumerate([b.main, b.accent, b.paper, b.dark, b.extra]):
-            o += f'<rect x="{x + 30 + j * 100}" y="570" width="90" height="70" rx="8" fill="{c}" stroke="#0002"/>'
-    return svg_doc(W, H, o)
-
-
 # --------------------------------------------------------------------------- exportación
 
 
@@ -629,30 +507,26 @@ def raster(svg: Path, png: Path, width: int | None = None) -> None:
 
 
 def main() -> None:
-    for b in BRANDS:
-        d = SRC_DIR / f"propuesta_{b.key}"
-        h = 200.0
-        _, hw = horizontal(b, 0, 0, h)
-        pad = 24
-        hs, _ = horizontal(b, pad, pad, h)
-        files = {
-            "horizontal": svg_doc(hw + 2 * pad, h + 2 * pad, hs),
-            "compacta": svg_doc(512, 512, compact(b, 256, 256, 250)),
-            "mono_negro": svg_doc(hw + 2 * pad, h + 2 * pad, horizontal(b, pad, pad, h, mono="#111111")[0]),
-            "mono_blanco": svg_doc(hw + 2 * pad, h + 2 * pad, horizontal(b, pad, pad, h, mono="#FFFFFF")[0]),
-            "simbolo": svg_doc(512, 512, symbol(b, 6, 6, 500, b.main, b.accent)),
-        }
-        for name, txt in files.items():
-            svg = d / f"pulpasa_{b.key}_{name}.svg"
-            write(svg, txt)
-            width = 1024 if name.startswith(("horizontal", "mono")) else 512
-            raster(svg, TEX_DIR / f"propuesta_{b.key}" / f"pulpasa_{b.key}_{name}.png", width)
-        lam = d / f"lamina_{b.key}.svg"
-        write(lam, sheet(b))
-        raster(lam, EVI_DIR / f"lamina_{b.key}_{b.name.lower().replace('ñ', 'n').replace('í', 'i')}.png")
-    ov = SRC_DIR / "propuestas.svg"
-    write(ov, overview())
-    raster(ov, EVI_DIR / "propuestas_resumo.png")
+    b = BRAND
+    h = 200.0
+    _, hw = horizontal(b, 0, 0, h)
+    pad = 24
+    hs, _ = horizontal(b, pad, pad, h)
+    files = {
+        "horizontal": svg_doc(hw + 2 * pad, h + 2 * pad, hs),
+        "compacta": svg_doc(512, 512, compact(b, 256, 256, 250)),
+        "mono_negro": svg_doc(hw + 2 * pad, h + 2 * pad, horizontal(b, pad, pad, h, mono="#111111")[0]),
+        "mono_blanco": svg_doc(hw + 2 * pad, h + 2 * pad, horizontal(b, pad, pad, h, mono="#FFFFFF")[0]),
+        "simbolo": svg_doc(512, 512, symbol(6, 6, 500, b.main)),
+    }
+    for name, txt in files.items():
+        svg = SRC_DIR / f"pulpasa_{name}.svg"
+        write(svg, txt)
+        width = 1024 if name.startswith(("horizontal", "mono")) else 512
+        raster(svg, TEX_DIR / f"pulpasa_{name}.png", width)
+    lam = SRC_DIR / "lamina.svg"
+    write(lam, sheet(b))
+    raster(lam, EVI_DIR / "lamina_oficial.png")
 
 
 if __name__ == "__main__":

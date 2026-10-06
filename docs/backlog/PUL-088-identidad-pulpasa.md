@@ -53,11 +53,13 @@ D21: la marca ficticia del juego es **PulpaSA**. Estética de referencia:
 4. `docs/art/brand.md` con colores, versiones, usos, fuentes y licencias.
 
 ## Evidence
-- Resumen: `docs/evidence/PUL-088/propuestas_resumo.png`.
-- Láminas: `lamina_a_marina.png`, `lamina_b_romaria.png`, `lamina_c_caldeiro.png` (misma carpeta).
-- SVG fuente: `art/brand/propuesta_{a,b,c}/` y `art/brand/propuestas.svg`; PNG + `.import` en
-  `godot/assets/textures/brand/propuesta_{a,b,c}/`.
-- Fuentes: Montserrat, Comfortaa e Inter (SIL OFL 1.1), convertidas a trazados; tabla en
-  `docs/art/brand.md` § Fuentes y licencias (el coordinador las pasa a `licenses.md`).
-- Pendiente del responsable: elegir propuesta (y lema). Después se borran las otras dos carpetas.
-- `tools/verify.sh` verde y `tools/check_owns.py` limpio (ver commit).
+- Ronda 1: tres propuestas (A Mariña, B Romaría, C Caldeiro); comparativa en
+  `docs/evidence/PUL-088/propuestas_resumo.png` y láminas `lamina_b_romaria.png`,
+  `lamina_c_caldeiro.png` (descartadas, se conservan como registro).
+- Ronda 2: el responsable elige **A «Mariña»** con el lema «Franquicia galega de polbo».
+  Lámina oficial: `docs/evidence/PUL-088/lamina_oficial.png`. B y C borradas (SVG, PNG, `.import`).
+- SVG fuente: `art/brand/pulpasa_{horizontal,compacta,mono_negro,mono_blanco,simbolo}.svg` y
+  `art/brand/lamina.svg`; PNG + `.import` en `godot/assets/textures/brand/pulpasa_*.png`.
+- Fuente: Montserrat Black/Bold (SIL OFL 1.1), convertida a trazados; fila para
+  `licenses.md` en `docs/art/brand.md` § Fuentes y licencias (la añade el coordinador).
+- `tools/verify.sh` verde y `tools/check_owns.py` limpio (ver commits).

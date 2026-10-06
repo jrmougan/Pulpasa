@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3dbdg1incsnt"
-path="res://.godot/imported/pulpasa_c_simbolo.png-d6a37eda36aaaf273a26937a80ffa1d0.ctex"
+uid="uid://b0jf4amruu4g5"
+path="res://.godot/imported/pulpasa_mono_blanco.png-6ec87a4e1c628d2b06662bc9c1979a74.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/brand/propuesta_c/pulpasa_c_simbolo.png"
-dest_files=["res://.godot/imported/pulpasa_c_simbolo.png-d6a37eda36aaaf273a26937a80ffa1d0.ctex"]
+source_file="res://assets/textures/brand/pulpasa_mono_blanco.png"
+dest_files=["res://.godot/imported/pulpasa_mono_blanco.png-6ec87a4e1c628d2b06662bc9c1979a74.ctex"]
 
 [params]
 
