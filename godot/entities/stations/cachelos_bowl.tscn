@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://entities/stations/cachelos_bowl.gd" id="1_bowl"]
-[ext_resource type="Material" path="res://assets/materials/ph_wood.tres" id="2_wood"]
+[ext_resource type="PackedScene" path="res://assets/models/stations/seasoning_station/cachelos_bowl.glb" id="2_model"]
 [ext_resource type="PackedScene" path="res://assets/models/food/cachelos/cachelos_pieces.glb" id="3_5sqpn"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_hl"]
 
@@ -9,10 +9,17 @@
 height = 0.3
 radius = 0.25
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_bowl"]
-top_radius = 0.25
+[sub_resource type="StandardMaterial3D" id="Material_hull"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hull"]
+top_radius = 0.235
 bottom_radius = 0.16
-height = 0.16
+height = 0.15
+radial_segments = 16
+rings = 1
 
 [node name="CachelosBowl" type="StaticBody3D" unique_id=651481627 groups=["interactable"]]
 collision_layer = 4
@@ -23,16 +30,11 @@ script = ExtResource("1_bowl")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 shape = SubResource("CylinderShape3D_bowl")
 
-[node name="Model" type="Node3D" parent="." unique_id=1095865069]
-
-[node name="Bowl" type="MeshInstance3D" parent="Model" unique_id=523535492]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
-material_override = ExtResource("2_wood")
-mesh = SubResource("CylinderMesh_bowl")
+[node name="Model" parent="." unique_id=1095865069 instance=ExtResource("2_model")]
 
 [node name="Portions" type="Node3D" parent="Model" unique_id=1824324861]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
 
 [node name="Portion1" parent="Model/Portions" unique_id=413698629 instance=ExtResource("3_5sqpn")]
 
@@ -58,9 +60,18 @@ visible = false
 [node name="cachelos_pieces_b" parent="Model/Portions/Portion3/cachelos_pieces" parent_id_path=PackedInt32Array(316236012, 613769494) index="1" unique_id=697496668]
 visible = false
 
-[node name="Highlightable" type="Node" parent="." unique_id=2072747665]
+[node name="OutlineHull" type="Node3D" parent="Model"]
+
+[node name="Bowl" type="MeshInstance3D" parent="Model/OutlineHull"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+cast_shadow = 0
+material_override = SubResource("Material_hull")
+mesh = SubResource("CylinderMesh_hull")
+
+[node name="Highlightable" type="Node" parent="." unique_id=2072747665 node_paths=PackedStringArray("root")]
 unique_name_in_owner = true
 script = ExtResource("4_hl")
+root = NodePath("../Model/OutlineHull")
 
 [editable path="Model/Portions/Portion1"]
 [editable path="Model/Portions/Portion2"]

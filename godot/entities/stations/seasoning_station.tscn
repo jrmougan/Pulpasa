@@ -10,30 +10,10 @@
 [ext_resource type="Resource" path="res://data/seasonings/salt.tres" id="8_salt"]
 [ext_resource type="Resource" path="res://data/seasonings/oil.tres" id="9_oil"]
 [ext_resource type="AudioStream" path="res://assets/audio/delivery_error.ogg" id="10_err"]
+[ext_resource type="PackedScene" path="res://assets/models/stations/seasoning_station/seasoning_station.glb" id="11_model"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_counter"]
 size = Vector3(4, 1.1, 1.1)
-
-[sub_resource type="StandardMaterial3D" id="Material_steel"]
-albedo_color = Color(0.6627451, 0.6901961, 0.70980394, 1)
-roughness = 0.6
-
-[sub_resource type="BoxMesh" id="BoxMesh_counter"]
-size = Vector3(4, 1, 1.1)
-
-[sub_resource type="StandardMaterial3D" id="Material_wood_light"]
-albedo_color = Color(0.8509804, 0.65882355, 0.42352942, 1)
-roughness = 0.8
-
-[sub_resource type="BoxMesh" id="BoxMesh_top"]
-size = Vector3(4.1, 0.1, 1.2)
-
-[sub_resource type="StandardMaterial3D" id="Material_wood_dark"]
-albedo_color = Color(0.43137255, 0.2901961, 0.16862746, 1)
-roughness = 0.8
-
-[sub_resource type="BoxMesh" id="BoxMesh_tray"]
-size = Vector3(0.7, 0.04, 0.55)
 
 [node name="SeasoningStation" type="StaticBody3D"]
 collision_mask = 0
@@ -44,17 +24,7 @@ data = ExtResource("2_data")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 shape = SubResource("BoxShape3D_counter")
 
-[node name="Model" type="Node3D" parent="."]
-
-[node name="Counter" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-material_override = SubResource("Material_steel")
-mesh = SubResource("BoxMesh_counter")
-
-[node name="Top" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
-material_override = SubResource("Material_wood_light")
-mesh = SubResource("BoxMesh_top")
+[node name="Model" parent="." instance=ExtResource("11_model")]
 
 [node name="PassSide" type="Marker3D" parent="."]
 unique_name_in_owner = true
@@ -67,11 +37,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
 [node name="Tray" parent="." instance=ExtResource("3_slot")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, -0.25)
 accepted_group = &"box"
-
-[node name="TrayMesh" type="MeshInstance3D" parent="Tray"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.12, 0)
-material_override = SubResource("Material_wood_dark")
-mesh = SubResource("BoxMesh_tray")
 
 [node name="Dispensers" type="Node3D" parent="."]
 
@@ -110,5 +75,26 @@ visible = false
 [node name="Body" parent="Tray/Model" index="5"]
 collision_layer = 0
 
+[node name="paprika_sweet" parent="Dispensers/HotPaprika/Model/seasoning_dispenser" index="3"]
+visible = false
+
+[node name="paprika_hot" parent="Dispensers/HotPaprika/Model/seasoning_dispenser" index="2"]
+visible = true
+
+[node name="paprika_sweet" parent="Dispensers/Salt/Model/seasoning_dispenser" index="3"]
+visible = false
+
+[node name="salt" parent="Dispensers/Salt/Model/seasoning_dispenser" index="4"]
+visible = true
+
+[node name="paprika_sweet" parent="Dispensers/Oil/Model/seasoning_dispenser" index="3"]
+visible = false
+
+[node name="oil" parent="Dispensers/Oil/Model/seasoning_dispenser" index="1"]
+visible = true
+
+[editable path="Dispensers/HotPaprika"]
+[editable path="Dispensers/Salt"]
+[editable path="Dispensers/Oil"]
 [editable path="Tray"]
 [editable path="Tray/Model"]
