@@ -9,6 +9,16 @@ const FOLDER_TYPES: Dictionary[String, String] = {
 	"recipes": "RecipeData",
 	"seasonings": "SeasoningData",
 }
+## Mínimo de `.tres` por carpeta: detecta un borrado sin fijar el total (añadir no rompe).
+const MIN_PER_FOLDER: Dictionary[String, int] = {
+	"audio": 2,
+	"boxes": 3,
+	"config": 6,
+	"ingredients": 2,
+	"orders": 8,
+	"recipes": 3,
+	"seasonings": 5,
+}
 ## Datos que deben existir, con su tipo.
 const KNOWN: Dictionary[String, String] = {
 	"res://data/config/box_badges.tres": "BoxBadgeStyle",
@@ -51,6 +61,14 @@ func test_ac3_all_tres_load() -> void:
 		elif folder == "orders":
 			var catalog: bool = path.get_file().begins_with("order_catalog")
 			assert_eq(type, "OrderCatalog" if catalog else "OrderData", path)
+	var per_folder: Dictionary[String, int] = {}
+	for path: String in paths:
+		var folder_name: String = path.get_base_dir().get_file()
+		per_folder[folder_name] = per_folder.get(folder_name, 0) + 1
+	for folder_name: String in MIN_PER_FOLDER:
+		assert_gte(
+			per_folder.get(folder_name, 0), MIN_PER_FOLDER[folder_name], "data/%s" % folder_name
+		)
 	for path: String in KNOWN:
 		assert_has(paths, path, "existe %s" % path)
 		var known: Resource = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)

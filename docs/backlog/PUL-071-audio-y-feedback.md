@@ -69,11 +69,12 @@ condimentar, entrega correcta y errónea (distintas), bajada de buses en pausa.
 - Notas para revisión:
   - `AudioCue` gana `shake_amplitude` (no estaba en la tabla del ADR): la sacudida de 0,04 m del
     dispensador no se ve en un puesto (deliver_error usa 0,12 m).
-  - `phase_up`: `LevelAudio` se conecta a `phase_changed` solo si `EventBus` la declara (PUL-070);
-    probado con una señal de usuario en un bus de test. Tras mergear PUL-070 funciona sin cambios.
+  - `phase_up`: tras mergear PUL-070, `LevelAudio` conecta `_bus.phase_changed` directamente;
+    `test_round_manager_phase_two_plays_phase_cue` arranca `RoundManager` con las fases reales de
+    `round_config.tres` y comprueba que `%PhaseCue` suena en la fase 2 y no en la 1.
   - Sin FX propio de PUL-068 para cocer: `cook_start` usa `fx_drop` y `cook_done` `fx_ui_click`;
     conviene escucha humana.
   - Owns ampliado por el coordinador: `test_order_stand.gd`, `test_seasoning_station.gd`
     (ahora cuentan `%Feedback.played`) y `test_data_integrity.gd` (sin recuento fijo de `.tres`:
-    tipo por carpeta y lista de conocidos).
+    tipo por carpeta, mínimo por carpeta y lista de conocidos).
   - El POP del puesto tapa un instante su número (`StandNumber` no está bajo `Model`).

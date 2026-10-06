@@ -9,6 +9,8 @@ extends GutTest
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 const OrderServiceScript: GDScript = preload("res://autoload/order_service.gd")
 const AudioDirectorScript: GDScript = preload("res://autoload/audio_director.gd")
+const RoundManagerScript: GDScript = preload("res://autoload/round_manager.gd")
+const ROUND_CONFIG: RoundConfig = preload("res://data/config/round_config.tres")
 const MAP: AudioFeedbackMap = preload("res://data/audio/feedback_map.tres")
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const LEVEL_AUDIO_SCENE: PackedScene = preload("res://entities/environment/level_audio.tscn")
@@ -267,17 +269,49 @@ func test_ac1_music_and_ambience_play_on_their_buses_after_round_start() -> void
 
 
 func test_phase_cue_only_from_phase_two() -> void:
-	if not _bus.has_signal(&"phase_changed"):
-		_bus.add_user_signal(&"phase_changed", [{"name": "phase", "type": TYPE_INT}])
 	var audio: LevelAudio = LEVEL_AUDIO_SCENE.instantiate()
 	audio.set_bus(_bus)
 	add_child_autofree(audio)
 	var cue: AudioStreamPlayer = audio.get_node("%PhaseCue")
 	assert_eq(cue.bus, &"SFX")
-	_bus.emit_signal(&"phase_changed", 1)
+	_bus.phase_changed.emit(1)
 	assert_false(cue.playing, "fase 1: silencio")
-	_bus.emit_signal(&"phase_changed", 2)
+	_bus.phase_changed.emit(2)
 	assert_true(cue.playing, "fase 2: suena")
+	assert_eq(cue.stream, MAP.get_cue(&"phase_up").stream)
+
+
+## Extremo a extremo con PUL-070: `RoundManager` con las fases reales reenvía `phase_changed` al
+## bus y `LevelAudio` toca `phase_up` al entrar en la fase 2 (no en la 1, que llega al arrancar).
+func test_round_manager_phase_two_plays_phase_cue() -> void:
+	assert_gte(ROUND_CONFIG.phases.size(), 2, "round_config.tres trae fases")
+	var audio: LevelAudio = LEVEL_AUDIO_SCENE.instantiate()
+	audio.set_bus(_bus)
+	add_child_autofree(audio)
+	var cue: AudioStreamPlayer = audio.get_node("%PhaseCue")
+	var service: Node = OrderServiceScript.new()
+	service.set_bus(_bus)
+	add_child_autofree(service)
+	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = 11
+	service.setup(CATALOG, rng, ROUND_CONFIG)
+	var manager: Node = RoundManagerScript.new()
+	manager.set_bus(_bus)
+	manager.set_order_service(service)
+	add_child_autofree(manager)
+	manager.set_physics_process(false)
+	watch_signals(_bus)
+	manager.start_round(ROUND_CONFIG, [1, 2, 3, 4] as Array[int])
+	assert_signal_emit_count(_bus, "phase_changed", 1)
+	assert_false(cue.playing, "fase 1: silencio")
+	var start: float = ROUND_CONFIG.phases[1].start_fraction * ROUND_CONFIG.duration
+	var round_state: RoundState = manager.round_state
+	round_state.advance(start - STEP)
+	assert_false(cue.playing, "aún en fase 1")
+	round_state.advance(STEP)
+	assert_signal_emit_count(_bus, "phase_changed", 2)
+	assert_eq(get_signal_parameters(_bus, "phase_changed", 1), [2])
+	assert_true(cue.playing, "fase 2: suena phase_up")
 	assert_eq(cue.stream, MAP.get_cue(&"phase_up").stream)
 
 

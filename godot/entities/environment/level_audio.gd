@@ -8,8 +8,6 @@ extends Node
 
 const DEFAULT_MAP: AudioFeedbackMap = preload("res://data/audio/feedback_map.tres")
 const PHASE_CUE: StringName = &"phase_up"
-## Señal de fases de `EventBus` (PUL-070): solo se conecta si el bus la declara.
-const PHASE_SIGNAL: StringName = &"phase_changed"
 
 ## Bucle de música (BG).
 @export var music: AudioStream
@@ -32,8 +30,7 @@ func _ready() -> void:
 	_music.stream = music
 	_ambience.stream = ambience
 	_bus.round_started.connect(_on_round_started)
-	if _bus.has_signal(PHASE_SIGNAL):
-		_bus.connect(PHASE_SIGNAL, _on_phase_changed)
+	_bus.phase_changed.connect(_on_phase_changed)
 
 
 ## Inyecta el bus (tests). Llamar antes de añadir el nodo al árbol; por defecto, el autoload.
