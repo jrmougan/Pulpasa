@@ -161,6 +161,21 @@ func test_hold_point_on_anchor_hold_outside_capsule() -> void:
 	assert_gt(-hold_point.position.z - 0.63 / 2.0, shape.radius - 0.02)
 
 
+func test_hold_point_centred_at_chest_height() -> void:
+	var hold_point: Node3D = _player.get_node(^"%HoldPoint") as Node3D
+	assert_almost_eq(hold_point.position.x, 0.0, 0.001)
+	assert_between(hold_point.position.y, 1.0, 1.3)
+
+
+func test_indicator_colours_match_variant_palette() -> void:
+	var colours: Array[Color] = []
+	for material: Material in _player.indicator_materials:
+		colours.append((material as StandardMaterial3D).albedo_color)
+	assert_eq(colours.size(), 2)
+	assert_eq(colours[0].to_html(false), "2f6fb5", "J1 azul (art-bible §2.6)")
+	assert_eq(colours[1].to_html(false), "e0a02e", "J2 ámbar (art-bible §2.6)")
+
+
 func test_active_indicator_still_visible() -> void:
 	var indicator: GeometryInstance3D = _player.get_node(^"%ActiveIndicator") as GeometryInstance3D
 	assert_true(indicator.visible)

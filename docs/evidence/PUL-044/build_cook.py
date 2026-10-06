@@ -57,9 +57,13 @@ BONES = {
     "thigh.R": ((-HIP_X, 0, 0.56), (-HIP_X, 0, 0.31), "hips"),
     "shin.R": ((-HIP_X, 0, 0.31), (-HIP_X, 0, 0.06), "thigh.R"),
 }
-# Marcador de agarre: entre las manos de la pose de llevar (IdleHolding), a la altura de las
-# manos y delante del delantal, para que pulpo ×1,4 y plato grande no entren en la cápsula.
-HOLD_POINT = (0.0, 0.56, 0.86)
+# Marcador de agarre (`%HoldPoint`, origen del objeto en la mano): centrado delante del pecho. Los
+# objetos tienen el origen por encima de su base (plato 0,17 m, pulpo 0,26 m), así que a 1,20 m la
+# base del plato queda a 1,03 m, sobre las manos de la pose de llevar. A 0,62 m del eje el pulpo
+# ×1,4 (0,59–0,66 de fondo) y el plato grande quedan delante del peto sin tocarlo. De espaldas a la
+# cámara (38°) el pulpo asoma a los lados de la cabeza; el plato lo tapan la cabeza y el gorro alto
+# de J2 (lo identifica su fila de pegatinas, PUL-059; decisión del coordinador).
+HOLD_POINT = (0.0, 0.62, 1.20)
 # El exportador glTF usa t = fotograma / fps: los clips empiezan en el fotograma 0.
 FPS = 30
 
@@ -284,12 +288,14 @@ def fwd(deg):
     return math.radians(deg)
 
 
-# Pose de llevar: brazos hacia delante casi horizontales, antebrazos algo arriba y hacia dentro.
+# Pose de llevar: brazos hacia delante con los codos algo doblados; las manos quedan a ±0,22 m,
+# 0,48 m por delante y a 1,03 m de alto (pecho), bajo el borde cercano del plato grande (Ø 0,49) y
+# bajo el cuerpo del pulpo.
 HOLD_POSE = {
-    "upper_arm.L": (fwd(70), math.radians(-14), 0.0),
-    "upper_arm.R": (fwd(70), math.radians(14), 0.0),
-    "forearm.L": (fwd(12), 0.0, 0.0),
-    "forearm.R": (fwd(12), 0.0, 0.0),
+    "upper_arm.L": (fwd(76), math.radians(-8), 0.0),
+    "upper_arm.R": (fwd(76), math.radians(8), 0.0),
+    "forearm.L": (fwd(22), 0.0, 0.0),
+    "forearm.R": (fwd(22), 0.0, 0.0),
 }
 
 

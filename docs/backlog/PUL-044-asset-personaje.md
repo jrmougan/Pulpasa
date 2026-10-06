@@ -8,7 +8,7 @@ agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043]
 orca_task: null
 unity_sources: []
-owns: [art/blender/cook.blend, godot/assets/models/characters/cook/**, godot/entities/player/player.tscn, godot/entities/player/player_animation.gd, godot/entities/player/player_animation.gd.uid, godot/tests/integration/test_player_animation.gd, godot/tests/integration/test_player_animation.gd.uid, docs/evidence/PUL-044/**]
+owns: [art/blender/cook.blend, godot/assets/models/characters/cook/**, godot/entities/player/player.tscn, godot/entities/player/player_animation.gd, godot/entities/player/player_animation.gd.uid, godot/tests/integration/test_player_animation.gd, godot/tests/integration/test_player_animation.gd.uid, godot/assets/materials/active_indicator_p1.tres, godot/assets/materials/active_indicator_p2.tres, docs/evidence/PUL-044/**]
 touches_scenes: [godot/entities/player/player.tscn]
 ---
 
@@ -58,8 +58,10 @@ Nota de PUL-047: en la mano el plato queda tapado por el `HoldPoint` provisional
    `amount_changed` del ingrediente que se lleva (el corte de `Box._cut` gasta el pulpo de la mano).
    Variante por `%Control.player_index` (se re-evalúa cada tick: vale aunque el índice cambie tras
    `_ready`). `player.gd` no se toca: el árbol lee `speed`/`is_holding` del `Player`.
-5. `%HoldPoint` en `Anchor_Hold` (0, 0,86, −0,56): 11 cm más adelante que antes (nota de PUL-045) y
-   entre las manos de la pose de llevar. Colisiones y demás nodos de contrato sin cambios.
+5. `%HoldPoint` en `Anchor_Hold` (0, 1,20, −0,62): agarre centrado delante del pecho (ronda del
+   responsable). Los objetos tienen el origen por encima de su base (plato 0,17 m, pulpo 0,26 m), así
+   que la base del plato queda a 1,03 m, sobre las manos de la pose de llevar (brazos hacia delante,
+   manos a ±0,22 m, 0,48 m por delante, 1,03 m de alto). Colisiones y demás nodos de contrato sin cambios.
 
 ## Evidence
 - Fuente: `art/blender/cook.blend` (+ `build_cook.py`). Export:
@@ -70,20 +72,26 @@ Nota de PUL-047: en la mano el plato queda tapado por el `HoldPoint` provisional
 - Paleta: `mat_cook_j1_accent #2F6FB5`, `mat_cook_j2_accent #E0A02E`, `mat_cook_shirt #F7F4EC`,
   `mat_cook_trousers #4A4F63`, `mat_cook_j1_skin #EBC49A`, `mat_cook_j2_skin #A8734D`, más
   `mat_iron_black` (zapatos, ojos) y `mat_wood_dark` (pelo): 6 colores por variante.
-- Tests: `godot/tests/integration/test_player_animation.gd` (11 casos: modelo y clips, duraciones
+- Tests: `godot/tests/integration/test_player_animation.gd` (13 casos: modelo y clips, duraciones
   de la biblia, estados Idle/Walk/Pick/IdleHolding/WalkWhileHolding/Cut, Cut por pulsación,
-  variante por `player_index`, `%HoldPoint` = `Anchor_Hold` fuera de la cápsula, aro visible).
-  `test_assets_models.gd` valida el `.glb` (escala, frente, base). `tools/verify.sh`: 637/637 OK.
-- Capturas desde la cámara de `level_01` (1920×1080): `level_camera_rest.png` (J1 y J2 en reposo),
-  `level_camera_walk.png`, `level_camera_holding.png` (J1 pulpo cocido ×1,4, J2 plato mediano
-  lleno), `level_camera_walk_holding.png`, `level_camera_holding_zoom.png`,
-  `level_camera_zoom_crop.png` (reposo / andando / andando con carga / de espaldas);
-  `animation_frames.png` y `animations.gif` (todos los clips); `blender_render.png`.
+  variante por `player_index`, `%HoldPoint` = `Anchor_Hold` fuera de la cápsula, centrado a la altura del pecho, aro visible y
+  colores del aro J1 `#2F6FB5` / J2 `#E0A02E`).
+  `test_assets_models.gd` valida el `.glb` (escala, frente, base). `tools/verify.sh`: 639/639 OK.
+- Capturas desde la cámara de `level_01` (1920×1080), tras los ajustes del responsable:
+  `hold_j1_octopus_j2_plate_{front,back,side,three_quarter}.png` (J1 con pulpo cocido ×1,4, J2 con
+  plato grande lleno) y `hold_j1_plate_j2_octopus_*.png` (al revés), con sus recortes ×2
+  `hold_zoom_j1_octopus_j2_plate.png` / `hold_zoom_j1_plate_j2_octopus.png`; `animation_frames.png`
+  y `animations.gif` (todos los clips, J1 de tres cuartos, IdleHolding/WalkWhileHolding/Cut con el
+  pulpo); `blender_render.png`. Script de captura: `capture_level.gd.txt`
+  (`xvfb-run -a godot --path godot --resolution 1920x1080 -s <script>`).
 - Observaciones para el coordinador:
-  - De espaldas a la cámara la carga queda tapada por la cabeza (inevitable con 38° y cabeza
-    grande); de frente, de perfil y de tres cuartos pulpo y plato se ven completos delante.
-  - El aro de PUL-035 sigue visible, pero sus materiales (`active_indicator_p1/p2.tres`) son
-    amarillo/cian, no el azul/ámbar de la biblia (§2.6, §4.1): el J1 azul lleva aro amarillo. Ajuste
-    pendiente fuera de `owns` (ficha pequeña de §4.1).
+  - Ajustes del responsable: (1) agarre centrado a la altura del pecho con los brazos hacia delante;
+    de frente, de perfil y de tres cuartos pulpo ×1,4 y plato grande se ven enteros y no atraviesan
+    el cuerpo; (2) aros J1 azul `#2F6FB5` y J2 ámbar `#E0A02E` (`active_indicator_p1/p2.tres`).
+  - **Limitación aceptada (opción A del coordinador)**: de espaldas a la cámara (38°) el pulpo asoma
+    a los lados de la cabeza, pero el plato lo tapan la cabeza y el gorro alto de J2 (en J1 solo
+    asoma el borde). Probado: ni adelantándolo a 0,70 m ni subiéndolo a los hombros asoma tras el
+    gorro de J2. De espaldas el plato se identifica por su fila de pegatinas (PUL-059); el gorro
+    alto de J2 (rasgo para daltónicos) no se toca. Capturas `hold_*_back.png`.
   - El aro sigue a `controlled_by` y la variante a `player_index` (identidad del personaje).
   - Licencia propia: la registra el coordinador en `docs/assets/licenses.md`.

@@ -158,7 +158,7 @@ shape = SubResource("CapsuleShape3D_a1qjk")
 
 [node name="HoldPoint" type="Marker3D" parent="." unique_id=1680575663]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.86, -0.56)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.62)
 
 [node name="Control" type="Node" parent="." unique_id=769118530]
 unique_name_in_owner = true
