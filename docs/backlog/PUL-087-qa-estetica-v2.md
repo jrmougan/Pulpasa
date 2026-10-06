@@ -21,6 +21,8 @@ Notas de PUL-073: la energía del sol (1,34) la fija `test_level_01`; `scene-tre
 
 Nota de PUL-085: los materiales embebidos de los .glb suman 83 recursos de material y 98 superficies en el entorno; comprobar frente al límite de §4.3 de la biblia v2 y proponer atlas/merge si afecta al rendimiento.
 
+Nota de PUL-084: el pipeline extrae ~115 PNG con texturas de biblioteca duplicadas por .glb (~40 MB de VRAM); proponer deduplicación (materiales externos compartidos) si afecta.
+
 ## Constraints
 - Referencia visual: `docs/art/style-refs/referencia-elegida-2026-10-06.png`; reglas en `docs/art/art-bible.md` v2 (PUL-072) y materiales de PUL-074.
 - Modela con el MCP de Blender (por CLI; no uses el puerto 9876 si hay un Blender del responsable).
