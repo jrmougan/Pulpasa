@@ -15,10 +15,10 @@ size = Vector3(1.482, 0.975, 0.39)
 size = Vector3(1.404, 0.975, 1.56)
 
 [sub_resource type="BoxMesh" id="BoxMesh_hull_counter"]
-size = Vector3(1.357, 0.9555, 0.3705)
+size = Vector3(1.36, 0.93, 0.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_hull_awning"]
-size = Vector3(1.482, 0.0195, 0.673)
+size = Vector3(1.46, 0.02, 0.61)
 
 [node name="OrderStand" type="StaticBody3D" groups=["interactable"]]
 collision_layer = 4
@@ -34,23 +34,23 @@ script = ExtResource("7_view")
 number_label = NodePath("../StandNumber")
 
 [node name="StandNumber" type="Label3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.536, -0.226)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.5, -0.232)
 modulate = Color(0.20392157, 0.1882353, 0.18039216, 1)
 outline_size = 0
 text = "1"
 font = ExtResource("5_font")
 font_size = 64
-pixel_size = 0.00536
+pixel_size = 0.0058
 
 [node name="OutlineHull" type="Node3D" parent="."]
 
 [node name="Counter" type="MeshInstance3D" parent="OutlineHull"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4778, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.475, 0)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_hull_counter")
 
 [node name="Awning" type="MeshInstance3D" parent="OutlineHull"]
-transform = Transform3D(1, 0, 0, 0, 0.9514445, 0.3078203, 0, -0.3078203, 0.9514445, 0, 1.682, -0.078)
+transform = Transform3D(1, 0, 0, 0, 0.9486833, 0.31622776, 0, -0.31622776, 0.9486833, 0, 1.695, -0.04)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_hull_awning")
 
