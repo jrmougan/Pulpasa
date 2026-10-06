@@ -1,11 +1,11 @@
 ---
 id: PUL-070
 title: Subir la dificultad por fases
-status: review
+status: done
 milestone: M3
 role: gameplay-engineer
 deps: [PUL-066, PUL-067]
-orca_task: null
+orca_task: task_3b07e03f823e
 unity_sources: []
 owns: [godot/core/round_state.gd, godot/core/order_board.gd, godot/autoload/round_manager.gd, godot/autoload/order_service.gd, godot/resources/round_config.gd, godot/resources/phase_data.gd, godot/resources/phase_data.gd.uid, godot/data/config/round_config.tres, godot/scenes/levels/level.gd, godot/tests/unit/test_round_state.gd, godot/tests/unit/test_order_board.gd, godot/tests/unit/test_round_manager.gd, godot/tests/unit/test_phases.gd, godot/tests/unit/test_phases.gd.uid, godot/tests/integration/*flow*.gd, docs/evidence/PUL-070/**, godot/autoload/event_bus.gd, godot/tests/unit/test_event_bus.gd, godot/data/orders/*.tres, godot/tests/integration/test_level_01.gd, godot/tests/integration/test_parity_smoke.gd, godot/tests/helpers/phaseless_config.gd, godot/tests/helpers/phaseless_config.gd.uid]
 touches_scenes: []
