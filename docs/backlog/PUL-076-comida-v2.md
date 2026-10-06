@@ -1,11 +1,11 @@
 ---
 id: PUL-076
 title: Rehacer pulpo, cachelos y raciones con la estética de referencia
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074]
-orca_task: null
+orca_task: task_93809b40081d
 unity_sources: []
 owns: [art/blender/octopus.blend, art/blender/cachelos.blend, godot/assets/models/food/**, godot/tests/integration/test_cooking_station.gd, godot/tests/integration/test_cachelos.gd, godot/entities/items/octopus.tscn, godot/entities/items/cachelos.tscn, docs/evidence/PUL-076/**]
 touches_scenes: [godot/entities/items/octopus.tscn, godot/entities/items/cachelos.tscn]

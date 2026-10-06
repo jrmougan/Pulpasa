@@ -1,7 +1,7 @@
 ---
 id: PUL-079
 title: Convertir el arcón en tanque de pulpos
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-076]

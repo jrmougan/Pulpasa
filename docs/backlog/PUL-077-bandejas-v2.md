@@ -1,7 +1,7 @@
 ---
 id: PUL-077
 title: Rehacer platos/cajas como bandejas de la referencia
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-076, PUL-088]

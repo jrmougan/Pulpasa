@@ -1,7 +1,7 @@
 ---
 id: PUL-080
 title: Rehacer la cachelera como sacos de patatas
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-076]
