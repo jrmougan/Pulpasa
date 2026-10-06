@@ -27,6 +27,8 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
 ## Ajustes de la biblia de arte (PUL-042)
 Ajuste de la biblia (§4) y PUL-040 aprobada: recipientes **fijos** (no se manipulan); aceitera como pieza propia; anclas `Anchor_Tray` y por dispensador; dos lados (pase y condimentar) según la feature. Respeta los nodos de la escena de PUL-058.
 
+Nota de PUL-049: si el modelo tiene mallas abiertas o huecas (cubas, cestos, baldas), el contorno inverted-hull del resaltado lo rellena entero. Solución usada: nodo `OutlineHull` con cajas cerradas ocultas y `Highlightable.root` apuntando a él; comprueba la captura resaltada.
+
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.

@@ -1,7 +1,7 @@
 ---
 id: PUL-050
 title: Modelar la cachelera (saco o cesto de patatas)
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
@@ -23,6 +23,8 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
 3. Sustituir el placeholder en su escena (`Model`), sin cambiar colisiones ni nodos de contrato
    (`scene-tree.md` §3) salvo que se pida. 
 4. Registrar la licencia (propia) en `docs/assets/licenses.md` → pedirlo al coordinador (fuera de `owns`).
+
+Nota de PUL-049: si el modelo tiene mallas abiertas o huecas (cubas, cestos, baldas), el contorno inverted-hull del resaltado lo rellena entero. Solución usada: nodo `OutlineHull` con cajas cerradas ocultas y `Highlightable.root` apuntando a él; comprueba la captura resaltada.
 
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.

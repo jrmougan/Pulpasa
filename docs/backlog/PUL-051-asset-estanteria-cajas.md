@@ -24,6 +24,8 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
    (`scene-tree.md` §3) salvo que se pida. 
 4. Registrar la licencia (propia) en `docs/assets/licenses.md` → pedirlo al coordinador (fuera de `owns`).
 
+Nota de PUL-049: si el modelo tiene mallas abiertas o huecas (cubas, cestos, baldas), el contorno inverted-hull del resaltado lo rellena entero. Solución usada: nodo `OutlineHull` con cajas cerradas ocultas y `Highlightable.root` apuntando a él; comprueba la captura resaltada.
+
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.

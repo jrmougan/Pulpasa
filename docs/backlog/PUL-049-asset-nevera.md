@@ -1,12 +1,12 @@
 ---
 id: PUL-049
 title: Modelar el arcón de pulpo
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043]
-orca_task: null
+orca_task: task_ac3b6aa756ea
 unity_sources: []
 owns: [art/blender/octopus_storage.blend, godot/assets/models/stations/octopus_storage/**, godot/entities/stations/octopus_storage.tscn, docs/evidence/PUL-049/**]
 touches_scenes: [godot/entities/stations/octopus_storage.tscn]
