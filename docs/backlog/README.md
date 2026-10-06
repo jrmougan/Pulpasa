@@ -100,3 +100,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-085 | M3b | asset-pipeline | draft | Rehacer el entorno con la estética de referencia |
 | PUL-086 | M3b | ui-engineer | draft | Adaptar HUD y tickets a la estética de referencia |
 | PUL-087 | M3b | qa-tester | draft | Pasar el QA visual y de rendimiento de la estética v2 |
+| PUL-088 | M3b | asset-pipeline | ready | Diseñar la identidad de la marca PulpaSA |

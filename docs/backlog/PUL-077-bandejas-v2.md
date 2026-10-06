@@ -4,7 +4,7 @@ title: Rehacer platos/cajas como bandejas de la referencia
 status: draft
 milestone: M3b
 role: asset-pipeline
-deps: [PUL-072, PUL-074, PUL-076]
+deps: [PUL-072, PUL-074, PUL-076, PUL-088]
 orca_task: null
 unity_sources: []
 owns: [art/blender/box.blend, godot/assets/models/items/box/**, godot/entities/items/box.tscn, docs/evidence/PUL-077/**]

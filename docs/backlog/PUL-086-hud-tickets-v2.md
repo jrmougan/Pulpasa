@@ -4,7 +4,7 @@ title: Adaptar HUD y tickets a la estética de referencia
 status: draft
 milestone: M3b
 role: ui-engineer
-deps: [PUL-072]
+deps: [PUL-072, PUL-088]
 orca_task: null
 unity_sources: []
 owns: [godot/ui/**, godot/assets/fonts/**, godot/tests/integration/test_hud.gd, godot/tests/integration/test_order_tickets.gd, docs/evidence/PUL-086/**]

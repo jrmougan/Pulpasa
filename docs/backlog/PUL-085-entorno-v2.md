@@ -4,7 +4,7 @@ title: Rehacer el entorno con la estética de referencia
 status: draft
 milestone: M3b
 role: asset-pipeline
-deps: [PUL-072, PUL-074, PUL-073]
+deps: [PUL-072, PUL-074, PUL-073, PUL-088]
 orca_task: null
 unity_sources: []
 owns: [art/blender/**, godot/assets/models/environment/**, godot/entities/environment/environment.tscn, docs/evidence/PUL-085/**]

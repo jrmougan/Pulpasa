@@ -4,7 +4,7 @@ title: Rehacer los puestos de entrega como kioscos
 status: draft
 milestone: M3b
 role: asset-pipeline
-deps: [PUL-072, PUL-074]
+deps: [PUL-072, PUL-074, PUL-088]
 orca_task: null
 unity_sources: []
 owns: [art/blender/order_stand.blend, godot/assets/models/stations/order_stand/**, godot/entities/stations/order_stand.tscn, docs/evidence/PUL-083/**]

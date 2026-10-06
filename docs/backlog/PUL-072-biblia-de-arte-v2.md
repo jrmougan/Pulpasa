@@ -30,10 +30,9 @@ Reescribe `docs/art/art-bible.md` (v2; conserva la v1 como `docs/art/art-bible-v
    (siempre limpio y legible).
 5. **Legibilidad** (§3) adaptada: pulpo crudo/cocido/quemado, cachelos, platos/bandejas con
    pegatinas, colores de puesto, aros de jugador; nada de detalle encima de lo jugable.
-6. **Marca (D21, decidida)**: la marca ficticia es **PulpaSA** (no «McPulpo»). Define su identidad:
-   logotipo de texto, colores y uso en cartel, toldo, uniformes, bandejas y UI, sin imitar marcas
-   registradas (nada de «Mc», ni arcos, ni la combinación rojo/amarillo de esa cadena). Propón el
-   tono (franquicia satírica de puesto de pulpo o romería con marca) y déjalo como pregunta en Evidence.
+6. **Marca (D21)**: la identidad de **PulpaSA** la diseña PUL-088 en paralelo (`docs/art/brand.md`);
+   la biblia la enlaza y fija dónde aparece (cartel, toldo, uniformes, bandejas, UI). Propón el tono
+   (franquicia satírica de puesto de pulpo o romería con marca) y déjalo como pregunta en Evidence.
 7. Tabla **asset → cambio** para PUL-073..PUL-086 (qué se rehace, qué se retexturiza, qué atrezo
    nuevo hace falta).
 
@@ -45,7 +44,7 @@ Reescribe `docs/art/art-bible.md` (v2; conserva la v1 como `docs/art/art-bible-v
 ## Acceptance
 - [ ] AC1 Biblia v2 con estilo, paleta, materiales, presupuestos, densidad y legibilidad
 - [ ] AC2 Tabla asset → cambio completa para PUL-073..PUL-086
-- [ ] AC3 Identidad de PulpaSA (D21) y pregunta de tono en Evidence
+- [ ] AC3 Enlace a la identidad de PUL-088 y pregunta de tono en Evidence
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

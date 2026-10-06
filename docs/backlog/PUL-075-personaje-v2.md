@@ -4,7 +4,7 @@ title: Rehacer el personaje con la estética de referencia
 status: draft
 milestone: M3b
 role: asset-pipeline
-deps: [PUL-072, PUL-074]
+deps: [PUL-072, PUL-074, PUL-088]
 orca_task: null
 unity_sources: []
 owns: [art/blender/cook.blend, godot/assets/models/characters/cook/**, godot/entities/player/player.tscn, docs/evidence/PUL-075/**]
