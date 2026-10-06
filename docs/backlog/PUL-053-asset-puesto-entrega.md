@@ -1,7 +1,7 @@
 ---
 id: PUL-053
 title: Modelar el puesto de entrega
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)

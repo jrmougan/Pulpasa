@@ -61,3 +61,4 @@ caja (cada pulsación llena la caja y gasta pulpo) → condimentos sobre la caja
 ## Pendientes detectados en el arte (M3)
 - Retirar el placeholder `cachelera*` y su comprobación en `tests/unit/test_assets_m1.gd` (PUL-050), y los demás placeholders que queden sin uso al terminar PUL-055.
 - Colisión del plato grande menor que el modelo (PUL-047).
+- Quitar la escala 0,78×0,975 de las instancias de `OrderStand` en `level_01.tscn` (y su aserción en `test_level_01`) y retirar `order_stand.fbx` de `scale_check.tscn` (PUL-053).
