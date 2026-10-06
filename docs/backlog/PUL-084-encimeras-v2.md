@@ -1,7 +1,7 @@
 ---
 id: PUL-084
 title: Rehacer encimeras y suelo de la cocina
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-073]

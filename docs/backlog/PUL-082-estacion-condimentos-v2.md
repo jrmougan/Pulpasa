@@ -1,11 +1,11 @@
 ---
 id: PUL-082
 title: Rehacer la estación de condimentos
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074]
-orca_task: null
+orca_task: task_fd1017ef4b79
 unity_sources: []
 owns: [art/blender/seasoning_station.blend, godot/assets/models/stations/seasoning_station/**, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn, docs/evidence/PUL-082/**]
 touches_scenes: [godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn]

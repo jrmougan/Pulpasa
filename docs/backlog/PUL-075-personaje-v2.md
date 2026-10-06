@@ -1,11 +1,11 @@
 ---
 id: PUL-075
 title: Rehacer el personaje con la estética de referencia
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-088]
-orca_task: null
+orca_task: task_5f2388f86fae
 unity_sources: []
 owns: [art/blender/cook.blend, godot/assets/models/characters/cook/**, godot/entities/player/player.tscn, docs/evidence/PUL-075/**]
 touches_scenes: [godot/entities/player/player.tscn]

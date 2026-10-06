@@ -1,7 +1,7 @@
 ---
 id: PUL-083
 title: Rehacer los puestos de entrega como kioscos
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-088]
