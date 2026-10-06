@@ -1,12 +1,12 @@
 ---
 id: PUL-047
 title: Modelar las tres cajas/platos de madera y sus distintivos
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043, PUL-040]
-orca_task: null
+orca_task: task_65b8c37dbc89
 unity_sources: []
 owns: [art/blender/box.blend, godot/assets/models/items/box/**, godot/entities/items/box.tscn, godot/entities/items/box_model.gd, godot/entities/items/box_model.gd.uid, godot/tests/integration/test_box_model.gd, godot/tests/integration/test_box_model.gd.uid, docs/evidence/PUL-047/**, docs/backlog/PUL-047-asset-cajas.md]
 touches_scenes: [godot/entities/items/box.tscn]

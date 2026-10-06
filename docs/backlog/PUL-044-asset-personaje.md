@@ -1,7 +1,7 @@
 ---
 id: PUL-044
 title: Modelar y animar el personaje (dos variantes)
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
@@ -28,6 +28,8 @@ biblia de arte (`docs/art/art-bible.md`, PUL-042).
 Ajuste de la biblia (§4): `Idle` en bucle de 1–2 s y `Cut` con ciclo corto (D13); dos variantes en un mismo `.blend` con malla y rig compartidos y materiales distintos; marcador `Anchor_Hold` en las manos.
 
 Nota de PUL-045: con el pulpo ×1,4 en la mano entra 6–9 cm en la cápsula; el `Anchor_Hold` del personaje (o adelantar `%HoldPoint` ~0,1 m) debe resolverlo.
+
+Nota de PUL-047: en la mano el plato queda tapado por el `HoldPoint` provisional; el agarre del personaje debe dejar visible el plato y su relleno desde la cámara.
 
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.
