@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Material" path="res://assets/materials/terrain.tres" id="1_wgy1n"]
+[ext_resource type="Material" path="res://assets/models/furniture/counters/kitchen_floor_dirt.tres" id="1_wgy1n"]
 [ext_resource type="PackedScene" uid="uid://w4ngv2uuqxef" path="res://assets/models/furniture/counters/counter_1m.glb" id="m_counter_1m"]
 [ext_resource type="PackedScene" uid="uid://dos3qr44let5g" path="res://assets/models/furniture/counters/counter_2m.glb" id="m_counter_2m"]
 [ext_resource type="PackedScene" uid="uid://cougrvnuh0y0y" path="res://assets/models/furniture/counters/counter_3m.glb" id="m_counter_3m"]
@@ -12,6 +12,9 @@
 [ext_resource type="PackedScene" uid="uid://bxiyvjsg6ebvo" path="res://assets/models/furniture/counters/pass_3m.glb" id="m_pass_3m"]
 [ext_resource type="PackedScene" uid="uid://suspedoanuki" path="res://assets/models/furniture/counters/pass_end.glb" id="m_pass_end"]
 [ext_resource type="PackedScene" uid="uid://bbwbx53mvmhke" path="res://assets/models/furniture/counters/rail_1m.glb" id="m_rail_1m"]
+[ext_resource type="PackedScene" path="res://assets/models/furniture/counters/drain_grate.glb" id="m_drain_grate"]
+[ext_resource type="PackedScene" path="res://assets/models/furniture/counters/counter_props_board.glb" id="m_props_board"]
+[ext_resource type="PackedScene" path="res://assets/models/furniture/counters/counter_props_crock.glb" id="m_props_crock"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_aa7sl"]
 size = Vector3(47.32295, 0.2, 42.286316)
@@ -68,6 +71,18 @@ shape = SubResource("BoxShape3D_aa7sl")
 [node name="Mesh" type="MeshInstance3D" parent="Floor" unique_id=38978639]
 material_override = ExtResource("1_wgy1n")
 mesh = SubResource("PlaneMesh_xtlaw")
+
+[node name="Grates" type="Node3D" parent="Floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.42, 0.006, 1.52)
+
+[node name="GrateKitchen" parent="Floor/Grates" instance=ExtResource("m_drain_grate")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, -2.85)
+
+[node name="GratePass" parent="Floor/Grates" instance=ExtResource("m_drain_grate")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0, 4.4)
+
+[node name="GrateGap" parent="Floor/Grates" instance=ExtResource("m_drain_grate")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 7.7, 0, 2.5)
 
 [node name="Bar" type="Node3D" parent="."]
 
@@ -137,6 +152,9 @@ shape = SubResource("BoxShape3D_seg4")
 [node name="counter_1m" parent="BackCounter/BackBetweenStoragePot/Model" instance=ExtResource("m_counter_1m")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
 
+[node name="props_crock" parent="BackCounter/BackBetweenStoragePot/Model" instance=ExtResource("m_props_crock")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.1, 1, -0.37)
+
 [node name="BackBetweenPots" type="StaticBody3D" parent="BackCounter"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, -4)
 collision_mask = 0
@@ -172,6 +190,12 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 2, 0, 0)
 [node name="counter_corner" parent="BackCounter/BackRight/Model" instance=ExtResource("m_counter_corner")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 3.5, 0, 0)
 
+[node name="props_board" parent="BackCounter/BackRight/Model" instance=ExtResource("m_props_board")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -2, 1, -0.37)
+
+[node name="props_crock" parent="BackCounter/BackRight/Model" instance=ExtResource("m_props_crock")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 2.6, 1, -0.37)
+
 [node name="Walls" type="Node3D" parent="."]
 
 [node name="WallLeftKitchen" type="StaticBody3D" parent="Walls"]
@@ -192,6 +216,9 @@ transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 1)
 
 [node name="counter_end" parent="Walls/WallLeftKitchen/Model" instance=ExtResource("m_counter_end")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 2)
+
+[node name="props_crock" parent="Walls/WallLeftKitchen/Model" instance=ExtResource("m_props_crock")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -0.37, 1, 0.5)
 
 [node name="WallLeftFront" type="StaticBody3D" parent="Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3, 0, 5)
@@ -236,6 +263,9 @@ transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 3.5)
 
 [node name="counter_end" parent="Walls/WallRight/Model" instance=ExtResource("m_counter_end")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 4.5)
+
+[node name="props_board" parent="Walls/WallRight/Model" instance=ExtResource("m_props_board")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.37, 1, 2)
 
 [node name="PublicRail" type="Node3D" parent="."]
 
