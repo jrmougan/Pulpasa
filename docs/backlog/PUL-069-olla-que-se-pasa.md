@@ -1,11 +1,11 @@
 ---
 id: PUL-069
 title: Quemar el pulpo que se deja en la olla y encender sus efectos
-status: review
+status: done
 milestone: M3
 role: gameplay-engineer
 deps: [PUL-066]
-orca_task: null
+orca_task: task_a701d519e04d
 unity_sources: []
 owns: [godot/entities/stations/cooking_station.gd, godot/entities/stations/kitchen.tscn, godot/entities/items/ingredient.gd, godot/resources/ingredient_data.gd, godot/resources/kitchen_data.gd, godot/data/config/kitchen.tres, godot/data/ingredients/*.tres, godot/assets/models/food/**, art/blender/octopus.blend, art/blender/cachelos.blend, godot/tests/integration/test_cooking_station.gd, godot/tests/integration/test_octopus.gd, godot/tests/integration/test_burn.gd, godot/tests/integration/test_burn.gd.uid, docs/evidence/PUL-069/**]
 touches_scenes: [godot/entities/stations/kitchen.tscn]
