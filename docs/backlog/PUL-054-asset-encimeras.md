@@ -29,6 +29,8 @@ Ajuste de la biblia (§4) y planta B elegida: kit de 1 m repetible más módulos
 
 Nota de PUL-049: si el modelo tiene mallas abiertas o huecas (cubas, cestos, baldas), el contorno inverted-hull del resaltado lo rellena entero. Solución usada: nodo `OutlineHull` con cajas cerradas ocultas y `Highlightable.root` apuntando a él; comprueba la captura resaltada.
 
+Nota de PUL-051: la estantería de cajas (1,8 m de ancho) queda en parte dentro de la pared oscura de la planta B; las paredes y encimeras nuevas deben dejarla libre y visible.
+
 ## Constraints
 - Presupuesto de polígonos, escala, frente −Z y paleta de la biblia de arte.
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.
