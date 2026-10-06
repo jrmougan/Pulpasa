@@ -26,3 +26,7 @@ Detalle por fichero en `docs/assets/licenses.md` (y `licenses-pul-009.md`, `lice
 - «Interface Sounds» de Kenney (kenney.nl).
 
 `textures/logo/PulpaSA.png` es propio del equipo Pulpasa.
+
+## Retirados
+
+PUL-067 quitó los placeholders 3D de primitivas (olla, fogón, nevera, mesas larga y media, cajas media y grande, pulpos, personaje, bote de aceite, cachelos, cachelera) y los FBX `Mueblecajas` y `order_stand`, todos propios del equipo y sin atribución. Detalle en `docs/assets/licenses.md`.

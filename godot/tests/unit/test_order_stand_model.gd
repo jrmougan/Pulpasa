@@ -70,6 +70,16 @@ func test_model_is_the_glb_at_unit_scale() -> void:
 	assert_eq(model.transform, Transform3D.IDENTITY)
 
 
+func test_stand_measures_counter_1_4_by_1_0_without_node_scale() -> void:
+	var stand: OrderStand = _stand(1)
+	var counter: MeshInstance3D = stand.get_node("Model").find_child("counter", true, false)
+	var size: Vector3 = counter.get_aabb().size
+	assert_almost_eq(size.x, 1.4, 0.1, "ancho del mostrador")
+	var body: BoxShape3D = (stand.get_node("CollisionShape3D") as CollisionShape3D).shape
+	assert_almost_eq(body.size.y, 1.0, 0.05, "alto del mostrador (colisión)")
+	assert_eq(stand.scale, Vector3.ONE)
+
+
 func test_highlight_uses_default_outline_on_hull() -> void:
 	var stand: OrderStand = _stand(1)
 	var highlight: Highlightable = stand.get_node("%Highlightable")

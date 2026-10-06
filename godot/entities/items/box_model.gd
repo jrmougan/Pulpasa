@@ -26,10 +26,17 @@ const CACHELOS_LIFT: float = 0.04
 ## Escala de las rodajas y los trozos por tamaño (el `.glb` de piezas está hecho para ≈ 0,3 m).
 @export
 var fill_scale: Dictionary[StringName, float] = {&"small": 0.95, &"medium": 1.15, &"large": 1.35}
+## Caja de colisión por tamaño: la del modelo del plato (art-bible §2.1), no una única talla.
+@export var collision_size: Dictionary[StringName, Vector3] = {
+	&"small": Vector3(0.338, 0.284, 0.320),
+	&"medium": Vector3(0.396, 0.333, 0.375),
+	&"large": Vector3(0.491, 0.414, 0.466),
+}
 ## Escala extra de los trozos de cachelos (su `.glb` mide ≈ 0,34 m de ancho).
 @export var cachelos_scale: float = 0.55
 
 var _box: Box
+var _own_shape: BoxShape3D
 
 @onready var _plate: Node3D = $Plate as Node3D
 @onready var _octopus: Node3D = $Octopus as Node3D
@@ -76,6 +83,7 @@ func refresh() -> void:
 		var variant: Node3D = _plate.find_child("box_" + key, true, false) as Node3D
 		if variant != null:
 			variant.visible = key == size
+	_fit_collision(size)
 	var anchor: Node3D = _plate.find_child("Anchor_Fill_" + size, true, false) as Node3D
 	var floor_y: float = anchor.position.y if anchor != null else 0.0
 	var s: float = fill_scale.get(size, 1.0)
@@ -90,6 +98,19 @@ func refresh() -> void:
 	_cachelos.visible = with_cachelos
 	for layer: StringName in CACHELOS_LAYERS:
 		_set_layer(_cachelos, layer, with_cachelos)
+
+
+## Forma propia por instancia (la del `.tscn` es un subrecurso compartido) con el tamaño del plato.
+func _fit_collision(size: StringName) -> void:
+	if _box == null or not collision_size.has(size):
+		return
+	var body: CollisionShape3D = _box.get_node_or_null("CollisionShape3D") as CollisionShape3D
+	if body == null:
+		return
+	if _own_shape == null:
+		_own_shape = BoxShape3D.new()
+	_own_shape.size = collision_size[size]
+	body.shape = _own_shape
 
 
 func _set_layer(pile: Node3D, layer: StringName, shown: bool) -> void:

@@ -411,13 +411,16 @@ func test_ac2_camera_matches_unity_main_camera() -> void:
 	assert_true(camera.current)
 
 
-func test_ac2_stand_scale_matches_unity() -> void:
+func test_ac1_stations_have_unit_scale() -> void:
 	await _load_level()
-	for stand: OrderStand in _stands():
-		var scale: Vector3 = stand.global_basis.get_scale()
-		assert_almost_eq(scale.x, 0.78, 0.01)
-		assert_almost_eq(scale.y, 0.975, 0.01)
-		assert_almost_eq(scale.z, 0.975, 0.01)
+	for station: Node in _level.get_node("Stations").get_children():
+		var node: Node3D = station as Node3D
+		if node == null:
+			continue
+		var scale: Vector3 = node.basis.get_scale()
+		assert_almost_eq(scale.x, 1.0, 0.001, "%s escala x" % node.name)
+		assert_almost_eq(scale.y, 1.0, 0.001, "%s escala y" % node.name)
+		assert_almost_eq(scale.z, 1.0, 0.001, "%s escala z" % node.name)
 
 
 func test_ac2_environment_has_world_environment_and_sun() -> void:
