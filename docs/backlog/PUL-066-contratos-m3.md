@@ -1,7 +1,7 @@
 ---
 id: PUL-066
 title: Enmendar los contratos para audio, quemado y fases
-status: ready
+status: review
 milestone: M3
 role: godot-architect
 deps: []
@@ -33,12 +33,30 @@ ADR-006 (audio y feedback) y enmiendas de `signals.md`/`scene-tree.md`/ADR-002:
 - Firmas del bus independientes de la dimensión (ADR-005).
 
 ## Acceptance
-- [ ] AC1 ADR-006 con alternativas y decisión
-- [ ] AC2 `signals.md` y `scene-tree.md` cubren todos los AC de las tres features
-- [ ] AC3 Lista de decisiones para el responsable en Evidence
+- [x] AC1 ADR-006 con alternativas y decisión
+- [x] AC2 `signals.md` y `scene-tree.md` cubren todos los AC de las tres features
+- [x] AC3 Lista de decisiones para el responsable en Evidence
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Leer las tres features (y `opciones-de-volumen`), `signals.md`, `scene-tree.md`, ADR-002..005 y
+   cómo suenan hoy `kitchen`/`box`/`order_stand`/`seasoning_station`, `cooking_station.gd`,
+   `RoundState`/`OrderBoard`/`OrderService`.
+2. ADR-006: buses, reparto mezcla (autoload `AudioDirector` + núcleo `AudioMix`) / reproducción
+   (escenas con `FeedbackPlayer`, `LevelAudio` para BG/FOL), mapa de cues en `.tres`, quemado
+   (reloj de la plaza, señales locales, desechar) y fases (`PhaseData`, `phase_changed`, puestos
+   activos, `max_time`, semilla), con alternativas.
+3. Enmiendas: ADR-002 (Enmienda 1: quinto autoload, fases en el reloj), `signals.md` (§2
+   `phase_changed`, §3 secuencias, §4 señales locales nuevas y receptores, §5 cobertura de AC),
+   `scene-tree.md` (§1–§3, §5, §6, §8).
+4. Lista de decisiones para el responsable en `docs/evidence/PUL-066/decisiones.md`.
 
 ## Evidence
-(Lo rellena el worker.)
+- AC1: `docs/arch/ADR-006-audio-feedback.md` (8 alternativas, decisión por apartado).
+- AC2: `signals.md` §5 mapea cada AC de `audio-y-fx` (AC1, AC2, AC3, AC5), `olla-que-se-pasa`
+  (AC1–AC4) y `dificultad-progresiva` (AC1–AC6) a su señal y escena; `scene-tree.md` recoge nodos y
+  datos (`AudioDirector`, `LevelAudio`, `%Feedback`, quemado en `kitchen.tscn`, `PhaseData`, buses).
+  Única señal nueva del bus: `phase_changed(phase: int)`.
+- AC3: `docs/evidence/PUL-066/decisiones.md` (R1–R15 y ajustes de owns de PUL-070/071).
+- `tools/verify.sh` verde (645/645 tests, smoke OK; `docs/evidence/PUL-066/verify.log`). Una
+  primera pasada falló en GUT sin cambios de código (solo docs): probable intermitencia de
+  temporización en los flujos integrados; la segunda, verde. `check_owns` limpio (solo docs).

@@ -1,6 +1,6 @@
 # ADR-002 — Bus de eventos y autoloads (sustituto de QFramework)
 
-- **Estado:** aceptado (2026-10-03)
+- **Estado:** aceptado (2026-10-03); Enmienda 1 (PUL-066) pendiente del gate humano
 - **Fecha:** 2026-10-03
 - **Ficha:** PUL-003
 - **Relacionado:** `docs/arch/signals.md`, ADR-001, ADR-003, ADR-005 (D14); inventario §1 (Architecture, Systems,
@@ -199,3 +199,29 @@ Consecuencias de ese orden:
 - (−) `GameState` en `PROCESS_MODE_ALWAYS` sigue vivo en pausa; no debe contener lógica de juego.
 - Fase 0 de M0 registra los cuatro autoloads (con sus señales/métodos públicos) en `project.godot`;
   fase 2 implementa `OrderBoard`, `RoundState` y sus adaptadores.
+
+## Enmienda 1 (2026-10-06, PUL-066) — `AudioDirector` y fases
+
+- **Estado:** propuesta, **pendiente del gate humano** (con ADR-006).
+
+1. **Quinto autoload.** Tras `RoundManager`:
+
+   | # | Autoload | Script | Responsabilidad | `process_mode` |
+   |---|---|---|---|---|
+   | 5 | `AudioDirector` | `autoload/audio_director.gd` | Adaptador de `AudioMix` (`core/audio_mix.gd`): único escritor de `AudioServer.set_bus_volume_db` para `Music`, `Ambience` y `SFX`; baja `Music`/`Ambience` en pausa (escucha `pause_changed`); `set_volume`/`get_volume` para el Should de volumen. **No reproduce sonido** y no emite señales al bus | `ALWAYS` |
+
+   Núcleo nuevo en la tabla de núcleos: `AudioMix` · dependencias `AudioMixConfig` · volumen
+   lineal por bus, estado de pausa y dB resultante (sin `AudioServer`) · adaptador `AudioDirector`.
+   Sigue la regla general (lógica en núcleo, adaptador fino) y es global por el mismo motivo que
+   descartó la alternativa 4 (servicios como nodos del nivel): la mezcla es estado de sesión que
+   sobrevive al cambio de escena (menú → nivel). La música y los FX **no** van aquí: son de las escenas (ADR-006 §2).
+2. **`RoundState` emite `phase_changed(phase: int)`** y `RoundManager` la reenvía (regla 2). El
+   cambio de fase entra en «Reloj y paciencia» entre los pasos 2 y 3: tras restar `d` al reloj,
+   aplica las fases cuyo inicio (`start_fraction × duration`) se ha alcanzado, emite una
+   `phase_changed` por fase y rellena los puestos que abre; después `round_time_changed` y, si
+   procede, fin de ronda. En `start`, `phase_changed(1)` va entre `orders_reset` y las comandas
+   iniciales. Sin fases en `RoundConfig`, nada de esto ocurre (comportamiento actual).
+3. **`OrderBoard`** gana `set_active_slots(slot_ids)` y `set_new_order_max_time(seconds)`, que
+   llama `RoundState` (el núcleo que recibe el tablero, regla 3). No hay señales nuevas de tablero.
+4. **Semilla.** `RoundConfig.rng_seed` (0 = aleatoria). `OrderService.setup` la usa si no recibe
+   `rng`. Los núcleos siguen sin crear su propio RNG (regla 7).
