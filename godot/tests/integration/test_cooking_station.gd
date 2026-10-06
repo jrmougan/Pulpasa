@@ -2,7 +2,7 @@
 extends GutTest
 ## PUL-017 AC2: la olla (`kitchen.tscn`, `cooking_station.gd`) acepta un pulpo crudo de la mano,
 ## lo cuece en `IngredientData.cook_time` (5 s) con barra y hervor, y lo devuelve cocido a una
-## mano vacía. Sin quemado (M1). La pausa del árbol congela la cocción.
+## mano vacía. La pausa del árbol congela la cocción. El quemado (M3) se prueba en `test_burn.gd`.
 ## PUL-029: varias plazas según `KitchenData.capacity` (2 en `data/config/kitchen.tres`),
 ## progreso independiente por plaza y devolución FIFO por orden de finalización.
 

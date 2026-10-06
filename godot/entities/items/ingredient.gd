@@ -1,7 +1,8 @@
 class_name Ingredient
 extends RigidBody3D
-## Pulpo (porta Ingredient.cs): crudo o cocido, con una cantidad que se gasta al cortarlo sobre una
-## caja. Contrato `pickable` e `interactable` (ADR-003 §4): con la mano vacía, interactuar lo coge.
+## Pulpo (porta Ingredient.cs): crudo, cocido o quemado (M3, lo quema la olla), con una cantidad
+## que se gasta al cortarlo sobre una caja. Contrato `pickable` e `interactable` (ADR-003 §4): con
+## la mano vacía, interactuar lo coge.
 ## Al agotarse se libera solo, tenga o no barra (B9).
 
 ## Cada corte, con la cantidad que queda.
@@ -35,6 +36,13 @@ func is_cooked() -> bool:
 
 func set_cooked() -> void:
 	state = IngredientData.CookingState.COOKED
+	_apply_state_visual()
+
+
+## Quemado en la olla tras `burn_time` (ADR-006 §5): deja de contar como cocido, así que la caja
+## lo rechaza al cortar y el cuenco no lo acepta. Muestra la malla `*_burnt` si el modelo la trae.
+func set_burnt() -> void:
+	state = IngredientData.CookingState.BURNT
 	_apply_state_visual()
 
 
