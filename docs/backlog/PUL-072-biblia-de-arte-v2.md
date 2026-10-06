@@ -30,21 +30,22 @@ Reescribe `docs/art/art-bible.md` (v2; conserva la v1 como `docs/art/art-bible-v
    (siempre limpio y legible).
 5. **Legibilidad** (§3) adaptada: pulpo crudo/cocido/quemado, cachelos, platos/bandejas con
    pegatinas, colores de puesto, aros de jugador; nada de detalle encima de lo jugable.
-6. **Marca y tema**: la referencia es una franquicia de pulpo («McPULPO, American octopus
-   franchise»). **Decisión del responsable (D21)**: tono de franquicia o mantener la romería gallega
-   con esta estética, y **nombre propio de la marca** (evitar «Mc» y la combinación rojo/amarillo
-   que imita una marca registrada; propón 3 nombres). Deja la decisión como pregunta en Evidence.
+6. **Marca (D21, decidida)**: la marca ficticia es **PulpaSA** (no «McPulpo»). Define su identidad:
+   logotipo de texto, colores y uso en cartel, toldo, uniformes, bandejas y UI, sin imitar marcas
+   registradas (nada de «Mc», ni arcos, ni la combinación rojo/amarillo de esa cadena). Propón el
+   tono (franquicia satírica de puesto de pulpo o romería con marca) y déjalo como pregunta en Evidence.
 7. Tabla **asset → cambio** para PUL-073..PUL-086 (qué se rehace, qué se retexturiza, qué atrezo
    nuevo hace falta).
 
 ## Constraints
 - Solo documentación. Sin imágenes de terceros (D16): describe la referencia; la referencia es del
   responsable y ya está en el repo. **Gate humano** antes de lanzar PUL-073..PUL-086.
+- El logotipo histórico `assets/textures/logo/PulpaSA.png` (propio, del prototipo) puede servir de punto de partida.
 
 ## Acceptance
 - [ ] AC1 Biblia v2 con estilo, paleta, materiales, presupuestos, densidad y legibilidad
 - [ ] AC2 Tabla asset → cambio completa para PUL-073..PUL-086
-- [ ] AC3 Pregunta D21 (tono y nombre de marca) con 3 propuestas de nombre
+- [ ] AC3 Identidad de PulpaSA (D21) y pregunta de tono en Evidence
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

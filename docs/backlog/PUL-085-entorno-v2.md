@@ -15,7 +15,7 @@ touches_scenes: [godot/entities/environment/environment.tscn]
 Adaptar este asset a la estética elegida por el responsable (`docs/art/style-refs/referencia-elegida-2026-10-06.png`).
 
 ## Change
-Suelo de tierra con rodadas, charcos y manchas; valla metálica, árboles y helechos; bidones, generador, bombonas, cables y tuberías; carpa/toldo y cartel con la marca de D21; mesas con comensales **estáticos** (Won't: NPC animados); guirnaldas de bombillas. Divide en varios `.glb` (suelo, carpa, fondo, atrezo) y deja fuera de la zona jugable todo lo denso.
+Suelo de tierra con rodadas, charcos y manchas; valla metálica, árboles y helechos; bidones, generador, bombonas, cables y tuberías; carpa/toldo y cartel y toldo de **PulpaSA** (D21); mesas con comensales **estáticos** (Won't: NPC animados); guirnaldas de bombillas. Divide en varios `.glb` (suelo, carpa, fondo, atrezo) y deja fuera de la zona jugable todo lo denso.
 
 ## Constraints
 - Referencia visual: `docs/art/style-refs/referencia-elegida-2026-10-06.png`; reglas en `docs/art/art-bible.md` v2 (PUL-072) y materiales de PUL-074.
