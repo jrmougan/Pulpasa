@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://entities/stations/cachelos_bowl.gd" id="1_bowl"]
 [ext_resource type="Material" path="res://assets/materials/ph_wood.tres" id="2_wood"]
-[ext_resource type="Material" path="res://assets/materials/ph_cachelo_cooked.tres" id="3_cooked"]
+[ext_resource type="PackedScene" path="res://assets/models/food/cachelos/cachelos_pieces.glb" id="3_5sqpn"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_hl"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_bowl"]
@@ -14,44 +14,54 @@ top_radius = 0.25
 bottom_radius = 0.16
 height = 0.16
 
-[sub_resource type="SphereMesh" id="SphereMesh_portion"]
-radius = 0.08
-height = 0.14
-
-[node name="CachelosBowl" type="StaticBody3D" groups=["interactable"]]
+[node name="CachelosBowl" type="StaticBody3D" unique_id=651481627 groups=["interactable"]]
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("1_bowl")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=565859006]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 shape = SubResource("CylinderShape3D_bowl")
 
-[node name="Model" type="Node3D" parent="."]
+[node name="Model" type="Node3D" parent="." unique_id=1095865069]
 
-[node name="Bowl" type="MeshInstance3D" parent="Model"]
+[node name="Bowl" type="MeshInstance3D" parent="Model" unique_id=523535492]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
 material_override = ExtResource("2_wood")
 mesh = SubResource("CylinderMesh_bowl")
 
-[node name="Portions" type="Node3D" parent="Model"]
+[node name="Portions" type="Node3D" parent="Model" unique_id=1824324861]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
 
-[node name="Portion1" type="MeshInstance3D" parent="Model/Portions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09, 0.18, 0.05)
-material_override = ExtResource("3_cooked")
-mesh = SubResource("SphereMesh_portion")
+[node name="Portion1" parent="Model/Portions" unique_id=413698629 instance=ExtResource("3_5sqpn")]
 
-[node name="Portion2" type="MeshInstance3D" parent="Model/Portions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09, 0.18, 0.05)
-material_override = ExtResource("3_cooked")
-mesh = SubResource("SphereMesh_portion")
+[node name="cachelos_pieces_b" parent="Model/Portions/Portion1/cachelos_pieces" parent_id_path=PackedInt32Array(413698629, 613769494) index="1" unique_id=697496668]
+visible = false
 
-[node name="Portion3" type="MeshInstance3D" parent="Model/Portions"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, -0.08)
-material_override = ExtResource("3_cooked")
-mesh = SubResource("SphereMesh_portion")
+[node name="cachelos_pieces_c" parent="Model/Portions/Portion1/cachelos_pieces" parent_id_path=PackedInt32Array(413698629, 613769494) index="2" unique_id=245261287]
+visible = false
 
-[node name="Highlightable" type="Node" parent="."]
+[node name="Portion2" parent="Model/Portions" unique_id=2002103266 instance=ExtResource("3_5sqpn")]
+
+[node name="cachelos_pieces_a" parent="Model/Portions/Portion2/cachelos_pieces" parent_id_path=PackedInt32Array(2002103266, 613769494) index="0" unique_id=346576700]
+visible = false
+
+[node name="cachelos_pieces_c" parent="Model/Portions/Portion2/cachelos_pieces" parent_id_path=PackedInt32Array(2002103266, 613769494) index="2" unique_id=245261287]
+visible = false
+
+[node name="Portion3" parent="Model/Portions" unique_id=316236012 instance=ExtResource("3_5sqpn")]
+
+[node name="cachelos_pieces_a" parent="Model/Portions/Portion3/cachelos_pieces" parent_id_path=PackedInt32Array(316236012, 613769494) index="0" unique_id=346576700]
+visible = false
+
+[node name="cachelos_pieces_b" parent="Model/Portions/Portion3/cachelos_pieces" parent_id_path=PackedInt32Array(316236012, 613769494) index="1" unique_id=697496668]
+visible = false
+
+[node name="Highlightable" type="Node" parent="." unique_id=2072747665]
 unique_name_in_owner = true
 script = ExtResource("4_hl")
+
+[editable path="Model/Portions/Portion1"]
+[editable path="Model/Portions/Portion2"]
+[editable path="Model/Portions/Portion3"]

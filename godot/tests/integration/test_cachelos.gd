@@ -99,13 +99,40 @@ func test_ac3_four_seasonings() -> void:
 	assert_eq(contents.seasonings.size(), 4)
 
 
-func test_pul033_cachelo_material_changes_and_colors_differ() -> void:
+## PUL-046: una malla por estado (cachelos_raw / cachelos_cooked) con los colores de la paleta
+## (art-bible §3.3); sustituye a la prueba de cambio de material del placeholder (PUL-033).
+func test_pul046_state_meshes_and_palette() -> void:
 	var cachelo: Ingredient = CACHELOS_SCENE.instantiate()
 	_level.add_child(cachelo)
-	var mesh: MeshInstance3D = cachelo.get_node("Model").find_children("*", "MeshInstance3D")[0]
-	assert_eq(mesh.material_override, cachelo.raw_material, "crudo")
+	var raw: MeshInstance3D = cachelo.get_node("Model").find_child("cachelos_raw") as MeshInstance3D
+	var cooked: MeshInstance3D = (
+		cachelo.get_node("Model").find_child("cachelos_cooked") as MeshInstance3D
+	)
+	assert_not_null(raw)
+	assert_not_null(cooked)
+	assert_true(raw.visible, "en crudo se ve la patata entera")
+	assert_false(cooked.visible)
 	cachelo.set_cooked()
-	assert_eq(mesh.material_override, cachelo.cooked_material, "cocido")
-	var raw: Color = (cachelo.raw_material as StandardMaterial3D).albedo_color
-	var cooked: Color = (cachelo.cooked_material as StandardMaterial3D).albedo_color
-	assert_gt(absf(raw.v - cooked.v), 0.3, "crudo y cocido se distinguen por luminosidad")
+	assert_false(raw.visible)
+	assert_true(cooked.visible, "al cocerse se ven los trozos")
+	assert_has(_material_names(raw), "mat_potato_raw")
+	assert_has(_material_names(cooked), "mat_potato_cooked")
+	assert_does_not_have(_material_names(cooked), "mat_potato_raw")
+	var raw_color: Color = _albedo(raw, "mat_potato_raw")
+	var cooked_color: Color = _albedo(cooked, "mat_potato_cooked")
+	assert_gt(cooked_color.get_luminance() - raw_color.get_luminance(), 0.3, "luminosidad")
+
+
+func _material_names(mesh: MeshInstance3D) -> Array[String]:
+	var names: Array[String] = []
+	for i: int in mesh.get_surface_override_material_count():
+		names.append(mesh.get_active_material(i).resource_name)
+	return names
+
+
+func _albedo(mesh: MeshInstance3D, material_name: String) -> Color:
+	for i: int in mesh.get_surface_override_material_count():
+		var material: BaseMaterial3D = mesh.get_active_material(i) as BaseMaterial3D
+		if material != null and material.resource_name == material_name:
+			return material.albedo_color
+	return Color.BLACK
