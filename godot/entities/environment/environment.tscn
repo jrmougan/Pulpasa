@@ -1,9 +1,13 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" uid="uid://doo5lql2gfme8" path="res://assets/models/environment/romeria_v2/ground_w.glb" id="1_ground_w"]
+[ext_resource type="PackedScene" uid="uid://bg3r3nlnijaq4" path="res://assets/models/environment/romeria_v2/ground_e.glb" id="2_ground_e"]
+[ext_resource type="PackedScene" uid="uid://beeivde7rwprg" path="res://assets/models/environment/romeria_v2/back_w.glb" id="3_back_w"]
+[ext_resource type="PackedScene" uid="uid://b1kl4wwk1scvc" path="res://assets/models/environment/romeria_v2/back_e.glb" id="4_back_e"]
+[ext_resource type="PackedScene" uid="uid://dft8j3c5a6eed" path="res://assets/models/environment/romeria_v2/tent.glb" id="5_tent"]
+[ext_resource type="PackedScene" uid="uid://bwq27pu8dk1m" path="res://assets/models/environment/romeria_v2/props_w.glb" id="6_props_w"]
+[ext_resource type="PackedScene" uid="uid://dcb4dma64b2sj" path="res://assets/models/environment/romeria_v2/props_e.glb" id="7_props_e"]
 [ext_resource type="Script" uid="uid://bsmgq1c7h3726" path="res://entities/environment/environment.gd" id="4_script"]
-[ext_resource type="PackedScene" uid="uid://bumwjtgycwqt8" path="res://assets/models/environment/romeria/ground.glb" id="1_ground"]
-[ext_resource type="PackedScene" uid="uid://cpuq5q5lir32v" path="res://assets/models/environment/romeria/tent.glb" id="2_tent"]
-[ext_resource type="PackedScene" uid="uid://c1emu3exusl1v" path="res://assets/models/environment/romeria/decor.glb" id="3_decor"]
 
 [sub_resource type="Gradient" id="Gradient_vignette"]
 offsets = PackedFloat32Array(0.55, 1)
@@ -86,17 +90,23 @@ expand_mode = 1
 
 [node name="Model" type="Node3D" parent="."]
 
-[node name="GroundWest" parent="Model" instance=ExtResource("1_ground")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -2.8, 0, 1)
+[node name="GroundWest" parent="Model" instance=ExtResource("1_ground_w")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5.2, 0, 1.1)
 
-[node name="GroundEast" parent="Model" instance=ExtResource("1_ground")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5.2, 0, 1)
+[node name="GroundEast" parent="Model" instance=ExtResource("2_ground_e")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 6.6, 0, 1.1)
 
-[node name="Tent" parent="Model" instance=ExtResource("2_tent")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.2, 0, -6.5)
+[node name="BackWest" parent="Model" instance=ExtResource("3_back_w")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5.25, 0, -9.9)
 
-[node name="DecorWest" parent="Model" instance=ExtResource("3_decor")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -8.7, 0, -2)
+[node name="BackEast" parent="Model" instance=ExtResource("4_back_e")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 6.65, 0, -9.9)
 
-[node name="DecorEast" parent="Model" instance=ExtResource("3_decor")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.7, 0, -2)
+[node name="Tent" parent="Model" instance=ExtResource("5_tent")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.3, 0, -5.8)
+
+[node name="PropsWest" parent="Model" instance=ExtResource("6_props_w")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -9.1, 0, 1.2)
+
+[node name="PropsEast" parent="Model" instance=ExtResource("7_props_e")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 11.0, 0, 1.2)
