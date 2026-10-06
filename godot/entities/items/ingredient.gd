@@ -9,8 +9,9 @@ signal amount_changed(remaining: float)
 
 @export var data: IngredientData
 ## Material del cuerpo en crudo: las mallas que lo usan cambian a `cooked_material` al cocerse.
+## Solo si `Model` no trae mallas hermanas por estado (ver `_apply_state_variants`).
 @export var raw_material: Material
-## Material del cuerpo cuando está cocido (el modelo es el placeholder crudo).
+## Material del cuerpo cuando está cocido (modelo de un solo estado, p. ej. un placeholder).
 @export var cooked_material: Material
 
 var is_held: bool = false
@@ -75,9 +76,30 @@ func _update_bar() -> void:
 
 
 func _apply_state_visual() -> void:
-	if _model == null or raw_material == null or cooked_material == null or not is_cooked():
+	if _model == null or _apply_state_variants():
+		return
+	if raw_material == null or cooked_material == null or not is_cooked():
 		return
 	for node: Node in _model.find_children("*", "MeshInstance3D"):
 		var mesh: MeshInstance3D = node as MeshInstance3D
 		if mesh.material_override == raw_material:
 			mesh.material_override = cooked_material
+
+
+## Modelo con una malla por estado (art-bible §2.4: `<asset>_raw`, `<asset>_cooked` y, si existe,
+## `<asset>_burnt` bajo `Model`): solo se ve la del estado actual; quemado sin malla propia usa la
+## de cocido. Devuelve false si el modelo no trae a la vez `_raw` y `_cooked`.
+func _apply_state_variants() -> bool:
+	var raw: Array[Node] = _model.find_children("*_raw", "Node3D")
+	var cooked: Array[Node] = _model.find_children("*_cooked", "Node3D")
+	if raw.is_empty() or cooked.is_empty():
+		return false
+	var burnt: Array[Node] = _model.find_children("*_burnt", "Node3D")
+	var shown: Array[Node] = raw
+	if state == IngredientData.CookingState.COOKED:
+		shown = cooked
+	elif state == IngredientData.CookingState.BURNT:
+		shown = cooked if burnt.is_empty() else burnt
+	for node: Node in raw + cooked + burnt:
+		(node as Node3D).visible = shown.has(node)
+	return true

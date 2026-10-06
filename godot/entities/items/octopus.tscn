@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" path="res://entities/items/ingredient.gd" id="1_ev0h6"]
 [ext_resource type="Resource" path="res://data/ingredients/octopus.tres" id="2_48f17"]
-[ext_resource type="Material" path="res://assets/materials/ph_octopus_raw.tres" id="3_bkf63"]
-[ext_resource type="Material" path="res://assets/materials/ph_octopus_cooked.tres" id="4_gi4yh"]
-[ext_resource type="PackedScene" path="res://assets/models/placeholders/octopus_raw.tscn" id="5_2pphk"]
+[ext_resource type="PackedScene" path="res://assets/models/food/octopus/octopus.glb" id="5_2pphk"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="6_peg75"]
 [ext_resource type="PackedScene" path="res://ui/widgets/world_progress_bar.tscn" id="7_sh7dx"]
 
@@ -16,8 +14,6 @@ collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_ev0h6")
 data = ExtResource("2_48f17")
-raw_material = ExtResource("3_bkf63")
-cooked_material = ExtResource("4_gi4yh")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1575972654]
 shape = SubResource("SphereShape3D_jqbqk")

@@ -1,5 +1,6 @@
 extends GutTest
 ## PUL-016 AC3: el pulpo se libera al agotarse aunque no tenga barra (B9).
+## PUL-045: una malla por estado (octopus_raw / octopus_cooked) bajo `Model`.
 
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 
@@ -49,17 +50,61 @@ func test_amount_bar_hidden_until_cut() -> void:
 	assert_true(bar.visible)
 
 
-func test_cooked_state_uses_cooked_material_from_data() -> void:
+func test_cooked_state_shows_the_cooked_mesh() -> void:
+	# PUL-045: el .glb trae octopus_raw y octopus_cooked; solo se ve la del estado actual.
 	var octopus: Ingredient = _octopus()
+	var raw: Node3D = octopus.get_node("Model").find_child("octopus_raw") as Node3D
+	var cooked: Node3D = octopus.get_node("Model").find_child("octopus_cooked") as Node3D
+	assert_not_null(raw)
+	assert_not_null(cooked)
 	assert_false(octopus.is_cooked())
-	assert_not_null(octopus.cooked_material)
+	assert_true(raw.visible, "en crudo se ve la malla cruda")
+	assert_false(cooked.visible)
 	octopus.set_cooked()
 	assert_true(octopus.is_cooked())
 	assert_eq(octopus.state, IngredientData.CookingState.COOKED)
-	var meshes: Array[Node] = octopus.get_node("Model").find_children("*", "MeshInstance3D")
-	assert_gt(meshes.size(), 0)
+	assert_false(raw.visible)
+	assert_true(cooked.visible, "al cocerse se ve la malla cocida")
+
+
+func test_burnt_state_uses_burnt_mesh_or_falls_back_to_cooked() -> void:
+	for with_burnt: bool in [true, false]:
+		var names: Array[String] = ["thing_raw", "thing_cooked"]
+		if with_burnt:
+			names.append("thing_burnt")
+		var ingredient: Ingredient = _variant_ingredient(names)
+		ingredient.state = IngredientData.CookingState.BURNT
+		ingredient._apply_state_visual()
+		var model: Node = ingredient.get_node("Model")
+		assert_false((model.get_node("thing_raw") as Node3D).visible)
+		assert_eq((model.get_node("thing_cooked") as Node3D).visible, not with_burnt)
+		if with_burnt:
+			assert_true((model.get_node("thing_burnt") as Node3D).visible)
+
+
+func test_model_without_state_meshes_keeps_material_swap() -> void:
+	# Sin mallas hermanas `_raw`/`_cooked` (cachelos con su placeholder) se cambia el material.
+	var scene: PackedScene = load("res://entities/items/cachelos.tscn")
+	var cachelos: Ingredient = scene.instantiate()
+	add_child_autofree(cachelos)
+	assert_not_null(cachelos.cooked_material)
+	cachelos.set_cooked()
 	var cooked: int = 0
-	for mesh: Node in meshes:
-		if (mesh as MeshInstance3D).material_override == octopus.cooked_material:
+	for mesh: Node in cachelos.get_node("Model").find_children("*", "MeshInstance3D"):
+		if (mesh as MeshInstance3D).material_override == cachelos.cooked_material:
 			cooked += 1
 	assert_gt(cooked, 0, "el cuerpo usa el material de cocido")
+
+
+func _variant_ingredient(mesh_names: Array[String]) -> Ingredient:
+	var ingredient: Ingredient = Ingredient.new()
+	var model: Node3D = Node3D.new()
+	model.name = "Model"
+	ingredient.add_child(model)
+	for mesh_name: String in mesh_names:
+		var mesh: MeshInstance3D = MeshInstance3D.new()
+		mesh.name = mesh_name
+		model.add_child(mesh)
+		mesh.owner = ingredient
+	add_child_autofree(ingredient)
+	return ingredient
