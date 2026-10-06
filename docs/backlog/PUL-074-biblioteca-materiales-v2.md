@@ -1,7 +1,7 @@
 ---
 id: PUL-074
 title: Crear la biblioteca de materiales estilizados
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072]

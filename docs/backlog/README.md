@@ -84,9 +84,9 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-069 | M3 | gameplay-engineer | done | Quemar el pulpo que se deja en la olla y encender sus efectos |
 | PUL-070 | M3 | gameplay-engineer | done | Subir la dificultad por fases |
 | PUL-071 | M3 | gameplay-engineer | done | Integrar música, ambiente y feedback de las acciones |
-| PUL-072 | M3b | game-designer | ready | Reescribir la biblia de arte con la estética de referencia |
-| PUL-073 | M3b | asset-pipeline | draft | Ajustar luz, sombras y post-proceso a la estética de referencia |
-| PUL-074 | M3b | asset-pipeline | draft | Crear la biblioteca de materiales estilizados |
+| PUL-072 | M3b | game-designer | done | Reescribir la biblia de arte con la estética de referencia |
+| PUL-073 | M3b | asset-pipeline | ready | Ajustar luz, sombras y post-proceso a la estética de referencia |
+| PUL-074 | M3b | asset-pipeline | ready | Crear la biblioteca de materiales estilizados |
 | PUL-075 | M3b | asset-pipeline | draft | Rehacer el personaje con la estética de referencia |
 | PUL-076 | M3b | asset-pipeline | draft | Rehacer pulpo, cachelos y raciones con la estética de referencia |
 | PUL-077 | M3b | asset-pipeline | draft | Rehacer platos/cajas como bandejas de la referencia |

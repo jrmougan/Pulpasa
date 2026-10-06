@@ -1,11 +1,11 @@
 ---
 id: PUL-072
 title: Reescribir la biblia de arte con la estética de referencia
-status: review
+status: done
 milestone: M3b
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_eae5e10a2792
 unity_sources: []
 owns: [docs/art/art-bible.md, docs/art/art-bible-v1.md, docs/art/moodboard*, docs/art/style-refs/**, docs/evidence/PUL-072/**]
 touches_scenes: []

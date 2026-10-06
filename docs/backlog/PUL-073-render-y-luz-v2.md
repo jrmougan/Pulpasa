@@ -1,7 +1,7 @@
 ---
 id: PUL-073
 title: Ajustar luz, sombras y post-proceso a la estética de referencia
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072]
