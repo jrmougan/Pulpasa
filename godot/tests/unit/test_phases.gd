@@ -265,17 +265,82 @@ func test_ac4_live_orders_keep_their_max_time_across_phase_changes() -> void:
 func test_ac4_phase_3_orders_use_0_7_and_patience_changed_reports_own_max_time() -> void:
 	_round.start(SLOTS)
 	_advance_to(199.0)
-	var live: Array[ActiveOrder] = _board.get_active_orders()
+	var live_max_time: Dictionary[int, float] = {}
+	for order: ActiveOrder in _board.get_active_orders():
+		live_max_time[order.id] = order.max_time
+	assert_eq(live_max_time.size(), 3, "puestos 1–3 con comanda en fase 2")
 	watch_signals(_board)
 	_round.advance(1.0)
 	assert_eq(_round.get_phase(), 3)
 	var newest: ActiveOrder = _board.get_order_for_slot(4)
 	assert_almost_eq(newest.max_time, newest.data.max_time * 0.7, 1e-6)
-	_round.advance(TICK)
-	for order: ActiveOrder in live:
-		var now: ActiveOrder = _board.get_order_for_slot(order.slot_id)
-		if now != null and now.id == order.id:
-			assert_eq(now.max_time, order.max_time)
+	var survivors: Array[int] = []
+	for order: ActiveOrder in _board.get_active_orders():
+		if live_max_time.has(order.id):
+			survivors.append(order.id)
+			assert_eq(order.max_time, live_max_time[order.id], "#%d conserva max_time" % order.id)
+	assert_false(survivors.is_empty(), "quedan comandas de antes del cambio de fase")
+	var reported: Dictionary[int, bool] = {}
+	for i: int in get_signal_emit_count(_board, "order_patience_changed"):
+		var params: Array = get_signal_parameters(_board, "order_patience_changed", i)
+		var order_id: int = params[0]
+		if live_max_time.has(order_id):
+			reported[order_id] = true
+			assert_eq(params[2] as float, live_max_time[order_id], "paciencia de #%d" % order_id)
+	for order_id: int in survivors:
+		assert_true(reported.has(order_id), "order_patience_changed de #%d" % order_id)
+
+
+## Comanda de la receta del catálogo real con `max_time` = 100 s: con la ronda de 300 s y la fase 2
+## a ⅓, la comanda inicial caduca justo en el tick en que empieza la fase 2.
+func _round_expiring_at_phase_2() -> RoundState:
+	var data: OrderData = _catalog.orders[0].duplicate() as OrderData
+	data.max_time = 100.0
+	var catalog: OrderCatalog = OrderCatalog.new()
+	catalog.orders = [data] as Array[OrderData]
+	_board = OrderBoard.new(catalog, _seeded_rng(1))
+	var round_state: RoundState = RoundState.new(_config_copy(300.0, 0.0), _board)
+	round_state.start(SLOTS)
+	return round_state
+
+
+func test_ac4_expiry_on_phase_tick_restocks_with_old_multiplier_then_changes_phase() -> void:
+	var round_state: RoundState = _round_expiring_at_phase_2()
+	var expiring: ActiveOrder = _board.get_order_for_slot(1)
+	assert_eq(expiring.max_time, 100.0)
+	round_state.advance(99.5)
+	assert_eq(round_state.get_phase(), 1)
+	_board.order_expired.connect(
+		func(o: ActiveOrder, _p: int) -> void: _trace.append("expired:%d" % o.slot_id)
+	)
+	_board.order_generated.connect(
+		func(o: ActiveOrder) -> void: _trace.append("gen:%d:%s" % [o.slot_id, o.max_time])
+	)
+	round_state.phase_changed.connect(func(p: int) -> void: _trace.append("phase:%d" % p))
+	round_state.advance(0.5)
+	assert_eq(round_state.get_phase(), 2)
+	assert_eq(
+		_trace,
+		(
+			["expired:1", "gen:1:100.0", "expired:2", "gen:2:100.0", "phase:2", "gen:3:85.0"]
+			as Array[String]
+		),
+		"por puesto: caducidad → reposición con ×1,0; luego phase_changed → puesto nuevo ×0,85"
+	)
+	assert_eq(_board.get_order_for_slot(1).max_time, 100.0, "repuesta antes de la fase: ×1,0")
+	watch_signals(_board)
+	assert_null(_board.try_deliver(1, _contents_for(expiring)), "entrega a la comanda caducada")
+	assert_signal_emitted_with_parameters(_board, "delivery_rejected", [1, expiring.id, 0])
+	assert_signal_not_emitted(_board, "order_completed")
+
+
+func test_ac4_orders_opened_after_expiry_tick_use_new_multiplier() -> void:
+	var round_state: RoundState = _round_expiring_at_phase_2()
+	round_state.advance(100.0)
+	round_state.advance(TICK)
+	var restocked: ActiveOrder = _board.get_order_for_slot(1)
+	assert_not_null(_board.try_deliver(1, _contents_for(restocked)))
+	assert_almost_eq(_board.get_order_for_slot(1).max_time, 85.0, 1e-6, "abierta en fase 2")
 
 
 # --- AC5 ---

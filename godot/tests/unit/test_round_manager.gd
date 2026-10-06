@@ -184,6 +184,62 @@ func test_ac3_paused_tree_does_not_advance_patience() -> void:
 	assert_lt(_service.get_active_orders()[0].time_left, frozen)
 
 
+## Config M0 con dos fases (2 puestos y, a la mitad, 4) para las pruebas de pausa (PUL-070).
+func _phased_config() -> RoundConfig:
+	var config: RoundConfig = _config()
+	var first: PhaseData = PhaseData.new()
+	first.active_slots = 2
+	var second: PhaseData = PhaseData.new()
+	second.start_fraction = 0.5
+	second.active_slots = 4
+	config.phases = [first, second] as Array[PhaseData]
+	return config
+
+
+func test_pul070_pause_just_before_phase_bound_freezes_clock_patience_and_phase() -> void:
+	_service.setup(_patient_catalog(200.0), _seeded_rng())
+	_manager.start_round(_phased_config(), SLOTS)
+	var state: RoundState = _manager.round_state
+	state.advance(90.0 - TICK * 0.5)
+	assert_eq(state.get_phase(), 1)
+	get_tree().paused = true
+	var frozen_time: float = state.get_time_left()
+	var frozen_patience: float = _service.get_active_orders()[0].time_left
+	watch_signals(_bus)
+	for i: int in range(5):
+		await get_tree().physics_frame
+	assert_eq(state.get_time_left(), frozen_time)
+	assert_eq(_service.get_active_orders()[0].time_left, frozen_patience)
+	assert_eq(state.get_phase(), 1, "la fase no cambia en pausa")
+	assert_signal_not_emitted(_bus, "phase_changed")
+	assert_signal_not_emitted(_bus, "order_patience_changed")
+	assert_eq(_service.get_active_orders().size(), 2)
+	get_tree().paused = false
+	for i: int in range(5):
+		await get_tree().physics_frame
+	assert_eq(state.get_phase(), 2)
+	assert_signal_emit_count(_bus, "phase_changed", 1, "una sola transición al reanudar")
+	assert_signal_emitted_with_parameters(_bus, "phase_changed", [2])
+	assert_eq(_service.get_active_orders().size(), 4)
+
+
+func test_pul070_repeated_pause_toggles_near_bound_give_one_transition() -> void:
+	_service.setup(_patient_catalog(200.0), _seeded_rng())
+	_manager.start_round(_phased_config(), SLOTS)
+	var state: RoundState = _manager.round_state
+	state.advance(90.0 - TICK * 2.5)
+	watch_signals(_bus)
+	for i: int in range(6):
+		get_tree().paused = i % 2 == 0
+		await get_tree().physics_frame
+		await get_tree().physics_frame
+	get_tree().paused = false
+	for i: int in range(5):
+		await get_tree().physics_frame
+	assert_eq(state.get_phase(), 2)
+	assert_signal_emit_count(_bus, "phase_changed", 1)
+
+
 func test_ac1_physics_process_without_round_is_noop() -> void:
 	watch_signals(_bus)
 	_manager._physics_process(TICK)

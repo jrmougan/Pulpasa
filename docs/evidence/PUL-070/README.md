@@ -31,3 +31,18 @@ paciencia. **Excepción: order_2 en fase 3** (56 s frente a ~54 s de ruta óptim
 prácticamente imposible para un humano y caducará casi siempre. PUL-039 ya veía justos sus 80 s.
 No se han tocado los datos, porque es una decisión de balance. Propuesta para M4: subir order_2 a
 ≥ 100 s (fase 3 → 70 s) o poner un suelo de paciencia por comanda.
+
+## Ronda de revisión
+- `test_phases.gd`: caducidad en el mismo tick del cambio de fase (comanda de 100 s y fase 2 a
+  100 s). El orden observado es, por cada puesto, `order_expired` → reposición con el multiplicador
+  anterior (×1,0); luego `phase_changed(2)` → puesto nuevo con ×0,85. Coincide con la secuencia de
+  tick de `signals.md`. La entrega al id caducado se rechaza (`delivery_rejected(slot, id, 0)`) y
+  la comanda abierta después de ese tick usa ×0,85. El test de AC4 con `order_patience_changed`
+  exige supervivientes y comprueba el `max_time` por id, sin aserciones condicionales vacías.
+- `test_round_manager.gd`: con la pausa medio tick antes del límite, el reloj, la paciencia y la
+  fase se congelan y `phase_changed` no se emite. Al reanudar hay una sola transición. Con pausas
+  alternas cerca del límite también hay una sola.
+- No apareció ningún fallo de lógica. `test_parity_smoke.gd::test_ac6_round_end_and_retry_reset_state`
+  falló una vez de forma intermitente («294.9s» frente a «295.0s»): leía la etiqueta del HUD
+  después de que corrieran ticks reales. Ahora compara con un margen de 0,25 s.
+- `tools/verify.sh`: verde, 676/676.

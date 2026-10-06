@@ -53,7 +53,7 @@ jugable y anótalo.
   semilla → misma secuencia en una ronda entera con entregas y caducidades). AC6: `test_ac6_*`
   (150 s → 50/100 s; 600 s → tick 12000).
 - AC7: `test_m1_flow`, `test_m2_flow` y `test_m2b_flow` en verde (sin fases, con el helper).
-- AC8: `tools/verify.sh` verde (672/672) y `check_owns` limpio.
+- AC8: `tools/verify.sh` verde (676/676 tras la revisión) y `check_owns` limpio. Ronda de revisión: ver README de la evidencia.
 - Balance: la fase 3 es jugable salvo order_2 (56 s frente a ~54 s de ruta de bot). Se anota
   para M4 sin tocar datos.
 - Nota de contrato: `docs/arch/signals.md` (tabla de tipos, `PhaseData`) aún dice `max_time: float`.

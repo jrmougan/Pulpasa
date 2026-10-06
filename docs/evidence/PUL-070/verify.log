@@ -24,10 +24,10 @@ res://tests/unit/test_station_side.gd
 Totals
 ------
 Scripts              64
-Tests               672
-Passing Tests       672
-Asserts            8138
-Time              341.877s
+Tests               676
+Passing Tests       676
+Asserts            8208
+Time              318.969s
 
 
 ---- All tests passed! ----
