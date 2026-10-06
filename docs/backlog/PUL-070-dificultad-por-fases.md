@@ -1,7 +1,7 @@
 ---
 id: PUL-070
 title: Subir la dificultad por fases
-status: draft
+status: ready
 milestone: M3
 role: gameplay-engineer
 deps: [PUL-066, PUL-067]

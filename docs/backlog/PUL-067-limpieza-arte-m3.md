@@ -1,11 +1,11 @@
 ---
 id: PUL-067
 title: Retirar placeholders y escalas heredadas tras el arte
-status: review
+status: done
 milestone: M3
 role: gameplay-engineer
 deps: []
-orca_task: null
+orca_task: task_78fd6e3a76fe
 unity_sources: []
 owns: [godot/scenes/levels/level_01.tscn, godot/scenes/scale_check.tscn, godot/tests/integration/test_level_01.gd, godot/tests/integration/test_scale_check.gd, godot/tests/unit/test_assets_m1.gd, godot/tests/unit/test_assets_audio_ui.gd, godot/assets/models/placeholders/**, godot/assets/models/furniture/Mueblecajas*, godot/assets/models/furniture/order_stand*, godot/entities/items/box.tscn, godot/tests/integration/test_box_model.gd, docs/assets/licenses.md, godot/assets/CREDITS.md, docs/evidence/PUL-067/**, art/blender/order_stand.blend, godot/assets/models/stations/order_stand/**, godot/entities/stations/order_stand.tscn, godot/tests/unit/test_order_stand_model.gd, godot/entities/items/box_model.gd]
 touches_scenes: [godot/scenes/levels/level_01.tscn, godot/scenes/scale_check.tscn, godot/entities/items/box.tscn, godot/entities/stations/order_stand.tscn]
