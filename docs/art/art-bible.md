@@ -1,387 +1,536 @@
-# Biblia de arte de Pulpasa
+# Biblia de arte de Pulpasa — v2
 
-Autor: PUL-042 (game-designer). Rige D20 (arte propio hecho en Blender por un agente con MCP), D14
-(3D, cámara ortográfica fija), D16 (solo licencias confirmadas) y D18 (estación de condimentos y
-distintivos en la caja). Si algo choca con `docs/design/decisions.md`, manda `decisions.md`.
-Todas las fichas de asset (PUL-044..PUL-055) deben cumplirla; los criterios medibles están en §2
-y §3 para que un test o una captura los comprueben.
+Autor: PUL-072 (game-designer), 2026-10-06. Sustituye a la v1 ([`art-bible-v1.md`](art-bible-v1.md),
+PUL-042), que queda archivada como referencia de los assets de M3. Rigen D14 (3D, cámara ortográfica
+fija), D16 (solo licencias confirmadas), D18 (estación de condimentos y distintivos), D20 (arte propio
+hecho en Blender por un agente con MCP) y D21 (marca **PulpaSA**). Si algo choca con
+`docs/design/decisions.md`, manda `decisions.md`.
 
-Moodboard: [`moodboard.svg`](moodboard.svg) (lámina propia: paleta, siluetas y pares crudo/cocido)
-y las descripciones de §1.2.
+Todas las fichas de la estética v2 (PUL-073..PUL-087) deben cumplirla. Los criterios medibles
+(medidas, triángulos, texturas, contrastes, píxeles) están en §2, §4 y §5 para que un test o una
+captura los comprueben.
+
+**Referencia visual única**: [`style-refs/referencia-elegida-2026-10-06.png`](style-refs/referencia-elegida-2026-10-06.png),
+elegida por el responsable el 2026-10-06. Es del responsable y está en el repo; no se añaden imágenes de
+terceros (D16). Lámina de paleta propia: [`moodboard-v2.svg`](moodboard-v2.svg) (la de la v1 sigue en
+[`moodboard.svg`](moodboard.svg)). Estado de partida: [`style-refs/actual-2026-10-06/`](style-refs/actual-2026-10-06/).
+
+## 0. Qué cambia respecto a la v1
+
+| Tema | v1 (M3) | v2 (M3b) |
+|---|---|---|
+| Estilo | Low-poly caricaturesco, color plano, feria de verano luminosa | **Diorama estilizado** de puesto callejero, detallado y «vivido», luz cálida sobre ambiente algo apagado |
+| Texturas | Prohibidas salvo 4 casos (≤ 256²) | **Permitidas**: texturas pequeñas pintadas/procedurales de la biblioteca v2 (PUL-074), atlas por asset, AO horneado, normal maps sencillos |
+| Materiales | Un color plano por material, roughness 0,8 | Biblioteca cerrada de materiales estilizados con desgaste (§3) |
+| Presupuestos | Personaje 2 500, estación 1 500, nivel 40 000 tris | 2–5 veces más (§4), con objetivo de rendimiento medido (60 fps a 1080p) |
+| Detalle | Uniforme en todo | **Por zonas** (§5): fondo denso, lo jugable siempre limpio |
+| Cocina | Caldeiro de cobre, arcón, cesto, platos de madera | Cocedores de acero, tanque de pulpos, sacos, **bandejas rojas**, encimeras de acero |
+| Marca | Cartel «PULPO Á FEIRA» | **PulpaSA** (D21) en cartel, toldo, uniformes, bandejas, kioscos y UI (§7) |
+| Legibilidad | §3 de la v1 | Se conserva y se amplía al estado **quemado** y a las bandejas (§6) |
+
+Lo que **no** cambia (sigue vigente tal cual de la v1): unidades, escala y medidas de referencia
+(§2.1 de la v1), orientación, origen y nodos de contrato (§2.3 de la v1), nombres y rutas (§2.4 de la
+v1), la cámara y los colores de pegatinas y condimentos (§3.4 de la v1).
 
 ## 1. Estilo
 
 ### 1.1 Dirección
 
-**Low-poly estilizado, caricaturesco y cálido**, de formas gordas y simples, con **color plano
-sin texturas fotográficas**. Tono: feria gallega de verano, lúdica y legible, no realista. Pilares
-del juego que el arte debe servir: caos cooperativo (todo se lee de un vistazo en pantalla
-compartida) e identidad gallega (cobre, madera, arpillera, pulpo, farolillos).
+**Diorama estilizado de un puesto de comida callejero en una romería**, visto como una maqueta: todo
+es pequeño, macizo y un poco gastado, como si alguien lo hubiera usado todo el verano. Los objetos son
+**estilizados** (formas simplificadas, bordes biselados, proporciones algo gordas), pero sus
+**superficies cuentan historias**: acero cepillado con arañazos, pintura descascarillada en las aristas,
+plástico rojo con roces, madera clara gastada, arpillera, tierra apisonada con rodadas y charcos.
 
-Principios:
-1. **Silueta primero.** Cada objeto se reconoce por su silueta en negro desde la cámara.
-2. **Formas grandes, detalle pequeño solo si aporta información** (pegatinas, número de puesto).
-3. **Facetas planas** (shading flat o smooth con pocos polígonos y bordes marcados); sin
-   normal maps ni roughness maps.
-4. **Exageración de proporciones**: cabezas grandes, patas de pulpo gruesas, platos y cajas algo
-   más grandes que su tamaño real para que se lean (véase §2.3).
-5. **Un solo lenguaje**: mismo grosor de bisel, mismo nivel de detalle y misma paleta en todas las
-   piezas. Sin piezas «realistas» entre piezas caricaturescas.
+Tono: caos cooperativo con humor; la «franquicia» PulpaSA montada en un campo de feria gallego
+(§7). El pilar de identidad gallega se mantiene con atrezo y vegetación (§1.4), no con el cobre de la v1.
 
-### 1.2 Referencias (descripciones, sin imágenes de terceros)
+Principios (por orden de prioridad):
+1. **Lo jugable se lee primero.** Silueta, color y estado de cada objeto con el que se interactúa se
+   reconocen en una captura a 1920×1080 sin acercarse (§6). Ningún detalle se pone encima de eso.
+2. **Detalle donde no se juega.** El fondo y los laterales de las estaciones pueden ser densos (§5);
+   las superficies de juego (huecos de encimera, bocas de olla, bandejas) son limpias.
+3. **Estilizado, nunca fotorrealista.** Formas simples y biseles generosos (2–3 cm en piezas de 1 m);
+   el realismo está en el material, no en la forma. Sin escaneos, sin fotografías, sin ruido fino.
+4. **Gastado, no sucio.** El desgaste va en aristas y zonas de uso (bordes de encimera, asas, suelo de
+   paso) y se ve a la distancia de la cámara; no hay manchas que parezcan comida o charcos que parezcan
+   objetos.
+5. **Un solo lenguaje.** Mismo bisel, misma biblioteca de materiales (§3), misma luz (§1.3) y misma
+   escala de texel (§4.2) en todos los assets. Un asset nuevo se juzga junto a los ya hechos.
 
-No se incluyen imágenes ajenas (D16). Referencias que guían el modelado, descritas con palabras:
+### 1.2 Análisis de la referencia
 
-- **Pulpería de romería** (Carballiño, O Grove): carpa o toldo blanco/crudo a rayas, mesas largas
-  de madera con mantel de papel, bancos corridos, cartel pintado a mano con el nombre de la
-  pulpería y el precio de la ración.
-- **Caldeiro de cobre**: caldero panzudo, abierto, con dos asas de aro, cobre cálido con
-  reflejos anaranjados, borde grueso, apoyado sobre un fogón de leña o una trébede de hierro negro;
-  humo y vapor blanco.
-- **Plato de madera (prato de madeira)**: plato redondo u ovalado de madera clara, algo hondo,
-  donde el pulpo troceado «á feira» se sirve con rodajas de cachelos, aceite, sal gorda y pimentón
-  rojo. Se usa también como «caja» del juego.
-- **Pulpo á feira**: tentáculos rosa-morados con ventosas visibles, cortados en rodajas, sobre
-  cachelos amarillentos; pimentón rojo espolvoreado; aceite de oliva dorado.
-- **Ambiente**: tierra apisonada y hierba de campo de feria, farolillos y banderines de colores
-  cruzando la calle, bancos de madera, sacos de arpillera, cajas de pescado de madera, cubos de
-  hielo, neveras de feria.
-- **Estilo gráfico**: la lectura limpia de los juegos de cocina cooperativos en cámara fija
-  (siluetas gruesas, color por función) y el low-poly artesanal, **solo como principio de claridad,
-  nunca copiando modelos de ningún juego**.
+Descripción de `referencia-elegida-2026-10-06.png` (1024×572, plano cenital del nivel completo), para
+que los agentes la traduzcan sin interpretarla cada uno a su manera:
 
-## 2. Reglas técnicas
+- **Composición**: igual que `level_01` (cámara alta, frontal, ligeramente inclinada). Puesto en
+  U: cocina al fondo, barra central, columna de encimeras a cada lado y cuatro kioscos de entrega
+  abajo. Fuera del perímetro, a izquierda y derecha, mesas con comensales; arriba, tanques y valla.
+- **Fondo del puesto**: muro de bloques de hormigón gris azulado con musgo en las juntas; encima, un
+  **toldo rojo** grande con el cartel de la marca (letras con borde claro, aspecto de cartel
+  luminoso) y dos tanques de gas plateados con tapa roja detrás. Cámaras de vigilancia en las
+  esquinas del toldo (toque satírico de «franquicia»). Dos pizarras de menú oscuras colgadas.
+- **Cocina**: tanque/acuario azul de plástico con agua clara, burbujas y pulpos rosas dentro, mangueras
+  oscuras que salen al suelo; dos **cocedores cilíndricos de acero** con tapa, piloto rojo/verde,
+  vapor blanco abundante y mangueras de gas roja y verde por el suelo hacia una bombona; mesitas de
+  acero con pulpo troceado; sacos de arpillera con patatas; cajas de cartón; jarras de barro.
+- **Encimeras**: acero inoxidable gris medio con tornillos en las esquinas, patas y balda inferior
+  con cajas de cartón; encima tablas de madera, cuchillos, cuencos de barro con sal, botes rojos de
+  pimentón, botellas de aceite y un limón. En el frente de la barra de condimentos, **etiquetas de
+  color** (amarillo, rojo, rojo oscuro, blanco, amarillo) que identifican cada dispensador.
+- **Bandejas**: pilas de **bandejas rojas de plástico** sobre las encimeras de la derecha y
+  recipientes blancos; en cada kiosco, una caja blanca para llevar con faja roja.
+- **Suelo**: tierra apisonada marrón claro con **rodadas** de neumático, **charcos** oscuros, piedrecitas,
+  hojas secas y patatas sueltas; **rejillas de desagüe** metálicas oscuras delante de las ollas y en
+  el paso inferior; algo de hierba en los bordes.
+- **Kioscos de entrega**: cuerpo de acero gris oscuro, toldillo de lona con festón en **rojo, azul,
+  amarillo y verde** (1–4), TPV con pantalla azul clara y teclado de colores, número negro en disco
+  blanco en el frente.
+- **Personajes**: cocineros pequeños y cabezones, camiseta blanca, pantalón azul marino, **gorra de
+  color** (amarillo, azul) y aro azul en el suelo bajo el jugador activo.
+- **Entorno**: valla de malla metálica, árboles frondosos y **helechos** en las esquinas, barriles de
+  madera, cajas, sacos, generador beige con bidones, bombona azul, cables negros por el suelo,
+  postes con **guirnaldas de bombillas** cálidas rodeando el puesto, banderines de colores en las mesas.
+- **UI**: paneles gris pizarra oscuros con borde gris claro, título en ámbar, nombre de la comanda en
+  blanco, condimentos como discos de color, barra de paciencia ámbar y **reloj tipo display de 7
+  segmentos** en ámbar. HUD compacto abajo a la izquierda con el mismo panel.
+- **Luz**: día nublado o final de tarde; luz principal suave desde arriba-izquierda con sombras
+  cortas y blandas; ambiente algo apagado (verdes y marrones desaturados) y **bombillas cálidas**
+  encendidas que añaden puntos de luz; ligera viñeta y oclusión ambiental marcada en contactos y
+  esquinas. Lectura de **maqueta** (miniatura) por el grano del detalle y la luz suave.
 
-### 2.1 Unidades, escala y proporciones
+Qué **no** se toma de la referencia:
+- La marca «McPULPO», el lema «American octopus franchise» y la combinación rojo/amarillo con
+  diagonales del toldo: se sustituyen por PulpaSA (D21, §7).
+- Los textos en inglés de la UI (los textos siguen el idioma del juego).
+- Las patatas sueltas en el suelo jugable y la comida de atrezo en encimeras jugables (rompen §6.1).
+- Los charcos tan oscuros como un objeto (se aclaran, §5).
 
-- **1 unidad Blender = 1 m = 1 unidad Godot.** Escala del objeto aplicada (`Ctrl+A → Scale`) y
-  rotación aplicada antes de exportar; todo objeto exportado con escala (1,1,1).
-- La escala se comprueba en `godot/scenes/scale_check.tscn` (cámara ortográfica `size = 12.74`,
-  inclinación ≈ 38°). Hay que colocar el modelo junto al personaje placeholder y comprobar que
-  encaja.
-- Medidas de referencia (alto × ancho × fondo, en m; ±10 %):
+### 1.3 Luz y post-proceso (lo aplica PUL-073)
 
-| Pieza | Medidas objetivo |
-|---|---|
-| Personaje | 1,8 de alto (con cabeza grande; ancho de hombros 0,6) |
-| Encimera / mesa | alto 1,0 (superficie en y = 1,0), fondo 0,8, módulos de 1 m de largo |
-| Nevera / arcón | 1,6 × 0,9 × 1,0 (arcón de feria; el placeholder actual mide 1,61 × 2,33 × 0,91; se puede bajar mientras no tape estaciones detrás) |
-| Olla (caldeiro + fogón) | boca a ≈ 1,0 de altura, diámetro del caldeiro 0,7, ancho total 0,9 |
-| Cachelera | 0,6 × 0,5 × 0,5 |
-| Estantería de cajas | 1,2 × 1,6 × 0,5 |
-| Puesto de entrega | mostrador 1,0 de alto, 1,4 de ancho |
-| Caja/plato pequeña, mediana, grande | 0,34 / 0,42 / 0,49 de diámetro; 0,10 de alto (más la comida) |
-| Pulpo crudo / cocido (entero) | 0,45 de largo aprox. |
-| Cachelos (patata) | 0,10–0,14 por pieza |
+- **Luz principal**: `DirectionalLight3D` cálida y suave (≈ `#FFE9C8`), elevación 50–60°, desde
+  arriba-izquierda de la cámara; sombras activadas y blandas (PCF suave, sin bandas). Las sombras
+  nunca ocultan una superficie jugable entera (§6.1, regla 6).
+- **Ambiente**: cielo cubierto, algo apagado y frío (≈ `#9AA6A8`), energía baja para que las bombillas
+  se noten; tonemapping **AgX** (o Filmic si AgX satura mal la comida), exposición fija.
+- **Bombillas**: guirnaldas con material emisivo `bulb_warm` (§2.2). Como luces reales, **≤ 6
+  `OmniLight3D` sin sombra** sobre la zona jugable y **≤ 2 con sombra** en total; el resto, solo
+  emisivo con glow suave.
+- **SSAO** activado (radio pequeño, contactos y esquinas); **glow** suave solo para emisivos.
+- **Viñeta y gradación**: ligera, cálida en medios tonos; la saturación global no baja de la de
+  la referencia para que la comida y las pegatinas sigan vivas.
+- **Tilt-shift** (desenfoque de profundidad de campo arriba y abajo de la pantalla): **opcional y
+  desactivado por defecto**; si se activa, la banda nítida cubre todo el perímetro de encimeras y los
+  cuatro kioscos. Valor en `.tres` (PUL-073).
+- El arte no incluye luces ni cámaras en los `.glb` (sigue la regla de la v1, comprobada por
+  `test_assets_models.gd`).
 
-  Las piezas que se sostienen (caja, pulpo, cachelos) pueden ser algo mayores que lo real, nunca
-  menores.
-- **Cuadrícula del nivel: 1 m.** Estaciones y encimeras encajan en múltiplos de 1 m (kit modular
-  de PUL-054). Se permiten medias unidades solo en piezas pequeñas.
+### 1.4 Identidad gallega en la v2
 
-### 2.2 Presupuesto de polígonos (triángulos tras triangular, por pieza exportada)
+La referencia es genérica de «comida callejera»; la identidad gallega (pilar del juego) se mete con
+atrezo de fondo, sin tocar lo jugable:
+- **Vegetación**: carballos (robles) y **fentos** (helechos) en las esquinas, hierba de campo.
+- **Barro y madera**: **cuncas** y jarras de barro (vino), platos de madera en las mesas de los
+  comensales, barriles y bancos corridos.
+- **Romería**: banderines y guirnaldas de bombillas, mesas largas con mantel de papel.
+- **Granito** como alternativa al muro de bloques (pregunta abierta §10: la referencia usa bloques
+  de hormigón).
 
-| Tipo | Triángulos máx. | Objetivo |
-|---|---|---|
-| Personaje (con rig) | 2 500 | ≈ 1 800 |
-| Objeto que se sostiene (pulpo, caja, cachelos; cada variante) | 600 | ≈ 300 |
-| Estación (olla, arcón, cachelera, estantería, estación de condimentos, puesto) | 1 500 | ≈ 800 |
-| Encimera (módulo) | 300 | ≈ 150 |
-| Prop de decoración (farolillo, banco, saco) | 300 | ≈ 100 |
-| Entorno completo (suelo + carpa + decoración) | 6 000 | ≈ 3 500 |
+## 2. Paleta v2 (hex sRGB)
 
-Escena de nivel completa (todo en pantalla): ≤ 40 000 triángulos. Lo que no se ve desde la
-cámara (cara inferior, interior de cajas cerradas) se elimina. Sin subdivisión en el export (los
-modificadores se aplican, salvo `Mirror` y `Bevel`, que se aplican también al exportar).
+Valores **de base** (albedo medio) de cada material. Las texturas de PUL-074 varían ±10 % de
+luminosidad alrededor de ese valor y añaden desgaste, pero **el color medio de una superficie a la
+distancia de la cámara debe quedar a ≤ 10 % de su hex**. Derivados de la referencia muestreando la
+imagen y ajustados para cumplir los contrastes de §6.
 
-### 2.3 Orientación, origen y colocación
+Jerarquía: **lo jugable saturado y cálido** (comida, bandejas, pegatinas, toldillos, gorras);
+**mobiliario en acero neutro**; **entorno apagado** (verdes y marrones de baja saturación).
 
-- **Frente del objeto = −Z de Godot.** En Blender (eje Z arriba, eje Y adelante) equivale a
-  modelar con el frente hacia **+Y** y exportar con «+Y Up» activado (el exportador glTF de
-  Blender convierte a Y-up y el frente +Y de Blender pasa a −Z de Godot). Se comprueba con
-  `test_assets_models.gd` (PUL-043).
-- **Origen:**
-  - Estaciones, encimeras, personaje, props de suelo: origen en el **centro de la base**, a nivel
-    del suelo (y = 0).
-  - Objetos sostenidos (caja, pulpo, cachelos): origen en el **centro de la base** del objeto
-    (el `HoldPoint` lo coloca a la altura de las manos del personaje sin desplazamientos).
-  - Módulos de encimera: origen en el centro de la base del módulo de 1 m.
-- Los nodos de contrato de las escenas (`docs/arch/scene-tree.md` §3: colisiones, `Model`,
-  puntos de anclaje) **no los crea el modelo**: el `.glb` solo trae mallas, materiales y, en el
-  personaje, esqueleto y animaciones. Colisiones: no se exportan (`-colonly` prohibido).
-- Cada asset es **una raíz `Node3D`/`Empty`** con el nombre del asset; hijos con nombres claros
-  (`Body`, `Lid`…). Para marcadores usar `Empty` con prefijo `Anchor_` (p. ej.
-  `Anchor_Sticker_Paprika`), que el ingeniero usa para colocar nodos.
-
-### 2.4 Nombres y rutas
-
-- Ficheros y objetos en `snake_case` inglés, sin espacios ni acentos: `octopus_raw`,
-  `box_medium`, `seasoning_station`.
-- Materiales: `mat_<nombre>` (`mat_copper`, `mat_wood_light`). Mallas: `<asset>_<parte>`.
-  Animaciones: `Idle`, `Walk`, `Pick`, `WalkWhileHolding`, `Cut` (nombres exactos, PUL-044).
-- Fuente: **`art/blender/<asset>.blend`** (un `.blend` por ficha).
-- Export: **`godot/assets/models/<categoría>/<asset>/<asset>.glb`**. Categorías: `characters`,
-  `food`, `items`, `stations`, `furniture`, `environment`. Una variante de color o de estado
-  va en el mismo `.glb` como objetos separados (`octopus_raw`, `octopus_cooked`) o en `.glb`
-  hermanos del mismo directorio, nunca en categorías distintas.
-- Export con `tools/blender_export.py` (PUL-043): glTF 2.0 binario (`.glb`), solo la colección
-  `export`, `+Y Up`, modificadores aplicados, **sin cámaras ni luces**, materiales exportados,
-  texturas embebidas solo si las hay, animaciones solo en el personaje.
-- Fuera del repo: no se guardan texturas de terceros. Licencia de todo el contenido: propia
-  (se registra en `docs/assets/licenses.md` por el coordinador).
-
-### 2.5 Materiales y texturas
-
-- **Un material por color plano** (Principled BSDF: solo `Base Color`; `Roughness` 0,8; `Metallic` 0
-  salvo el cobre con 0,3). Ninguna textura en piezas de gameplay.
-- Se permite **una textura pequeña por asset (≤ 256×256, sin mipmaps especiales)** únicamente
-  para: ventosas del pulpo, rayas de la carpa, iconos de pegatinas (ver §3.4) y número del puesto.
-  Si varias piezas comparten texturas, usar un atlas de ≤ 512×512 en
-  `godot/assets/models/<categoría>/<asset>/`.
-- Sin vértices de color como único portador del color (el import de Godot los ignora por defecto).
-- Los materiales de Blender deben usar nombres de la paleta (§2.6) y colores exactos.
-- Godot importa los materiales del `.glb` como `StandardMaterial3D` sombreado (iluminado). El
-  resaltado de interacción es un shader aparte (`asset-pipeline`), no se pinta en el modelo.
-
-### 2.6 Paleta (hex sRGB)
-
-Paleta cerrada: cada pieza usa **como máximo 5–6 colores** de esta tabla (los valores exactos se
-aplican en Blender como `Base Color` hex). Tonos cálidos para lo interactivo, fríos/apagados para
-el fondo, para que los objetos de gameplay destaquen sobre el escenario.
-
-**Madera, tela y estructura**
+### 2.1 Estructura y mobiliario
 
 | Nombre | Hex | Uso |
 |---|---|---|
-| `wood_light` | `#D9A86C` | Platos/cajas, encimeras (superficie) |
-| `wood_mid` | `#B07A45` | Bancos, estantería, patas de mesa |
-| `wood_dark` | `#6E4A2B` | Contornos, vigas, cajones |
-| `canvas_cream` | `#F1E6CC` | Carpa, mantel de papel, arpillera clara |
-| `canvas_stripe` | `#C9483D` | Rayas de la carpa (rojo feria) |
-| `burlap` | `#B8955A` | Saco de la cachelera |
-| `iron_black` | `#34302E` | Fogón, trébede, herrajes |
-| `steel_grey` | `#A9B0B5` | Nevera/arcón, mostrador metálico |
-| `ice_blue` | `#BFE3EE` | Hielo del arcón |
+| `steel_light` | `#B9BEC2` | Acero inoxidable claro: cocedores, tapas, frentes de cajón |
+| `steel_top` | `#9EA5AA` | **Superficie de encimera** (tablero de apoyo; base de los contrastes de §6) |
+| `steel_mid` | `#7D868D` | Frentes, patas y baldas de encimera |
+| `steel_dark` | `#4E5458` | Cuerpo de kiosco, rejillas, sombras de acero |
+| `paint_grey` | `#5F6A6E` | Metal pintado (postes, marcos); desconcha a `steel_mid` |
+| `paint_beige` | `#B29770` | Metal pintado del generador y cajas eléctricas |
+| `plastic_red` | `#C93A33` | **Bandejas**, toldo grande, tapas de tanque |
+| `plastic_blue` | `#3E78B0` | Tanque de pulpos, bombona azul |
+| `wood_used` | `#B58A5C` | Tablas de corte, cajas de fruta, bancos |
+| `wood_dark` | `#553E30` | Barriles, vigas, mangos de cuchillo |
+| `cardboard` | `#B8935F` | Cajas de cartón (bajo encimeras, fondo) |
+| `burlap` | `#9C7D59` | Sacos de patatas |
+| `clay` | `#A85A3A` | Cuncas, jarras y cuencos de barro |
+| `canvas_red` | `#C33E39` | Lona del toldo grande |
+| `concrete_block` | `#6E7578` | Muro de bloques (juntas `#4A4F4C` con musgo `#5E6B3A`) |
+| `rubber_black` | `#24272A` | Cables, mangueras de agua, neumáticos |
+| `hose_red` / `hose_green` | `#8E2F2A` / `#3F6B45` | Mangueras de gas de los cocedores |
 
-**Cobre y fuego**
-
-| Nombre | Hex | Uso |
-|---|---|---|
-| `copper` | `#C8672E` | Caldeiro |
-| `copper_light` | `#E8914F` | Reflejos/borde del caldeiro |
-| `copper_dark` | `#8A4220` | Interior, abolladuras |
-| `fire` | `#FFB02E` | Llamas |
-| `steam` | `#F4F7F8` | Vapor (partículas, no modelo) |
-
-**Comida** (versión detallada en §3)
+### 2.2 Luz, agua y efectos
 
 | Nombre | Hex | Uso |
 |---|---|---|
-| `octopus_raw` | `#C9B0BC` | Pulpo crudo (rosa-grisáceo pálido) |
-| `octopus_raw_dark` | `#9A8294` | Ventosas/sombra del pulpo crudo |
+| `bulb_warm` | `#FFD58A` | Bombillas (emisivo, energía 1,5–3) |
+| `water_tank` | `#8FC6D8` | Agua del tanque (semitransparente, alfa 0,5–0,6) |
+| `steam` | `#F4F7F8` | Vapor (partículas de PUL-065/069, no modelo) |
+| `fire_gas` | `#5AA0FF` → `#FFB02E` | Llama de gas (base azul, punta naranja) |
+| `screen_tpv` | `#8FD3F0` | Pantalla del TPV (emisivo suave) |
+
+### 2.3 Suelo y entorno
+
+| Nombre | Hex | Uso |
+|---|---|---|
+| `ground_dirt` | `#A18668` | Tierra apisonada de la zona jugable |
+| `ground_track` | `#8A735A` | Rodadas y zonas pisadas (≤ 1,3:1 contra `ground_dirt`) |
+| `ground_puddle` | `#6E6A60` | Charcos (aclarados respecto a la referencia, §5) |
+| `grate_dark` | `#45484A` | Rejillas de desagüe |
+| `grass` | `#66713C` | Hierba fuera de la zona jugable |
+| `foliage` | `#3E5A2E` | Helechos y copas (sombra `#2C4324`) |
+| `fence` | `#525E5E` | Valla de malla |
+
+### 2.4 Comida (detalle y contrastes en §6)
+
+| Nombre | Hex | Uso |
+|---|---|---|
+| `octopus_raw` | `#E0AFB2` | Pulpo crudo (rosa pálido) |
+| `octopus_raw_dark` | `#9A6E7A` | Ventosas y contorno del crudo |
 | `octopus_cooked` | `#B8283D` | Pulpo cocido (rojo-morado saturado) |
-| `octopus_cooked_dark` | `#6E1A3A` | Ventosas/puntas del pulpo cocido |
-| `potato_raw` | `#8E6B47` | Patata cruda con piel (marrón terroso) |
-| `potato_cooked` | `#F2D56B` | Cachelo cocido (amarillo cálido claro) |
-| `potato_cooked_dark` | `#D8A93C` | Corte/borde del cachelo |
-| `paprika_sweet` | `#D6361F` | Pimentón dulce |
-| `paprika_hot` | `#8F1A14` | Pimentón picante |
-| `salt` | `#F7F4EC` | Sal gorda |
-| `oil` | `#F2C230` | Aceite |
+| `octopus_cooked_dark` | `#6E1A3A` | Ventosas y puntas del cocido |
+| `octopus_pieces` | `#D4506A` | Rodajas (corte `#F4C6CC`) |
+| `octopus_burnt` | `#2A2320` | Pulpo quemado (carbón; brasas `#5A2A1E`) |
+| `potato_raw` | `#8E6B47` | Patata cruda con piel |
+| `potato_cooked` | `#F2D56B` | Cachelo cocido (borde `#D8A93C`) |
+| `potato_burnt` | `#2E2620` | Cachelo quemado |
+| `tray_liner` | `#EFE4CC` | Papel antigrasa dentro de la bandeja |
 
-**Entorno**
+### 2.5 Condimentos (pegatinas, dispensadores y etiquetas)
+
+Sin cambios respecto a la v1 (§3.4 de la v1) para no tocar UI ni pegatinas de PUL-059/060:
+pimentón dulce `#D6361F`, picante `#8F1A14`, sal `#F7F4EC` (borde `#6E4A2B`), aceite `#F2C230`,
+cachelos `#F2D56B` (borde `#8E6B47`). Las etiquetas de color del frente de la barra (referencia) usan
+exactamente estos valores.
+
+### 2.6 Puestos, jugadores y UI
 
 | Nombre | Hex | Uso |
 |---|---|---|
-| `ground_dirt` | `#9C8566` | Suelo de tierra apisonada (zona jugable) |
-| `ground_grass` | `#7DA05A` | Hierba (fuera de la zona jugable) |
-| `ground_stone` | `#B9B2A5` | Losas de piedra |
-| `bunting_blue` | `#2F6FB5` | Banderines, azul Galicia |
-| `bunting_yellow` | `#F4C542` | Banderines |
-| `bunting_green` | `#4E9B5F` | Banderines |
-| `lantern_warm` | `#FFD27F` | Farolillos (emisivo suave) |
+| `stand_1` | `#D2473F` | Toldillo del puesto 1 (rojo) |
+| `stand_2` | `#3F7CC8` | Puesto 2 (azul) |
+| `stand_3` | `#E8C23A` | Puesto 3 (amarillo) |
+| `stand_4` | `#4FA05A` | Puesto 4 (verde) |
+| `player_1` | `#2F6FB5` | Gorra/delantal J1 y su aro (igual que la v1 y PUL-035) |
+| `player_2` | `#E0A02E` | Gorra/delantal J2 y su aro |
+| `uniform_shirt` | `#F2F0EC` | Camiseta |
+| `uniform_pants` | `#2E3A55` | Pantalón azul marino |
+| `ui_panel` | `#2B3636` | Fondo de tickets y HUD (alfa 0,92) |
+| `ui_border` | `#8E9494` | Borde de panel (2–3 px a 1080p) |
+| `ui_text` | `#E6E6E2` | Texto principal (contraste 10:1 sobre el panel) |
+| `ui_amber` | `#E8A44E` | Títulos, barra de paciencia, dígitos (5,9:1 sobre el panel) |
+| `ui_track` | `#1C2424` | Fondo de barras |
+| `ui_alert` | `#D2473F` | Paciencia baja / aviso |
 
-**Personajes** (dos variantes, J1 y J2)
+Los colores de **marca** (rojo, crema, etc.) los fija PUL-088 en [`brand.md`](brand.md); deben convivir
+con esta tabla (§7) y no reutilizar `player_1/2` ni los cuatro `stand_*` como color principal.
 
-| Nombre | J1 | J2 |
-|---|---|---|
-| Delantal / gorro | `#2F6FB5` (azul) | `#E0A02E` (ámbar) |
-| Camisa | `#F7F4EC` | `#F7F4EC` |
-| Pantalón | `#4A4F63` | `#4A4F63` |
-| Piel (opcional, dos tonos) | `#EBC49A` | `#A8734D` |
+## 3. Materiales (biblioteca v2, la crea PUL-074)
 
-El aro de selección de PUL-035 usa los mismos azul y ámbar, así que el color de la ropa y el del aro
-coinciden.
+### 3.1 Catálogo
 
-**UI y distintivos de la caja**: ver §3.4; los colores de los iconos son los de la tabla de comida.
+Biblioteca cerrada en `art/blender/_materials_v2.blend` → `godot/assets/materials/v2/`. Un asset solo usa
+materiales de aquí (más su atlas propio, §3.3). Nombres `mat_<nombre>`:
 
-### 2.7 Iluminación y sombreado
-
-- Una `DirectionalLight3D` y ambiente suave como `scale_check.tscn`/nivel; sombras activadas. El
-  arte no incluye luces; los farolillos solo llevan material emisivo.
-- **Contorno**: opcional, a cargo de un shader de post-proceso del motor, no geometría. El modelo no
-  incluye «casco invertido».
-- Cara oculta: sin dobles caras; normales hacia fuera (`Recalculate Outside`).
-
-## 3. Legibilidad desde la cámara ortográfica
-
-Condiciones de la cámara (`camera_rig.tscn`): ortográfica, `size = 12.74` m de alto visible,
-inclinación ≈ 38° sobre el horizonte, fija. En una ventana de 1920×1080 un metro ocupa
-≈ 85 px de alto en pantalla. Un objeto de 0,3 m ocupa unos 25–40 px: es el tamaño crítico de caja, pulpo y cachelos. Se ve desde arriba y por delante: **la
-cara superior y la frontal importan, el reverso no.**
-
-### 3.1 Reglas generales
-
-1. **Silueta**: en una captura a 1920×1080 los objetos de gameplay se distinguen entre sí en negro
-   puro. Prueba: convertir la captura a blanco/negro (o rellenar de negro) y reconocer cada tipo.
-2. **Detalle mínimo**: ningún elemento significativo (pegatina, ventosa) menor de **6 px** en la
-   captura de 1920×1080 (≈ 0,07 m en el objeto).
-3. **Contraste**: los pares de estados (crudo/cocido) se separan al menos **3:1 de relación de
-   luminancia** entre sí (§3.2, §3.3). Contra suelo (`ground_dirt`, L ≈ 0,25) y encimera
-   (`wood_light`, L ≈ 0,44), los objetos sostenibles se distinguen por **saturación o borde oscuro**
-   (`wood_dark`/`iron_black`, 0,02 m), no solo por luminosidad: una patata cruda (L ≈ 0,17) sobre
-   el suelo solo da 1,4:1, así que lleva siempre borde o sombra de contacto.
-4. **Jerarquía por color**: gameplay saturado (pulpo, cobre, pegatinas), mobiliario en madera/grises
-   cálidos, entorno apagado y de baja saturación.
-5. **Nada alto tapa la cámara**: el entorno (carpa, banderines, farolillos) va **fuera de la zona
-   jugable** y por detrás o por encima del plano de las estaciones; ningún elemento por delante
-   del plano de juego sobresale más de 1 m de alto.
-6. Cada personaje se distingue por **color de delantal/gorro** (azul/ámbar) y por el aro de PUL-035;
-   un tercer rasgo (p. ej. forma del gorro) distingue a daltónicos: J1 gorro redondo, J2 gorro alto
-   de cocinero.
-
-### 3.2 Pulpo crudo y cocido
-
-| | Crudo | Cocido |
-|---|---|---|
-| Color principal | `#C9B0BC` rosa-grisáceo pálido | `#B8283D` rojo-morado saturado |
-| Ventosas | `#9A8294` | `#6E1A3A` |
-| Forma | Cuerpo y patas **lacias, flácidas, extendidas**; cabeza de saco redondeada | Patas **enroscadas y rizadas** hacia arriba, cuerpo más pequeño |
-| Brillo | Mate (roughness 0,9) | Algo más brillante (roughness 0,5) |
-| Luminosidad relativa | alta (≈ 0,47) | baja (≈ 0,12); relación 3,1:1 |
-
-Los dos estados difieren **a la vez por color, luminosidad y silueta** (no solo por tono): se
-distinguen aunque el jugador sea daltónico. Además existe el estado **troceado** (rodajas de patas,
-`octopus_pieces`) para la caja: rodajas redondas de ≈ 0,05 m, color del cocido más claro
-(`#D4506A`) con corte `#F4C6CC`.
-
-### 3.3 Cachelos crudos y cocidos
-
-| | Crudo | Cocido |
-|---|---|---|
-| Color | `#8E6B47` marrón terroso, piel opaca | `#F2D56B` amarillo cálido, borde `#D8A93C` |
-| Forma | Patata **entera, ovalada, irregular** | Patata **partida en 2–3 trozos**, caras de corte planas y claras (a la vista desde arriba) |
-| Cantidad | 1–2 patatas | 3–4 trozos amontonados |
-
-Contraste crudo/cocido: marrón oscuro (L ≈ 0,17) frente a amarillo claro (L ≈ 0,68), relación 3,3:1, y
-entero frente a partido. En el plato, los cachelos cocidos se leen como «montón amarillo» sobre el
-pulpo rojo.
-
-### 3.4 Cajas, platos y distintivos (D18)
-
-- Tres tamaños con **proporción de diámetro 0,34 : 0,42 : 0,49** y **bordes de color por tamaño**
-  para identificarlos incluso apilados en la estantería: pequeña `#D9A86C` con aro `#2F6FB5`,
-  mediana con aro `#4E9B5F`, grande con aro `#C9483D` (el aro es una banda plana de 0,02 m).
-- **Relleno progresivo de pulpo** (D8/PUL-047): las cajas muestran hasta 3 niveles de relleno
-  visibles desde arriba (vacía, a medias, llena) con rodajas `#D4506A`.
-- **Distintivos (pegatinas) de D18**: un disco plano de **0,10 m de diámetro** pegado en el **borde
-  frontal-superior** de la caja (visible desde la cámara), uno por condimento, colocados
-  en un máximo de 4 huecos (marcadores `Anchor_Sticker_0..3`) en arco sobre el borde. El color del
-  disco **es el del condimento** y lleva icono en blanco/negro (el mismo icono del ticket de
-  comanda, PUL-030/PUL-040):
-
-| Condimento | Color del disco | Icono |
-|---|---|---|
-| Pimentón dulce | `#D6361F` | pimiento / flama simple |
-| Pimentón picante | `#8F1A14` | pimiento + chispa |
-| Sal gorda | `#F7F4EC` (borde `#6E4A2B`) | copos |
-| Aceite | `#F2C230` | gota |
-| Cachelos | `#F2D56B` (borde `#8E6B47`) | patata |
-
-  Los discos del pimentón dulce y el picante deben distinguirse por **luminosidad** (`#D6361F` ≈ 0,17;
-  `#8F1A14` ≈ 0,07: relación 2,0:1) **y** por icono (con chispa o sin ella), porque son exclusivos (D4) y no pueden
-  confundirse. Las pegatinas se modelan como un único objeto reutilizable con la textura de iconos
-  del atlas; en Godot el ingeniero decide cuáles se muestran según los condimentos de la caja.
-- Los discos no se modelan en bajorrelieve; son planos con un offset de 1 mm para evitar z-fighting.
-
-### 3.5 Estaciones y entorno
-
-- **Olla**: el caldeiro de cobre es el objeto más saturado y claro de la zona del fogón; la boca
-  abierta deja ver el interior `#8A4220`, con **plazas visibles** (anclas `Anchor_Slot_0..N`) para
-  la capacidad (D9) y llamas `#FFB02E` bajo el caldero, sin tapar el borde.
-- **Arcón de pulpo**: gris acero con tapa abierta y hielo `#BFE3EE` y un tentáculo asomando
-  (señal «aquí está el pulpo»).
-- **Cachelera**: saco de arpillera `#B8955A` con la boca enrollada y patatas `#8E6B47` visibles.
-- **Estantería de cajas**: tres montones identificados por el aro de color del tamaño (§3.4).
-- **Estación de condimentos**: mesa baja en madera con cinco recipientes (pimentón dulce, picante,
-  sal, aceitera, cachelos) en el **color del condimento** (los mismos de las pegatinas); un recipiente
-  por lado o zona según PUL-040. Los recipientes no superan 0,25 m de alto para no ocultar la caja.
-- **Puesto de entrega**: mostrador con número grande y toldillo de color propio (4 colores),
-  además de un hueco legible para el `#id` de la comanda.
-- **Entorno**: suelo de tierra en la zona jugable; hierba y losas fuera; carpa con rayas
-  `canvas_cream`/`canvas_stripe` al fondo; farolillos y banderines en la parte alta, nunca delante de
-  una estación.
-
-## 4. Lista de assets: revisión de PUL-044..PUL-055
-
-Cobertura vs. el juego actual (`level_01`, PUL-016..PUL-018, D18). Estado: **ok** = la ficha cubre
-el asset; **ajuste** = ficha existente con un cambio recomendado; **falta** = no está en ninguna
-ficha.
-
-| Ficha | Asset | Estado | Presupuesto (tris) | Observación |
+| Material | Base (§2) | Rough. | Metal. | Textura y desgaste |
 |---|---|---|---|---|
-| PUL-044 | Personaje + rig + 5 clips | ajuste | 2 500 | Falta confirmar clip `Idle` en bucle de 1–2 s y `Cut` con ciclo corto (pulsación repetida, D13). Dos variantes en **un mismo `.blend` con malla compartida** y materiales distintos, para no duplicar rig. Añadir marcador `Anchor_Hold` en las manos (altura de la caja) |
-| PUL-045 | Pulpo crudo, cocido, troceado | ok | 600 c/u | Separar `octopus_pieces` (rodajas) para el contenido de la caja; el estado «cortado» de la caja usa esas rodajas |
-| PUL-046 | Cachelos crudos y cocidos | ajuste | 300 c/u | Añadir variante **«cantidad»** (1, 2, 3 piezas) o piezas sueltas para montones en la caja y en la olla |
-| PUL-047 | Platos/cajas (3 tamaños) + relleno + pegatinas | ajuste | 600 c/u | Añadir el objeto **`sticker`** reutilizable (disco 0,10 m con atlas de 5 iconos ≤ 256×256) y los 4 `Anchor_Sticker_*`. Tres niveles de relleno como objetos ocultables, no tres mallas distintas |
-| PUL-048 | Caldeiro + fogón | ok | 1 500 | Separar `pot_body` (caldeiro) y `stove_base` (fogón) para que puedan moverse/animarse; llamas y vapor son partículas de motor, no modelo (lo dice la ficha) |
-| PUL-049 | Arcón de pulpo | ok | 1 500 | Incluir **tapa separada** (`Lid`) por si se anima; tentáculo asomando |
-| PUL-050 | Cachelera | ok | 1 500 | Alinear con PUL-046: patatas visibles del mismo modelo; retirar el placeholder `cachelera*` (ya en `owns`) |
-| PUL-051 | Estantería de cajas | ok | 1 500 | Usa las 3 cajas de PUL-047 como referencia de tamaño; no incrusta las cajas del juego: estas se instancian aparte |
-| PUL-052 | Estación de condimentos | ajuste | 1 500 | Bloqueada por PUL-040. Falta: **recipientes por condimento** con el color de §3.4 (la ficha enumera los cinco, correcto); **aceitera** como pieza propia; y **huecos/anclas para la caja** (`Anchor_Box_A/B` si hay dos lados). Sin `touches_scenes`: la escena la crea una ficha de gameplay |
-| PUL-053 | Puesto de entrega | ajuste | 1 500 | 4 variantes de color de toldillo (puestos 1–4, D12) y sitio para el número; el número se dibuja con textura o se deja como `Label3D` del motor (preferible: legible a cualquier tamaño) |
-| PUL-054 | Encimeras modulares (recta, esquina, extremo) | ajuste | 300 c/u | Valorar **módulos largos de 2 m y 3 m**: o bien un kit de 1 m que se repite (los placeholders `table_long/medium/square` miden 2,79 m, etc.), y **tablero de apoyo** para la caja con altura exacta 1,0 m |
-| PUL-055 | Entorno de romería | ajuste | 6 000 | Dividir en **3 `.glb`** para que se puedan asignar a otros agentes sin chocar: `ground` (suelo), `tent` (carpa y vigas), `decor` (farolillos, banderines, bancos). Mantiene `owns` único (`romeria/**`) |
+| `mat_steel_brushed` | `steel_light`/`steel_top` | 0,35–0,45 | 1,0 | Cepillado direccional suave, arañazos finos solo en tableros, manchas de agua sutiles |
+| `mat_steel_dark` | `steel_dark` | 0,5 | 0,8 | Igual, más mate; tornillos pintados en el atlas |
+| `mat_paint_worn` | `paint_grey`/`paint_beige` | 0,6 | 0 (desconchado 1,0) | Desconchado en aristas que deja ver `steel_mid` (máscara de curvatura horneada) |
+| `mat_plastic_red` | `plastic_red` | 0,45 | 0 | Roces claros en bordes, sin brillo de espejo |
+| `mat_plastic_blue` | `plastic_blue` | 0,45 | 0 | Igual |
+| `mat_wood_used` | `wood_used`/`wood_dark` | 0,7 | 0 | Veta pintada ancha, cortes de cuchillo en tablas, bordes oscurecidos |
+| `mat_burlap` | `burlap` | 0,9 | 0 | Trama gruesa pintada (≥ 4 px por hilo a 1080p, si no, liso) |
+| `mat_cardboard` | `cardboard` | 0,85 | 0 | Ondulado en el canto, cinta y garabatos sin texto legible |
+| `mat_clay` | `clay` | 0,75 | 0 | Vidriado parcial más claro en el borde |
+| `mat_canvas` | `canvas_red` / toldillos | 0,85 | 0 | Trama de lona, costuras, borde de festón más oscuro |
+| `mat_concrete` | `concrete_block` | 0,9 | 0 | Bloques con juntas y musgo en la parte baja |
+| `mat_rubber` | `rubber_black`, mangueras | 0,7 | 0 | Liso |
+| `mat_ground_dirt` | `ground_dirt` | 0,95 | 0 | Tierra con piedrecitas pintadas, rodadas y zonas pisadas (`ground_track`), charcos con roughness 0,1 |
+| `mat_grass` / `mat_foliage` | `grass` / `foliage` | 0,9 | 0 | Pintado, hojas por tarjetas con alfa en el fondo |
+| `mat_glass_water` | `water_tank` | 0,05 | 0 | Transparente; burbujas como malla o partículas |
+| `mat_emissive_bulb` | `bulb_warm` | — | — | Emisivo, sin textura |
+| `mat_cloth` | uniforme | 0,9 | 0 | Tela de personaje, pliegues pintados grandes |
+| `mat_skin` | dos tonos de la v1 | 0,7 | 0 | Liso |
+| `mat_food_*` | §2.4 | §6 | 0 | **Sin ruido**: degradado suave y ventosas; quemado con grietas grandes |
 
-### 4.1 Assets que faltan (propuestas de ficha nueva)
+`mat_copper` de la v1 deja de usarse en la cocina (los cocedores son de acero, PUL-078); puede quedar
+en atrezo de fondo (cazos colgados) si casa.
 
-| Asset | Motivo | Propuesta |
+### 3.2 Qué se permite y qué no
+
+**Ahora sí** (la v1 lo prohibía):
+- **Texturas de color** pintadas a mano o procedurales y horneadas, pequeñas (§4.2).
+- **AO horneado**: en el canal AO de una textura ORM (Occlusion-Roughness-Metallic) o multiplicado en el
+  albedo del atlas del asset. Es lo que da el aspecto de maqueta.
+- **Normal maps sencillos**: solo en materiales tileables de la biblioteca (cepillado, trama, juntas,
+  tierra) o en el atlas de una estación, a ≤ 512². Detalles de relieve grandes (tornillos, costuras,
+  remaches), nunca microdetalle.
+- **Roughness y metallic por textura** (ORM) y materiales metálicos de verdad (`metallic = 1` en acero).
+- **Decals planos** (malla con offset de 1–2 mm o `Decal` de Godot) para rodadas, manchas, charcos,
+  etiquetas y logos.
+- **Transparencia** solo en agua del tanque, vapor (partículas) y tarjetas de vegetación del fondo.
+- **Vértices de color** como máscara de desgaste en el shader, siempre que el color base venga de
+  textura o material (sigue prohibido que sea el único portador del color).
+
+**Sigue prohibido**:
+- Fotorrealismo: fotografías, escaneos, texturas de terceros, PBR de bibliotecas externas (D16).
+- **Ruido que mate la lectura**: ninguna textura con frecuencia más fina que **4 px a 1080p** en
+  superficies jugables (≈ 0,05 m en el modelo); nada de grano fino en comida, bandejas ni pegatinas.
+- Color de desgaste que imite comida o condimento (manchas rojas de «pimentón» o amarillas de
+  «aceite» en encimeras jugables).
+- Texto legible inventado en atrezo, salvo la marca PulpaSA (§7) y los números de puesto.
+- Shaders personalizados por asset: el asset usa `StandardMaterial3D` (importado del `.glb`). Los
+  únicos shaders son los del motor (resaltado `highlight_outline`, agua, partículas).
+- Normal maps de alta frecuencia, parallax, subsurface, clearcoat y teselación.
+
+### 3.3 Atlas por asset
+
+Además de los materiales tileables, cada asset puede llevar **un atlas propio** (albedo + ORM y,
+opcional, normal) para lo que no se repite: etiquetas, pantallas, tornillos, logotipo, desgaste
+concreto. Se hornea desde Blender y va embebido en el `.glb` o en `godot/assets/textures/v2/<asset>/`
+según decida PUL-074 (el test exige materiales embebidos).
+
+## 4. Presupuestos
+
+### 4.1 Triángulos (tras triangular, por pieza exportada)
+
+| Tipo | v1 máx. | **v2 máx.** | Objetivo v2 |
+|---|---|---|---|
+| Personaje (con rig, ropa y gorra) | 2 500 | **6 000** | ≈ 4 000 |
+| Objeto que se sostiene (pulpo, cachelos; cada variante de estado) | 600 | **1 500** | ≈ 800 |
+| Bandeja (cada talla, con relleno al máximo) | 600 | **2 000** | ≈ 1 200 |
+| Estación (cocedor, tanque, sacos, rack, condimentos, kiosco) | 1 500 | **6 000** | ≈ 3 500 |
+| Encimera (módulo de 1 m, con cajones y balda) | 300 | **1 500** | ≈ 800 |
+| Atrezo pequeño (bote, cuchillo, cuenco, saco, barril) | 300 | **800** | ≈ 300 |
+| Atrezo grande de fondo (generador, tanque de gas, árbol, mesa con comensales) | — | **5 000** | ≈ 3 000 |
+| Entorno completo (suelo, toldo, muro, valla, fondo y atrezo) | 6 000 | **80 000** | ≈ 50 000 |
+| **Escena de nivel completa en pantalla** | 40 000 | **250 000** | ≈ 160 000 |
+
+- Lo que nunca ve la cámara (caras inferiores, interiores cerrados, traseras contra el muro) se borra.
+- La vegetación del fondo usa tarjetas con alfa, no geometría de hoja.
+- Atrezo repetido (bombillas, tornillos, botes, sacos) se instancia (`MultiMeshInstance3D` o la misma
+  malla) en vez de fusionarse en una malla única enorme.
+
+### 4.2 Texturas
+
+| Tipo | Resolución máx. | Notas |
 |---|---|---|
-| **Botes de condimento** (pimentón dulce/picante, sal, aceitera) | D18 los sustituye por estación, pero el diseño de PUL-040 puede necesitar **recipientes manipulables** o solo recipientes fijos en la mesa | Decidir tras PUL-040; si son fijos, los cubre PUL-052 |
-| **Aro de selección / indicador de personaje** (PUL-035) | Existe como placeholder; debe casar con la paleta (azul/ámbar) | Ficha pequeña de ajuste, no de modelado: usar `#2F6FB5`/`#E0A02E` |
-| **Texto de puestos y números 1–4** | Ver PUL-053 | `Label3D` del motor o atlas |
-| **Pegatinas** (disco + atlas de iconos) | Núcleo de D18; falta en PUL-047 si no se asigna | Incluido en PUL-047 (ajuste) |
-| **Iconos de condimentos/estrellas** (UI) | Son 2D (PUL-030/PUL-031) y deben usar la misma paleta | Revisión de colores en la ficha de UI, no en estas fichas |
-| **Partículas** (vapor, fuego, humo, chispas al cortar) | No son modelo; pertenecen a motor | Ficha de VFX posterior (M3/M4), con la paleta de §2.6 |
-| **Mobiliario menor** (banco, saco, barril) | Útil para dar vida al entorno | Incluido en `decor` de PUL-055 |
+| Material tileable de la biblioteca (albedo/ORM/normal) | **512²** | Suelo: hasta 1024² |
+| Atlas de personaje | **1024²** | Compartido por J1/J2 (cambian colores por material o por zona del atlas) |
+| Atlas de estación | **1024²** | Uno por estación |
+| Atlas de objeto que se sostiene / bandeja | **512²** | Compartible entre estados (crudo/cocido/quemado) |
+| Atlas de atrezo | **512²** | Un atlas compartido por familia (cocina, mesas, fondo) |
+| Marca (cartel, toldo, logos) | **1024×512** | PUL-088 |
+| Pegatinas / iconos | 256² (atlas existente) | Sin cambios |
 
-### 4.2 Nada que quitar
+- **Densidad de texel**: objetivo **≈ 256 px por metro** (≈ 3 texels por píxel de pantalla a 1080p,
+  donde 1 m ≈ 85 px); nunca menos de 128 px/m en lo jugable. Así todos los assets tienen el mismo grano.
+- Import en Godot: compresión VRAM (BPTC/S3TC de escritorio), mipmaps activados, filtro lineal con
+  anisotropía. Las de UI, sin compresión.
+- Memoria total de texturas del nivel: **≤ 256 MB** de VRAM.
 
-No se propone retirar ninguna ficha. **PUL-013** (superada por PUL-044) queda fuera. Si PUL-041
-cambia la planta, solo cambian PUL-054 y PUL-055 (cantidad y disposición de módulos), no los modelos
-individuales.
+### 4.3 Rendimiento (lo mide PUL-087)
 
-### 4.3 Orden recomendado de modelado
+- **Objetivo**: **60 fps estables a 1920×1080** en la máquina de desarrollo (Forward+, RTX 3090,
+  24 hilos) con todos los efectos de §1.3 activos; **tiempo de frame de GPU ≤ 12 ms** de media y
+  ≤ 16,6 ms en el percentil 99 durante una partida completa, para dejar margen a equipos más modestos.
+- Límites de escena: **≤ 1 000 draw calls**, ≤ 60 materiales distintos en pantalla, ≤ 8 luces
+  dinámicas (§1.3), ≤ 2 con sombra además de la direccional.
+- Si no se cumple, el orden de recorte es: tilt-shift → sombras de luces puntuales → SSAO a calidad
+  baja → densidad del atrezo de fondo → resolución de texturas del fondo. **Nunca** se recorta
+  detalle de lo jugable ni contraste de §6.
+- Cada ficha de asset anota en su Evidence sus triángulos y texturas; PUL-087 suma y mide.
 
-1. **PUL-043** (pipeline) y la escala con un cubo.
-2. **Pulpo, cachelos y caja** (PUL-045, 046, 047): son lo que más se ve y fija el lenguaje.
-3. **Personaje** (PUL-044).
-4. **Estaciones** (PUL-048, 049, 050, 051, 053, 052).
-5. **Encimeras y entorno** (PUL-054, 055) al final: dependen de la planta elegida (PUL-041).
+## 5. Densidad de detalle por zonas
 
-## 5. Lista de comprobación por asset (para el reviewer y el asset-pipeline)
+| Zona | Qué es | Detalle permitido | Colisión |
+|---|---|---|---|
+| **Z0 · Suelo jugable** | Tierra dentro del perímetro de encimeras, por donde caminan los cocineros | Solo en textura o decal plano (rodadas, piedrecitas, hojas, charcos, rejillas): relieve ≤ 2 cm, contraste ≤ 1,3:1 contra `ground_dirt` salvo rejillas. **Ningún objeto suelto** (ni patatas, ni piedras grandes, ni cables) | Ninguna nueva |
+| **Z1 · Superficies de juego** | Tablero de encimeras en huecos de dejar, bocas de cocedor, tanque, sacos, rack, dispensadores, bandeja del kiosco | **Limpias**: material base + desgaste suave. Atrezo solo en la franja trasera (≤ 25 % del fondo del tablero), ≤ 0,25 m de alto, a ≥ 0,15 m de cualquier ancla (`Anchor_*`) o punto de dejar | La del contrato, sin cambios |
+| **Z2 · Frentes y laterales** | Cara frontal y lateral de encimeras, estaciones y kioscos | Libre: cajones, tornillos, etiquetas de condimento, logos, pantallas, cables cortos, cajas en la balda inferior | La del contrato |
+| **Z3 · Fondo y entorno** | Todo lo que queda fuera del perímetro: muro, toldo, tanques, valla, mesas, árboles | **Denso** (la referencia es el mínimo): barriles, sacos, cajas, cables, bombonas, generador, comensales estáticos. Algo más desaturado (≈ −15 %) que lo jugable. Nada por delante del plano de juego más alto de 1 m (regla de la v1) | **Sin colisión** |
 
-- [ ] Escala 1 u = 1 m, medidas dentro del ±10 % de §2.1, escala aplicada (1,1,1)
-- [ ] Triángulos ≤ presupuesto de §2.2
-- [ ] Frente −Z, origen en el centro de la base
-- [ ] Solo colores de §2.6 (hex exactos), un material por color, sin texturas salvo las permitidas
-- [ ] Nombres y rutas de §2.4; `.blend` y `.glb` versionados
-- [ ] Captura en `docs/evidence/<id>/` de la cámara del nivel: silueta reconocible, contrastes de §3
-- [ ] Pares crudo/cocido distinguibles por forma, luminosidad y color
+Reglas comunes:
+1. **El atrezo no imita lo jugable**: ni pulpos, ni patatas, ni bandejas rojas sueltas, ni botes de
+   condimento en Z0/Z1 que no sean los de verdad. En Z3 sí (platos de los comensales, pilas de bandejas
+   detrás del rack), siempre a ≥ 1 m de una estación del mismo tipo.
+2. Las pilas de bandejas de la referencia sobre encimeras jugables se sustituyen por el **rack**
+   (PUL-081), que es el que da bandejas.
+3. Lo denso se agrupa en `.glb` de fondo separados (PUL-085) para poder bajar su detalle sin tocar lo jugable.
+4. Cables y mangueras pueden cruzar Z0 **solo** pegados al suelo como decal o malla de ≤ 2 cm, y nunca
+   atravesando la huella de una estación o el paso entre encimeras.
+
+## 6. Legibilidad desde la cámara ortográfica
+
+Cámara (`camera_rig.tscn`, sin cambios): ortográfica, `size = 12.74` m, inclinación ≈ 38°. A
+1920×1080, 1 m ≈ 85 px; un objeto de 0,3 m ocupa 25–40 px. Importan la cara superior y la frontal.
+
+### 6.1 Reglas generales
+
+1. **Silueta**: en una captura 1920×1080 rellenada de negro, cada tipo jugable (pulpo, cachelos,
+   bandeja de cada talla, estación, cocinero) se reconoce. Los estados de un mismo objeto cambian de
+   silueta (§6.2, §6.3).
+2. **Detalle mínimo**: todo lo que da información (pegatina, número, estado) ≥ **6 px** a 1080p
+   (≈ 0,07 m). Lo decorativo menor de 4 px no se texturiza (se queda en color liso).
+3. **Contraste entre estados**: crudo/cocido ≥ **3:1** de luminancia relativa; cocido/quemado
+   ≥ **2,5:1** más cambio de silueta y humo (PUL-069); crudo/quemado ≥ 3:1.
+4. **Contraste contra el apoyo**: los objetos que se sostienen se leen contra `steel_top` (encimera),
+   `tray_liner` (dentro de la bandeja) y `ground_dirt` (en la mano, sobre el suelo). Si la luminancia
+   no llega a 3:1, se separan por **saturación** y por **contorno oscuro** de 0,01–0,02 m o sombra de
+   contacto (AO). Tabla en §6.4.
+5. **Nada encima de lo jugable**: ningún atrezo, decal, cable, vapor opaco o rama tapa un ancla,
+   una boca de cocedor, una bandeja o una pegatina desde la cámara. El vapor es semitransparente
+   (alfa ≤ 0,5) y sube por detrás del borde.
+6. **Luz**: ninguna superficie jugable queda con luminancia final < 0,08 (sombra ilegible) ni
+   quemada > 0,95 en la captura con la luz de §1.3; lo comprueba PUL-073 (AC2).
+7. **Resaltado**: el contorno de interacción (`highlight_outline`, `OutlineHull` si el modelo es
+   abierto, nota de PUL-049) debe seguir viéndose sobre los materiales nuevos; si el acero claro lo
+   apaga, se oscurece el borde, no se cambia el shader.
+
+### 6.2 Pulpo: crudo, cocido, quemado y rodajas
+
+| | Crudo | Cocido | Quemado |
+|---|---|---|---|
+| Color | `#E0AFB2` rosa pálido, ventosas `#9A6E7A` | `#B8283D` rojo-morado, ventosas `#6E1A3A` | `#2A2320` carbón, grietas `#5A2A1E` |
+| Luminancia (L) | 0,50 | 0,12 | 0,02 |
+| Forma | Patas **lacias y extendidas**, cabeza de saco | Patas **enroscadas** hacia arriba, cuerpo menor | Más pequeño, **arrugado y encogido**, puntas rotas |
+| Brillo | Húmedo (rough. 0,4) | Satinado (0,5) | Mate (0,95) |
+| Extra | — | — | Humo de PUL-069 |
+
+Relaciones: crudo/cocido **3,2:1**, cocido/quemado **2,5:1**, crudo/quemado **8,1:1**. Rodajas
+`#D4506A` con corte `#F4C6CC`, ≈ 0,05 m, sobre `tray_liner`: **3,2:1**.
+El crudo sobre acero (`steel_top`) solo da 1,3:1: se separa por saturación (rosa frente a gris) y por
+el contorno de ventosas `#9A6E7A`; dentro del tanque, el agua no baja su luminancia más de un 15 %.
+
+### 6.3 Cachelos: crudo, cocido, quemado
+
+| | Crudo | Cocido | Quemado |
+|---|---|---|---|
+| Color | `#8E6B47` piel opaca | `#F2D56B`, borde `#D8A93C` | `#2E2620` |
+| Forma | Patata **entera**, ovalada | **Partida** en 2–3 trozos, caras de corte claras | Trozos encogidos y agrietados |
+
+Relaciones: crudo/cocido **3,3:1**, cocido/quemado **10,3:1**, crudo/quemado **3,1:1** (más forma).
+El cocido dentro de la bandeja se lee sobre `tray_liner` por **saturación y borde** (solo 1,15:1 de
+luminancia): el borde `#D8A93C` de 0,01 m es obligatorio.
+
+### 6.4 Bandejas (sustituyen a los platos de madera) y pegatinas
+
+- **Bandeja de plástico rojo** `plastic_red` con **papel antigrasa** `tray_liner` en el fondo: el papel
+  existe porque el pulpo cocido sobre rojo (1,2:1) no se leería. Liner/bandeja: **4,0:1**.
+- **Tres tallas distinguibles por forma**, no solo por tamaño (proporción de diámetro de la v1,
+  0,34 : 0,42 : 0,49): pequeña **redonda**, mediana **ovalada**, grande **rectangular con asas**.
+  Se mantiene el aro de color por talla de la v1 como banda fina en el canto (azul, verde, rojo) para
+  leerlas apiladas.
+- **Relleno visible por capas** (vacía, a medias, llena) con rodajas y cachelos desde arriba.
+- **Pegatinas** (D18): sin cambios de forma ni color (disco 0,10 m, icono del atlas, fila billboard de
+  PUL-059). Van **por encima** de la bandeja en la fila de PUL-059; el logotipo de la bandeja va en
+  el canto frontal-inferior, nunca donde caen las pegatinas.
+- Bandeja sobre `steel_top`: 2,0:1 más saturación; sobre `ground_dirt`: 1,5:1 más saturación y sombra
+  de contacto.
+- Pimentón dulce/picante en pegatinas y etiquetas: 1,9:1 más icono (con chispa o sin ella), como en la v1.
+
+### 6.5 Puestos, jugadores y estaciones
+
+- **Kioscos**: toldillo `stand_1..4` y número negro en disco blanco ≥ 0,25 m en el frente (Z2);
+  `%OrderLabel` del motor sigue mostrando el `#id` de la comanda encima. El TPV no puede ser más
+  llamativo que el número.
+- **Jugadores**: gorra y delantal `player_1`/`player_2`, aro del mismo color (PUL-035); rasgo de forma
+  para daltónicos (v1 §3.1-6: J1 gorra redonda, J2 gorro alto, o el que fije PUL-075). La camiseta
+  blanca debe destacar sobre el suelo (`uniform_shirt` / `ground_dirt`: 3,0:1).
+- **Cocedores**: abiertos o con tapa levantada para ver lo que cuece desde la cámara (plazas
+  `Anchor_Slot_*` a la vista); piloto de color por estado opcional, nunca rojo/verde como único aviso.
+- **Tanque de pulpos**: el pulpo crudo de dentro se ve como el de la mano (lectura «de aquí sale el pulpo»).
+- **Sacos**: patatas crudas visibles en la boca, del modelo de PUL-076.
+- **Dispensadores de condimento**: recipiente del color del condimento (§2.5) y etiqueta del mismo
+  color en el frente de la barra (como la referencia); ≤ 0,25 m de alto.
+
+## 7. Marca PulpaSA (D21)
+
+La identidad (logotipo, símbolo, colores de marca, versiones) la diseña **PUL-088** en
+[`docs/art/brand.md`](brand.md); esta biblia solo fija **dónde aparece y con qué reglas**. Mientras
+`brand.md` no exista, los assets dejan el hueco del logo con un material provisional `mat_brand_placeholder`.
+Punto de partida permitido: `godot/assets/textures/logo/PulpaSA.png` (propio, del prototipo).
+
+| Lugar | Asset / ficha | Versión del logo | Regla |
+|---|---|---|---|
+| Cartel luminoso sobre el toldo | Entorno, PUL-085 | Horizontal, emisivo | El elemento más llamativo del fondo, pero por encima del plano de juego y sin tapar la cocina |
+| Toldo grande | Entorno, PUL-085 | Horizontal grande sobre `canvas_red` | Sin diagonales rojo/amarillo de la referencia |
+| Uniformes (gorra, delantal) | Personaje, PUL-075 | Compacta / símbolo, monocromo | Pequeño; no cambia el color de gorra/delantal que identifica al jugador |
+| Bandejas | PUL-077 | Símbolo en el canto frontal-inferior | Nunca en la zona de pegatinas ni en el fondo de la bandeja |
+| Kioscos de entrega | PUL-083 | Compacta en la caja de llevar o el frente | Más pequeña que el número del puesto |
+| Vasos y servilleteros de los comensales | Entorno, PUL-085 | Símbolo | Atrezo Z3 |
+| Pizarras de menú | Entorno, PUL-085 | Horizontal pequeña | Sin texto inventado legible aparte de la marca |
+| Tickets, HUD y menús | UI, PUL-086 | Compacta o monocromo | En cabecera de menús y pantalla de título; en tickets como mucho un símbolo pequeño |
+
+Reglas de convivencia: el color principal de marca no puede ser `player_1/2` ni un `stand_*`, para que
+no se confunda con un jugador o un puesto; nada de «Mc», arcos ni la combinación rojo/amarillo de
+una cadena conocida (restricción de PUL-088).
+
+**Tono propuesto** (lo decide el responsable, pregunta en Evidence de PUL-072): **franquicia satírica
+con raíz de romería**. «PulpaSA» se lee como *Pulpa, S.A.*: una sociedad anónima que ha convertido la
+pulpería de feria en franquicia (uniformes, TPV, cámaras de vigilancia, cartel luminoso, «empregado do
+mes»), pero montada en un campo de romería gallego con barro, fentos y cuncas. El humor sale del choque
+entre lo corporativo y lo tradicional; la alternativa es una **romería con marca** (pulpería
+tradicional con logo pintado a mano, sin guiños corporativos).
+
+## 8. Tabla asset → cambio (PUL-073..PUL-086)
+
+**Rehacer** = modelo nuevo (misma huella y contratos); **retexturizar** = mismo modelo o casi, materiales
+v2; **nuevo** = atrezo que no existe. Todo conserva colisiones, anclas, nodos de contrato y posiciones
+de `level_01`.
+
+| Ficha | Asset actual | Acción | Qué cambia | Atrezo nuevo | Presupuesto (§4) | Depende de |
+|---|---|---|---|---|---|---|
+| PUL-073 | `WorldEnvironment`, luz del nivel | **Ajustar** | Luz y post de §1.3 (AgX, SSAO, ambiente apagado, luces de bombilla, tilt-shift opcional en `.tres`) | Luces de bombilla (las mallas las pone PUL-085) | ≤ 8 luces, §4.3 | — |
+| PUL-074 | Materiales planos de la v1 | **Nuevo** | Biblioteca de §3.1, plantilla `_template.blend`, export de texturas | — | Texturas §4.2 | — |
+| PUL-075 | Cocinero low-poly | **Rehacer** | Uniforme (camiseta, pantalón marino, gorra/gorro, delantal), materiales `mat_cloth`/`mat_skin`, logo compacto; mismo rig, clips y `Anchor_Hold` | — | 6 000 tris, atlas 1024² | PUL-074, PUL-088 |
+| PUL-076 | Pulpo, cachelos (crudo/cocido/quemado), rodajas | **Rehacer** | Colores y formas de §6.2/§6.3, más detalle de ventosas y cortes, sin ruido; mismos nombres de malla | — | 1 500 c/u, atlas 512² | PUL-074 |
+| PUL-077 | Platos de madera (3 tallas) | **Rehacer** | Bandejas de plástico rojo con papel, tres formas (§6.4), relleno por capas, logo en canto | — | 2 000 c/u, atlas 512² | PUL-074, PUL-076, PUL-088 |
+| PUL-078 | Caldeiros de cobre con fogón | **Rehacer** | Cocedores cilíndricos de acero con quemador de gas, tapa levantada, piloto; boca abierta para ver las plazas | Mangueras de gas roja/verde al suelo, bombona junto al muro | 6 000 (cada cocedor + quemador) | PUL-074 |
+| PUL-079 | Arcón de pulpo | **Rehacer** | Tanque azul de plástico con agua `mat_glass_water`, burbujas y pulpos crudos dentro; misma huella | Mangueras de agua, cartel pequeño sin texto inventado | 6 000 | PUL-074, PUL-076 (pulpo crudo) |
+| PUL-080 | Cesta/cachelera | **Rehacer** | 1–2 sacos de arpillera abiertos con patatas crudas de PUL-076, cesto opcional | — | 6 000 | PUL-074, PUL-076 |
+| PUL-081 | Estantería de platos | **Rehacer** | Rack de acero con pilas de bandejas por talla delante de cada spawner | — | 6 000 (sin contar las bandejas instanciadas) | PUL-074, PUL-077 |
+| PUL-082 | Estación de condimentos (dispensadores, cuenco de cachelos) | **Rehacer** | Mostrador de acero, botes/latas de pimentón dulce y picante, salero, aceitera, cuenco de barro de cachelos, etiquetas de color en el frente | Tabla de corte y cuchillo en la franja trasera (Z1) | 6 000 el conjunto | PUL-074 |
+| PUL-083 | Puestos de entrega 1–4 | **Rehacer** | Kiosco de acero oscuro, toldillo `stand_1..4` con festón, TPV, número en disco, logo compacto | Caja de llevar con faja de marca | 6 000 c/u (malla común + 4 materiales) | PUL-074, PUL-088 |
+| PUL-084 | Encimeras de madera (kit) y suelo de la cocina | **Rehacer** | Encimeras de acero con tornillos, cajones/puertas, balda con cajas de cartón; tablero `steel_top` limpio (Z1) | Rejillas de desagüe, utensilios en franja trasera, cajas de cartón en baldas | 1 500 por módulo | PUL-074, PUL-073 |
+| PUL-085 | Entorno de romería (carpa, cartel, mesas, decoración) | **Rehacer + nuevo** | Suelo de tierra con rodadas/charcos (Z0, decals), muro de bloques (o granito, §10), toldo rojo y cartel luminoso PulpaSA, valla | Tanques de gas, generador, bombonas, cables, barriles, cajas, sacos, carballos y fentos, mesas largas con comensales **estáticos**, cuncas, postes con guirnaldas de bombillas, pizarras de menú, cámaras de vigilancia, banderines. Dividido en `ground`, `tent`, `back`, `props` | 80 000 el entorno | PUL-074, PUL-073, PUL-088 |
+| PUL-086 | HUD, tickets y menús | **Retexturizar (UI)** | Paneles `ui_panel` con borde, título ámbar, reloj de 7 segmentos (fuente libre OFL), barra ámbar, pegatinas de PUL-060; HUD compacto | Fuentes OFL (registro del coordinador) | — | PUL-088 |
+
+Orden recomendado: PUL-073 y PUL-074 primero (luz y materiales fijan el juicio); después
+PUL-076 → PUL-077 → PUL-081 (comida, bandeja, rack); PUL-075; estaciones PUL-078/079/080/082/083;
+por último PUL-084 y PUL-085 (lo más grande) y PUL-086 en paralelo cuando exista `brand.md`.
+PUL-079 depende también de PUL-076 (pulpos dentro del tanque): conviene añadirlo a su `deps`.
+
+## 9. Lista de comprobación por asset (reviewer y asset-pipeline)
+
+- [ ] Escala 1 u = 1 m, medidas de §2.1 de la v1 ±10 % (salvo huellas de contrato), escala aplicada
+- [ ] Triángulos ≤ §4.1; texturas ≤ §4.2 con ≈ 256 px/m; anotados en Evidence
+- [ ] Frente −Z (`Anchor_Front`), origen en el centro de la base; sin luces ni cámaras
+- [ ] Solo materiales de la biblioteca v2 (§3) y su atlas; color medio a ≤ 10 % del hex de §2
+- [ ] Nada fotorrealista ni ruido < 4 px en superficies jugables (§3.2)
+- [ ] Zonas de §5 respetadas: Z0 sin objetos sueltos, Z1 limpia, atrezo sin colisión en Z3
+- [ ] Contrastes y siluetas de §6 (crudo/cocido/quemado, bandejas, pegatinas, puestos, jugadores)
+- [ ] Resaltado visible sobre el material nuevo (§6.1-7)
+- [ ] Logo PulpaSA solo donde dice §7 y en la versión indicada
+- [ ] Captura antes/después desde la cámara de `level_01` junto a la referencia y render del `.blend`
 - [ ] Licencia propia anotada (a través del coordinador)
 
-## 6. Preguntas abiertas
+## 10. Preguntas abiertas
 
-- ¿Estilo de contorno (shader de post-proceso) sí o no? Decisión de arte con el responsable.
-- ¿Los botes de condimento se manipulan o son fijos? Depende de PUL-040.
-- ¿Cuántos tonos de piel y variantes de personaje (más de dos)? Fuera de la alpha.
+- **Tono de la marca**: franquicia satírica con raíz de romería (propuesta) o romería con marca (§7).
+- **Muro del fondo**: bloques de hormigón como la referencia o **granito** gallego (más identidad).
+- **Equipo mínimo**: la medición es en una RTX 3090; ¿hay que fijar una máquina de referencia modesta
+  (p. ej. gráfica integrada) para la alpha? Cambiaría §4.
+- **Tilt-shift**: se deja desactivado por defecto; ¿lo quiere el responsable como opción de ajustes?
+- **Comensales estáticos**: ¿con el uniforme de cliente genérico o con trajes de romería (boina,
+  pañuelo)? Afecta solo a PUL-085.
