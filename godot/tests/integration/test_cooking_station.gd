@@ -116,8 +116,8 @@ func test_ac2_cooked_octopus_shows_cooked_mesh() -> void:
 	assert_true(cooked.visible, "malla cocida al terminar")
 	assert_false(raw.visible, "sin restos del crudo")
 	var names: Array[String] = _material_names(cooked)
-	assert_has(names, "mat_octopus_cooked", "material cocido de la paleta")
-	assert_does_not_have(names, "mat_octopus_raw", "el cocido no usa el material crudo")
+	assert_has(names, "mat_food_octopus_cooked", "material cocido de la paleta")
+	assert_does_not_have(names, "mat_food_octopus_raw", "el cocido no usa el material crudo")
 
 
 func test_ac2_octopus_anchor_point_sits_on_pot_anchor() -> void:
