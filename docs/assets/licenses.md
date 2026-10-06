@@ -7,6 +7,8 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 
 | Asset (origen) | Destino en `godot/` | Licencia | Atribución requerida |
 |---|---|---|---|
+| Montserrat Black y Bold (Julieta Ulanovsky y colaboradores; github.com/JulietaUla/Montserrat), convertidas a trazados en `art/brand/*.svg` (PUL-088) | `assets/textures/brand/pulpasa_*.png` | SIL OFL 1.1 | No en el dibujo; si se distribuye la fuente, incluir `OFL.txt` |
+| Símbolo, placas y maquetas de `art/brand/` (PUL-088) | `assets/textures/brand/pulpasa_*.png` | Propio (equipo Pulpasa) | No |
 | `art/blender/octopus.blend` (PUL-045, D20) | `assets/models/food/octopus/octopus.glb`, `octopus_pieces.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/cachelos.blend` (PUL-046, D20) | `assets/models/food/cachelos/cachelos.glb`, `cachelos_pieces.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/box.blend` (PUL-047, D20) | `assets/models/items/box/box.glb`, `box_box_stickers.png` | Propio (equipo Pulpasa); iconos del atlas derivados de los ya registrados (Lorc, Delapouite: CC BY 3.0; Line Awesome: MIT) | Sí, la de esos iconos |

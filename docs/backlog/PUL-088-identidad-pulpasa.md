@@ -1,11 +1,11 @@
 ---
 id: PUL-088
 title: Diseñar la identidad de la marca PulpaSA
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: []
-orca_task: null
+orca_task: task_04df2b263b37
 unity_sources: []
 owns: [docs/art/brand.md, art/brand/**, godot/assets/textures/brand/**, docs/evidence/PUL-088/**]
 touches_scenes: []
