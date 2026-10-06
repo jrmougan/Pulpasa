@@ -19,6 +19,9 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `art/blender/seasoning_station.blend` (PUL-052, D20) | `assets/models/stations/seasoning_station/*.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/counters.blend` (PUL-054, D20) | `assets/models/furniture/counters/*.glb` | Propio (equipo Pulpasa) | No |
 | `art/blender/romeria.blend` (PUL-055, D20) | `assets/models/environment/romeria/{ground,tent,decor}.glb` | Propio (equipo Pulpasa) | No |
+| https://opengameart.org/node/114926 («Celtic Loop», stereoscopic) | `assets/audio/bg_romeria_loop.ogg` | CC0 | No |
+| https://opengameart.org/content/crowd-shoutingspeaking-ambience (StarNinjas) | `assets/audio/fol_feria_loop.ogg` | CC0 | No |
+| Kenney (RPG Audio, Music Jingles, Interface Sounds, UI Audio; kenney.nl) | `assets/audio/fx_{grab,drop,order_new,order_expired,burn_warning,burned,phase_change,ui_click}.ogg` | CC0 | No (detalle en `docs/assets/audio-sources.md`) |
 | `Art/Furniture/Mueblecajas.fbx` | `assets/models/furniture/Mueblecajas.fbx` (+ envoltorio `Mueblecajas.tscn`) | Propio (equipo Pulpasa) | No |
 | `Art/Furniture/order_stand.fbx` | `assets/models/furniture/order_stand.fbx` | Propio (equipo Pulpasa) | No |
 | `Art/Materials/**` (colores y parámetros; sin texturas) | `assets/materials/*.tres` | Propio | No |
