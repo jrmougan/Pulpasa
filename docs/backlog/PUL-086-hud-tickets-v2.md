@@ -1,7 +1,7 @@
 ---
 id: PUL-086
 title: Adaptar HUD y tickets a la estética de referencia
-status: draft
+status: ready
 milestone: M3b
 role: ui-engineer
 deps: [PUL-072, PUL-088]

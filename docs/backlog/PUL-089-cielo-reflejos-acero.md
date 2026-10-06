@@ -1,11 +1,11 @@
 ---
 id: PUL-089
 title: Ajustar el cielo y los reflejos para que el acero se lea claro
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-073]
-orca_task: null
+orca_task: task_0bcfc9b82a99
 unity_sources: []
 owns: [godot/data/config/render_config.tres, godot/resources/render_config.gd, godot/tests/unit/test_render_config.gd, docs/evidence/PUL-089/**]
 touches_scenes: []
