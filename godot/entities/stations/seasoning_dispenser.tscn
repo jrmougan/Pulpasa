@@ -1,22 +1,12 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://entities/stations/seasoning_dispenser.gd" id="1_disp"]
-[ext_resource type="Material" path="res://assets/materials/ph_dark.tres" id="2_dark"]
+[ext_resource type="PackedScene" path="res://assets/models/stations/seasoning_station/seasoning_dispenser.glb" id="2_model"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="3_hl"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_disp"]
 height = 0.5
 radius = 0.15
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_body"]
-top_radius = 0.13
-bottom_radius = 0.15
-height = 0.4
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_cap"]
-top_radius = 0.05
-bottom_radius = 0.1
-height = 0.1
 
 [node name="SeasoningDispenser" type="StaticBody3D" groups=["interactable"]]
 collision_layer = 4
@@ -27,17 +17,7 @@ script = ExtResource("1_disp")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("CylinderShape3D_disp")
 
-[node name="Model" type="Node3D" parent="."]
-
-[node name="Body" type="MeshInstance3D" parent="Model"]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
-mesh = SubResource("CylinderMesh_body")
-
-[node name="Cap" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-material_override = ExtResource("2_dark")
-mesh = SubResource("CylinderMesh_cap")
+[node name="Model" parent="." instance=ExtResource("2_model")]
 
 [node name="Icon" type="Sprite3D" parent="Model"]
 unique_name_in_owner = true
@@ -46,6 +26,17 @@ pixel_size = 0.004
 billboard = 1
 no_depth_test = true
 
+[node name="paprika_hot" parent="Model/seasoning_dispenser" index="2"]
+visible = false
+
+[node name="salt" parent="Model/seasoning_dispenser" index="4"]
+visible = false
+
+[node name="oil" parent="Model/seasoning_dispenser" index="1"]
+visible = false
+
 [node name="Highlightable" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_hl")
+
+[editable path="Model"]
