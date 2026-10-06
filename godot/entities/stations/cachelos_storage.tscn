@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://entities/stations/item_spawner.gd" id="1_d6uvc"]
 [ext_resource type="PackedScene" path="res://entities/items/cachelos.tscn" id="2_7y4y7"]
-[ext_resource type="PackedScene" path="res://assets/models/placeholders/cachelera.tscn" id="3_plchld"]
+[ext_resource type="PackedScene" path="res://assets/models/stations/cachelos_storage/cachelos_storage.glb" id="3_plchld"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="3_2k76u"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c1wrc"]
