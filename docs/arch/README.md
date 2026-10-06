@@ -12,6 +12,7 @@ de la específica; ADR-005 recoge la comparación para decidir.
 | [ADR-003](ADR-003-arbol-escenas-composicion.md) | Árbol de escenas, composición y contrato de interacción | propuesto |
 | [ADR-004](ADR-004-input-coop-local.md) | InputMap por jugador y dispositivo; cambio de personaje | propuesto |
 | [ADR-005](ADR-005-dimension-3d-2d.md) | Dimensión 3D o 2D (D14): comparación y recomendación | propuesto (decide el responsable) |
+| [ADR-006](ADR-006-audio-feedback.md) | Audio, feedback, quemado y fases (M3) | aceptado |
 | [signals.md](signals.md) | Catálogo de señales con firma, emisor y receptores | propuesto |
 | [scene-tree.md](scene-tree.md) | Árbol de escenas objetivo de M0 | propuesto |
 

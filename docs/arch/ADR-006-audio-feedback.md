@@ -1,6 +1,6 @@
 # ADR-006 — Audio, feedback de acciones, quemado y fases
 
-- **Estado:** propuesto (2026-10-06), **pendiente del gate humano** (bloquea PUL-069..071)
+- **Estado:** aceptado (2026-10-06, gate del responsable; fases con multiplicador de paciencia)
 - **Fecha:** 2026-10-06
 - **Ficha:** PUL-066
 - **Relacionado:** ADR-002 (Enmienda 1), ADR-003 (capa común / específica), ADR-005 (D14 = 3D),
@@ -184,18 +184,17 @@ estación: suenan los dos (`drop` es suave por datos); no se suprime para no rom
 - **Bus**: `phase_changed(phase: int)` en `EventBus`. Nace en `RoundState` y la reenvía
   `RoundManager` (ADR-002 regla 2). `phase` empieza en 1. Firma independiente de la dimensión.
 - **Datos**: `PhaseData` (`resources/phase_data.gd`): `start_fraction: float` (0–1 de
-  `duration`), `active_slots: int`, `max_time: float` (0 = el de cada `OrderData`). En
+  `duration`), `active_slots: int`, `patience_multiplier: float` (1,0 = el `max_time` de cada `OrderData`). En
   `RoundConfig`: `phases: Array[PhaseData]` (ordenadas, la primera con `start_fraction` = 0;
   **vacía = sin fases**: todos los puestos, `max_time` de la receta y ninguna `phase_changed`, que
   es como funcionan hoy los flujos M1/M2) y `rng_seed: int = 0` (0 = aleatoria). Los límites se
   calculan como `start_fraction × duration` (AC6). M3: 3 fases a 0, ⅓ y ⅔ con 2/3/4 puestos y
-  90/70/50 s (`round_config.tres`).
+  multiplicadores ×1,0/×0,85/×0,7 sobre el `max_time` de la receta (`round_config.tres`). *Cambio del responsable al aprobar (2026-10-06): multiplicador en lugar de un `max_time` fijo por fase, que con 50 s hacía injugable la fase 3 (ver PUL-039).*
 - **`OrderBoard`** (dos métodos nuevos, sin señales nuevas):
   `set_active_slots(slot_ids: Array[int])`: `request_order` en un puesto fuera de la lista devuelve
   `null`. Sin llamar nunca, todos activos (compatibilidad). Si una fase redujera puestos, la
   comanda viva de un puesto desactivado sigue hasta entregarse o caducar y **no se repone**.
-  `set_new_order_max_time(seconds: float)`: `max_time` de las comandas que se creen desde ahora (0 =
-  el de `OrderData`). Las vivas conservan el suyo porque `ActiveOrder` lo copia al crearse (AC4).
+  `set_new_order_patience_multiplier(factor: float)`: multiplica el `max_time` de `OrderData` de las comandas que se creen desde ahora (1,0 = sin cambio). Las vivas conservan el suyo porque `ActiveOrder` lo copia al crearse (AC4).
 - **Qué puestos se abren**: los `active_slots` primeros de `slot_ids` en el orden en que el nivel
   los pasa (`level.gd` → `stands`). El diseño del nivel decide el orden; sin dato extra.
 - **Orden en `RoundState`**:

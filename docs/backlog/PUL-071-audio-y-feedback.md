@@ -7,8 +7,8 @@ role: gameplay-engineer
 deps: [PUL-066, PUL-068, PUL-069]
 orca_task: null
 unity_sources: []
-owns: [godot/default_bus_layout.tres, godot/autoload/**, godot/project.godot, godot/data/audio/**, godot/resources/audio_*.gd, godot/entities/**/*.tscn, godot/components/**, godot/ui/menus/pause_menu.gd, godot/tests/integration/test_audio_feedback.gd, godot/tests/integration/test_audio_feedback.gd.uid, docs/evidence/PUL-071/**]
-touches_scenes: []
+owns: [godot/default_bus_layout.tres, godot/autoload/**, godot/project.godot, godot/data/audio/**, godot/resources/audio_*.gd, godot/entities/**/*.tscn, godot/components/**, godot/ui/menus/pause_menu.gd, godot/tests/integration/test_audio_feedback.gd, godot/tests/integration/test_audio_feedback.gd.uid, docs/evidence/PUL-071/**, godot/core/audio_mix.gd, godot/core/audio_mix.gd.uid, godot/entities/**/*.gd, godot/scenes/levels/level_01.tscn, godot/tests/unit/test_audio_mix.gd, godot/tests/unit/test_audio_mix.gd.uid]
+touches_scenes: [godot/scenes/levels/level_01.tscn]
 ---
 
 ## Target

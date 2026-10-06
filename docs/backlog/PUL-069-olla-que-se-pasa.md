@@ -1,7 +1,7 @@
 ---
 id: PUL-069
 title: Quemar el pulpo que se deja en la olla y encender sus efectos
-status: draft
+status: ready
 milestone: M3
 role: gameplay-engineer
 deps: [PUL-066]

@@ -1,11 +1,11 @@
 ---
 id: PUL-066
 title: Enmendar los contratos para audio, quemado y fases
-status: review
+status: done
 milestone: M3
 role: godot-architect
 deps: []
-orca_task: null
+orca_task: task_4191fa76efc9
 unity_sources: []
 owns: [docs/arch/signals.md, docs/arch/scene-tree.md, docs/arch/ADR-002-eventbus-autoloads.md, docs/arch/ADR-006-audio-feedback.md]
 touches_scenes: []
