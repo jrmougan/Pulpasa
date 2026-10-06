@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://entities/stations/item_spawner.gd" id="1_w2pem"]
 [ext_resource type="PackedScene" path="res://entities/items/octopus.tscn" id="2_n77ji"]
-[ext_resource type="PackedScene" path="res://assets/models/placeholders/fridge.tscn" id="3_hdq4l"]
+[ext_resource type="PackedScene" path="res://assets/models/stations/octopus_storage/octopus_storage.glb" id="3_hdq4l"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_bxfsx"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_512c5"]
