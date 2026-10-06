@@ -1,7 +1,7 @@
 ---
 id: PUL-076
 title: Rehacer pulpo, cachelos y raciones con la estética de referencia
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074]

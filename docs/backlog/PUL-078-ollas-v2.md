@@ -1,7 +1,7 @@
 ---
 id: PUL-078
 title: Rehacer las ollas como cocedores de acero
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074]

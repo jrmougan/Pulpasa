@@ -1,7 +1,7 @@
 ---
 id: PUL-075
 title: Rehacer el personaje con la estética de referencia
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-088]

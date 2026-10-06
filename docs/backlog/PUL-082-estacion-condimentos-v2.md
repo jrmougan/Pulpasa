@@ -1,7 +1,7 @@
 ---
 id: PUL-082
 title: Rehacer la estación de condimentos
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074]

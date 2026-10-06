@@ -1,11 +1,11 @@
 ---
 id: PUL-074
 title: Crear la biblioteca de materiales estilizados
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072]
-orca_task: null
+orca_task: task_cbd1d6f496dd
 unity_sources: []
 owns: [art/blender/_materials_v2.blend, art/blender/_template.blend, godot/assets/materials/v2/**, godot/assets/textures/v2/**, godot/assets/models/_pipeline/materials_v2_test/**, docs/art/materials-v2.md, docs/art/pipeline.md, tools/blender_export.py, docs/evidence/PUL-074/**]
 touches_scenes: []
