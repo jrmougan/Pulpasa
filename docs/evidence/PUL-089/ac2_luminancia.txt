@@ -1,0 +1,18 @@
+## docs/evidence/PUL-089/despues/level_camera_despues_states.png
+zona                    mediana    p05    p95  <0.08  >0.95
+encimera_fondo            0.561  0.520  0.686   0.0%   0.0%
+encimera_barra            0.491  0.317  0.514   1.4%   0.0%
+frente_condimentos        0.197  0.139  0.514   4.3%   0.0%
+pegatinas_comanda         0.366  0.355  0.376   0.0%   0.0%
+pegatinas_nevera          0.666  0.169  0.710   0.8%   0.0%
+olla_1                    0.232  0.060  0.649   8.5%   0.0%
+olla_2                    0.213  0.030  0.588  18.9%   0.0%
+estanteria_platos         0.355  0.103  0.527   3.1%   0.0%
+kiosco_1_numero           0.278  0.121  0.592   4.1%   0.0%
+kiosco_2_numero           0.308  0.104  0.650   4.5%   0.0%
+kiosco_3_numero           0.332  0.092  0.686   4.8%   0.0%
+kiosco_4_numero           0.326  0.133  0.665   3.7%   0.0%
+kiosco_cartel_1           0.713  0.161  0.713   1.6%   0.0%
+aro_jugador               0.269  0.037  0.330  18.7%   0.0%
+suelo_jugable             0.335  0.331  0.350   0.0%   0.0%
+jugador_1                 0.327  0.027  0.705  15.7%   0.0%
