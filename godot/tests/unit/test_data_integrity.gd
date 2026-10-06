@@ -2,6 +2,36 @@ extends GutTest
 ## AC3: todos los .tres de data/ cargan con su tipo y sin referencias rotas.
 
 const DATA_DIR: String = "res://data"
+## Carpetas de `data/` con un solo tipo de Resource.
+const FOLDER_TYPES: Dictionary[String, String] = {
+	"boxes": "BoxData",
+	"ingredients": "IngredientData",
+	"recipes": "RecipeData",
+	"seasonings": "SeasoningData",
+}
+## Mínimo de `.tres` por carpeta: detecta un borrado sin fijar el total (añadir no rompe).
+const MIN_PER_FOLDER: Dictionary[String, int] = {
+	"audio": 2,
+	"boxes": 3,
+	"config": 6,
+	"ingredients": 2,
+	"orders": 8,
+	"recipes": 3,
+	"seasonings": 5,
+}
+## Datos que deben existir, con su tipo.
+const KNOWN: Dictionary[String, String] = {
+	"res://data/config/box_badges.tres": "BoxBadgeStyle",
+	"res://data/config/input_config.tres": "InputConfig",
+	"res://data/config/kitchen.tres": "KitchenData",
+	"res://data/config/player_config.tres": "PlayerConfig",
+	"res://data/config/round_config.tres": "RoundConfig",
+	"res://data/config/seasoning_station.tres": "SeasoningStationData",
+	"res://data/orders/order_catalog.tres": "OrderCatalog",
+	"res://data/orders/order_catalog_basic.tres": "OrderCatalog",
+	"res://data/audio/feedback_map.tres": "AudioFeedbackMap",
+	"res://data/audio/audio_mix.tres": "AudioMixConfig",
+}
 
 
 func _collect(dir_path: String, out: Array[String]) -> void:
@@ -12,13 +42,43 @@ func _collect(dir_path: String, out: Array[String]) -> void:
 		_collect(dir_path.path_join(sub), out)
 
 
+## Sin recuento exacto de `.tres` (PUL-071): cada ficha que añade datos lo rompía. Se comprueba
+## que todo `.tres` de `data/` carga con una clase propia, que su carpeta fija el tipo cuando es
+## homogénea y que existen, con su tipo, los conocidos.
 func test_ac3_all_tres_load() -> void:
 	var paths: Array[String] = []
 	_collect(DATA_DIR, paths)
-	assert_eq(paths.size(), 27)
 	for path: String in paths:
 		var res: Resource = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
 		assert_not_null(res, path)
+		if res == null:
+			continue
+		var type: String = _class_of(res)
+		assert_ne(type, "", "%s: Resource con class_name" % path)
+		var folder: String = path.get_base_dir().get_file()
+		if FOLDER_TYPES.has(folder):
+			assert_eq(type, FOLDER_TYPES[folder], path)
+		elif folder == "orders":
+			var catalog: bool = path.get_file().begins_with("order_catalog")
+			assert_eq(type, "OrderCatalog" if catalog else "OrderData", path)
+	var per_folder: Dictionary[String, int] = {}
+	for path: String in paths:
+		var folder_name: String = path.get_base_dir().get_file()
+		per_folder[folder_name] = per_folder.get(folder_name, 0) + 1
+	for folder_name: String in MIN_PER_FOLDER:
+		assert_gte(
+			per_folder.get(folder_name, 0), MIN_PER_FOLDER[folder_name], "data/%s" % folder_name
+		)
+	for path: String in KNOWN:
+		assert_has(paths, path, "existe %s" % path)
+		var known: Resource = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE)
+		if known != null:
+			assert_eq(_class_of(known), KNOWN[path], path)
+
+
+func _class_of(res: Resource) -> String:
+	var script: Script = res.get_script() as Script
+	return String(script.get_global_name()) if script != null else ""
 
 
 func test_ac3_no_missing_dependencies() -> void:

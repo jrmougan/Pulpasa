@@ -31,14 +31,16 @@ var _is_open: bool = false
 
 @onready var _fill_bar: WorldProgressBar = get_node_or_null(^"%FillBar") as WorldProgressBar
 @onready var _animation: AnimationPlayer = get_node_or_null(^"%AnimationPlayer") as AnimationPlayer
-@onready var _cut_audio: AudioStreamPlayer3D = get_node_or_null(^"%CutAudio") as AudioStreamPlayer3D
-@onready
-var _season_audio: AudioStreamPlayer3D = get_node_or_null(^"%SeasonAudio") as AudioStreamPlayer3D
+@onready var _feedback: FeedbackPlayer = get_node_or_null(^"%Feedback") as FeedbackPlayer
 
 
 func _ready() -> void:
 	if _fill_bar != null:
 		_fill_bar.visible = false
+	if _feedback != null:
+		fill_changed.connect(_on_feedback.bind(&"cut").unbind(1))
+		seasoned.connect(_on_feedback.bind(&"season").unbind(1))
+		seasoning_removed.connect(_on_feedback.bind(&"unseason").unbind(1))
 
 
 func is_full() -> bool:
@@ -66,8 +68,6 @@ func toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> Seasoni
 	if result.removed != null:
 		seasoning_removed.emit(result.removed)
 	if result.added != null:
-		if _season_audio != null:
-			_season_audio.play()
 		seasoned.emit(result.added)
 	return SeasoningRules.Rejection.NONE
 
@@ -141,12 +141,15 @@ func _cut(ingredient: Ingredient) -> void:
 		fill = 1.0
 		_ingredient = source
 	ingredient.take(data.fill_per_press * source.amount_per_full_box)
-	if _cut_audio != null:
-		_cut_audio.play()
 	if is_instance_valid(_fill_bar):
 		_fill_bar.visible = fill > 0.0 and not is_full()
 		_fill_bar.set_progress(fill)
 	fill_changed.emit(fill)
+
+
+## Corte, condimento y su retirada suenan en `%Feedback` (ADR-006 §4).
+func _on_feedback(cue: StringName) -> void:
+	_feedback.play_cue(cue)
 
 
 func _set_open(open: bool) -> void:

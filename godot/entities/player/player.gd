@@ -26,6 +26,7 @@ var _round_active: bool = false
 @onready var _control: ControlComponent = %Control
 @onready var _hold: HoldComponent = %HoldComponent
 @onready var _indicator: GeometryInstance3D = %ActiveIndicator
+@onready var _feedback: FeedbackPlayer = get_node_or_null(^"%Feedback") as FeedbackPlayer
 
 
 func _ready() -> void:
@@ -38,6 +39,9 @@ func _ready() -> void:
 	_bus.round_started.connect(_on_round_started)
 	_bus.round_finished.connect(_on_round_finished)
 	_control.control_changed.connect(_on_control_changed)
+	if _feedback != null:
+		_hold.item_picked_up.connect(_on_item_picked_up)
+		_hold.item_dropped.connect(_on_item_dropped)
 	_on_control_changed(_control.controlled_by)
 
 
@@ -86,6 +90,15 @@ func _on_control_changed(controlled_by: int) -> void:
 	_indicator.visible = slot >= 0
 	if slot >= 0 and slot < indicator_materials.size():
 		_indicator.material_override = indicator_materials[slot]
+
+
+## Coger: sonido y `POP` del objeto cogido (ADR-006 §4, audio-y-fx AC5).
+func _on_item_picked_up(item: Node) -> void:
+	_feedback.play_cue(&"pick_up", item as Node3D)
+
+
+func _on_item_dropped(_item: Node) -> void:
+	_feedback.play_cue(&"drop")
 
 
 func _on_round_started(_duration: float) -> void:

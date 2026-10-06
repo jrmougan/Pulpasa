@@ -91,6 +91,7 @@ var _elapsed: float:
 @onready var _boil_audio: AudioStreamPlayer3D = %BoilAudio
 @onready var _steam: GPUParticles3D = $Model/Steam
 @onready var _fire: GPUParticles3D = $Model/Fire
+@onready var _feedback: FeedbackPlayer = get_node_or_null(^"%Feedback") as FeedbackPlayer
 
 
 func _ready() -> void:
@@ -116,6 +117,7 @@ func _ready() -> void:
 		slot_data.bar.position.y += float(i) * 0.35
 		_slots.append(slot_data)
 	_update_effects()
+	_connect_feedback()
 
 
 func _physics_process(delta: float) -> void:
@@ -319,6 +321,23 @@ func _discard() -> bool:
 	ingredient.queue_free()
 	_reposition_anchors()
 	return true
+
+
+## Sonido y respuesta visual de cada hecho de la olla en `%Feedback` (ADR-006 §4): `POP` de la
+## olla al empezar y desechar, del ingrediente al terminar, `SHAKE` de la olla al quemarse; el
+## aviso ya lo muestra la barra parpadeando.
+func _connect_feedback() -> void:
+	if _feedback == null:
+		return
+	cooking_started.connect(_on_feedback.bind(&"cook_start", false))
+	cooking_finished.connect(_on_feedback.bind(&"cook_done", true))
+	burn_warned.connect(_on_feedback.bind(&"burn_warning", false))
+	burnt.connect(_on_feedback.bind(&"burnt", false))
+	discarded.connect(_on_feedback.bind(&"discard", false))
+
+
+func _on_feedback(ingredient: Ingredient, cue: StringName, on_ingredient: bool) -> void:
+	_feedback.play_cue(cue, ingredient if on_ingredient else null)
 
 
 ## Vapor solo con alguna plaza cociendo; fuego bajo en reposo y vivo al cocer.

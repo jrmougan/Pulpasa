@@ -5,6 +5,7 @@ extends GutTest
 ## entregada se libera; la rechazada se queda en la mano. El label vive de señales (B16).
 ## PUL-039: la zona solo entrega una caja que coincide con la comanda viva del puesto; con otra
 ## no hace nada (sin rechazo ni penalización). E sigue rechazando (D8). El puesto se resalta.
+## PUL-071: los sonidos salen de `%Feedback` (ADR-006 §4); se cuentan sus `played`.
 
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 const OrderServiceScript: GDScript = preload("res://autoload/order_service.gd")
@@ -46,6 +47,20 @@ func before_each() -> void:
 	_hold.items_root = _level
 	_actor = _player.get_node("%InteractionComponent")
 	watch_signals(_bus)
+	watch_signals(_feedback())
+
+
+func _feedback() -> FeedbackPlayer:
+	return _stand.get_node("%Feedback") as FeedbackPlayer
+
+
+## Veces que `%Feedback` reprodujo `cue`.
+func _played(cue: StringName) -> int:
+	var count: int = 0
+	for i: int in get_signal_emit_count(_feedback(), "played"):
+		if get_signal_parameters(_feedback(), "played", i)[0] == cue:
+			count += 1
+	return count
 
 
 func _label() -> String:
@@ -142,11 +157,12 @@ func test_ac1_label_clears_on_reset_completed_and_expired() -> void:
 
 
 func test_ac1_ok_sound_only_for_own_slot() -> void:
-	var ok: AudioStreamPlayer3D = _stand.get_node("%OkAudio")
 	_bus.order_completed.emit(ActiveOrder.new(1, null, SLOT_ID + 1), 0)
-	assert_false(ok.playing)
+	assert_signal_not_emitted(_feedback(), "played")
 	_bus.order_completed.emit(ActiveOrder.new(1, null, SLOT_ID), 0)
-	assert_true(ok.playing)
+	assert_signal_emit_count(_feedback(), "played", 1)
+	assert_eq(_played(&"deliver_ok"), 1)
+	assert_true(_feedback().playing)
 
 
 func test_pul039_wrong_box_in_zone_does_nothing() -> void:
@@ -155,7 +171,7 @@ func test_pul039_wrong_box_in_zone_does_nothing() -> void:
 	await _enter_zone()
 	assert_signal_not_emitted(_bus, "delivery_rejected", "sin rechazo ni penalización")
 	assert_signal_not_emitted(_bus, "order_completed")
-	assert_false((_stand.get_node("%ErrorAudio") as AudioStreamPlayer3D).playing)
+	assert_eq(_played(&"deliver_error"), 0)
 	assert_eq(_hold.get_held_item(), box)
 
 
@@ -269,18 +285,19 @@ func test_ac2_wrong_box_is_rejected_error_sounds_and_box_stays_in_hand() -> void
 	assert_signal_emit_count(_bus, "delivery_rejected", 1)
 	assert_eq(get_signal_parameters(_bus, "delivery_rejected", 0)[0], SLOT_ID)
 	assert_signal_not_emitted(_bus, "order_completed")
-	assert_true((_stand.get_node("%ErrorAudio") as AudioStreamPlayer3D).playing)
-	assert_false((_stand.get_node("%OkAudio") as AudioStreamPlayer3D).playing)
+	assert_eq(_played(&"deliver_error"), 1)
+	assert_eq(_played(&"deliver_ok"), 0)
 	assert_eq(_hold.get_held_item(), box)
 	assert_false(_is_released(box))
 
 
 func test_ac2_error_sound_only_for_own_slot() -> void:
-	var error: AudioStreamPlayer3D = _stand.get_node("%ErrorAudio")
 	_bus.delivery_rejected.emit(SLOT_ID + 1, 1, 0)
-	assert_false(error.playing)
+	assert_signal_not_emitted(_feedback(), "played")
 	_bus.delivery_rejected.emit(SLOT_ID, 1, 0)
-	assert_true(error.playing)
+	assert_signal_emit_count(_feedback(), "played", 1)
+	assert_eq(_played(&"deliver_error"), 1)
+	assert_true(_feedback().playing)
 
 
 func test_ac3_already_inside_zone_interact_delivers() -> void:

@@ -4,6 +4,7 @@ extends GutTest
 ## ADR-003 §8; scene-tree.md §3). Las pulsaciones se dan con `interact()` del objetivo (como hace
 ## `InteractionComponent`) y el antirrebote se prueba con el reloj inyectado, sin esperas reales.
 ## AC7 y AC9 (segunda caja) pasan por el detector real del jugador.
+## PUL-071: el sonido de error y la sacudida salen de `%Feedback` (cue `season_error`, ADR-006 §4).
 
 const STATION_SCENE: PackedScene = preload("res://entities/stations/seasoning_station.tscn")
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
@@ -28,11 +29,14 @@ var _hold: HoldComponent
 var _actor: InteractionComponent
 var _now: float = 100.0
 var _rejections: Array[SeasoningRules.Rejection] = []
+## Cues que ha reproducido el `%Feedback` de la estación.
+var _cues: Array[StringName] = []
 
 
 func before_each() -> void:
 	_now = 100.0
 	_rejections.clear()
+	_cues.clear()
 	_level = add_child_autofree(Node3D.new())
 	_add_station(STATION_DATA)
 	_player = PLAYER_SCENE.instantiate()
@@ -56,6 +60,14 @@ func _add_station(data: SeasoningStationData) -> void:
 		dispenser.rejected.connect(_on_rejected)
 	_bowl().clock = clock
 	_bowl().rejected.connect(_on_rejected)
+	var feedback: FeedbackPlayer = _station.get_node("%Feedback") as FeedbackPlayer
+	feedback.played.connect(func(cue: StringName) -> void: _cues.append(cue))
+
+
+## Duración de la sacudida de rechazo (dato de la cue `season_error`).
+func _shake_time() -> float:
+	var feedback: FeedbackPlayer = _station.get_node("%Feedback") as FeedbackPlayer
+	return feedback.map.get_cue(&"season_error").visual_time
 
 
 func _on_rejected(reason: SeasoningRules.Rejection) -> void:
@@ -77,8 +89,9 @@ func _bowl() -> CachelosBowl:
 	return _station.get_node("CachelosBowl") as CachelosBowl
 
 
-func _error_audio() -> AudioStreamPlayer3D:
-	return _station.get_node("%ErrorAudio") as AudioStreamPlayer3D
+## Veces que ha sonado el error de la estación.
+func _error_sounds() -> int:
+	return _cues.count(&"season_error")
 
 
 func _new_box(fill: float) -> Box:
@@ -218,7 +231,7 @@ func test_ac3_second_press_within_guard_is_ignored_silently() -> void:
 	assert_true(box.has_seasoning(SALT), "la caja sigue con sal")
 	assert_signal_not_emitted(box, "seasoning_removed")
 	assert_signal_not_emitted(salt, "rejected")
-	assert_false(_error_audio().playing, "sin sonido de error")
+	assert_eq(_error_sounds(), 0, "sin sonido de error")
 
 
 func test_ac3_guard_is_per_dispenser() -> void:
@@ -274,6 +287,7 @@ func test_ac4_without_paprika_swap_other_paprika_is_rejected() -> void:
 func test_ac5_box_not_full_is_rejected_with_error_sound() -> void:
 	for fill: float in [0.0, 0.6]:
 		_rejections.clear()
+		_cues.clear()
 		var box: Box = _box_on_tray(fill)
 		watch_signals(box)
 		_press(_dispenser("Salt"))
@@ -282,7 +296,7 @@ func test_ac5_box_not_full_is_rejected_with_error_sound() -> void:
 		assert_eq(
 			_rejections, [SeasoningRules.Rejection.BOX_NOT_FULL] as Array[SeasoningRules.Rejection]
 		)
-		assert_true(_error_audio().playing, "suena el error")
+		assert_eq(_cues, [&"season_error"] as Array[StringName], "suena el error una vez")
 		assert_true(_station.get_tray().interact(_actor), "se recoge la caja")
 		_hold.drop()
 		box.queue_free()
@@ -297,7 +311,7 @@ func test_ac6_empty_tray_rejects_without_errors() -> void:
 	assert_eq(_rejections.size(), 4)
 	for reason: SeasoningRules.Rejection in _rejections:
 		assert_eq(reason, SeasoningRules.Rejection.NO_BOX)
-	assert_true(_error_audio().playing)
+	assert_eq(_error_sounds(), 4, "un error por pulsación")
 	assert_engine_error_count(0)
 
 
@@ -308,10 +322,9 @@ func test_ac6_rejection_shakes_emitter_and_returns_to_rest() -> void:
 	var shake: Tween = _station.get_shake(_dispenser("Salt"))
 	assert_not_null(shake)
 	shake.pause()
-	shake.custom_step(SeasoningStation.SHAKE_STEP_TIME / 2.0)
+	shake.custom_step(_shake_time() / 10.0)
 	assert_ne(model.position, rest, "se sacude")
-	var total: float = SeasoningStation.SHAKE_STEP_TIME * (SeasoningStation.SHAKE_STEPS + 1)
-	shake.custom_step(total)
+	shake.custom_step(_shake_time())
 	assert_true(model.position.is_equal_approx(rest), "vuelve a su sitio")
 	assert_null(_station.get_shake(_dispenser("Salt")), "la sacudida terminó")
 
@@ -323,12 +336,12 @@ func test_ac6_repeated_rejection_restarts_shake_from_rest() -> void:
 	_press(salt)
 	var first: Tween = _station.get_shake(salt)
 	first.pause()
-	first.custom_step(SeasoningStation.SHAKE_STEP_TIME / 2.0)
+	first.custom_step(_shake_time() / 10.0)
 	_press(salt)
 	assert_false(first.is_valid(), "la primera se cancela")
 	var second: Tween = _station.get_shake(salt)
 	second.pause()
-	second.custom_step(SeasoningStation.SHAKE_STEP_TIME * (SeasoningStation.SHAKE_STEPS + 1))
+	second.custom_step(_shake_time())
 	assert_true(model.position.is_equal_approx(rest), "reposo original, no el desplazado")
 
 

@@ -11,6 +11,7 @@
 [ext_resource type="Material" path="res://assets/materials/active_indicator_p1.tres" id="9_actp1"]
 [ext_resource type="Material" path="res://assets/materials/active_indicator_p2.tres" id="10_actp2"]
 [ext_resource type="Script" path="res://entities/player/player_animation.gd" id="11_anim"]
+[ext_resource type="Script" path="res://components/feedback_player.gd" id="12_fb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a1qjk"]
 radius = 0.21
@@ -209,3 +210,8 @@ player = NodePath("..")
 holder = NodePath("../HoldComponent")
 control = NodePath("../Control")
 model = NodePath("../Model")
+
+[node name="Feedback" type="AudioStreamPlayer3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+script = ExtResource("12_fb")

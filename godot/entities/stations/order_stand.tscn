@@ -2,12 +2,11 @@
 
 [ext_resource type="Script" path="res://entities/stations/order_stand.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://assets/models/stations/order_stand/order_stand.glb" id="2_model"]
-[ext_resource type="AudioStream" path="res://assets/audio/delivery_ok.ogg" id="3_ok"]
-[ext_resource type="AudioStream" path="res://assets/audio/delivery_error.ogg" id="4_err"]
 
 [ext_resource type="FontFile" path="res://assets/fonts/LiberationSans.ttf" id="5_font"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="6_hl"]
 [ext_resource type="Script" path="res://entities/stations/order_stand_model.gd" id="7_view"]
+[ext_resource type="Script" path="res://components/feedback_player.gd" id="8_fb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_body"]
 size = Vector3(1.482, 0.975, 0.39)
@@ -82,10 +81,7 @@ font = ExtResource("5_font")
 font_size = 96
 pixel_size = 0.00439
 
-[node name="OkAudio" type="AudioStreamPlayer3D" parent="."]
+[node name="Feedback" type="AudioStreamPlayer3D" parent="."]
 unique_name_in_owner = true
-stream = ExtResource("3_ok")
-
-[node name="ErrorAudio" type="AudioStreamPlayer3D" parent="."]
-unique_name_in_owner = true
-stream = ExtResource("4_err")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+script = ExtResource("8_fb")

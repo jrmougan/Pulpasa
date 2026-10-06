@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" path="res://entities/player/character_switcher.tscn" id="18_swtch"]
 [ext_resource type="PackedScene" path="res://entities/stations/slot.tscn" id="19_slot"]
 [ext_resource type="PackedScene" path="res://entities/stations/seasoning_station.tscn" id="20_season"]
+[ext_resource type="PackedScene" path="res://entities/environment/level_audio.tscn" id="21_audio"]
 
 [node name="Level01" type="Node3D" unique_id=441971169 node_paths=PackedStringArray("stands")]
 script = ExtResource("1_cwffn")
@@ -112,6 +113,8 @@ controlled_by = 0
 characters = [NodePath("../Characters/Player1/Control"), NodePath("../Characters/Player2/Control")]
 
 [node name="Items" type="Node3D" parent="." unique_id=1698734200]
+
+[node name="LevelAudio" parent="." instance=ExtResource("21_audio")]
 
 [node name="CameraRig" parent="." unique_id=697112619 instance=ExtResource("12_uujh0")]
 transform = Transform3D(1, 0, 0, 0, 0.7880108, 0.6156615, 0, -0.6156615, 0.7880108, 0.7, 7.49, 5.86)
