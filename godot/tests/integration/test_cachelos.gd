@@ -115,11 +115,11 @@ func test_pul046_state_meshes_and_palette() -> void:
 	cachelo.set_cooked()
 	assert_false(raw.visible)
 	assert_true(cooked.visible, "al cocerse se ven los trozos")
-	assert_has(_material_names(raw), "mat_potato_raw")
-	assert_has(_material_names(cooked), "mat_potato_cooked")
-	assert_does_not_have(_material_names(cooked), "mat_potato_raw")
-	var raw_color: Color = _albedo(raw, "mat_potato_raw")
-	var cooked_color: Color = _albedo(cooked, "mat_potato_cooked")
+	assert_has(_material_names(raw), "mat_food_potato_raw")
+	assert_has(_material_names(cooked), "mat_food_potato_cooked")
+	assert_does_not_have(_material_names(cooked), "mat_food_potato_raw")
+	var raw_color: Color = _albedo(raw, "mat_food_potato_raw")
+	var cooked_color: Color = _albedo(cooked, "mat_food_potato_cooked")
 	assert_gt(cooked_color.get_luminance() - raw_color.get_luminance(), 0.3, "luminosidad")
 
 
