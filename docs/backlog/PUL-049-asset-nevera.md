@@ -1,7 +1,7 @@
 ---
 id: PUL-049
 title: Modelar el arcón de pulpo
-status: draft
+status: ready
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)

@@ -60,8 +60,8 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-045 | M3 | asset-pipeline | done | Modelar el pulpo crudo, cocido y troceado |
 | PUL-046 | M3 | asset-pipeline | done | Modelar los cachelos crudos y cocidos |
 | PUL-047 | M3 | asset-pipeline | done | Modelar las tres cajas/platos de madera y sus distintivos |
-| PUL-048 | M3 | asset-pipeline | ready | Modelar el caldero de cobre y el fogón |
-| PUL-049 | M3 | asset-pipeline | draft | Modelar el arcón de pulpo |
+| PUL-048 | M3 | asset-pipeline | done | Modelar el caldero de cobre y el fogón |
+| PUL-049 | M3 | asset-pipeline | ready | Modelar el arcón de pulpo |
 | PUL-050 | M3 | asset-pipeline | draft | Modelar la cachelera (saco o cesto de patatas) |
 | PUL-051 | M3 | asset-pipeline | draft | Modelar la estantería de cajas |
 | PUL-052 | M3 | asset-pipeline | draft | Modelar la estación de condimentos |
@@ -77,3 +77,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-062 | M2 | qa-tester | done | Pasar el QA de la estación y la planta B y preparar el playtest |
 | PUL-063 | M2 | gameplay-engineer | done | Hacer inequívoca la selección de dispensadores y bandeja en la estación |
 | PUL-064 | M2 | gameplay-engineer | done | Ignorar los dispensadores cuando el jugador lleva algo en la mano |
+| PUL-065 | M3 | gameplay-engineer | draft | Encender fuego y vapor de la olla solo al cocinar |

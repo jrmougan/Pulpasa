@@ -1,12 +1,12 @@
 ---
 id: PUL-048
 title: Modelar el caldero de cobre y el fogón
-status: review
+status: done
 milestone: M3
 role: asset-pipeline
 agent: claude + MCP de Blender (PUL-043)
 deps: [PUL-042, PUL-043]
-orca_task: null
+orca_task: task_3f42e19c8e08
 unity_sources: []
 owns: [art/blender/pot.blend, godot/assets/models/stations/pot/**, godot/entities/stations/kitchen.tscn, docs/evidence/PUL-048/**]
 touches_scenes: [godot/entities/stations/kitchen.tscn]
