@@ -46,7 +46,7 @@ No se han incorporado fuentes visuales nuevas de terceros.
 
 ## Validación y límites
 
-- `verify.log`: **verde**, 68 scripts, **735/735 tests**, 9 052 asserts, import/lint/formato y smoke OK.
+- `verify.log`: **verde**, 68 scripts, **735/735 tests**, 9 050 asserts, import/lint/formato y smoke OK.
 - `concept_validation.json`: los dos archivos reabren, sus bibliotecas y texturas existen;
   cámara ortográfica 1920×1080, ancho 22,6489 m, rotación Blender X=52° (38° bajo horizontal).
   `reopen_A.png` comprueba el render del archivo guardado, además de la sesión de generación.
@@ -59,3 +59,32 @@ No se han incorporado fuentes visuales nuevas de terceros.
   durante las capturas válidas. Es el cierre del harness, no una regresión en escenas de producción.
 - Hace falta selección humana y resolver las reglas de PUL-090 antes de fichas de implementación.
   No se ha aprobado ninguna dirección ni creado fichas nuevas.
+
+## Ronda 2 · Corrección de textos
+
+El texto inclinado de las placas intersectaba el soporte: el recorte de partes de los glifos
+hacía que S/M y cifras parecieran reflejadas o giradas. El generador ahora alinea todos los
+objetos FONT con los tres ejes de la cámara ortográfica y los separa hacia ella según su tamaño,
+sin cambiar su posición proyectada; no usa escalas negativas ni giros de 180°.
+La separación es de maqueta, no prescribe el relieve de las etiquetas de producción.
+En las pilas A solo se presenta la letra de la bandeja superior para evitar superponer cuatro
+letras; el rack A pasa de 5 801 a 5 390 triángulos de maqueta.
+
+`validate_concepts.py` comprueba en ambos `.blend` guardados la coincidencia de los ejes con
+la cámara, determinante positivo y escalas positivas de todos los textos. Se regeneran los
+12 renders A/B, los `.blend`, el render de reapertura y la lámina comparativa.
+
+Revisión visual individual de los PNG regenerados (ronda 2):
+
+| PNG A y B | Lectura comprobada |
+|---|---|
+| `*_station.png` | DOCE, PIC., SAL, ACEITE y DEIXAR completos; flechas hacia arriba. |
+| `*_trays.png` | A: S/M/L completas; B: símbolo `=` íntegro, sin inversión. |
+| `*_rack.png` | S/M/L completas y orientadas de izquierda a derecha; sin repetición solapada en A. |
+| `*_counters.png` | A: M/L completas; flechas en A y B con orientación correcta. |
+| `*_kiosks.png` | #17, #18, #19, #20 y 1, 2, 3, 4 completos y sin espejo. |
+| `*_native_1080.png` | Misma orientación correcta de rótulos y cifras a escala nativa; textos secundarios conservan su tamaño pequeño. |
+| `comparativa_actual_A_B.png` | Placas S/M/L e IDs/cifras correctos en ambas columnas. |
+
+Esta corrección de orientación/oclusión no altera los límites de lectura por tamaño ya indicados
+en el informe: no convierte un rótulo secundario diminuto en señal principal a 1080p.

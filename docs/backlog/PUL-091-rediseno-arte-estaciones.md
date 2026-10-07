@@ -67,3 +67,5 @@ Propuesta entregada en `docs/art/rediseno-estaciones-arte.md`; evidencia y repro
 - `tools/verify.sh`: verde, 735 tests; wrapper añade `--audio-driver Dummy`. Ownership tras commit en `docs/evidence/PUL-091/owns.log`.
 - Pendiente solo el gate humano de selección y reglas; no se crean fichas de arte ni se integra en Godot.
 - Límites: fixture visual (no prueba de input), renders de estudio con fallback OCIO; detalles ampliados identificados y prueba de escala separada.
+
+- Ronda 2 del producer: textos orientados a cámara y separados de placas para evitar recortes; regenerados conceptos A/B y comparativa, con validación de bases y escalas positivas.

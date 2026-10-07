@@ -46,7 +46,11 @@ def cyl(n,p,r,h,mat,vertices=24):
 def text(n,p,body,size,mat='navy',flat=True):
  d=bpy.data.curves.new(n,'FONT');d.body=body;d.size=size;d.align_x='CENTER';d.align_y='CENTER';d.extrude=0
  o=bpy.data.objects.new(n,d);C.objects.link(o);o.location=p;d.materials.append(M[mat])
- if not flat:o.rotation_euler=(math.radians(52),0,0)
+ # All concept labels share the camera basis: local X right, local Y screen-up.
+ # Lift toward the camera as well: the tilted glyphs previously intersected their
+ # vertical backing plates, clipping S/M/digits into apparently mirrored fragments.
+ o.rotation_euler=(math.radians(52),0,0)
+ o.location += Vector((0,-math.sin(math.radians(52)),math.cos(math.radians(52)))) * (size*.8+.02)
  return o
 
 def icon(p,kind,size=.15,billboard=False,dark=False):
@@ -81,7 +85,7 @@ def base(width=4,depth=1.1):
  for x in [-width/2+.08,width/2-.08]:
   for y in [-depth/2+.1,depth/2-.1]:cube('leg',(x,y,.51),(.08,.08,1),'mat_steel_brushed_mid',.012)
 
-def tray(x,y,z,size='M',fill=0):
+def tray(x,y,z,size='M',fill=0,show_label=True):
  w={'S':.34,'M':.42,'L':.50}[size];d=.34 if size=='S' else .32 if size=='M' else .38
  if size!='L':
   o=cyl('tray_'+size,(x,y,z+.035),w/2,.07,'mat_plastic_red',32);o.scale.y=d/w
@@ -91,7 +95,8 @@ def tray(x,y,z,size='M',fill=0):
   cube('liner',(x,y,z+.075),(w-.07,d-.07,.012),'mat_food_tray_liner',.025)
   for side in [-1,1]:cube('handle',(x+side*.255,y,z+.045),(.08,.18,.04),'mat_plastic_red',.015)
  # Size letters repeat on a small lug, avoid filling and billboard row.
- if MODE=='A':text('size_lug',(x,y-d/2+.045,z+.085),size,.095)
+ if MODE=='A':
+  if show_label:text('size_lug',(x,y-d/2+.045,z+.085),size,.095)
  else:
   for i in range({'S':1,'M':2,'L':3}[size]):
    cube('size_notch',(x-.06+i*.06,y-d/2+.04,z+.085),(.025,.055,.008),'navy',0)
@@ -167,7 +172,8 @@ def rack():
  base(1.8,1.1)
  for i,s in enumerate(['S','M','L']):
   x=(i-1)*.55
-  for j in range(4):tray(x,-.10,1.11+j*.04,s)
+  # Buried trays do not project duplicate labels over the visible top tray.
+  for j in range(4):tray(x,-.10,1.11+j*.04,s,show_label=j==3)
   if MODE=='A':
    cube('size_panel',(x,-.59,.83),(.42,.03,.26),'paper',.025);text('rack_size',(x,-.62,.85),s,.20,'navy',False)
   else:

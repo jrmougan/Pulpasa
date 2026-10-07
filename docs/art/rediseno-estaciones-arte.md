@@ -147,7 +147,7 @@ asset. Los rótulos de producción se hornearán en atlas; no se exportarán cur
 |---|---:|---:|---|
 | station | 3 618 | 4 250 | Conjunto completo, 4 dispensadores y cuenco |
 | trays | 10 137 | 10 278 | Nueve bandejas, capas, tres filas de badges y barras |
-| rack | 5 801 | 5 541 | Rack con 12 bandejas apiladas y rótulos |
+| rack | 5 390 | 5 541 | Rack con 12 bandejas apiladas y rótulos |
 | counters | 3 272 | 3 999 | Tres metros + dos bandejas con relleno |
 | kiosks | 7 717 | 8 197 | Cuatro kioscos, IDs de ejemplo diferentes de 1–4 |
 

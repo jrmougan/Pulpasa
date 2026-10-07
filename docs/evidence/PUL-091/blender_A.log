@@ -3,22 +3,22 @@
 00:00.016  color_management | Using fallback mode for management
 /home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/build_concepts.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
   mat=bpy.data.materials.new('atlas_'+n);mat.use_nodes=True
-/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/build_concepts.py:55: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/build_concepts.py:59: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
   m=bpy.data.materials.new(key);m.use_nodes=True
 Blender 5.2.2 LTS (hash unknown built 2026-09-15 00:00:00)
 [OpenColorIO Info]: Color management disabled. (Specify the $OCIO environment variable to enable.)
-00:07.963  cycles           | WARNING Colorspace sRGB can't be converted to scene_linear: Color space 'sRGB' could not be found.
-00:07.963  cycles           | WARNING Colorspace sRGB not found, using scene linear instead
-00:07.965  cycles           | WARNING Colorspace Non-Color can't be converted to scene_linear: Color space 'Non-Color' could not be found.
-00:07.965  cycles           | WARNING Colorspace Non-Color not found, using scene linear instead
-00:07.965  cycles           | WARNING Colorspace Non-Color not found, using scene linear instead
-00:07.965  cycles           | WARNING Colorspace Non-Color not found, using scene linear instead
-00:20.000  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_station.png'
-00:32.166  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_trays.png'
-00:44.453  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_rack.png'
-00:56.610  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_counters.png'
-01:09.154  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_kiosks.png'
-01:20.811  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_native_1080.png'
+00:05.480  cycles           | WARNING Colorspace sRGB can't be converted to scene_linear: Color space 'sRGB' could not be found.
+00:05.480  cycles           | WARNING Colorspace sRGB not found, using scene linear instead
+00:05.482  cycles           | WARNING Colorspace Non-Color can't be converted to scene_linear: Color space 'Non-Color' could not be found.
+00:05.482  cycles           | WARNING Colorspace Non-Color not found, using scene linear instead
+00:05.482  cycles           | WARNING Colorspace Non-Color not found, using scene linear instead
+00:05.482  cycles           | WARNING Colorspace Non-Color not found, using scene linear instead
+00:11.935  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_station.png'
+00:18.062  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_trays.png'
+00:24.510  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_rack.png'
+00:30.901  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_counters.png'
+00:37.529  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_kiosks.png'
+00:43.672  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/A_native_1080.png'
 Info: Saved as "direction_A.blend"
 Info: Saved as "direction_A.blend"
 

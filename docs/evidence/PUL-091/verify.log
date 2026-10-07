@@ -8,10 +8,6 @@ Success: no problems found
 == import
 
 == tests (GUT)
-res://tests/unit/test_station_side.gd
-[0m* test_points_on_each_side
-* test_midline_counts_as_operator
-* test_rotated_and_moved_station_classifies_the_same
 [1m3/3 passed.
 [0m
 
@@ -26,13 +22,17 @@ Totals
 Scripts              68
 Tests               735
 Passing Tests       735
-Asserts            9052
-Time              331.391s
+Asserts            9050
+Time              307.154s
 
 
 [32m---- All tests passed! ----
 [0m
 Results saved to res://.gut_reports/junit.xml
+WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 6 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
 
 == smoke run (escena principal, 120 frames)
 OK
