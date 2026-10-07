@@ -1,11 +1,11 @@
 ---
 id: PUL-081
 title: Rehacer la estantería como rack de bandejas
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-077]
-orca_task: null
+orca_task: task_44988ff309a6
 unity_sources: []
 owns: [art/blender/box_shelf.blend, godot/assets/models/stations/box_shelf/**, godot/entities/stations/box_shelf.tscn, docs/evidence/PUL-081/**]
 touches_scenes: [godot/entities/stations/box_shelf.tscn]

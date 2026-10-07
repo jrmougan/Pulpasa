@@ -1,7 +1,7 @@
 ---
 id: PUL-087
 title: Pasar el QA visual y de rendimiento de la estética v2
-status: draft
+status: ready
 milestone: M3b
 role: qa-tester
 deps: [PUL-073, PUL-075, PUL-076, PUL-077, PUL-078, PUL-079, PUL-080, PUL-081, PUL-082, PUL-083, PUL-084, PUL-085, PUL-086]
@@ -22,6 +22,8 @@ Notas de PUL-073: la energía del sol (1,34) la fija `test_level_01`; `scene-tre
 Nota de PUL-085: los materiales embebidos de los .glb suman 83 recursos de material y 98 superficies en el entorno; comprobar frente al límite de §4.3 de la biblia v2 y proponer atlas/merge si afecta al rendimiento.
 
 Nota de PUL-084: el pipeline extrae ~115 PNG con texturas de biblioteca duplicadas por .glb (~40 MB de VRAM); proponer deduplicación (materiales externos compartidos) si afecta.
+
+Notas: el panel «Turno» del HUD (PUL-086, ×1,5 a 1080p) tapa parte del lateral izquierdo y de la estantería de bandejas (PUL-081); una bandeja llena de pulpo + cachelos ronda 2 430 tris (PUL-077). Revisar también que nada quede del arte v1 (p. ej. restos de `romeria`, placeholders) y la coherencia de color de la sal (PUL-086).
 
 ## Constraints
 - Referencia visual: `docs/art/style-refs/referencia-elegida-2026-10-06.png`; reglas en `docs/art/art-bible.md` v2 (PUL-072) y materiales de PUL-074.

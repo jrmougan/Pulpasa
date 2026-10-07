@@ -12,6 +12,7 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `docs/evidence/PUL-073/luz_v2.blend` (PUL-073, escena de luz de referencia) | — (solo evidencia) | Propio (equipo Pulpasa) | No |
 | Montserrat Bold, Black y SemiBold (.otf; Julieta Ulanovsky y colaboradores, github.com/JulietaUla/Montserrat) | `assets/fonts/montserrat/*.otf`, `assets/fonts/montserrat/OFL.txt` | SIL OFL 1.1 | Incluir `OFL.txt` (incluido) |
 | DSEG7 Classic Bold (keshikan, github.com/keshikan/DSEG v0.46) | `assets/fonts/dseg/DSEG7Classic-Bold.ttf`, `assets/fonts/dseg/OFL.txt` | SIL OFL 1.1 | Incluir `OFL.txt` (incluido) |
+| `art/blender/box_shelf.blend` v2, rack (PUL-081) | `assets/models/stations/box_shelf/**` | Propio (equipo Pulpasa) | No |
 | `art/blender/box.blend` v2, bandejas (PUL-077) | `assets/models/items/box/*` | Propio (equipo Pulpasa) | No |
 | `art/blender/cachelos_storage.blend` v2, sacos (PUL-080) | `assets/models/stations/cachelos_storage/**` | Propio (equipo Pulpasa) | No |
 | `art/blender/octopus_storage.blend` v2, tanque (PUL-079) | `assets/models/stations/octopus_storage/*` | Propio (equipo Pulpasa) | No |
