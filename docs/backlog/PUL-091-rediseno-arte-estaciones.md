@@ -1,11 +1,11 @@
 ---
 id: PUL-091
 title: Auditar la lectura visual de estaciones y bandejas y proponer su rediseño artístico
-status: ready
+status: done
 milestone: M3c
 role: asset-pipeline
 deps: []
-orca_task: null
+orca_task: task_c9330a5a5f07
 unity_sources: []
 owns: [docs/art/rediseno-estaciones-arte.md, art/concepts/estaciones/**, docs/evidence/PUL-091/**]
 touches_scenes: []

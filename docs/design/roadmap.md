@@ -11,6 +11,7 @@ Propuesta completa (privada): https://claude.ai/artifact/PstRxmwwgejjsphmEXCkJe
 | M2 | Coop local 2P, mando, cambio de personaje, menú por modo — **técnico cerrado 2026-10-04** (PUL-034..037; guía en `m2-gate.md`) | Playtest de game feel (hecho 2026-10-05: bug de entrega PUL-039; rediseños D18 condimentos PUL-040, D19 mapa PUL-041; D20 arte PUL-042). Rediseños hechos (PUL-038..064); segundo playtest con `m2b-gate.md` pendiente |
 | M3 | **Técnico cerrado 2026-10-06** (PUL-043..071): arte propio en Blender (D20), audio completo, feedback, olla que se pasa, dificultad por fases | — |
 | M3b | **Técnico cerrado 2026-10-07** · Estética v2 según la referencia elegida (`docs/art/style-refs/referencia-elegida-2026-10-06.png`): biblia v2, luz, materiales, todos los assets, HUD y QA (PUL-072..087) | Revisión del responsable (biblia v2 y D21; resultado final) |
+| M3c | **Planificado 2026-10-07** · Rediseño jugable y artístico de estaciones (D23): diagnóstico y propuestas (PUL-090, PUL-091, hechas), features y contratos (PUL-092, 093), arte con Codex (PUL-094..096), implementación (PUL-097..101) y QA/playtest (PUL-102) | Playtest humano con `m3c-gate.md` |
 | M4 | Balanceo, opciones, gallego, builds Win/Linux, playtests | Publicar alpha |
 
 ## Fases de M0

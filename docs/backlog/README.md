@@ -103,4 +103,15 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-088 | M3b | asset-pipeline | done | Diseñar la identidad de la marca PulpaSA |
 | PUL-089 | M3b | asset-pipeline | done | Ajustar el cielo y los reflejos para que el acero se lea claro |
 | PUL-090 | M3c | game-designer | done | Diagnosticar y proponer el rediseño jugable de las estaciones de condimento y bandejas |
-| PUL-091 | M3c | asset-pipeline | ready | Auditar la lectura visual de estaciones y bandejas y proponer su rediseño artístico |
+| PUL-091 | M3c | asset-pipeline | done | Auditar la lectura visual de estaciones y bandejas y proponer su rediseño artístico |
+| PUL-092 | M3c | game-designer | ready | Reescribir las features de estaciones según D23 |
+| PUL-093 | M3c | godot-architect | ready | Enmendar los contratos para la estación sin bandeja y los pasaplatos marcados |
+| PUL-094 | M3c | asset-pipeline | ready | Rehacer la estación de condimentos como línea al paso (arte, Codex) |
+| PUL-095 | M3c | asset-pipeline | ready | Rehacer rack, bandejas S/M/L y marcas de pasaplatos (arte, Codex) |
+| PUL-096 | M3c | asset-pipeline | ready | Rehacer los kioscos con placa de comanda y zona de entrega (arte, Codex) |
+| PUL-097 | M3c | gameplay-engineer | ready | Implementar la estación de condimentos al paso |
+| PUL-098 | M3c | gameplay-engineer | ready | Aplicar los cortes 4/6/10 y el tamaño legible de las bandejas |
+| PUL-099 | M3c | ui-engineer | ready | Mostrar el tamaño y el color del puesto en el ticket |
+| PUL-100 | M3c | gameplay-engineer | ready | Encender la zona de entrega del kiosco con la caja correcta |
+| PUL-101 | M3c | gameplay-engineer | ready | Montar level_01 con la línea al paso, el hueco nuevo y 6 pasaplatos |
+| PUL-102 | M3c | qa-tester | ready | Medir el rediseño de estaciones y preparar el playtest |
