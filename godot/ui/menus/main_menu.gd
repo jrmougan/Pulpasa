@@ -11,6 +11,12 @@ const TEXT: Dictionary[StringName, String] = {
 	&"MENU_LOAD_FAILED": "No se pudo abrir la cocina. Inténtalo de nuevo.",
 }
 
+## Marca PulpaSA (brand.md, propuesta A · Mariña).
+const LOGO: Texture2D = preload("res://assets/textures/brand/pulpasa_horizontal.png")
+const BACKGROUND: Color = Color("13202f")
+const PAPER: Color = Color("f4efe6")
+const NAVY: Color = Color("1d3557")
+
 var _start_level: Callable
 var _quit: Callable
 
@@ -39,19 +45,20 @@ func _ready() -> void:
 
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, size), Color("fff7e8"))
-	# Marca propia vectorial: pulpo sobre plato, sin assets del prototipo.
+	draw_rect(Rect2(Vector2.ZERO, size), BACKGROUND)
+	# Logotipo horizontal sobre placa «papel» con borde marino (brand.md: fondos con detalle).
 	var logo: Control = %Logo
-	var center: Vector2 = logo.global_position - global_position + logo.size / 2.0
-	var ink: Color = Color("b83d34")
-	draw_circle(center, 62.0, Color("f2dcc0"))
-	draw_arc(center, 62.0, 0.0, TAU, 64, ink, 2.0, true)
-	draw_circle(center + Vector2(0, -12), 25.0, ink)
-	for index: int in range(4):
-		var x: float = -30.0 + index * 20.0
-		draw_arc(center + Vector2(x, 14), 10.0, 0.0, PI, 20, ink, 8.0, true)
-	draw_circle(center + Vector2(-8, -15), 3.5, Color("fff7e8"))
-	draw_circle(center + Vector2(8, -15), 3.5, Color("fff7e8"))
+	var rect: Rect2 = Rect2(logo.global_position - global_position, logo.size)
+	var plate: StyleBoxFlat = StyleBoxFlat.new()
+	plate.bg_color = PAPER
+	plate.border_color = NAVY
+	plate.set_border_width_all(4)
+	plate.set_corner_radius_all(14)
+	draw_style_box(plate, rect)
+	var art: Vector2 = LOGO.get_size()
+	var fit: float = minf(rect.size.x / art.x, rect.size.y / art.y)
+	var drawn: Vector2 = art * fit
+	draw_texture_rect(LOGO, Rect2(rect.get_center() - drawn / 2.0, drawn), false)
 
 
 ## Inyección antes de _ready para verificar órdenes sin cambiar de escena ni cerrar GUT.

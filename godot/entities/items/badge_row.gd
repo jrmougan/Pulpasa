@@ -2,7 +2,8 @@ class_name BadgeRow
 extends Node3D
 ## Fila de pegatinas de condimento sobre la caja (D18, ADR-003 §8.4, scene-tree.md §3). 3D de
 ## mundo: cada pegatina es un disco `SeasoningData.color` con su icono en blanco (`Sprite3D`
-## billboard sin test de profundidad); el picante lleva además `style.hot_mark`. Orden canónico
+## billboard sin test de profundidad); en discos claros (sal) el icono y un anillo van en
+## `StickerInk.INK` (PUL-086); el picante lleva además `style.hot_mark`. Orden canónico
 ## (`SeasoningRules.canonical_order`), compactada y centrada; se rehace al oír `seasoned` /
 ## `seasoning_removed` de la caja. Sin condimentos, oculta.
 ## La fila va en `top_level`: sigue a la caja sin heredar su rotación, y se reparte a lo largo del
@@ -23,6 +24,7 @@ const HOT_MARK_OFFSET: float = 0.2
 const MIN_SCREEN_GAP_PX: float = 8.0
 
 static var _disc_texture: ImageTexture
+static var _ringed_disc_texture: ImageTexture
 
 @export var box: Box
 @export var style: BoxBadgeStyle = preload("res://data/config/box_badges.tres")
@@ -133,12 +135,14 @@ func _rebuild() -> void:
 func _make_badge(seasoning: SeasoningData, side: float) -> Node3D:
 	var badge: Node3D = Node3D.new()
 	badge.name = "Badge"
-	var disc: Sprite3D = _make_sprite(_get_disc_texture(), side, 10)
+	var light: bool = StickerInk.is_light(seasoning.color)
+	var texture: ImageTexture = _get_ringed_disc_texture() if light else _get_disc_texture()
+	var disc: Sprite3D = _make_sprite(texture, side, 10)
 	disc.modulate = seasoning.color
 	badge.add_child(disc)
 	if seasoning.icon != null:
 		var icon: Sprite3D = _make_sprite(seasoning.icon, side * ICON_RATIO, 11)
-		icon.modulate = Color.WHITE
+		icon.modulate = StickerInk.icon_color(seasoning.color)
 		badge.add_child(icon)
 	if style.hot_mark != null and style.has_hot_mark(seasoning):
 		var mark: Sprite3D = _make_sprite(style.hot_mark, side * HOT_MARK_RATIO, 12)
@@ -177,12 +181,29 @@ func _screen_right() -> Vector3:
 
 static func _get_disc_texture() -> ImageTexture:
 	if _disc_texture == null:
-		var image: Image = Image.create(DISC_TEXTURE_PX, DISC_TEXTURE_PX, false, Image.FORMAT_RGBA8)
-		var centre: float = (DISC_TEXTURE_PX - 1) / 2.0
-		for y: int in DISC_TEXTURE_PX:
-			for x: int in DISC_TEXTURE_PX:
-				var dist: float = Vector2(x - centre, y - centre).length()
-				var alpha: float = clampf(centre + 0.5 - dist, 0.0, 1.0)
-				image.set_pixel(x, y, Color(1, 1, 1, alpha))
-		_disc_texture = ImageTexture.create_from_image(image)
+		_disc_texture = _make_disc_texture(0.0)
 	return _disc_texture
+
+
+## Disco blanco con el anillo de `StickerInk.INK` ya pintado: el `modulate` del disco sigue
+## siendo el color del condimento y el anillo queda oscuro.
+static func _get_ringed_disc_texture() -> ImageTexture:
+	if _ringed_disc_texture == null:
+		_ringed_disc_texture = _make_disc_texture(DISC_TEXTURE_PX * StickerInk.RING_FRACTION)
+	return _ringed_disc_texture
+
+
+static func _make_disc_texture(ring_px: float) -> ImageTexture:
+	var image: Image = Image.create(DISC_TEXTURE_PX, DISC_TEXTURE_PX, false, Image.FORMAT_RGBA8)
+	var centre: float = (DISC_TEXTURE_PX - 1) / 2.0
+	for y: int in DISC_TEXTURE_PX:
+		for x: int in DISC_TEXTURE_PX:
+			var dist: float = Vector2(x - centre, y - centre).length()
+			var alpha: float = clampf(centre + 0.5 - dist, 0.0, 1.0)
+			var inner: float = clampf(centre + 0.5 - ring_px - dist, 0.0, 1.0)
+			var colour: Color = (
+				StickerInk.INK.lerp(Color.WHITE, inner) if ring_px > 0.0 else Color.WHITE
+			)
+			colour.a = alpha
+			image.set_pixel(x, y, colour)
+	return ImageTexture.create_from_image(image)

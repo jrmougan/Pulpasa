@@ -99,7 +99,7 @@ func test_ac3_references_are_filled() -> void:
 
 func test_ac3_seasoning_colors_are_distinct_and_opaque() -> void:
 	var expected: Dictionary = {
-		"salt": Color(0.5931827, 0.8113208, 0.7928984, 1.0),
+		"salt": Color(0.96862745, 0.95686275, 0.9254902, 1.0),
 		"paprika": Color(0.95, 0.55, 0.2, 1.0),
 		"hot_paprika": Color(0.85, 0.12, 0.1, 1.0),
 	}
