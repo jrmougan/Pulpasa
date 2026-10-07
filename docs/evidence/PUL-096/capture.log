@@ -1,0 +1,6 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Failed to create wd.xic as the input method or its xim server may not have started yet.
+     at: _create_xic (platform/linuxbsd/x11/display_server_x11.cpp:6347)
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3090
+
+CAMERA [X: (1.0, 0.0, 0.0), Y: (0.0, 0.788011, -0.615662), Z: (0.0, 0.615662, 0.788011), O: (0.7, 7.49, 5.86)] size=12.7399997711182 viewport=(1920, 1080)

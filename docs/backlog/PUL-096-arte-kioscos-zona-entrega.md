@@ -35,7 +35,10 @@ Kioscos `order_stand`. Concepto: `art/concepts/estaciones/A_kiosks.png`. QA PUL-
 - [ ] AC3 Hex de los 4 colores de puesto en Evidence
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Inspeccionar modelo, atlas, orientación y contratos; conservar los anchors y colisiones actuales.
+2. Añadir placa papel con borde marino y pieza `delivery_zone`; exportar GLB y materiales apagado/encendido por puesto.
+3. Capturar los cuatro kioscos en Godot a 1920×1080 con cámara de juego, documentar colores e integración PUL-100.
+4. Ejecutar verify, commitear únicamente owns y comprobar check_owns tras el commit.
 
 ## Evidence
 (Lo rellena el worker.)

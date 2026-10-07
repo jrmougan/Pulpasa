@@ -1,0 +1,43 @@
+00:00.016  color_management | ERROR OpenColorIO Error: Error: Loading the OCIO profile '/usr/share/blender/5.2/datafiles/colormanagement/config.ocio' failed. This .ocio config  '/usr/share/blender/5.2/datafiles/colormanagement/config.ocio' is version 2.5. This version of the OpenColorIO library (2.4.2) is not able to load that config version.
+                            | The minor version 5 is not supported for major version 2. Maximum minor version is 4.
+00:00.016  color_management | Using fallback mode for management
+00:00.735  blend            | Read blend: "/home/jeromo/orca/workspaces/Pulpasa/pul-096/art/blender/order_stand.blend"
+00:00.740  reports          | Read library: '/home/jeromo/orca/workspaces/Pulpasa/pul-096/art/blender/_materials_v2.blend', '//_materials_v2.blend', parent '<direct>'
+Blender 5.2.2 LTS (hash unknown built 2026-09-15 00:00:00)
+ERROR Draco is not available because library could not be found at /usr/lib/blender/5.2/scripts/addons_core/io_scene_gltf2/libbf_intern_draco_bridge.so
+ERROR MeshOptimizer is not available because library could not be found at /usr/lib/blender/5.2/scripts/addons_core/io_scene_gltf2/libbf_intern_meshopt_bridge.so
+13:26:40 | INFO: Starting glTF 2.0 export
+13:26:40 | INFO: Extracting primitive: awning_1
+13:26:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:26:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:26:40 | INFO: Primitives created: 2
+13:26:40 | INFO: Extracting primitive: awning_2
+13:26:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:26:40 | INFO: Primitives created: 2
+13:26:40 | INFO: Extracting primitive: awning_3
+13:26:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:26:40 | INFO: Primitives created: 2
+13:26:40 | INFO: Extracting primitive: awning_4
+13:26:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:26:40 | INFO: Primitives created: 2
+13:26:40 | INFO: Extracting primitive: counter
+13:26:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:26:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:26:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:26:40 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:26:40 | INFO: Primitives created: 6
+13:26:40 | INFO: Extracting primitive: delivery_zone
+13:26:40 | INFO: Primitives created: 1
+13:26:40 | INFO: Extracting primitive: delivery_zone_border
+13:26:40 | INFO: Primitives created: 1
+13:26:40 | INFO: Extracting primitive: order_id_plate
+13:26:40 | INFO: Primitives created: 1
+13:26:40 | INFO: Extracting primitive: tpv
+13:26:40 | INFO: Primitives created: 2
+13:26:40 | INFO: Extracting primitive: tray
+13:26:40 | INFO: Primitives created: 2
+13:26:40 | INFO: Finished glTF 2.0 export in 0.05648541450500488 s
+
+blender_export: OK godot/assets/models/stations/order_stand/order_stand.glb (14 objetos, 3204 triángulos, 608 KiB)
+
+Blender quit

@@ -1,0 +1,44 @@
+{
+  "triangles_all_four_awnings": 3204,
+  "anchors_godot": {
+    "Anchor_Front": [
+      0,
+      0,
+      -0.23499999940395355
+    ],
+    "Anchor_Number": [
+      0,
+      0.5,
+      -0.23000000417232513
+    ],
+    "Anchor_Sign": [
+      0,
+      1.7120000123977661,
+      -0.09099999815225601
+    ]
+  },
+  "original_meshes": {
+    "awning_1": "unchanged positions, normals, UV",
+    "awning_2": "unchanged positions, normals, UV",
+    "awning_3": "unchanged positions, normals, UV",
+    "awning_4": "unchanged positions, normals, UV",
+    "counter": "unchanged positions, normals, UV",
+    "tpv": "unchanged positions, normals, UV",
+    "tray": "unchanged positions, normals, UV"
+  },
+  "new_meshes": [
+    "order_id_plate",
+    "delivery_zone",
+    "delivery_zone_border"
+  ],
+  "atlas_size": [
+    512,
+    512
+  ],
+  "palette_srgb": [
+    "#D2473F",
+    "#3F7CC8",
+    "#E8C23A",
+    "#4FA05A"
+  ]
+}
