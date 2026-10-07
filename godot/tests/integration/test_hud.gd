@@ -1,6 +1,7 @@
 extends GutTest
 ## PUL-020: HUD dirigido exclusivamente por eventos del reloj de ronda.
 ## PUL-030: recaudación en € (AC9–AC11 de entrega-y-puntuacion).
+## PUL-086: panel compacto de marca con cifras en `ui_digits` y escala por resolución.
 
 const HUD_SCENE: PackedScene = preload("res://ui/hud/hud.tscn")
 const BusScript: GDScript = preload("res://autoload/event_bus.gd")
@@ -181,3 +182,33 @@ func test_ac5_device_assigned_shows_brief_notice() -> void:
 func test_ac5_keyboard_only_assignment_shows_no_notice() -> void:
 	_bus.device_assigned.emit(2, DeviceAssignment.NONE)
 	assert_false((_hud.get_node("%DeviceNotice") as Label).visible)
+
+
+func test_pul086_figures_use_brand_digits_on_brand_panel() -> void:
+	for name: String in ["TimeLeft", "Revenue"]:
+		var label: Label = _hud.get_node("%" + name)
+		assert_eq(label.theme_type_variation, &"FigureLabel", name)
+		assert_eq(label.get_theme_color(&"font_color"), Color("5b8db8"), "%s: ui_digits" % name)
+	assert_eq((_hud.get_node("%BoxesPerMinute") as Label).theme_type_variation, &"FigureLabel")
+	var background: PanelContainer = _hud.get_node("Background")
+	assert_eq(background.theme_type_variation, &"UiPanel")
+	assert_eq(_text("Shift"), "Turno")
+
+
+func test_pul086_ui_scale_keeps_proportion_from_720p_to_1080p() -> void:
+	assert_eq(UiScale.factor(720.0), 1.0)
+	assert_eq(UiScale.factor(1080.0), 1.5)
+	assert_eq(UiScale.factor(600.0), 1.0, "nunca encoge")
+	assert_eq(UiScale.factor(4320.0), 2.0, "tope")
+	var expected: float = UiScale.factor(_hud.get_viewport_rect().size.y)
+	assert_eq(_hud.scale, Vector2.ONE * expected)
+
+
+func test_pul086_hud_fits_compact_corner_at_720p() -> void:
+	var background: Control = _hud.get_node("Background")
+	_start()
+	_bus.score_changed.emit(12, 1234)
+	await wait_process_frames(2)
+	var size: Vector2 = background.get_combined_minimum_size()
+	assert_lt(size.x, 230.0, "compacto: ancho")
+	assert_lt(size.y, 300.0, "compacto: alto")

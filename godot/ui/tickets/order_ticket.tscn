@@ -3,17 +3,7 @@
 [ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="1_oad86"]
 [ext_resource type="PackedScene" path="res://ui/tickets/ticket_entry.tscn" id="1_x4wjf"]
 [ext_resource type="Script" path="res://ui/tickets/order_ticket.gd" id="2_ahx7y"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u775v"]
-content_margin_left = 14.0
-content_margin_top = 10.0
-content_margin_right = 14.0
-content_margin_bottom = 10.0
-bg_color = Color(0.15686275, 0.22745098, 0.22745098, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[ext_resource type="Texture2D" uid="uid://bk2ecjgyqafyj" path="res://assets/textures/brand/pulpasa_compacta.png" id="3_badge"]
 
 [sub_resource type="Gradient" id="Gradient_n2ykx"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
@@ -24,24 +14,52 @@ width = 256
 height = 8
 
 [node name="OrderTicket" type="PanelContainer" unique_id=2068974431]
-custom_minimum_size = Vector2(236, 245)
+custom_minimum_size = Vector2(212, 0)
+size_flags_vertical = 0
 mouse_filter = 2
 theme = ExtResource("1_oad86")
-theme_override_styles/panel = SubResource("StyleBoxFlat_u775v")
+theme_type_variation = &"UiPanel"
 script = ExtResource("2_ahx7y")
 
 [node name="Content" type="VBoxContainer" parent="." unique_id=1793628071]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="OrderId" type="Label" parent="Content" unique_id=587401737]
+[node name="Header" type="PanelContainer" parent="Content" unique_id=1630399830]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"UiHeader"
+
+[node name="Row" type="HBoxContainer" parent="Content/Header" unique_id=1833622709]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Badge" type="TextureRect" parent="Content/Header/Row" unique_id=199111168]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_badge")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Content/Header/Row" unique_id=2062691992]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9490196, 0.70980394, 0.40784314, 1)
-theme_override_font_sizes/font_size = 26
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "Comanda"
+vertical_alignment = 1
 
-[node name="Entry" type="HBoxContainer" parent="Content" unique_id=241350231 instance=ExtResource("1_x4wjf")]
+[node name="OrderId" type="Label" parent="Content/Header/Row" unique_id=587401737]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleLabel"
+theme_override_font_sizes/font_size = 20
+vertical_alignment = 1
+
+[node name="Entry" parent="Content" unique_id=241350231 instance=ExtResource("1_x4wjf")]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
@@ -49,12 +67,39 @@ mouse_filter = 2
 [node name="PatienceBar" type="TextureProgressBar" parent="Content" unique_id=2007156344]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 8)
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 mouse_filter = 2
 nine_patch_stretch = true
 step = 0.01
 texture_under = SubResource("GradientTexture2D_oad86")
 texture_progress = SubResource("GradientTexture2D_oad86")
-tint_under = Color(0.09019608, 0.15686275, 0.15686275, 1)
-tint_progress = Color(0.9490196, 0.70980394, 0.40784314, 1)
+tint_under = Color(0.043137256, 0.078431375, 0.11764706, 1)
+tint_progress = Color(0.78431374, 0.2509804, 0.18431373, 1)
+
+[node name="ClockWell" type="PanelContainer" parent="Content" unique_id=1043072236]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+theme_type_variation = &"DisplayWell"
+
+[node name="Stack" type="MarginContainer" parent="Content/ClockWell" unique_id=1746505807]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Ghost" type="Label" parent="Content/ClockWell/Stack" unique_id=1526974505]
+layout_mode = 2
+theme_type_variation = &"DisplayGhostLabel"
+theme_override_font_sizes/font_size = 30
+text = "88:88"
+horizontal_alignment = 2
+
+[node name="Clock" type="Label" parent="Content/ClockWell/Stack" unique_id=2116556524]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"DisplayLabel"
+theme_override_font_sizes/font_size = 30
+text = "00:00"
+horizontal_alignment = 2

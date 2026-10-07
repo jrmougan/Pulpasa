@@ -19,21 +19,21 @@ anchor_bottom = 1.0
 
 [node name="Column" type="VBoxContainer" parent="Center" unique_id=967804433]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(460, 0)
+custom_minimum_size = Vector2(480, 0)
 layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Logo" type="Control" parent="Center/Column" unique_id=1871033860]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 140)
+custom_minimum_size = Vector2(0, 168)
 layout_mode = 2
 mouse_filter = 2
 
 [node name="Title" type="Label" parent="Center/Column" unique_id=391633087]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
-theme_override_font_sizes/font_size = 68
-theme_override_colors/font_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+theme_type_variation = &"TitleLabel"
 text = "PULPASA"
 horizontal_alignment = 1
 
@@ -41,7 +41,7 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-theme_override_colors/font_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+theme_override_colors/font_color = Color(0.7529412, 0.7764706, 0.8, 1)
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="Center/Column" unique_id=474855341]
@@ -82,7 +82,7 @@ theme_type_variation = &"MenuSecondaryButton"
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
-theme_override_colors/font_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+theme_override_colors/font_color = Color(0.7529412, 0.7764706, 0.8, 1)
 horizontal_alignment = 1
 
 [node name="Status" type="Label" parent="Center/Column" unique_id=330158050]
@@ -91,6 +91,6 @@ visible = false
 custom_minimum_size = Vector2(460, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.32156864, 0.18039216, 0.16862746, 1)
+theme_override_colors/font_color = Color(0.7529412, 0.7764706, 0.8, 1)
 horizontal_alignment = 1
 autowrap_mode = 3
