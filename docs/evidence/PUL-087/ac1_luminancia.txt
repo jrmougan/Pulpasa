@@ -1,0 +1,18 @@
+## docs/evidence/PUL-087/despues/00_nivel_sin_hud.png
+zona                    mediana    p05    p95  <0.08  >0.95
+encimera_fondo            0.191  0.167  0.418   0.1%   0.0%
+encimera_barra            0.188  0.059  0.240   7.4%   0.0%
+frente_condimentos        0.209  0.080  0.429   4.8%   0.0%
+pegatinas_comanda         0.368  0.079  0.704   8.3%   0.0%
+pegatinas_nevera          0.433  0.089  0.716   4.3%   0.0%
+olla_1                    0.206  0.026  0.322  22.2%   0.0%
+olla_2                    0.208  0.055  0.406   8.7%   0.0%
+estanteria_platos         0.311  0.097  0.744   4.1%   0.0%
+kiosco_1_numero           0.100  0.075  0.552   5.6%   0.0%
+kiosco_2_numero           0.104  0.069  0.599   6.6%   0.0%
+kiosco_3_numero           0.107  0.038  0.626   6.8%   0.0%
+kiosco_4_numero           0.104  0.027  0.610   6.6%   0.0%
+kiosco_cartel_1           0.252  0.022  0.738   9.1%   0.0%
+aro_jugador               0.265  0.019  0.362  20.1%   0.0%
+suelo_jugable             0.318  0.276  0.375   0.0%   0.0%
+jugador_1                 0.313  0.012  0.720  25.7%   0.0%

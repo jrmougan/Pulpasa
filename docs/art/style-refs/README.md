@@ -41,3 +41,7 @@ Estilos para probar (uno por imagen):
 
 Cuando una te guste, pide variantes de esa misma («same style, more <x>») y guarda la elegida en
 `docs/art/style-refs/` para actualizar la biblia de arte.
+
+## Estado final de la v2 (PUL-087, 2026-10-07)
+Mismo plano en `docs/evidence/PUL-087/despues/`; comparativa con la referencia y la v1 en
+`docs/evidence/PUL-087/ac1_comparativa_nivel.png`.
