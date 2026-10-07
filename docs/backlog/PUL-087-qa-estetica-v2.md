@@ -1,11 +1,11 @@
 ---
 id: PUL-087
 title: Pasar el QA visual y de rendimiento de la estética v2
-status: review
+status: done
 milestone: M3b
 role: qa-tester
 deps: [PUL-073, PUL-075, PUL-076, PUL-077, PUL-078, PUL-079, PUL-080, PUL-081, PUL-082, PUL-083, PUL-084, PUL-085, PUL-086]
-orca_task: null
+orca_task: task_991c650d05d9
 unity_sources: []
 owns: [docs/evidence/PUL-087/**, docs/design/m3b-gate.md, docs/art/style-refs/**]
 touches_scenes: []

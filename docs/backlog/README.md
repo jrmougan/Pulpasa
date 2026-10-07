@@ -99,6 +99,6 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-084 | M3b | asset-pipeline | done | Rehacer encimeras y suelo de la cocina |
 | PUL-085 | M3b | asset-pipeline | done | Rehacer el entorno con la estética de referencia |
 | PUL-086 | M3b | ui-engineer | done | Adaptar HUD y tickets a la estética de referencia |
-| PUL-087 | M3b | qa-tester | ready | Pasar el QA visual y de rendimiento de la estética v2 |
+| PUL-087 | M3b | qa-tester | done | Pasar el QA visual y de rendimiento de la estética v2 |
 | PUL-088 | M3b | asset-pipeline | done | Diseñar la identidad de la marca PulpaSA |
 | PUL-089 | M3b | asset-pipeline | done | Ajustar el cielo y los reflejos para que el acero se lea claro |

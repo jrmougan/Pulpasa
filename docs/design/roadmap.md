@@ -10,7 +10,7 @@ Propuesta completa (privada): https://claude.ai/artifact/PstRxmwwgejjsphmEXCkJe
 | M1 | Paciencia, puntuación y estrellas, aceite y cachelos, iconos en tickets — **cerrado 2026-10-04** (PUL-027..033) | — |
 | M2 | Coop local 2P, mando, cambio de personaje, menú por modo — **técnico cerrado 2026-10-04** (PUL-034..037; guía en `m2-gate.md`) | Playtest de game feel (hecho 2026-10-05: bug de entrega PUL-039; rediseños D18 condimentos PUL-040, D19 mapa PUL-041; D20 arte PUL-042). Rediseños hechos (PUL-038..064); segundo playtest con `m2b-gate.md` pendiente |
 | M3 | **Técnico cerrado 2026-10-06** (PUL-043..071): arte propio en Blender (D20), audio completo, feedback, olla que se pasa, dificultad por fases | — |
-| M3b | Estética v2 según la referencia elegida (`docs/art/style-refs/referencia-elegida-2026-10-06.png`): biblia v2, luz, materiales, todos los assets, HUD y QA (PUL-072..087) | Revisión del responsable (biblia v2 y D21; resultado final) |
+| M3b | **Técnico cerrado 2026-10-07** · Estética v2 según la referencia elegida (`docs/art/style-refs/referencia-elegida-2026-10-06.png`): biblia v2, luz, materiales, todos los assets, HUD y QA (PUL-072..087) | Revisión del responsable (biblia v2 y D21; resultado final) |
 | M4 | Balanceo, opciones, gallego, builds Win/Linux, playtests | Publicar alpha |
 
 ## Fases de M0
@@ -69,3 +69,8 @@ caja (cada pulsación llena la caja y gasta pulpo) → condimentos sobre la caja
 - Balance de la fase 3: `order_2` (80 s × 0,7 = 56 s) frente a ~54 s de ruta óptima (PUL-070) → M4.
 - El POP del puesto tapa un instante el número del puesto (PUL-071).
 - Segundo playtest de M2b (`m2b-gate.md`) pendiente; ahora con arte y audio.
+
+## Pendientes detectados en M3b (QA PUL-087, `docs/evidence/PUL-087/README.md`)
+- D1 rótulo #id de kioscos sin placa; D2 vapor apenas visible; D3 tapa de olla flota; D4 ambiente algo claro/amarillo (propuesta en `render_config.tres`); D5/D6 materiales y texturas duplicados (~80 MB, ficha de pipeline); D7 acero delantero brilla; D8 panel Turno tapa comensales; D9 restos ocultos (`table_square` en PassSlot, `romeria.blend`).
+- `scene-tree.md` sin `Bulbs`/`Vignette` (enmienda del arquitecto).
+- El MCP de Godot no admite `--audio-driver Dummy`: silenciar buses al arrancar (lo hizo PUL-087).
