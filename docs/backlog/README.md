@@ -102,5 +102,5 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-087 | M3b | qa-tester | done | Pasar el QA visual y de rendimiento de la estética v2 |
 | PUL-088 | M3b | asset-pipeline | done | Diseñar la identidad de la marca PulpaSA |
 | PUL-089 | M3b | asset-pipeline | done | Ajustar el cielo y los reflejos para que el acero se lea claro |
-| PUL-090 | M3c | game-designer | ready | Diagnosticar y proponer el rediseño jugable de las estaciones de condimento y bandejas |
+| PUL-090 | M3c | game-designer | done | Diagnosticar y proponer el rediseño jugable de las estaciones de condimento y bandejas |
 | PUL-091 | M3c | asset-pipeline | ready | Auditar la lectura visual de estaciones y bandejas y proponer su rediseño artístico |

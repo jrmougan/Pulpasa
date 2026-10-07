@@ -1,11 +1,11 @@
 ---
 id: PUL-090
 title: Diagnosticar y proponer el rediseño jugable de las estaciones de condimento y bandejas
-status: ready
+status: done
 milestone: M3c
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_473ef05cacf2
 unity_sources: []
 owns: [docs/design/rediseno-estaciones.md, docs/evidence/PUL-090/**]
 touches_scenes: []
