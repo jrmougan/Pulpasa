@@ -1,10 +1,83 @@
-# Distribuciones de la cocina de `level_01` (D19, PUL-041)
+# Distribuciones de la cocina de `level_01` (D19, PUL-041; D23, PUL-092)
 
-**Estado:** propuesta para que el responsable elija. **Fuentes:** D14 (cámara ortográfica fija),
-D18 (estación de condimentos, diseño en PUL-040), D1 (corte sobre la caja), D3/D11 (Individual con
-cambio de personaje), D9 (olla de 2 plazas), D10 (cachelos en la olla), D12 (cada comanda en su puesto).
+**Estado:** elegida la **planta B · barra partida** (D19, 2026-10-05), **modificada por D23**
+(2026-10-07): hueco de la barra a x ≈ 3,2, 6 pasaplatos marcados y línea de condimentos «al paso»
+sin bandeja. La sección siguiente es la planta vigente; desde «Qué falla en la planta actual» el
+documento conserva la propuesta original de PUL-041 como histórico. **Fuentes:** D14 (cámara
+ortográfica fija), D18/D23 (estación de condimentos), D1 (corte sobre la caja), D3/D11 (Individual
+con cambio de personaje), D9 (olla de 2 plazas), D10 (cachelos en la olla), D12 (cada comanda en su
+puesto), `rediseno-estaciones.md` (PUL-090).
 
-## Qué falla en la planta actual
+## Planta B vigente (D23)
+
+> **Sustituido por D23:** el hueco de 1 m en la columna 14 (x 7,7), los 9 pasaplatos invisibles
+> (`PassSlot01–09`) a lo largo de toda la barra y la estación con bandeja de dos caras. El rodeo
+> bandeja ↔ pase medía 16–17 m (PUL-090 §1.3.3), fuera del 6–10 m de `estacion-condimentos.md`.
+
+### Planta (cuadrícula de 1 m; columna `c` → x = c − 6,8, fila `r` → z = r − 4,5)
+```
+   0123456789012345
+ 0 ##NK#O#O########     z -4.5  cocina: nevera, cachelera, 2 ollas (x −1,3 y +0,7)
+ 1 #..............#
+ 2 #.b............#     salida J2 (cocina, cocinero)
+ 3 #..............#
+ 4 #===#CCCCC.===##     barra: 3 pasaplatos · línea de condimentos · HUECO x≈3,2 · 3 pasaplatos
+ 5 #..............#                                                   (col. 14 cerrada)
+ 6 B..............#     rack de cajas S/M/L en la pared izquierda del servicio
+ 7 B..........a...#     salida J1 (servicio, emplatador)
+ 8 #..............#
+ 9 #..............#
+10 ###1#2##3#4#####     z +5.5  puestos 1–4 (rojo, azul, amarillo, verde) con zona de entrega
+```
+Con 1 m por celda el hueco cae entre las columnas 9 y 10; la referencia es el detalle de la barra.
+
+### Detalle de la barra (z = 0, una marca = 0,5 m, x −6,3 … +7,7)
+```
+ x:  -6,3        -2,8 -2,3               2,7  3,7         6,7  7,7
+     #  =  =  =  =  =  =  #  d  .  p  .  s  .  a  .  c  .  ░  ░  =  =  =  =  =  =  #  #
+     └─ 3 pasaplatos ──┘     └──── línea de condimentos ────┘  hueco └ 3 pasaplatos ┘ cerrado
+        x −5,3 −4,3 −3,3     d p s a = dispensadores, c = cuenco    4,2  5,2  6,2
+                              (≥ 1,0 m entre centros)
+ lado de PASE (cocina, z < 0):  se cortan cajas en los pasaplatos; se reponen cachelos en «c»
+ lado de CONDIMENTAR (servicio, z > 0): se recogen/dejan cajas en los pasaplatos; con la caja
+                              llena en la mano se pulsa d p s a c al paso → puestos 1–4
+```
+Posiciones aproximadas (±0,5 m): las fija la ficha de nivel (PUL-090 §4.4, ficha 4) junto con
+`kitchen_layout.tscn`, `level_walker.gd::GAP_X` y las distancias de `test_level_01.gd`. Los
+pasaplatos son `Slot` con **marca visible** (salvamantel o recuadro pintado, arte de PUL-091); el
+resto de la barra **no acepta objetos**. Pasaplatos cerca de las ollas (x −3,3 y 4,2) para que el
+cocinero corte sin andar mucho; el rack está en el servicio (G5 de PUL-090).
+
+### Flujo por pedido
+- **Coop:** emplatador: rack → 2 cajas vacías a pasaplatos → (espera o adelanta otra comanda) →
+  recoge la caja llena → línea al paso → puesto. Cocinero: nevera → olla (5 s) → corta las dos
+  cajas en los pasaplatos (4/6/10 pulsaciones cada una) → cachelos si hacen falta (2 raciones por
+  cocido). Mientras se condimenta la caja N se corta la N+1.
+- **Individual con cambio:** 1 cambio por pedido de dos cajas (`estacion-condimentos.md` AC16).
+- **Individual sin cambio:** dos cruces por el hueco de ≈ 7–8 m cada uno (antes ≈ 17 m).
+
+| Tramo (estimado, ±1 m) | Antes de D23 | D23 |
+|---|---:|---:|
+| Cara de condimentar ↔ cara de pase de la estación, por el hueco | 16–17 | **≈ 7** |
+| Rack → nevera, un solo personaje | ≈ 28 | **≈ 19** |
+| Línea de condimentos → puestos 1/2/3/4 | 5/4/4/5 | 5/4/4/5 |
+| Pedido S desde cero, un personaje (bot de PUL-090) | 78,9 | **≤ 50** |
+
+### Criterios de aceptación de la planta (D23)
+**R*n*** = criterio de `rediseno-estaciones.md` §4.3. Las medidas con bot usan
+`docs/evidence/PUL-090/measure_flow.gd` adaptado a la línea al paso (ficha de QA, PUL-090 §4.4,
+ficha 7).
+
+- **L1 (R11)** Given `level_01.tscn`, Then hay exactamente 6 `PassSlot`, cada uno con marca visible (≥ 18 px de lado en una captura a 1280×720), y Given un jugador con algo en la mano frente a la barra fuera de los pasaplatos y de la línea de condimentos, When pulsa interactuar, Then no suelta nada (la mano no cambia). *Test:* `test_level_01.gd` (recuento y barrido de la barra con `level_walker.gd`) + captura.
+- **L2 (R14)** Given `level_01.tscn`, Then el camino más corto (Dijkstra de `test_level_01.gd`) de la cara de condimentar a la cara de pase de la estación mide 6–10 m, y el hueco de la barra está en x ∈ [2,7; 3,7] con ≥ 1,0 m libre; no hay otro hueco (x 7,7 cerrado). *Test:* `test_level_01.gd`.
+- **L3 (R15)** Given Individual con un solo personaje, When hace un pedido S sal+aceite desde cero con `measure_flow.gd`, Then recorre ≤ 50 m (hoy 78,9 m). *Test:* `measure_flow.gd` adaptado, `metrics.json` en `docs/evidence/<ficha QA>/`.
+- **L4 (R16)** Given Individual con cambio, When se hacen 2 pedidos S con un solo pulpo, Then se completan 2 `order_completed` con exactamente 2 pulsaciones de `p1_switch` en total. *Test:* el mismo de `estacion-condimentos.md` AC16 (`test_station_level.gd`).
+- **L5 (R17)** Given Coop 2P con `measure_flow.gd`, When se encadenan 4 pedidos S, Then el tiempo medio de los pedidos 2–4 es ≤ 75 % del de hoy (≤ 4,6 s de juego del bot; hoy 6,1 s). *Test:* `measure_flow.gd` adaptado; se usa también para decidir el precio de la L (`entrega-y-puntuacion.md`, pregunta 2).
+- **L6** Given la cámara de juego a 1280×720, Then ningún pasaplatos, dispensador, el cuenco ni el hueco quedan bajo el HUD o la banda de tickets, y el hueco se distingue de la barra (umbral o cambio de suelo). *Test:* `test_level_01.gd::test_ui_does_not_cover_*` + captura.
+
+## Histórico: propuesta de PUL-041
+
+### Qué falla en la planta actual
 Captura de referencia: `docs/evidence/PUL-037/ac3-coop-2p-dos-personajes.png`.
 - **Todo pegado a la pared del fondo** (nevera, olla, cajas, botes) y los puestos en la pared de
   delante: cada pedido cruza los ~9 m de la cocina dos veces.
@@ -26,7 +99,7 @@ en el encuadre con 0,4 m de margen respecto al HUD (la cocina actual mide unos 1
 - Con pantallas más estrechas que 16:9 la cámara mantiene el alto y recorta los lados: los 16 m de
   ancho siguen cabiendo hasta 4:3 (17 m visibles).
 
-**Supuestos (se ajustan cuando cierre PUL-040):**
+**Supuestos de PUL-041 (sustituidos por D23 en lo que toca a la estación y los pasaplatos):**
 - Estación de condimentos = mostrador de 2 m con **un hueco de caja accesible por dos caras**. La
   caja se deja ahí y se aplican pimentón dulce/picante, sal, aceite y cachelos cocidos (D4, D10).
   Si PUL-040 la deja de una sola cara, las plantas valen orientándola hacia el servicio.
@@ -230,6 +303,9 @@ es la imagen más reconocible de una pulpeira de feira.
 también sirve como planta de tutorial o primer nivel, porque se juega casi en solitario.
 
 ## Preguntas abiertas
+*Las tres preguntas de PUL-041 están cerradas: la estación tiene dos caras (D18/D23), el hueco se
+queda pero se mueve a x ≈ 3,2 (D23) y hay dos ollas de 2 plazas. Se conservan como histórico.*
+
 1. ¿La estación de PUL-040 tiene dos caras? B y C la aprovechan; con una sola cara, en B se orienta
    al servicio y los cachelos pasan por el pasaplatos.
 2. ¿El hueco de la barra en B (1 m, columna 14) se queda o se cierra del todo? Recomendación:
@@ -237,7 +313,7 @@ también sirve como planta de tutorial o primer nivel, porque se juega casi en s
 3. ¿Dos ollas de 2 plazas o una? Con una sola, en B el cocinero se queda sin hacer nada; en A y C
    da igual.
 
-## Siguiente paso (cuando el responsable elija)
+## Siguiente paso (histórico, hecho en M2–M3b)
 Una ficha de nivel para el gameplay-engineer, dueña de `level_01.tscn` y `kitchen_layout.tscn`,
 que:
 - mueva las estaciones a la planta elegida;
