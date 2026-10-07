@@ -1,11 +1,11 @@
 ---
 id: PUL-092
 title: Reescribir las features de estaciones según D23
-status: review
+status: done
 milestone: M3c
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_53ea92b0f279
 unity_sources: []
 owns: [docs/design/features/estacion-condimentos.md, docs/design/features/condimentacion.md, docs/design/features/corte-pulpo.md, docs/design/features/entrega-y-puntuacion.md, docs/design/features/comandas.md, docs/design/level-layouts.md, docs/evidence/PUL-092/**, docs/backlog/PUL-092-features-estaciones-d23.md]
 touches_scenes: []

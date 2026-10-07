@@ -104,7 +104,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-089 | M3b | asset-pipeline | done | Ajustar el cielo y los reflejos para que el acero se lea claro |
 | PUL-090 | M3c | game-designer | done | Diagnosticar y proponer el rediseño jugable de las estaciones de condimento y bandejas |
 | PUL-091 | M3c | asset-pipeline | done | Auditar la lectura visual de estaciones y bandejas y proponer su rediseño artístico |
-| PUL-092 | M3c | game-designer | ready | Reescribir las features de estaciones según D23 |
+| PUL-092 | M3c | game-designer | done | Reescribir las features de estaciones según D23 |
 | PUL-093 | M3c | godot-architect | ready | Enmendar los contratos para la estación sin bandeja y los pasaplatos marcados |
 | PUL-094 | M3c | asset-pipeline | ready | Rehacer la estación de condimentos como línea al paso (arte, Codex) |
 | PUL-095 | M3c | asset-pipeline | ready | Rehacer rack, bandejas S/M/L y marcas de pasaplatos (arte, Codex) |

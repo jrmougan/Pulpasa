@@ -7,15 +7,15 @@ role: gameplay-engineer
 deps: [PUL-097, PUL-098, PUL-100]
 orca_task: null
 unity_sources: []
-owns: [godot/scenes/levels/level_01.tscn, godot/entities/environment/kitchen_layout.tscn, godot/tests/integration/level_walker.gd, godot/tests/integration/test_level_01.gd, docs/evidence/PUL-101/**, docs/backlog/PUL-101-level01-linea-al-paso.md]
-touches_scenes: [godot/scenes/levels/level_01.tscn, godot/entities/environment/kitchen_layout.tscn]
+owns: [godot/entities/stations/slot.tscn, godot/entities/stations/slot.gd, godot/components/hold_component.gd, godot/tests/**/test_slot.gd, godot/tests/**/test_hold*.gd, godot/scenes/levels/level_01.tscn, godot/entities/environment/kitchen_layout.tscn, godot/tests/integration/level_walker.gd, godot/tests/integration/test_level_01.gd, docs/evidence/PUL-101/**, docs/backlog/PUL-101-level01-linea-al-paso.md]
+touches_scenes: [godot/entities/stations/slot.tscn, godot/scenes/levels/level_01.tscn, godot/entities/environment/kitchen_layout.tscn]
 ---
 
 ## Target
 Nivel `level_01` (planta B) según D23 y `level-layouts.md` reescrito.
 
 ## Change
-Hueco de la barra a x≈3,2 con el umbral de PUL-095; 6 `PassSlot` con `pass_mark` visible y el resto de la barra sin `Slot`; estación sin bandeja; `GAP_X` del `level_walker`. Retira los restos ocultos de QA D9 en `PassSlot` (placeholder `table_square`).
+Hueco de la barra a x≈3,2 con el umbral de PUL-095; 6 `PassSlot` con `pass_mark` visible y el resto de la barra sin `Slot`; estación sin bandeja; `GAP_X` del `level_walker`. `pass_mark` va en `slot.tscn` (ADR-003 §9). Si R11 exige que pulsar fuera de un `PassSlot` no suelte la caja, cámbialo en `HoldComponent` con su test. Retira los restos ocultos de QA D9 en `PassSlot` (placeholder `table_square`).
 
 ## Constraints
 - `tools/verify.sh` en verde; GDScript tipado; datos en `.tres`. Godot con `--audio-driver Dummy`; con el MCP, silencia los buses.
