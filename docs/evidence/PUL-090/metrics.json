@@ -1,0 +1,398 @@
+[
+  {
+    "cuts": 5,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 78.9,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 14,
+        "retargets": 0,
+        "seconds": 23.3,
+        "still_s_p1": 7.32,
+        "still_s_p2": 23.3,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "meters_p1": 58.6,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 11,
+        "retargets": 0,
+        "seconds": 13.77,
+        "still_s_p1": 1.85,
+        "still_s_p2": 13.77,
+        "switches": 0
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 10,
+    "delivery_rejections": 0,
+    "kind": "M",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 78.9,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 23.65,
+        "still_s_p1": 7.67,
+        "still_s_p2": 23.65,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "meters_p1": 58.4,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 16,
+        "retargets": 0,
+        "seconds": 14.05,
+        "still_s_p1": 2.18,
+        "still_s_p2": 14.05,
+        "switches": 0
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 20,
+    "delivery_rejections": 0,
+    "kind": "L",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 78.9,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 29,
+        "retargets": 0,
+        "seconds": 24.28,
+        "still_s_p1": 8.32,
+        "still_s_p2": 24.28,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "meters_p1": 58.1,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 26,
+        "retargets": 0,
+        "seconds": 14.65,
+        "still_s_p1": 2.83,
+        "still_s_p2": 14.65,
+        "switches": 0
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 5,
+    "delivery_rejections": 0,
+    "kind": "S+cachelos",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 94.6,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 18,
+        "retargets": 0,
+        "seconds": 27.35,
+        "still_s_p1": 8.15,
+        "still_s_p2": 27.35,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "meters_p1": 72.7,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 15,
+        "retargets": 0,
+        "seconds": 22.42,
+        "still_s_p1": 7.62,
+        "still_s_p2": 22.42,
+        "switches": 0
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 5,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mode": "switch",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 26.2,
+        "meters_p2": 12.4,
+        "order": 1,
+        "presses": 14,
+        "retargets": 0,
+        "seconds": 15.85,
+        "still_s_p1": 10.43,
+        "still_s_p2": 13.33,
+        "switches": 2
+      },
+      {
+        "completed": true,
+        "meters_p1": 19.7,
+        "meters_p2": 3.5,
+        "order": 2,
+        "presses": 11,
+        "retargets": 0,
+        "seconds": 7.27,
+        "still_s_p1": 3.17,
+        "still_s_p2": 6.55,
+        "switches": 2
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 10,
+    "delivery_rejections": 0,
+    "kind": "M",
+    "mode": "switch",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 26.4,
+        "meters_p2": 12.4,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 16.2,
+        "still_s_p1": 10.77,
+        "still_s_p2": 13.68,
+        "switches": 2
+      },
+      {
+        "completed": true,
+        "meters_p1": 19.4,
+        "meters_p2": 3.5,
+        "order": 2,
+        "presses": 16,
+        "retargets": 0,
+        "seconds": 7.53,
+        "still_s_p1": 3.52,
+        "still_s_p2": 6.82,
+        "switches": 2
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 20,
+    "delivery_rejections": 0,
+    "kind": "L",
+    "mode": "switch",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 26.3,
+        "meters_p2": 12.4,
+        "order": 1,
+        "presses": 29,
+        "retargets": 0,
+        "seconds": 16.87,
+        "still_s_p1": 11.43,
+        "still_s_p2": 14.35,
+        "switches": 2
+      },
+      {
+        "completed": true,
+        "meters_p1": 19.1,
+        "meters_p2": 3.5,
+        "order": 2,
+        "presses": 26,
+        "retargets": 0,
+        "seconds": 8.15,
+        "still_s_p1": 4.17,
+        "still_s_p2": 7.43,
+        "switches": 2
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 5,
+    "delivery_rejections": 0,
+    "kind": "S+cachelos",
+    "mode": "switch",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 30.0,
+        "meters_p2": 25.5,
+        "order": 1,
+        "presses": 18,
+        "retargets": 0,
+        "seconds": 20.13,
+        "still_s_p1": 14.03,
+        "still_s_p2": 14.85,
+        "switches": 2
+      },
+      {
+        "completed": true,
+        "meters_p1": 23.2,
+        "meters_p2": 16.1,
+        "order": 2,
+        "presses": 15,
+        "retargets": 0,
+        "seconds": 16.33,
+        "still_s_p1": 11.55,
+        "still_s_p2": 12.98,
+        "switches": 2
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 5,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 26.2,
+        "meters_p2": 12.4,
+        "order": 1,
+        "presses": 14,
+        "retargets": 0,
+        "seconds": 10.52,
+        "still_s_p1": 5.1,
+        "still_s_p2": 8.0,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "meters_p1": 19.7,
+        "meters_p2": 3.5,
+        "order": 2,
+        "presses": 11,
+        "retargets": 0,
+        "seconds": 6.08,
+        "still_s_p1": 1.98,
+        "still_s_p2": 5.37,
+        "switches": 0
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 10,
+    "delivery_rejections": 0,
+    "kind": "M",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 26.4,
+        "meters_p2": 12.4,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 10.88,
+        "still_s_p1": 5.45,
+        "still_s_p2": 8.37,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "meters_p1": 19.4,
+        "meters_p2": 3.5,
+        "order": 2,
+        "presses": 16,
+        "retargets": 0,
+        "seconds": 6.35,
+        "still_s_p1": 2.33,
+        "still_s_p2": 5.63,
+        "switches": 0
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 20,
+    "delivery_rejections": 0,
+    "kind": "L",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 26.3,
+        "meters_p2": 12.4,
+        "order": 1,
+        "presses": 29,
+        "retargets": 0,
+        "seconds": 11.53,
+        "still_s_p1": 6.1,
+        "still_s_p2": 9.02,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "meters_p1": 19.1,
+        "meters_p2": 3.5,
+        "order": 2,
+        "presses": 26,
+        "retargets": 0,
+        "seconds": 6.97,
+        "still_s_p1": 2.98,
+        "still_s_p2": 6.25,
+        "switches": 0
+      }
+    ],
+    "station_rejections": 0
+  },
+  {
+    "cuts": 5,
+    "delivery_rejections": 0,
+    "kind": "S+cachelos",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "meters_p1": 30.0,
+        "meters_p2": 25.5,
+        "order": 1,
+        "presses": 18,
+        "retargets": 0,
+        "seconds": 14.82,
+        "still_s_p1": 8.72,
+        "still_s_p2": 9.53,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "meters_p1": 23.2,
+        "meters_p2": 16.1,
+        "order": 2,
+        "presses": 15,
+        "retargets": 0,
+        "seconds": 13.18,
+        "still_s_p1": 8.4,
+        "still_s_p2": 9.83,
+        "switches": 0
+      }
+    ],
+    "station_rejections": 0
+  }
+]
