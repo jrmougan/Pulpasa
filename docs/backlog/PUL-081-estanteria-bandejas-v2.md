@@ -1,7 +1,7 @@
 ---
 id: PUL-081
 title: Rehacer la estantería como rack de bandejas
-status: draft
+status: ready
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-077]
