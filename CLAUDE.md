@@ -13,11 +13,14 @@ Cooperativo de cocina (pulpo á feira en romerías gallegas) en migración de Un
 - GDD original (gallego, solo lectura): `/home/jeromo/vibedora/dev/pulpasa_docs/main.tex`.
 
 ## Comandos
+- Toolchain: `mise install` en la raíz (`mise.toml`: node, python ≥3.13, uv, jq, gdtoolkit). Se
+  trabaja en Linux, macOS y Windows; las versiones solo cambian por commit en `mise.toml`.
 - Verificación completa: `tools/verify.sh` (gdformat, gdlint, import, GUT, smoke). `--quick` sin tests.
 - Merge de una rama de worker (solo el producer): `tools/merge_gate.sh <rama>`.
-- Godot: `godot` en el PATH (4.7.2, binario oficial instalado con Godots).
+- Godot: `godot` en el PATH (4.7.2, binario oficial; con el gestor de cada sistema, p. ej. Godots o
+  Scoop con `hold`). No lo gestiona mise.
 - MCP `godot` (`.mcp.json`, godot-mcp-runtime 3.8.1, sin diálogos de confirmación por decisión del responsable): ejecutar, capturar, simular input, leer errores.
-  Proyecto: `<raíz>/godot`. Sin pantalla, lanzar Claude con `xvfb-run -a`.
+  Proyecto: `<raíz>/godot`. Linux sin pantalla: lanzar Claude con `xvfb-run -a`.
 - Orca: usa siempre `orca-ide`, nunca `orca` (en Linux es el lector de pantalla).
 
 ## Reglas no negociables

@@ -8,8 +8,8 @@ Autor: PUL-043 (asset-pipeline). Aplica D20 y las reglas técnicas de [`art-bibl
 | Pieza | Versión | Nota |
 |---|---|---|
 | Blender | 5.2.2 LTS (`blender` en el PATH) | El de Fedora avisa de OCIO 2.5 vs 2.4 y de que faltan Draco/MeshOptimizer: son avisos inocuos (usa color management de reserva y no comprimimos mallas) |
-| Add-on MCP de Blender Lab | 1.0.3 (extensión `lab_blender_org.mcp`, ≥ Blender 5.1) | Instalado en `~/.config/blender/5.2/extensions/`. Abre un socket TCP local |
-| Servidor MCP `blender-mcp` | Blender Lab `lab/blender_mcp` @ `dbbf836ad4b1025f14a2b3b504c43903f39e0b04` (subdirectorio `mcp`) | Fijado en `.mcp.json` y lanzado con `uvx` (uv ≥ 0.12) |
+| Add-on MCP de Blender Lab | 1.0.3 (extensión `lab_blender_org.mcp`, ≥ Blender 5.1) | Instalado en `~/.config/blender/5.2/extensions/` (Windows: `%APPDATA%\Blender Foundation\Blender\5.2\extensions\`). Abre un socket TCP local. Tras instalarlo desde la interfaz, **guarda las preferencias**: si no, el Blender `-b` no lo carga y `-c blender_mcp` no existe |
+| Servidor MCP `blender-mcp` | Blender Lab `lab/blender_mcp` @ `dbbf836ad4b1025f14a2b3b504c43903f39e0b04` (subdirectorio `mcp`) | Fijado en `.mcp.json` y lanzado con `uvx` (uv de `mise.toml`). El primer arranque compila el paquete (~1 min) y Claude lo da por caído: lánzalo una vez a mano para llenar la caché de uv |
 | Godot | 4.7.2 | Importador glTF nativo |
 
 ## 2. MCP de Blender

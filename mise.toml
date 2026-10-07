@@ -1,0 +1,10 @@
+# Versiones del toolchain, iguales en Linux, macOS y Windows: `mise install` en la raíz.
+# Godot 4.7.2 se instala con el gestor de cada sistema (no lo gestiona mise).
+min_version = "2026.10.1"
+
+[tools]
+node = "24"
+python = "3.13"
+uv = "0.12"
+jq = "1.8"
+"pipx:gdtoolkit" = "4.5.0"

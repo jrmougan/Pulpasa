@@ -22,14 +22,14 @@ Con el MCP `godot` (proyecto en `godot/`, ruta absoluta en `projectPath`):
 2. `simulate_input` para llegar al estado del AC (acciones del InputMap, no teclas sueltas).
 3. `take_screenshot`. Copia el PNG de `godot/.mcp/godot-runtime/screenshots/` a
    `docs/evidence/<id>/<ac>-<descripcion>.png`.
-4. `get_debug_output`: cero `SCRIPT ERROR`/`ERROR`. Los `WARNING` de X11/xic son ruido conocido.
+4. `get_debug_output`: cero `SCRIPT ERROR`/`ERROR`. Los `WARNING` de X11/xic (Linux) son ruido conocido.
 5. `stop_project`, siempre, aunque algo falle.
 
-Sin pantalla (worker en segundo plano), lanza Claude bajo `xvfb-run -a`. Está comprobado en
-esta máquina con Vulkan.
+En Linux sin pantalla (worker en segundo plano), lanza Claude bajo `xvfb-run -a` (comprobado con
+Vulkan). En Windows y macOS no hace falta: `background: true` ya oculta la ventana.
 
 ## Reglas
-- Todo `godot` que lances para capturas o scripts (`xvfb-run godot … -s`, escenas sueltas) va con
+- Todo `godot` que lances para capturas o scripts (`godot … -s`, escenas sueltas) va con
   `--audio-driver Dummy`: el audio sale por los altavoces del responsable aunque la ventana sea
   virtual. Comprueba el audio por señales/estado de los reproductores, no escuchándolo.
 - Las capturas son evidencia para revisión humana, no comparación de píxeles.
