@@ -52,7 +52,18 @@ Solo propuesta (no se integra en Godot todavía). Escribe `docs/art/rediseno-est
 - [ ] AC4 Presupuesto y lista de cambios por asset; dependencias de reglas marcadas como condicionales
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Inspeccionar contratos, materiales y fuentes; capturar level_01 a 1080p con su cámara real y estados controlados.
+2. Puntuar lectura y diseñar dos familias completas de affordances, sin decidir reglas de PUL-090.
+3. Generar conceptos originales mediante Blender CLI, renders ortográficos y comparativa actual/A/B.
+4. Documentar presupuesto, cambios y gate humano; verificar, commitear y comunicar al coordinador.
 
 ## Evidence
-(Lo rellena el worker.)
+Propuesta entregada en `docs/art/rediseno-estaciones-arte.md`; evidencia y reproducción en `docs/evidence/PUL-091/README.md`.
+
+- AC1: capturas nuevas 1920×1080, cámara real de level_01 y matriz controlada S/M/L × vacío/medio/lleno; puntuación por elemento.
+- AC2: lenguaje común de depósito/pulsación/lados/estados, paleta v2 y marca.
+- AC3: dos `.blend` nuevos, diez renders de detalle, dos hojas a escala de juego y lámina actual/A/B.
+- AC4: presupuesto medido de conceptos, objetivos por asset, biblioteca reutilizada y variantes dependientes de PUL-090.
+- `tools/verify.sh`: verde, 735 tests; wrapper añade `--audio-driver Dummy`. Ownership tras commit en `docs/evidence/PUL-091/owns.log`.
+- Pendiente solo el gate humano de selección y reglas; no se crean fichas de arte ni se integra en Godot.
+- Límites: fixture visual (no prueba de input), renders de estudio con fallback OCIO; detalles ampliados identificados y prueba de escala separada.

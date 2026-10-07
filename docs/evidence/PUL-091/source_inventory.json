@@ -1,0 +1,2000 @@
+{
+  "seasoning_station": [
+    {
+      "name": "Anchor_Bowl",
+      "type": "EMPTY",
+      "location": [
+        -1.7999999523162842,
+        -0.0,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Dispenser_HotPaprika",
+      "type": "EMPTY",
+      "location": [
+        -0.3499999940395355,
+        -0.44999998807907104,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Dispenser_Oil",
+      "type": "EMPTY",
+      "location": [
+        1.850000023841858,
+        -0.44999998807907104,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Dispenser_Salt",
+      "type": "EMPTY",
+      "location": [
+        0.949999988079071,
+        -0.44999998807907104,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Dispenser_SweetPaprika",
+      "type": "EMPTY",
+      "location": [
+        -1.25,
+        -0.44999998807907104,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5600000023841858,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_bowl",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.25,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_dispenser",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.15000000596046448,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_OperatorSide",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        -1.2000000476837158,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_PassSide",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        1.2000000476837158,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Portions",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        -0.0,
+        0.07000000029802322
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Tray",
+      "type": "EMPTY",
+      "location": [
+        0.30000001192092896,
+        0.25,
+        1.1399999856948853
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "bowl",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.5,
+        0.5,
+        0.16200000047683716
+      ]
+    },
+    {
+      "name": "cachelos_bowl",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        4.039999961853027,
+        1.1200000047683716,
+        1.100000023841858
+      ]
+    },
+    {
+      "name": "cutting_board",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.4399999976158142,
+        0.21999996900558472,
+        0.05199992656707764
+      ]
+    },
+    {
+      "name": "oil",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.3633173108100891,
+        0.23999999463558197,
+        0.23364998400211334
+      ]
+    },
+    {
+      "name": "paprika_hot",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.20999999344348907,
+        0.20999999344348907,
+        0.23999999463558197
+      ]
+    },
+    {
+      "name": "paprika_sweet",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.23999999463558197,
+        0.23999999463558197,
+        0.21400000154972076
+      ]
+    },
+    {
+      "name": "ref_character_1_8m",
+      "type": "MESH",
+      "location": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.6000000238418579,
+        0.30000001192092896,
+        1.7999999523162842
+      ]
+    },
+    {
+      "name": "ref_counter_1m",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.0,
+        0.800000011920929,
+        1.0
+      ]
+    },
+    {
+      "name": "ref_front_+Y",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "ref_materials_v2",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        2.6500000953674316,
+        1.4500000476837158,
+        0.0
+      ]
+    },
+    {
+      "name": "salt",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.30000001192092896,
+        0.30000001192092896,
+        0.17599999904632568
+      ]
+    },
+    {
+      "name": "seasoning_dispenser",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "seasoning_station",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "tray",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.699999988079071,
+        0.5499999523162842,
+        0.06999993324279785
+      ]
+    }
+  ],
+  "box": [
+    {
+      "name": "Anchor_Fill_large",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.024000000208616257
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Fill_medium",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.024000000208616257
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Fill_small",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.024000000208616257
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_large_0",
+      "type": "EMPTY",
+      "location": [
+        -0.16130609810352325,
+        0.16471612453460693,
+        0.04152270406484604
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_large_1",
+      "type": "EMPTY",
+      "location": [
+        -0.05429674685001373,
+        0.17662648856639862,
+        0.041583940386772156
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_large_2",
+      "type": "EMPTY",
+      "location": [
+        0.05429674685001373,
+        0.17662648856639862,
+        0.041583940386772156
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_large_3",
+      "type": "EMPTY",
+      "location": [
+        0.16130609810352325,
+        0.16471612453460693,
+        0.04152270406484604
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_medium_0",
+      "type": "EMPTY",
+      "location": [
+        -0.15092453360557556,
+        0.0940653532743454,
+        0.0415889173746109
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_medium_1",
+      "type": "EMPTY",
+      "location": [
+        -0.05424975976347923,
+        0.14098550379276276,
+        0.041585274040699005
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_medium_2",
+      "type": "EMPTY",
+      "location": [
+        0.05424975976347923,
+        0.14098550379276276,
+        0.041585274040699005
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_medium_3",
+      "type": "EMPTY",
+      "location": [
+        0.15092453360557556,
+        0.0940653532743454,
+        0.0415889173746109
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_small_0",
+      "type": "EMPTY",
+      "location": [
+        -0.13543076813220978,
+        0.07876944541931152,
+        0.041584257036447525
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_small_1",
+      "type": "EMPTY",
+      "location": [
+        -0.05342806875705719,
+        0.14728054404258728,
+        0.041584257036447525
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_small_2",
+      "type": "EMPTY",
+      "location": [
+        0.05342806875705719,
+        0.14728054404258728,
+        0.041584257036447525
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sticker_small_3",
+      "type": "EMPTY",
+      "location": [
+        0.13543076813220978,
+        0.07876944541931152,
+        0.041584257036447525
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "box",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "box_large",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.4959999918937683,
+        0.3799999952316284,
+        0.09799999743700027
+      ]
+    },
+    {
+      "name": "box_medium",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.41999998688697815,
+        0.3199999928474426,
+        0.09799999743700027
+      ]
+    },
+    {
+      "name": "box_small",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.3399991989135742,
+        0.3399991989135742,
+        0.09799999743700027
+      ]
+    },
+    {
+      "name": "hull_large",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.4959999918937683,
+        0.3799999952316284,
+        0.09799999743700027
+      ]
+    },
+    {
+      "name": "hull_medium",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.41999998688697815,
+        0.3199999928474426,
+        0.09799999743700027
+      ]
+    },
+    {
+      "name": "hull_small",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.3399991989135742,
+        0.3399991989135742,
+        0.09799999743700027
+      ]
+    },
+    {
+      "name": "OutlineHull",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "ref_character_1_8m",
+      "type": "MESH",
+      "location": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.6000000238418579,
+        0.30000001192092896,
+        1.7999999523162842
+      ]
+    },
+    {
+      "name": "ref_counter_1m",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.0,
+        0.800000011920929,
+        1.0
+      ]
+    },
+    {
+      "name": "ref_front_+Y",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "ref_materials_v2",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        2.6500000953674316,
+        1.4500000476837158,
+        0.0
+      ]
+    },
+    {
+      "name": "review_sticker_large_0",
+      "type": "MESH",
+      "location": [
+        -0.16185852885246277,
+        0.16602647304534912,
+        0.041045404970645905
+      ],
+      "dimensions": [
+        0.09999998658895493,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "review_sticker_large_1",
+      "type": "MESH",
+      "location": [
+        -0.05430273339152336,
+        0.17806760966777802,
+        0.04116788133978844
+      ],
+      "dimensions": [
+        0.10000000149011612,
+        0.0,
+        0.09999999403953552
+      ]
+    },
+    {
+      "name": "review_sticker_medium_0",
+      "type": "MESH",
+      "location": [
+        -0.15187589824199677,
+        0.09514976292848587,
+        0.04117783531546593
+      ],
+      "dimensions": [
+        0.09999998658895493,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "review_sticker_medium_1",
+      "type": "MESH",
+      "location": [
+        -0.05454638972878456,
+        0.14239618182182312,
+        0.041170548647642136
+      ],
+      "dimensions": [
+        0.09999998658895493,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "review_sticker_medium_2",
+      "type": "MESH",
+      "location": [
+        0.05454638972878456,
+        0.14239618182182312,
+        0.041170548647642136
+      ],
+      "dimensions": [
+        0.09999998658895493,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "review_sticker_small_0",
+      "type": "MESH",
+      "location": [
+        -0.1366766095161438,
+        0.07949404418468475,
+        0.041168518364429474
+      ],
+      "dimensions": [
+        0.10000000149011612,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "review_sticker_small_1",
+      "type": "MESH",
+      "location": [
+        -0.05391959100961685,
+        0.1486353725194931,
+        0.041168518364429474
+      ],
+      "dimensions": [
+        0.10000000149011612,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "review_sticker_small_2",
+      "type": "MESH",
+      "location": [
+        0.05391959100961685,
+        0.1486353725194931,
+        0.041168518364429474
+      ],
+      "dimensions": [
+        0.10000000149011612,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "review_sticker_small_3",
+      "type": "MESH",
+      "location": [
+        0.1366766095161438,
+        0.07949404418468475,
+        0.041168518364429474
+      ],
+      "dimensions": [
+        0.10000000149011612,
+        0.0,
+        0.10000000149011612
+      ]
+    },
+    {
+      "name": "sticker",
+      "type": "MESH",
+      "location": [
+        -0.053953126072883606,
+        0.14107482135295868,
+        0.041999999433755875
+      ],
+      "dimensions": [
+        0.10000000149011612,
+        0.0,
+        0.10000000149011612
+      ]
+    }
+  ],
+  "box_shelf": [
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "box_shelf",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "cartons",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.5199999809265137,
+        0.44999998807907104,
+        1.459999918937683
+      ]
+    },
+    {
+      "name": "hull_large",
+      "type": "MESH",
+      "location": [
+        0.5360000133514404,
+        0.7799999713897705,
+        0.3100000023841858
+      ],
+      "dimensions": [
+        0.5239999890327454,
+        0.40799999237060547,
+        0.2029999941587448
+      ]
+    },
+    {
+      "name": "hull_medium",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.7799999713897705,
+        0.3100000023841858
+      ],
+      "dimensions": [
+        0.4479999840259552,
+        0.3479999899864197,
+        0.2029999941587448
+      ]
+    },
+    {
+      "name": "hull_small",
+      "type": "MESH",
+      "location": [
+        -0.5099999904632568,
+        0.7799999713897705,
+        0.3100000023841858
+      ],
+      "dimensions": [
+        0.36799919605255127,
+        0.36799919605255127,
+        0.2029999941587448
+      ]
+    },
+    {
+      "name": "labels",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.2059999704360962,
+        0.0,
+        0.05499999225139618
+      ]
+    },
+    {
+      "name": "OutlineHull",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "rack",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.7999999523162842,
+        1.619999885559082,
+        1.4500000476837158
+      ]
+    },
+    {
+      "name": "ref_character_1_8m",
+      "type": "MESH",
+      "location": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.6000000238418579,
+        0.30000001192092896,
+        1.7999999523162842
+      ]
+    },
+    {
+      "name": "ref_counter_1m",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.0,
+        0.800000011920929,
+        1.0
+      ]
+    },
+    {
+      "name": "ref_front_+Y",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "ref_materials_v2",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        2.6500000953674316,
+        1.4500000476837158,
+        0.0
+      ]
+    },
+    {
+      "name": "stack_large",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.501758337020874,
+        0.38760387897491455,
+        0.203000009059906
+      ]
+    },
+    {
+      "name": "stack_medium",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.4199078679084778,
+        0.319929838180542,
+        0.203000009059906
+      ]
+    },
+    {
+      "name": "stack_small",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.3399136960506439,
+        0.33991366624832153,
+        0.203000009059906
+      ]
+    }
+  ],
+  "counters": [
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_counter_2m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_counter_3m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_counter_corner",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_counter_end",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_counter_half",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_counter_props_board",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.11999999731779099,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_counter_props_crock",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.10000000149011612,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_drain_grate",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.15000000596046448,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_pass_1m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5600000023841858,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_pass_2m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5600000023841858,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_pass_3m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5600000023841858,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_pass_end",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5600000023841858,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Front_rail_1m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter_1m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter_1m_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.9919999837875366,
+        1.000999927520752,
+        1.0
+      ]
+    },
+    {
+      "name": "counter_2m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter_2m_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.9919999837875366,
+        1.000999927520752,
+        1.0
+      ]
+    },
+    {
+      "name": "counter_3m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter_3m_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        2.992000102996826,
+        1.000999927520752,
+        1.0
+      ]
+    },
+    {
+      "name": "counter_corner",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter_corner_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.0,
+        1.000999927520752,
+        1.0
+      ]
+    },
+    {
+      "name": "counter_end",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter_end_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.0,
+        1.000999927520752,
+        1.0
+      ]
+    },
+    {
+      "name": "counter_half",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter_half_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.492000013589859,
+        1.000999927520752,
+        1.0
+      ]
+    },
+    {
+      "name": "counter_props_board",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter_props_board_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.7100000381469727,
+        0.23999999463558197,
+        0.07999999821186066
+      ]
+    },
+    {
+      "name": "counter_props_crock",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "counter_props_crock_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.4050000011920929,
+        0.17000000178813934,
+        0.25
+      ]
+    },
+    {
+      "name": "drain_grate",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "drain_grate_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.2000000476837158,
+        0.30000001192092896,
+        0.05350000411272049
+      ]
+    },
+    {
+      "name": "pass_1m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "pass_1m_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.9919999837875366,
+        1.121999979019165,
+        1.1019999980926514
+      ]
+    },
+    {
+      "name": "pass_2m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "pass_2m_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.9919999837875366,
+        1.121999979019165,
+        1.1019999980926514
+      ]
+    },
+    {
+      "name": "pass_3m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "pass_3m_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        2.992000102996826,
+        1.121999979019165,
+        1.1019999980926514
+      ]
+    },
+    {
+      "name": "pass_end",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "pass_end_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.0,
+        1.121999979019165,
+        1.1019999980926514
+      ]
+    },
+    {
+      "name": "rail_1m",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "rail_1m_body",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.0,
+        1.0,
+        0.6000000238418579
+      ]
+    },
+    {
+      "name": "ref_character_1_8m",
+      "type": "MESH",
+      "location": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.6000000238418579,
+        0.30000001192092896,
+        1.7999999523162842
+      ]
+    },
+    {
+      "name": "ref_counter_1m",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.0,
+        0.800000011920929,
+        1.0
+      ]
+    },
+    {
+      "name": "ref_front_+Y",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "ref_materials_v2",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        2.6500000953674316,
+        1.4500000476837158,
+        0.0
+      ]
+    }
+  ],
+  "order_stand": [
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.23499999940395355,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Number",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.23000000417232513,
+        0.5
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "Anchor_Sign",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.09099999815225601,
+        1.7120000123977661
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "awning_1",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.4800000190734863,
+        0.6059999465942383,
+        0.36999988555908203
+      ]
+    },
+    {
+      "name": "awning_2",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.4800000190734863,
+        0.6059999465942383,
+        0.36999988555908203
+      ]
+    },
+    {
+      "name": "awning_3",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.4800000190734863,
+        0.6059999465942383,
+        0.36999988555908203
+      ]
+    },
+    {
+      "name": "awning_4",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.4800000190734863,
+        0.6059999465942383,
+        0.36999988555908203
+      ]
+    },
+    {
+      "name": "counter",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.440000057220459,
+        0.5289782285690308,
+        1.7760000228881836
+      ]
+    },
+    {
+      "name": "order_stand",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "ref_character_1_8m",
+      "type": "MESH",
+      "location": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.6000000238418579,
+        0.30000001192092896,
+        1.7999999523162842
+      ]
+    },
+    {
+      "name": "ref_counter_1m",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.0,
+        0.800000011920929,
+        1.0
+      ]
+    },
+    {
+      "name": "ref_front_+Y",
+      "type": "EMPTY",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "ref_materials_v2",
+      "type": "MESH",
+      "location": [
+        1.5,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        2.6500000953674316,
+        1.4500000476837158,
+        0.0
+      ]
+    },
+    {
+      "name": "tpv",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.3700000047683716,
+        0.19500000774860382,
+        0.21999996900558472
+      ]
+    },
+    {
+      "name": "tray",
+      "type": "MESH",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.6200000047683716,
+        0.3700000047683716,
+        0.16899996995925903
+      ]
+    }
+  ]
+}

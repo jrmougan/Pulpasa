@@ -1,0 +1,24 @@
+00:00.021  color_management | ERROR OpenColorIO Error: Error: Loading the OCIO profile '/usr/share/blender/5.2/datafiles/colormanagement/config.ocio' failed. This .ocio config  '/usr/share/blender/5.2/datafiles/colormanagement/config.ocio' is version 2.5. This version of the OpenColorIO library (2.4.2) is not able to load that config version.
+                            | The minor version 5 is not supported for major version 2. Maximum minor version is 4.
+00:00.021  color_management | Using fallback mode for management
+/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/build_concepts.py:22: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat=bpy.data.materials.new('atlas_'+n);mat.use_nodes=True
+/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/build_concepts.py:55: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  m=bpy.data.materials.new(key);m.use_nodes=True
+Blender 5.2.2 LTS (hash unknown built 2026-09-15 00:00:00)
+[OpenColorIO Info]: Color management disabled. (Specify the $OCIO environment variable to enable.)
+00:09.320  cycles           | WARNING Colorspace sRGB can't be converted to scene_linear: Color space 'sRGB' could not be found.
+00:09.320  cycles           | WARNING Colorspace sRGB not found, using scene linear instead
+00:09.326  cycles           | WARNING Colorspace Non-Color can't be converted to scene_linear: Color space 'Non-Color' could not be found.
+00:09.326  cycles           | WARNING Colorspace Non-Color not found, using scene linear instead
+00:09.329  cycles           | WARNING Colorspace Non-Color not found, using scene linear instead
+00:20.408  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/B_station.png'
+00:31.565  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/B_trays.png'
+00:44.044  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/B_rack.png'
+00:56.210  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/B_counters.png'
+01:08.899  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/B_kiosks.png'
+01:20.046  render           | Saved: '/home/jeromo/orca/workspaces/Pulpasa/pul-091/art/concepts/estaciones/B_native_1080.png'
+Info: Saved as "direction_B.blend"
+Info: Saved as "direction_B.blend"
+
+Blender quit

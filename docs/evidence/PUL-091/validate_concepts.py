@@ -1,0 +1,24 @@
+import bpy,json,math
+from pathlib import Path
+R=Path.cwd();out={}
+for d in ['A','B']:
+ p=R/'art/concepts/estaciones'/('direction_'+d+'.blend')
+ bpy.ops.wm.open_mainfile(filepath=str(p))
+ s=bpy.context.scene
+ missing=[]
+ for im in bpy.data.images:
+  if im.source=='FILE' and not im.packed_file:
+   path=Path(bpy.path.abspath(im.filepath,library=im.library))
+   if not path.exists():missing.append(str(path))
+ assert not missing,missing
+ assert s.camera.data.type=='ORTHO'
+ assert abs(s.camera.data.ortho_scale-12.74*1920/1080)<.0001
+ assert abs(s.camera.rotation_euler.x-math.radians(52))<.0001
+ assert all(name in bpy.data.collections for name in ['station','trays','rack','counters','kiosks'])
+ assert all(Path(bpy.path.abspath(l.filepath)).exists() for l in bpy.data.libraries)
+ out[d]={'missing_images':missing,'camera_width':s.camera.data.ortho_scale,'camera_rotation_degrees':52,'resolution':[s.render.resolution_x,s.render.resolution_y],'libraries':[l.filepath for l in bpy.data.libraries]}
+ # Reopened render ensures native sheet uses valid saved links, not session-only image cache.
+ if d=='A':
+  s.cycles.samples=4;s.render.filepath=str(R/'docs/evidence/PUL-091/reopen_A.png');bpy.ops.render.render(write_still=True)
+(R/'docs/evidence/PUL-091/concept_validation.json').write_text(json.dumps(out,indent=2))
+print('PUL091 CONCEPT VALIDATION OK')
