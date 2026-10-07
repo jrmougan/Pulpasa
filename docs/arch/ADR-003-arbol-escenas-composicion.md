@@ -1,7 +1,7 @@
 # ADR-003 — Árbol de escenas y composición
 
 - **Estado:** aceptado (2026-10-03); enmienda §8 (estación de condimentos) **propuesta**, pendiente
-  del gate humano (PUL-056); enmienda §9 (estación al paso, D23) **propuesta**, pendiente de la
+  del gate humano (PUL-056); enmienda §9 (estación al paso, D23) **aceptada** por el producer el 2026-10-07 tras la
   revisión del producer (PUL-093); sustituye las partes de §8 que dependían de la bandeja
 - **Fecha:** 2026-10-03; enmiendas 2026-10-05 y 2026-10-07
 - **Ficha:** PUL-003; enmiendas PUL-056 (D18, D19) y PUL-093 (D23)
@@ -234,7 +234,7 @@ pulsación. En la estación un rechazo **no debe tirar nada** (AC8: «la mano no
   Lista completa con la ficha que ejecuta cada baja en `scene-tree.md` §7.
 - Ninguna señal nueva en `EventBus` (`signals.md` §4).
 
-### 9. Estación al paso, pasaplatos marcados y entrega iluminada (D23) — *enmienda 2026-10-07, PUL-093, pendiente de revisión del producer*
+### 9. Estación al paso, pasaplatos marcados y entrega iluminada (D23) — *enmienda 2026-10-07, PUL-093, aceptada*
 
 **Contexto.** D23 (responsable, 2026-10-07, sobre `docs/design/rediseno-estaciones.md`: C-B + B-A +
 E-A + N-A) quita la bandeja de la estación: la caja llena **se lleva en la mano** y se pulsa cada

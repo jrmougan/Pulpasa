@@ -1,11 +1,11 @@
 ---
 id: PUL-093
 title: Enmendar los contratos para la estación sin bandeja y los pasaplatos marcados
-status: review
+status: done
 milestone: M3c
 role: godot-architect
 deps: []
-orca_task: null
+orca_task: task_e498b5d0f8ee
 unity_sources: []
 owns: [docs/arch/scene-tree.md, docs/arch/ADR-003-arbol-escenas-composicion.md, docs/arch/signals.md, docs/arch/README.md, docs/evidence/PUL-093/**, docs/backlog/PUL-093-contratos-estacion-al-paso.md]
 touches_scenes: []
