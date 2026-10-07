@@ -7,6 +7,11 @@
 - **Enmienda M3** (PUL-066, 2026-10-06, ADR-006), **pendiente del gate humano**: `AudioDirector`
   (§1), `LevelAudio` (§2), `%Feedback` y quemado en las entidades (§3), datos de audio, fases y
   quemado (§5), equivalencia 2D (§6) y §8 (buses). Lo marcado **M3** lo implementan PUL-069..071.
+- **Enmienda D23** (PUL-093, 2026-10-07, ADR-003 §9), **pendiente de la revisión del producer**:
+  estación sin `Tray` y dispensadores/cuenco sobre la caja en la mano (§3), 6 `PassSlot` marcados y
+  hueco de la barra a x ≈ 3,2 (§2), indicador de entrega en `order_stand.tscn` (§3), `BoxData` y
+  `StandPalette` (§5), bajas (§7). Además recoge `Bulbs` y `Vignette` de `environment.tscn` (PUL-073,
+  pendiente del QA de M3b). Lo marcado **M3c** lo implementan PUL-097..PUL-101.
 
 Árbol que debe existir al cerrar M0 (fase 8). Rutas relativas a `godot/` (estructura de ADR-001).
 `%Nombre` = nodo con nombre único de escena. Entre corchetes, la fase de M0 en que se crea la
@@ -35,7 +40,7 @@ Flujo: `ui/menus/main_menu.tscn` (escena principal desde la fase 7; `boot.tscn` 
 `scenes/levels/level_01.tscn`. Game over → reintentar (`start_level` con el mismo modo) o salir al
 menú (`GameState.go_to_main_menu()`).
 
-## 2. `scenes/levels/level_01.tscn` [8; planta B en M2b]
+## 2. `scenes/levels/level_01.tscn` [8; planta B en M2b; D23 en M3c]
 
 Solo instancias (ADR-003). Overrides permitidos: transform, `slot_id`, `player_index`,
 `controlled_by` inicial y referencias `@export` entre instancias.
@@ -52,7 +57,7 @@ coordenadas son orientativas: manda `docs/design/level-layouts/gen_layouts.py` c
  1 #..............#
  2 #.b............#     Player2 (b)
  3 #..............#
- 4 #====CCCC=====.#     barra: PassSlot01–04 · SeasoningStation (cols 5–8) · PassSlot05–09 · hueco col 14
+ 4 #PPPPCCCC.#PP###     M3c (D23): PassSlot01–04 · SeasoningStation (cols 5–8) · hueco x ≈ 3,2 · PassSlot05–06
  5 #..............#
  6 B..............#     BoxShelf (pared izquierda del servicio)
  7 B..........a...#     Player1 (a)
@@ -62,16 +67,28 @@ coordenadas son orientativas: manda `docs/design/level-layouts/gen_layouts.py` c
 ```
 Cambio respecto a la planta B publicada: la estación ocupa **4 celdas** (cols 5–8, 4 m) en lugar
 de 2, con el **mismo centro** (x ≈ 0,2), porque la feature pide 4 dispensadores a ≥ 0,9 m entre
-centros más el cuenco (≈ 3,6 m útiles). El pasaplatos queda en 9 `Slot` (cols 1–4 y 9–13).
+centros más el cuenco (≈ 3,6 m útiles). ~~El pasaplatos queda en 9 `Slot` (cols 1–4 y 9–13).~~
+
+**M3c (D23, N-A y B-A; ADR-003 §9.5).** En el dibujo, `P` = `PassSlot`, `C` = estación. El hueco
+de la barra pasa de la col. 14 (x 7,7) a un hueco de ≥ 1 m con **centro x ≈ 3,2** (entre las cols. 9 y 10; en el dibujo, col. 9) y la barra se
+cierra hasta la pared derecha. Hay **exactamente 6** `PassSlot`, cada uno con su marca visible, y
+ningún otro `Slot` en la barra (R11): 4 al oeste de la estación (cols 1–4, como hoy) y 2 al este del
+hueco (orientativo: cols 11–12). Son contrato el número, los nombres `PassSlot01..06`, la marca y
+que fuera de ellos no se deja nada; la posición exacta del hueco y de los dos del este la fija
+`level-layouts.md` (PUL-092) con R14 (rodeo cara de condimentar ↔ cara de pase 6–10 m) y la monta
+PUL-101 (con `level_walker.gd::GAP_X`).
 
 ```
 Level01 (Node3D)                         scenes/levels/level.gd  (común, extends Node)
 │   @export round_config = data/config/round_config.tres   (300 s, D5)
 │   @export order_catalog = data/orders/order_catalog.tres
 │   @export stands = [OrderStand1..4]
-├── Environment          entities/environment/environment.tscn     WorldEnvironment + DirectionalLight3D [8]
+├── Environment          entities/environment/environment.tscn     LevelEnvironment: WorldEnvironment, Sun, Bulbs,
+│                        Vignette y Model (§3) [8; M3b]
 ├── KitchenLayout        entities/environment/kitchen_layout.tscn  suelo 16 × 11, paredes y la barra de la fila 4
 │                        (cols 1–13; hueco de 1 m en la col. 14), todo en la capa world [3/8; M2b]
+│                        M3c (D23): hueco de ≥ 1 m con centro x ≈ 3,2 y barra cerrada hasta la pared derecha;
+│                        umbral del hueco (PUL-095) para que no parezca más barra
 ├── Stations (Node3D)
 │   ├── OctopusStorage   entities/stations/octopus_storage.tscn    celda (2, 0)  [6]
 │   ├── CachelosStorage  entities/stations/cachelos_storage.tscn   celda (3, 0)  [M1]
@@ -79,8 +96,10 @@ Level01 (Node3D)                         scenes/levels/level.gd  (común, extend
 │   ├── Kitchen2         entities/stations/kitchen.tscn            celda (7, 0)  [M2b] segunda olla de 2 plazas (D9)
 │   ├── PassSlot01..04   entities/stations/slot.tscn               celdas (1..4, 4) pasaplatos, sin initial_item [M2b]
 │   ├── SeasoningStation entities/stations/seasoning_station.tscn  cols 5–8 de la fila 4, centro x ≈ 0,2, z ≈ 0,0;
-│   │                    %PassSide hacia la cocina (z−), %OperatorSide hacia el servicio (z+)  [M2b]
-│   ├── PassSlot05..09   entities/stations/slot.tscn               celdas (9..13, 4)  [M2b]
+│   │                    %PassSide hacia la cocina (z−), %OperatorSide hacia el servicio (z+)  [M2b; sin Tray en M3c]
+│   ├── PassSlot05..06   entities/stations/slot.tscn               al este del hueco (orientativo: celdas (11..12, 4))  [M3c]
+│   │                    (M2b tenía PassSlot05..09 en las celdas (9..13, 4); 07–09 se dan de baja, §7)
+│   │                    Sin overrides de Model/Body: la marca pass_mark es parte de slot.tscn (§3)
 │   ├── BoxShelf         entities/stations/box_shelf.tscn          celdas (0, 6–7), de frente al servicio (+x)  [6; M2b]
 │   ├── OrderStand1      entities/stations/order_stand.tscn  slot_id = 1  celda (3, 10)  [6]
 │   ├── OrderStand2      …                                   slot_id = 2  celda (5, 10)
@@ -101,7 +120,9 @@ Level01 (Node3D)                         scenes/levels/level.gd  (común, extend
 ```
 No hay `SpiceShelf` ni ningún `SeasoningItem` (AC18 de la feature): los únicos puntos donde cambia
 el condimento de una caja son los 4 dispensadores y el cuenco de `SeasoningStation`. El nivel no
-sobrescribe nada dentro de la estación (ni datos ni marcadores): solo su transformación.
+sobrescribe nada dentro de la estación (ni datos ni marcadores): solo su transformación. Desde D23,
+con una caja en la mano, en el tramo de la estación solo son objetivo los dispensadores y el cuenco
+(R7): no hay `Slot` en esas 4 celdas.
 
 ## 3. Escenas de entidad
 
@@ -152,7 +173,8 @@ Caja (API del contrato con la estación, M2b, PUL-057; ADR-003 §8.3):
 `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection`,
 `remove_seasoning(seasoning: SeasoningData) -> bool`, `has_seasoning()`, `is_full()`,
 `get_contents()`. `interact()` corta (D1) o se coge; con cualquier otra cosa en la mano consume la
-pulsación sin efecto (ya no condimenta, AC12).
+pulsación sin efecto (ya no condimenta, AC12). D23 no cambia esta API: el dispensador y el cuenco la
+llaman sobre la caja **de la mano** del actor en vez de la de la bandeja.
 
 ### `entities/stations/`
 ```
@@ -174,41 +196,58 @@ box_shelf.tscn        BoxShelf (StaticBody3D)  Model (mueble)
                       └── LargeSpawner  …                                                 data = large.tres
 slot.tscn [5]         Slot (StaticBody3D; grupo interactable)  slot.gd  @export initial_item: PackedScene
                       │   @export accepted_group: StringName = &""  [M2b] vacío = acepta cualquier objeto; si no,
-                      │   lo que no esté en el grupo se rechaza consumiendo la pulsación (ADR-003 §8.2)
+                      │   lo que no esté en el grupo se rechaza consumiendo la pulsación (ADR-003 §8.2).
+                      │   Sin usuario en el nivel desde D23 (lo usaba Tray); se conserva
                       ├── CollisionShape3D, Model, %Anchor (Marker3D), %Highlightable (retícula)
+                      │   [M3c, D23] Model = marca pass_mark de counters (PUL-095; esquinas papel/marino,
+                      │   ≥ 18 px de lado a 1280×720, R11) en lugar del placeholder table_square; el nivel
+                      │   deja de ocultarlo con overrides (ADR-003 §9.5). Lo integra PUL-101
 cachelos_storage.tscn CachelosStorage (StaticBody3D; grupo interactable)  item_spawner.gd  scene = cachelos.tscn  [M1]
                       ├── CollisionShape3D, Model (cachelera), %Highlightable
 spice_shelf.tscn      BAJA en M2b (PUL-061, §7). SpiceShelf con SaltSlot / PaprikaSlot / HotPaprikaSlot
 order_stand.tscn      OrderStand (StaticBody3D; grupo interactable)  order_stand.gd  class_name OrderStand  @export slot_id: int
                       ├── CollisionShape3D, Model (order_stand)
                       ├── %DeliveryZone (Area3D, capa delivery_zone)   body_entered → intenta entregar (B12: también al interactuar)
-                      ├── %OrderLabel (Label3D, billboard)             "#id" o "–"
+                      ├── %OrderLabel (Label3D, billboard)             "#id" o "–"  [M3c: sobre la placa papel del modelo, PUL-096]
+                      ├── %DeliveryMark  [M3c, D23]  pieza delivery_zone de PUL-096 en el suelo, sobre %DeliveryZone;
+                      │                  dos estados: apagado / encendido (emisivo en palette.color_for(slot_id))
+                      ├── %ProximityArea (Area3D, collision_layer 0, máscara player)  [M3c, D23]
+                      │   └── CollisionShape3D (cilindro, radio 2,0 m, centrado en la zona; R12)
                       └── %OkAudio, %ErrorAudio (AudioStreamPlayer3D)  → M3: un %Feedback (FeedbackPlayer), pulse_target = el puesto:
                           deliver_ok (POP), deliver_error (SHAKE), order_new (POP de %OrderLabel, delay), order_expired (SHAKE de %OrderLabel)
 ```
+**Indicador de entrega (M3c, D23, ADR-003 §9.4; PUL-100).** `order_stand.gd` gana
+`@export var palette: StandPalette = data/config/stand_palette.tres` e `is_zone_lit() -> bool`. La
+zona está encendida mientras algún cuerpo de `%ProximityArea` tenga un `%InteractionComponent` cuyo
+`holder` lleve una `Box` que pase `_zone_accepts` (comanda viva del puesto + `OrderValidator.matches`,
+lo mismo que ya decide la entrega sola). Se evalúa en `_physics_process` solo con cuerpos en el
+área; se apaga al vaciarse y con `orders_reset` / `order_completed` / `order_expired` del puesto. No
+entrega: eso sigue en `%DeliveryZone` e `interact`. Sin señales nuevas.
 Un puesto sin comanda (también los que una fase aún no abre, M3) muestra «–»; entregar en él da
 `delivery_rejected(slot_id, −1, 0)` como hoy.
 Los modelos de nevera, olla, fogón y mesas dependen de D6 (Pandazole o sustitutos).
 
-### `entities/stations/` — estación de condimentos [M2b] (D18, ADR-003 §8)
+### `entities/stations/` — estación de condimentos [M2b; al paso en M3c] (D18, D23, ADR-003 §8–§9)
 Diseño: `docs/design/features/estacion-condimentos.md` y boceto `docs/evidence/PUL-040/boceto-estacion.svg`.
 Escenas y scripts de PUL-058; el `Model` definitivo, de PUL-052 (sin tocar el resto de nodos).
 Frente del modelo hacia −Z (biblia de arte) = lado de pase; +Z = lado de condimentar.
+**M3c (D23, PUL-097; modelos de PUL-094):** sin `Tray`; la caja se lleva en la mano y la estación
+es una línea de 4 dispensadores (≥ 1,0 m entre centros, orden del ticket: dulce, picante, sal,
+aceite) y el cuenco. Quién es objetivo con qué en la mano: ADR-003 §9.1 (resumen abajo).
 
 ```
 seasoning_station.tscn
 SeasoningStation (StaticBody3D, capa world; sin grupos)   seasoning_station.gd  class_name SeasoningStation
 │   @export data: SeasoningStationData = data/config/seasoning_station.tres
 │   side_of(floor_position: Vector2) -> StationSide.Side       (ADR-003 §8.1)
-│   get_box() -> Box                                           caja de la bandeja o null
-│   conecta rejected de los 4 dispensadores y del cuenco → %ErrorAudio + sacudida del emisor
+│   get_box() -> Box, get_tray() -> Slot                       BAJA en M3c (D23): no hay bandeja
+│   conecta rejected de los 4 dispensadores y del cuenco → %Feedback (season_error) + sacudida del emisor
 ├── CollisionShape3D (Box ≈ 4 × 1,1 m)   mostrador: no se cruza
 ├── Model                                placeholder de primitivas (PUL-058) → .glb de PUL-052
 ├── %PassSide (Marker3D)                 en el suelo, centro del pasillo del lado de pase (z− local)
 ├── %OperatorSide (Marker3D)             en el suelo, centro del pasillo del lado de condimentar (z+ local)
-├── Tray        instancia de slot.tscn   accepted_group = &"box", sin initial_item; centro del mostrador,
-│                                        hacia el lado de pase; alcanzable desde los dos lados (AC9)
-├── Dispensers (Node3D)                  fila hacia el lado de condimentar, ≥ 0,9 m entre centros
+├── Tray        BAJA en M3c (D23). Era instancia de slot.tscn con accepted_group = &"box"
+├── Dispensers (Node3D)                  fila hacia el lado de condimentar, ≥ 0,9 m entre centros (M3c: ≥ 1,0 m)
 │   ├── SweetPaprika  seasoning_dispenser.tscn  seasoning = data/seasonings/paprika.tres
 │   ├── HotPaprika    seasoning_dispenser.tscn  seasoning = data/seasonings/hot_paprika.tres
 │   ├── Salt          seasoning_dispenser.tscn  seasoning = data/seasonings/salt.tres
@@ -221,10 +260,14 @@ seasoning_dispenser.tscn
 SeasoningDispenser (StaticBody3D, capa interactable; grupo interactable)   seasoning_dispenser.gd  class_name SeasoningDispenser
 │   @export seasoning: SeasoningData
 │   @export station: SeasoningStation
-│   is_reachable_from(floor_position: Vector2, holder: Holder) -> bool   lado de condimentar
-│                     (o los dos con data.operator_side_only = false)
-│   can_interact(actor) -> bool   true si hay holder; interact(actor) -> bool  siempre consume (ADR-003 §8.2)
-│   antirrebote: data.toggle_guard s por dispensador, con reloj inyectable para tests (sin await)
+│   is_reachable_from(floor_position: Vector2, holder: Holder) -> bool
+│                     M3c (D23): true solo si holder lleva una Box (llena o a medio cortar) y desde el lado
+│                     de condimentar (o los dos con data.operator_side_only = false); mano vacía u otra cosa: false
+│   can_interact(actor) -> bool   M3c: true si actor.holder lleva una Box; interact(actor) -> bool  siempre consume
+│                     (ADR-003 §8.2): caja a medio cortar → rejected(BOX_NOT_FULL); llena → box.toggle_seasoning
+│                     sobre la caja de la mano (con paprika_swap); la caja sigue en la mano
+│   antirrebote: data.toggle_guard s por dispensador; M3c: reloj de juego (acumulado en _physics_process,
+│                     se congela en pausa), clock: Callable inyectable para tests (sin await)
 │   signal rejected(reason: SeasoningRules.Rejection)
 ├── CollisionShape3D, Model (bote fijo del condimento; color de SeasoningData)
 └── %Highlightable
@@ -234,18 +277,54 @@ CachelosBowl (StaticBody3D, capa interactable; grupo interactable)   cachelos_bo
 │   @export seasoning: SeasoningData = data/seasonings/cachelos.tres
 │   @export station: SeasoningStation
 │   var stock: int  (0..data.cachelos_stock_max; empieza en data.cachelos_initial_stock)
-│   is_reachable_from: lado de condimentar, o cualquier lado con algo en la mano
-│   interact: mano con un Ingredient cocido cuyo data.as_seasoning.same_as(seasoning) → +data.cachelos_portions_per_item
-│             y libera los cachelos; mano vacía → alterna cachelos en la caja de la bandeja (±1 ración)
+│   is_reachable_from (M3c, D23): true con cachelos cocidos en la mano (Ingredient cocido cuyo
+│             data.as_seasoning.same_as(seasoning)) desde cualquier lado; con una Box **llena** en la mano
+│             solo desde el lado de condimentar; con cualquier otra cosa (mano vacía, pulpo, cachelos crudos
+│             o quemados, caja a medio cortar) false
+│   interact: cachelos cocidos → +data.cachelos_portions_per_item (máx. stock_max) y los libera; caja llena →
+│             alterna cachelos en la caja de la mano (±1 ración; BOWL_EMPTY / BOWL_FULL); antirrebote como el
+│             dispensador
 │   signal rejected(reason: SeasoningRules.Rejection); signal stock_changed(stock: int)
 ├── CollisionShape3D, Model (cuenco)
-├── %Portions (Node3D)   una malla por ración, visibles según stock
+├── %Portions (Node3D)   M2b: una malla por ración, visibles según stock. M3c (PUL-094): estados
+│                        Portions0..Portions4 (sub-mallas del .glb); solo es visible Portions<stock>
 └── %Highlightable
 ```
 Cada dispensador y el cuenco son escenas propias para que cada uno tenga su `%Highlightable`
 (hijo directo, como lo busca `InteractionDetector`) y para que las 4 variantes sean una escena +
-`SeasoningData` (ADR-003 §1). La caja en la bandeja se sigue pudiendo cortar (D1): el detector
-sustituye `Tray` por la caja guardada, como en cualquier `Slot`.
+`SeasoningData` (ADR-003 §1). ~~La caja en la bandeja se sigue pudiendo cortar (D1): el detector
+sustituye `Tray` por la caja guardada, como en cualquier `Slot`.~~ Desde D23 la caja se corta en un
+`PassSlot` (el detector sustituye el `Slot` por la caja guardada, como siempre) y llega llena a la
+mano para condimentar.
+
+Objetivo por lo que hay en la mano (M3c, ADR-003 §9.1; «servicio» = lado de condimentar):
+
+| En la mano | Dispensador | Cuenco |
+|---|---|---|
+| Nada | — | — |
+| Caja llena | servicio: alterna | servicio: alterna cachelos |
+| Caja a medio cortar | servicio: rechaza `BOX_NOT_FULL` (R3) | — |
+| Cachelos cocidos | — | cualquier lado: repone +2 (máx. 4) |
+| Pulpo, cachelos crudos o quemados | — | — |
+
+«—» = no es objetivo (ni se resalta).
+
+### `entities/environment/environment.tscn` [8; luz v2 en M3b, PUL-073/PUL-085]
+```
+Environment (Node3D)   environment.gd  class_name LevelEnvironment
+│   @export config: RenderConfig = data/config/render_config.tres  → environment y camera_attributes del WorldEnvironment
+├── WorldEnvironment
+├── Sun (DirectionalLight3D)        energía 1,34 (la fija test_level_01), sombras
+├── Bulbs (Node3D)                  bombillas de la carpa y las guirnaldas: OmniLight3D cálidas
+│   ├── BulbTentWest, BulbTentCenter, BulbTentEast        (y ≈ 1,85, sobre la cocina; rango 3,5 m)
+│   └── BulbGarlandWest, BulbGarlandEast                  (y ≈ 2,1, laterales del servicio; rango 4,5 m)
+├── Vignette (CanvasLayer, layer −1)  viñeta de pantalla por debajo de la UI del nivel
+│   └── Overlay (TextureRect, anclas a pantalla completa, mouse_filter IGNORE, GradientTexture2D radial)
+└── Model (Node3D)                  suelos, fondos, carpa y atrezo (.glb de PUL-085); solo visual
+```
+`Bulbs` y `Vignette` son estéticos: ningún script los busca y no tienen grupos ni capas de física.
+`Vignette` es un `CanvasLayer` dentro de una escena de mundo (no de `ui/`) porque pertenece al
+render del nivel; su capa −1 la deja bajo `UI` (capa 1 por defecto) y no recibe input.
 
 ### `entities/environment/level_audio.tscn` [M3] (común, ADR-006 §2)
 ```
@@ -306,6 +385,22 @@ data/audio/audio_mix.tres                        AudioMixConfig (music 0.7, ambi
 resources/{phase_data,audio_cue,audio_feedback_map,audio_mix_config}.gd   PhaseData, AudioCue, AudioFeedbackMap, AudioMixConfig
 core/audio_mix.gd                                AudioMix (núcleo de AudioDirector)
 ```
+**M3c** (D23, ADR-003 §9.3):
+```
+resources/box_data.gd                            BoxData + short_label: String («S» / «M» / «L»), + icon: Texture2D
+                                                 (silueta + letra de assets/textures/ui/box_sizes/, PUL-095); PUL-098
+data/boxes/{small,medium,large}.tres             fill_per_press 0.25 / 0.1667 / 0.1 (4 / 6 / 10 pulsaciones, R9),
+                                                 short_label e icon rellenos; el ticket los lee por order.data.recipe.box
+resources/stand_palette.gd                       StandPalette (común) [PUL-099]: @export colors: Array[Color]
+                                                 (índice slot_id − 1), @export fallback: Color,
+                                                 func color_for(slot_id: int) -> Color
+data/config/stand_palette.tres                   StandPalette: 4 colores de toldo (rojo, azul, amarillo, verde; hex
+                                                 de PUL-096); lo leen order_ticket.gd (franja, R13) y order_stand.gd
+                                                 (zona encendida, R12)
+data/config/seasoning_station.tres               cachelos_portions_per_item 2, cachelos_stock_max 4 (D23, R6);
+                                                 resto sin cambios (operator_side_only true, toggle_guard 0.25,
+                                                 paprika_swap true, cachelos_initial_stock 0); PUL-097
+```
 
 ## 6. Equivalencias si D14 = 2D
 
@@ -330,6 +425,9 @@ Misma estructura y nombres; cambian el nodo base y los hijos visuales/físicos.
 | `%ActiveIndicator` (aro `MeshInstance3D`) | `Sprite2D` bajo los pies | |
 | `%BadgeRow` (`Sprite3D` billboard sin test de profundidad) | `HBoxContainer` o `Sprite2D` bajo un `Node2D` con `z_index` alto | Misma API `get_shown()` |
 | `%PassSide` / `%OperatorSide` (`Marker3D`) | `Marker2D` | `StationSide.classify` es el mismo (`Vector2`) |
+| `%ProximityArea` (`Area3D`, cilindro 2 m) y `%DeliveryMark` (pieza de suelo) [M3c] | `Area2D` (círculo 2 m) y `Sprite2D` con dos texturas | Misma regla de `is_zone_lit()` y mismo `StandPalette` |
+| `Bulbs` (`OmniLight3D`) | `PointLight2D` (opcional) | Estético |
+| `Vignette` (`CanvasLayer` −1 + `TextureRect`) | Igual | Ya es 2D de pantalla |
 
 ## 7. Bajas por la estación de condimentos (D18, M2b)
 
@@ -345,6 +443,22 @@ Misma estructura y nombres; cambian el nodo base y los hijos visuales/físicos.
 
 Se mantienen: `SeasoningData` y los cinco `.tres`, `BoxContents`, `OrderValidator` (coincidencia
 exacta), `IngredientData.as_seasoning` y la señal local `seasoned`.
+
+### 7.1 Bajas por la estación al paso (D23, M3c; ADR-003 §9)
+
+| Qué | Dónde | La ejecuta | Nota |
+|---|---|---|---|
+| `Tray` (y sus overrides de `Model`/`Body`) | `entities/stations/seasoning_station.tscn` | PUL-097 | La caja se condimenta en la mano |
+| `SeasoningStation.get_box()`, `get_tray()` | `entities/stations/seasoning_station.gd` | PUL-097 | Dispensador y cuenco leen `actor.holder.get_held_item() as Box` |
+| Dispensador y cuenco con la mano vacía | `seasoning_dispenser.gd`, `cachelos_bowl.gd` (`is_reachable_from`, `can_interact`, `_toggle`) | PUL-097 | Matriz de ADR-003 §9.1 |
+| Antirrebote con reloj de pared (`engine_seconds`, `Time.get_ticks_usec`) | `seasoning_dispenser.gd`, `cachelos_bowl.gd` | PUL-097 | Reloj de juego; `clock` sigue inyectable |
+| `PassSlot07..09` y el hueco de la col. 14 | `level_01.tscn`, `kitchen_layout.tscn` | PUL-101 | Quedan 6 `PassSlot`; hueco a x ≈ 3,2 |
+| Overrides `Model.visible`/`Body.collision_layer` de los `PassSlot` (QA D9) | `level_01.tscn` | PUL-101 | La marca `pass_mark` va en `slot.tscn` (requiere que PUL-101 tenga `slot.tscn` en `owns`/`touches_scenes`) |
+| Placeholder `table_square` como `Model` del `Slot` | `entities/stations/slot.tscn` | PUL-101 | Lo sustituye `pass_mark` (PUL-095) |
+| Tests de la bandeja | En `owns`: `test_seasoning_station.gd`, `test_cachelos.gd` (PUL-097); `test_level_01.gd`, `level_walker.gd` (`GAP_X`) (PUL-101). **Sin dueño** a 2026-10-07: `test_m2b_station_selection.gd`, `test_m2b_flow.gd`, `test_station_level.gd`, `test_delivery_e2e.gd`, `test_kitchen_flow.gd`, `test_m1_flow.gd`, `test_m2_flow.gd`, `test_parity_smoke.gd` | PUL-097 / PUL-101 (el producer reparte los sin dueño) | Usan `Tray`/`get_tray()`/`get_box()`; se reescriben contra la caja en la mano |
+
+`SeasoningRules.Rejection.NO_BOX` y `HAND_BUSY` quedan en desuso (nadie los emite) sin quitarse del
+enum. `Slot.accepted_group` y el grupo `box` se conservan.
 
 ## 8. Buses de audio (M3, ADR-006 §1)
 
