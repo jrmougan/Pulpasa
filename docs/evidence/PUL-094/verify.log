@@ -1,0 +1,40 @@
+
+== gdformat --check
+159 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== tests (GUT)
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m[4m
+res://tests/unit/test_data_integrity.gd
+[0m- test_ac3_seasoning_colors_are_distinct_and_opaque
+[31m    [Failed]:  [0m[COLOR(0.8392, 0.2118, 0.1216, 1.0)] expected to equal [COLOR(0.95, 0.55, 0.2, 1.0)]:  paprika
+          at line 110
+[31m    [Failed]:  [0m[COLOR(0.5608, 0.102, 0.0784, 1.0)] expected to equal [COLOR(0.85, 0.12, 0.1, 1.0)]:  hot_paprika
+          at line 110
+
+Totals
+------
+Scripts              68
+Tests               735
+Passing Tests       734
+Failing Tests         1
+Asserts           9112/9114
+Time              307.025s
+
+
+[31m---- 1 failing tests ----
+[0m
+Results saved to res://.gut_reports/junit.xml
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✗ verify FAILED

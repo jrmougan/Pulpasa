@@ -37,7 +37,10 @@ Modelos de `art/blender/seasoning_station.blend` → `godot/assets/models/statio
 - [ ] AC4 Presupuesto de triángulos dentro de la biblia §4
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Auditar modelos, nombres y anclajes; conservar variantes y documentar las posiciones nuevas necesarias para 1 m de separación y el orden D23.
+2. Reconstruir por Blender CLI el mostrador sin bandeja, cuatro siluetas con botones de papel y cuenco abierto con Portions0..4; exportar los tres GLB con materiales v2 y atlas propio.
+3. Armonizar los tres colores de datos con §2.5 y comprobar nombres, geometría, presupuesto y datos.
+4. Capturar en Godot a 1080p con cámara del juego y Dummy, incluyendo gris y estados; ejecutar verify, commit y check_owns, y entregar instrucciones a PUL-097.
 
 ## Evidence
 (Lo rellena el worker.)

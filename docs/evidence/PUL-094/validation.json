@@ -1,0 +1,69 @@
+{
+  "seasoning_station": {
+    "counter": 108,
+    "IngredientStripe": 108,
+    "IngredientStripe.001": 108,
+    "IngredientStripe.002": 108,
+    "IngredientStripe.003": 108,
+    "IngredientStripe.004": 108,
+    "KitchenRail": 108,
+    "Leg": 108,
+    "Leg.001": 108,
+    "Leg.002": 108,
+    "Leg.003": 108,
+    "PaprikaPair": 12,
+    "ServiceChevron": 4,
+    "ServiceChevron.001": 4,
+    "ServiceChevron.002": 4,
+    "ServiceChevron.003": 4,
+    "ServiceChevron.004": 4,
+    "ServiceFascia": 108,
+    "ServiceMat": 108,
+    "Shelf": 108
+  },
+  "anchor_positions_godot": {
+    "Anchor_Dispenser_SweetPaprika": [
+      -2,
+      1.100000023841858,
+      0
+    ],
+    "Anchor_Dispenser_HotPaprika": [
+      -1,
+      1.100000023841858,
+      0
+    ],
+    "Anchor_Dispenser_Salt": [
+      0,
+      1.100000023841858,
+      0
+    ],
+    "Anchor_Dispenser_Oil": [
+      1,
+      1.100000023841858,
+      0
+    ],
+    "Anchor_Bowl": [
+      2,
+      1.100000023841858,
+      0
+    ]
+  },
+  "seasoning_dispenser": {
+    "oil": 538,
+    "paprika_hot": 306,
+    "paprika_sweet": 498,
+    "salt": 370
+  },
+  "cachelos_bowl": {
+    "bowl": 288,
+    "BowlButton": 250,
+    "BowlHull": 60,
+    "Portions0": 60,
+    "Portions1": 80,
+    "Portions2": 100,
+    "Portions3": 120,
+    "Portions4": 140
+  },
+  "bowl_max_active_including_hull": 738,
+  "palette": "PASS: all five data colors match art bible 2.5"
+}
