@@ -1,3 +1,22 @@
+# Todo el texto del repo en LF, también en Windows (Godot y el MCP reescriben con su propio fin de línea).
+* text=auto eol=lf
+
+# Binarios: nunca convertir.
+*.png binary
+*.jpg binary
+*.webp binary
+*.exr binary
+*.glb binary
+*.blend binary
+*.fbx binary
+*.ogg binary
+*.wav binary
+*.mp3 binary
+*.ttf binary
+*.otf binary
+*.res binary
+*.scn binary
+
 # Godot: escenas y recursos no se fusionan línea a línea; un conflicto se rehace.
 *.tscn merge=binary
 *.tres merge=binary
