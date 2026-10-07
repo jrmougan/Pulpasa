@@ -1,9 +1,10 @@
 # ADR-003 — Árbol de escenas y composición
 
 - **Estado:** aceptado (2026-10-03); enmienda §8 (estación de condimentos) **propuesta**, pendiente
-  del gate humano (PUL-056)
-- **Fecha:** 2026-10-03; enmienda 2026-10-05
-- **Ficha:** PUL-003; enmienda PUL-056 (D18, D19)
+  del gate humano (PUL-056); enmienda §9 (estación al paso, D23) **propuesta**, pendiente de la
+  revisión del producer (PUL-093); sustituye las partes de §8 que dependían de la bandeja
+- **Fecha:** 2026-10-03; enmiendas 2026-10-05 y 2026-10-07
+- **Ficha:** PUL-003; enmiendas PUL-056 (D18, D19) y PUL-093 (D23)
 - **Relacionado:** `docs/arch/scene-tree.md` (árbol objetivo de M0), ADR-001 (carpetas), ADR-002
   (autoloads), ADR-005 (3D o 2D, D14 pendiente), inventario §1 (Characters, Game, Interaction,
   Interfaces) y §3 (prefabs, escenas)
@@ -99,7 +100,7 @@ Godot no tiene interfaces; se usa **grupo + métodos con firma fija**, verificad
 | `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación). **Opcional** (§8): `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool` | estaciones, slots, caja, puesto de entrega, pulpo y cachelos; dispensadores y cuenco de la estación de condimentos (§8). Condimento (bote): baja en PUL-061 |
 | `pickable` | `on_picked_up(holder: Holder) -> void`; `on_dropped() -> void`; `var is_held: bool` | pulpo, cachelos, caja. Condimento (bote): baja en PUL-061 |
 | `kitchen` | Ninguno (marca). Lo usa `InteractionDetector` para el bonus de puntuación con mano vacía (`PlayerConfig.kitchen_bonus`, equivale al tag `Kitchen` de Unity). No es una capa de física | raíz de `kitchen.tscn` (obligatorio) |
-| `box` | Ninguno (marca, §8). Lo usa `Slot.accepted_group` para que la bandeja de la estación solo acepte cajas. No es una capa de física | raíz de `box.tscn` |
+| `box` | Ninguno (marca, §8). Lo usaba `Slot.accepted_group` para que la bandeja de la estación solo aceptara cajas; sin usuario en el nivel desde D23 (§9), se conserva. No es una capa de física | raíz de `box.tscn` |
 
 *Enmienda 2026-10-03 (grupo `kitchen`), aprobada por el responsable tras la revisión de PUL-015.*
 
@@ -143,6 +144,10 @@ alternativa que salta al menú) → `scenes/levels/level_01.tscn`. Los cambios d
 escena cambia de escena por su cuenta. Pausa y game over son overlays dentro del nivel, no escenas.
 
 ### 8. Estación de condimentos (D18) — *enmienda 2026-10-05, PUL-056, pendiente del gate humano*
+
+> **D23 (§9):** la bandeja (`Tray`) desaparece. Lo que aquí depende de ella (fila `Tray` de §8.1,
+> dispensador con la mano vacía, `accepted_group` de la bandeja en §8.2 y `station.get_box()` en
+> §8.3) queda sustituido por §9; el resto de §8 sigue vigente.
 Diseño: `docs/design/features/estacion-condimentos.md` (aprobado el 2026-10-05, `paprika_swap` =
 intercambiar). Árbol de nodos en `scene-tree.md` §3 y planta del nivel en `scene-tree.md` §2.
 
@@ -229,6 +234,119 @@ pulsación. En la estación un rechazo **no debe tirar nada** (AC8: «la mano no
   Lista completa con la ficha que ejecuta cada baja en `scene-tree.md` §7.
 - Ninguna señal nueva en `EventBus` (`signals.md` §4).
 
+### 9. Estación al paso, pasaplatos marcados y entrega iluminada (D23) — *enmienda 2026-10-07, PUL-093, pendiente de revisión del producer*
+
+**Contexto.** D23 (responsable, 2026-10-07, sobre `docs/design/rediseno-estaciones.md`: C-B + B-A +
+E-A + N-A) quita la bandeja de la estación: la caja llena **se lleva en la mano** y se pulsa cada
+dispensador «al paso». Además: 6 pasaplatos marcados (el resto de la barra no acepta objetos),
+tamaño S/M/L legible en ticket y rack, color de puesto en el ticket y zona de entrega que se
+enciende, hueco de la barra a x ≈ 3,2 y 2 raciones por cachelo (máx. 4). Esta sección **sustituye**
+lo que en §8 dependía de la bandeja (fila `Tray` de §8.1, `accepted_group` de la bandeja en §8.2,
+`station.get_box()` en §8.3) y mantiene el resto de §8: la regla de lado (`StationSide`,
+`is_reachable_from`, `side_of`), consumir al rechazar, `SeasoningRules` y la API de la caja. Tecla
+única e InputMap sin cambios (D3, G9). Lo implementan PUL-097 (estación), PUL-098 (cajas), PUL-099
+(ticket y `StandPalette`), PUL-100 (puesto) y PUL-101 (nivel).
+
+#### 9.1 Quién es objetivo con qué en la mano
+El filtro sigue siendo `is_reachable_from(floor_position, holder)` (§8.1): si devuelve `false`, el
+detector no lo resalta ni lo publica. «Servicio» = `station.side_of(...) == OPERATOR`, o cualquier
+lado si `SeasoningStationData.operator_side_only` es `false` (se mantiene `true`, pregunta abierta 3
+de PUL-090).
+
+| En la mano | Dispensador (×4) | Cuenco de cachelos |
+|---|---|---|
+| Nada | No es objetivo (R4) | No es objetivo |
+| Caja llena | Servicio: alterna su condimento en **esa** caja (R1–R2) | Servicio: alterna cachelos en esa caja |
+| Caja a medio cortar | Servicio: es objetivo y **rechaza** `BOX_NOT_FULL` (R3: la caja no cambia y suena `season_error`) | No es objetivo |
+| Cachelos cocidos | No es objetivo | Cualquier lado: repone `+cachelos_portions_per_item` (R5–R6) |
+| Otra cosa (pulpo, cachelos crudos o quemados) | No es objetivo | No es objetivo |
+| Cualquier cosa, desde el lado de pase | No es objetivo | Solo cachelos cocidos (reponer) |
+
+- La caja **siempre sigue en la mano** (R1): dispensador y cuenco consumen la pulsación (§8.2), así
+  que `InteractionComponent` nunca suelta. Al rechazar emiten `rejected(reason)` sin cambiar nada.
+- Asimetría deliberada con la caja a medio cortar: el dispensador es objetivo para que R3 dé
+  feedback (`BOX_NOT_FULL`); el cuenco no, por la aclaración del responsable sobre D23 («con
+  cualquier otra cosa no es objetivo»). Las dos son de `is_reachable_from`, sin código común.
+- Con algo en la mano que no hace objetivo a nada de la estación, la pulsación sigue la regla general
+  (soltar, §9.5).
+- Defensa en profundidad: `can_interact(actor)` repite la condición de la mano (sin el lado, como en
+  §8.1) y devuelve `false` en el resto de casos.
+- `SeasoningRules.Rejection.NO_BOX` queda **en desuso** (como `HAND_BUSY`): sin caja en la mano el
+  dispensador no es objetivo. No se quita del enum para no renumerar.
+
+#### 9.2 Dónde está la caja y antirrebote
+- Dispensador y cuenco toman la caja de `actor.holder.get_held_item() as Box`. **Se quitan**
+  `SeasoningStation.get_box()` y `get_tray()`, y el nodo `Tray`. La estación conserva `data`,
+  `side_of()` y la respuesta a `rejected` (cue `season_error` + sacudida del emisor).
+- El antirrebote (`toggle_guard`, 0,25 s) usa el **reloj de juego**: segundos acumulados en
+  `_physics_process` del propio nodo (se congela en pausa y sigue `Engine.time_scale`, como la olla).
+  `clock: Callable` sigue siendo inyectable para tests; deja de usar `Time.get_ticks_usec`
+  (pregunta abierta 4 de PUL-090). Aplica a dispensadores y al cuenco al alternar; la segunda
+  pulsación dentro de la guarda se consume en silencio.
+- Las pegatinas (`%BadgeRow`) siguen a la caja en la mano sin cambios: ya se rehacen con
+  `seasoned`/`seasoning_removed`.
+
+#### 9.3 Contratos de datos
+| Recurso | Campo | Tipo | Valor / uso |
+|---|---|---|---|
+| `BoxData` (`resources/box_data.gd`, común) | `short_label` | `String` | «S», «M», «L» en `data/boxes/{small,medium,large}.tres` |
+| `BoxData` | `icon` | `Texture2D` | silueta + letra de `assets/textures/ui/box_sizes/` (PUL-095); la usan el ticket (vía `RecipeData.box`) y, si quiere, el rack. Mismo recurso en los dos (R10) |
+| `BoxData` | `fill_per_press` | `float` (ya existe) | 0,25 / 0,1667 / 0,1 → 4 / 6 / 10 pulsaciones (R9) |
+| `StandPalette` (`resources/stand_palette.gd`, común, nuevo) | `colors` | `Array[Color]` | índice `slot_id − 1`; 4 entradas: rojo, azul, amarillo, verde (hex de los toldos, PUL-096) |
+| `StandPalette` | `fallback` | `Color` | para un `slot_id` fuera de rango (no se espera en el nivel) |
+| `StandPalette` | `color_for(slot_id: int) -> Color` | método | única forma de leerla; la usan `order_ticket.gd` (franja, R13) y `order_stand.gd` (zona encendida). Instancia: `data/config/stand_palette.tres` |
+| `SeasoningStationData` (ya existe) | `cachelos_portions_per_item` / `cachelos_stock_max` | `int` | 1 → **2** / 3 → **4** (R6, D23); `operator_side_only` `true`, `toggle_guard` 0,25, `paprika_swap` `true` sin cambios |
+
+`StandPalette` y `BoxData` solo usan `Color`, `String` y `Texture2D`: capa común (§0), válidos en
+3D y 2D. El color del toldo del modelo del puesto (PUL-083/PUL-096) debe coincidir con la paleta;
+PUL-100 lo comprueba (o tiñe el toldo desde la paleta).
+
+#### 9.4 Indicador de entrega en `order_stand.tscn`
+- `%DeliveryMark`: la pieza `delivery_zone` de PUL-096 en el suelo, sobre `%DeliveryZone`, con dos
+  estados (apagado / encendido; el encendido, emisivo en `palette.color_for(slot_id)`).
+- `%ProximityArea` (`Area3D`, `collision_layer` 0, máscara `player`): cilindro de **2,0 m** de radio
+  centrado en la zona (R12). El radio es geometría de la escena; el test de PUL-100 lo fija.
+- Regla (en `order_stand.gd`, `@export var palette: StandPalette`): encendida si algún cuerpo de
+  `%ProximityArea` tiene un `%InteractionComponent` cuyo `holder` lleva una `Box` que cumple la misma
+  comprobación que ya usa la zona para entregar sola (`_zone_accepts`: comanda viva y
+  `OrderValidator.matches`). Se evalúa en `_physics_process` mientras haya cuerpos en el área (≤ 1
+  tick, R12 pide ≤ 0,1 s) y se apaga al vaciarse el área y con `orders_reset`, `order_completed` y
+  `order_expired` de su puesto. Expone `is_zone_lit() -> bool` para tests.
+- No entrega nada: entregar sigue siendo `%DeliveryZone` (`body_entered`) o interactuar (B12).
+
+#### 9.5 Pasaplatos y barra
+- En el nivel hay exactamente **6** `PassSlot` (`slot.tscn`), y fuera de ellos y de la estación
+  ningún `Slot` (R11). `slot.tscn` cambia su `Model` (hoy el placeholder `table_square`, oculto por
+  overrides del nivel desde el QA D9) por la marca `pass_mark` de `counters` (PUL-095): la marca es
+  parte del pasaplatos, no del nivel, y el nivel deja de sobrescribir `Model`/`Body`. La retícula
+  de `%Highlightable` no cambia. `Slot.accepted_group` se conserva (API probada, sin usuarios en el
+  nivel).
+- Soltar sin objetivo no cambia (§6: delante del portador, al nodo `Items`). R11 exige además que lo
+  soltado frente a la barra **no quede sobre ella**: PUL-101 lo prueba; si falla, la corrección va en
+  `HoldComponent._drop_position` (si el punto cae dentro de un cuerpo de la capa `world`, se suelta
+  a los pies del portador) en una ficha aparte que asigna el producer.
+- Hueco de la barra: de x 7,7 (col. 14) a **centro x ≈ 3,2**, ≥ 1 m de ancho, y la barra se cierra
+  hasta la pared derecha. La posición exacta la fija `level-layouts.md` (PUL-092) con R14 (rodeo
+  6–10 m). `level_walker.gd::GAP_X` sigue al hueco.
+
+#### 9.6 Señales
+**Ninguna señal nueva ni cambio de firma.** El condimento sigue en `seasoned` / `seasoning_removed`
+de la caja y `rejected` / `stock_changed` de dispensador y cuenco (locales, `signals.md` §4); la
+entrega y el puesto, en `order_generated` / `order_completed` / `order_expired` / `orders_reset` /
+`delivery_rejected` de `EventBus`. El indicador lee la mano del portador (local, por cuerpos del
+área, como ya hace `%DeliveryZone`) y las comandas que el puesto ya oye; el ticket obtiene tamaño y
+color de datos (`RecipeData.box`, `ActiveOrder.slot_id` + `StandPalette`), sin escuchar al puesto.
+
+**Alternativas descartadas.**
+1. *Mantener `Tray` como opcional y que el dispensador mire primero la mano.* Dos caminos para la
+   misma acción y vuelve E2 (franja de la bandeja que compite con los dispensadores).
+2. *Señal `EventBus.delivery_hint_changed(slot_id, lit)`.* Nadie fuera del puesto la necesita; el
+   ticket no se ilumina (E-A solo pide el color). Se promovería con enmienda si el HUD la pide.
+3. *Color por puesto como `@export var color` en cada `OrderStand` del nivel.* Duplica el dato en
+   el nivel y el ticket no lo vería sin buscar nodos; un `Resource` compartido lo leen los dos.
+4. *Marca del pasaplatos como piezas de `kitchen_layout.tscn`.* La marca y el `Slot` podrían
+   separarse al mover uno; en `slot.tscn` van juntos.
+
 ## Alternativas consideradas
 1. **Nivel monolítico como `Level_01.unity`.** Un solo dueño para casi todo, conflictos de merge en
    un `.tscn` grande y overrides opacos. Descartada.
@@ -265,5 +383,9 @@ pulsación. En la estación un rechazo **no debe tirar nada** (AC8: «la mano no
   existentes (el método nuevo es opcional).
 - (§8, −) El detector hace una llamada dinámica más por candidato con el método; son 5 nodos en el
   nivel y solo dentro del radio del detector.
+- (§9, +) Cada pieza de la estación tiene un único verbo con la caja en la mano; desaparece la
+  pieza que compartía caja entre lados, y con ella `get_box()` y la franja de la bandeja.
+- (§9, −) Se pierde la regla de dos lados para la caja (queda para dispensadores y cuenco), y el
+  puesto hace una comprobación por tick mientras haya alguien a ≤ 2 m (≤ 2 cuerpos).
 - El árbol concreto de M0 está en `docs/arch/scene-tree.md`. Cambiarlo en algo que afecte a otra
   ficha (nombres de escena, `@export` públicos, grupos, capas) requiere enmienda.
