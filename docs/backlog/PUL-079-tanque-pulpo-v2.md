@@ -1,11 +1,11 @@
 ---
 id: PUL-079
 title: Convertir el arcón en tanque de pulpos
-status: review
+status: done
 milestone: M3b
 role: asset-pipeline
 deps: [PUL-072, PUL-074, PUL-076]
-orca_task: null
+orca_task: task_a0e464dc5fcc
 unity_sources: []
 owns: [art/blender/octopus_storage.blend, godot/assets/models/stations/octopus_storage/**, godot/entities/stations/octopus_storage.tscn, docs/evidence/PUL-079/**]
 touches_scenes: [godot/entities/stations/octopus_storage.tscn]

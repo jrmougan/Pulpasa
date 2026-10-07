@@ -91,7 +91,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-076 | M3b | asset-pipeline | done | Rehacer pulpo, cachelos y raciones con la estética de referencia |
 | PUL-077 | M3b | asset-pipeline | ready | Rehacer platos/cajas como bandejas de la referencia |
 | PUL-078 | M3b | asset-pipeline | done | Rehacer las ollas como cocedores de acero |
-| PUL-079 | M3b | asset-pipeline | ready | Convertir el arcón en tanque de pulpos |
+| PUL-079 | M3b | asset-pipeline | done | Convertir el arcón en tanque de pulpos |
 | PUL-080 | M3b | asset-pipeline | ready | Rehacer la cachelera como sacos de patatas |
 | PUL-081 | M3b | asset-pipeline | draft | Rehacer la estantería como rack de bandejas |
 | PUL-082 | M3b | asset-pipeline | done | Rehacer la estación de condimentos |

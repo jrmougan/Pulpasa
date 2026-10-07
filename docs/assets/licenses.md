@@ -10,6 +10,7 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | Montserrat Black y Bold (Julieta Ulanovsky y colaboradores; github.com/JulietaUla/Montserrat), convertidas a trazados en `art/brand/*.svg` (PUL-088) | `assets/textures/brand/pulpasa_*.png` | SIL OFL 1.1 | No en el dibujo; si se distribuye la fuente, incluir `OFL.txt` |
 | Símbolo, placas y maquetas de `art/brand/` (PUL-088) | `assets/textures/brand/pulpasa_*.png` | Propio (equipo Pulpasa) | No |
 | `docs/evidence/PUL-073/luz_v2.blend` (PUL-073, escena de luz de referencia) | — (solo evidencia) | Propio (equipo Pulpasa) | No |
+| `art/blender/octopus_storage.blend` v2, tanque (PUL-079) | `assets/models/stations/octopus_storage/*` | Propio (equipo Pulpasa) | No |
 | `art/blender/counters.blend` v2 (PUL-084) | `assets/models/furniture/counters/*` | Propio (equipo Pulpasa) | No |
 | `art/blender/environment_v2.blend` (PUL-085) | `assets/models/environment/romeria_v2/*` y texturas | Propio (equipo Pulpasa) | No |
 | `art/blender/order_stand.blend` v2 (PUL-083) | `assets/models/stations/order_stand/**` | Propio (equipo Pulpasa) | No |
