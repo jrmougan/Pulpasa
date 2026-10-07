@@ -53,7 +53,21 @@ Solo diseño (sin código). Escribe `docs/design/rediseno-estaciones.md`:
 - [ ] AC4 Sección de necesidades de arte y preguntas de gate con recomendación
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Leer features, decisiones y el código real de estación, caja, slot, detector, olla y puestos.
+2. Medir jugando: bot con teclado simulado y detector real sobre `level_01.tscn`
+   (`docs/evidence/PUL-090/measure_flow.gd`) en Solo, Individual con cambio y Coop 2P, S/M/L y con
+   cachelos; y mapa de objetivos del detector a lo largo de la barra (`target_map.gd`).
+3. Diagnóstico, problemas priorizados, 2–3 alternativas por bloque con boceto y coste,
+   recomendación con AC borrador, necesidades de arte y preguntas de gate en
+   `docs/design/rediseno-estaciones.md`. Sin tocar `godot/` ni las features.
 
 ## Evidence
-(Lo rellena el worker.)
+- Documento: `docs/design/rediseno-estaciones.md` (AC1 §1, AC2 §2–3, AC3 §4, AC4 §5–6).
+- Medidas reproducibles: `docs/evidence/PUL-090/` (`metrics.json`, `target_map.txt`, scripts y
+  README con los comandos). 24 pedidos completados por el bot; 0 rechazos.
+- Hallazgos clave: bandeja única = emplatador quieto 49 % en coop; rodeo de 16–17 m frente a los
+  6–10 m de la feature; el corte es el 69 % de las pulsaciones de una L; cuenco que roba el objetivo
+  con cualquier cosa en la mano; tamaño S/M/L ausente del ticket.
+- `tools/verify.sh` en verde (la 1.ª ejecución dio un fallo intermitente en
+  `test_level_01.gd::test_ac3_retry_after_round_finished_leaves_clean_state`, 299,83 frente a 300 ± 0,1
+  de `time_left`; sin tocar `godot/`, la 2.ª pasó entera).
