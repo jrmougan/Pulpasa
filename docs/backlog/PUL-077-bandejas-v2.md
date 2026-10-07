@@ -107,7 +107,7 @@ La referencia sirve en bandejas/recipientes rojos de plástico: tres tamaños di
   [`zoom`](../evidence/PUL-077/level_camera_after_plain_zoom.png) /
   [`resaltado`](../evidence/PUL-077/level_camera_after_highlight.png) /
   [`resaltado zoom`](../evidence/PUL-077/level_camera_after_highlight_zoom.png). El papel separa las
-  rodajas del rojo, las tres siluetas se distinguen sobre la madera de la barra y en la mano.
+  rodajas del rojo, las tres siluetas se distinguen sobre el acero de las encimeras v2 (PUL-084, integrada la rama base antes de la captura «después»; la «antes» es con las encimeras v1) y en la mano.
   La estantería (`box_shelf`) sigue con sus pilas v1: la rehace PUL-081.
 - **Render del `.blend`** (Cycles, encimera `mat_steel_brushed_top`, ortográfica a 38°; vacías detrás,
   llenas delante con la escala de `fill_scale`): [`blender_render.png`](../evidence/PUL-077/blender_render.png).
