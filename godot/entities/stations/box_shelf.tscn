@@ -20,30 +20,6 @@ size = Vector3(0.5, 0.45, 0.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_c30b7"]
 size = Vector3(0.5, 0.45, 0.5)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hull"]
-albedo_color = Color(0.851, 0.659, 0.424, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_hull_small"]
-top_radius = 0.1581
-bottom_radius = 0.1360
-height = 0.16
-radial_segments = 16
-rings = 1
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_hull_medium"]
-top_radius = 0.1953
-bottom_radius = 0.1680
-height = 0.16
-radial_segments = 16
-rings = 1
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_hull_large"]
-top_radius = 0.2279
-bottom_radius = 0.1960
-height = 0.16
-radial_segments = 16
-rings = 1
-
 [node name="BoxShelf" type="StaticBody3D" unique_id=1788334010]
 collision_mask = 0
 
@@ -65,17 +41,9 @@ data = ExtResource("4_ngbkk")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 shape = SubResource("BoxShape3D_5xe2l")
 
-[node name="OutlineHull" type="Node3D" parent="SmallSpawner"]
-
-[node name="Body" type="MeshInstance3D" parent="SmallSpawner/OutlineHull"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
-cast_shadow = 0
-material_override = SubResource("StandardMaterial3D_hull")
-mesh = SubResource("CylinderMesh_hull_small")
-
 [node name="Highlightable" type="Node" parent="SmallSpawner" unique_id=915379132 node_paths=PackedStringArray("root")]
 script = ExtResource("6_sc6ef")
-root = NodePath("../OutlineHull")
+root = NodePath("../../Model/box_shelf/OutlineHull/hull_small")
 
 [node name="MediumSpawner" type="StaticBody3D" parent="." unique_id=1736467547 groups=["interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.31, -0.78)
@@ -89,17 +57,9 @@ data = ExtResource("7_33sfg")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 shape = SubResource("BoxShape3D_qnwu0")
 
-[node name="OutlineHull" type="Node3D" parent="MediumSpawner"]
-
-[node name="Body" type="MeshInstance3D" parent="MediumSpawner/OutlineHull"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
-cast_shadow = 0
-material_override = SubResource("StandardMaterial3D_hull")
-mesh = SubResource("CylinderMesh_hull_medium")
-
 [node name="Highlightable" type="Node" parent="MediumSpawner" unique_id=2101543581 node_paths=PackedStringArray("root")]
 script = ExtResource("6_sc6ef")
-root = NodePath("../OutlineHull")
+root = NodePath("../../Model/box_shelf/OutlineHull/hull_medium")
 
 [node name="LargeSpawner" type="StaticBody3D" parent="." unique_id=1598286876 groups=["interactable"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.536, 0.31, -0.78)
@@ -113,14 +73,6 @@ data = ExtResource("9_afmdh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 shape = SubResource("BoxShape3D_c30b7")
 
-[node name="OutlineHull" type="Node3D" parent="LargeSpawner"]
-
-[node name="Body" type="MeshInstance3D" parent="LargeSpawner/OutlineHull"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
-cast_shadow = 0
-material_override = SubResource("StandardMaterial3D_hull")
-mesh = SubResource("CylinderMesh_hull_large")
-
 [node name="Highlightable" type="Node" parent="LargeSpawner" unique_id=1069699526 node_paths=PackedStringArray("root")]
 script = ExtResource("6_sc6ef")
-root = NodePath("../OutlineHull")
+root = NodePath("../../Model/box_shelf/OutlineHull/hull_large")
