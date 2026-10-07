@@ -2,95 +2,136 @@
 
 [ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="1_4d6w6"]
 [ext_resource type="Script" path="res://ui/hud/hud.gd" id="1_xmswo"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4d6w6"]
-content_margin_left = 14.0
-content_margin_top = 8.0
-content_margin_right = 14.0
-content_margin_bottom = 8.0
-bg_color = Color(0.1254902, 0.1882353, 0.1882353, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[ext_resource type="Texture2D" uid="uid://bk2ecjgyqafyj" path="res://assets/textures/brand/pulpasa_compacta.png" id="3_badge"]
 
 [node name="HUD" type="Control" unique_id=1410909336]
 layout_mode = 3
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = -270.0
-offset_right = 192.0
-offset_bottom = -58.0
+offset_left = 8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = -8.0
 grow_vertical = 0
 mouse_filter = 2
 theme = ExtResource("1_4d6w6")
 script = ExtResource("1_xmswo")
 
 [node name="Background" type="PanelContainer" parent="." unique_id=1469453156]
-layout_mode = 0
-anchor_right = 1.0
+custom_minimum_size = Vector2(176, 0)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
 anchor_bottom = 1.0
+grow_vertical = 0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4d6w6")
+theme_type_variation = &"UiPanel"
 
 [node name="Stats" type="VBoxContainer" parent="Background" unique_id=295948112]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 6
+
+[node name="Header" type="PanelContainer" parent="Background/Stats" unique_id=622738718]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"UiHeader"
+
+[node name="Row" type="HBoxContainer" parent="Background/Stats/Header" unique_id=1198824033]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Badge" type="TextureRect" parent="Background/Stats/Header/Row" unique_id=1210702300]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_badge")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Shift" type="Label" parent="Background/Stats/Header/Row" unique_id=1602479296]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "Turno"
+vertical_alignment = 1
 
 [node name="ActiveCharacter" type="Label" parent="Background/Stats" unique_id=1410909401]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 15
 
 [node name="DeviceNotice" type="Label" parent="Background/Stats" unique_id=1410909402]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1, 0.41960785, 0.34117648, 1)
+theme_override_font_sizes/font_size = 15
 
 [node name="Time" type="VBoxContainer" parent="Background/Stats" unique_id=415250434]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 2
 
 [node name="TimeTitle" type="Label" parent="Background/Stats/Time" unique_id=1308121492]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_type_variation = &"CaptionLabel"
 
-[node name="TimeLeft" type="Label" parent="Background/Stats/Time" unique_id=337204135]
+[node name="TimeWell" type="PanelContainer" parent="Background/Stats/Time" unique_id=1804077953]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"DisplayWell"
+
+[node name="TimeLeft" type="Label" parent="Background/Stats/Time/TimeWell" unique_id=337204135]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"FigureLabel"
+horizontal_alignment = 2
 
 [node name="Rate" type="VBoxContainer" parent="Background/Stats" unique_id=6399693]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 2
 
 [node name="RateTitle" type="Label" parent="Background/Stats/Rate" unique_id=1752798135]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_type_variation = &"CaptionLabel"
 
-[node name="BoxesPerMinute" type="Label" parent="Background/Stats/Rate" unique_id=1036724537]
+[node name="RateWell" type="PanelContainer" parent="Background/Stats/Rate" unique_id=202806496]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"DisplayWell"
+
+[node name="BoxesPerMinute" type="Label" parent="Background/Stats/Rate/RateWell" unique_id=1036724537]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"FigureLabel"
+horizontal_alignment = 2
 
 [node name="Revenue" type="VBoxContainer" parent="Background/Stats" unique_id=1998093434]
 layout_mode = 2
 mouse_filter = 2
+theme_override_constants/separation = 2
 
 [node name="RevenueTitle" type="Label" parent="Background/Stats/Revenue" unique_id=1374638685]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 13
+theme_type_variation = &"CaptionLabel"
 
-[node name="Revenue" type="Label" parent="Background/Stats/Revenue" unique_id=1102016110]
+[node name="RevenueWell" type="PanelContainer" parent="Background/Stats/Revenue" unique_id=321945795]
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"DisplayWell"
+
+[node name="Revenue" type="Label" parent="Background/Stats/Revenue/RevenueWell" unique_id=1102016110]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"FigureLabel"
 text = "0 €"
+horizontal_alignment = 2

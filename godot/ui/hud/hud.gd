@@ -1,6 +1,8 @@
 class_name RoundHUD
 extends Control
 ## Presentación del reloj único y la recaudación. No arranca rondas ni acumula delta.
+## Panel compacto de marca abajo a la izquierda, cifras en `ui_digits` (PUL-086). El display de 7
+## segmentos queda para los relojes de los tickets: confunde «s» con «5» y apenas marca el decimal.
 
 var _bus: Node
 var _game_state: Node
@@ -28,9 +30,12 @@ func _ready() -> void:
 	_bus.pause_changed.connect(_on_pause_changed)
 	_bus.character_switched.connect(_on_character_switched)
 	_bus.device_assigned.connect(_on_device_assigned)
+	%Shift.text = _text("HUD_SHIFT", "Turno")
 	%TimeTitle.text = _text("HUD_TIME_LEFT", "Tiempo restante")
 	%RateTitle.text = _text("HUD_BOXES_PER_MINUTE", "Cajas / minuto")
 	%RevenueTitle.text = _text("HUD_REVENUE", "Recaudación")
+	get_viewport().size_changed.connect(_apply_ui_scale)
+	_apply_ui_scale()
 	_render()
 
 
@@ -41,6 +46,10 @@ func set_bus(bus: Node) -> void:
 ## Inyección para pruebas (solo se lee `mode`); por defecto se usa el autoload.
 func set_game_state(state: Node) -> void:
 	_game_state = state
+
+
+func _apply_ui_scale() -> void:
+	scale = Vector2.ONE * UiScale.factor(get_viewport_rect().size.y)
 
 
 func _on_round_started(duration: float) -> void:

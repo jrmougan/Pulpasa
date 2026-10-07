@@ -9,7 +9,7 @@ const SFX_FILES: Array[String] = [
 	"delivery_ok.ogg",
 	"delivery_error.ogg",
 ]
-const FONT_PATH := "res://assets/fonts/LiberationSans.ttf"
+const FONT_PATH := "res://assets/fonts/montserrat/Montserrat-Bold.otf"
 const THEME_PATH := "res://ui/theme/default_theme.tres"
 
 

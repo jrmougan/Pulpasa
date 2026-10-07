@@ -20,6 +20,8 @@ func _ready() -> void:
 	_bus.order_expired.connect(_on_removed)
 	for order: ActiveOrder in _service.get_active_orders():
 		_on_generated(order)
+	get_viewport().size_changed.connect(_apply_ui_scale)
+	_apply_ui_scale()
 
 
 func set_bus(bus: Node) -> void:
@@ -28,6 +30,10 @@ func set_bus(bus: Node) -> void:
 
 func set_service(service: Node) -> void:
 	_service = service
+
+
+func _apply_ui_scale() -> void:
+	(%Tickets as Control).scale = Vector2.ONE * UiScale.factor(get_viewport_rect().size.y)
 
 
 func _on_reset() -> void:

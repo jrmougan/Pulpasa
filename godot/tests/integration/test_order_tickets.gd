@@ -1,5 +1,6 @@
 extends GutTest
 ## PUL-020: tickets integrados con un servicio real y un bus aislado.
+## PUL-086: estética de referencia (reloj de 7 segmentos, aviso de paciencia, sal clara).
 
 const PANEL_SCENE: PackedScene = preload("res://ui/tickets/order_tickets_panel.tscn")
 const BusScript: GDScript = preload("res://autoload/event_bus.gd")
@@ -11,6 +12,9 @@ const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
 const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 const SWEET: SeasoningData = preload("res://data/seasonings/paprika.tres")
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
+const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
+const SMALL_BOX: BoxData = preload("res://data/boxes/small.tres")
+const THEME: Theme = preload("res://ui/theme/default_theme.tres")
 
 var _bus: Node
 var _service: Node
@@ -143,7 +147,8 @@ func test_ac4_sticker_uses_box_badge_style_and_seasoning_color() -> void:
 	var disc: Panel = sticker.get_node("Disc")
 	var box: StyleBoxFlat = disc.get_theme_stylebox("panel") as StyleBoxFlat
 	assert_eq(box.bg_color, SALT.color)
-	assert_eq((sticker.get_node("Icon") as TextureRect).self_modulate, Color.WHITE)
+	var hot: Control = _entry_with(HOT).get_node("%SeasoningIcons").get_child(0)
+	assert_eq((hot.get_node("Icon") as TextureRect).self_modulate, Color.WHITE)
 
 
 func test_ac4_sweet_and_hot_paprika_tickets_are_distinguishable() -> void:
@@ -196,6 +201,96 @@ func test_ac2_patience_is_hidden_in_m0_and_updates_only_own_id() -> void:
 	assert_eq(bar.value, 5.0)
 	_bus.order_patience_changed.emit(order.id, 0.0, 0.0)
 	assert_false(bar.visible)
+
+
+func test_pul086_salt_sticker_is_light_with_ink_icon_and_ring() -> void:
+	assert_true(StickerInk.is_light(SALT.color), "sal #F7F4EC (biblia §2.5)")
+	var sticker: Control = _entry_with(SALT).get_node("%SeasoningIcons").get_child(0)
+	var box: StyleBoxFlat = (sticker.get_node("Disc") as Panel).get_theme_stylebox("panel")
+	assert_eq(box.border_color, StickerInk.INK)
+	assert_gt(box.border_width_left, 0, "anillo marrón")
+	assert_eq((sticker.get_node("Icon") as TextureRect).self_modulate, StickerInk.INK)
+	for other: SeasoningData in [SWEET, HOT, OIL, CACHELOS]:
+		var plain: Control = _entry_with(other).get_node("%SeasoningIcons").get_child(0)
+		var style: StyleBoxFlat = (plain.get_node("Disc") as Panel).get_theme_stylebox("panel")
+		assert_eq(style.border_width_left, 0, "%s sin anillo" % other.display_name)
+		assert_eq((plain.get_node("Icon") as TextureRect).self_modulate, Color.WHITE)
+
+
+func test_pul086_box_badge_salt_uses_ink_icon_and_ringed_disc() -> void:
+	var box: Box = BOX_SCENE.instantiate()
+	box.data = SMALL_BOX
+	add_child_autofree(box)
+	box.fill = 1.0
+	box.toggle_seasoning(SALT, true)
+	box.toggle_seasoning(HOT, true)
+	var row: BadgeRow = box.get_node("%BadgeRow") as BadgeRow
+	var hot_badge: Node = row.get_child(0)
+	var salt_badge: Node = row.get_child(1)
+	assert_eq((salt_badge.get_child(0) as Sprite3D).modulate, SALT.color)
+	assert_eq((salt_badge.get_child(1) as Sprite3D).modulate, StickerInk.INK)
+	assert_eq((hot_badge.get_child(1) as Sprite3D).modulate, Color.WHITE)
+	var ringed: Image = (salt_badge.get_child(0) as Sprite3D).texture.get_image()
+	var plain: Image = (hot_badge.get_child(0) as Sprite3D).texture.get_image()
+	var edge: Vector2i = Vector2i(ringed.get_width() / 2, 2)
+	assert_lt(ringed.get_pixelv(edge).get_luminance(), 0.5, "anillo oscuro en el borde")
+	assert_eq(plain.get_pixelv(edge).get_luminance(), 1.0, "disco liso sin anillo")
+	var centre: Vector2i = Vector2i(ringed.get_width() / 2, ringed.get_height() / 2)
+	assert_eq(ringed.get_pixelv(centre), Color.WHITE, "el centro toma el color de la sal")
+
+
+func test_pul086_clock_shows_remaining_time_in_display_format() -> void:
+	assert_eq(OrderTicket.format_clock(5.0), "00:05")
+	assert_eq(OrderTicket.format_clock(4.2), "00:05", "redondea hacia arriba")
+	assert_eq(OrderTicket.format_clock(75.0), "01:15")
+	assert_eq(OrderTicket.format_clock(0.0), "00:00")
+	assert_eq(OrderTicket.format_clock(-3.0), "00:00")
+	_mount()
+	_fill()
+	var order: ActiveOrder = _service.get_active_orders()[0]
+	var ticket: OrderTicket = _ticket(order.id)
+	var clock: Label = ticket.get_node("%Clock")
+	assert_false((ticket.get_node("%ClockWell") as Control).visible, "sin paciencia, sin reloj")
+	_bus.order_patience_changed.emit(order.id, 30.0, 40.0)
+	assert_true((ticket.get_node("%ClockWell") as Control).visible)
+	assert_eq(clock.text, "00:30")
+	assert_eq(clock.get_theme_font(&"font"), THEME.get_font(&"font", &"DisplayLabel"))
+	_bus.order_patience_changed.emit(order.id, 0.0, 0.0)
+	assert_false((ticket.get_node("%ClockWell") as Control).visible)
+
+
+func test_pul086_low_patience_switches_to_alert_and_blinks() -> void:
+	_mount()
+	_fill()
+	var order: ActiveOrder = _service.get_active_orders()[0]
+	var ticket: OrderTicket = _ticket(order.id)
+	var bar: TextureProgressBar = ticket.get_node("%PatienceBar")
+	var alert: Color = ticket.get_theme_color(&"alert_color", &"OrderTicket")
+	var normal: Color = ticket.get_theme_color(&"bar_color", &"OrderTicket")
+	assert_ne(alert, normal)
+	_bus.order_patience_changed.emit(order.id, 20.0, 40.0)
+	assert_false(ticket.is_low_patience())
+	assert_eq(bar.tint_progress, normal)
+	assert_false(ticket.is_processing(), "sin parpadeo")
+	_bus.order_patience_changed.emit(order.id, 8.0, 40.0)
+	assert_true(ticket.is_low_patience(), "≤ 25 %")
+	assert_eq(bar.tint_progress, alert)
+	assert_eq((ticket.get_node("%Clock") as Label).get_theme_color(&"font_color"), alert)
+	assert_true(ticket.is_processing(), "parpadea: el aviso no es solo color")
+	_bus.order_patience_changed.emit(order.id, 0.0, 0.0)
+	assert_false(ticket.is_low_patience())
+	assert_eq(bar.self_modulate.a, 1.0)
+
+
+func test_pul086_ticket_uses_brand_panel_and_title() -> void:
+	_mount()
+	_fill()
+	var ticket: OrderTicket = _ticket(_service.get_active_orders()[0].id)
+	assert_eq(ticket.theme_type_variation, &"UiPanel")
+	var panel: StyleBoxFlat = ticket.get_theme_stylebox(&"panel", &"UiPanel") as StyleBoxFlat
+	assert_eq(Color(panel.bg_color, 1.0), Color("13202f"), "ui_panel = brand_night")
+	assert_eq(panel.border_color, Color("8e9494"), "ui_border")
+	assert_eq((ticket.get_node("%Title") as Label).text, "Comanda")
 
 
 func _disc_color(sticker: Control) -> Color:

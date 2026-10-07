@@ -8,11 +8,14 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_512c5"]
 size = Vector3(1.61, 2.33, 0.91)
 
-[sub_resource type="BoxMesh" id="BoxMesh_hull_body"]
-size = Vector3(1.56, 0.64, 0.86)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hull_hidden"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0)
 
-[sub_resource type="BoxMesh" id="BoxMesh_hull_lid"]
-size = Vector3(1.56, 0.03, 0.88)
+[sub_resource type="BoxMesh" id="BoxMesh_hull_body"]
+material = SubResource("StandardMaterial3D_hull_hidden")
+size = Vector3(1.6, 0.98, 0.86)
 
 [node name="OctopusStorage" type="StaticBody3D" unique_id=696420386 groups=["interactable"]]
 collision_layer = 4
@@ -29,14 +32,9 @@ shape = SubResource("BoxShape3D_512c5")
 [node name="OutlineHull" type="Node3D" parent="." unique_id=1500490001]
 
 [node name="Body" type="MeshInstance3D" parent="OutlineHull" unique_id=1500490002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 cast_shadow = 0
 mesh = SubResource("BoxMesh_hull_body")
-
-[node name="Lid" type="MeshInstance3D" parent="OutlineHull" unique_id=1500490003]
-transform = Transform3D(1, 0, 0, 0, -0.259, -0.966, 0, 0.966, -0.259, 0, 1.2705, 0.5475)
-cast_shadow = 0
-mesh = SubResource("BoxMesh_hull_lid")
 
 [node name="Highlightable" type="Node" parent="." unique_id=243222243 node_paths=PackedStringArray("root")]
 unique_name_in_owner = true

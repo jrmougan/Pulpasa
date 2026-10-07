@@ -2,41 +2,7 @@
 
 [ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="1_y6gjx"]
 [ext_resource type="Script" path="res://ui/menus/menu_panel.gd" id="2_kql8w"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vvqa4"]
-content_margin_left = 40.0
-content_margin_top = 32.0
-content_margin_right = 40.0
-content_margin_bottom = 32.0
-bg_color = Color(0.1254902, 0.20392157, 0.23921569, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hqxmd"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.9411765, 0.7647059, 0.4862745, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xiel4"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.9411765, 0.7647059, 0.4862745, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+[ext_resource type="Texture2D" uid="uid://bk2ecjgyqafyj" path="res://assets/textures/brand/pulpasa_compacta.png" id="3_badge"]
 
 [node name="MenuPanel" type="Control" unique_id=1619565341]
 layout_mode = 3
@@ -50,7 +16,7 @@ script = ExtResource("2_kql8w")
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.04, 0.06, 0.08, 0.82)
+color = Color(0.043137256, 0.078431375, 0.11764706, 0.78)
 
 [node name="Center" type="CenterContainer" parent="." unique_id=1643609920]
 layout_mode = 0
@@ -60,39 +26,47 @@ anchor_bottom = 1.0
 [node name="Card" type="PanelContainer" parent="Center" unique_id=1860634783]
 custom_minimum_size = Vector2(520, 0)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vvqa4")
+theme_type_variation = &"UiCard"
 
 [node name="Content" type="VBoxContainer" parent="Center/Card" unique_id=1984530822]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
+
+[node name="Badge" type="TextureRect" parent="Center/Card/Content" unique_id=881130462]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_badge")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Brand" type="Label" parent="Center/Card/Content" unique_id=1380234855]
 unique_name_in_owner = true
-modulate = Color(0.9411765, 0.7647059, 0.4862745, 1)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "PULPASA"
+theme_type_variation = &"BrandLabel"
+text = "FRANQUICIA GALEGA DE POLBO"
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="Title" type="Label" parent="Center/Card/Content" unique_id=1380209499]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 34
+theme_type_variation = &"TitleLabel"
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="Description" type="Label" parent="Center/Card/Content" unique_id=326208650]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="Ratio" type="Label" parent="Center/Card/Content" unique_id=1334911276]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.35686275, 0.5529412, 0.72156864, 1)
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 autowrap_mode = 3
 
@@ -106,7 +80,7 @@ focus_neighbor_right = NodePath("../ExitButton")
 focus_neighbor_bottom = NodePath("../ExitButton")
 focus_next = NodePath("../ExitButton")
 focus_previous = NodePath("../ExitButton")
-theme_override_styles/focus = SubResource("StyleBoxFlat_hqxmd")
+theme_type_variation = &"MenuPrimaryButton"
 
 [node name="ExitButton" type="Button" parent="Center/Card/Content" unique_id=740311893]
 unique_name_in_owner = true
@@ -118,4 +92,4 @@ focus_neighbor_right = NodePath("../PrimaryButton")
 focus_neighbor_bottom = NodePath("../PrimaryButton")
 focus_next = NodePath("../PrimaryButton")
 focus_previous = NodePath("../PrimaryButton")
-theme_override_styles/focus = SubResource("StyleBoxFlat_xiel4")
+theme_type_variation = &"MenuSecondaryButton"

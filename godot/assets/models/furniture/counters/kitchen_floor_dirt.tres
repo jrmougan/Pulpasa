@@ -1,0 +1,22 @@
+[gd_resource type="StandardMaterial3D" load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/v2/ground_dirt/ground_dirt_albedo.png" id="1_albedo"]
+[ext_resource type="Texture2D" path="res://assets/textures/v2/ground_dirt/ground_dirt_orm.png" id="2_orm"]
+[ext_resource type="Texture2D" path="res://assets/textures/v2/ground_dirt/ground_dirt_normal.png" id="3_normal"]
+
+[resource]
+resource_name = "kitchen_floor_dirt"
+albedo_color = Color(1, 1, 1, 1)
+albedo_texture = ExtResource("1_albedo")
+metallic = 0.0
+metallic_texture = ExtResource("2_orm")
+metallic_texture_channel = 2
+roughness = 0.95
+roughness_texture = ExtResource("2_orm")
+roughness_texture_channel = 1
+normal_enabled = true
+normal_texture = ExtResource("3_normal")
+uv1_scale = Vector3(0.25, 0.25, 0.25)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 5

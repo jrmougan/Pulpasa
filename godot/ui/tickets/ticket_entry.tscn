@@ -11,12 +11,12 @@ script = ExtResource("2_fnq4i")
 [node name="Details" type="VBoxContainer" parent="." unique_id=1538344326]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
 [node name="Recipe" type="Label" parent="Details" unique_id=1350993805]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 23
+theme_override_font_sizes/font_size = 19
 
 [node name="SeasoningIcons" type="HBoxContainer" parent="Details" unique_id=869064649]
 unique_name_in_owner = true

@@ -91,14 +91,14 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-076 | M3b | asset-pipeline | done | Rehacer pulpo, cachelos y raciones con la estética de referencia |
 | PUL-077 | M3b | asset-pipeline | ready | Rehacer platos/cajas como bandejas de la referencia |
 | PUL-078 | M3b | asset-pipeline | done | Rehacer las ollas como cocedores de acero |
-| PUL-079 | M3b | asset-pipeline | ready | Convertir el arcón en tanque de pulpos |
+| PUL-079 | M3b | asset-pipeline | done | Convertir el arcón en tanque de pulpos |
 | PUL-080 | M3b | asset-pipeline | ready | Rehacer la cachelera como sacos de patatas |
 | PUL-081 | M3b | asset-pipeline | draft | Rehacer la estantería como rack de bandejas |
 | PUL-082 | M3b | asset-pipeline | done | Rehacer la estación de condimentos |
 | PUL-083 | M3b | asset-pipeline | done | Rehacer los puestos de entrega como kioscos |
-| PUL-084 | M3b | asset-pipeline | ready | Rehacer encimeras y suelo de la cocina |
+| PUL-084 | M3b | asset-pipeline | done | Rehacer encimeras y suelo de la cocina |
 | PUL-085 | M3b | asset-pipeline | done | Rehacer el entorno con la estética de referencia |
-| PUL-086 | M3b | ui-engineer | ready | Adaptar HUD y tickets a la estética de referencia |
+| PUL-086 | M3b | ui-engineer | done | Adaptar HUD y tickets a la estética de referencia |
 | PUL-087 | M3b | qa-tester | draft | Pasar el QA visual y de rendimiento de la estética v2 |
 | PUL-088 | M3b | asset-pipeline | done | Diseñar la identidad de la marca PulpaSA |
 | PUL-089 | M3b | asset-pipeline | done | Ajustar el cielo y los reflejos para que el acero se lea claro |

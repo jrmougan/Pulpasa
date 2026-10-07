@@ -9,5 +9,5 @@ display_name = "Sal"
 translation_key = "SEASONING_SALT"
 type = 0
 sort_order = 1
-color = Color(0.5931827, 0.8113208, 0.7928984, 1)
+color = Color(0.96862745, 0.95686275, 0.9254902, 1)
 icon = ExtResource("2_icon")
