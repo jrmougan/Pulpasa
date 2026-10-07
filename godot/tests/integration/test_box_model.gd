@@ -1,7 +1,8 @@
 extends GutTest
 ## PUL-047: el `Model` de la caja (BoxModel) muestra el plato del tamaño de `data`, el relleno
 ## progresivo con las rodajas y los cachelos si los lleva; las pegatinas 3D del `.glb` van ocultas
-## y los nodos de contrato de `box.tscn` siguen en su sitio.
+## y los nodos de contrato de `box.tscn` siguen en su sitio. PUL-077: el resaltado sale del volumen
+## cerrado `hull_<tamaño>` de la talla visible, no de la bandeja abierta.
 
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const SMALL: BoxData = preload("res://data/boxes/small.tres")
@@ -63,6 +64,25 @@ func test_each_size_shows_only_its_plate_with_the_bible_diameter() -> void:
 		assert_almost_eq(aabb.size.x, DIAMETERS[size], DIAMETERS[size] * 0.1, size)
 		assert_almost_eq(aabb.size.y, 0.10, 0.01, size)
 		assert_almost_eq(aabb.position.y, 0.0, 0.001, "%s: base en el origen" % size)
+
+
+func test_outline_hull_follows_the_size() -> void:
+	for data: BoxData in [SMALL, MEDIUM, LARGE]:
+		var box: Box = _box(data)
+		var size: StringName = _model(box).get_size()
+		var highlightable: Highlightable = box.get_node("%Highlightable") as Highlightable
+		assert_not_null(highlightable.root, "%s: raíz del contorno" % size)
+		assert_eq(highlightable.root.name, &"OutlineHull")
+		for key: StringName in BoxModel.SIZES:
+			assert_eq(_visible(box, "hull_" + key), key == size, "%s: hull_%s" % [size, key])
+		highlightable.show()
+		var hull: MeshInstance3D = (
+			box.get_node("Model").find_child("hull_" + size) as MeshInstance3D
+		)
+		assert_eq(hull.material_overlay, highlightable.material, "%s: contorno en el hull" % size)
+		var tray: MeshInstance3D = box.get_node("Model").find_child("box_" + size) as MeshInstance3D
+		assert_null(tray.material_overlay, "%s: la bandeja abierta no lleva contorno" % size)
+		highlightable.hide()
 
 
 func test_refresh_follows_data_assigned_after_ready() -> void:

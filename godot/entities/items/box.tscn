@@ -63,6 +63,11 @@ shape = SubResource("BoxShape3D_im475")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1665, 0)
 script = ExtResource("3_model")
 cachelos = ExtResource("12_cach")
+fill_scale = Dictionary[StringName, float]({
+&"large": 1.15,
+&"medium": 1.0,
+&"small": 0.9
+})
 
 [node name="Plate" parent="Model" unique_id=1077296101 instance=ExtResource("5_plate")]
 
@@ -74,9 +79,10 @@ cachelos = ExtResource("12_cach")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1665, 0)
 
-[node name="Highlightable" type="Node" parent="." unique_id=1012587984]
+[node name="Highlightable" type="Node" parent="." unique_id=1012587984 node_paths=PackedStringArray("root")]
 unique_name_in_owner = true
 script = ExtResource("4_hjnlo")
+root = NodePath("../Model/Plate/box/OutlineHull")
 
 [node name="Lid" type="Node3D" parent="." unique_id=1317625187]
 unique_name_in_owner = true

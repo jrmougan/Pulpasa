@@ -1,10 +1,13 @@
 class_name BoxModel
 extends Node3D
-## Vista del plato de la caja (PUL-047, art-bible §3.4): nodo `Model` de `box.tscn`. Lee la `Box`
-## padre y no cambia su estado. Muestra la variante del tamaño (`box_small/medium/large` de
-## `box.glb`), el relleno progresivo con las capas de rodajas de `octopus_pieces.glb` y, si la caja
-## lleva el condimento `cachelos`, los trozos de `cachelos_pieces.glb` encima. Las pegatinas 3D del
-## `.glb` (`sticker`) van ocultas: la fila de condimentos en juego es `%BadgeRow` (PUL-059).
+## Vista de la bandeja de la caja (PUL-047, PUL-077, art-bible v2 §6.4): nodo `Model` de
+## `box.tscn`. Lee la `Box` padre y no cambia su estado. Muestra la variante del tamaño
+## (`box_small/medium/large` de `box.glb`), el relleno progresivo con las capas de rodajas de
+## `octopus_pieces.glb` y, si la caja lleva el condimento `cachelos`, los trozos de
+## `cachelos_pieces.glb` encima. Las pegatinas 3D del `.glb` (`sticker`) van ocultas: la fila de
+## condimentos en juego es `%BadgeRow` (PUL-059). La bandeja es abierta: el contorno de
+## resaltado sale del volumen cerrado `hull_<tamaño>` (bajo `OutlineHull` del `.glb`, raíz de
+## `%Highlightable`), que se muestra con su talla.
 ## Se rehace en `_ready` (el `ItemSpawner` asigna `data` antes de entrar al árbol) y al oír
 ## `fill_changed`, `seasoned` y `seasoning_removed`; quien cambie `data` después llama a
 ## `refresh()`.
@@ -83,6 +86,9 @@ func refresh() -> void:
 		var variant: Node3D = _plate.find_child("box_" + key, true, false) as Node3D
 		if variant != null:
 			variant.visible = key == size
+		var hull: Node3D = _plate.find_child("hull_" + key, true, false) as Node3D
+		if hull != null:
+			hull.visible = key == size
 	_fit_collision(size)
 	var anchor: Node3D = _plate.find_child("Anchor_Fill_" + size, true, false) as Node3D
 	var floor_y: float = anchor.position.y if anchor != null else 0.0
