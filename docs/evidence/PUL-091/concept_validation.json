@@ -1,0 +1,30 @@
+{
+  "A": {
+    "camera_facing_texts": 40,
+    "positive_text_scale": true,
+    "missing_images": [],
+    "camera_width": 22.648889541625977,
+    "camera_rotation_degrees": 52,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "libraries": [
+      "//../../blender/_materials_v2.blend"
+    ]
+  },
+  "B": {
+    "camera_facing_texts": 29,
+    "positive_text_scale": true,
+    "missing_images": [],
+    "camera_width": 22.648889541625977,
+    "camera_rotation_degrees": 52,
+    "resolution": [
+      1920,
+      1080
+    ],
+    "libraries": [
+      "//../../blender/_materials_v2.blend"
+    ]
+  }
+}
