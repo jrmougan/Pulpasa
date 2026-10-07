@@ -4,9 +4,24 @@
 [ext_resource type="PackedScene" path="res://entities/items/cachelos.tscn" id="2_7y4y7"]
 [ext_resource type="PackedScene" path="res://assets/models/stations/cachelos_storage/cachelos_storage.glb" id="3_plchld"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="3_2k76u"]
+[ext_resource type="Material" path="res://assets/materials/v2/mat_burlap.tres" id="4_burlap"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c1wrc"]
 size = Vector3(0.7, 0.6, 0.6)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hull_big"]
+top_radius = 0.17
+bottom_radius = 0.18
+height = 0.46
+radial_segments = 18
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hull_small"]
+top_radius = 0.14
+bottom_radius = 0.145
+height = 0.32
+radial_segments = 18
+rings = 1
 
 [node name="CachelosStorage" type="StaticBody3D" unique_id=2011447575 groups=["interactable"]]
 collision_layer = 4
@@ -20,6 +35,21 @@ shape = SubResource("BoxShape3D_c1wrc")
 
 [node name="Model" parent="." unique_id=837607216 instance=ExtResource("3_plchld")]
 
-[node name="Highlightable" type="Node" parent="." unique_id=624963848]
+[node name="OutlineHull" type="Node3D" parent="." unique_id=1508000001]
+
+[node name="SackBig" type="MeshInstance3D" parent="OutlineHull" unique_id=1508000002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.125, 0.23, 0.075)
+material_override = ExtResource("4_burlap")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_hull_big")
+
+[node name="SackSmall" type="MeshInstance3D" parent="OutlineHull" unique_id=1508000003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.165, 0.16, -0.1)
+material_override = ExtResource("4_burlap")
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_hull_small")
+
+[node name="Highlightable" type="Node" parent="." unique_id=624963848 node_paths=PackedStringArray("root")]
 unique_name_in_owner = true
 script = ExtResource("3_2k76u")
+root = NodePath("../OutlineHull")
