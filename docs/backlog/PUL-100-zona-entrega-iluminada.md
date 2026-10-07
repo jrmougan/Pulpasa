@@ -15,7 +15,7 @@ touches_scenes: [godot/entities/stations/order_stand.tscn]
 Kiosco de entrega (D23, E-A).
 
 ## Change
-Integra el modelo de PUL-096 (placa del `#id`, `delivery_zone`). La zona se enciende (material encendido, color de `StandPalette`) cuando un portador a ≤ 2,0 m lleva una caja que coincide con la comanda viva del puesto; si no coincide, apagada.
+Integra el modelo de PUL-096 (placa del `#id`, `delivery_zone`). La zona se enciende (material encendido, color de `StandPalette`) cuando un portador a ≤ 2,0 m lleva una caja que coincide con la comanda viva del puesto; si no coincide, apagada. **Alinea el `Area3D` de entrega con la marca `delivery_zone` de PUL-096**, que se desplazó hacia la cocina (centro Z local ≈ 2,5) para que se vea desde la cámara; el centro y tamaño exactos están en `docs/evidence/PUL-096/`.
 
 ## Constraints
 - `tools/verify.sh` en verde; GDScript tipado; datos en `.tres`. Godot con `--audio-driver Dummy`; con el MCP, silencia los buses.
