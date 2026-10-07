@@ -1,0 +1,221 @@
+00:00.017  color_management | ERROR OpenColorIO Error: Error: Loading the OCIO profile '/usr/share/blender/5.2/datafiles/colormanagement/config.ocio' failed. This .ocio config  '/usr/share/blender/5.2/datafiles/colormanagement/config.ocio' is version 2.5. This version of the OpenColorIO library (2.4.2) is not able to load that config version.
+                            | The minor version 5 is not supported for major version 2. Maximum minor version is 4.
+00:00.017  color_management | Using fallback mode for management
+00:00.742  blend            | Read blend: "/home/jeromo/orca/workspaces/Pulpasa/pul-095/art/blender/box.blend"
+Info: Read library: '/home/jeromo/orca/workspaces/Pulpasa/pul-095/art/blender/_materials_v2.blend', '//_materials_v2.blend', parent '<direct>'
+Info: Saved as "box.blend"
+ERROR Draco is not available because library could not be found at /usr/lib/blender/5.2/scripts/addons_core/io_scene_gltf2/libbf_intern_draco_bridge.so
+ERROR MeshOptimizer is not available because library could not be found at /usr/lib/blender/5.2/scripts/addons_core/io_scene_gltf2/libbf_intern_meshopt_bridge.so
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: box_large
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 2
+13:25:43 | INFO: Extracting primitive: box_medium
+13:25:43 | INFO: Primitives created: 2
+13:25:43 | INFO: Extracting primitive: box_small
+13:25:43 | INFO: Primitives created: 2
+13:25:43 | INFO: Extracting primitive: hull_large
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Extracting primitive: hull_medium
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Extracting primitive: hull_small
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Extracting primitive: sticker
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Finished glTF 2.0 export in 0.02384471893310547 s
+00:00.992  blend            | Read blend: "/home/jeromo/orca/workspaces/Pulpasa/pul-095/art/blender/box_shelf.blend"
+
+blender_export: OK godot/assets/models/items/box/box.glb (25 objetos, 2168 triángulos, 209 KiB)
+Info: Read library: '/home/jeromo/orca/workspaces/Pulpasa/pul-095/art/blender/_materials_v2.blend', '//_materials_v2.blend', parent '<direct>'
+Info: Saved as "box_shelf.blend"
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: cartons
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Extracting primitive: labels.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Extracting primitive: hull_large
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Extracting primitive: hull_medium
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Extracting primitive: hull_small.001
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Extracting primitive: rack
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 3
+13:25:43 | INFO: Extracting primitive: stack_large
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 2
+13:25:43 | INFO: Extracting primitive: stack_medium
+13:25:43 | INFO: Primitives created: 2
+13:25:43 | INFO: Extracting primitive: stack_small
+13:25:43 | INFO: Primitives created: 2
+13:25:43 | INFO: Finished glTF 2.0 export in 0.03389239311218262 s
+00:01.088  blend            | Read blend: "/home/jeromo/orca/workspaces/Pulpasa/pul-095/art/blender/counters.blend"
+
+blender_export: OK godot/assets/models/stations/box_shelf/box_shelf.glb (12 objetos, 5882 triángulos, 751 KiB)
+Info: Read library: '/home/jeromo/orca/workspaces/Pulpasa/pul-095/art/blender/_materials_v2.blend', '//_materials_v2.blend', parent '<direct>'
+Info: Saved as "counters.blend"
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: counter_1m_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 6
+13:25:43 | INFO: Finished glTF 2.0 export in 0.0176389217376709 s
+
+blender_export: OK godot/assets/models/furniture/counters/counter_1m.glb (3 objetos, 422 triángulos, 287 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: counter_2m_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 7
+13:25:43 | INFO: Finished glTF 2.0 export in 0.020051002502441406 s
+
+blender_export: OK godot/assets/models/furniture/counters/counter_2m.glb (3 objetos, 662 triángulos, 368 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: counter_3m_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 7
+13:25:43 | INFO: Finished glTF 2.0 export in 0.023008108139038086 s
+
+blender_export: OK godot/assets/models/furniture/counters/counter_3m.glb (3 objetos, 926 triángulos, 396 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: counter_corner_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 7
+13:25:43 | INFO: Finished glTF 2.0 export in 0.020061016082763672 s
+
+blender_export: OK godot/assets/models/furniture/counters/counter_corner.glb (3 objetos, 486 triángulos, 350 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: counter_end_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 6
+13:25:43 | INFO: Finished glTF 2.0 export in 0.017810821533203125 s
+
+blender_export: OK godot/assets/models/furniture/counters/counter_end.glb (3 objetos, 510 triángulos, 296 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: counter_half_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 6
+13:25:43 | INFO: Finished glTF 2.0 export in 0.018744945526123047 s
+
+blender_export: OK godot/assets/models/furniture/counters/counter_half.glb (3 objetos, 368 triángulos, 281 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: counter_props_board_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 4
+13:25:43 | INFO: Finished glTF 2.0 export in 0.014403343200683594 s
+
+blender_export: OK godot/assets/models/furniture/counters/counter_props_board.glb (3 objetos, 218 triángulos, 421 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: counter_props_crock_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 4
+13:25:43 | INFO: Finished glTF 2.0 export in 0.01333475112915039 s
+
+blender_export: OK godot/assets/models/furniture/counters/counter_props_crock.glb (3 objetos, 232 triángulos, 304 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: drain_grate_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 2
+13:25:43 | INFO: Finished glTF 2.0 export in 0.007653951644897461 s
+
+blender_export: OK godot/assets/models/furniture/counters/drain_grate.glb (3 objetos, 12 triángulos, 84 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: pass_1m_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 7
+13:25:43 | INFO: Finished glTF 2.0 export in 0.01980447769165039 s
+
+blender_export: OK godot/assets/models/furniture/counters/pass_1m.glb (3 objetos, 690 triángulos, 372 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: pass_2m_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 7
+13:25:43 | INFO: Finished glTF 2.0 export in 0.021190404891967773 s
+
+blender_export: OK godot/assets/models/furniture/counters/pass_2m.glb (3 objetos, 1178 triángulos, 423 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: pass_3m_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 7
+13:25:43 | INFO: Finished glTF 2.0 export in 0.04387235641479492 s
+
+blender_export: OK godot/assets/models/furniture/counters/pass_3m.glb (3 objetos, 1666 triángulos, 475 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: pass_end_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 7
+13:25:43 | INFO: Finished glTF 2.0 export in 0.0196073055267334 s
+
+blender_export: OK godot/assets/models/furniture/counters/pass_end.glb (3 objetos, 778 triángulos, 381 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: pass_mark_body
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Finished glTF 2.0 export in 0.004064798355102539 s
+
+blender_export: OK godot/assets/models/furniture/counters/pass_mark.glb (3 objetos, 32 triángulos, 8 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: pass_threshold_body
+13:25:43 | INFO: Primitives created: 1
+13:25:43 | INFO: Finished glTF 2.0 export in 0.0036907196044921875 s
+
+blender_export: OK godot/assets/models/furniture/counters/pass_threshold.glb (3 objetos, 10 triángulos, 6 KiB)
+13:25:43 | INFO: Starting glTF 2.0 export
+13:25:43 | INFO: Extracting primitive: rail_1m_body.001
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+13:25:43 | INFO: Primitives created: 4
+13:25:43 | INFO: Finished glTF 2.0 export in 0.014429092407226562 s
+
+blender_export: OK godot/assets/models/furniture/counters/rail_1m.glb (3 objetos, 104 triángulos, 248 KiB)
+Blender 5.2.2 LTS (hash unknown built 2026-09-15 00:00:00)
+
+Blender quit

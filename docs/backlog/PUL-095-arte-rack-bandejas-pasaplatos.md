@@ -37,7 +37,10 @@ Rack `box_shelf`, bandejas S/M/L (`box`) y encimeras modulares (`counters`). Con
 - [ ] AC4 Presupuesto dentro de la biblia §4
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Auditar mallas, atlas, anchors y orientación real; conservar contratos y colisiones.
+2. Reforzar siluetas y rotular bordes S/M/L; repetir placas del rack en frente y plano visible, con atlas Montserrat.
+3. Exportar iconos S/M/L, pieza pass_mark y remate bajo de paso, sin editar escenas ni datos.
+4. Capturar fixtures a 1920×1080 con cámara real, medir presupuesto y validar importación, GUT, smoke y owns tras commit.
 
 ## Evidence
 (Lo rellena el worker.)

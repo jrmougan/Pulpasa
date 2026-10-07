@@ -1,0 +1,12 @@
+{
+  "octopus": {
+    "octopus_pieces_a": 448,
+    "octopus_pieces_b": 320,
+    "octopus_pieces_c": 192
+  },
+  "cachelos": {
+    "cachelos_pieces_a": 360,
+    "cachelos_pieces_b": 240,
+    "cachelos_pieces_c": 120
+  }
+}

@@ -1,0 +1,40 @@
+
+== gdformat --check
+159 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== tests (GUT)
+[0m- test_each_size_shows_only_its_plate_with_the_bible_diameter
+[31m    [Failed]:  [0m[0.12950000166893005371] expected to equal [0.1] +/- [0.01]:  small
+          at line 65
+[31m    [Failed]:  [0m[0.12950000166893005371] expected to equal [0.1] +/- [0.01]:  medium
+          at line 65
+[31m    [Failed]:  [0m[0.12950000166893005371] expected to equal [0.1] +/- [0.01]:  large
+          at line 65
+
+Totals
+------
+Scripts              68
+Tests               735
+Passing Tests       734
+Failing Tests         1
+Asserts           9071/9074
+Time              306.563s
+
+
+[31m---- 1 failing tests ----
+[0m
+Results saved to res://.gut_reports/junit.xml
+WARNING: 18 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 6 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✗ verify FAILED

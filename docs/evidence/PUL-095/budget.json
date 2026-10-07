@@ -1,0 +1,23 @@
+{
+  "tray_small": 696,
+  "tray_medium": 696,
+  "tray_large": 760,
+  "box": 2168,
+  "box_shelf": 5882,
+  "counter_1m": 422,
+  "counter_2m": 662,
+  "counter_3m": 926,
+  "counter_corner": 486,
+  "counter_end": 510,
+  "counter_half": 368,
+  "counter_props_board": 218,
+  "counter_props_crock": 232,
+  "drain_grate": 12,
+  "pass_1m": 690,
+  "pass_2m": 1178,
+  "pass_3m": 1666,
+  "pass_end": 778,
+  "pass_mark": 32,
+  "pass_threshold": 10,
+  "rail_1m": 104
+}
