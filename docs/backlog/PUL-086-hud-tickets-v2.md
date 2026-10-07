@@ -1,11 +1,11 @@
 ---
 id: PUL-086
 title: Adaptar HUD y tickets a la estética de referencia
-status: review
+status: done
 milestone: M3b
 role: ui-engineer
 deps: [PUL-072, PUL-088]
-orca_task: null
+orca_task: task_8a940123595b
 unity_sources: []
 owns: [godot/ui/**, godot/assets/fonts/**, godot/tests/integration/test_hud.gd, godot/tests/integration/test_order_tickets.gd, docs/evidence/PUL-086/**, godot/data/seasonings/salt.tres, godot/tests/unit/test_data_integrity.gd, godot/entities/items/badge_row.gd, godot/tests/unit/test_assets_audio_ui.gd]
 touches_scenes: [godot/ui/hud/hud.tscn, godot/ui/tickets/order_ticket.tscn, godot/ui/tickets/ticket_entry.tscn]
