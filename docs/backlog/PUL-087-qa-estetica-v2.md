@@ -1,7 +1,7 @@
 ---
 id: PUL-087
 title: Pasar el QA visual y de rendimiento de la estética v2
-status: ready
+status: review
 milestone: M3b
 role: qa-tester
 deps: [PUL-073, PUL-075, PUL-076, PUL-077, PUL-078, PUL-079, PUL-080, PUL-081, PUL-082, PUL-083, PUL-084, PUL-085, PUL-086]
@@ -38,14 +38,36 @@ Notas: el panel «Turno» del HUD (PUL-086, ×1,5 a 1080p) tapa parte del latera
 - Antes de cerrar: `tools/verify.sh` verde y `tools/check_owns.py <tu-rama> jrmougan/agentica-migracion-godot-alpha` limpio.
 
 ## Acceptance
-- [ ] AC1 Comparativa referencia / antes / después
-- [ ] AC2 60 fps a 1080p o lista de lo que lo impide
-- [ ] AC3 Partidas sin errores en consola
-- [ ] Captura antes/después desde la cámara del nivel y render del `.blend`
-- [ ] `tools/verify.sh` verde, `check_owns` limpio.
+- [x] AC1 Comparativa referencia / antes / después
+- [x] AC2 60 fps a 1080p o lista de lo que lo impide
+- [x] AC3 Partidas sin errores en consola
+- [x] Captura antes/después desde la cámara del nivel y render del `.blend`
+- [x] `tools/verify.sh` verde, `check_owns` limpio.
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. `tools/verify.sh` de partida. Capturas `despues/` con `capture_style_refs.gd` (mismo plano que
+   `actual-2026-10-06/`) y láminas referencia / antes / progreso / después por nivel y por zona;
+   luminancia de PUL-073 y estadísticas globales de color frente a la referencia.
+2. Script de medición (`measure_perf.gd`): partida real vía `GameState.start_level`, input del
+   InputMap, sin vsync, 60 s por modo con y sin tilt-shift a 1920×1080; fps, frame, GPU, draw
+   calls, primitivas, VRAM, materiales y luces. Coste por efecto apagándolos solo en la ejecución.
+3. Partidas completas Individual y Local 2P con el MCP (menú → ronda de 300 s → game over →
+   salir/reintentar/pausa) y consola.
+4. Revisión por asset (restos v1, sal, HUD, bandejas, materiales/texturas duplicados), render del
+   `.blend` del entorno por CLI, lista de desajustes y guía `docs/design/m3b-gate.md`.
 
 ## Evidence
-(Lo rellena el worker.)
+Todo en `docs/evidence/PUL-087/README.md`. Resumen:
+- AC1: `ac1_comparativa_nivel.png`, `ac1_comparativa_hud.png`, `ac1_zona_*.png`, `despues/`;
+  luminancia jugable dentro de rango; desajustes D1–D9 (uno A: rótulo de comanda de los kioscos
+  sin placa, PUL-083).
+- AC2: **pasa**. 1080p en pantalla real: 426 fps (GPU 1,28 ms, p99 1,29) en Individual, 423 en 2P;
+  con tilt-shift 382–385 fps (GPU 1,52). 690–729 draw calls, 5 omni sin sombra, VRAM 477 MB.
+  Fuera de límite pero sin coste de fps: 239 recursos de material para 60 nombres y 341 PNG
+  duplicados (D5, D6). Bajo Xvfb la medida no vale (12 fps por la presentación).
+- AC3: **pasa**. Individual y Local 2P de 300 s hasta el game over (más salir, reintentar y pausa)
+  con 0 errores del juego en consola (`partidas/`).
+- Render del `.blend`: `render_environment_v2.png` (Blender 5.2.2 por CLI, sin el puerto 9876).
+- Audio: capturas y medición con `--audio-driver Dummy`; el MCP no lo admite y se silenció con
+  `AudioServer.set_bus_mute` al arrancar.
+- `tools/verify.sh` verde (735/735 tests); `tools/check_owns.py` limpio.

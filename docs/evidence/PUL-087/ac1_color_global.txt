@@ -1,0 +1,4 @@
+docs/art/style-refs/referencia-elegida-2026-10-06.png: luma_media=0.419 contraste(sd)=0.165 saturacion=0.311 calidez(R-B)=+0.129 tono_medio=31
+docs/art/style-refs/actual-2026-10-06/00_nivel_sin_hud.png: luma_media=0.756 contraste(sd)=0.129 saturacion=0.306 calidez(R-B)=+0.232 tono_medio=44
+docs/art/style-refs/progreso-2026-10-07/00_nivel_sin_hud.png: luma_media=0.507 contraste(sd)=0.148 saturacion=0.382 calidez(R-B)=+0.212 tono_medio=41
+docs/evidence/PUL-087/despues/00_nivel_sin_hud.png: luma_media=0.506 contraste(sd)=0.147 saturacion=0.381 calidez(R-B)=+0.209 tono_medio=41

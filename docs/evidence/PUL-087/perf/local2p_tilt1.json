@@ -1,0 +1,59 @@
+{
+  "adapter": "NVIDIA GeForce RTX 3090",
+  "buffer_mem_mb": 36.7834358215332,
+  "cpu_render_ms": {
+    "avg": 0.335934852478977,
+    "max": 2.33899998664856,
+    "p50": 0.314000010490417,
+    "p99": 0.619000017642975
+  },
+  "draw_calls": {
+    "avg": 692.145328568938,
+    "max": 729.0,
+    "p50": 693.0,
+    "p99": 728.0
+  },
+  "fps_avg": 382.449908986489,
+  "frame_ms": {
+    "avg": 2.6147215007844,
+    "max": 550.527,
+    "p50": 2.503,
+    "p99": 3.541
+  },
+  "frames": 22948,
+  "gpu_ms": {
+    "avg": 1.51517474597831,
+    "max": 1.82000005245209,
+    "p50": 1.51400005817413,
+    "p99": 1.52900004386902
+  },
+  "mode": 1,
+  "objects": {
+    "avg": 1102.83000697229,
+    "max": 1144.0,
+    "p50": 1108.0,
+    "p99": 1143.0
+  },
+  "off": [],
+  "primitives": {
+    "avg": 149976.220324211,
+    "max": 154960.0,
+    "p50": 149990.0,
+    "p99": 154824.0
+  },
+  "resolution": "(1920.0, 1080.0)",
+  "scene": {
+    "directional_lights": 1,
+    "materials_distinct": 236,
+    "materials_on_screen": 236,
+    "mesh_instances": 133,
+    "omni_lights": 5,
+    "omni_lights_shadow": 0,
+    "spot_lights": 0,
+    "surfaces": 473,
+    "triangles_scene": 80606
+  },
+  "texture_mem_mb": 411.49072265625,
+  "tilt_shift": true,
+  "video_mem_mb": 477.34928894043
+}
