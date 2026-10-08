@@ -30,8 +30,8 @@ Kioscos `order_stand`. Concepto: `art/concepts/estaciones/A_kiosks.png`. QA PUL-
 - No toques `order_stand.tscn` (lo integra PUL-100).
 
 ## Acceptance
-- [x] AC1 `#id` legible sobre placa a 1080p en los 4 kioscos: [#17/#28/#39/–](../evidence/PUL-096/native_1080.png)
-- [x] AC2 `delivery_zone`: [apagado](../evidence/PUL-096/native_1080.png) y [encendido](../evidence/PUL-096/delivery_on_1080.png)
+- [x] AC1 `#id` legible sobre placa a 1080p en los 4 kioscos: [#17/#28/#39/–](../evidence/PUL-096/zone_off_1080.png)
+- [x] AC2 `delivery_zone`: [apagado](../evidence/PUL-096/zone_off_1080.png) y [encendido](../evidence/PUL-096/zone_on_1080.png)
 - [x] AC3 [Hex y colocación final](../evidence/PUL-096/integration.json): #D2473F / #3F7CC8 / #E8C23A / #4FA05A
 
 ## Plan
@@ -40,8 +40,8 @@ Kioscos `order_stand`. Concepto: `art/concepts/estaciones/A_kiosks.png`. QA PUL-
 3. Capturar cuatro kioscos con IDs diferentes del número fijo y ambos estados; validar exportación, presupuesto y proyecto.
 
 ## Evidence
-Arte completo, pendiente de revisión/integración. [Entrega, materiales y notas para PUL-099/100](../evidence/PUL-096/README.md). GLB y raíces anteriores conservados; añadidos placa papel/marino, `Anchor_OrderLabel`, `delivery_zone` y `Anchor_DeliveryZone`; materiales `.tres` apagado/encendido con atlas y emisión suave 0,35.
+[README de entrega (materiales, anclajes, notas para PUL-099/100)](../evidence/PUL-096/README.md). Revisión posterior al trabajo de Codex: se regeneraron las capturas con `capture_zone.gd` (las originales mostraban apagado y encendido casi idénticos porque el marco es blanco y una emisión sola no lo tiñe) y se corrigió `delivery_zone_on.tres`, que ahora lleva `albedo_color` + `emission` del color del puesto.
 
-**Centro final de entrega Z local=3,40 m**, huella 1,45 × 1,05 m y relieve ≤2 cm. El ensayo en Z≈2,50 quedaba oculto por el toldillo; PUL-100 debe alinear el área al centro final documentado. `Anchor_OrderLabel`=(0, 1,905, −0,23). No se editó `order_stand.tscn`, ni su colisión ni el número fijo.
+GLB conservado; añadidos placa papel/marino, `Anchor_OrderLabel`, `delivery_zone` y `Anchor_DeliveryZone`. **Centro de entrega Z local = 3,40 m** (huella 1,45 x 1,05 m, relieve <= 2 cm), al lado +Z como el `DeliveryZone` Area3D actual (1,17 m) pero más lejos: a Z~2,5 el toldillo lo oculta a cámara de juego. PUL-100 debe decidir si mueve el Area3D al nuevo centro o acerca la alfombrilla. `Anchor_OrderLabel`=(0, 1,905, -0,23). No se tocó `order_stand.tscn`, ni colisión ni número fijo.
 
-[Presupuesto: 3.032 / 6.000 tris](../evidence/PUL-096/budget.json), incluidos todos los toldillos; [verify: 735/735 y smoke OK](../evidence/PUL-094/verify.log); [alcance](../evidence/PUL-094/validation.json). Capturas a cámara de juego en estudio; iluminación/oclusiones del layout final corresponden a integración y QA. Fila de licencia propia propuesta en Evidence.
+[Presupuesto: 3.032 / 6.000 tris](../evidence/PUL-096/budget.json). `tools/verify.sh` en verde (735/735 y smoke OK). Capturas en estudio; iluminación y oclusión del nivel son de integración y QA. Fila de licencia propia propuesta en el README; la añade el coordinador.

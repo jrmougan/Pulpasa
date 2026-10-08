@@ -64,7 +64,8 @@ for state, emission in [('off', False), ('on', True)]:
     resource += 'resource_name = "delivery_zone_' + state + '"\n'
     resource += 'albedo_texture = ExtResource("1_atlas")\nroughness = 0.82\n'
     if emission:
-        resource += 'emission_enabled = true\nemission = Color(0.8235294, 0.2784314, 0.2470588, 1)\nemission_energy_multiplier = 0.35\n'
+        resource += 'albedo_color = Color(0.8235294, 0.2784314, 0.2470588, 1)
+emission_enabled = true\nemission = Color(0.8235294, 0.2784314, 0.2470588, 1)\nemission_energy_multiplier = 0.35\n'
     (out / ('delivery_zone_' + state + '.tres')).write_text(resource, encoding='utf8')
 (ROOT / 'docs/evidence/PUL-096/budget.json').write_text(json.dumps(counts, indent=2))
 (ROOT / 'docs/evidence/PUL-096/integration.json').write_text(json.dumps({

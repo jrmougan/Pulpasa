@@ -4,6 +4,7 @@
 
 [resource]
 resource_name = "delivery_zone_on"
+albedo_color = Color(0.8235294, 0.2784314, 0.2470588, 1)
 albedo_texture = ExtResource("1_atlas")
 roughness = 0.82
 emission_enabled = true
