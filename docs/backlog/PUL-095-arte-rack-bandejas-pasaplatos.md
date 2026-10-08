@@ -34,7 +34,7 @@ Rack `box_shelf`, bandejas S/M/L (`box`) y encimeras modulares (`counters`). Con
 - [x] AC1 Rack con S/M/L legible a 1080p con giro −90°: [captura](../evidence/PUL-095/native_1080.png)
 - [x] AC2 Bandejas [aisladas](../evidence/PUL-095/native_1080.png) y en la mano de ambos jugadores: [S](../evidence/PUL-095/hands_small_1080.png), [M](../evidence/PUL-095/hands_medium_1080.png), [L](../evidence/PUL-095/hands_large_1080.png); iconos PNG exportados
 - [x] AC3 `pass_mark` y `pass_threshold` exportados: [captura](../evidence/PUL-095/native_1080.png)
-- [x] AC4 [Rack 5.960/6.000](../evidence/PUL-095/budget.json); [bandejas llenas S/M=1.952, L=1.932 / 2.000](../evidence/PUL-094/validation.json), incluyendo hulls y reserva para badges/barra
+- [x] AC4 [Rack 5.960/6.000](../evidence/PUL-095/budget.json); [bandejas llenas S/M=1.952, L=1.932 / 2.000](../evidence/PUL-095/budget.json), incluyendo hulls y reserva para badges/barra
 
 ## Plan
 1. Reutilizar siluetas y hulls de bandejas; añadir letras en el borde y placas S/M/L frontales y visibles con giro de 90° del rack.
@@ -42,8 +42,8 @@ Rack `box_shelf`, bandejas S/M/L (`box`) y encimeras modulares (`counters`). Con
 3. Validar presupuesto y capturar orientación real, bandejas aisladas/sostenidas y marcas, sin editar escenas ni datos.
 
 ## Evidence
-Arte completo, pendiente de revisión/integración. [Entrega y contratos](../evidence/PUL-095/README.md). Raíces, anclajes, dimensiones nominales y `OutlineHull` conservados; contornos simplificados para cumplir el presupuesto con relleno máximo. Letras de borde y placas delanteras/superiores del rack; iconos `size_s.png`, `size_m.png`, `size_l.png` para PUL-098/099.
+Arte completo, verificado por el worker de revisión (verify 735/735, presupuestos recontados desde los .glb, capturas revisadas). [Entrega y contratos](../evidence/PUL-095/README.md). Raíces, anclajes, dimensiones nominales y `OutlineHull` conservados; contornos simplificados para cumplir el presupuesto con relleno máximo. Letras de borde y placas delanteras/superiores del rack; iconos `size_s.png`, `size_m.png`, `size_l.png` para PUL-098/099.
 
 Nuevas piezas independientes `pass_mark.glb` y `pass_threshold.glb` en counters; relieve expuesto máximo 2 cm con base empotrada. Módulos anteriores intactos. No se modificaron `.tscn` ni `.tres` de gameplay.
 
-[`tools/verify.sh`: 735/735 y smoke OK](../evidence/PUL-094/verify.log); [31 tests específicos](../evidence/PUL-094/final_asset_tests.log); [auditoría de alcance](../evidence/PUL-094/validation.json). Licencia propia propuesta en Evidence; Montserrat e iconos existentes mantienen sus atribuciones.
+[`tools/verify.sh`: 735/735 y smoke OK](../evidence/PUL-095/verify.log); [auditoría de alcance](../evidence/PUL-095/budget.json). Licencia propia propuesta en Evidence; Montserrat e iconos existentes mantienen sus atribuciones.

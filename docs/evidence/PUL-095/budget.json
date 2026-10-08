@@ -1,6 +1,11 @@
 {
-  "box_all_variants": 1076,
   "box_shelf": 5960,
+  "box_shelf_limit": 6000,
+  "box_all_variants": 1076,
   "pass_mark": 140,
-  "pass_threshold": 70
+  "pass_threshold": 70,
+  "box_full_variant_tris": {"small": 1952, "medium": 1952, "large": 1932},
+  "box_full_variant_limit": 2000,
+  "box_full_variant_formula": "variante+hull+letra+borde (S 286+60+2+12=360; M igual; L 282+44+2+12=340) + comida visible max 1560 + reserva 32 para badges/barra",
+  "food_visible_max_from": "PUL-094 (evidencia no presente en esta rama)"
 }
