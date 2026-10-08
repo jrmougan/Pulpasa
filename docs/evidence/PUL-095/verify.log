@@ -1,0 +1,20 @@
+= Run Summary
+==============================================
+
+Totals
+------
+Scripts              68
+Tests               735
+Passing Tests       735
+Asserts            9129
+Time              337.554s
+
+
+---- All tests passed! ----
+
+Results saved to res://.gut_reports/junit.xml
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✓ verify OK

@@ -1,0 +1,144 @@
+00:01.453  blend            | Read blend: "<repo>\art\blender\box.blend"
+blender.exe : <string>:93: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+En línea: 2 Carácter: 253
++ ... sk PUL-095; & 'C:/Program Files/Blender Foundation/Blender 5.2/blende ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (<string>:93: De... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+00:01.781  image.write      | ERROR OpenImageIO write failed: Could not open file "\.thumbnails\large\blender_38352_74da74df7b097a76ae8865938c20d596.png.png"
+Info: Read library: '<repo>\art\blender\_materials_v2.blend', '//_materials_v2.blend', parent '<direct>'
+Info: Saved as "box.blend"
+INFO Draco is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_draco_bridge.dll
+INFO MeshOptimizer is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_meshopt_bridge.dll
+22:02:19 | INFO: Starting glTF 2.0 export
+22:02:19 | INFO: Extracting primitive: box_large.001
+22:02:19 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:02:19 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:02:19 | INFO: Primitives created: 2
+22:02:19 | INFO: Extracting primitive: Plane.002
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: Cube.002
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: box_medium.001
+22:02:19 | INFO: Primitives created: 2
+22:02:19 | INFO: Extracting primitive: Plane.001
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: Cube.001
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: box_small.001
+22:02:19 | INFO: Primitives created: 2
+22:02:19 | INFO: Extracting primitive: Plane
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: Cube
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: hull_large.001
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: hull_medium.001
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: hull_small.001
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: sticker
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Finished glTF 2.0 export in 0.06602191925048828 s
+00:02.359  blend            | Read blend: "<repo>\art\blender\box_shelf.blend"
+<string>:93: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+00:02.609  image.write      | ERROR OpenImageIO write failed: Could not open file "\.thumbnails\large\blender_38352_472ca74d41f2db159f8630ff4a7236d5.png.png"
+
+blender_export: OK godot\assets\models\items\box\box.glb (31 objetos, 1076 triángulos, 187 KiB)
+Info: Read library: '<repo>\art\blender\_materials_v2.blend', '//_materials_v2.blend', parent '<direct>'
+Info: Saved as "box_shelf.blend"
+22:02:19 | INFO: Starting glTF 2.0 export
+22:02:19 | INFO: Extracting primitive: cartons
+22:02:19 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: labels
+22:02:19 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: hull_large
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: hull_medium
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: hull_small.001
+22:02:19 | INFO: Primitives created: 1
+22:02:19 | INFO: Extracting primitive: rack
+22:02:19 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:02:19 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:02:20 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:02:20 | INFO: Primitives created: 3
+22:02:20 | INFO: Extracting primitive: Plane.005
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Plane.003
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Plane.001
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.005
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.003
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.001
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Plane.004
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Plane.002
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Plane
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.004
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.002
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: stack_large
+22:02:20 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:02:20 | INFO: Primitives created: 2
+22:02:20 | INFO: Extracting primitive: stack_medium
+22:02:20 | INFO: Primitives created: 2
+22:02:20 | INFO: Extracting primitive: stack_small
+22:02:20 | INFO: Primitives created: 2
+22:02:20 | INFO: Finished glTF 2.0 export in 0.06454157829284668 s
+00:02.703  blend            | Read blend: "<repo>\art\blender\counters.blend"
+
+blender_export: OK godot\assets\models\stations\box_shelf\box_shelf.glb (24 objetos, 5960 triángulos, 797 KiB)
+Info: Read library: '<repo>\art\blender\_materials_v2.blend', '//_materials_v2.blend', parent '<direct>'
+22:02:20 | INFO: Starting glTF 2.0 export
+22:02:20 | INFO: Extracting primitive: Cube.001
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.003
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.005
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.007
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.002
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.004
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.006
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.008
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Finished glTF 2.0 export in 0.015395164489746094 s
+
+blender_export: OK godot\assets\models\furniture\counters\pass_mark.glb (11 objetos, 140 triángulos, 56 KiB)
+22:02:20 | INFO: Starting glTF 2.0 export
+22:02:20 | INFO: Extracting primitive: Plane
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.009
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.010
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Extracting primitive: Cube.011
+22:02:20 | INFO: Primitives created: 1
+22:02:20 | INFO: Finished glTF 2.0 export in 0.009692668914794922 s
+00:03.031  image.write      | ERROR OpenImageIO write failed: Could not open file "\.thumbnails\large\blender_38352_7ab85dc48bbb0053dbb03bf92f315052.png.png"
+
+blender_export: OK godot\assets\models\furniture\counters\pass_threshold.glb (6 objetos, 70 triángulos, 45 KiB)
+Info: Saved as "counters.blend"
+PUL-095 budgets {'box_all_variants': 1076, 'box_shelf': 5960, 'pass_mark': 140, 'pass_threshold': 70}
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit
