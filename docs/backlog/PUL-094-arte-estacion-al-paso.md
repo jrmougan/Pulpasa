@@ -48,4 +48,6 @@ Mostrador de 5,20 m; centros X=−2/−1/0/1/2 a 1 m. Retirados `tray`, `cutting
 
 El responsable autorizó ampliar `owns` para `godot/tests/unit/test_data_integrity.gd` el 2026-10-07: el test exigía colores antiguos y ahora valida los cinco hex normativos con comparación aproximada para decimales, sin relajar opacidad ni distinción entre pimentones.
 
-[`tools/verify.sh` en verde: 735/735 tests, smoke OK](../evidence/PUL-094/verify.log). [Auditoría de alcance del árbol de trabajo conjunto](../evidence/PUL-094/validation.json); las ramas individuales nombradas en Constraints no existen en este checkout. Exportaciones por CLI, presupuesto y reglas del importador validados.
+[`tools/verify.sh` en verde (re-verificado en el worktree pul-094): 735/735 tests, smoke OK](../evidence/PUL-094/verify.log). [Auditoría de alcance del árbol de trabajo conjunto](../evidence/PUL-094/validation.json); las ramas individuales nombradas en Constraints no existen en este checkout. Exportaciones por CLI, presupuesto y reglas del importador validados.
+
+Revisión (Claude, 2026-10-08): capturas `native_1080`, `rear_1080` y `grayscale_1080` revisadas a mano; los cuatro dispensadores y los cinco estados del cuenco se distinguen en grises, faja marino con chevrones solo en el frente de servicio. Retirados `update_palette_test.patch` y `capture-errors.log` (vacío) de las evidencias. `check_owns` OK. Nota menor: en `rear_1080` la etiqueta de texto se solapa con el mostrador (solo rótulo de la lámina).
