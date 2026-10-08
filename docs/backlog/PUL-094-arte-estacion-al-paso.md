@@ -1,7 +1,7 @@
 ---
 id: PUL-094
 title: Rehacer la estación de condimentos como línea al paso (arte, Codex)
-status: review
+status: done
 milestone: M3c
 role: asset-pipeline
 deps: []

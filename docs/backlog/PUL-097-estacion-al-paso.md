@@ -21,6 +21,7 @@ Quita `Tray`. Dispensador: con caja llena en la mano y desde el lado de servicio
 - `tools/verify.sh` en verde; GDScript tipado; datos en `.tres`. Godot con `--audio-driver Dummy`; con el MCP, silencia los buses.
 - Diseño: D23 en `docs/design/decisions.md` y `docs/design/rediseno-estaciones.md` (R1–R17). Las features reescritas (PUL-092) y los contratos (PUL-093) mandan.
 - No toques `level_01.tscn` (PUL-101). `seasoned`/`seasoning_removed` sin cambios de firma.
+- Revisión de PUL-094: los anclajes de dispensadores y cuenco cambiaron y el mostrador mide 5,2 m (colisión actual de 4 m; `Tray` queda flotando sin malla). `cachelos_bowl.glb` trae `Portions0..4` todos visibles: la escena debe mostrar solo uno; añade un test que lo compruebe. Detalle en `docs/evidence/PUL-094/README.md`.
 
 ## Acceptance
 - [ ] AC1 R1–R4 (toggle con caja en mano, antirrebote, caja a medio cortar rechazada, mano vacía sin objetivo) → tests

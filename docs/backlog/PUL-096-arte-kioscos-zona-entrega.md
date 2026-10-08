@@ -1,7 +1,7 @@
 ---
 id: PUL-096
 title: Rehacer los kioscos con placa de comanda y zona de entrega (arte, Codex)
-status: review
+status: done
 milestone: M3c
 role: asset-pipeline
 deps: []

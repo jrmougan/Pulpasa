@@ -106,9 +106,9 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-091 | M3c | asset-pipeline | done | Auditar la lectura visual de estaciones y bandejas y proponer su rediseño artístico |
 | PUL-092 | M3c | game-designer | done | Reescribir las features de estaciones según D23 |
 | PUL-093 | M3c | godot-architect | done | Enmendar los contratos para la estación sin bandeja y los pasaplatos marcados |
-| PUL-094 | M3c | asset-pipeline | ready | Rehacer la estación de condimentos como línea al paso (arte, Codex) |
-| PUL-095 | M3c | asset-pipeline | ready | Rehacer rack, bandejas S/M/L y marcas de pasaplatos (arte, Codex) |
-| PUL-096 | M3c | asset-pipeline | ready | Rehacer los kioscos con placa de comanda y zona de entrega (arte, Codex) |
+| PUL-094 | M3c | asset-pipeline | done | Rehacer la estación de condimentos como línea al paso (arte, Codex) |
+| PUL-095 | M3c | asset-pipeline | done | Rehacer rack, bandejas S/M/L y marcas de pasaplatos (arte, Codex) |
+| PUL-096 | M3c | asset-pipeline | done | Rehacer los kioscos con placa de comanda y zona de entrega (arte, Codex) |
 | PUL-097 | M3c | gameplay-engineer | ready | Implementar la estación de condimentos al paso |
 | PUL-098 | M3c | gameplay-engineer | ready | Aplicar los cortes 4/6/10 y el tamaño legible de las bandejas |
 | PUL-099 | M3c | ui-engineer | ready | Mostrar el tamaño y el color del puesto en el ticket |

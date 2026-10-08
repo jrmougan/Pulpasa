@@ -1,7 +1,7 @@
 ---
 id: PUL-095
 title: Rehacer rack, bandejas S/M/L y marcas de pasaplatos (arte, Codex)
-status: review
+status: done
 milestone: M3c
 role: asset-pipeline
 deps: []

@@ -12,6 +12,9 @@ añade una fila aquí. Lo dudoso se sustituye por alternativas libres o primitiv
 | `docs/evidence/PUL-073/luz_v2.blend` (PUL-073, escena de luz de referencia) | — (solo evidencia) | Propio (equipo Pulpasa) | No |
 | Montserrat Bold, Black y SemiBold (.otf; Julieta Ulanovsky y colaboradores, github.com/JulietaUla/Montserrat) | `assets/fonts/montserrat/*.otf`, `assets/fonts/montserrat/OFL.txt` | SIL OFL 1.1 | Incluir `OFL.txt` (incluido) |
 | DSEG7 Classic Bold (keshikan, github.com/keshikan/DSEG v0.46) | `assets/fonts/dseg/DSEG7Classic-Bold.ttf`, `assets/fonts/dseg/OFL.txt` | SIL OFL 1.1 | Incluir `OFL.txt` (incluido) |
+| `art/blender/seasoning_station.blend` v3, línea al paso (PUL-094) | `assets/models/stations/seasoning_station/**` | Propio (equipo Pulpasa); letras de Montserrat (SIL OFL 1.1) e iconos del atlas ya registrados | Sí, la de esos iconos |
+| `art/blender/box_shelf.blend`, `box.blend`, `counters.blend` v3, tallas S/M/L y pasaplatos (PUL-095) | `assets/models/stations/box_shelf/**`, `assets/models/items/box/**`, `assets/models/furniture/counters/pass_*`, `assets/textures/ui/box_sizes/*` | Propio (equipo Pulpasa); letras de Montserrat (SIL OFL 1.1) | No |
+| `art/blender/order_stand.blend` v3, placa y zona de entrega (PUL-096) | `assets/models/stations/order_stand/**` | Propio (equipo Pulpasa); letras de Montserrat (SIL OFL 1.1) e iconos del atlas ya registrados | Sí, la de esos iconos |
 | `art/blender/box_shelf.blend` v2, rack (PUL-081) | `assets/models/stations/box_shelf/**` | Propio (equipo Pulpasa) | No |
 | `art/blender/box.blend` v2, bandejas (PUL-077) | `assets/models/items/box/*` | Propio (equipo Pulpasa) | No |
 | `art/blender/cachelos_storage.blend` v2, sacos (PUL-080) | `assets/models/stations/cachelos_storage/**` | Propio (equipo Pulpasa) | No |

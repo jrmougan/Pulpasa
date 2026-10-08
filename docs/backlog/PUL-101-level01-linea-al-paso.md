@@ -15,7 +15,7 @@ touches_scenes: [godot/entities/stations/slot.tscn, godot/scenes/levels/level_01
 Nivel `level_01` (planta B) según D23 y `level-layouts.md` reescrito.
 
 ## Change
-Hueco de la barra a x≈3,2 con el umbral de PUL-095; 6 `PassSlot` con `pass_mark` visible y el resto de la barra sin `Slot`; estación sin bandeja; `GAP_X` del `level_walker`. `pass_mark` va en `slot.tscn` (ADR-003 §9). Si R11 exige que pulsar fuera de un `PassSlot` no suelte la caja, cámbialo en `HoldComponent` con su test. Retira los restos ocultos de QA D9 en `PassSlot` (placeholder `table_square`).
+Hueco de la barra a x≈3,2 con el umbral de PUL-095; 6 `PassSlot` con `pass_mark` visible y el resto de la barra sin `Slot`; estación sin bandeja; `GAP_X` del `level_walker`. `pass_mark` va en `slot.tscn` (ADR-003 §9). Si R11 exige que pulsar fuera de un `PassSlot` no suelte la caja, cámbialo en `HoldComponent` con su test. Retira los restos ocultos de QA D9 en `PassSlot` (placeholder `table_square`). Revisión de PUL-095: las placas `SizePanel_*`/`SizeFront_*` de `box_shelf.glb` quedan ~0,5 m fuera de la colisión del rack; ajústala si el jugador las atraviesa.
 
 ## Constraints
 - `tools/verify.sh` en verde; GDScript tipado; datos en `.tres`. Godot con `--audio-driver Dummy`; con el MCP, silencia los buses.
