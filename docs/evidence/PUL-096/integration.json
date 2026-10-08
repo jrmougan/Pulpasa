@@ -1,0 +1,30 @@
+{
+  "stand_colors": [
+    "#D2473F",
+    "#3F7CC8",
+    "#E8C23A",
+    "#4FA05A"
+  ],
+  "delivery_zone_center_godot": [
+    0,
+    0.008,
+    3.4
+  ],
+  "delivery_zone_size": [
+    1.45,
+    0.016,
+    1.05
+  ],
+  "delivery_frame_path": "order_stand/delivery_zone/DeliveryFrame",
+  "order_label_center_godot": [
+    0,
+    1.905,
+    -0.23
+  ],
+  "order_plate_dimensions": [
+    1.02,
+    0.5,
+    0.024
+  ],
+  "emission_energy": 0.35
+}

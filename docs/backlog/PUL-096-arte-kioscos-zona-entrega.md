@@ -1,7 +1,7 @@
 ---
 id: PUL-096
 title: Rehacer los kioscos con placa de comanda y zona de entrega (arte, Codex)
-status: ready
+status: review
 milestone: M3c
 role: asset-pipeline
 deps: []
@@ -30,12 +30,18 @@ Kioscos `order_stand`. Concepto: `art/concepts/estaciones/A_kiosks.png`. QA PUL-
 - No toques `order_stand.tscn` (lo integra PUL-100).
 
 ## Acceptance
-- [ ] AC1 `#id` legible sobre placa a 1080p en los 4 kioscos (captura)
-- [ ] AC2 `delivery_zone` con estados apagado/encendido (captura de ambos)
-- [ ] AC3 Hex de los 4 colores de puesto en Evidence
+- [x] AC1 `#id` legible sobre placa a 1080p en los 4 kioscos: [#17/#28/#39/–](../evidence/PUL-096/zone_off_1080.png)
+- [x] AC2 `delivery_zone`: [apagado](../evidence/PUL-096/zone_off_1080.png) y [encendido](../evidence/PUL-096/zone_on_1080.png)
+- [x] AC3 [Hex y colocación final](../evidence/PUL-096/integration.json): #D2473F / #3F7CC8 / #E8C23A / #4FA05A
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Preservar cuerpo, toldillos y número fijo; incorporar placa papel/marino para el ID variable.
+2. Exportar `delivery_zone` con materiales apagado y encendido, y documentar centro, tamaño y paleta para integración.
+3. Capturar cuatro kioscos con IDs diferentes del número fijo y ambos estados; validar exportación, presupuesto y proyecto.
 
 ## Evidence
-(Lo rellena el worker.)
+[README de entrega (materiales, anclajes, notas para PUL-099/100)](../evidence/PUL-096/README.md). Revisión posterior al trabajo de Codex: se regeneraron las capturas con `capture_zone.gd` (las originales mostraban apagado y encendido casi idénticos porque el marco es blanco y una emisión sola no lo tiñe) y se corrigió `delivery_zone_on.tres`, que ahora lleva `albedo_color` + `emission` del color del puesto.
+
+GLB conservado; añadidos placa papel/marino, `Anchor_OrderLabel`, `delivery_zone` y `Anchor_DeliveryZone`. **Centro de entrega Z local = 3,40 m** (huella 1,45 x 1,05 m, relieve <= 2 cm), al lado +Z como el `DeliveryZone` Area3D actual (1,17 m) pero más lejos: a Z~2,5 el toldillo lo oculta a cámara de juego. PUL-100 debe decidir si mueve el Area3D al nuevo centro o acerca la alfombrilla. `Anchor_OrderLabel`=(0, 1,905, -0,23). No se tocó `order_stand.tscn`, ni colisión ni número fijo.
+
+[Presupuesto: 3.032 / 6.000 tris](../evidence/PUL-096/budget.json). `tools/verify.sh` en verde (735/735 y smoke OK). Capturas en estudio; iluminación y oclusión del nivel son de integración y QA. Fila de licencia propia propuesta en el README; la añade el coordinador.
