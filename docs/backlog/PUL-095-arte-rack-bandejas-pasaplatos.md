@@ -32,7 +32,7 @@ Rack `box_shelf`, bandejas S/M/L (`box`) y encimeras modulares (`counters`). Con
 
 ## Acceptance
 - [x] AC1 Rack con S/M/L legible a 1080p con giro −90°: [captura](../evidence/PUL-095/native_1080.png)
-- [x] AC2 Bandejas [aisladas](../evidence/PUL-095/native_1080.png) y en la mano de ambos jugadores: [S](../evidence/PUL-095/hands_small_1080.png), [M](../evidence/PUL-095/hands_medium_1080.png), [L](../evidence/PUL-095/hands_large_1080.png); iconos PNG exportados
+- [x] AC2 Bandejas [aisladas](../evidence/PUL-095/native_1080.png) y en la mano de ambos jugadores: [S](../evidence/PUL-095/hands_small_1080.png), [M](../evidence/PUL-095/hands_medium_1080.png), [L](../evidence/PUL-095/hands_large_1080.png) ([recortes ×3](../evidence/PUL-095/hands_large_zoom.png): talla por tamaño; la letra en mano la cubre PUL-098/099); iconos PNG exportados
 - [x] AC3 `pass_mark` y `pass_threshold` exportados: [captura](../evidence/PUL-095/native_1080.png)
 - [x] AC4 [Rack 5.960/6.000](../evidence/PUL-095/budget.json); [bandejas llenas S/M=1.952, L=1.932 / 2.000](../evidence/PUL-095/budget.json), incluyendo hulls y reserva para badges/barra
 

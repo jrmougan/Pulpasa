@@ -39,7 +39,9 @@ func _run() -> void:
 		for i: int in 10:
 			await process_frame
 		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png(out + "/hands_%s_1080.png" % size)
+		var shot: Image = root.get_texture().get_image()
+		shot.save_png(out + "/hands_%s_1080.png" % size)
+		_save_zoom(shot, players, out + "/hands_%s_zoom.png" % size)
 		for player: Node3D in players:
 			player.get_node("%HoldComponent").call("drop")
 		for item: Node3D in held:
@@ -47,3 +49,16 @@ func _run() -> void:
 		await process_frame
 	print("CAPTURE HANDS OK: ", out)
 	quit()
+
+
+## Crop around both players, scaled x3 (nearest) so the held tray's size letter is reviewable.
+func _save_zoom(shot: Image, players: Array[Node3D], path: String) -> void:
+	var cam: Camera3D = root.get_camera_3d()
+	var box := Rect2(cam.unproject_position(players[0].global_position + Vector3.UP), Vector2.ZERO)
+	for player: Node3D in players:
+		box = box.expand(cam.unproject_position(player.global_position))
+		box = box.expand(cam.unproject_position(player.global_position + Vector3.UP * 2.0))
+	box = box.grow(60.0).intersection(Rect2(Vector2.ZERO, Vector2(shot.get_size())))
+	var crop: Image = shot.get_region(Rect2i(box))
+	crop.resize(crop.get_width() * 3, crop.get_height() * 3, Image.INTERPOLATE_NEAREST)
+	crop.save_png(path)
