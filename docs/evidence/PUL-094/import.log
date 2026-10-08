@@ -1,0 +1,94 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Inicialización del proyecto (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Escaneando la estructura del archivo...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Cargando nombres de clases globales...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verificando GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creando scripts de carga automática...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Inicializando plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Iniciando escaneo de archivos...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Escaneando acciones... (3 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | cachelos_bowl.glb[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | seasoning_dispenser.glb[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | seasoning_station.glb[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (20 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparando archivos para reimportarlos...[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones de pre-reimportación...[39m[0m
+[   0% ] [90m[1mpreload_reimporting_scene[22m | Started Preparando escenas para recargar (1 steps)[39m[0m
+[   0% ] [90m[1mpreload_reimporting_scene[22m | Analizando escena [vacío][39m[0m
+[  50% ] [90m[1mpreload_reimporting_scene[22m | Preparación terminada.[39m[0m
+[92m[ DONE ][39m [1mpreload_reimporting_scene[22m
+[0m
+[   0% ] [90m[1mreimport[22m | seasoning_station_seasoning_signs.png[39m[0m
+[   4% ] [90m[1mreimport[22m | seasoning_station_seasoning_station_atlas.png[39m[0m
+[   9% ] [90m[1mreimport[22m | seasoning_station_cardboard_orm.png[39m[0m
+[  14% ] [90m[1mreimport[22m | seasoning_station_cardboard_albedo.png[39m[0m
+[  19% ] [90m[1mreimport[22m | seasoning_station_steel_brushed_normal.png[39m[0m
+[  23% ] [90m[1mreimport[22m | seasoning_station_steel_brushed_orm.png[39m[0m
+[  28% ] [90m[1mreimport[22m | seasoning_station_steel_brushed_albedo.png[39m[0m
+[  33% ] [90m[1mreimport[22m | seasoning_station_steel_brushed_top_normal.png[39m[0m
+[  38% ] [90m[1mreimport[22m | seasoning_station_steel_brushed_top_orm.png[39m[0m
+[  42% ] [90m[1mreimport[22m | seasoning_station_steel_brushed_top_albedo.png[39m[0m
+[  47% ] [90m[1mreimport[22m | seasoning_dispenser_steel_brushed_normal.png[39m[0m
+[  52% ] [90m[1mreimport[22m | seasoning_dispenser_steel_brushed_orm.png[39m[0m
+[  57% ] [90m[1mreimport[22m | seasoning_dispenser_steel_brushed_albedo.png[39m[0m
+[  61% ] [90m[1mreimport[22m | seasoning_dispenser_seasoning_signs.png[39m[0m
+[  66% ] [90m[1mreimport[22m | cachelos_bowl_clay_normal.png[39m[0m
+[  71% ] [90m[1mreimport[22m | cachelos_bowl_clay_orm.png[39m[0m
+[  76% ] [90m[1mreimport[22m | cachelos_bowl_clay_albedo.png[39m[0m
+[  80% ] [90m[1mreimport[22m | seasoning_station.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Importar Escena (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importando Escena...[39m[0m
+[   1% ] [90m[1mimport[22m | Ejecutando Script Personalizado...[39m[0m
+[  99% ] [90m[1mimport[22m | Guardando...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  85% ] [90m[1mreimport[22m | seasoning_dispenser.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Importar Escena (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importando Escena...[39m[0m
+[   1% ] [90m[1mimport[22m | Ejecutando Script Personalizado...[39m[0m
+[  99% ] [90m[1mimport[22m | Guardando...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  90% ] [90m[1mreimport[22m | cachelos_bowl.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Importar Escena (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importando Escena...[39m[0m
+[   1% ] [90m[1mimport[22m | Ejecutando Script Personalizado...[39m[0m
+[  99% ] [90m[1mimport[22m | Guardando...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  95% ] [90m[1mreimport[22m | Finalizando la importación de recursos...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importación de Assets (20 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Ejecutando operaciones post-reimportación...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Cargando editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Cargando diseño del editor...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Cargando docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m

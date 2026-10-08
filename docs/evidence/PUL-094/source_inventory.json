@@ -1,0 +1,1122 @@
+{
+  "seasoning_station": [
+    {
+      "name": "seasoning_station",
+      "type": "EMPTY",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "parent": "seasoning_station",
+      "location": [
+        0.0,
+        0.5600000023841858,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "counter",
+      "type": "MESH",
+      "parent": "seasoning_station",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        4.039999961853027,
+        1.1200000047683716,
+        1.100000023841858
+      ],
+      "materials": [
+        "mat_steel_brushed_top",
+        "mat_steel_brushed",
+        "mat_steel_brushed_mid",
+        "mat_rubber",
+        "mat_cardboard",
+        "seasoning_station_atlas"
+      ]
+    },
+    {
+      "name": "tray",
+      "type": "MESH",
+      "parent": "seasoning_station",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.699999988079071,
+        0.5499999523162842,
+        0.06999993324279785
+      ],
+      "materials": [
+        "mat_steel_dark",
+        "mat_steel_brushed"
+      ]
+    },
+    {
+      "name": "cutting_board",
+      "type": "MESH",
+      "parent": "seasoning_station",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.4399999976158142,
+        0.21999996900558472,
+        0.05199992656707764
+      ],
+      "materials": [
+        "mat_wood_used",
+        "mat_steel_brushed",
+        "mat_wood_dark"
+      ]
+    },
+    {
+      "name": "Anchor_Tray",
+      "type": "EMPTY",
+      "parent": "seasoning_station",
+      "location": [
+        0.30000001192092896,
+        0.25,
+        1.1399999856948853
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Dispenser_SweetPaprika",
+      "type": "EMPTY",
+      "parent": "seasoning_station",
+      "location": [
+        -1.25,
+        -0.44999998807907104,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Dispenser_HotPaprika",
+      "type": "EMPTY",
+      "parent": "seasoning_station",
+      "location": [
+        -0.3499999940395355,
+        -0.44999998807907104,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Dispenser_Salt",
+      "type": "EMPTY",
+      "parent": "seasoning_station",
+      "location": [
+        0.949999988079071,
+        -0.44999998807907104,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Dispenser_Oil",
+      "type": "EMPTY",
+      "parent": "seasoning_station",
+      "location": [
+        1.850000023841858,
+        -0.44999998807907104,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Bowl",
+      "type": "EMPTY",
+      "parent": "seasoning_station",
+      "location": [
+        -1.7999999523162842,
+        -0.0,
+        1.100000023841858
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_PassSide",
+      "type": "EMPTY",
+      "parent": "seasoning_station",
+      "location": [
+        0.0,
+        1.2000000476837158,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_OperatorSide",
+      "type": "EMPTY",
+      "parent": "seasoning_station",
+      "location": [
+        0.0,
+        -1.2000000476837158,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    }
+  ],
+  "box": [
+    {
+      "name": "box",
+      "type": "EMPTY",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "parent": "box",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "OutlineHull",
+      "type": "EMPTY",
+      "parent": "box",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "hull_small",
+      "type": "MESH",
+      "parent": "OutlineHull",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.3399991989135742,
+        0.3399991989135742,
+        0.09799999743700027
+      ],
+      "materials": [
+        "mat_outline_hull"
+      ]
+    },
+    {
+      "name": "box_small",
+      "type": "MESH",
+      "parent": "box",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.3399991989135742,
+        0.3399991989135742,
+        0.09799999743700027
+      ],
+      "materials": [
+        "mat_plastic_red",
+        "atlas_box"
+      ]
+    },
+    {
+      "name": "Anchor_Fill_small",
+      "type": "EMPTY",
+      "parent": "box_small",
+      "location": [
+        0.0,
+        0.0,
+        0.024000000208616257
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_small_0",
+      "type": "EMPTY",
+      "parent": "box_small",
+      "location": [
+        -0.13543076813220978,
+        0.07876944541931152,
+        0.041584257036447525
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_small_1",
+      "type": "EMPTY",
+      "parent": "box_small",
+      "location": [
+        -0.05342806875705719,
+        0.14728054404258728,
+        0.041584257036447525
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_small_2",
+      "type": "EMPTY",
+      "parent": "box_small",
+      "location": [
+        0.05342806875705719,
+        0.14728054404258728,
+        0.041584257036447525
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_small_3",
+      "type": "EMPTY",
+      "parent": "box_small",
+      "location": [
+        0.13543076813220978,
+        0.07876944541931152,
+        0.041584257036447525
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "hull_medium",
+      "type": "MESH",
+      "parent": "OutlineHull",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.41999998688697815,
+        0.3199999928474426,
+        0.09799999743700027
+      ],
+      "materials": [
+        "mat_outline_hull"
+      ]
+    },
+    {
+      "name": "box_medium",
+      "type": "MESH",
+      "parent": "box",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.41999998688697815,
+        0.3199999928474426,
+        0.09799999743700027
+      ],
+      "materials": [
+        "mat_plastic_red",
+        "atlas_box"
+      ]
+    },
+    {
+      "name": "Anchor_Fill_medium",
+      "type": "EMPTY",
+      "parent": "box_medium",
+      "location": [
+        0.0,
+        0.0,
+        0.024000000208616257
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_medium_0",
+      "type": "EMPTY",
+      "parent": "box_medium",
+      "location": [
+        -0.15092453360557556,
+        0.0940653532743454,
+        0.0415889173746109
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_medium_1",
+      "type": "EMPTY",
+      "parent": "box_medium",
+      "location": [
+        -0.05424975976347923,
+        0.14098550379276276,
+        0.041585274040699005
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_medium_2",
+      "type": "EMPTY",
+      "parent": "box_medium",
+      "location": [
+        0.05424975976347923,
+        0.14098550379276276,
+        0.041585274040699005
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_medium_3",
+      "type": "EMPTY",
+      "parent": "box_medium",
+      "location": [
+        0.15092453360557556,
+        0.0940653532743454,
+        0.0415889173746109
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "hull_large",
+      "type": "MESH",
+      "parent": "OutlineHull",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.4959999918937683,
+        0.3799999952316284,
+        0.09799999743700027
+      ],
+      "materials": [
+        "mat_outline_hull"
+      ]
+    },
+    {
+      "name": "box_large",
+      "type": "MESH",
+      "parent": "box",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.4959999918937683,
+        0.3799999952316284,
+        0.09799999743700027
+      ],
+      "materials": [
+        "mat_plastic_red",
+        "atlas_box"
+      ]
+    },
+    {
+      "name": "Anchor_Fill_large",
+      "type": "EMPTY",
+      "parent": "box_large",
+      "location": [
+        0.0,
+        0.0,
+        0.024000000208616257
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_large_0",
+      "type": "EMPTY",
+      "parent": "box_large",
+      "location": [
+        -0.16130609810352325,
+        0.16471612453460693,
+        0.04152270406484604
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_large_1",
+      "type": "EMPTY",
+      "parent": "box_large",
+      "location": [
+        -0.05429674685001373,
+        0.17662648856639862,
+        0.041583940386772156
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_large_2",
+      "type": "EMPTY",
+      "parent": "box_large",
+      "location": [
+        0.05429674685001373,
+        0.17662648856639862,
+        0.041583940386772156
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sticker_large_3",
+      "type": "EMPTY",
+      "parent": "box_large",
+      "location": [
+        0.16130609810352325,
+        0.16471612453460693,
+        0.04152270406484604
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "sticker",
+      "type": "MESH",
+      "parent": "box",
+      "location": [
+        -0.053953126072883606,
+        0.14107482135295868,
+        0.041999999433755875
+      ],
+      "dimensions": [
+        0.10000000149011612,
+        0.0,
+        0.10000000149011612
+      ],
+      "materials": [
+        "mat_sticker_atlas"
+      ]
+    }
+  ],
+  "box_shelf": [
+    {
+      "name": "box_shelf",
+      "type": "EMPTY",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "parent": "box_shelf",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "rack",
+      "type": "MESH",
+      "parent": "box_shelf",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.7999999523162842,
+        1.619999885559082,
+        1.4500000476837158
+      ],
+      "materials": [
+        "mat_steel_brushed_mid",
+        "mat_steel_dark",
+        "mat_steel_brushed_top"
+      ]
+    },
+    {
+      "name": "cartons",
+      "type": "MESH",
+      "parent": "box_shelf",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.5199999809265137,
+        0.44999998807907104,
+        1.459999918937683
+      ],
+      "materials": [
+        "mat_cardboard"
+      ]
+    },
+    {
+      "name": "OutlineHull",
+      "type": "EMPTY",
+      "parent": "box_shelf",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "stack_small",
+      "type": "MESH",
+      "parent": "box_shelf",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.3399136960506439,
+        0.33991366624832153,
+        0.203000009059906
+      ],
+      "materials": [
+        "mat_plastic_red",
+        "atlas_box"
+      ]
+    },
+    {
+      "name": "hull_small",
+      "type": "MESH",
+      "parent": "OutlineHull",
+      "location": [
+        -0.5099999904632568,
+        0.7799999713897705,
+        0.3100000023841858
+      ],
+      "dimensions": [
+        0.36799919605255127,
+        0.36799919605255127,
+        0.2029999941587448
+      ],
+      "materials": [
+        "mat_outline_hull"
+      ]
+    },
+    {
+      "name": "stack_medium",
+      "type": "MESH",
+      "parent": "box_shelf",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.4199078679084778,
+        0.319929838180542,
+        0.203000009059906
+      ],
+      "materials": [
+        "mat_plastic_red",
+        "atlas_box"
+      ]
+    },
+    {
+      "name": "hull_medium",
+      "type": "MESH",
+      "parent": "OutlineHull",
+      "location": [
+        0.0,
+        0.7799999713897705,
+        0.3100000023841858
+      ],
+      "dimensions": [
+        0.4479999840259552,
+        0.3479999899864197,
+        0.2029999941587448
+      ],
+      "materials": [
+        "mat_outline_hull"
+      ]
+    },
+    {
+      "name": "stack_large",
+      "type": "MESH",
+      "parent": "box_shelf",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.501758337020874,
+        0.38760387897491455,
+        0.203000009059906
+      ],
+      "materials": [
+        "mat_plastic_red",
+        "atlas_box"
+      ]
+    },
+    {
+      "name": "hull_large",
+      "type": "MESH",
+      "parent": "OutlineHull",
+      "location": [
+        0.5360000133514404,
+        0.7799999713897705,
+        0.3100000023841858
+      ],
+      "dimensions": [
+        0.5239999890327454,
+        0.40799999237060547,
+        0.2029999941587448
+      ],
+      "materials": [
+        "mat_outline_hull"
+      ]
+    },
+    {
+      "name": "labels",
+      "type": "MESH",
+      "parent": "box_shelf",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.2059999704360962,
+        0.0,
+        0.05499999225139618
+      ],
+      "materials": [
+        "atlas_box"
+      ]
+    }
+  ],
+  "counters": [
+    {
+      "name": "counter_1m",
+      "type": "EMPTY",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "parent": "counter_1m",
+      "location": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "counter_1m_body",
+      "type": "MESH",
+      "parent": "counter_1m",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.9919999837875366,
+        1.000999927520752,
+        1.0
+      ],
+      "materials": [
+        "mat_steel_brushed_top",
+        "mat_steel_brushed",
+        "counters_atlas",
+        "mat_steel_brushed_mid",
+        "mat_rubber",
+        "mat_steel_dark"
+      ]
+    }
+  ],
+  "order_stand": [
+    {
+      "name": "order_stand",
+      "type": "EMPTY",
+      "parent": null,
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Front",
+      "type": "EMPTY",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.23499999940395355,
+        0.0
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "counter",
+      "type": "MESH",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.440000057220459,
+        0.5289782285690308,
+        1.7760000228881836
+      ],
+      "materials": [
+        "mat_steel_dark",
+        "mat_rubber",
+        "mat_steel_brushed_top",
+        "mat_steel_brushed_mid",
+        "mat_steel_brushed",
+        "order_stand_atlas"
+      ]
+    },
+    {
+      "name": "tpv",
+      "type": "MESH",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.3700000047683716,
+        0.19500000774860382,
+        0.21999996900558472
+      ],
+      "materials": [
+        "order_stand_atlas",
+        "mat_emissive_screen"
+      ]
+    },
+    {
+      "name": "tray",
+      "type": "MESH",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        0.6200000047683716,
+        0.3700000047683716,
+        0.16899996995925903
+      ],
+      "materials": [
+        "mat_steel_brushed",
+        "order_stand_atlas"
+      ]
+    },
+    {
+      "name": "awning_1",
+      "type": "MESH",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.4800000190734863,
+        0.6059999465942383,
+        0.36999988555908203
+      ],
+      "materials": [
+        "mat_canvas_stand_1",
+        "mat_canvas_paper"
+      ]
+    },
+    {
+      "name": "awning_2",
+      "type": "MESH",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.4800000190734863,
+        0.6059999465942383,
+        0.36999988555908203
+      ],
+      "materials": [
+        "mat_canvas_stand_2",
+        "mat_canvas_paper"
+      ]
+    },
+    {
+      "name": "awning_3",
+      "type": "MESH",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.4800000190734863,
+        0.6059999465942383,
+        0.36999988555908203
+      ],
+      "materials": [
+        "mat_canvas_stand_3",
+        "mat_canvas_paper"
+      ]
+    },
+    {
+      "name": "awning_4",
+      "type": "MESH",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "dimensions": [
+        1.4800000190734863,
+        0.6059999465942383,
+        0.36999988555908203
+      ],
+      "materials": [
+        "mat_canvas_stand_4",
+        "mat_canvas_paper"
+      ]
+    },
+    {
+      "name": "Anchor_Number",
+      "type": "EMPTY",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.23000000417232513,
+        0.5
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    },
+    {
+      "name": "Anchor_Sign",
+      "type": "EMPTY",
+      "parent": "order_stand",
+      "location": [
+        0.0,
+        0.09099999815225601,
+        1.7120000123977661
+      ],
+      "dimensions": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "materials": []
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+tools/verify.sh re-ejecutado en el worktree pul-094 (2026-10-08): gdformat OK, gdlint OK, GUT 735/735 (9121 asserts), smoke OK, verify OK
+
+
+== gdformat --check
+159 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== tests (GUT)
+3/3 passed.
+
+
+
+
+==============================================
+= Run Summary
+==============================================
+
+Totals
+------
+Scripts              68
+Tests               735
+Passing Tests       735
+Asserts            9121
+Time              318.517s
+
+
+---- All tests passed! ----
+
+Results saved to res://.gut_reports/junit.xml
+WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 6 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✓ verify OK

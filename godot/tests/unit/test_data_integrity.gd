@@ -99,15 +99,17 @@ func test_ac3_references_are_filled() -> void:
 
 func test_ac3_seasoning_colors_are_distinct_and_opaque() -> void:
 	var expected: Dictionary = {
-		"salt": Color(0.96862745, 0.95686275, 0.9254902, 1.0),
-		"paprika": Color(0.95, 0.55, 0.2, 1.0),
-		"hot_paprika": Color(0.85, 0.12, 0.1, 1.0),
+		"salt": Color("F7F4EC"),
+		"paprika": Color("D6361F"),
+		"hot_paprika": Color("8F1A14"),
+		"oil": Color("F2C230"),
+		"cachelos": Color("F2D56B"),
 	}
 	for id: String in expected:
 		var seasoning: SeasoningData = load("res://data/seasonings/%s.tres" % id) as SeasoningData
 		assert_not_null(seasoning, id)
 		if seasoning:
-			assert_eq(seasoning.color, expected[id] as Color, id)
+			assert_true(seasoning.color.is_equal_approx(expected[id] as Color), id)
 			assert_eq(seasoning.color.a, 1.0, "%s: color opaco" % id)
 	var sweet: SeasoningData = load("res://data/seasonings/paprika.tres")
 	var hot: SeasoningData = load("res://data/seasonings/hot_paprika.tres")

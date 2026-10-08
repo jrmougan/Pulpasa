@@ -1,0 +1,73 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+---  GUT  ---
+[1m[INFO]:  [0musing [C:/Users/jesus/AppData/Roaming/Godot/app_userdata/Pulpasa] for temporary output.
+Godot version:  4.7.2
+GUT version:  9.7.1
+[4m
+
+res://tests/unit/test_data_integrity.gd
+[0m* test_ac3_all_tres_load
+* test_ac3_no_missing_dependencies
+* test_ac3_references_are_filled
+* test_ac3_seasoning_colors_are_distinct_and_opaque
+* test_ac1_player_config_has_detector_scoring_values
+* test_comandas_ac5_m1_data_ranges
+* test_pul057_seasoning_sort_order
+* test_pul057_box_badge_style_values
+* test_pul057_every_seasoning_color_is_opaque
+* test_pul058_seasoning_station_values
+[1m10/10 passed.
+[0m[4m
+
+res://tests/unit/test_assets_models.gd
+[0m* test_ac3_cubo_de_prueba_existe
+* test_ac3_cubo_de_prueba_mide_1_m
+* test_ac3_cada_glb_importa_y_cumple_reglas
+* test_validador_acepta_modelo_correcto
+* test_validador_rechaza_raiz_escalada_y_girada
+* test_validador_rechaza_raiz_girada
+* test_validador_rechaza_frente_ladeado
+* test_validador_rechaza_hijo_escalado
+* test_validador_rechaza_origen_fuera_de_la_base
+* test_validador_rechaza_sin_marcador_de_frente
+* test_validador_rechaza_camaras_y_luces
+[1m11/11 passed.
+[0m[4m
+
+res://tests/integration/test_box_model.gd
+[0m* test_size_key_comes_from_the_data_file
+* test_each_size_shows_only_its_plate_with_the_bible_diameter
+* test_outline_hull_follows_the_size
+* test_refresh_follows_data_assigned_after_ready
+* test_fill_levels_show_progressive_slices
+* test_slices_sit_on_the_plate_floor
+* test_cachelos_follow_the_seasoning
+[33m    9 Orphans[0m
+[33m        * [@Node3D@29:<Node3D#232632880637>] + 2
+        * [Badge:<Node3D#232330890775>] + 2
+        * [Badge:<Node3D#232582549033>] + 2[0m
+* test_3d_sticker_is_hidden_and_anchors_exist
+* test_contract_nodes_survive_the_new_model
+* test_collision_matches_the_model_of_each_size
+[33m9 orphans[0m
+[1m10/10 passed.
+[0m
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Scripts               3
+Tests                31
+Passing Tests        31
+Asserts             569
+Time              1.082s
+
+
+[32m---- All tests passed! ----
+[0m

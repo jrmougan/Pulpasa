@@ -1,0 +1,110 @@
+00:02.016  blend            | Read blend: "<repo>\art\blender\seasoning_station.blend"
+blender.exe : <string>:93: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+En línea: 2 Carácter: 43
++ ... sk PUL-094; & 'C:/Program Files/Blender Foundation/Blender 5.2/blende ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (<string>:93: De... in Blender 6.0:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+00:02.625  image.write      | ERROR OpenImageIO write failed: Could not open file "\.thumbnails\large\blender_1208_1cdd2d6bc0fc387603b78a00d0205c1e.png.png"
+Info: Read library: '<repo>\art\blender\_materials_v2.blend', '//_materials_v2.blend', parent '<direct>'
+Info: Saved as "seasoning_station.blend"
+INFO Draco is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_draco_bridge.dll
+INFO MeshOptimizer is available, use library at C:\Program Files\Blender Foundation\Blender 5.2\5.2\scripts\addons_core\io_scene_gltf2\bf_intern_meshopt_bridge.dll
+22:29:55 | INFO: Starting glTF 2.0 export
+22:29:55 | INFO: Extracting primitive: counter
+22:29:55 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:29:55 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:29:55 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:29:55 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:29:55 | INFO: Primitives created: 6
+22:29:55 | INFO: Extracting primitive: Plane.003
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Plane.007
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Plane.009
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Plane.005
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Plane.001
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Cube.003
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Cube.005
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Cube.006
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Cube.004
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Cube.002
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Plane.002
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Plane.006
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Plane.008
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Plane.004
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Plane
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Cube
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: Cube.001
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Finished glTF 2.0 export in 0.12134599685668945 s
+
+blender_export: OK godot\assets\models\stations\seasoning_station\seasoning_station.glb (27 objetos, 1100 triángulos, 529 KiB)
+22:29:55 | INFO: Starting glTF 2.0 export
+22:29:55 | INFO: Extracting primitive: oil_v3
+22:29:55 | WARNING: oil_v3: Could not calculate tangents. Please try to triangulate the mesh first.
+22:29:55 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:29:55 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:29:55 | INFO: Primitives created: 3
+22:29:55 | INFO: Extracting primitive: paprika_hot_v3
+22:29:55 | WARNING: paprika_hot_v3: Could not calculate tangents. Please try to triangulate the mesh first.
+22:29:55 | INFO: Primitives created: 1
+22:29:55 | INFO: Extracting primitive: paprika_sweet_v3
+22:29:55 | WARNING: paprika_sweet_v3: Could not calculate tangents. Please try to triangulate the mesh first.
+22:29:55 | INFO: Primitives created: 2
+22:29:55 | INFO: Extracting primitive: salt_v3
+22:29:55 | WARNING: salt_v3: Could not calculate tangents. Please try to triangulate the mesh first.
+22:29:55 | INFO: Primitives created: 2
+22:29:56 | INFO: Finished glTF 2.0 export in 0.01895928382873535 s
+
+Warning: oil_v3: Could not calculate tangents. Please try to triangulate the mesh first.
+Warning: paprika_hot_v3: Could not calculate tangents. Please try to triangulate the mesh first.
+Warning: paprika_sweet_v3: Could not calculate tangents. Please try to triangulate the mesh first.
+Warning: salt_v3: Could not calculate tangents. Please try to triangulate the mesh first.
+blender_export: OK godot\assets\models\stations\seasoning_station\seasoning_dispenser.glb (6 objetos, 1032 triángulos, 174 KiB)
+22:29:56 | INFO: Starting glTF 2.0 export
+22:29:56 | INFO: Extracting primitive: bowl
+22:29:56 | WARNING: More than one shader node tex image used for a texture. The resulting glTF sampler will behave like the first shader node tex image.
+22:29:56 | INFO: Primitives created: 1
+22:29:56 | INFO: Extracting primitive: Cylinder.014
+22:29:56 | WARNING: Cylinder.014: Could not calculate tangents. Please try to triangulate the mesh first.
+22:29:56 | INFO: Primitives created: 1
+22:29:56 | INFO: Extracting primitive: Cylinder.015
+22:29:56 | WARNING: Cylinder.015: Could not calculate tangents. Please try to triangulate the mesh first.
+22:29:56 | INFO: Primitives created: 2
+22:29:56 | INFO: Extracting primitive: Cylinder.019
+22:29:56 | WARNING: Cylinder.019: Could not calculate tangents. Please try to triangulate the mesh first.
+22:29:56 | INFO: Primitives created: 2
+22:29:56 | INFO: Extracting primitive: Cylinder.023
+22:29:56 | WARNING: Cylinder.023: Could not calculate tangents. Please try to triangulate the mesh first.
+22:29:56 | INFO: Primitives created: 2
+22:29:56 | INFO: Extracting primitive: Cylinder.028
+22:29:56 | WARNING: Cylinder.028: Could not calculate tangents. Please try to triangulate the mesh first.
+22:29:56 | INFO: Primitives created: 2
+22:29:56 | INFO: Finished glTF 2.0 export in 0.015638113021850586 s
+
+Warning: Cylinder.014: Could not calculate tangents. Please try to triangulate the mesh first.
+Warning: Cylinder.015: Could not calculate tangents. Please try to triangulate the mesh first.
+Warning: Cylinder.019: Could not calculate tangents. Please try to triangulate the mesh first.
+Warning: Cylinder.023: Could not calculate tangents. Please try to triangulate the mesh first.
+Warning: Cylinder.028: Could not calculate tangents. Please try to triangulate the mesh first.
+blender_export: OK godot\assets\models\stations\seasoning_station\cachelos_bowl.glb (9 objetos, 780 triángulos, 196 KiB)
+PUL-094 budgets {'seasoning_station': 1100, 'seasoning_dispenser': 1032, 'cachelos_bowl': 780}
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:37:04)
+
+Blender quit
