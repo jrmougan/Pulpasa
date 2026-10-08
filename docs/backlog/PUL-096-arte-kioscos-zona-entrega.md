@@ -1,7 +1,7 @@
 ---
 id: PUL-096
 title: Rehacer los kioscos con placa de comanda y zona de entrega (arte, Codex)
-status: ready
+status: review
 milestone: M3c
 role: asset-pipeline
 deps: []
@@ -30,12 +30,18 @@ Kioscos `order_stand`. Concepto: `art/concepts/estaciones/A_kiosks.png`. QA PUL-
 - No toques `order_stand.tscn` (lo integra PUL-100).
 
 ## Acceptance
-- [ ] AC1 `#id` legible sobre placa a 1080p en los 4 kioscos (captura)
-- [ ] AC2 `delivery_zone` con estados apagado/encendido (captura de ambos)
-- [ ] AC3 Hex de los 4 colores de puesto en Evidence
+- [x] AC1 `#id` legible sobre placa a 1080p en los 4 kioscos: [#17/#28/#39/–](../evidence/PUL-096/native_1080.png)
+- [x] AC2 `delivery_zone`: [apagado](../evidence/PUL-096/native_1080.png) y [encendido](../evidence/PUL-096/delivery_on_1080.png)
+- [x] AC3 [Hex y colocación final](../evidence/PUL-096/integration.json): #D2473F / #3F7CC8 / #E8C23A / #4FA05A
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Preservar cuerpo, toldillos y número fijo; incorporar placa papel/marino para el ID variable.
+2. Exportar `delivery_zone` con materiales apagado y encendido, y documentar centro, tamaño y paleta para integración.
+3. Capturar cuatro kioscos con IDs diferentes del número fijo y ambos estados; validar exportación, presupuesto y proyecto.
 
 ## Evidence
-(Lo rellena el worker.)
+Arte completo, pendiente de revisión/integración. [Entrega, materiales y notas para PUL-099/100](../evidence/PUL-096/README.md). GLB y raíces anteriores conservados; añadidos placa papel/marino, `Anchor_OrderLabel`, `delivery_zone` y `Anchor_DeliveryZone`; materiales `.tres` apagado/encendido con atlas y emisión suave 0,35.
+
+**Centro final de entrega Z local=3,40 m**, huella 1,45 × 1,05 m y relieve ≤2 cm. El ensayo en Z≈2,50 quedaba oculto por el toldillo; PUL-100 debe alinear el área al centro final documentado. `Anchor_OrderLabel`=(0, 1,905, −0,23). No se editó `order_stand.tscn`, ni su colisión ni el número fijo.
+
+[Presupuesto: 3.032 / 6.000 tris](../evidence/PUL-096/budget.json), incluidos todos los toldillos; [verify: 735/735 y smoke OK](../evidence/PUL-094/verify.log); [alcance](../evidence/PUL-094/validation.json). Capturas a cámara de juego en estudio; iluminación/oclusiones del layout final corresponden a integración y QA. Fila de licencia propia propuesta en Evidence.
