@@ -1,0 +1,40 @@
+
+== gdformat --check
+159 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== tests (GUT)
+res://tests/unit/test_station_side.gd
+[0m* test_points_on_each_side
+* test_midline_counts_as_operator
+* test_rotated_and_moved_station_classifies_the_same
+[1m3/3 passed.
+[0m
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Scripts              68
+Tests               735
+Passing Tests       735
+Asserts            9280
+Time              352.061s
+
+
+[32m---- All tests passed! ----
+[0m
+Results saved to res://.gut_reports/junit.xml
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✓ verify OK
