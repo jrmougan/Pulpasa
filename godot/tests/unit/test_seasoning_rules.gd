@@ -1,3 +1,4 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-057: reglas puras de condimento (estacion-condimentos.md AC2–AC5 y AC13, lógica).
 
@@ -176,3 +177,19 @@ func test_feature_ac13_canonical_order_is_compact_and_stable() -> void:
 		SeasoningRules.canonical_order(_list([PAPRIKA, SALT, HOT_PAPRIKA])),
 		_list([PAPRIKA, HOT_PAPRIKA, SALT])
 	)
+
+
+## PUL-097 (R6): el cuenco suma 2 raciones por cachelo, con máximo 4 y recorte.
+func test_pul097_restocked_adds_two_portions_up_to_four() -> void:
+	assert_eq(SeasoningRules.restocked(0, 2, 4), 2)
+	assert_eq(SeasoningRules.restocked(2, 2, 4), 4)
+
+
+func test_pul097_restocked_clips_to_max() -> void:
+	assert_eq(SeasoningRules.restocked(3, 2, 4), 4, "con 3 queda en 4")
+
+
+func test_pul097_full_bowl_rejects_restock() -> void:
+	assert_true(SeasoningRules.can_restock(3, 4))
+	assert_false(SeasoningRules.can_restock(4, 4))
+	assert_eq(SeasoningRules.restocked(4, 2, 4), 4)

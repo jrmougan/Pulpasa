@@ -103,3 +103,16 @@ static func canonical_order(seasonings: Array[SeasoningData]) -> Array[Seasoning
 			index -= 1
 		result.insert(index, seasoning)
 	return result
+
+
+## Si el cuenco admite otro cachelo: con `stock` ya en `max_stock` se rechaza (`BOWL_FULL`).
+static func can_restock(stock: int, max_stock: int) -> bool:
+	return stock < max_stock
+
+
+## Raciones tras echar un cachelo cocido: suma `per_item` y se recorta a `max_stock`
+## (con 3 de 4 queda en 4, D23). Con el cuenco ya lleno devuelve `stock` sin cambios.
+static func restocked(stock: int, per_item: int, max_stock: int) -> int:
+	if not can_restock(stock, max_stock):
+		return stock
+	return mini(stock + per_item, max_stock)

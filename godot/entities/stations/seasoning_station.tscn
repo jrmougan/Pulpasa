@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://entities/stations/seasoning_station.gd" id="1_station"]
 [ext_resource type="Resource" path="res://data/config/seasoning_station.tres" id="2_data"]
-[ext_resource type="PackedScene" path="res://entities/stations/slot.tscn" id="3_slot"]
 [ext_resource type="PackedScene" path="res://entities/stations/seasoning_dispenser.tscn" id="4_disp"]
 [ext_resource type="PackedScene" path="res://entities/stations/cachelos_bowl.tscn" id="5_bowl"]
 [ext_resource type="Resource" path="res://data/seasonings/paprika.tres" id="6_sweet"]
@@ -13,7 +12,7 @@
 [ext_resource type="Script" path="res://components/feedback_player.gd" id="12_fb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_counter"]
-size = Vector3(4, 1.1, 1.1)
+size = Vector3(5.2, 1.1, 1.12)
 
 [node name="SeasoningStation" type="StaticBody3D"]
 collision_mask = 0
@@ -34,46 +33,36 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.2)
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
 
-[node name="Tray" parent="." instance=ExtResource("3_slot")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, -0.25)
-accepted_group = &"box"
-
 [node name="Dispensers" type="Node3D" parent="."]
 
 [node name="SweetPaprika" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.25, 1.1, 0.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.1, -0.1)
 seasoning = ExtResource("6_sweet")
 station = NodePath("../..")
 
 [node name="HotPaprika" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 1.1, 0.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.1, -0.1)
 seasoning = ExtResource("7_hot")
 station = NodePath("../..")
 
 [node name="Salt" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.95, 1.1, 0.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.1)
 seasoning = ExtResource("8_salt")
 station = NodePath("../..")
 
 [node name="Oil" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.85, 1.1, 0.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.1, -0.1)
 seasoning = ExtResource("9_oil")
 station = NodePath("../..")
 
 [node name="CachelosBowl" parent="." node_paths=PackedStringArray("station") instance=ExtResource("5_bowl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.1, -0.1)
 station = NodePath("..")
 
 [node name="Feedback" type="AudioStreamPlayer3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 script = ExtResource("12_fb")
-
-[node name="Model" parent="Tray" index="1"]
-visible = false
-
-[node name="Body" parent="Tray/Model" index="5"]
-collision_layer = 0
 
 [node name="paprika_sweet" parent="Dispensers/HotPaprika/Model/seasoning_dispenser" index="3"]
 visible = false
@@ -96,5 +85,3 @@ visible = true
 [editable path="Dispensers/HotPaprika"]
 [editable path="Dispensers/Salt"]
 [editable path="Dispensers/Oil"]
-[editable path="Tray"]
-[editable path="Tray/Model"]

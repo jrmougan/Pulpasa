@@ -90,9 +90,10 @@ func _seasoned_order() -> ActiveOrder:
 	return order
 
 
-## Nevera → olla; mientras cuece, caja de la comanda a la bandeja de la estación; tras la cocción,
-## pulpo cocido a la mano y cortes sobre la bandeja hasta llenar la caja; el resto del pulpo se
-## suelta. Devuelve la caja llena.
+## Nevera → olla; mientras cuece, caja de la comanda a un pasaplatos; tras la cocción, pulpo
+## cocido a
+## la mano y cortes sobre la caja del pasaplatos hasta llenarla; el resto del pulpo se suelta y la
+## caja llena pasa a la mano (D23: se condimenta en la mano). Devuelve la caja llena.
 func _cook_and_fill(order: ActiveOrder) -> Box:
 	assert_true(_press(_storage), "nevera: da un pulpo")
 	var octopus: Ingredient = _hold.get_held_item() as Ingredient
@@ -108,8 +109,9 @@ func _cook_and_fill(order: ActiveOrder) -> Box:
 	var box: Box = _hold.get_held_item() as Box
 	assert_not_null(box)
 	assert_eq(box.data, order.data.recipe.box)
-	assert_true(_press(_station.get_tray()), "bandeja: guarda la caja")
-	assert_eq(_station.get_box(), box)
+	var free_slot: Slot = _sandbox.get_node("Stations/FreeSlot")
+	assert_true(_press(free_slot), "pasaplatos: guarda la caja mientras cuece")
+	assert_eq(free_slot.get_item(), box)
 
 	await wait_for_signal(_kitchen.cooking_finished, octopus.data.cook_time + COOK_MARGIN)
 	assert_true(octopus.is_cooked(), "cocido tras cook_time")
@@ -124,19 +126,21 @@ func _cook_and_fill(order: ActiveOrder) -> Box:
 	if not _is_released(octopus):
 		_press(null)
 	assert_null(_hold.get_held_item())
+	assert_true(_press(box), "coge la caja llena del pasaplatos")
+	assert_eq(_hold.get_held_item(), box)
 	return box
 
 
-## Pulsa con la mano vacía el dispensador de cada condimento sobre la caja de la bandeja.
+## Pulsa, con la caja llena en la mano, el dispensador de cada condimento.
 func _season(box: Box, seasonings: Array[SeasoningData]) -> void:
-	assert_eq(_station.get_box(), box, "la caja está en la bandeja")
+	assert_eq(_hold.get_held_item(), box, "la caja está en la mano")
 	for seasoning: SeasoningData in seasonings:
 		var dispenser: SeasoningDispenser = _dispenser(seasoning)
 		assert_not_null(dispenser, "dispensador de %s" % seasoning.resource_path)
 		assert_true(_press(dispenser), "pulsa el dispensador")
 		_now += 1.0
 		assert_true(box.has_seasoning(seasoning))
-	assert_null(_hold.get_held_item())
+	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
 
 
 func test_ac1_full_flow_completes_exactly_one_order_and_stand_gets_new_one() -> void:
@@ -145,7 +149,6 @@ func test_ac1_full_flow_completes_exactly_one_order_and_stand_gets_new_one() -> 
 	assert_eq(_label(_stand), "#%d" % order.id)
 	var box: Box = await _cook_and_fill(order)
 	_season(box, order.data.seasonings)
-	assert_true(_press(box), "coge la caja del slot")
 	assert_eq(_hold.get_held_item(), box)
 
 	assert_true(_press(_stand), "puesto: entrega")
@@ -173,7 +176,6 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
 	var missing: SeasoningData = wanted[wanted.size() - 1]
 	var partial: Array[SeasoningData] = wanted.slice(0, wanted.size() - 1)
 	_season(box, partial)
-	assert_true(_press(box))
 
 	assert_true(_press(_stand), "consume la pulsación aunque rechace")
 	assert_signal_emit_count(EventBus, "delivery_rejected", 1)
@@ -182,7 +184,6 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
 	assert_eq(_hold.get_held_item(), box, "la caja rechazada se queda en la mano")
 	assert_eq(_order_for(SLOT_ID).id, order.id, "la comanda sigue viva")
 
-	assert_true(_press(_station.get_tray()), "devuelve la caja a la bandeja")
 	_season(box, [missing])
 	var extra: Array[SeasoningData] = []
 	for child: Node in _station.get_node("Dispensers").get_children():
@@ -194,7 +195,6 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
 		break
 	assert_gt(extra.size(), 0, "hay al menos un condimento que la comanda no pide")
 	_season(box, extra)
-	assert_true(_press(box))
 	# El puesto ignora un segundo intento de la misma caja en el mismo tick de física.
 	await wait_physics_frames(1)
 

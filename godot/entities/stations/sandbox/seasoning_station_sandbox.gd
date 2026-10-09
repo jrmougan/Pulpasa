@@ -1,8 +1,8 @@
 extends Node3D
-## Sandbox de PUL-058: la estación de condimentos con un jugador en el lado de condimentar. Arranca
-## una ronda como `level.gd` para que el jugador se mueva y prepara la escena por las rutas reales
-## de interacción: dos raciones en el cuenco y una caja llena en la bandeja con picante, sal y
-## aceite.
+## Sandbox de PUL-058/097: la estación de condimentos al paso con un jugador en el lado de
+## condimentar. Arranca una ronda como `level.gd` para que el jugador se mueva y prepara la escena
+## por las rutas reales de interacción: un cachelo cocido en el cuenco (2 raciones) y una caja llena
+## en la mano del jugador, con picante, sal y aceite.
 ##
 ## `mcp_bridge` reenvía `p1_interact` sondeado (el `simulate_input` del MCP no genera
 ## `_unhandled_input`); apagado por defecto, como en `stations_sandbox.gd`.
@@ -17,8 +17,8 @@ extends Node3D
 @export var cachelos_scene: PackedScene
 ## Dispensadores que se pulsan al preparar la caja (rutas dentro de `station`).
 @export var staged_dispensers: Array[NodePath] = []
-## Raciones que se echan al cuenco al preparar.
-@export var staged_portions: int = 2
+## Cachelos cocidos que se echan al cuenco al preparar (2 raciones cada uno).
+@export var staged_cachelos: int = 1
 @export var mcp_bridge: bool = false
 
 var _actor: InteractionComponent
@@ -39,7 +39,7 @@ func _process(_delta: float) -> void:
 
 func _stage() -> void:
 	var bowl: CachelosBowl = station.get_node(^"CachelosBowl") as CachelosBowl
-	for _portion: int in staged_portions:
+	for _item: int in staged_cachelos:
 		var cachelos: Ingredient = cachelos_scene.instantiate() as Ingredient
 		items_root.add_child(cachelos)
 		cachelos.set_cooked()
@@ -50,7 +50,6 @@ func _stage() -> void:
 	items_root.add_child(box)
 	box.fill = 1.0
 	_actor.holder.pick_up(box)
-	station.get_tray().interact(_actor)
 	for path: NodePath in staged_dispensers:
 		var dispenser: SeasoningDispenser = station.get_node(path) as SeasoningDispenser
 		dispenser.interact(_actor)

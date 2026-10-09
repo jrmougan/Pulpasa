@@ -166,7 +166,6 @@ func _order_with_most_seasonings() -> ActiveOrder:
 func _prepare_box(order: ActiveOrder) -> Box:
 	var recipe: RecipeData = order.data.recipe
 	var station: SeasoningStation = _scene.get_node("Stations/SeasoningStation")
-	var tray: Vector2 = Walker.xz(station.get_tray().global_position)
 	var pass_slot: Slot = _scene.get_node("Stations/PassSlot05")
 	var pass_xz: Vector2 = Walker.xz(pass_slot.global_position)
 	# 1. Servicio: caja de la estantería al pasaplatos.
@@ -178,8 +177,8 @@ func _prepare_box(order: ActiveOrder) -> Box:
 	assert_eq(box.data, recipe.box)
 	assert_eq(await _service.use(pass_xz, Vector2(pass_xz.x, ACCESS)), pass_slot, "pasaplatos")
 	assert_eq(pass_slot.get_item(), box, "caja en el pasaplatos")
-	# 2. Cocina: pulpo → olla → corte sobre el pasaplatos hasta llenar; la caja a la bandeja;
-	# cachelos al cuenco.
+	# 2. Cocina: pulpo → olla → corte sobre el pasaplatos hasta llenar; cachelos al cuenco (desde el
+	# pase, con cachelos cocidos en la mano).
 	await _switch()
 	var kitchen_hold: Holder = _kitchen.holder()
 	var octopi: int = 0
@@ -197,25 +196,24 @@ func _prepare_box(order: ActiveOrder) -> Box:
 			await _kitchen.face(KITCHEN_DUMP + Vector2(1.0, 0.0))
 			await _kitchen.tap_interact()
 	assert_true(box.is_full(), "caja llena")
-	assert_eq(await _kitchen.use(pass_xz, Vector2(pass_xz.x, -ACCESS)), box, "coge la caja")
-	assert_eq(await _kitchen.use(tray, Vector2(tray.x, -ACCESS)), station.get_tray(), "bandeja")
-	assert_eq(station.get_box(), box, "caja en la bandeja")
 	var bowl: CachelosBowl = station.get_node("CachelosBowl")
 	var bowl_xz: Vector2 = Walker.xz(bowl.global_position)
 	if _wants_cachelos(order):
 		await _kitchen_use(_scene.get_node("Stations/CachelosStorage"))
 		await _cook_held()
 		assert_eq(await _kitchen.use(bowl_xz, Vector2(bowl_xz.x, -ACCESS)), bowl, "cuenco")
-		assert_eq(bowl.stock, 1, "cachelos en el cuenco")
-	# 3. Servicio: condimentos de la comanda y caja a la mano.
+		assert_eq(bowl.stock, 2, "un cachelo cocido = 2 raciones")
+	# 3. Servicio: coge la caja llena del pasaplatos y la condimenta en la mano.
 	await _switch()
+	assert_eq(await _service.use(pass_xz, Vector2(pass_xz.x, ACCESS)), box, "coge la caja")
+	assert_eq(_hold.get_held_item(), box, "la caja va en la mano")
 	for seasoning: SeasoningData in order.data.seasonings:
 		var part: Node3D = bowl if seasoning.same_as(CACHELOS_SEASONING) else _dispenser(seasoning)
 		var at: Vector2 = Walker.xz(part.global_position)
 		var stand: Vector2 = Walker.station_stand(at, station.global_position.z, 1.0)
 		assert_eq(await _service.use(at, stand), part, "objetivo %s" % part.name)
 		assert_true(box.has_seasoning(seasoning), "caja con %s" % seasoning.display_name)
-	assert_eq(await _service.use(tray, Vector2(tray.x, ACCESS)), box, "recoge la caja")
+	assert_eq(_hold.get_held_item(), box, "la caja condimentada sigue en la mano")
 	return box
 
 

@@ -1,8 +1,9 @@
 extends GutTest
 ## PUL-062: regresión de la estación de condimentos en la planta B (`level_01.tscn` real), una
 ## partida por modo con tres entregas seguidas y el flujo completo: nevera → olla → cachelos al
-## cuenco y cortes sobre la caja de la bandeja por el lado de pase → dispensadores y cuenco por el
-## lado de condimentar → entrega. Todo con el teclado y el detector reales (`level_walker.gd`): el
+## cuenco y cortes sobre la caja de un pasaplatos por el lado de pase → la caja a la mano →
+## dispensadores y cuenco por el lado de condimentar → entrega. Todo con el teclado y el detector
+## reales (`level_walker.gd`): el
 ## test nunca llama a `interact()` ni publica `target_changed`.
 ## - SINGLE: J1 lleva al cocinero (Player2, cocina) y al servidor (Player1, servicio) y cambia con
 ##   Q; ningún personaje cruza la barra.
@@ -183,27 +184,32 @@ func _collect(cook: Walker, pot: String, item: Ingredient) -> void:
 	assert_eq(_held(cook), item, "sale de la olla")
 
 
-## Pone la cocina en marcha al empezar: un pulpo y tres raciones de cachelos al cuenco por el pase
-## (el máximo, `cachelos_stock_max`), y deja el pulpo cocido en la mano del cocinero.
+## Pone la cocina en marcha al empezar: un pulpo y cuatro raciones de cachelos al cuenco por el pase
+## (dos cachelos de 2 raciones, el máximo `cachelos_stock_max`), y deja el pulpo cocido en la mano
+## del cocinero.
 func _prepare_kitchen(cook: Walker) -> void:
 	var first: Ingredient = await _start_cachelos(cook, "Kitchen")
 	var octopus: Ingredient = await _start_octopus(cook, "Kitchen")
 	var second: Ingredient = await _start_cachelos(cook, "Kitchen2")
-	var third: Ingredient = await _start_cachelos(cook, "Kitchen2")
-	for pair: Array in [[first, "Kitchen"], [second, "Kitchen2"], [third, "Kitchen2"]]:
+	for pair: Array in [[first, "Kitchen"], [second, "Kitchen2"]]:
 		await _collect(cook, pair[1], pair[0])
 		var stock: int = _bowl().stock
 		assert_eq(await _use_station(cook, _bowl(), -1.0), _bowl(), "cuenco por el pase")
-		assert_eq(_bowl().stock, stock + 1, "una ración más")
+		assert_eq(_bowl().stock, stock + 2, "dos raciones más")
 		assert_null(_held(cook))
 	await _collect(cook, "Kitchen", octopus)
 
 
-## Corta sobre la caja de la bandeja desde el pase hasta llenarla; si se acaba el pulpo, cuece
+## Pasaplatos de la barra en que se deja la caja a medio hacer (visible desde los dos lados).
+func _pass_slot() -> Slot:
+	return _stations("PassSlot05") as Slot
+
+
+## Corta sobre la caja del pasaplatos desde el pase hasta llenarla; si se acaba el pulpo, cuece
 ## otro. El sobrante se queda en la mano para la caja siguiente.
-func _fill_tray_box(cook: Walker, box: Box) -> void:
-	var tray: Vector2 = _xz(_station.get_tray())
-	var stand: Vector2 = Walker.station_stand(tray, _station.global_position.z, -1.0)
+func _fill_box(cook: Walker, box: Box) -> void:
+	var slot: Vector2 = _xz(_pass_slot())
+	var stand: Vector2 = Walker.station_stand(slot, _station.global_position.z, -1.0)
 	var guard: int = 0
 	while not box.is_full() and guard < 40:
 		guard += 1
@@ -211,8 +217,8 @@ func _fill_tray_box(cook: Walker, box: Box) -> void:
 			var octopus: Ingredient = await _start_octopus(cook, "Kitchen")
 			await _collect(cook, "Kitchen", octopus)
 		await cook.walk_to(stand)
-		await cook.face(tray)
-		assert_eq(cook.detector().get_target(), box, "de cara a la caja de la bandeja")
+		await cook.face(slot)
+		assert_eq(cook.detector().get_target(), box, "de cara a la caja del pasaplatos")
 		await cook.tap_interact()
 	assert_true(box.is_full(), "caja llena por el pase")
 
@@ -220,8 +226,8 @@ func _fill_tray_box(cook: Walker, box: Box) -> void:
 # --- Servicio (lado de condimentar) --------------------------------------------------------------
 
 
-## Estantería → caja de la comanda a la bandeja por el lado de condimentar.
-func _box_to_tray(server: Walker, order: ActiveOrder) -> Box:
+## Estantería → caja de la comanda al pasaplatos por el lado de condimentar.
+func _box_to_slot(server: Walker, order: ActiveOrder) -> Box:
 	var spawner: Node3D = null
 	for child: Node in _stations("BoxShelf").get_children():
 		if child is ItemSpawner and (child as ItemSpawner).data == order.data.recipe.box:
@@ -231,15 +237,17 @@ func _box_to_tray(server: Walker, order: ActiveOrder) -> Box:
 	assert_eq(await server.use(at, at + Vector2(SHELF_ACCESS, 0.0)), spawner, "estantería")
 	var box: Box = _held(server) as Box
 	assert_not_null(box, "caja en la mano")
-	var tray: Node3D = _station.get_tray()
-	assert_eq(await _use_station(server, tray, 1.0), tray, "bandeja por el lado de condimentar")
-	assert_eq(_station.get_box(), box, "caja en la bandeja")
+	var slot: Slot = _pass_slot()
+	assert_eq(await _use_station(server, slot, 1.0), slot, "pasaplatos por el lado de servicio")
+	assert_eq(slot.get_item(), box, "caja en el pasaplatos")
 	return box
 
 
-## Pone los condimentos de la comanda con la mano vacía. Para el pimentón pulsa antes el otro y
-## comprueba que el bueno lo sustituye en una pulsación.
+## Coge la caja llena del pasaplatos y pone los condimentos de la comanda con ella en la mano. Para
+## el pimentón pulsa antes el otro y comprueba que el bueno lo sustituye en una pulsación.
 func _season(server: Walker, box: Box, order: ActiveOrder) -> void:
+	assert_eq(await _use_station(server, _pass_slot(), 1.0), box, "coge la caja llena")
+	assert_eq(_held(server), box)
 	for seasoning: SeasoningData in order.data.seasonings:
 		if seasoning.same_as(CACHELOS):
 			assert_eq(await _use_station(server, _bowl(), 1.0), _bowl(), "cuenco")
@@ -257,11 +265,9 @@ func _season(server: Walker, box: Box, order: ActiveOrder) -> void:
 	)
 
 
-## Recoge la caja de la bandeja y la entrega en el puesto de la comanda.
+## Entrega en el puesto de la comanda la caja condimentada que lleva en la mano.
 func _deliver(server: Walker, box: Box, order: ActiveOrder) -> void:
-	var tray: Node3D = _station.get_tray()
-	assert_eq(await _use_station(server, tray, 1.0), box, "recoge la caja")
-	assert_eq(_held(server), box)
+	assert_eq(_held(server), box, "la caja condimentada va en la mano")
 	var stand: OrderStand = _stations("OrderStand%d" % order.slot_id) as OrderStand
 	var stand_xz: Vector2 = _xz(stand)
 	await server.walk_to(stand_xz + Vector2(0.0, -STAND_FRONT))
@@ -290,10 +296,10 @@ func _play(cook: Walker, server: Walker) -> void:
 		var started: int = Time.get_ticks_msec()
 		if single:
 			await _switch(cook)
-		var box: Box = await _box_to_tray(server, order)
+		var box: Box = await _box_to_slot(server, order)
 		if single:
 			await _switch(server)
-		await _fill_tray_box(cook, box)
+		await _fill_box(cook, box)
 		if single:
 			await _switch(cook)
 		await _season(server, box, order)
