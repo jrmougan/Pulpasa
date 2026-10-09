@@ -20,10 +20,10 @@ Success: no problems found
 Totals
 ------
 Scripts              68
-Tests               768
-Passing Tests       768
-Asserts            9360
-Time              322.11s
+Tests               769
+Passing Tests       769
+Asserts            9411
+Time              360.211s
 
 
 [32m---- All tests passed! ----

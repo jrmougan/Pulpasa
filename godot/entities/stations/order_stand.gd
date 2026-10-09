@@ -97,10 +97,12 @@ func _setup_delivery_mark() -> void:
 		var color: Color = palette.color_for(slot_id) if palette != null else on.albedo_color
 		_lit_material.albedo_color = color
 		_lit_material.emission = color
-	_apply_lit(false)
+	_apply_lit(false, true)
 
 
 func _physics_process(_delta: float) -> void:
+	if not _lit and not _proximity.has_overlapping_bodies():
+		return
 	_apply_lit(_carrier_in_range())
 
 
@@ -118,7 +120,9 @@ func _carrier_in_range() -> bool:
 	return false
 
 
-func _apply_lit(lit: bool) -> void:
+func _apply_lit(lit: bool, force: bool = false) -> void:
+	if lit == _lit and not force:
+		return
 	_lit = lit
 	if _frame != null:
 		_frame.material_override = _lit_material if lit else material_off

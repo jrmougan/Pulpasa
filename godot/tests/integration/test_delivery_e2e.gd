@@ -13,15 +13,21 @@ extends GutTest
 ## paciencia real de los `.tres` (sin caducar). La zona no hace nada con una caja que no es la del
 ## puesto (E sí la rechaza, D8) y el puesto al que apunta E se resalta.
 
+const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
+const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const Walker: GDScript = preload("res://tests/integration/level_walker.gd")
 const CACHELOS_SEASONING: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 ## Distancia al puesto desde la que se empieza a acercar (m): del lado del kiosco de
 ## `%DeliveryZone` (PUL-100: marca en Z local 3,40, entre la barra y el kiosco), fuera de ella.
-const STAND_FRONT: float = 2.5
-## Pasillos (X) entre zonas de entrega por los que se llega al kiosco sin cruzar ninguna zona.
-const LANES: Dictionary = {1: -5.0, 2: -2.3, 3: 0.2, 4: 5.0}
+const STAND_FRONT: float = 2.35
+## Pasillos (X) por fuera de las cuatro zonas (X -4,03 a 4,43): los puestos 1 y 2 se rodean por la
+## izquierda y el 3 y el 4 por la derecha, con holgura de sobra para la cápsula (r 0,21).
+const LANE_LEFT: float = -4.8
+const LANE_RIGHT: float = 5.1
 ## Z desde la que se baja por el pasillo: al norte de las zonas (ocupan Z 1,83 a 2,88).
 const LANE_ENTRY_Z: float = 1.2
+## Z por la que se va de pasillo a puesto: del lado del kiosco, a 0,4 m de las zonas.
+const KIOSK_LANE_Z: float = 3.5
 ## Del centro de una estación al punto desde el que se usa (m).
 const ACCESS: float = 1.0
 ## Rincón de la cocina donde se suelta el pulpo que sobra.
@@ -140,24 +146,65 @@ func test_pul039_wrong_box_in_zone_does_nothing_and_e_rejects() -> void:
 	var box: Box = _hold.get_held_item() as Box
 	assert_not_null(box)
 	var stand: OrderStand = _stand(order.slot_id)
-	var stand_xz: Vector2 = _xz(stand.global_position)
-	# Cruza las zonas de los cuatro puestos y se para dentro de la suya.
-	await _service.walk_to(_xz(_stand(1).global_position) + Vector2(0.0, -STAND_FRONT))
-	await _service.walk_to(_xz(_stand(1).global_position) + Vector2(0.0, -1.4))
-	var crossing: Vector2 = _xz(_stand(4).global_position) + Vector2(0.0, -1.4)
+	var zone: Area3D = stand.get_node("%DeliveryZone") as Area3D
+	var zone_xz: Vector2 = _xz(zone.global_position)
+	# Cruza las zonas de los cuatro puestos (a su altura) y se para dentro de la suya.
+	await _walk_around_zones(_stand(1), Vector2(LANE_LEFT, KIOSK_LANE_Z))
+	await _service.walk_to(Vector2(LANE_LEFT, zone_xz.y))
+	var crossing: Vector2 = Vector2(_xz(_stand(4).global_position).x, zone_xz.y)
 	await _service.walk_to(crossing)
 	assert_almost_eq(
 		_xz(_player.global_position).distance_to(crossing), 0.0, 0.2, "cruzó las zonas"
 	)
-	await _service.walk_to(stand_xz + Vector2(0.0, -1.4))
-	await _service.push_towards(stand_xz, 4)
+	await _service.walk_to(zone_xz)
+	assert_true(zone.overlaps_body(_player), "termina dentro de la zona de su puesto")
 	assert_signal_not_emitted(EventBus, "delivery_rejected", "la zona no rechaza ni penaliza")
 	assert_signal_not_emitted(EventBus, "order_completed")
 	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
+	await _service.push_towards(zone_xz, 4)
+	assert_true(zone.overlaps_body(_player), "sigue dentro de la zona")
+	# Sale hacia el kiosco, enfrente de él, hasta que el detector lo elige.
+	var front: Vector2 = Vector2(zone_xz.x, KIOSK_LANE_Z)
+	await _service.walk_to(front)
+	for _i: int in 20:
+		if _detector.get_target() == stand:
+			break
+		await _service.push_towards(_xz(stand.global_position), 1)
 	assert_eq(_detector.get_target(), stand)
 	await _service.tap_interact()
 	assert_signal_emit_count(EventBus, "delivery_rejected", 1, "E valida y rechaza (D8)")
 	assert_eq(_hold.get_held_item(), box)
+
+
+## Aproximación determinista a los 4 puestos con una caja que coincide inyectada en la mano: rodear
+## las zonas sin entregar, zona encendida antes de entrar y entrega al entrar.
+func test_pul100_every_stand_lights_and_delivers_on_entry() -> void:
+	OrderService.board.set_active_slots([1, 2, 3, 4] as Array[int])
+	OrderService.board.fill_slots([1, 2, 3, 4] as Array[int])
+	for slot: int in [1, 2, 3, 4]:
+		var order: ActiveOrder = null
+		for active: ActiveOrder in OrderService.get_active_orders():
+			if active.slot_id == slot:
+				order = active
+		assert_not_null(order, "comanda viva en el puesto %d" % slot)
+		if order == null:
+			return
+		var stand: OrderStand = _stand(slot)
+		_inject_box(order)
+		var start_x: float = LANE_LEFT if slot <= 2 else LANE_RIGHT
+		_player.global_position = Vector3(start_x, 0.0, LANE_ENTRY_Z)
+		await wait_physics_frames(3)
+		var done: int = get_signal_emit_count(EventBus, "order_completed")
+		await _walk_around_zones(stand, _xz(stand.global_position) + Vector2(0.0, -STAND_FRONT))
+		assert_eq(
+			get_signal_emit_count(EventBus, "order_completed"), done, "puesto %d: aún no" % slot
+		)
+		assert_true(stand.is_zone_lit(), "puesto %d: zona encendida" % slot)
+		var zone: Area3D = stand.get_node("%DeliveryZone") as Area3D
+		await _service.push_towards(_xz(zone.global_position), 60)
+		assert_eq(get_signal_emit_count(EventBus, "order_completed"), done + 1, "puesto %d" % slot)
+		assert_null(_hold.get_held_item(), "puesto %d: caja entregada" % slot)
+		assert_signal_emit_count(EventBus, "delivery_rejected", 0)
 
 
 # --- Preparación de la caja, solo con teclas ----------------------------------------------------
@@ -297,12 +344,37 @@ func _assert_not_expired(order: ActiveOrder) -> void:
 		assert_ne(expired.id, order.id, "la comanda no caduca con la paciencia real")
 
 
-## Va a `target` (del lado del kiosco) por el pasillo entre zonas de `stand`, sin cruzar zonas.
+## Va a `target` (del lado del kiosco) rodeando las zonas por fuera, sin cruzar ninguna.
 func _walk_around_zones(stand: OrderStand, target: Vector2) -> void:
-	var lane: float = float(LANES[stand.slot_id])
+	var lane: float = LANE_LEFT if stand.slot_id <= 2 else LANE_RIGHT
 	await _service.walk_to(Vector2(lane, LANE_ENTRY_Z))
-	await _service.walk_to(Vector2(lane, target.y))
+	await _service.walk_to(Vector2(lane, KIOSK_LANE_Z))
+	await _service.walk_to(Vector2(target.x, KIOSK_LANE_Z))
 	await _service.walk_to(target)
+
+
+## Caja que coincide con `order` en la mano del personaje del servicio, sin prepararla jugando.
+func _inject_box(order: ActiveOrder) -> Box:
+	var items: Node = _scene.get_node("Items")
+	var box: Box = BOX_SCENE.instantiate()
+	items.add_child(box)
+	box.data = order.data.recipe.box
+	var guard: int = 0
+	while not box.is_full() and guard < 200:
+		var octopus: Ingredient = OCTOPUS_SCENE.instantiate()
+		items.add_child(octopus)
+		octopus.set_cooked()
+		assert_true(_hold.pick_up(octopus))
+		while octopus.is_inside_tree() and not box.is_full() and guard < 200:
+			box.interact(_player.get_node("%InteractionComponent") as InteractionComponent)
+			guard += 1
+		if is_instance_valid(octopus):
+			_hold.drop()
+			octopus.free()
+	for seasoning: SeasoningData in order.data.seasonings:
+		box.toggle_seasoning(seasoning, true)
+	assert_true(_hold.pick_up(box))
+	return box
 
 
 func _stand(slot_id: int) -> OrderStand:
