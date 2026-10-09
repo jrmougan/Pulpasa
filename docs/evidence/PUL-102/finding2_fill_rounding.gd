@@ -42,6 +42,7 @@ func _case(label: String, fill: float, template: BoxData) -> void:
 	root.add_child(octopus)
 	octopus.set_cooked()
 	var presses: Array[int] = []
+	var fills: Array[float] = []
 	for _n: int in 2:
 		var data: BoxData = template.duplicate() as BoxData
 		data.fill_per_press = fill
@@ -49,18 +50,24 @@ func _case(label: String, fill: float, template: BoxData) -> void:
 		box.data = data
 		root.add_child(box)
 		var count: int = 0
-		while not box.is_full() and count < 40 and is_instance_valid(octopus):
+		while not box.is_full() and count < 40 and _alive(octopus):
 			box.call("_cut", octopus)
 			count += 1
 		presses.append(count)
+		fills.append(snappedf(box.fill, 0.000001))
 		box.free()
-	var freed: bool = not is_instance_valid(octopus) or octopus.is_queued_for_deletion()
-	var left: float = -1.0 if not is_instance_valid(octopus) else octopus.remaining
+	var freed: bool = not _alive(octopus)
+	var left: float = octopus.remaining if is_instance_valid(octopus) else -1.0
 	print(
 		(
-			"%-34s cortes por caja %s | pulpo liberado tras 2 cajas: %s | resto %.9f"
-			% [label, presses, str(freed), left]
+			"%-30s cortes %s | fill de cada caja %s | pulpo liberado: %s | resto %.9f"
+			% [label, presses, fills, str(freed), left]
 		)
 	)
 	if is_instance_valid(octopus):
 		octopus.free()
+
+
+## Vivo de verdad: `queue_free` no invalida la instancia hasta el final del frame.
+func _alive(octopus: Ingredient) -> bool:
+	return is_instance_valid(octopus) and not octopus.is_queued_for_deletion()

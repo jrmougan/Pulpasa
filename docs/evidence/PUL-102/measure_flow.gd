@@ -48,10 +48,12 @@ var _completed: int = 0
 var _completed_at: Array[int] = []
 var _rejections: int = 0
 var _delivery_rejections: int = 0
-var _results: Array = []
+var _results: Array[Dictionary] = []
 var _part: String = "all"
 ## Tramos andados por pieza usada (`pieza:metros`), para explicar dónde se van los metros.
 var _legs: Array[String] = []
+## Pulpo sobrante dejado en el suelo (variante `floor`).
+var _floor_left: Node3D
 ## Pasaplatos de la caja y del pulpo sobrante (protocolo secuencial).
 var _box_slot: String = "PassSlot01"
 var _left_slot: String = "PassSlot02"
@@ -69,31 +71,36 @@ func _main() -> void:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	if args.size() > 0:
 		_part = args[0]
-	if args.size() > 2:
+	if args.size() > 1:
 		_box_slot = args[1]
-		_left_slot = args[2]
+		if args.size() > 2:
+			_left_slot = args[2]
 		if _box_slot == "PassSlot04":
 			_chain_slots = ["PassSlot04", "PassSlot05", "PassSlot06"]
-	var kinds: Array = [
-		["S", SMALL, [SALT, OIL]],
-		["M", MEDIUM, [SALT, OIL]],
-		["L", LARGE, [SALT, OIL]],
-		["S+cachelos", SMALL, [OIL, CACHELOS]],
+	var salt_oil: Array[SeasoningData] = [SALT, OIL]
+	var oil_cachelos: Array[SeasoningData] = [OIL, CACHELOS]
+	var kinds: Array[Dictionary] = [
+		{"kind": "S", "recipe": SMALL, "seasonings": salt_oil},
+		{"kind": "M", "recipe": MEDIUM, "seasonings": salt_oil},
+		{"kind": "L", "recipe": LARGE, "seasonings": salt_oil},
+		{"kind": "S+cachelos", "recipe": SMALL, "seasonings": oil_cachelos},
 	]
 	for mode: String in ["solo", "switch", "coop"]:
 		if _part != "all" and _part != mode:
 			continue
-		for kind: Array in kinds:
-			var result: Dictionary = await _run(mode, kind[0], kind[1], kind[2])
+		for kind: Dictionary in kinds:
+			var seasonings: Array[SeasoningData] = []
+			seasonings.assign(kind["seasonings"])
+			var result: Dictionary = await _run(mode, kind["kind"], kind["recipe"], seasonings)
 			_results.append(result)
 			print(JSON.stringify(result))
 	if _part == "all" or _part == "chain":
 		for mode: String in ["chain_seq", "chain_pipe"]:
-			var result: Dictionary = await _run(mode, "S", SMALL, [SALT, OIL])
+			var result: Dictionary = await _run(mode, "S", SMALL, salt_oil)
 			_results.append(result)
 			print(JSON.stringify(result))
 	var file_name: String = "metrics.json" if _part == "all" else "metrics_%s.json" % _part
-	if args.size() > 2:
+	if args.size() > 1:
 		file_name = "metrics_%s_%s_%s.json" % [_part, _box_slot, _left_slot]
 	var path: String = ProjectSettings.globalize_path("res://").path_join(
 		"../docs/evidence/PUL-102/" + file_name
@@ -108,7 +115,9 @@ func _main() -> void:
 # --- Montaje ------------------------------------------------------------------------------------
 
 
-func _run(mode: String, kind: String, recipe: RecipeData, seasonings: Array) -> Dictionary:
+func _run(
+	mode: String, kind: String, recipe: RecipeData, seasonings: Array[SeasoningData]
+) -> Dictionary:
 	var order: OrderData = OrderData.new()
 	order.recipe = recipe
 	order.seasonings.assign(seasonings)
@@ -152,7 +161,7 @@ func _run(mode: String, kind: String, recipe: RecipeData, seasonings: Array) -> 
 	EventBus.delivery_rejected.connect(_on_delivery_rejected)
 	get_tree().physics_frame.connect(_track)
 
-	var per_order: Array = []
+	var per_order: Array[Dictionary] = []
 	if mode == "chain_pipe":
 		await _chain_pipe(recipe, seasonings, 4)
 		var last: int = 0
@@ -215,12 +224,13 @@ func _run(mode: String, kind: String, recipe: RecipeData, seasonings: Array) -> 
 		"mode": mode,
 		"kind": kind,
 		"cuts": int(round(1.0 / recipe.box.fill_per_press)),
+		"slots": "%s/%s" % [_box_slot, _left_slot],
 		"orders": per_order,
 		"station_rejections": _rejections,
 		"delivery_rejections": _delivery_rejections,
 	}
 	if mode.begins_with("chain"):
-		var rest: Array = per_order.slice(1)
+		var rest: Array[Dictionary] = per_order.slice(1)
 		var sum: float = 0.0
 		for entry: Dictionary in rest:
 			sum += float(entry.seconds)
@@ -414,20 +424,61 @@ func _take_leftover(w: Walker, left: Slot) -> void:
 	await _use(w, left.get_item(), _side(left, -1.0))
 
 
-## Emplatado: coge la caja llena del pasaplatos, pulsa cada condimento (en orden de x) con la caja
-## en la mano y entra en la zona de entrega del puesto de la comanda.
-func _season_and_deliver(w: Walker, slot: Slot, seasonings: Array) -> void:
+## Emplatado: coge la caja llena del pasaplatos, pulsa cada condimento (en el orden, ascendente o
+## descendente en x, que dé menos recorrido desde donde está hasta la zona) con la caja en la mano y
+## entra en la zona de entrega del puesto de la comanda.
+func _season_and_deliver(w: Walker, slot: Slot, seasonings: Array[SeasoningData]) -> void:
 	await _wait_until(func() -> bool: return _box_in(slot) != null and _box_in(slot).is_full())
 	await _use(w, slot.get_item(), _side(slot, 1.0))
-	var pieces: Array = []
+	await _season_and_deliver_held(w, seasonings)
+
+
+## Con la caja en la mano: condimentos y entrega.
+func _season_and_deliver_held(w: Walker, seasonings: Array[SeasoningData]) -> void:
+	var pieces: Array[Node3D] = []
 	for seasoning: SeasoningData in seasonings:
 		pieces.append(_piece(seasoning))
 	pieces.sort_custom(
 		func(a: Node3D, b: Node3D) -> bool: return a.global_position.x < b.global_position.x
 	)
+	var reversed: Array[Node3D] = pieces.duplicate()
+	reversed.reverse()
+	var edge: Vector2 = _zone_edge_from(_stand_for_order(), _side(pieces[pieces.size() - 1], 1.0))
+	var edge_rev: Vector2 = _zone_edge_from(
+		_stand_for_order(), _side(reversed[reversed.size() - 1], 1.0)
+	)
+	if _route_cost(w.position(), reversed, edge_rev) < _route_cost(w.position(), pieces, edge):
+		pieces = reversed
 	for piece: Node3D in pieces:
 		await _use(w, piece, _side(piece, 1.0))
 	await _deliver(w)
+
+
+func _route_cost(start: Vector2, pieces: Array[Node3D], end: Vector2) -> float:
+	var total: float = 0.0
+	var here: Vector2 = start
+	for piece: Node3D in pieces:
+		var stand: Vector2 = _side(piece, 1.0)
+		total += here.distance_to(stand)
+		here = stand
+	return total + here.distance_to(end)
+
+
+## Punto de la zona de entrega de `stand` más cercano a `from` (dentro, 0,15 m del borde).
+func _zone_edge_from(stand: Node3D, from: Vector2) -> Vector2:
+	var zone: Node3D = stand.get_node("%DeliveryZone") as Node3D
+	var half: Vector2 = Vector2(0.5, 0.5)
+	for child: Node in zone.get_children():
+		var shape: CollisionShape3D = child as CollisionShape3D
+		if shape != null and shape.shape is BoxShape3D:
+			var size: Vector3 = (shape.shape as BoxShape3D).size
+			half = Vector2(size.x, size.z) * 0.5
+	var center: Vector2 = _xz(zone)
+	var inset: Vector2 = Vector2(maxf(half.x - 0.15, 0.0), maxf(half.y - 0.15, 0.0))
+	return Vector2(
+		clampf(from.x, center.x - inset.x, center.x + inset.x),
+		clampf(from.y, center.y - inset.y, center.y + inset.y)
+	)
 
 
 func _deliver(w: Walker) -> void:
@@ -435,12 +486,14 @@ func _deliver(w: Walker) -> void:
 	var zone: Node3D = stand.get_node("%DeliveryZone") as Node3D
 	var zone_xz: Vector2 = _xz(zone)
 	var done: int = _completed
-	await w.walk_to(zone_xz + Vector2(0.0, -1.6))
-	# Entra en la `%DeliveryZone`: con la caja correcta entrega sin pulsar.
+	var before_m: float = float(_stats["dist%d" % w.player_index])
+	# Directo al punto de la zona más cercano: con la caja correcta entrega sin pulsar.
+	await w.walk_to(_zone_edge_from(stand, w.position()))
 	for _i: int in 20:
 		if _completed > done:
-			return
+			break
 		await w.push_towards(zone_xz, 6)
+	_legs.append("Zone:%.1f" % (float(_stats["dist%d" % w.player_index]) - before_m))
 	if _completed > done:
 		return
 	push_warning("la zona no entregó; pulsa en el puesto")
@@ -460,7 +513,12 @@ func _stand_for_order() -> Node3D:
 
 ## Cocina de un pedido: pulpo (nuevo o sobrante), cachelos si el cuenco no tiene raciones.
 func _cook_part(
-	w: Walker, recipe: RecipeData, slot: Slot, left: Slot, seasonings: Array, leftover: bool
+	w: Walker,
+	recipe: RecipeData,
+	slot: Slot,
+	left: Slot,
+	seasonings: Array[SeasoningData],
+	leftover: bool
 ) -> void:
 	var need_cachelos: bool = seasonings.has(CACHELOS) and _bowl().stock < 1
 	var needed: int = _cooked
@@ -481,8 +539,11 @@ func _cook_part(
 
 
 ## Individual con un solo personaje (Player1, empieza en el servicio).
-func _solo(recipe: RecipeData, seasonings: Array, leftover: bool) -> void:
+func _solo(recipe: RecipeData, seasonings: Array[SeasoningData], leftover: bool) -> void:
 	var w: Walker = Walker.new(get_tree(), _char(1), 1)
+	if _box_slot.begins_with("floor"):
+		await _solo_floor(w, recipe, seasonings, leftover)
+		return
 	var slot: Slot = _slot(_box_slot)
 	var left: Slot = _slot(_left_slot)
 	await _box_to_slot(w, recipe, slot)
@@ -490,8 +551,49 @@ func _solo(recipe: RecipeData, seasonings: Array, leftover: bool) -> void:
 	await _season_and_deliver(w, slot, seasonings)
 
 
+## barra, `interaction_component.gd`), se corta allí, el sobrante se deja en el suelo y la caja
+## se coge de nuevo. `floor` = junto a las ollas (x -1,3); `floorgap` = junto al hueco (x 2,6).
+## nuevo. `floor` = junto a las ollas (x -1,3); `floorgap` = junto al hueco (x 2,6).
+func _solo_floor(
+	w: Walker, recipe: RecipeData, seasonings: Array[SeasoningData], leftover: bool
+) -> void:
+	var drop_x: float = 2.6 if _box_slot == "floorgap" else -1.3
+	var presses: int = int(round(1.0 / recipe.box.fill_per_press))
+	var spawner: Node3D = _shelf_spawner(recipe)
+	await _use(w, spawner, _xz(spawner) + Vector2(0.9, 0.0))
+	var box: Box = w.holder().get_held_item() as Box
+	# Suelta la caja mirando al oeste, a 1,6 m de la barra.
+	await _drop_facing(w, Vector2(drop_x, -1.6), Vector2(-1.0, 0.0))
+	var need_cachelos: bool = seasonings.has(CACHELOS) and _bowl().stock < 1
+	var needed: int = _cooked
+	if leftover:
+		await _use(w, _floor_left, _xz(_floor_left) + Vector2(0.9, 0.0))
+	else:
+		await _start_cooking(w, need_cachelos)
+		needed += 2 if need_cachelos else 1
+		await _collect_cooked(w, need_cachelos, needed)
+	await _use(w, box, _xz(box) + Vector2(0.9, 0.0), presses)
+	var rest: Node3D = w.holder().get_held_item() as Node3D
+	if rest != null:
+		_floor_left = rest
+		await _drop_facing(w, _xz(box) + Vector2(0.9, 0.0), Vector2(1.0, 0.0))
+	await _use(w, box, _xz(box) + Vector2(0.9, 0.0))
+	await _season_and_deliver_held(w, seasonings)
+
+
+## Anda a `stand`, se gira hacia `dir` (empujando) y suelta lo que lleva con interactuar.
+func _drop_facing(w: Walker, stand: Vector2, dir: Vector2) -> void:
+	var before_m: float = float(_stats["dist%d" % w.player_index])
+	await w.walk_to(stand)
+	_legs.append("Drop:%.1f" % (float(_stats["dist%d" % w.player_index]) - before_m))
+	await w.push_towards(stand + dir * 2.0, Walker.FACE_FRAMES)
+	await w.tap_interact()
+	_stats.presses += 1
+	await _frames(45)
+
+
 ## Individual con cambio: Player1 emplata (servicio) y Player2 cocina (cocina). J1 empieza en P1.
-func _switch_flow(recipe: RecipeData, seasonings: Array, leftover: bool) -> void:
+func _switch_flow(recipe: RecipeData, seasonings: Array[SeasoningData], leftover: bool) -> void:
 	var server: Walker = Walker.new(get_tree(), _char(1), 1)
 	var cook: Walker = Walker.new(get_tree(), _char(2), 1)
 	var slot: Slot = _slot(_box_slot)
@@ -504,7 +606,7 @@ func _switch_flow(recipe: RecipeData, seasonings: Array, leftover: bool) -> void
 
 
 ## Coop 2P: J1 (WASD) emplata con Player1 y J2 (flechas) cocina con Player2, a la vez.
-func _coop(recipe: RecipeData, seasonings: Array, leftover: bool) -> void:
+func _coop(recipe: RecipeData, seasonings: Array[SeasoningData], leftover: bool) -> void:
 	var server: Walker = Walker.new(get_tree(), _char(1), 1)
 	var cook: Walker = Walker.new(get_tree(), _char(2), 2)
 	var slot: Slot = _slot(_box_slot)
@@ -524,7 +626,7 @@ func _coop(recipe: RecipeData, seasonings: Array, leftover: bool) -> void:
 
 ## R17: `n` pedidos S seguidos en coop con el flujo adelantado. Emplatador: dos cajas por delante.
 ## Cocinero: dos pulpos al fuego a la vez; cada pulpo da dos cajas.
-func _chain_pipe(recipe: RecipeData, seasonings: Array, n: int) -> void:
+func _chain_pipe(recipe: RecipeData, seasonings: Array[SeasoningData], n: int) -> void:
 	var server: Walker = Walker.new(get_tree(), _char(1), 1)
 	var cook: Walker = Walker.new(get_tree(), _char(2), 2)
 	var done: Array[bool] = [false, false]

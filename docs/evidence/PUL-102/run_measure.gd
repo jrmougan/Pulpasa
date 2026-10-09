@@ -1,5 +1,5 @@
 extends SceneTree
-## Arranque de `measure_flow.gd` (PUL-090). Carga el medidor cuando los autoloads ya existen.
+## Arranque de `measure_flow.gd` (PUL-102). Carga el medidor cuando existen los autoloads.
 
 
 func _initialize() -> void:

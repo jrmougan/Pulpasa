@@ -8,17 +8,17 @@ responsable**: juega y decide. Unos 25 minutos.
 ## Lo que ya sabes antes de jugar (medido por el bot, `docs/evidence/PUL-102/README.md`)
 | Criterio | Resultado | Estado |
 |---|---|---|
-| R15 Individual sin cambio, pedido S desde cero ≤ 50 m | 78,9 m → **63,7 m** (pasaplatos al este del hueco) o 74,4 m (junto al rack) | **no cumple** |
-| R17 Coop, media de pedidos 2–4 ≤ 4,6 s | **4,31 s** con el bot que adelanta cajas y ollas; 7,33 s con el protocolo secuencial de PUL-090 | cumple solo con juego adelantado |
+| R15 Individual sin cambio, pedido S desde cero ≤ 50 m | 78,9 m → **55,0 m** la mejor ruta del bot (caja soltada en el suelo junto a las ollas; 45,3 m sin los 9,7 m de salir de la posición inicial); 61,0 m con la caja en el pasaplatos 04, 73,3 m en el 01 | **no cumple con el bot** (por 5 m si se cuenta la salida inicial) |
+| R17 Coop, media de pedidos 2–4 ≤ 4,6 s | **4,09 s** con el bot que adelanta cajas y ollas; 7,08 s con el protocolo secuencial de PUL-090 | **pendiente de este gate**: PUL-090 nunca midió el flujo adelantado |
 | Pulsaciones del pedido L (desde cero) | 29 → 19 | cumple (estimado 19) |
-| Pedido 2 con cachelos (Coop) | 13,2 s → 5,5 s | mejora fuerte |
-| Coop, pedido 1 | 10,5 s → 11,5 s (S) | empeora ligeramente (+1 s) |
+| Pedido 2 con cachelos (Coop) | 13,2 s → 5,3 s | mejora fuerte |
+| Coop, pedido 1 | 10,5 s → 11,2 s (S) | empeora ligeramente (+0,7 s) |
 
 Dos decisiones que te tocan por esos números:
-- **R15**: ¿se acepta 63,7 m (−19 %) como suficiente para Individual sin cambio, o se mueve el rack,
-  el hueco o la nevera? La mayor parte son dos tramos de ≈ 10 m (rack ↔ hueco) y dos cruces del hueco.
-- **R17**: ¿basta que se cumpla con juego adelantado (dos cajas por delante, dos pulpos al fuego)? Un
-  jugador nuevo hará el protocolo secuencial (7,3 s de media, el pedido 3 espera 5 s de cocción).
+- **R15**: ¿se acepta 55,0 m (−30 %) como suficiente para Individual sin cambio, o se mueve el rack,
+  el hueco o la nevera? Los tramos largos son rack ↔ hueco (≈ 16 m con la caja) y los dos cruces del hueco.
+- **R17**: el bot adelantado cumple (4,09 s), pero el pedido 2 secuencial da 4,85 s (80 %, no 75 %) y la
+  cadena secuencial 7,08 s (el pedido 3 espera 5 s de cocción). ¿Basta con juego adelantado (dos cajas por delante, dos pulpos al fuego)?
 
 ## Antes de empezar
 1. Abre `docs/evidence/PUL-102/ac1-cuenco-2-vs-4-raciones.png` y
@@ -26,9 +26,9 @@ Dos decisiones que te tocan por esos números:
    a 1280×720.
 2. Juega una ronda en **Individual** y otra en **Local 2P** a pantalla completa (1080p) desde el menú,
    con audio.
-3. Juega con la misma prueba que el bot: un pedido S desde cero (rack → pasaplatos → nevera → olla →
-   cortar en el pasaplatos → dispensadores con la caja en la mano → zona de entrega) y luego otro con
-   el pulpo sobrante.
+3. En Individual sin cambio, busca **tu ruta más corta** para un pedido S desde cero (incluido soltar la
+   caja en el suelo de la cocina, que está permitido fuera de la barra) y cuenta los metros o los pasos:
+   el bot hace 55,0 m, 45,3 m sin la salida inicial. ¿Le ganas? ¿Te sale natural o es un truco?
 
 ## Qué mirar y qué responder
 ### Estación al paso y cuenco
@@ -70,13 +70,13 @@ Dos decisiones que te tocan por esos números:
 ### Cooperativo (Local 2P)
 | Mira | Pregunta |
 |---|---|
-| Emplatador y cocinero a la vez | ¿Sabéis quién hace qué? ¿Alguien espera más de lo que le toca? El bot mide al emplatador quieto el 57 % del pedido 1 (6,6 s de 11,5 s). |
+| Emplatador y cocinero a la vez | ¿Sabéis quién hace qué? ¿Alguien espera más de lo que le toca? El bot mide al emplatador quieto el 57 % del pedido 1 (6,5 s de 11,2 s). |
 | Pasaplatos del medio entre los dos | ¿Os pisáis en la barra o en el hueco? |
 | Dos cajas por delante y dos pulpos al fuego | ¿Lo descubrís solos? Si no, ¿qué indicación lo diría? |
 
 ## Qué anotar
 Para cada fila: **ok / cambiar / dudas**, y una línea si es «cambiar». Además:
-- R15: aceptar 63,7 m o pedir cambio de nivel (rack, hueco o nevera).
+- R15: aceptar 55,0 m (o tu ruta) o pedir cambio de nivel (rack, hueco o nevera).
 - R17: aceptar el criterio con juego adelantado o pedir más margen.
 - Cuenco 2 vs 4: contador, otro modelo o dejar.
 - Ticket: nombre corto en `RecipeData` o dejar el recorte.

@@ -3,6 +3,762 @@
     "cuts": 4,
     "delivery_rejections": 0,
     "kind": "S",
+    "mean_orders_2_4": 7.08,
+    "meters_p1_total": 70.0,
+    "meters_p2_total": 28.4,
+    "mode": "chain_seq",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "SmallSpawner:9.7",
+          "PassSlot01:1.0",
+          "Kitchen:0.3",
+          "PassSlot01:4.8",
+          "Box:0.3",
+          "PassSlot02:0.9",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 23.3,
+        "meters_p2": 11.6,
+        "order": 1,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 11.2,
+        "still_s_p1": 6.47,
+        "still_s_p2": 8.87,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "SmallSpawner:1.9",
+          "PassSlot01:1.0",
+          "PassSlot01:1.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 15.6,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 4.85,
+        "still_s_p1": 1.68,
+        "still_s_p2": 4.5,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.9",
+          "OctopusStorage:2.6",
+          "PassSlot01:1.0",
+          "Kitchen:3.2",
+          "Kitchen:0.3",
+          "PassSlot01:4.9",
+          "Box:0.3",
+          "PassSlot02:1.0",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 15.6,
+        "meters_p2": 13.4,
+        "order": 3,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 11.53,
+        "still_s_p1": 8.37,
+        "still_s_p2": 8.83,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "SmallSpawner:1.9",
+          "PassSlot01:1.0",
+          "PassSlot01:1.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 15.6,
+        "meters_p2": 1.7,
+        "order": 4,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 4.85,
+        "still_s_p1": 1.68,
+        "still_s_p2": 4.5,
+        "switches": 0
+      }
+    ],
+    "presses_total": 46,
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mean_orders_2_4": 4.09,
+    "meters_p1_total": 73.1,
+    "meters_p2_total": 28.6,
+    "mode": "chain_pipe",
+    "orders": [
+      {
+        "at": 11.25,
+        "completed": true,
+        "order": 1,
+        "seconds": 11.25
+      },
+      {
+        "at": 15.67,
+        "completed": true,
+        "order": 2,
+        "seconds": 4.42
+      },
+      {
+        "at": 19.9,
+        "completed": true,
+        "order": 3,
+        "seconds": 4.23
+      },
+      {
+        "at": 23.52,
+        "completed": true,
+        "order": 4,
+        "seconds": 3.62
+      }
+    ],
+    "presses_total": 42,
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mean_orders_2_4": 8.33,
+    "meters_p1_total": 94.3,
+    "meters_p2_total": 40.3,
+    "mode": "chain_seq",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "SmallSpawner:9.7",
+          "PassSlot04:10.1",
+          "Kitchen:0.3",
+          "PassSlot04:6.9",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "Oil:3.6",
+          "Salt:1.0",
+          "Zone:3.4"
+        ],
+        "meters_p1": 29.4,
+        "meters_p2": 13.8,
+        "order": 1,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 11.02,
+        "still_s_p1": 5.07,
+        "still_s_p2": 8.23,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "SmallSpawner:1.9",
+          "PassSlot04:10.1",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "Oil:3.6",
+          "Salt:1.0",
+          "Zone:3.4"
+        ],
+        "meters_p1": 21.6,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 6.07,
+        "still_s_p1": 1.68,
+        "still_s_p2": 5.72,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.9",
+          "OctopusStorage:10.1",
+          "PassSlot04:10.1",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "PassSlot04:7.0",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "Oil:3.6",
+          "Salt:1.0",
+          "Zone:3.4"
+        ],
+        "meters_p1": 21.6,
+        "meters_p2": 23.0,
+        "order": 3,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 12.85,
+        "still_s_p1": 8.47,
+        "still_s_p2": 8.22,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "SmallSpawner:1.9",
+          "PassSlot04:10.1",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "Oil:3.6",
+          "Salt:1.0",
+          "Zone:3.4"
+        ],
+        "meters_p1": 21.6,
+        "meters_p2": 1.7,
+        "order": 4,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 6.07,
+        "still_s_p1": 1.68,
+        "still_s_p2": 5.72,
+        "switches": 0
+      }
+    ],
+    "presses_total": 46,
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mean_orders_2_4": 5.51,
+    "meters_p1_total": 118.8,
+    "meters_p2_total": 40.1,
+    "mode": "chain_pipe",
+    "orders": [
+      {
+        "at": 11.85,
+        "completed": true,
+        "order": 1,
+        "seconds": 11.85
+      },
+      {
+        "at": 18.12,
+        "completed": true,
+        "order": 2,
+        "seconds": 6.27
+      },
+      {
+        "at": 24.38,
+        "completed": true,
+        "order": 3,
+        "seconds": 6.27
+      },
+      {
+        "at": 28.37,
+        "completed": true,
+        "order": 4,
+        "seconds": 3.98
+      }
+    ],
+    "presses_total": 42,
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "SmallSpawner:9.7",
+          "PassSlot01:1.0",
+          "Kitchen:0.3",
+          "PassSlot01:4.8",
+          "Box:0.3",
+          "PassSlot02:0.9",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 23.3,
+        "meters_p2": 11.6,
+        "order": 1,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 11.2,
+        "still_s_p1": 6.47,
+        "still_s_p2": 8.87,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "SmallSpawner:1.9",
+          "PassSlot01:1.0",
+          "PassSlot01:1.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 15.6,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 4.85,
+        "still_s_p1": 1.68,
+        "still_s_p2": 4.5,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "M",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "MediumSpawner:9.4",
+          "PassSlot01:1.5",
+          "Kitchen:0.3",
+          "PassSlot01:4.8",
+          "Box:0.3",
+          "PassSlot02:0.9",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 23.7,
+        "meters_p2": 11.6,
+        "order": 1,
+        "presses": 15,
+        "retargets": 0,
+        "seconds": 11.33,
+        "still_s_p1": 6.55,
+        "still_s_p2": 9.0,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "MediumSpawner:2.1",
+          "PassSlot01:1.5",
+          "PassSlot01:1.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 16.3,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 5.12,
+        "still_s_p1": 1.8,
+        "still_s_p2": 4.77,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 10,
+    "delivery_rejections": 0,
+    "kind": "L",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "LargeSpawner:9.2",
+          "PassSlot01:2.0",
+          "Kitchen:0.3",
+          "PassSlot01:4.8",
+          "Box:0.3",
+          "PassSlot02:0.9",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 23.9,
+        "meters_p2": 11.6,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 11.6,
+        "still_s_p1": 6.75,
+        "still_s_p2": 9.27,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "LargeSpawner:2.3",
+          "PassSlot01:2.0",
+          "PassSlot01:1.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 17.0,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 16,
+        "retargets": 0,
+        "seconds": 5.53,
+        "still_s_p1": 2.08,
+        "still_s_p2": 5.18,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S+cachelos",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "CachelosStorage:1.8",
+          "SmallSpawner:9.7",
+          "PassSlot01:1.0",
+          "Kitchen2:3.9",
+          "Kitchen2:0.3",
+          "CachelosBowl:2.9",
+          "Kitchen:4.3",
+          "PassSlot01:5.0",
+          "Box:0.3",
+          "PassSlot02:0.9",
+          "Oil:6.6",
+          "CachelosBowl:1.1",
+          "Zone:5.3"
+        ],
+        "meters_p1": 25.3,
+        "meters_p2": 26.1,
+        "order": 1,
+        "presses": 17,
+        "retargets": 0,
+        "seconds": 15.5,
+        "still_s_p1": 10.37,
+        "still_s_p2": 10.1,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "SmallSpawner:1.9",
+          "PassSlot01:1.0",
+          "PassSlot01:1.0",
+          "Box:0.3",
+          "Oil:6.6",
+          "CachelosBowl:1.1",
+          "Zone:5.3"
+        ],
+        "meters_p1": 17.6,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 5.25,
+        "still_s_p1": 1.68,
+        "still_s_p2": 4.9,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "SmallSpawner:9.7",
+          "PassSlot04:10.1",
+          "Kitchen:0.3",
+          "PassSlot04:6.9",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "Oil:3.6",
+          "Salt:1.0",
+          "Zone:3.4"
+        ],
+        "meters_p1": 29.4,
+        "meters_p2": 13.8,
+        "order": 1,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 11.02,
+        "still_s_p1": 5.07,
+        "still_s_p2": 8.23,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "SmallSpawner:1.9",
+          "PassSlot04:10.1",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "Oil:3.6",
+          "Salt:1.0",
+          "Zone:3.4"
+        ],
+        "meters_p1": 21.6,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 6.07,
+        "still_s_p1": 1.68,
+        "still_s_p2": 5.72,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "M",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "MediumSpawner:9.4",
+          "PassSlot04:10.3",
+          "Kitchen:0.3",
+          "PassSlot04:6.9",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "Oil:3.5",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 29.5,
+        "meters_p2": 13.8,
+        "order": 1,
+        "presses": 15,
+        "retargets": 0,
+        "seconds": 11.15,
+        "still_s_p1": 5.2,
+        "still_s_p2": 8.37,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "MediumSpawner:2.1",
+          "PassSlot04:10.3",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "Oil:3.5",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 22.0,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 6.27,
+        "still_s_p1": 1.8,
+        "still_s_p2": 5.92,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 10,
+    "delivery_rejections": 0,
+    "kind": "L",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "LargeSpawner:9.2",
+          "PassSlot04:10.5",
+          "Kitchen:0.3",
+          "PassSlot04:6.9",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "Oil:3.6",
+          "Salt:1.1",
+          "Zone:3.3"
+        ],
+        "meters_p1": 29.4,
+        "meters_p2": 13.8,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 11.42,
+        "still_s_p1": 5.47,
+        "still_s_p2": 8.63,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "LargeSpawner:2.3",
+          "PassSlot04:10.5",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "Oil:3.5",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 22.5,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 16,
+        "retargets": 0,
+        "seconds": 6.63,
+        "still_s_p1": 2.08,
+        "still_s_p2": 6.28,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S+cachelos",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "CachelosStorage:1.8",
+          "SmallSpawner:9.7",
+          "Kitchen2:3.9",
+          "PassSlot04:10.1",
+          "Kitchen2:0.3",
+          "CachelosBowl:2.9",
+          "Kitchen:4.3",
+          "PassSlot04:6.8",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "CachelosBowl:2.6",
+          "Oil:1.0",
+          "Zone:4.4"
+        ],
+        "meters_p1": 29.4,
+        "meters_p2": 28.1,
+        "order": 1,
+        "presses": 17,
+        "retargets": 0,
+        "seconds": 14.87,
+        "still_s_p1": 8.92,
+        "still_s_p2": 9.07,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "SmallSpawner:1.9",
+          "PassSlot04:10.1",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "CachelosBowl:2.6",
+          "Oil:1.0",
+          "Zone:4.4"
+        ],
+        "meters_p1": 21.6,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 6.07,
+        "still_s_p1": 1.68,
+        "still_s_p2": 5.72,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
     "mode": "solo",
     "orders": [
       {
@@ -17,42 +773,44 @@
           "PassSlot02:1.0",
           "Box:19.5",
           "Salt:5.5",
-          "Oil:1.0"
+          "Oil:1.0",
+          "Zone:4.3"
         ],
-        "meters_p1": 74.4,
+        "meters_p1": 73.3,
         "meters_p2": 0.0,
         "order": 1,
         "presses": 13,
         "retargets": 0,
-        "seconds": 22.55,
-        "still_s_p1": 7.55,
-        "still_s_p2": 22.55,
+        "seconds": 22.23,
+        "still_s_p1": 7.45,
+        "still_s_p2": 22.23,
         "switches": 0
       },
       {
         "completed": true,
         "legs": [
-          "SmallSpawner:1.4",
+          "SmallSpawner:1.9",
           "PassSlot01:1.0",
           "Octopus:19.6",
           "PassSlot01:1.1",
           "Box:20.5",
           "Salt:5.5",
-          "Oil:1.0"
+          "Oil:1.0",
+          "Zone:4.3"
         ],
-        "meters_p1": 57.3,
+        "meters_p1": 56.7,
         "meters_p2": 0.0,
         "order": 2,
         "presses": 10,
         "retargets": 0,
-        "seconds": 13.53,
-        "still_s_p1": 1.98,
-        "still_s_p2": 13.53,
+        "seconds": 13.32,
+        "still_s_p1": 1.88,
+        "still_s_p2": 13.32,
         "switches": 0
       }
     ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
   },
   {
     "cuts": 6,
@@ -72,42 +830,44 @@
           "PassSlot02:1.0",
           "Box:19.5",
           "Salt:5.5",
-          "Oil:1.0"
+          "Oil:1.0",
+          "Zone:4.3"
         ],
-        "meters_p1": 74.7,
+        "meters_p1": 73.6,
         "meters_p2": 0.0,
         "order": 1,
         "presses": 15,
         "retargets": 0,
-        "seconds": 22.73,
-        "still_s_p1": 7.68,
-        "still_s_p2": 22.73,
+        "seconds": 22.42,
+        "still_s_p1": 7.58,
+        "still_s_p2": 22.42,
         "switches": 0
       },
       {
         "completed": true,
         "legs": [
-          "MediumSpawner:1.6",
+          "MediumSpawner:2.1",
           "PassSlot01:1.5",
           "Octopus:19.6",
           "PassSlot01:1.1",
           "Box:20.5",
           "Salt:5.5",
-          "Oil:1.0"
+          "Oil:1.0",
+          "Zone:4.3"
         ],
-        "meters_p1": 58.1,
+        "meters_p1": 57.5,
         "meters_p2": 0.0,
         "order": 2,
         "presses": 12,
         "retargets": 0,
-        "seconds": 13.8,
-        "still_s_p1": 2.1,
-        "still_s_p2": 13.8,
+        "seconds": 13.58,
+        "still_s_p1": 2.0,
+        "still_s_p2": 13.58,
         "switches": 0
       }
     ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
   },
   {
     "cuts": 10,
@@ -127,42 +887,44 @@
           "PassSlot02:1.0",
           "Box:19.5",
           "Salt:5.5",
-          "Oil:1.0"
+          "Oil:1.0",
+          "Zone:4.3"
         ],
-        "meters_p1": 75.0,
+        "meters_p1": 73.9,
         "meters_p2": 0.0,
         "order": 1,
         "presses": 19,
         "retargets": 0,
-        "seconds": 23.07,
-        "still_s_p1": 7.95,
-        "still_s_p2": 23.07,
+        "seconds": 22.75,
+        "still_s_p1": 7.85,
+        "still_s_p2": 22.75,
         "switches": 0
       },
       {
         "completed": true,
         "legs": [
-          "LargeSpawner:1.8",
+          "LargeSpawner:2.3",
           "PassSlot01:2.0",
           "Octopus:19.5",
           "PassSlot01:1.1",
           "Box:20.5",
           "Salt:5.5",
-          "Oil:1.1"
+          "Oil:1.1",
+          "Zone:4.3"
         ],
-        "meters_p1": 58.9,
+        "meters_p1": 58.3,
         "meters_p2": 0.0,
         "order": 2,
         "presses": 16,
         "retargets": 0,
-        "seconds": 14.23,
-        "still_s_p1": 2.38,
-        "still_s_p2": 14.23,
+        "seconds": 14.02,
+        "still_s_p1": 2.28,
+        "still_s_p2": 14.02,
         "switches": 0
       }
     ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
   },
   {
     "cuts": 4,
@@ -186,687 +948,101 @@
           "PassSlot02:0.9",
           "Box:19.6",
           "Oil:6.5",
-          "CachelosBowl:1.1"
+          "CachelosBowl:1.1",
+          "Zone:5.3"
         ],
-        "meters_p1": 90.9,
+        "meters_p1": 89.8,
         "meters_p2": 0.0,
         "order": 1,
         "presses": 17,
         "retargets": 0,
-        "seconds": 26.87,
-        "still_s_p1": 8.42,
-        "still_s_p2": 26.87,
+        "seconds": 26.55,
+        "still_s_p1": 8.32,
+        "still_s_p2": 26.55,
         "switches": 0
       },
       {
         "completed": true,
         "legs": [
-          "SmallSpawner:1.4",
+          "SmallSpawner:1.9",
           "PassSlot01:1.0",
           "Octopus:19.6",
           "PassSlot01:1.1",
           "Box:20.5",
           "Oil:6.5",
-          "CachelosBowl:1.0"
+          "CachelosBowl:1.0",
+          "Zone:5.3"
         ],
-        "meters_p1": 59.4,
+        "meters_p1": 58.8,
         "meters_p2": 0.0,
         "order": 2,
         "presses": 10,
         "retargets": 0,
-        "seconds": 13.93,
-        "still_s_p1": 1.97,
-        "still_s_p2": 13.93,
+        "seconds": 13.72,
+        "still_s_p1": 1.87,
+        "still_s_p2": 13.72,
         "switches": 0
       }
     ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
   },
   {
     "cuts": 4,
     "delivery_rejections": 0,
     "kind": "S",
-    "mode": "switch",
+    "mode": "solo",
     "orders": [
       {
         "completed": true,
         "legs": [
           "SmallSpawner:9.7",
-          "PassSlot01:1.0",
-          "OctopusStorage:0.0",
-          "Kitchen:0.0",
-          "Kitchen:0.0",
-          "PassSlot01:0.0",
-          "PassSlot02:0.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
+          "PassSlot03:2.1",
+          "OctopusStorage:18.4",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "PassSlot03:3.2",
+          "PassSlot02:1.1",
+          "Box:17.4",
+          "Salt:3.5",
+          "Oil:1.0",
+          "Zone:4.3"
         ],
-        "meters_p1": 24.4,
-        "meters_p2": 11.6,
+        "meters_p1": 66.7,
+        "meters_p2": 0.0,
         "order": 1,
         "presses": 13,
         "retargets": 0,
-        "seconds": 15.48,
-        "still_s_p1": 10.53,
-        "still_s_p2": 13.15,
-        "switches": 2
-      },
-      {
-        "completed": true,
-        "legs": [
-          "SmallSpawner:1.4",
-          "PassSlot01:1.0",
-          "Octopus:0.0",
-          "PassSlot01:0.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 16.1,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 6.25,
-        "still_s_p1": 2.97,
-        "still_s_p2": 5.9,
-        "switches": 2
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 6,
-    "delivery_rejections": 0,
-    "kind": "M",
-    "mode": "switch",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "MediumSpawner:9.4",
-          "PassSlot01:1.5",
-          "OctopusStorage:0.0",
-          "Kitchen:0.0",
-          "Kitchen:0.0",
-          "PassSlot01:0.0",
-          "PassSlot02:0.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 24.7,
-        "meters_p2": 11.6,
-        "order": 1,
-        "presses": 15,
-        "retargets": 0,
-        "seconds": 15.67,
-        "still_s_p1": 10.67,
-        "still_s_p2": 13.33,
-        "switches": 2
-      },
-      {
-        "completed": true,
-        "legs": [
-          "MediumSpawner:1.6",
-          "PassSlot01:1.5",
-          "Octopus:0.0",
-          "PassSlot01:0.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 16.9,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 12,
-        "retargets": 0,
-        "seconds": 6.52,
-        "still_s_p1": 3.08,
-        "still_s_p2": 6.17,
-        "switches": 2
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 10,
-    "delivery_rejections": 0,
-    "kind": "L",
-    "mode": "switch",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "LargeSpawner:9.2",
-          "PassSlot01:2.0",
-          "OctopusStorage:0.0",
-          "Kitchen:0.0",
-          "Kitchen:0.0",
-          "PassSlot01:0.0",
-          "PassSlot02:0.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 25.0,
-        "meters_p2": 11.6,
-        "order": 1,
-        "presses": 19,
-        "retargets": 0,
-        "seconds": 16.0,
-        "still_s_p1": 10.93,
-        "still_s_p2": 13.67,
-        "switches": 2
-      },
-      {
-        "completed": true,
-        "legs": [
-          "LargeSpawner:1.8",
-          "PassSlot01:2.0",
-          "Octopus:0.0",
-          "PassSlot01:0.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 17.6,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 16,
-        "retargets": 0,
-        "seconds": 6.93,
-        "still_s_p1": 3.37,
-        "still_s_p2": 6.58,
-        "switches": 2
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S+cachelos",
-    "mode": "switch",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "SmallSpawner:9.7",
-          "PassSlot01:1.0",
-          "OctopusStorage:0.0",
-          "Kitchen:0.0",
-          "CachelosStorage:0.0",
-          "Kitchen2:0.0",
-          "Kitchen2:0.0",
-          "CachelosBowl:0.0",
-          "Kitchen:0.0",
-          "PassSlot01:0.0",
-          "PassSlot02:0.0",
-          "Box:0.3",
-          "Oil:6.6",
-          "CachelosBowl:1.1"
-        ],
-        "meters_p1": 26.4,
-        "meters_p2": 26.1,
-        "order": 1,
-        "presses": 17,
-        "retargets": 0,
-        "seconds": 19.78,
-        "still_s_p1": 14.43,
-        "still_s_p2": 14.38,
-        "switches": 2
-      },
-      {
-        "completed": true,
-        "legs": [
-          "SmallSpawner:1.4",
-          "PassSlot01:1.0",
-          "Octopus:0.0",
-          "PassSlot01:0.0",
-          "Box:0.3",
-          "Oil:6.6",
-          "CachelosBowl:1.1"
-        ],
-        "meters_p1": 18.1,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 6.65,
-        "still_s_p1": 2.97,
-        "still_s_p2": 6.3,
-        "switches": 2
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S",
-    "mode": "coop",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "SmallSpawner:9.7",
-          "PassSlot01:1.0",
-          "Kitchen:0.3",
-          "PassSlot01:4.8",
-          "Box:0.3",
-          "PassSlot02:0.9",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 24.4,
-        "meters_p2": 11.6,
-        "order": 1,
-        "presses": 13,
-        "retargets": 0,
-        "seconds": 11.52,
-        "still_s_p1": 6.57,
-        "still_s_p2": 9.18,
+        "seconds": 20.92,
+        "still_s_p1": 7.47,
+        "still_s_p2": 20.92,
         "switches": 0
       },
       {
         "completed": true,
         "legs": [
-          "Octopus:0.3",
-          "SmallSpawner:1.4",
-          "PassSlot01:1.0",
-          "PassSlot01:1.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
+          "SmallSpawner:1.9",
+          "PassSlot03:2.1",
+          "Octopus:17.6",
+          "PassSlot03:0.9",
+          "Box:16.6",
+          "Salt:3.5",
+          "Oil:1.1",
+          "Zone:4.3"
         ],
-        "meters_p1": 16.1,
-        "meters_p2": 1.7,
+        "meters_p1": 50.0,
+        "meters_p2": 0.0,
         "order": 2,
         "presses": 10,
         "retargets": 0,
-        "seconds": 5.07,
-        "still_s_p1": 1.78,
-        "still_s_p2": 4.72,
-        "switches": 0
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 6,
-    "delivery_rejections": 0,
-    "kind": "M",
-    "mode": "coop",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "MediumSpawner:9.4",
-          "PassSlot01:1.5",
-          "Kitchen:0.3",
-          "PassSlot01:4.8",
-          "Box:0.3",
-          "PassSlot02:0.9",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 24.7,
-        "meters_p2": 11.6,
-        "order": 1,
-        "presses": 15,
-        "retargets": 0,
-        "seconds": 11.65,
-        "still_s_p1": 6.65,
-        "still_s_p2": 9.32,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "MediumSpawner:1.6",
-          "PassSlot01:1.5",
-          "PassSlot01:1.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 16.9,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 12,
-        "retargets": 0,
-        "seconds": 5.33,
+        "seconds": 11.98,
         "still_s_p1": 1.9,
-        "still_s_p2": 4.98,
+        "still_s_p2": 11.98,
         "switches": 0
       }
     ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 10,
-    "delivery_rejections": 0,
-    "kind": "L",
-    "mode": "coop",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "LargeSpawner:9.2",
-          "PassSlot01:2.0",
-          "Kitchen:0.3",
-          "PassSlot01:4.8",
-          "Box:0.3",
-          "PassSlot02:0.9",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 25.0,
-        "meters_p2": 11.6,
-        "order": 1,
-        "presses": 19,
-        "retargets": 0,
-        "seconds": 11.92,
-        "still_s_p1": 6.85,
-        "still_s_p2": 9.58,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "LargeSpawner:1.8",
-          "PassSlot01:2.0",
-          "PassSlot01:1.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 17.6,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 16,
-        "retargets": 0,
-        "seconds": 5.75,
-        "still_s_p1": 2.18,
-        "still_s_p2": 5.4,
-        "switches": 0
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S+cachelos",
-    "mode": "coop",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "CachelosStorage:1.8",
-          "SmallSpawner:9.7",
-          "PassSlot01:1.0",
-          "Kitchen2:3.9",
-          "Kitchen2:0.3",
-          "CachelosBowl:2.9",
-          "Kitchen:4.3",
-          "PassSlot01:5.0",
-          "Box:0.3",
-          "PassSlot02:0.9",
-          "Oil:6.6",
-          "CachelosBowl:1.1"
-        ],
-        "meters_p1": 26.4,
-        "meters_p2": 26.1,
-        "order": 1,
-        "presses": 17,
-        "retargets": 0,
-        "seconds": 15.82,
-        "still_s_p1": 10.47,
-        "still_s_p2": 10.42,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "SmallSpawner:1.4",
-          "PassSlot01:1.0",
-          "PassSlot01:1.0",
-          "Box:0.3",
-          "Oil:6.6",
-          "CachelosBowl:1.1"
-        ],
-        "meters_p1": 18.1,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 5.47,
-        "still_s_p1": 1.78,
-        "still_s_p2": 5.12,
-        "switches": 0
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S",
-    "mean_orders_2_4": 7.33,
-    "meters_p1_total": 72.8,
-    "meters_p2_total": 28.4,
-    "mode": "chain_seq",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "SmallSpawner:9.7",
-          "PassSlot01:1.0",
-          "Kitchen:0.3",
-          "PassSlot01:4.8",
-          "Box:0.3",
-          "PassSlot02:0.9",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 24.4,
-        "meters_p2": 11.6,
-        "order": 1,
-        "presses": 13,
-        "retargets": 0,
-        "seconds": 11.52,
-        "still_s_p1": 6.57,
-        "still_s_p2": 9.18,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "SmallSpawner:1.4",
-          "PassSlot01:1.0",
-          "PassSlot01:1.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 16.1,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 5.07,
-        "still_s_p1": 1.78,
-        "still_s_p2": 4.72,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "SmallSpawner:1.4",
-          "OctopusStorage:2.6",
-          "PassSlot01:1.0",
-          "Kitchen:3.2",
-          "Kitchen:0.3",
-          "PassSlot01:4.9",
-          "Box:0.3",
-          "PassSlot02:1.0",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 16.1,
-        "meters_p2": 13.4,
-        "order": 3,
-        "presses": 13,
-        "retargets": 0,
-        "seconds": 11.85,
-        "still_s_p1": 8.57,
-        "still_s_p2": 9.15,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "SmallSpawner:1.4",
-          "PassSlot01:1.0",
-          "PassSlot01:1.0",
-          "Box:0.3",
-          "Salt:5.6",
-          "Oil:1.1"
-        ],
-        "meters_p1": 16.1,
-        "meters_p2": 1.7,
-        "order": 4,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 5.07,
-        "still_s_p1": 1.78,
-        "still_s_p2": 4.72,
-        "switches": 0
-      }
-    ],
-    "presses_total": 46,
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S",
-    "mean_orders_2_4": 4.31,
-    "meters_p1_total": 76.0,
-    "meters_p2_total": 28.6,
-    "mode": "chain_pipe",
-    "orders": [
-      {
-        "at": 11.58,
-        "completed": true,
-        "order": 1,
-        "seconds": 11.58
-      },
-      {
-        "at": 16.22,
-        "completed": true,
-        "order": 2,
-        "seconds": 4.63
-      },
-      {
-        "at": 20.68,
-        "completed": true,
-        "order": 3,
-        "seconds": 4.47
-      },
-      {
-        "at": 24.52,
-        "completed": true,
-        "order": 4,
-        "seconds": 3.83
-      }
-    ],
-    "presses_total": 42,
-    "station_rejections": 0,
-    "slots": "west (PassSlot01 caja / 02 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S",
-    "mode": "solo",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "SmallSpawner:9.7",
-          "PassSlot04:10.1",
-          "OctopusStorage:12.8",
-          "Kitchen:3.1",
-          "Kitchen:0.3",
-          "PassSlot04:6.9",
-          "PassSlot05:1.1",
-          "Box:6.3",
-          "Salt:4.5",
-          "Oil:0.9"
-        ],
-        "meters_p1": 63.7,
-        "meters_p2": 0.0,
-        "order": 1,
-        "presses": 13,
-        "retargets": 0,
-        "seconds": 20.42,
-        "still_s_p1": 7.57,
-        "still_s_p2": 20.42,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "SmallSpawner:1.4",
-          "PassSlot04:10.1",
-          "Octopus:6.2",
-          "PassSlot04:0.9",
-          "Box:5.3",
-          "Salt:4.5",
-          "Oil:1.0"
-        ],
-        "meters_p1": 36.8,
-        "meters_p2": 0.0,
-        "order": 2,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 9.42,
-        "still_s_p1": 1.98,
-        "still_s_p2": 9.42,
-        "switches": 0
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
+    "slots": "PassSlot03/PassSlot02",
+    "station_rejections": 0
   },
   {
     "cuts": 6,
@@ -878,50 +1054,52 @@
         "completed": true,
         "legs": [
           "MediumSpawner:9.4",
-          "PassSlot04:10.3",
-          "OctopusStorage:12.8",
+          "PassSlot03:2.3",
+          "OctopusStorage:18.3",
           "Kitchen:3.1",
           "Kitchen:0.3",
-          "PassSlot04:7.0",
-          "PassSlot05:1.1",
-          "Box:6.2",
-          "Salt:4.4",
-          "Oil:0.9"
+          "PassSlot03:3.2",
+          "PassSlot02:1.1",
+          "Box:17.4",
+          "Salt:3.5",
+          "Oil:1.0",
+          "Zone:4.3"
         ],
-        "meters_p1": 63.7,
+        "meters_p1": 66.6,
         "meters_p2": 0.0,
         "order": 1,
         "presses": 15,
         "retargets": 0,
-        "seconds": 20.53,
-        "still_s_p1": 7.68,
-        "still_s_p2": 20.53,
+        "seconds": 21.03,
+        "still_s_p1": 7.6,
+        "still_s_p2": 21.03,
         "switches": 0
       },
       {
         "completed": true,
         "legs": [
-          "MediumSpawner:1.7",
-          "PassSlot04:10.3",
-          "Octopus:6.2",
-          "PassSlot04:0.9",
-          "Box:5.4",
-          "Salt:4.5",
-          "Oil:0.9"
+          "MediumSpawner:2.1",
+          "PassSlot03:2.3",
+          "Octopus:17.6",
+          "PassSlot03:1.0",
+          "Box:16.6",
+          "Salt:3.5",
+          "Oil:1.1",
+          "Zone:4.3"
         ],
-        "meters_p1": 37.2,
+        "meters_p1": 50.4,
         "meters_p2": 0.0,
         "order": 2,
         "presses": 12,
         "retargets": 0,
-        "seconds": 9.62,
-        "still_s_p1": 2.12,
-        "still_s_p2": 9.62,
+        "seconds": 12.17,
+        "still_s_p1": 2.0,
+        "still_s_p2": 12.17,
         "switches": 0
       }
     ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
+    "slots": "PassSlot03/PassSlot02",
+    "station_rejections": 0
   },
   {
     "cuts": 10,
@@ -933,50 +1111,52 @@
         "completed": true,
         "legs": [
           "LargeSpawner:9.2",
-          "PassSlot04:10.5",
-          "OctopusStorage:12.8",
+          "PassSlot03:2.7",
+          "OctopusStorage:18.3",
           "Kitchen:3.1",
           "Kitchen:0.3",
-          "PassSlot04:6.9",
-          "PassSlot05:1.1",
-          "Box:6.3",
-          "Salt:4.5",
-          "Oil:0.9"
+          "PassSlot03:3.1",
+          "PassSlot02:1.1",
+          "Box:17.5",
+          "Salt:3.5",
+          "Oil:1.1",
+          "Zone:4.3"
         ],
-        "meters_p1": 63.7,
+        "meters_p1": 67.1,
         "meters_p2": 0.0,
         "order": 1,
         "presses": 19,
         "retargets": 0,
-        "seconds": 20.82,
-        "still_s_p1": 7.97,
-        "still_s_p2": 20.82,
+        "seconds": 21.38,
+        "still_s_p1": 7.87,
+        "still_s_p2": 21.38,
         "switches": 0
       },
       {
         "completed": true,
         "legs": [
-          "LargeSpawner:1.8",
-          "PassSlot04:10.5",
-          "Octopus:6.2",
-          "PassSlot04:0.9",
-          "Box:5.3",
-          "Salt:4.4",
-          "Oil:0.9"
+          "LargeSpawner:2.3",
+          "PassSlot03:2.7",
+          "Octopus:17.5",
+          "PassSlot03:0.9",
+          "Box:16.6",
+          "Salt:3.5",
+          "Oil:1.1",
+          "Zone:4.3"
         ],
-        "meters_p1": 37.4,
+        "meters_p1": 51.0,
         "meters_p2": 0.0,
         "order": 2,
         "presses": 16,
         "retargets": 0,
-        "seconds": 9.93,
-        "still_s_p1": 2.38,
-        "still_s_p2": 9.93,
+        "seconds": 12.55,
+        "still_s_p1": 2.27,
+        "still_s_p2": 12.55,
         "switches": 0
       }
     ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
+    "slots": "PassSlot03/PassSlot02",
+    "station_rejections": 0
   },
   {
     "cuts": 4,
@@ -988,54 +1168,984 @@
         "completed": true,
         "legs": [
           "SmallSpawner:9.7",
-          "PassSlot04:10.1",
-          "OctopusStorage:12.8",
+          "PassSlot03:2.1",
+          "OctopusStorage:18.4",
           "Kitchen:3.1",
           "CachelosStorage:1.8",
           "Kitchen2:3.9",
           "Kitchen2:0.3",
           "CachelosBowl:2.9",
           "Kitchen:4.3",
-          "PassSlot04:6.8",
-          "PassSlot05:1.1",
-          "Box:6.2",
-          "Oil:3.4",
-          "CachelosBowl:0.9"
+          "PassSlot03:3.2",
+          "PassSlot02:1.1",
+          "Box:17.5",
+          "Oil:4.5",
+          "CachelosBowl:1.1",
+          "Zone:5.3"
         ],
-        "meters_p1": 77.9,
+        "meters_p1": 83.2,
         "meters_p2": 0.0,
         "order": 1,
         "presses": 17,
         "retargets": 0,
-        "seconds": 24.23,
-        "still_s_p1": 8.38,
-        "still_s_p2": 24.23,
+        "seconds": 25.22,
+        "still_s_p1": 8.3,
+        "still_s_p2": 25.22,
         "switches": 0
       },
       {
         "completed": true,
         "legs": [
-          "SmallSpawner:1.4",
+          "SmallSpawner:1.9",
+          "PassSlot03:2.1",
+          "Octopus:17.6",
+          "PassSlot03:0.9",
+          "Box:16.6",
+          "Oil:4.5",
+          "CachelosBowl:1.1",
+          "Zone:5.3"
+        ],
+        "meters_p1": 52.1,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 12.38,
+        "still_s_p1": 1.88,
+        "still_s_p2": 12.38,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot03/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:9.7",
+          "PassSlot04:10.1",
+          "OctopusStorage:12.8",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "PassSlot04:6.9",
+          "PassSlot05:1.1",
+          "Box:6.3",
+          "Oil:3.5",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 61.0,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 19.77,
+        "still_s_p1": 7.47,
+        "still_s_p2": 19.77,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.9",
           "PassSlot04:10.1",
           "Octopus:6.2",
           "PassSlot04:0.9",
           "Box:5.3",
           "Oil:3.5",
-          "CachelosBowl:1.0"
+          "Salt:1.0",
+          "Zone:3.4"
         ],
-        "meters_p1": 36.8,
+        "meters_p1": 34.3,
         "meters_p2": 0.0,
         "order": 2,
         "presses": 10,
         "retargets": 0,
-        "seconds": 9.42,
-        "still_s_p1": 1.98,
-        "still_s_p2": 9.42,
+        "seconds": 8.82,
+        "still_s_p1": 1.9,
+        "still_s_p2": 8.82,
         "switches": 0
       }
     ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "M",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "MediumSpawner:9.4",
+          "PassSlot04:10.3",
+          "OctopusStorage:12.8",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "PassSlot04:7.0",
+          "PassSlot05:1.1",
+          "Box:6.2",
+          "Oil:3.4",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 61.0,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 15,
+        "retargets": 0,
+        "seconds": 19.88,
+        "still_s_p1": 7.58,
+        "still_s_p2": 19.88,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "MediumSpawner:2.2",
+          "PassSlot04:10.3",
+          "Octopus:6.2",
+          "PassSlot04:0.9",
+          "Box:5.4",
+          "Oil:3.5",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 34.9,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 9.07,
+        "still_s_p1": 2.02,
+        "still_s_p2": 9.07,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 10,
+    "delivery_rejections": 0,
+    "kind": "L",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "LargeSpawner:9.2",
+          "PassSlot04:10.5",
+          "OctopusStorage:12.8",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "PassSlot04:6.9",
+          "PassSlot05:1.1",
+          "Box:6.3",
+          "Oil:3.5",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 61.0,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 20.17,
+        "still_s_p1": 7.87,
+        "still_s_p2": 20.17,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "LargeSpawner:2.3",
+          "PassSlot04:10.5",
+          "Octopus:6.2",
+          "PassSlot04:0.9",
+          "Box:5.3",
+          "Oil:3.4",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 35.1,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 16,
+        "retargets": 0,
+        "seconds": 9.38,
+        "still_s_p1": 2.28,
+        "still_s_p2": 9.38,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S+cachelos",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:9.7",
+          "PassSlot04:10.1",
+          "OctopusStorage:12.8",
+          "Kitchen:3.1",
+          "CachelosStorage:1.8",
+          "Kitchen2:3.9",
+          "Kitchen2:0.3",
+          "CachelosBowl:2.9",
+          "Kitchen:4.3",
+          "PassSlot04:6.8",
+          "PassSlot05:1.1",
+          "Box:6.2",
+          "CachelosBowl:2.4",
+          "Oil:1.1",
+          "Zone:4.4"
+        ],
+        "meters_p1": 75.2,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 17,
+        "retargets": 0,
+        "seconds": 23.58,
+        "still_s_p1": 8.28,
+        "still_s_p2": 23.58,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.9",
+          "PassSlot04:10.1",
+          "Octopus:6.2",
+          "PassSlot04:0.9",
+          "Box:5.3",
+          "CachelosBowl:2.5",
+          "Oil:1.0",
+          "Zone:4.4"
+        ],
+        "meters_p1": 34.3,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 8.82,
+        "still_s_p1": 1.9,
+        "still_s_p2": 8.82,
+        "switches": 0
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:9.7",
+          "Drop:16.3",
+          "OctopusStorage:3.2",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "Box:1.8",
+          "Drop:0.5",
+          "Box:0.5",
+          "Oil:11.1",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 55.0,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 20.1,
+        "still_s_p1": 8.72,
+        "still_s_p2": 20.1,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.8",
+          "Drop:16.3",
+          "Octopus:2.8",
+          "Box:1.7",
+          "Box:0.4",
+          "Oil:10.6",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 41.3,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 11.0,
+        "still_s_p1": 2.33,
+        "still_s_p2": 11.0,
+        "switches": 0
+      }
+    ],
+    "slots": "floor/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "M",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "MediumSpawner:9.4",
+          "Drop:16.4",
+          "OctopusStorage:3.2",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "Box:1.8",
+          "Drop:0.4",
+          "Box:0.5",
+          "Oil:11.1",
+          "Salt:1.1",
+          "Zone:3.3"
+        ],
+        "meters_p1": 55.0,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 15,
+        "retargets": 0,
+        "seconds": 20.2,
+        "still_s_p1": 8.85,
+        "still_s_p2": 20.2,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "MediumSpawner:2.2",
+          "Drop:16.6",
+          "Octopus:2.7",
+          "Box:1.6",
+          "Box:0.4",
+          "Oil:10.7",
+          "Salt:1.1",
+          "Zone:3.3"
+        ],
+        "meters_p1": 41.4,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 11.22,
+        "still_s_p1": 2.48,
+        "still_s_p2": 11.22,
+        "switches": 0
+      }
+    ],
+    "slots": "floor/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 10,
+    "delivery_rejections": 0,
+    "kind": "L",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "LargeSpawner:9.2",
+          "Drop:16.7",
+          "OctopusStorage:3.3",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "Box:1.8",
+          "Drop:0.4",
+          "Box:0.6",
+          "Oil:11.1",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 55.1,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 20.62,
+        "still_s_p1": 9.1,
+        "still_s_p2": 20.62,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "LargeSpawner:2.3",
+          "Drop:16.8",
+          "Octopus:2.7",
+          "Box:1.7",
+          "Box:0.4",
+          "Oil:10.7",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 42.0,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 16,
+        "retargets": 0,
+        "seconds": 11.55,
+        "still_s_p1": 2.75,
+        "still_s_p2": 11.55,
+        "switches": 0
+      }
+    ],
+    "slots": "floor/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S+cachelos",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:9.7",
+          "Drop:16.3",
+          "OctopusStorage:3.2",
+          "Kitchen:3.1",
+          "CachelosStorage:1.8",
+          "Kitchen2:3.9",
+          "Kitchen2:0.3",
+          "CachelosBowl:2.9",
+          "Kitchen:4.3",
+          "Box:1.9",
+          "Drop:0.4",
+          "Box:0.5",
+          "CachelosBowl:10.2",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 69.3,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 17,
+        "retargets": 0,
+        "seconds": 24.0,
+        "still_s_p1": 9.55,
+        "still_s_p2": 24.0,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.9",
+          "Drop:16.3",
+          "Octopus:2.7",
+          "Box:1.6",
+          "Box:0.4",
+          "CachelosBowl:9.7",
+          "Oil:1.1",
+          "Zone:4.4"
+        ],
+        "meters_p1": 41.2,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 10.93,
+        "still_s_p1": 2.38,
+        "still_s_p2": 10.93,
+        "switches": 0
+      }
+    ],
+    "slots": "floor/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:9.7",
+          "Drop:12.3",
+          "OctopusStorage:7.8",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "Box:4.3",
+          "Drop:0.4",
+          "Box:0.5",
+          "Oil:14.4",
+          "Salt:1.1",
+          "Zone:3.3"
+        ],
+        "meters_p1": 61.4,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 27.65,
+        "still_s_p1": 8.68,
+        "still_s_p2": 27.65,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.9",
+          "Drop:20.1",
+          "Octopus:2.7",
+          "Box:1.6",
+          "Box:0.4",
+          "Oil:6.8",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 41.1,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 15.45,
+        "still_s_p1": 2.33,
+        "still_s_p2": 15.45,
+        "switches": 0
+      }
+    ],
+    "slots": "floorgap/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "M",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "MediumSpawner:9.4",
+          "Drop:12.6",
+          "OctopusStorage:7.7",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "Box:4.3",
+          "Drop:0.4",
+          "Box:0.5",
+          "Oil:11.2",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 58.1,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 15,
+        "retargets": 0,
+        "seconds": 30.68,
+        "still_s_p1": 13.47,
+        "still_s_p2": 30.68,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "MediumSpawner:2.1",
+          "Drop:17.5",
+          "Octopus:2.7",
+          "Box:1.6",
+          "Box:0.4",
+          "Oil:6.7",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 38.5,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 15.73,
+        "still_s_p1": 2.47,
+        "still_s_p2": 15.73,
+        "switches": 0
+      }
+    ],
+    "slots": "floorgap/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 10,
+    "delivery_rejections": 0,
+    "kind": "L",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "LargeSpawner:9.2",
+          "Drop:12.8",
+          "OctopusStorage:7.8",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "Box:4.3",
+          "Drop:0.4",
+          "Box:0.6",
+          "Oil:17.3",
+          "Salt:1.1",
+          "Zone:3.3"
+        ],
+        "meters_p1": 64.0,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 28.93,
+        "still_s_p1": 9.1,
+        "still_s_p2": 28.93,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "LargeSpawner:2.3",
+          "Drop:23.4",
+          "Octopus:2.8",
+          "Box:1.7",
+          "Box:0.4",
+          "Oil:6.7",
+          "Salt:1.1",
+          "Zone:3.4"
+        ],
+        "meters_p1": 44.9,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 16,
+        "retargets": 0,
+        "seconds": 16.03,
+        "still_s_p1": 2.75,
+        "still_s_p2": 16.03,
+        "switches": 0
+      }
+    ],
+    "slots": "floorgap/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S+cachelos",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:9.7",
+          "Drop:12.3",
+          "OctopusStorage:7.8",
+          "Kitchen:3.1",
+          "CachelosStorage:1.8",
+          "Kitchen2:3.9",
+          "Kitchen2:0.3",
+          "CachelosBowl:2.9",
+          "Kitchen:4.4",
+          "Box:4.2",
+          "Drop:0.5",
+          "Box:0.6",
+          "CachelosBowl:16.5",
+          "Oil:1.1",
+          "Zone:4.4"
+        ],
+        "meters_p1": 79.1,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 17,
+        "retargets": 0,
+        "seconds": 31.65,
+        "still_s_p1": 9.53,
+        "still_s_p2": 31.65,
+        "switches": 0
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.9",
+          "Drop:22.9",
+          "Octopus:2.7",
+          "Box:1.7",
+          "Box:0.4",
+          "CachelosBowl:5.8",
+          "Oil:1.1",
+          "Zone:4.4"
+        ],
+        "meters_p1": 44.0,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 15.47,
+        "still_s_p1": 2.35,
+        "still_s_p2": 15.47,
+        "switches": 0
+      }
+    ],
+    "slots": "floorgap/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S",
+    "mode": "switch",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:9.7",
+          "PassSlot01:1.0",
+          "OctopusStorage:0.0",
+          "Kitchen:0.0",
+          "Kitchen:0.0",
+          "PassSlot01:0.0",
+          "PassSlot02:0.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 23.3,
+        "meters_p2": 11.6,
+        "order": 1,
+        "presses": 13,
+        "retargets": 0,
+        "seconds": 15.17,
+        "still_s_p1": 10.43,
+        "still_s_p2": 12.83,
+        "switches": 2
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.9",
+          "PassSlot01:1.0",
+          "Octopus:0.0",
+          "PassSlot01:0.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 15.6,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 6.03,
+        "still_s_p1": 2.87,
+        "still_s_p2": 5.68,
+        "switches": 2
+      }
+    ],
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "M",
+    "mode": "switch",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "MediumSpawner:9.4",
+          "PassSlot01:1.5",
+          "OctopusStorage:0.0",
+          "Kitchen:0.0",
+          "Kitchen:0.0",
+          "PassSlot01:0.0",
+          "PassSlot02:0.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 23.7,
+        "meters_p2": 11.6,
+        "order": 1,
+        "presses": 15,
+        "retargets": 0,
+        "seconds": 15.35,
+        "still_s_p1": 10.57,
+        "still_s_p2": 13.02,
+        "switches": 2
+      },
+      {
+        "completed": true,
+        "legs": [
+          "MediumSpawner:2.1",
+          "PassSlot01:1.5",
+          "Octopus:0.0",
+          "PassSlot01:0.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 16.3,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 6.3,
+        "still_s_p1": 2.98,
+        "still_s_p2": 5.95,
+        "switches": 2
+      }
+    ],
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 10,
+    "delivery_rejections": 0,
+    "kind": "L",
+    "mode": "switch",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "LargeSpawner:9.2",
+          "PassSlot01:2.0",
+          "OctopusStorage:0.0",
+          "Kitchen:0.0",
+          "Kitchen:0.0",
+          "PassSlot01:0.0",
+          "PassSlot02:0.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 23.9,
+        "meters_p2": 11.6,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 15.68,
+        "still_s_p1": 10.83,
+        "still_s_p2": 13.35,
+        "switches": 2
+      },
+      {
+        "completed": true,
+        "legs": [
+          "LargeSpawner:2.3",
+          "PassSlot01:2.0",
+          "Octopus:0.0",
+          "PassSlot01:0.0",
+          "Box:0.3",
+          "Salt:5.6",
+          "Oil:1.1",
+          "Zone:4.3"
+        ],
+        "meters_p1": 17.0,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 16,
+        "retargets": 0,
+        "seconds": 6.72,
+        "still_s_p1": 3.27,
+        "still_s_p2": 6.37,
+        "switches": 2
+      }
+    ],
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
+  },
+  {
+    "cuts": 4,
+    "delivery_rejections": 0,
+    "kind": "S+cachelos",
+    "mode": "switch",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:9.7",
+          "PassSlot01:1.0",
+          "OctopusStorage:0.0",
+          "Kitchen:0.0",
+          "CachelosStorage:0.0",
+          "Kitchen2:0.0",
+          "Kitchen2:0.0",
+          "CachelosBowl:0.0",
+          "Kitchen:0.0",
+          "PassSlot01:0.0",
+          "PassSlot02:0.0",
+          "Box:0.3",
+          "Oil:6.6",
+          "CachelosBowl:1.1",
+          "Zone:5.3"
+        ],
+        "meters_p1": 25.3,
+        "meters_p2": 26.1,
+        "order": 1,
+        "presses": 17,
+        "retargets": 0,
+        "seconds": 19.47,
+        "still_s_p1": 14.33,
+        "still_s_p2": 14.07,
+        "switches": 2
+      },
+      {
+        "completed": true,
+        "legs": [
+          "SmallSpawner:1.9",
+          "PassSlot01:1.0",
+          "Octopus:0.0",
+          "PassSlot01:0.0",
+          "Box:0.3",
+          "Oil:6.6",
+          "CachelosBowl:1.1",
+          "Zone:5.3"
+        ],
+        "meters_p1": 17.6,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 10,
+        "retargets": 0,
+        "seconds": 6.43,
+        "still_s_p1": 2.87,
+        "still_s_p2": 6.08,
+        "switches": 2
+      }
+    ],
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0
   },
   {
     "cuts": 4,
@@ -1054,43 +2164,45 @@
           "PassSlot04:0.0",
           "PassSlot05:0.0",
           "Box:0.3",
-          "Salt:4.6",
-          "Oil:1.0"
+          "Oil:3.6",
+          "Salt:1.0",
+          "Zone:3.4"
         ],
-        "meters_p1": 32.4,
+        "meters_p1": 29.4,
         "meters_p2": 13.8,
         "order": 1,
         "presses": 13,
         "retargets": 0,
-        "seconds": 17.53,
-        "still_s_p1": 10.98,
-        "still_s_p2": 14.75,
+        "seconds": 16.83,
+        "still_s_p1": 10.88,
+        "still_s_p2": 14.05,
         "switches": 2
       },
       {
         "completed": true,
         "legs": [
-          "SmallSpawner:1.3",
+          "SmallSpawner:1.9",
           "PassSlot04:10.1",
           "Octopus:0.0",
           "PassSlot04:0.0",
           "Box:0.3",
-          "Salt:4.6",
-          "Oil:1.0"
+          "Oil:3.6",
+          "Salt:1.0",
+          "Zone:3.4"
         ],
-        "meters_p1": 24.1,
+        "meters_p1": 21.6,
         "meters_p2": 1.7,
         "order": 2,
         "presses": 10,
         "retargets": 0,
-        "seconds": 7.83,
-        "still_s_p1": 2.97,
-        "still_s_p2": 7.48,
+        "seconds": 7.25,
+        "still_s_p1": 2.87,
+        "still_s_p2": 6.9,
         "switches": 2
       }
     ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
   },
   {
     "cuts": 6,
@@ -1109,43 +2221,45 @@
           "PassSlot04:0.0",
           "PassSlot05:0.0",
           "Box:0.3",
-          "Salt:4.5",
-          "Oil:0.9"
+          "Oil:3.5",
+          "Salt:1.1",
+          "Zone:3.4"
         ],
-        "meters_p1": 32.2,
+        "meters_p1": 29.5,
         "meters_p2": 13.8,
         "order": 1,
         "presses": 15,
         "retargets": 0,
-        "seconds": 17.62,
-        "still_s_p1": 11.12,
-        "still_s_p2": 14.83,
+        "seconds": 16.97,
+        "still_s_p1": 11.02,
+        "still_s_p2": 14.18,
         "switches": 2
       },
       {
         "completed": true,
         "legs": [
-          "MediumSpawner:1.7",
+          "MediumSpawner:2.1",
           "PassSlot04:10.3",
           "Octopus:0.0",
           "PassSlot04:0.0",
           "Box:0.3",
-          "Salt:4.5",
-          "Oil:0.9"
+          "Oil:3.5",
+          "Salt:1.1",
+          "Zone:3.4"
         ],
-        "meters_p1": 24.3,
+        "meters_p1": 22.0,
         "meters_p2": 1.7,
         "order": 2,
         "presses": 12,
         "retargets": 0,
-        "seconds": 8.02,
-        "still_s_p1": 3.1,
-        "still_s_p2": 7.67,
+        "seconds": 7.45,
+        "still_s_p1": 2.98,
+        "still_s_p2": 7.1,
         "switches": 2
       }
     ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
   },
   {
     "cuts": 10,
@@ -1164,43 +2278,45 @@
           "PassSlot04:0.0",
           "PassSlot05:0.0",
           "Box:0.3",
-          "Salt:4.6",
-          "Oil:1.0"
+          "Oil:3.6",
+          "Salt:1.1",
+          "Zone:3.3"
         ],
-        "meters_p1": 32.4,
+        "meters_p1": 29.4,
         "meters_p2": 13.8,
         "order": 1,
         "presses": 19,
         "retargets": 0,
-        "seconds": 17.93,
-        "still_s_p1": 11.38,
-        "still_s_p2": 15.15,
+        "seconds": 17.23,
+        "still_s_p1": 11.28,
+        "still_s_p2": 14.45,
         "switches": 2
       },
       {
         "completed": true,
         "legs": [
-          "LargeSpawner:1.8",
+          "LargeSpawner:2.3",
           "PassSlot04:10.5",
           "Octopus:0.0",
           "PassSlot04:0.0",
           "Box:0.3",
-          "Salt:4.5",
-          "Oil:0.9"
+          "Oil:3.5",
+          "Salt:1.1",
+          "Zone:3.4"
         ],
-        "meters_p1": 24.7,
+        "meters_p1": 22.5,
         "meters_p2": 1.7,
         "order": 2,
         "presses": 16,
         "retargets": 0,
-        "seconds": 8.37,
-        "still_s_p1": 3.38,
-        "still_s_p2": 8.02,
+        "seconds": 7.82,
+        "still_s_p1": 3.27,
+        "still_s_p2": 7.47,
         "switches": 2
       }
     ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
   },
   {
     "cuts": 4,
@@ -1223,408 +2339,44 @@
           "PassSlot04:0.0",
           "PassSlot05:0.0",
           "Box:0.3",
-          "Oil:3.6",
-          "CachelosBowl:1.0"
+          "CachelosBowl:2.6",
+          "Oil:1.0",
+          "Zone:4.4"
         ],
-        "meters_p1": 32.4,
+        "meters_p1": 29.4,
         "meters_p2": 28.1,
         "order": 1,
         "presses": 17,
         "retargets": 0,
-        "seconds": 21.38,
-        "still_s_p1": 14.83,
-        "still_s_p2": 15.58,
+        "seconds": 20.68,
+        "still_s_p1": 14.73,
+        "still_s_p2": 14.88,
         "switches": 2
       },
       {
         "completed": true,
         "legs": [
-          "SmallSpawner:1.3",
+          "SmallSpawner:1.9",
           "PassSlot04:10.1",
           "Octopus:0.0",
           "PassSlot04:0.0",
           "Box:0.3",
-          "Oil:3.6",
-          "CachelosBowl:1.0"
+          "CachelosBowl:2.6",
+          "Oil:1.0",
+          "Zone:4.4"
         ],
-        "meters_p1": 24.1,
+        "meters_p1": 21.6,
         "meters_p2": 1.7,
         "order": 2,
         "presses": 10,
         "retargets": 0,
-        "seconds": 7.83,
-        "still_s_p1": 2.97,
-        "still_s_p2": 7.48,
+        "seconds": 7.25,
+        "still_s_p1": 2.87,
+        "still_s_p2": 6.9,
         "switches": 2
       }
     ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S",
-    "mode": "coop",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "SmallSpawner:9.7",
-          "PassSlot04:10.1",
-          "Kitchen:0.3",
-          "PassSlot04:6.9",
-          "Box:0.3",
-          "PassSlot05:1.1",
-          "Salt:4.6",
-          "Oil:1.0"
-        ],
-        "meters_p1": 32.4,
-        "meters_p2": 13.8,
-        "order": 1,
-        "presses": 13,
-        "retargets": 0,
-        "seconds": 11.72,
-        "still_s_p1": 5.17,
-        "still_s_p2": 8.93,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "SmallSpawner:1.3",
-          "PassSlot04:10.1",
-          "PassSlot04:1.0",
-          "Box:0.3",
-          "Salt:4.6",
-          "Oil:1.0"
-        ],
-        "meters_p1": 24.1,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 6.65,
-        "still_s_p1": 1.78,
-        "still_s_p2": 6.3,
-        "switches": 0
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
-  },
-  {
-    "cuts": 6,
-    "delivery_rejections": 0,
-    "kind": "M",
-    "mode": "coop",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "MediumSpawner:9.4",
-          "PassSlot04:10.3",
-          "Kitchen:0.3",
-          "PassSlot04:6.9",
-          "Box:0.3",
-          "PassSlot05:1.1",
-          "Salt:4.5",
-          "Oil:0.9"
-        ],
-        "meters_p1": 32.2,
-        "meters_p2": 13.8,
-        "order": 1,
-        "presses": 15,
-        "retargets": 0,
-        "seconds": 11.8,
-        "still_s_p1": 5.3,
-        "still_s_p2": 9.02,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "MediumSpawner:1.7",
-          "PassSlot04:10.3",
-          "PassSlot04:1.0",
-          "Box:0.3",
-          "Salt:4.5",
-          "Oil:0.9"
-        ],
-        "meters_p1": 24.3,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 12,
-        "retargets": 0,
-        "seconds": 6.83,
-        "still_s_p1": 1.92,
-        "still_s_p2": 6.48,
-        "switches": 0
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
-  },
-  {
-    "cuts": 10,
-    "delivery_rejections": 0,
-    "kind": "L",
-    "mode": "coop",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "LargeSpawner:9.2",
-          "PassSlot04:10.5",
-          "Kitchen:0.3",
-          "PassSlot04:6.9",
-          "Box:0.3",
-          "PassSlot05:1.1",
-          "Salt:4.6",
-          "Oil:1.0"
-        ],
-        "meters_p1": 32.4,
-        "meters_p2": 13.8,
-        "order": 1,
-        "presses": 19,
-        "retargets": 0,
-        "seconds": 12.12,
-        "still_s_p1": 5.57,
-        "still_s_p2": 9.33,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "LargeSpawner:1.8",
-          "PassSlot04:10.5",
-          "PassSlot04:1.0",
-          "Box:0.3",
-          "Salt:4.5",
-          "Oil:0.9"
-        ],
-        "meters_p1": 24.7,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 16,
-        "retargets": 0,
-        "seconds": 7.18,
-        "still_s_p1": 2.2,
-        "still_s_p2": 6.83,
-        "switches": 0
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S+cachelos",
-    "mode": "coop",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "CachelosStorage:1.8",
-          "SmallSpawner:9.7",
-          "Kitchen2:3.9",
-          "PassSlot04:10.1",
-          "Kitchen2:0.3",
-          "CachelosBowl:2.9",
-          "Kitchen:4.3",
-          "PassSlot04:6.8",
-          "Box:0.3",
-          "PassSlot05:1.1",
-          "Oil:3.6",
-          "CachelosBowl:1.0"
-        ],
-        "meters_p1": 32.4,
-        "meters_p2": 28.1,
-        "order": 1,
-        "presses": 17,
-        "retargets": 0,
-        "seconds": 15.57,
-        "still_s_p1": 9.02,
-        "still_s_p2": 9.77,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "SmallSpawner:1.3",
-          "PassSlot04:10.1",
-          "PassSlot04:1.0",
-          "Box:0.3",
-          "Oil:3.6",
-          "CachelosBowl:1.0"
-        ],
-        "meters_p1": 24.1,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 6.65,
-        "still_s_p1": 1.78,
-        "still_s_p2": 6.3,
-        "switches": 0
-      }
-    ],
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S",
-    "mean_orders_2_4": 8.95,
-    "meters_p1_total": 104.6,
-    "meters_p2_total": 40.3,
-    "mode": "chain_seq",
-    "orders": [
-      {
-        "completed": true,
-        "legs": [
-          "OctopusStorage:1.1",
-          "Kitchen:3.1",
-          "SmallSpawner:9.7",
-          "PassSlot04:10.1",
-          "Kitchen:0.3",
-          "PassSlot04:6.9",
-          "Box:0.3",
-          "PassSlot05:1.1",
-          "Salt:4.6",
-          "Oil:1.0"
-        ],
-        "meters_p1": 32.4,
-        "meters_p2": 13.8,
-        "order": 1,
-        "presses": 13,
-        "retargets": 0,
-        "seconds": 11.72,
-        "still_s_p1": 5.17,
-        "still_s_p2": 8.93,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "SmallSpawner:1.3",
-          "PassSlot04:10.1",
-          "PassSlot04:1.0",
-          "Box:0.3",
-          "Salt:4.6",
-          "Oil:1.0"
-        ],
-        "meters_p1": 24.1,
-        "meters_p2": 1.7,
-        "order": 2,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 6.65,
-        "still_s_p1": 1.78,
-        "still_s_p2": 6.3,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "SmallSpawner:1.3",
-          "OctopusStorage:10.1",
-          "PassSlot04:10.1",
-          "Kitchen:3.1",
-          "Kitchen:0.3",
-          "PassSlot04:7.0",
-          "Box:0.3",
-          "PassSlot05:1.1",
-          "Salt:4.6",
-          "Oil:1.0"
-        ],
-        "meters_p1": 24.1,
-        "meters_p2": 23.0,
-        "order": 3,
-        "presses": 13,
-        "retargets": 0,
-        "seconds": 13.55,
-        "still_s_p1": 8.68,
-        "still_s_p2": 8.92,
-        "switches": 0
-      },
-      {
-        "completed": true,
-        "legs": [
-          "Octopus:0.3",
-          "SmallSpawner:1.3",
-          "PassSlot04:10.1",
-          "PassSlot04:1.0",
-          "Box:0.3",
-          "Salt:4.6",
-          "Oil:1.0"
-        ],
-        "meters_p1": 24.1,
-        "meters_p2": 1.7,
-        "order": 4,
-        "presses": 10,
-        "retargets": 0,
-        "seconds": 6.65,
-        "still_s_p1": 1.78,
-        "still_s_p2": 6.3,
-        "switches": 0
-      }
-    ],
-    "presses_total": 46,
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
-  },
-  {
-    "cuts": 4,
-    "delivery_rejections": 0,
-    "kind": "S",
-    "mean_orders_2_4": 6.15,
-    "meters_p1_total": 129.7,
-    "meters_p2_total": 40.1,
-    "mode": "chain_pipe",
-    "orders": [
-      {
-        "at": 12.53,
-        "completed": true,
-        "order": 1,
-        "seconds": 12.53
-      },
-      {
-        "at": 19.35,
-        "completed": true,
-        "order": 2,
-        "seconds": 6.82
-      },
-      {
-        "at": 26.2,
-        "completed": true,
-        "order": 3,
-        "seconds": 6.85
-      },
-      {
-        "at": 30.97,
-        "completed": true,
-        "order": 4,
-        "seconds": 4.77
-      }
-    ],
-    "presses_total": 42,
-    "station_rejections": 0,
-    "slots": "east (PassSlot04 caja / 05 sobrante)"
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0
   }
 ]
