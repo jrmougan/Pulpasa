@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://entities/stations/slot.tscn" id="9_cmrg4"]
 [ext_resource type="PackedScene" path="res://entities/items/box.tscn" id="10_aam0k"]
 [ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="11_l7k0q"]
+[ext_resource type="PackedScene" uid="uid://dikr5arcy4g4q" path="res://assets/models/furniture/counters/pass_1m.glb" id="pass_1m_bar"]
 
 [sub_resource type="Environment" id="Environment_ae2mo"]
 background_mode = 1
@@ -18,6 +19,9 @@ ambient_light_color = Color(0.6, 0.6, 0.65, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qvn7g"]
 size = Vector3(20, 0.2, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_passbar"]
+size = Vector3(1, 1.1, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_sp6j1"]
 size = Vector2(20, 20)
@@ -59,6 +63,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.26, 0)
 [node name="TableWithBox" parent="Stations" unique_id=781638945 instance=ExtResource("9_cmrg4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0, 0)
 initial_item = ExtResource("10_aam0k")
+
+[node name="PassBar_TableWithBox" type="StaticBody3D" parent="Stations"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Stations/PassBar_TableWithBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("BoxShape3D_passbar")
+
+[node name="Model" parent="Stations/PassBar_TableWithBox" instance=ExtResource("pass_1m_bar")]
 
 [node name="Player" parent="." unique_id=370749224 node_paths=PackedStringArray("camera", "items_root") instance=ExtResource("11_l7k0q")]
 camera = NodePath("../CameraRig")
