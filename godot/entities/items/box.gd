@@ -138,7 +138,7 @@ func _cut(ingredient: Ingredient) -> void:
 	_set_open(true)
 	var source: IngredientData = ingredient.data
 	var previous: float = fill
-	_presses = maxi(_presses, roundi(fill * data.presses_to_fill)) + 1
+	_presses = maxi(_presses, floori(fill * data.presses_to_fill + 0.0001)) + 1
 	fill = data.fill_after(_presses)
 	if _presses >= data.presses_to_fill:
 		_ingredient = source
