@@ -1,7 +1,7 @@
 ---
 id: PUL-097
 title: Implementar la estación de condimentos al paso
-status: review
+status: done
 milestone: M3c
 role: gameplay-engineer
 deps: [PUL-092, PUL-093, PUL-094]

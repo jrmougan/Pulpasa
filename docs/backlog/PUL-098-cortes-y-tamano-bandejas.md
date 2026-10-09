@@ -1,7 +1,7 @@
 ---
 id: PUL-098
 title: Aplicar los cortes 4/6/10 y el tamaño legible de las bandejas
-status: review
+status: done
 milestone: M3c
 role: gameplay-engineer
 deps: [PUL-092, PUL-093, PUL-095]
