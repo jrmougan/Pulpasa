@@ -289,3 +289,20 @@ func test_pul104_ac2_two_medium_boxes_spend_exactly_one_octopus() -> void:
 		spent += before - octopus.remaining
 	assert_almost_eq(spent, 100.0, 0.00001, "gasto total exacto")
 	assert_true(octopus.is_queued_for_deletion())
+
+
+## PUL-104: si cambia la talla a mitad de llenado, la caja sigue llenando sin pasarse y el gasto
+## total es el de una caja.
+func test_pul104_mixed_sizes_small_then_large_fill_once_and_spend_one_box() -> void:
+	var box: Box = _box(SMALL)
+	var octopus: Ingredient = _octopus_in_hand(true)
+	assert_true(box.interact(_actor))
+	box.data = LARGE
+	var presses: int = 1
+	while not box.is_full() and presses < 20:
+		assert_true(box.interact(_actor))
+		presses += 1
+	assert_true(box.is_full())
+	assert_eq(box.fill, 1.0)
+	assert_lt(presses, 10, "no repite lo ya llenado")
+	assert_almost_eq(octopus.remaining, 50.0, 0.001, "gasta una caja entera")

@@ -19,7 +19,8 @@ signal seasoning_removed(seasoning: SeasoningData)
 @export var data: BoxData
 
 var is_held: bool = false
-## Llenado 0–1.
+## Llenado 0–1. Estado derivado de `_presses`; `_cut` resincroniza `_presses` desde él por si
+## `fill` o `data` cambiaron por fuera.
 var fill: float = 0.0
 
 var _presses: int = 0
@@ -137,7 +138,7 @@ func _cut(ingredient: Ingredient) -> void:
 	_set_open(true)
 	var source: IngredientData = ingredient.data
 	var previous: float = fill
-	_presses += 1
+	_presses = maxi(_presses, roundi(fill * data.presses_to_fill)) + 1
 	fill = data.fill_after(_presses)
 	if _presses >= data.presses_to_fill:
 		_ingredient = source

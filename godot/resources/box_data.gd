@@ -6,7 +6,7 @@ extends Resource
 @export var display_name: String = ""
 @export var capacity: float = 100.0
 ## Pulsaciones (cortes) que llenan la caja; el llenado por corte es `1 / presses_to_fill`.
-@export var presses_to_fill: int = 1
+@export_range(1, 20) var presses_to_fill: int = 1
 ## Letra de talla («S», «M», «L») que muestran el ticket y el rack (R10).
 @export var short_label: String = ""
 ## Silueta + letra de `assets/textures/ui/box_sizes/`; el mismo recurso en ticket y rack.

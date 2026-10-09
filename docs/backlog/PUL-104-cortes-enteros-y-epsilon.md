@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: []
 orca_task: null
 unity_sources: []
-owns: [godot/resources/box_data.gd, godot/data/boxes/**, godot/entities/items/box.gd, godot/entities/items/ingredient.gd, godot/resources/ingredient_data.gd, godot/tests/unit/test_data_boxes.gd, godot/tests/integration/test_box*.gd, godot/tests/**/test_ingredient*.gd, docs/evidence/PUL-104/**, docs/backlog/PUL-104-cortes-enteros-y-epsilon.md]
+owns: [godot/resources/box_data.gd, godot/data/boxes/**, godot/entities/items/box.gd, godot/entities/items/ingredient.gd, godot/resources/ingredient_data.gd, godot/tests/unit/test_data_boxes.gd, godot/tests/integration/test_box*.gd, godot/tests/**/test_ingredient*.gd*, docs/evidence/PUL-104/**, docs/backlog/PUL-104-cortes-enteros-y-epsilon.md]
 touches_scenes: []
 ---
 
@@ -31,6 +31,6 @@ Tests: AC1 `tests/unit/test_data_boxes.gd` (4/6/10, llena exacto y no antes) y `
 
 ## Evidence
 - `tools/verify.sh` completo en verde (gdformat, gdlint, import, GUT 783 tests, smoke).
-- `fill_per_press` eliminado. Usos fuera de `owns` NO tocados: `godot/resources/ingredient_data.gd:21` (comentario), `docs/evidence/PUL-090/measure_flow.gd`, `docs/evidence/PUL-102/{measure_flow,finding2_fill_rounding}.gd` (scripts de evidencia historicos, ya no ejecutables) y docs de diseno/arch/backlog.
-
+- `fill_per_press` eliminado. Usos no tocados (fuera de `owns`): `docs/evidence/PUL-090/measure_flow.gd`, `docs/evidence/PUL-102/{measure_flow,finding2_fill_rounding}.gd` (scripts de evidencia historicos, ya no ejecutables) y docs de diseno/arch/backlog.
 - `ingredient_data.gd` incorporado a `owns`: comentario de `amount_per_full_box` actualizado a `presses_to_fill`. Los scripts de evidencia historicos (`docs/evidence/PUL-090`, `PUL-102`) y los docs de contratos/diseno siguen nombrando `fill_per_press`; se actualizaran en otra ficha.
+- Revision: `.uid` cubierto por `owns` (`test_ingredient*.gd*`); `Box._cut` resincroniza `_presses` desde `fill`; `presses_to_fill` con `@export_range(1, 20)`; test de mezcla S+L en `test_box.gd`.
