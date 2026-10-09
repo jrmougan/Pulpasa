@@ -16,6 +16,12 @@ const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
 const SLOT_ID: int = 2
 const FAR: Vector3 = Vector3(20, 0, 20)
+const PALETTE: StandPalette = preload("res://data/config/stand_palette.tres")
+const MAT_ON_PATH: String = "res://assets/models/stations/order_stand/delivery_zone_on.tres"
+const MAT_OFF_PATH: String = "res://assets/models/stations/order_stand/delivery_zone_off.tres"
+const ZONE_Z: float = 3.40
+## Ticks a 60 Hz que caben en 0,1 s (R12).
+const LIGHT_TICKS: int = 6
 
 var _bus: Node
 var _service: Node
@@ -398,3 +404,168 @@ func test_review_late_stand_shows_current_order_id() -> void:
 	empty.set_service(_service)
 	_level.add_child(empty)
 	assert_eq((empty.get_node("%OrderLabel") as Label3D).text, "–")
+
+
+# --- PUL-100: zona de entrega iluminada (R12, ADR-003 §9.4) ---
+## Coloca al jugador a `distance` metros del centro de la zona (hacia +Z local), fuera de ella.
+func _stand_at(distance: float) -> void:
+	_player.global_position = _stand.get_node("%DeliveryZone").global_position
+	_player.global_position += Vector3(0, 0, distance)
+	await wait_physics_frames(LIGHT_TICKS)
+
+
+func _frame_material(stand: OrderStand) -> StandardMaterial3D:
+	var frame: MeshInstance3D = stand.find_child("DeliveryFrame", true, false) as MeshInstance3D
+	assert_not_null(frame, "DeliveryFrame del .glb")
+	return frame.get_active_material(0) as StandardMaterial3D
+
+
+func test_pul100_ac1_matching_box_near_zone_lights_it_within_a_tenth_of_a_second() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	assert_false(_stand.is_zone_lit())
+	_box_in_hand(_order_for(SLOT_ID))
+	await _stand_at(1.5)
+	assert_true(_stand.is_zone_lit())
+	assert_signal_not_emitted(_bus, "order_completed", "encender no entrega")
+
+
+func test_pul100_ac1_wrong_box_keeps_zone_off() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	_box_in_hand(null)
+	await _stand_at(1.5)
+	assert_false(_stand.is_zone_lit())
+
+
+func test_pul100_ac1_box_of_another_stand_keeps_zone_off() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var own: OrderData = _order_for(SLOT_ID).data
+	for order: ActiveOrder in _service.get_active_orders():
+		if order.slot_id != SLOT_ID and order.data != own:
+			_box_in_hand(order)
+			await _stand_at(1.5)
+			assert_false(_stand.is_zone_lit())
+			return
+	fail_test("con la semilla 5 hay otra receta en otro puesto")
+
+
+func test_pul100_ac1_no_box_or_other_item_keeps_zone_off() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	await _stand_at(1.5)
+	assert_false(_stand.is_zone_lit(), "sin nada en la mano")
+	var octopus: Ingredient = OCTOPUS_SCENE.instantiate()
+	_level.add_child(octopus)
+	assert_true(_hold.pick_up(octopus))
+	await wait_physics_frames(LIGHT_TICKS)
+	assert_false(_stand.is_zone_lit(), "con un pulpo")
+
+
+func test_pul100_ac1_beyond_two_metres_keeps_zone_off() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	_box_in_hand(_order_for(SLOT_ID))
+	await _stand_at(2.6)
+	assert_false(_stand.is_zone_lit())
+	_player.global_position = _stand.get_node("%DeliveryZone").global_position + Vector3(0, 0, 1.9)
+	await wait_physics_frames(LIGHT_TICKS)
+	assert_true(_stand.is_zone_lit(), "a 1,9 m sí")
+
+
+func test_pul100_ac1_zone_turns_off_when_carrier_leaves() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	_box_in_hand(_order_for(SLOT_ID))
+	await _stand_at(1.5)
+	assert_true(_stand.is_zone_lit())
+	_player.global_position = FAR
+	await wait_physics_frames(LIGHT_TICKS)
+	assert_false(_stand.is_zone_lit())
+
+
+func test_pul100_ac1_zone_turns_off_on_expired_and_reset() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var order: ActiveOrder = _order_for(SLOT_ID)
+	_box_in_hand(order)
+	await _stand_at(1.5)
+	assert_true(_stand.is_zone_lit())
+	_bus.order_expired.emit(order, 0)
+	assert_false(_stand.is_zone_lit(), "caducada: apagada al instante")
+	await wait_physics_frames(LIGHT_TICKS)
+	assert_false(_stand.is_zone_lit(), "y sigue apagada sin comanda")
+	_bus.order_generated.emit(order)
+	await wait_physics_frames(LIGHT_TICKS)
+	assert_true(_stand.is_zone_lit(), "comanda viva otra vez")
+	_bus.orders_reset.emit()
+	assert_false(_stand.is_zone_lit(), "reset")
+
+
+func test_pul100_ac1_zone_turns_off_when_order_is_delivered() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	_box_in_hand(_order_for(SLOT_ID))
+	await _stand_at(1.5)
+	assert_true(_stand.is_zone_lit())
+	assert_true(_stand.interact(_actor))
+	assert_signal_emit_count(_bus, "order_completed", 1)
+	assert_false(_stand.is_zone_lit(), "entregada: apagada")
+
+
+func test_pul100_ac1_lit_frame_uses_stand_colour_in_albedo_and_emission() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var shared_on: StandardMaterial3D = load(MAT_ON_PATH) as StandardMaterial3D
+	var shared_before: Color = shared_on.albedo_color
+	var off: StandardMaterial3D = load(MAT_OFF_PATH) as StandardMaterial3D
+	assert_eq(_frame_material(_stand), off, "apagada: material apagado")
+	_box_in_hand(_order_for(SLOT_ID))
+	await _stand_at(1.5)
+	var lit: StandardMaterial3D = _frame_material(_stand)
+	var expected: Color = PALETTE.color_for(SLOT_ID)
+	assert_ne(lit, shared_on, "material por instancia")
+	assert_eq(lit.albedo_color, expected)
+	assert_eq(lit.emission, expected)
+	assert_true(lit.emission_enabled)
+	assert_eq(shared_on.albedo_color, shared_before, "el .tres compartido no cambia")
+	assert_eq(shared_on.emission, shared_before)
+	_player.global_position = FAR
+	await wait_physics_frames(LIGHT_TICKS)
+	assert_eq(_frame_material(_stand), off)
+
+
+func test_pul100_ac1_each_stand_lights_in_its_own_colour() -> void:
+	var other: OrderStand = STAND_SCENE.instantiate()
+	other.slot_id = 3
+	other.set_bus(_bus)
+	other.set_service(_service)
+	_level.add_child(other)
+	other.position = Vector3(10, 0, 0)
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	_box_in_hand(_order_for(3))
+	_player.global_position = other.get_node("%DeliveryZone").global_position + Vector3(0, 0, 1.5)
+	await wait_physics_frames(LIGHT_TICKS)
+	assert_true(other.is_zone_lit())
+	assert_false(_stand.is_zone_lit(), "la zona de otro puesto no se enciende con esta caja")
+	assert_eq(_frame_material(other).albedo_color, PALETTE.color_for(3))
+	assert_eq(_frame_material(other).emission, PALETTE.color_for(3))
+
+
+func test_pul100_zone_geometry_matches_delivery_mark() -> void:
+	var zone: Area3D = _stand.get_node("%DeliveryZone")
+	assert_almost_eq(zone.position.z, ZONE_Z, 0.001, "centro en Z local 3,40")
+	var shape: BoxShape3D = (zone.get_child(0) as CollisionShape3D).shape as BoxShape3D
+	assert_almost_eq(shape.size.x, 1.45, 0.01)
+	assert_almost_eq(shape.size.z, 1.05, 0.01)
+	var frame: Node3D = _stand.find_child("DeliveryFrame", true, false) as Node3D
+	assert_almost_eq(frame.global_position.z, ZONE_Z, 0.6, "la marca está sobre la zona")
+
+
+func test_pul100_proximity_area_is_two_metre_cylinder_on_player_layer() -> void:
+	var area: Area3D = _stand.get_node("%ProximityArea")
+	var zone: Area3D = _stand.get_node("%DeliveryZone")
+	assert_eq(area.collision_layer, 0)
+	assert_eq(area.collision_mask, 1 << 1, "máscara player")
+	assert_eq(area.global_position, zone.global_position)
+	var shape: CylinderShape3D = (area.get_child(0) as CollisionShape3D).shape as CylinderShape3D
+	assert_almost_eq(shape.radius, 2.0, 0.001)
+
+
+func test_pul100_order_label_sits_on_anchor_order_label() -> void:
+	var anchor: Node3D = _stand.find_child("Anchor_OrderLabel", true, false) as Node3D
+	assert_not_null(anchor)
+	var label: Label3D = _stand.get_node("%OrderLabel")
+	assert_almost_eq(label.global_position.distance_to(anchor.global_position), 0.0, 0.01)
