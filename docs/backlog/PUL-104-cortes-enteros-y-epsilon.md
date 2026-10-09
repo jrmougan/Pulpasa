@@ -1,7 +1,7 @@
 ---
 id: PUL-104
 title: Contar cortes en enteros y agotar ingredientes con épsilon
-status: ready
+status: review
 milestone: M3c
 role: gameplay-engineer
 deps: []
@@ -22,11 +22,13 @@ Hoy la talla M tiene `fill_per_press = 0.16666667` y funciona porque redondea ha
 - El comportamiento visible no cambia: 4/6/10 pulsaciones y un pulpo = 2 cajas.
 
 ## Acceptance
-- [ ] AC1 Given cada talla, When se pulsa N veces (4/6/10), Then la caja está llena y no antes → test
-- [ ] AC2 Given un pulpo y dos cajas M, When se llenan, Then el pulpo se agota y se libera aunque el llenado por corte tenga error de redondeo → test con un valor redondeado a la baja
+- [x] AC1 Given cada talla, When se pulsa N veces (4/6/10), Then la caja está llena y no antes → test
+- [x] AC2 Given un pulpo y dos cajas M, When se llenan, Then el pulpo se agota y se libera aunque el llenado por corte tenga error de redondeo → test con un valor redondeado a la baja
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+Ficheros: `resources/box_data.gd` (+`presses_to_fill: int`, +`fill_after(presses)`, se quita `fill_per_press`), `data/boxes/*.tres` (4/6/10), `entities/items/box.gd` (cuenta `_presses`, llenado = `fill_after`, gasto = diferencia de llenado x `amount_per_full_box`; sin `FULL_EPSILON`), `entities/items/ingredient.gd` (`EMPTY_EPSILON = 0.001` en `take`). Sin señales nuevas.
+Tests: AC1 `tests/unit/test_data_boxes.gd` (4/6/10, llena exacto y no antes) y `tests/integration/test_box.gd` (pulsaciones por talla). AC2 `tests/unit/test_ingredient_epsilon.gd` (12 cortes con 0.1666666, redondeado a la baja, agotan y liberan) y `test_box.gd` (dos cajas M gastan 100 exactos y liberan).
 
 ## Evidence
-(Lo rellena el worker.)
+- `tools/verify.sh` completo en verde (gdformat, gdlint, import, GUT 783 tests, smoke).
+- `fill_per_press` eliminado. Usos fuera de `owns` NO tocados: `godot/resources/ingredient_data.gd:21` (comentario), `docs/evidence/PUL-090/measure_flow.gd`, `docs/evidence/PUL-102/{measure_flow,finding2_fill_rounding}.gd` (scripts de evidencia historicos, ya no ejecutables) y docs de diseno/arch/backlog.

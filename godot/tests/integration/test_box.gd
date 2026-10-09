@@ -276,3 +276,16 @@ func test_pul057_ac2_remove_seasoning() -> void:
 	assert_false(box.remove_seasoning(null))
 	assert_signal_emit_count(box, "seasoning_removed", 1)
 	assert_signal_emit_count(box, "seasoned", 0)
+
+
+## PUL-104 AC2: dos cajas M gastan exactamente un pulpo (sin residuo) y lo liberan.
+func test_pul104_ac2_two_medium_boxes_spend_exactly_one_octopus() -> void:
+	var octopus: Ingredient = _octopus_in_hand(true)
+	var spent: float = 0.0
+	for i: int in 2:
+		var box: Box = _box(MEDIUM)
+		var before: float = octopus.remaining
+		_fill(box)
+		spent += before - octopus.remaining
+	assert_almost_eq(spent, 100.0, 0.00001, "gasto total exacto")
+	assert_true(octopus.is_queued_for_deletion())

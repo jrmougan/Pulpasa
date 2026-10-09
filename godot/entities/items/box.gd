@@ -1,7 +1,7 @@
 class_name Box
 extends RigidBody3D
 ## Caja de pulpo (porta Box.cs sin el modo spawner). Receptor de la interacción contextual
-## (ADR-003 §4): con pulpo cocido en la mano, cada pulsación corta y llena `fill_per_press`
+## (ADR-003 §4): con pulpo cocido en la mano, cada pulsación corta y llena `1 / presses_to_fill`
 ## (D1/D13); con la mano vacía, se coge. Con cualquier otra cosa en la mano consume la pulsación
 ## sin efecto: fuera de la estación ya no se condimenta (D18, feature estacion-condimentos AC12).
 ## La entrega lee `get_contents()`.
@@ -16,14 +16,13 @@ signal seasoned(seasoning: SeasoningData)
 ## `remove_seasoning`). En el intercambio se emite antes que el `seasoned` del nuevo.
 signal seasoning_removed(seasoning: SeasoningData)
 
-## Tolerancia de coma flotante al sumar `fill_per_press` (0,1 × 10 ≠ 1,0 exacto).
-const FULL_EPSILON: float = 0.0001
-
 @export var data: BoxData
 
 var is_held: bool = false
 ## Llenado 0–1.
 var fill: float = 0.0
+
+var _presses: int = 0
 
 var _ingredient: IngredientData
 var _seasonings: Array[SeasoningData] = []
@@ -132,15 +131,17 @@ func _can_cut(ingredient: Ingredient) -> bool:
 	)
 
 
-## Un corte: llena `fill_per_press` y gasta `fill_per_press * amount_per_full_box` de pulpo.
+## Un corte: sube una pulsación entera, llena `fill_after(_presses)` y gasta la diferencia de
+## llenado por `amount_per_full_box`: N cortes llenan exactamente y gastan lo mismo que una caja.
 func _cut(ingredient: Ingredient) -> void:
 	_set_open(true)
 	var source: IngredientData = ingredient.data
-	fill = minf(fill + data.fill_per_press, 1.0)
-	if fill >= 1.0 - FULL_EPSILON:
-		fill = 1.0
+	var previous: float = fill
+	_presses += 1
+	fill = data.fill_after(_presses)
+	if _presses >= data.presses_to_fill:
 		_ingredient = source
-	ingredient.take(data.fill_per_press * source.amount_per_full_box)
+	ingredient.take((fill - previous) * source.amount_per_full_box)
 	if is_instance_valid(_fill_bar):
 		_fill_bar.visible = fill > 0.0 and not is_full()
 		_fill_bar.set_progress(fill)

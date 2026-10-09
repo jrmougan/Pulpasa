@@ -7,6 +7,6 @@
 script = ExtResource("1_box")
 display_name = "Pequeña"
 capacity = 100.0
-fill_per_press = 0.25
+presses_to_fill = 4
 short_label = "S"
 icon = ExtResource("2_icon")

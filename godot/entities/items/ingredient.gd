@@ -8,6 +8,9 @@ extends RigidBody3D
 ## Cada corte, con la cantidad que queda.
 signal amount_changed(remaining: float)
 
+## Resto por debajo del cual el ingrediente cuenta como agotado (error de coma flotante).
+const EMPTY_EPSILON: float = 0.001
+
 @export var data: IngredientData
 ## Material del cuerpo en crudo: las mallas que lo usan cambian a `cooked_material` al cocerse.
 ## Solo si `Model` no trae mallas hermanas por estado (ver `_apply_state_variants`).
@@ -48,13 +51,13 @@ func set_burnt() -> void:
 
 ## Gasta hasta `amount`; devuelve lo gastado. A 0 se libera (B9).
 func take(amount: float) -> float:
-	if remaining <= 0.0 or amount <= 0.0:
+	if remaining <= EMPTY_EPSILON or amount <= 0.0:
 		return 0.0
 	var taken: float = minf(amount, remaining)
 	remaining -= taken
 	amount_changed.emit(remaining)
 	_update_bar()
-	if remaining <= 0.0:
+	if remaining <= EMPTY_EPSILON:
 		remaining = 0.0
 		queue_free()
 	return taken
