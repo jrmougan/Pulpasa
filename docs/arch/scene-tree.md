@@ -216,7 +216,12 @@ cachelos_storage.tscn CachelosStorage (StaticBody3D; grupo interactable)  item_s
                       ├── CollisionShape3D, Model (cachelera), %Highlightable
 spice_shelf.tscn      BAJA en M2b (PUL-061, §7). SpiceShelf con SaltSlot / PaprikaSlot / HotPaprikaSlot
 order_stand.tscn      OrderStand (StaticBody3D; grupo interactable)  order_stand.gd  class_name OrderStand  @export slot_id: int
-                      ├── CollisionShape3D, Model (order_stand)
+                      ├── CollisionShape3D
+                      ├── Model (order_stand.glb + order_stand_model.gd, OrderStandModel)  toldillo del color del puesto;
+                      │   number_label = StandNumber
+                      ├── StandNumber (Label3D)                        número del puesto sobre la placa del mostrador (lo escribe Model)
+                      ├── OutlineHull (Node3D)                         Counter, Awning (MeshInstance3D): casco del resaltado
+                      ├── %Highlightable                               root = OutlineHull
                       ├── %DeliveryZone (Area3D, capa delivery_zone)   body_entered → intenta entregar (B12: también al interactuar)
                       ├── %OrderLabel (Label3D, billboard)             "#id" o "–"  [M3c: sobre la placa papel del modelo, PUL-096]
                       │   [M3c, PUL-100] la marca de la zona es la malla DeliveryFrame dentro de Model (.glb de PUL-096);
@@ -226,7 +231,7 @@ order_stand.tscn      OrderStand (StaticBody3D; grupo interactable)  order_stand
                       ├── %ProximityArea (Area3D, collision_layer 0, máscara player)  [M3c, D23]
                       │   └── CollisionShape3D (cilindro, radio 2,0 m, centrado en la zona; R12). Se mide al borde
                       │       de la cápsula del jugador (radio 0,21): enciende con su centro a ≲ 2,21 m (PUL-100)
-                      └── %OkAudio, %ErrorAudio (AudioStreamPlayer3D)  → M3: un %Feedback (FeedbackPlayer), pulse_target = el puesto:
+                      └── %Feedback (AudioStreamPlayer3D, FeedbackPlayer) [M3; sustituye a %OkAudio/%ErrorAudio], pulse_target = el puesto:
                           deliver_ok (POP), deliver_error (SHAKE), order_new (POP de %OrderLabel, delay), order_expired (SHAKE de %OrderLabel)
 ```
 **Indicador de entrega (M3c, D23, ADR-003 §9.4; PUL-100).** `order_stand.gd` gana

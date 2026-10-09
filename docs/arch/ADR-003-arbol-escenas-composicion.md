@@ -197,7 +197,7 @@ dispensadores y cuenco lo implementen.
 
 #### 8.2 Consumir y rechazar
 `InteractionComponent.interact_pressed()` suelta lo que lleva la mano si el objetivo no consume la
-pulsación. En la estación un rechazo **no debe tirar nada** (AC8: «la mano no cambia»). Regla:
+pulsación y `holder.can_drop_freely()` (§9.5). En la estación un rechazo **no debe tirar nada** (AC8: «la mano no cambia»). Regla:
 - Dispensador: `can_interact(actor)` es `true` solo con `actor.holder` y la mano vacía (**enmienda
   PUL-064, aprobada por el responsable el 2026-10-05**: con algo en la mano no es objetivo —
   `is_reachable_from` devuelve `false`, §8.1—, así que el detector no lo resalta y gana la bandeja o el cuenco; `HAND_BUSY` queda en desuso). Cuenco:
@@ -336,8 +336,9 @@ PUL-100 lo comprueba (o tiñe el toldo desde la paleta).
   nivel). Reparto 3 + 3 (PUL-101): `PassSlot01..03` en x −5,3 / −4,3 / −3,3 y `PassSlot04..06` en
   x 4,7 / 5,7 / 6,7, fuera del tramo de la estación (x −2,4…2,8) y del hueco.
 - Soltar sin objetivo (enmienda PUL-103, implementada en PUL-101; **sustituye** a «se suelta a los
-  pies del portador»): si el punto de soltar (§6: 0,6 m delante y 0,6 m arriba del portador,
-  `PlayerConfig`) cae en un cuerpo de la capa `world` (esfera de 0,2 m: la barra, una pared, el
+  pies del portador»): si el punto de soltar (delante y arriba del portador según
+  `PlayerConfig.drop_forward_offset` / `drop_up_offset`, 0,6 / 0,6 m en
+  `data/config/player_config.tres`; el destino `Items` es el de §6) cae en un cuerpo de la capa `world` (esfera de 0,2 m: la barra, una pared, el
   mostrador de la estación), **no se suelta nada y la mano no cambia** (R11 literal). Contrato:
   - `Holder.can_drop_freely() -> bool` (común; la base devuelve `true`). `HoldComponent` devuelve
     `false` si el punto de soltar está bloqueado por `world`.
