@@ -1,0 +1,13 @@
+
+real S (0.25)                      cortes por caja [4, 4] | pulpo liberado tras 2 cajas: true | resto 0.000000000
+real M (0.16666667)                cortes por caja [6, 6] | pulpo liberado tras 2 cajas: true | resto 0.000000000
+real L (0.1)                       cortes por caja [10, 10] | pulpo liberado tras 2 cajas: true | resto 0.000000000
+variante M (0.1666667)             cortes por caja [6, 6] | pulpo liberado tras 2 cajas: true | resto 0.000000000
+variante M (0.16666667)            cortes por caja [6, 6] | pulpo liberado tras 2 cajas: true | resto 0.000000000
+variante M (0.166666667)           cortes por caja [6, 6] | pulpo liberado tras 2 cajas: true | resto 0.000000000
+variante M (0.16666666)            cortes por caja [6, 6] | pulpo liberado tras 2 cajas: false | resto 0.000004000
+variante M (0.1666666)             cortes por caja [6, 6] | pulpo liberado tras 2 cajas: false | resto 0.000040000
+variante M (0.166666)              cortes por caja [6, 6] | pulpo liberado tras 2 cajas: false | resto 0.000400000
+variante M (0.1666)                cortes por caja [7, 7] | pulpo liberado tras 2 cajas: true | resto 0.000000000
+variante M (0.17)                  cortes por caja [6, 6] | pulpo liberado tras 2 cajas: true | resto 0.000000000
+variante M (0.16)                  cortes por caja [7, 7] | pulpo liberado tras 2 cajas: true | resto 0.000000000
