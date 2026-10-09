@@ -9,9 +9,15 @@
   quemado (§5), equivalencia 2D (§6) y §8 (buses). Lo marcado **M3** lo implementan PUL-069..071.
 - **Enmienda D23** (PUL-093, 2026-10-07, ADR-003 §9), **pendiente de la revisión del producer**:
   estación sin `Tray` y dispensadores/cuenco sobre la caja en la mano (§3), 6 `PassSlot` marcados y
-  hueco de la barra a x ≈ 3,2 (§2), indicador de entrega en `order_stand.tscn` (§3), `BoxData` y
+  hueco de la barra a x ≈ 3,2 (§2; montado en x 2,8…4,2, enmienda PUL-103), indicador de entrega en `order_stand.tscn` (§3), `BoxData` y
   `StandPalette` (§5), bajas (§7). Además recoge `Bulbs` y `Vignette` de `environment.tscn` (PUL-073,
   pendiente del QA de M3b). Lo marcado **M3c** lo implementan PUL-097..PUL-101.
+- **Enmienda PUL-103** (2026-10-09, ADR-003 §9.4–§9.5), **aprobada por el responsable en gate
+  humano**: recoge lo que cambió al implementar M3c. Pasaplatos 3 + 3 y hueco de 1,4 m en x 2,8…4,2
+  (§2, PUL-101), marca de entrega `DeliveryFrame` dentro del `Model` del puesto y radio al borde de
+  la cápsula (§3, PUL-100), colisión de la estación de 5,2 m, raíz de dispensadores y cuenco
+  desplazada respecto al arte y antirrebote con reloj de juego (§3, PUL-097), soltar bloqueado por
+  `world` (ADR-003 §9.5, PUL-101).
 
 Árbol que debe existir al cerrar M0 (fase 8). Rutas relativas a `godot/` (estructura de ADR-001).
 `%Nombre` = nodo con nombre único de escena. Entre corchetes, la fase de M0 en que se crea la
@@ -57,7 +63,7 @@ coordenadas son orientativas: manda `docs/design/level-layouts/gen_layouts.py` c
  1 #..............#
  2 #.b............#     Player2 (b)
  3 #..............#
- 4 #PPPPCCCC.#PP###     M3c (D23): PassSlot01–04 · SeasoningStation (cols 5–8) · hueco x ≈ 3,2 · PassSlot05–06
+ 4 #PPPCCCCCC.PPP##     M3c (D23, PUL-101): PassSlot01–03 · SeasoningStation (x −2,4…2,8) · hueco x 2,8…4,2 · PassSlot04–06
  5 #..............#
  6 B..............#     BoxShelf (pared izquierda del servicio)
  7 B..........a...#     Player1 (a)
@@ -70,13 +76,16 @@ de 2, con el **mismo centro** (x ≈ 0,2), porque la feature pide 4 dispensadore
 centros más el cuenco (≈ 3,6 m útiles). ~~El pasaplatos queda en 9 `Slot` (cols 1–4 y 9–13).~~
 
 **M3c (D23, N-A y B-A; ADR-003 §9.5).** En el dibujo, `P` = `PassSlot`, `C` = estación. El hueco
-de la barra pasa de la col. 14 (x 7,7) a un hueco de ≥ 1 m con **centro x ≈ 3,2** (entre las cols. 9 y 10; en el dibujo, col. 9) y la barra se
-cierra hasta la pared derecha. Hay **exactamente 6** `PassSlot`, cada uno con su marca visible, y
-ningún otro `Slot` en la barra (R11): 4 al oeste de la estación (cols 1–4, como hoy) y 2 al este del
-hueco (orientativo: cols 11–12). Son contrato el número, los nombres `PassSlot01..06`, la marca y
-que fuera de ellos no se deja nada; la posición exacta del hueco y de los dos del este la fija
-`level-layouts.md` (PUL-092) con R14 (rodeo cara de condimentar ↔ cara de pase 6–10 m) y la monta
-PUL-101 (con `level_walker.gd::GAP_X`).
+de la barra pasa de la col. 14 (x 7,7, ahora cerrada) a un hueco de **1,4 m libres, x 2,8…4,2
+(centro 3,5)**, entre el extremo este de la colisión de la estación (x 2,8) y el tramo este de la
+barra, que se cierra hasta la pared derecha (PUL-101; en el dibujo, col. 10). Hay **exactamente 6**
+`PassSlot`, cada uno con su marca visible, y ningún otro `Slot` en la barra (R11), repartidos
+**3 + 3** (PUL-101; enmienda PUL-103, antes «4 + 2»): `PassSlot01..03` al oeste de la estación
+(x −5,3 / −4,3 / −3,3) y `PassSlot04..06` al este del hueco (x 4,7 / 5,7 / 6,7). Los 4 del oeste
+de M2b no caben: la estación mide 5,2 m (x −2,4…2,8) y pisaba el antiguo `PassSlot04` (x −2,3).
+Son contrato el número, los nombres `PassSlot01..06`, la marca y que fuera de ellos no se deja nada
+(ADR-003 §9.5); las posiciones son las de `level_01.tscn` y las prueba `test_level_01.gd` (R11,
+R14: rodeo 7,93 m), con `level_walker.gd::GAP_X` = 3,5.
 
 ```
 Level01 (Node3D)                         scenes/levels/level.gd  (común, extends Node)
@@ -87,18 +96,19 @@ Level01 (Node3D)                         scenes/levels/level.gd  (común, extend
 │                        Vignette y Model (§3) [8; M3b]
 ├── KitchenLayout        entities/environment/kitchen_layout.tscn  suelo 16 × 11, paredes y la barra de la fila 4
 │                        (cols 1–13; hueco de 1 m en la col. 14), todo en la capa world [3/8; M2b]
-│                        M3c (D23): hueco de ≥ 1 m con centro x ≈ 3,2 y barra cerrada hasta la pared derecha;
-│                        umbral del hueco (PUL-095) para que no parezca más barra
+│                        M3c (D23, PUL-101): BarKitchenSide x −5,8…−1,8, hueco libre x 2,8…4,2 (centro 3,5)
+│                        y BarServiceSide x 4,2…8,2 hasta la pared derecha (col. 14 cerrada); umbral
+│                        GapThreshold (pass_threshold, PUL-095) en el hueco para que no parezca más barra
 ├── Stations (Node3D)
 │   ├── OctopusStorage   entities/stations/octopus_storage.tscn    celda (2, 0)  [6]
 │   ├── CachelosStorage  entities/stations/cachelos_storage.tscn   celda (3, 0)  [M1]
 │   ├── Kitchen          entities/stations/kitchen.tscn            celda (5, 0)  [6]
 │   ├── Kitchen2         entities/stations/kitchen.tscn            celda (7, 0)  [M2b] segunda olla de 2 plazas (D9)
-│   ├── PassSlot01..04   entities/stations/slot.tscn               celdas (1..4, 4) pasaplatos, sin initial_item [M2b]
-│   ├── SeasoningStation entities/stations/seasoning_station.tscn  cols 5–8 de la fila 4, centro x ≈ 0,2, z ≈ 0,0;
+│   ├── PassSlot01..03   entities/stations/slot.tscn               x −5,3 / −4,3 / −3,3, z 0 (cols 1–3, fila 4); sin initial_item [M2b; M3c]
+│   ├── SeasoningStation entities/stations/seasoning_station.tscn  fila 4, centro x 0,2, z 0,0; colisión x −2,4…2,8 (M3c);
 │   │                    %PassSide hacia la cocina (z−), %OperatorSide hacia el servicio (z+)  [M2b; sin Tray en M3c]
-│   ├── PassSlot05..06   entities/stations/slot.tscn               al este del hueco (orientativo: celdas (11..12, 4))  [M3c]
-│   │                    (M2b tenía PassSlot05..09 en las celdas (9..13, 4); 07–09 se dan de baja, §7)
+│   ├── PassSlot04..06   entities/stations/slot.tscn               al este del hueco: x 4,7 / 5,7 / 6,7, z 0 (cols 11–13)  [M3c, PUL-101]
+│   │                    (M2b tenía PassSlot01..04 en las cols 1–4 y 05..09 en las cols 9–13; quedan 6, 3 + 3, §7)
 │   │                    Sin overrides de Model/Body: la marca pass_mark es parte de slot.tscn (§3)
 │   ├── BoxShelf         entities/stations/box_shelf.tscn          celdas (0, 6–7), de frente al servicio (+x)  [6; M2b]
 │   ├── OrderStand1      entities/stations/order_stand.tscn  slot_id = 1  celda (3, 10)  [6]
@@ -209,15 +219,20 @@ order_stand.tscn      OrderStand (StaticBody3D; grupo interactable)  order_stand
                       ├── CollisionShape3D, Model (order_stand)
                       ├── %DeliveryZone (Area3D, capa delivery_zone)   body_entered → intenta entregar (B12: también al interactuar)
                       ├── %OrderLabel (Label3D, billboard)             "#id" o "–"  [M3c: sobre la placa papel del modelo, PUL-096]
-                      ├── %DeliveryMark  [M3c, D23]  pieza delivery_zone de PUL-096 en el suelo, sobre %DeliveryZone;
-                      │                  dos estados: apagado / encendido (emisivo en palette.color_for(slot_id))
+                      │   [M3c, PUL-100] la marca de la zona es la malla DeliveryFrame dentro de Model (.glb de PUL-096);
+                      │   no hay nodo %DeliveryMark. order_stand.gd la halla con find_child("DeliveryFrame") y alterna
+                      │   material_override: @export material_off / material_on (encendido: albedo y emisión del color
+                      │   de palette.color_for(slot_id))
                       ├── %ProximityArea (Area3D, collision_layer 0, máscara player)  [M3c, D23]
-                      │   └── CollisionShape3D (cilindro, radio 2,0 m, centrado en la zona; R12)
+                      │   └── CollisionShape3D (cilindro, radio 2,0 m, centrado en la zona; R12). Se mide al borde
+                      │       de la cápsula del jugador (radio 0,21): enciende con su centro a ≲ 2,21 m (PUL-100)
                       └── %OkAudio, %ErrorAudio (AudioStreamPlayer3D)  → M3: un %Feedback (FeedbackPlayer), pulse_target = el puesto:
                           deliver_ok (POP), deliver_error (SHAKE), order_new (POP de %OrderLabel, delay), order_expired (SHAKE de %OrderLabel)
 ```
 **Indicador de entrega (M3c, D23, ADR-003 §9.4; PUL-100).** `order_stand.gd` gana
-`@export var palette: StandPalette = data/config/stand_palette.tres` e `is_zone_lit() -> bool`. La
+`@export var palette: StandPalette = data/config/stand_palette.tres`, `@export var material_off` /
+`material_on` (`delivery_zone_off.tres` / `delivery_zone_on.tres`) e `is_zone_lit() -> bool`. Lo
+que se ilumina es `DeliveryFrame` del `Model`, no un nodo propio (enmienda PUL-103). La
 zona está encendida mientras algún cuerpo de `%ProximityArea` tenga un `%InteractionComponent` cuyo
 `holder` lleve una `Box` que pase `_zone_accepts` (comanda viva del puesto + `OrderValidator.matches`,
 lo mismo que ya decide la entrega sola). Se evalúa en `_physics_process` solo con cuerpos en el
@@ -242,12 +257,13 @@ SeasoningStation (StaticBody3D, capa world; sin grupos)   seasoning_station.gd  
 │   side_of(floor_position: Vector2) -> StationSide.Side       (ADR-003 §8.1)
 │   get_box() -> Box, get_tray() -> Slot                       BAJA en M3c (D23): no hay bandeja
 │   conecta rejected de los 4 dispensadores y del cuenco → %Feedback (season_error) + sacudida del emisor
-├── CollisionShape3D (Box ≈ 4 × 1,1 m)   mostrador: no se cruza
+├── CollisionShape3D (Box 5,2 × 1,1 × 1,12 m, PUL-097)   mostrador, capa world: no se cruza ni se suelta encima
 ├── Model                                placeholder de primitivas (PUL-058) → .glb de PUL-052
 ├── %PassSide (Marker3D)                 en el suelo, centro del pasillo del lado de pase (z− local)
 ├── %OperatorSide (Marker3D)             en el suelo, centro del pasillo del lado de condimentar (z+ local)
 ├── Tray        BAJA en M3c (D23). Era instancia de slot.tscn con accepted_group = &"box"
-├── Dispensers (Node3D)                  fila hacia el lado de condimentar, ≥ 0,9 m entre centros (M3c: ≥ 1,0 m)
+├── Dispensers (Node3D)                  fila hacia el lado de condimentar, ≥ 0,9 m entre centros (M3c: 1,0 m,
+│                                        raíces en x −2 / −1 / 0 / 1, z −0,1; cuenco en x 2, z −0,1)
 │   ├── SweetPaprika  seasoning_dispenser.tscn  seasoning = data/seasonings/paprika.tres
 │   ├── HotPaprika    seasoning_dispenser.tscn  seasoning = data/seasonings/hot_paprika.tres
 │   ├── Salt          seasoning_dispenser.tscn  seasoning = data/seasonings/salt.tres
@@ -266,10 +282,14 @@ SeasoningDispenser (StaticBody3D, capa interactable; grupo interactable)   seaso
 │   can_interact(actor) -> bool   M3c: true si actor.holder lleva una Box; interact(actor) -> bool  siempre consume
 │                     (ADR-003 §8.2): caja a medio cortar → rejected(BOX_NOT_FULL); llena → box.toggle_seasoning
 │                     sobre la caja de la mano (con paprika_swap); la caja sigue en la mano
-│   antirrebote: data.toggle_guard s por dispensador; M3c: reloj de juego (acumulado en _physics_process,
-│                     se congela en pausa), clock: Callable inyectable para tests (sin await)
+│   antirrebote: data.toggle_guard s por dispensador; M3c (PUL-097): reloj de juego (_game_time acumulado en
+│                     _physics_process, se congela en pausa y sigue Engine.time_scale; sin Time.get_ticks_usec),
+│                     clock: Callable inyectable para tests (sin await)
 │   signal rejected(reason: SeasoningRules.Rejection)
 ├── CollisionShape3D, Model (bote fijo del condimento; color de SeasoningData)
+│   [M3c, PUL-097] el Model está en z +0,45 local: la raíz (objetivo del detector) queda 0,45 m hacia el
+│   pase respecto al arte para que las franjas de selección no tengan huecos (R8). Para anclar algo al
+│   arte del dispensador, usar Model, no global_position de la raíz
 └── %Highlightable
 
 cachelos_bowl.tscn
@@ -283,9 +303,10 @@ CachelosBowl (StaticBody3D, capa interactable; grupo interactable)   cachelos_bo
 │             o quemados, caja a medio cortar) false
 │   interact: cachelos cocidos → +data.cachelos_portions_per_item (máx. stock_max) y los libera; caja llena →
 │             alterna cachelos en la caja de la mano (±1 ración; BOWL_EMPTY / BOWL_FULL); antirrebote como el
-│             dispensador
+│             dispensador (reloj de juego propio, _game_time; PUL-097)
 │   signal rejected(reason: SeasoningRules.Rejection); signal stock_changed(stock: int)
-├── CollisionShape3D, Model (cuenco)
+├── CollisionShape3D, Model (cuenco)   [M3c, PUL-097] Model en z +0,25 local: la raíz queda 0,25 m hacia el
+│                                      pase respecto al arte; para anclar algo al cuenco, usar Model
 ├── %Portions (Node3D)   M2b: una malla por ración, visibles según stock. M3c (PUL-094): estados
 │                        Portions0..Portions4 (sub-mallas del .glb); solo es visible Portions<stock>
 └── %Highlightable
@@ -425,7 +446,7 @@ Misma estructura y nombres; cambian el nodo base y los hijos visuales/físicos.
 | `%ActiveIndicator` (aro `MeshInstance3D`) | `Sprite2D` bajo los pies | |
 | `%BadgeRow` (`Sprite3D` billboard sin test de profundidad) | `HBoxContainer` o `Sprite2D` bajo un `Node2D` con `z_index` alto | Misma API `get_shown()` |
 | `%PassSide` / `%OperatorSide` (`Marker3D`) | `Marker2D` | `StationSide.classify` es el mismo (`Vector2`) |
-| `%ProximityArea` (`Area3D`, cilindro 2 m) y `%DeliveryMark` (pieza de suelo) [M3c] | `Area2D` (círculo 2 m) y `Sprite2D` con dos texturas | Misma regla de `is_zone_lit()` y mismo `StandPalette` |
+| `%ProximityArea` (`Area3D`, cilindro 2 m) y la malla `DeliveryFrame` del `Model` [M3c] | `Area2D` (círculo 2 m) y `Sprite2D` con dos texturas | Misma regla de `is_zone_lit()` y mismo `StandPalette` |
 | `Bulbs` (`OmniLight3D`) | `PointLight2D` (opcional) | Estético |
 | `Vignette` (`CanvasLayer` −1 + `TextureRect`) | Igual | Ya es 2D de pantalla |
 
@@ -452,7 +473,7 @@ exacta), `IngredientData.as_seasoning` y la señal local `seasoned`.
 | `SeasoningStation.get_box()`, `get_tray()` | `entities/stations/seasoning_station.gd` | PUL-097 | Dispensador y cuenco leen `actor.holder.get_held_item() as Box` |
 | Dispensador y cuenco con la mano vacía | `seasoning_dispenser.gd`, `cachelos_bowl.gd` (`is_reachable_from`, `can_interact`, `_toggle`) | PUL-097 | Matriz de ADR-003 §9.1 |
 | Antirrebote con reloj de pared (`engine_seconds`, `Time.get_ticks_usec`) | `seasoning_dispenser.gd`, `cachelos_bowl.gd` | PUL-097 | Reloj de juego; `clock` sigue inyectable |
-| `PassSlot07..09` y el hueco de la col. 14 | `level_01.tscn`, `kitchen_layout.tscn` | PUL-101 | Quedan 6 `PassSlot`; hueco a x ≈ 3,2 |
+| `PassSlot07..09` y el hueco de la col. 14 | `level_01.tscn`, `kitchen_layout.tscn` | PUL-101 | Quedan 6 `PassSlot` (3 + 3); hueco x 2,8…4,2 (centro 3,5) |
 | Overrides `Model.visible`/`Body.collision_layer` de los `PassSlot` (QA D9) | `level_01.tscn` | PUL-101 | La marca `pass_mark` va en `slot.tscn` (requiere que PUL-101 tenga `slot.tscn` en `owns`/`touches_scenes`) |
 | Placeholder `table_square` como `Model` del `Slot` | `entities/stations/slot.tscn` | PUL-101 | Lo sustituye `pass_mark` (PUL-095) |
 | Tests de la bandeja | En `owns`: `test_seasoning_station.gd`, `test_cachelos.gd` (PUL-097); `test_level_01.gd`, `level_walker.gd` (`GAP_X`) (PUL-101). **Sin dueño** a 2026-10-07: `test_m2b_station_selection.gd`, `test_m2b_flow.gd`, `test_station_level.gd`, `test_delivery_e2e.gd`, `test_kitchen_flow.gd`, `test_m1_flow.gd`, `test_m2_flow.gd`, `test_parity_smoke.gd` | PUL-097 / PUL-101 (el producer reparte los sin dueño) | Usan `Tray`/`get_tray()`/`get_box()`; se reescriben contra la caja en la mano |
