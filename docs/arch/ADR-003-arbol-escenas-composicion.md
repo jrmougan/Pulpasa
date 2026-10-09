@@ -302,7 +302,7 @@ de PUL-090).
 | `StandPalette` | `color_for(slot_id: int) -> Color` | método | única forma de leerla; la usan `order_ticket.gd` (franja, R13) y `order_stand.gd` (zona encendida). Instancia: `data/config/stand_palette.tres` |
 | `SeasoningStationData` (ya existe) | `cachelos_portions_per_item` / `cachelos_stock_max` | `int` | 1 → **2** / 3 → **4** (R6, D23); `operator_side_only` `true`, `toggle_guard` 0,25, `paprika_swap` `true` sin cambios |
 
-`StandPalette` y `BoxData` solo usan `Color`, `String`, `int` y `Texture2D`: capa común (§0), válidos en
+`StandPalette` y `BoxData` solo usan `Color`, `String`, `int`, `float`, `Texture2D` y `PackedScene`: capa común (§0), válidos en
 3D y 2D. El color del toldo del modelo del puesto (PUL-083/PUL-096) debe coincidir con la paleta;
 PUL-100 lo comprueba (o tiñe el toldo desde la paleta).
 
