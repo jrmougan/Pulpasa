@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-093, PUL-096, PUL-099]
 orca_task: null
 unity_sources: []
-owns: [godot/entities/stations/order_stand.gd, godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand_model.gd, godot/tests/integration/test_order_stand.gd, godot/tests/unit/test_order_stand_model.gd, docs/evidence/PUL-100/**, docs/backlog/PUL-100-zona-entrega-iluminada.md]
+owns: [godot/entities/stations/order_stand.gd, godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand_model.gd, godot/tests/integration/test_order_stand.gd, godot/tests/unit/test_order_stand_model.gd, godot/tests/integration/test_delivery_e2e.gd, docs/evidence/PUL-100/**, docs/backlog/PUL-100-zona-entrega-iluminada.md]
 touches_scenes: [godot/entities/stations/order_stand.tscn]
 ---
 
