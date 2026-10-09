@@ -100,6 +100,9 @@ PUL-090) y en el 2 (con el pulpo sobrante):
 | **Suelo de la cocina junto a las ollas (x −1,3)** | 78,9 | **55** | 41,3 |
 | Suelo de la cocina junto al hueco (x 2,6) | 78,9 | 61,4 | 41,1 |
 
+> La variante «suelo junto al hueco» (`floorgap`) no es determinista: para la misma ruta, el tramo de aceite del pedido 1 da 14,4 / 11,2 / 17,3 m en S / M / L, probablemente porque el bot choca con la caja o el pulpo soltados en x 2,6, z −1,6, en el camino al hueco. Sus 61,4 m no son un dato fiable; la conclusión se apoya en `floor`, que es estable (55,0 / 55,0 / 55,1 m).
+
+
 La ruta que el revisor estimó óptima (caja al suelo junto a la olla: rack → hueco con la caja → suelo →
 nevera → olla → cortar en el suelo → sobrante al suelo → coger la caja → hueco → dispensadores → zona)
 está medida: **55,0 m** (la mejor del bot). Tramos (m): SmallSpawner:9.7, Drop:16.3, OctopusStorage:3.2, Kitchen:3.1, Kitchen:0.3, Box:1.8, Drop:0.5, Box:0.5, Oil:11.1, Salt:1.1, Zone:3.4. Sin los 9,7 m

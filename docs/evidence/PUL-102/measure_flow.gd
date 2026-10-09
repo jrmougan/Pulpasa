@@ -551,8 +551,8 @@ func _solo(recipe: RecipeData, seasonings: Array[SeasoningData], leftover: bool)
 	await _season_and_deliver(w, slot, seasonings)
 
 
-## barra, `interaction_component.gd`), se corta allí, el sobrante se deja en el suelo y la caja
-## se coge de nuevo. `floor` = junto a las ollas (x -1,3); `floorgap` = junto al hueco (x 2,6).
+## La caja se suelta en el suelo de la cocina (R11: fuera de la barra se puede soltar libre, ver
+## `interaction_component.gd`), se corta allí, el sobrante se deja en el suelo y la caja se coge de
 ## nuevo. `floor` = junto a las ollas (x -1,3); `floorgap` = junto al hueco (x 2,6).
 func _solo_floor(
 	w: Walker, recipe: RecipeData, seasonings: Array[SeasoningData], leftover: bool
