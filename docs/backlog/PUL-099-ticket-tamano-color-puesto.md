@@ -8,7 +8,7 @@ deps: [PUL-093, PUL-096, PUL-098]
 orca_task: null
 unity_sources: []
 owns: [godot/ui/tickets/**, godot/resources/stand_palette.gd, godot/resources/stand_palette.gd.uid, godot/data/config/stand_palette.tres, godot/tests/integration/test_order_tickets.gd, docs/evidence/PUL-099/**, docs/backlog/PUL-099-ticket-tamano-color-puesto.md]
-touches_scenes: [godot/ui/tickets/order_ticket.tscn, godot/ui/tickets/order_tickets_panel.tscn]
+touches_scenes: [godot/ui/tickets/order_ticket.tscn, godot/ui/tickets/ticket_entry.tscn]
 ---
 
 ## Target
