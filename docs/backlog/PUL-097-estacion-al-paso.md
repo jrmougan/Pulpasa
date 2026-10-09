@@ -57,3 +57,9 @@ Tests por AC:
 
 ### Ampliación de `owns` (coordinador)
 Se añaden `test_data_integrity.gd` (valores 4 / 2 del cuenco) y `test_level_01.gd` (el recorrido AC4 deja la caja en `PassSlot01` y la recoge desde el lado de servicio; `_station_access` sin bandeja). Con ello `test_level_01` pasa 18/18.
+
+### Correcciones de revisión
+- Antirrebote con reloj de juego (ADR-003 §9.2): `_game_time` acumulado en `_physics_process` de dispensadores y cuenco (`clock` inyectable; `engine_seconds` eliminado). Test: con el árbol en pausa 60 frames físicos no avanza y la guarda no vence.
+- Colisión de selección del dispensador: `BoxShape3D` 0,98 x 0,5 x 0,4 dentro del fondo del mostrador (ya no sobresale ni bloquea al jugador); test de que ninguna forma de dispensador/cuenco sobresale del `BoxShape3D` del mostrador. `target_map.txt` regenerado: franjas idénticas y continuas (>= 1,0 m), a 1,0 m del eje, alcanzable andando.
+- `test_parity_smoke.gd`: aserción del stock final del cuenco (2 raciones por cachelo menos 1 por caja).
+- **Riesgo para PUL-101:** el nodo raíz de los dispensadores (z -0,1) y del cuenco (z -0,1) queda 0,45 / 0,25 m hacia el pase respecto al arte (el `Model` está en los anclajes de PUL-094, z 0,35 / 0,15). Cualquier cosa anclada a `global_position` del dispensador o del cuenco queda desplazada: usar `Model`.

@@ -24,13 +24,18 @@ const DEFAULT_SEASONING: SeasoningData = preload("res://data/seasonings/cachelos
 
 ## Raciones en el cuenco (0..`cachelos_stock_max`).
 var stock: int = 0
-## Segundos actuales; por defecto, el reloj monotónico del motor.
-var clock: Callable = SeasoningDispenser.engine_seconds
+## Segundos de juego actuales; por defecto, `_game_time` (se congela en pausa, ADR-003 §9.2).
+var clock: Callable = func() -> float: return _game_time
 
+var _game_time: float = 0.0
 var _last_change: float = -INF
 
 ## Estados del modelo (`Portions0` = fondo vacío … `Portions4`), uno visible a la vez.
 @onready var _portions: Array[Node3D] = _find_portions()
+
+
+func _physics_process(delta: float) -> void:
+	_game_time += delta
 
 
 func _ready() -> void:

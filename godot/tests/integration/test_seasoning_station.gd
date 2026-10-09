@@ -439,6 +439,30 @@ func test_ac8_other_item_detector_does_not_pick_a_dispenser() -> void:
 	assert_eq(_hold.get_held_item(), cachelos)
 
 
+# --- Reloj de juego (ADR-003 §9.2) ---
+
+
+func test_default_clock_is_game_time_and_freezes_while_paused() -> void:
+	var extra: SeasoningStation = STATION_SCENE.instantiate()
+	extra.position = Vector3(30.0, 0.0, 0.0)
+	_level.add_child(extra)
+	var oil: SeasoningDispenser = extra.get_node("Dispensers/Oil")
+	var box: Box = _held_box()
+	assert_true(oil.interact(_actor))
+	assert_true(box.has_seasoning(OIL))
+	get_tree().paused = true
+	var frozen: float = oil.get("_game_time")
+	await wait_physics_frames(60)
+	assert_eq(float(oil.get("_game_time")), frozen, "congelado en pausa")
+	assert_true(oil.interact(_actor), "consume la pulsación")
+	assert_true(box.has_seasoning(OIL), "la guarda no vence en pausa: no se quita")
+	get_tree().paused = false
+	await wait_physics_frames(30)
+	assert_gt(float(oil.get("_game_time")), frozen, "avanza con el árbol en marcha")
+	assert_true(oil.interact(_actor), "pasada la guarda, alterna")
+	assert_false(box.has_seasoning(OIL))
+
+
 # --- R7 / R8: sin bandeja y franjas continuas ---
 
 
@@ -451,6 +475,25 @@ func test_r7_station_has_no_tray_and_counter_collision_covers_5_2_m() -> void:
 
 ## Los modelos están en los anclajes de PUL-094; el origen de cada objetivo queda 0,45 / 0,25 m
 ## hacia el pase para que las franjas del detector (cono de 30°) sean continuas (R8).
+func test_selection_shapes_stay_inside_the_counter_collision() -> void:
+	var counter: BoxShape3D = (_station.get_node("CollisionShape3D") as CollisionShape3D).shape
+	var half: Vector3 = counter.size / 2.0
+	var parts: Array[Node3D] = [_bowl()]
+	for dispenser: SeasoningDispenser in _dispensers():
+		parts.append(dispenser)
+	for part: Node3D in parts:
+		var body: CollisionShape3D = part.get_node("CollisionShape3D")
+		var extents: Vector3 = Vector3.ZERO
+		if body.shape is BoxShape3D:
+			extents = (body.shape as BoxShape3D).size / 2.0
+		elif body.shape is CylinderShape3D:
+			var cylinder: CylinderShape3D = body.shape as CylinderShape3D
+			extents = Vector3(cylinder.radius, cylinder.height / 2.0, cylinder.radius)
+		var center: Vector3 = _station.to_local(body.global_position)
+		assert_lte(absf(center.x) + extents.x, half.x + 0.0001, "%s en x" % part.name)
+		assert_lte(absf(center.z) + extents.z, half.z + 0.0001, "%s no sobresale en z" % part.name)
+
+
 func test_r7_anchors_place_dispensers_and_bowl_one_meter_apart() -> void:
 	var expected: Dictionary = {"SweetPaprika": -2.0, "HotPaprika": -1.0, "Salt": 0.0, "Oil": 1.0}
 	for node_name: String in expected:

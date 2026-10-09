@@ -7,7 +7,8 @@ extends StaticBody3D
 ## rechazar (p. ej. caja a medio cortar) emite `rejected` sin cambiar nada (ADR-003 §8.2).
 ##
 ## Antirrebote: tras un cambio, otra pulsación antes de `toggle_guard` s se consume en silencio.
-## El reloj es inyectable (`clock`) para probarlo sin esperar.
+## El reloj es de juego (ADR-003 §9.2): `_game_time` suma el delta de `_physics_process`, así que se
+## congela en pausa y sigue `Engine.time_scale`. Es inyectable (`clock`) para probarlo sin esperar.
 
 ## Pulsación consumida sin cambios (signals.md §4). No se emite por el antirrebote.
 signal rejected(reason: SeasoningRules.Rejection)
@@ -15,14 +16,15 @@ signal rejected(reason: SeasoningRules.Rejection)
 @export var seasoning: SeasoningData
 @export var station: SeasoningStation
 
-## Segundos actuales; por defecto, el reloj monotónico del motor.
-var clock: Callable = SeasoningDispenser.engine_seconds
+## Segundos de juego actuales; por defecto, `_game_time`.
+var clock: Callable = func() -> float: return _game_time
 
+var _game_time: float = 0.0
 var _last_change: float = -INF
 
 
-static func engine_seconds() -> float:
-	return Time.get_ticks_usec() / 1_000_000.0
+func _physics_process(delta: float) -> void:
+	_game_time += delta
 
 
 ## Solo con una caja en la mano y desde el lado de condimentar (o los dos con

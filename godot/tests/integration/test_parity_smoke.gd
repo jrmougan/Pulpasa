@@ -21,6 +21,7 @@ const PAUSE_SECONDS: float = 0.5
 ## Margen sobre `cook_time` para esperar la cocción.
 const COOK_MARGIN: float = 3.0
 
+var _expected_stock: int = 0
 var _level: Node
 var _menu: Node
 ## Reloj de los dispensadores y del cuenco: cada pulsación avanza 1 s (antirrebote sin esperas).
@@ -28,6 +29,7 @@ var _now: float = 100.0
 
 
 func before_each() -> void:
+	_expected_stock = 0
 	PhaselessConfig.disable()
 	GameState.set_paused(false)
 
@@ -235,6 +237,9 @@ func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 		# Un cachelo cocido da 2 raciones: se repone cuando el cuenco se vacía (sobra 1 de cada 2).
 		if seasoning.type == SeasoningData.SeasoningType.CACHELOS and bowl.stock == 0:
 			await _restock_bowl_with_cachelos()
+			_expected_stock += 2
+		if seasoning.type == SeasoningData.SeasoningType.CACHELOS:
+			_expected_stock -= 1
 	assert_true(_press(box), "coge la caja llena del pasaplatos")
 	assert_eq(_hold().get_held_item(), box)
 	for seasoning: SeasoningData in order.data.seasonings:
@@ -375,6 +380,9 @@ func test_ac4_twenty_deliveries_leave_no_empty_stands_duplicates_or_ghosts() -> 
 	assert_eq(_alive("Box").size(), 0, "sin cajas fantasma")
 	assert_eq(_alive("Ingredient").size(), 0, "20 cajas = 10 pulpos exactos, sin sobrantes")
 	assert_eq((_level.get_node("Stations/PassSlot01") as Slot).get_item(), null, "pasaplatos libre")
+	var bowl: CachelosBowl = _station().get_node("CachelosBowl") as CachelosBowl
+	assert_eq(bowl.stock, _expected_stock, "cuenco: 2 raciones por cachelo menos 1 por caja")
+	assert_between(bowl.stock, 0, 1, "sobra como mucho una ración")
 	assert_eq(_level.get_node("Items").get_child_count(), 0)
 	assert_null(_hold().get_held_item())
 	assert_false(_kitchen().is_cooking())
