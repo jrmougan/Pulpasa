@@ -22,6 +22,9 @@ func test_ac2_short_label_and_icon_filled() -> void:
 	var icons: Array[Texture2D] = []
 	for id: String in BOXES:
 		var box: BoxData = load("res://data/boxes/%s.tres" % id) as BoxData
+		assert_not_null(box, id)
+		if not box:
+			continue
 		var expected: Dictionary = BOXES[id]
 		assert_eq(box.short_label, expected["label"], id)
 		assert_not_null(box.icon, id)
