@@ -1,7 +1,7 @@
 ---
 id: PUL-103
 title: Enmendar los contratos con lo que cambió al implementar M3c
-status: review
+status: done
 milestone: M3c
 role: godot-architect
 deps: [PUL-101]
