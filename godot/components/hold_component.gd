@@ -6,6 +6,10 @@ extends Holder
 
 ## Capa de física `held` (ADR-003 §5): sin colisión con el portador.
 const HELD_LAYER: int = 1 << 3
+## Capa de física `world` (ADR-003 §5): barra, paredes y estaciones.
+const WORLD_MASK: int = 1
+## Radio (m) con que se comprueba que el punto de soltar está libre de `world`.
+const DROP_CLEARANCE: float = 0.2
 
 ## Punto de sujeción del portador (`%HoldPoint`).
 @export var hold_point: Node3D
@@ -76,7 +80,9 @@ func _current_held() -> Node3D:
 	return _held
 
 
-## 0,6 m delante y 0,6 m arriba del portador (PlayerConfig), con "delante" en el suelo.
+## 0,6 m delante y 0,6 m arriba del portador (PlayerConfig), con "delante" en el suelo. Si ese
+## punto cae dentro de un cuerpo de la capa `world` (la barra, una pared), el objeto se suelta a los
+## pies del portador: nunca queda sobre la barra ni dentro de ella (R11, ADR-003 §9.5).
 func _drop_position() -> Vector3:
 	var cfg: PlayerConfig = config if config != null else PlayerConfig.new()
 	var origin: Vector3 = carrier.global_position if carrier != null else hold_point.global_position
@@ -85,7 +91,23 @@ func _drop_position() -> Vector3:
 		forward = -carrier.global_basis.z
 	forward.y = 0.0
 	forward = forward.normalized() if forward.length_squared() > 0.0 else Vector3.FORWARD
-	return origin + forward * cfg.drop_forward_offset + Vector3.UP * cfg.drop_up_offset
+	var lift: Vector3 = Vector3.UP * cfg.drop_up_offset
+	var ahead: Vector3 = origin + forward * cfg.drop_forward_offset + lift
+	return origin + lift if _is_blocked(ahead) else ahead
+
+
+## Si hay un cuerpo de la capa `world` en `point` (esfera de `DROP_CLEARANCE`).
+func _is_blocked(point: Vector3) -> bool:
+	var anchor: Node3D = carrier if carrier != null else hold_point
+	if anchor == null or not anchor.is_inside_tree():
+		return false
+	var shape: SphereShape3D = SphereShape3D.new()
+	shape.radius = DROP_CLEARANCE
+	var query: PhysicsShapeQueryParameters3D = PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = Transform3D(Basis.IDENTITY, point)
+	query.collision_mask = WORLD_MASK
+	return not anchor.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty()
 
 
 func _freeze(body: Node3D) -> void:

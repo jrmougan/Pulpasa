@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://suspedoanuki" path="res://assets/models/furniture/counters/pass_end.glb" id="m_pass_end"]
 [ext_resource type="PackedScene" uid="uid://bbwbx53mvmhke" path="res://assets/models/furniture/counters/rail_1m.glb" id="m_rail_1m"]
 [ext_resource type="PackedScene" path="res://assets/models/furniture/counters/drain_grate.glb" id="m_drain_grate"]
+[ext_resource type="PackedScene" path="res://assets/models/furniture/counters/pass_threshold.glb" id="m_pass_threshold"]
 [ext_resource type="PackedScene" path="res://assets/models/furniture/counters/counter_props_board.glb" id="m_props_board"]
 [ext_resource type="PackedScene" path="res://assets/models/furniture/counters/counter_props_crock.glb" id="m_props_crock"]
 
@@ -26,7 +27,7 @@ size = Vector2(47.32295, 42.286316)
 size = Vector3(4, 1.1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_seg2"]
-size = Vector3(5, 1.1, 1)
+size = Vector3(4, 1.1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_seg3"]
 size = Vector3(1.5, 1, 1)
@@ -82,7 +83,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, -2.85)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0, 4.4)
 
 [node name="GrateGap" parent="Floor/Grates" instance=ExtResource("m_drain_grate")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 7.7, 0, 2.5)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 3.5, 0, 2.5)
 
 [node name="Bar" type="Node3D" parent="."]
 
@@ -99,11 +100,14 @@ shape = SubResource("BoxShape3D_seg1")
 [node name="pass_2m" parent="Bar/BarKitchenSide/Model" instance=ExtResource("m_pass_2m")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
 
-[node name="pass_2m_2" parent="Bar/BarKitchenSide/Model" instance=ExtResource("m_pass_2m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
+[node name="pass_1m" parent="Bar/BarKitchenSide/Model" instance=ExtResource("m_pass_1m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
+
+[node name="counter_1m" parent="Bar/BarKitchenSide/Model" instance=ExtResource("m_counter_1m")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.5, 0, 0)
 
 [node name="BarServiceSide" type="StaticBody3D" parent="Bar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.7, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2, 0, 0)
 collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Bar/BarServiceSide"]
@@ -112,14 +116,16 @@ shape = SubResource("BoxShape3D_seg2")
 
 [node name="Model" type="Node3D" parent="Bar/BarServiceSide"]
 
-[node name="pass_3m" parent="Bar/BarServiceSide/Model" instance=ExtResource("m_pass_3m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
-
-[node name="pass_1m" parent="Bar/BarServiceSide/Model" instance=ExtResource("m_pass_1m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0)
-
 [node name="pass_end" parent="Bar/BarServiceSide/Model" instance=ExtResource("m_pass_end")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -1.5, 0, 0)
+
+[node name="pass_2m" parent="Bar/BarServiceSide/Model" instance=ExtResource("m_pass_2m")]
+
+[node name="counter_1m" parent="Bar/BarServiceSide/Model" instance=ExtResource("m_counter_1m")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.5, 0, 0)
+
+[node name="GapThreshold" parent="Bar" instance=ExtResource("m_pass_threshold")]
+transform = Transform3D(1.4, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 0)
 
 [node name="BackCounter" type="Node3D" parent="."]
 

@@ -1,11 +1,12 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-024: `level_01.tscn` montado con los autoloads reales; PUL-061: planta B · barra partida
 ## (D19, `docs/design/level-layouts.md`; scene-tree.md §2).
 ##
 ## Cuadrícula de 16 × 11 celdas de 1 m: columna `c` → x = c − 6,3 (centro); fila `r` → z = r − 4,0.
 ## Arriba (z−) la cocina, abajo (z+) el servicio; la barra de la fila 4 los separa y solo se cruza
-## por el hueco de la columna 14. Las posiciones son orientativas (±1 m, AC2 de PUL-061); la cámara
-## sigue siendo la del prototipo (D14).
+## por el hueco de x 2,8…4,2 (D23, PUL-101). Las posiciones son orientativas (±1 m, AC2 de
+## PUL-061); la cámara sigue siendo la del prototipo (D14).
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const LEVEL_SCRIPT: GDScript = preload("res://scenes/levels/level.gd")
@@ -32,10 +33,22 @@ const PLAN: Dictionary[String, Array] = {
 	"Characters/Player1": [11, 7, 0.0],
 	"Characters/Player2": [2, 2, 0.0],
 }
-## Pasaplatos: columnas de la fila 4 (la estación ocupa 5–8 y el hueco es la 14).
-const PASS_COLUMNS: Array[int] = [1, 2, 3, 4, 9, 10, 11, 12, 13]
-const GAP_COLUMN: int = 14
-const BAR_ROW: int = 4
+## Pasaplatos (D23): 3 al oeste de la estación (que ocupa x −2,4…2,8) y 3 al este del hueco.
+const PASS_X: Array[float] = [-5.3, -4.3, -3.3, 4.7, 5.7, 6.7]
+const PASS_COUNT: int = 6
+const PASS_MARK_PATH: String = "res://assets/models/furniture/counters/pass_mark.glb"
+## Estación al paso (5,2 m en x = 0,2) y hueco de la barra (centro 3,5; R14 pide x ∈ [2,7; 3,7]).
+const STATION_MIN_X: float = -2.4
+const GAP_MIN_X: float = 2.8
+const GAP_MAX_X: float = 4.2
+const BAR_Z: float = 0.0
+## R11: ancho mínimo de la marca de un pasaplatos a 1280 × 720 (px).
+const MARK_MIN_PX: float = 18.0
+## R14: rodeo de la cara de condimentar a la cara de pase de la estación (m).
+const DETOUR_MIN: float = 6.0
+const DETOUR_MAX: float = 10.0
+const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
+const SMALL_BOX: BoxData = preload("res://data/boxes/small.tres")
 const CAMERA_PITCH_DEG: float = -37.7
 const CAMERA_SIZE: float = 12.74
 ## Rejilla del recorrido (AC4): paso y límites del suelo jugable (Godot).
@@ -54,7 +67,9 @@ const B_POT_TO_PASS: float = 2.0
 const B_PASS_TO_STATION: float = 1.0
 const B_POT_TO_STATION: float = 2.0
 const B_STATION_TO_STANDS: Array[float] = [5.0, 4.0, 4.0, 5.0]
-const B_EXIT_J2_TO_J1: float = 18.2
+## D23 (PUL-101): el hueco pasa de x 7,7 a x 3,5 y el rodeo de salida a salida baja de 18,2 m a
+## 12,3 m (medido con la rejilla de este test).
+const B_EXIT_J2_TO_J1: float = 12.3
 ## Del centro de una estación a la celda desde la que se usa (la de al lado, 1 m).
 const ACCESS_OFFSET: float = 1.0
 ## Señales del bus que escuchan el nivel y la UI (AC3).
@@ -218,47 +233,175 @@ func test_ac2_positions_and_rotations_follow_planta_b() -> void:
 		)
 
 
-func test_ac2_pass_slots_sit_on_the_bar_without_their_own_table() -> void:
+func test_ac2_pass_slots_sit_on_the_bar_with_their_own_mark() -> void:
 	await _load_level()
-	for i: int in PASS_COLUMNS.size():
+	for i: int in PASS_COUNT:
 		var slot: Slot = _level.get_node("Stations/PassSlot%02d" % (i + 1)) as Slot
 		assert_not_null(slot, "PassSlot%02d" % (i + 1))
-		var expected: Vector2 = _cell_center(PASS_COLUMNS[i], BAR_ROW)
+		var expected: Vector2 = Vector2(PASS_X[i], BAR_Z)
 		assert_lt(_flat(slot.global_position).distance_to(expected), 0.05, slot.name)
+		assert_almost_eq(slot.global_position.y, 0.0, 0.001, "%s sobre el suelo" % slot.name)
 		assert_null(slot.initial_item, "%s sin objeto inicial" % slot.name)
 		assert_eq(slot.accepted_group, &"", "%s acepta cualquier objeto" % slot.name)
-		assert_false(
-			(slot.get_node("Model") as Node3D).visible, "%s: la barra es la mesa" % slot.name
-		)
-		var table: StaticBody3D = slot.get_node("Model/Body") as StaticBody3D
-		assert_eq(table.collision_layer, 0, "%s: la mesa oculta no choca" % slot.name)
+		assert_true((slot.get_node("Model") as Node3D).visible, "%s: marca visible" % slot.name)
 		var anchor: Node3D = slot.get_node("%Anchor")
 		assert_almost_eq(
-			anchor.global_position.y, 1.1, 0.02, "%s: a la altura de la barra" % slot.name
+			anchor.global_position.y, 1.14, 0.02, "%s: a la altura de la barra" % slot.name
 		)
 
 
-func test_ac2_kitchen_layout_bar_blocks_except_the_gap() -> void:
+## R11 (L1): exactamente 6 `PassSlot` con su marca, ninguno en el tramo de la estación ni en el
+## hueco, y ningún otro `Slot` en el nivel.
+func test_r11_exactly_six_marked_pass_slots_outside_station_and_gap() -> void:
 	await _load_level()
-	var layout: Node3D = _level.get_node("KitchenLayout")
-	var bodies: Array[Node] = layout.find_children("*", "StaticBody3D", true, false)
-	assert_gt(bodies.size(), 2, "suelo, barra y paredes")
-	for body: Node in bodies:
-		assert_eq((body as StaticBody3D).collision_layer, 1, "%s en capa world" % body.name)
+	var slots: Array[Node] = _level.find_children("*", "Slot", true, false)
+	assert_eq(slots.size(), PASS_COUNT, "ningún otro Slot en el nivel")
+	var names: Array[String] = []
+	for node: Node in slots:
+		names.append(node.name)
+		var x: float = (node as Node3D).global_position.x
+		assert_true(
+			x < STATION_MIN_X - 0.4 or x > GAP_MAX_X + 0.4,
+			"%s (x %.1f) fuera del tramo de la estación y del hueco" % [node.name, x]
+		)
+		var mark: Node3D = node.get_node("Model") as Node3D
+		assert_eq(mark.scene_file_path, PASS_MARK_PATH, "%s lleva pass_mark" % node.name)
+	names.sort()
+	var expected: Array[String] = []
+	for i: int in PASS_COUNT:
+		expected.append("PassSlot%02d" % (i + 1))
+	assert_eq(names, expected)
+
+
+## R11: cada marca mide >= 18 px de ancho a 1280 × 720 con la cámara real del nivel.
+func test_r11_pass_marks_are_at_least_18_px_with_the_game_camera() -> void:
+	await _load_level_at_project_size()
+	var camera: Camera3D = _level.get_node("CameraRig")
+	for i: int in PASS_COUNT:
+		var slot: Slot = _level.get_node("Stations/PassSlot%02d" % (i + 1)) as Slot
+		var bounds: AABB = AABB()
+		var first: bool = true
+		for mesh: Node in (slot.get_node("Model") as Node).find_children(
+			"*", "MeshInstance3D", true, false
+		):
+			var instance: MeshInstance3D = mesh as MeshInstance3D
+			var box: AABB = instance.global_transform * instance.get_aabb()
+			bounds = box if first else bounds.merge(box)
+			first = false
+		assert_false(first, "%s tiene malla" % slot.name)
+		var left: Vector2 = camera.unproject_position(bounds.position)
+		var right: Vector2 = camera.unproject_position(
+			bounds.position + Vector3(bounds.size.x, 0, 0)
+		)
+		assert_gte(left.distance_to(right), MARK_MIN_PX, "%s: marca estrecha" % slot.name)
+
+
+## R11: con algo en la mano frente a la barra, fuera de los pasaplatos y de la estación, interactuar
+## no deja el objeto sobre la barra ni dentro de ella ni en un `Slot`.
+func test_r11_pressing_in_front_of_the_bar_leaves_nothing_on_it() -> void:
+	await _load_level()
 	var player: Player = _player()
-	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(player)
-	# La fila de la barra está cerrada salvo el hueco de la columna 14.
-	for col: int in range(0, 16):
-		var cell: Vector2i = _cell_of(_cell_center(col, BAR_ROW))
-		if col == GAP_COLUMN:
-			assert_true(reachable.has(cell), "hueco de la barra en la columna 14")
-		else:
-			assert_false(reachable.has(cell), "la barra cierra la columna %d" % col)
-	# Cocina y servicio quedan conectados (por el hueco) desde la salida de J1.
-	var kitchen_exit: Vector2i = _cell_of(
-		_flat(_level.get_node("Characters/Player2").global_position)
-	)
-	assert_true(reachable.has(kitchen_exit), "desde el servicio se llega a la cocina")
+	var actor: InteractionComponent = player.get_node("%InteractionComponent")
+	var hold: Holder = player.get_node("%HoldComponent")
+	var items: Node = _level.get_node("Items")
+	var checked: int = 0
+	var x: float = -5.5
+	while x <= 8.0:
+		for side: float in [1.0, -1.0]:
+			if x > GAP_MIN_X - 0.7 and x < GAP_MAX_X + 0.7:
+				continue
+			player.global_position = Vector3(x, player.global_position.y, BAR_Z + side * 0.85)
+			player.rotation.y = 0.0 if side > 0.0 else PI
+			var box: Box = BOX_SCENE.instantiate()
+			box.data = SMALL_BOX
+			items.add_child(box)
+			assert_true(hold.pick_up(box))
+			await wait_physics_frames(3)
+			var target: Node = _detector(player).get_target()
+			if not (target is Slot or target is SeasoningDispenser or target is CachelosBowl):
+				actor.interact_pressed()
+				checked += 1
+				var at: Vector3 = box.global_position
+				var on_bar: bool = absf(at.z - BAR_Z) < 0.5 and at.y < 1.2
+				assert_false(on_bar, "x %.1f lado %.0f: caja en la barra %s" % [x, side, at])
+				for slot: Node in _level.find_children("*", "Slot", true, false):
+					assert_false((slot as Slot).has_item(), "ningún pasaplatos guarda la caja")
+			box.free()
+			await wait_physics_frames(1)
+		x += 0.5
+	assert_gt(checked, 8, "barrido de la barra fuera de pasaplatos y estación")
+
+
+func test_r11_bar_is_closed_except_the_gap_and_the_old_gap_is_sealed() -> void:
+	await _load_level()
+	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(_player())
+	var x: float = -5.6
+	while x <= 8.0:
+		var cell: Vector2i = _cell_of(Vector2(x, BAR_Z))
+		if x > GAP_MIN_X + 0.35 and x < GAP_MAX_X - 0.35:
+			assert_true(reachable.has(cell), "hueco libre en x %.1f" % x)
+		elif x < GAP_MIN_X - 0.1 or x > GAP_MAX_X + 0.1:
+			assert_false(reachable.has(cell), "la barra cierra x %.1f" % x)
+		x += 0.2
+	assert_false(reachable.has(_cell_of(Vector2(7.7, BAR_Z))), "el hueco antiguo (x 7,7) cerrado")
+
+
+## El hueco libre mide >= 1,0 m entre la estación y la barra del este, y lleva el umbral (PUL-095).
+func test_r14_gap_is_at_least_one_metre_wide_and_has_the_threshold() -> void:
+	await _load_level()
+	var east: StaticBody3D = _level.get_node("KitchenLayout/Bar/BarServiceSide")
+	var station: SeasoningStation = _level.get_node("Stations/SeasoningStation")
+	var station_box: BoxShape3D = (station.get_node("CollisionShape3D") as CollisionShape3D).shape
+	var east_box: BoxShape3D = (east.get_node("CollisionShape3D") as CollisionShape3D).shape
+	var station_end: float = station.global_position.x + station_box.size.x / 2.0
+	var east_start: float = east.global_position.x - east_box.size.x / 2.0
+	assert_gte(east_start - station_end, 1.0, "hueco libre de la barra")
+	var centre: float = (east_start + station_end) / 2.0
+	assert_between(centre, 2.7, 3.7, "centro del hueco")
+	var threshold: Node3D = _level.get_node("KitchenLayout/Bar/GapThreshold") as Node3D
+	assert_not_null(threshold)
+	assert_almost_eq(threshold.global_position.x, centre, 0.3, "umbral en el hueco")
+	assert_almost_eq(threshold.global_position.y, 0.0, 0.001)
+	assert_true(threshold.is_visible_in_tree())
+	assert_eq(threshold.find_children("*", "CollisionObject3D", true, false).size(), 0)
+
+
+## R14 (L2): camino más corto de la cara de condimentar a la cara de pase de la estación.
+func test_r14_detour_from_operator_face_to_pass_face_is_six_to_ten_metres() -> void:
+	await _load_level()
+	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(_player())
+	var station: SeasoningStation = _level.get_node("Stations/SeasoningStation")
+	var operator_face: Array[Vector2] = [
+		_flat((station.get_node("%OperatorSide") as Node3D).global_position)
+	]
+	var pass_face: Array[Vector2] = [
+		_flat((station.get_node("%PassSide") as Node3D).global_position)
+	]
+	var walked: float = _walk_distance(reachable, operator_face, pass_face)
+	gut.p("R14 cara de condimentar -> cara de pase: %.2f m" % walked)
+	assert_between(walked, DETOUR_MIN, DETOUR_MAX, "rodeo de %.2f m" % walked)
+
+
+## Las placas `SizePanel_*` / `SizeFront_*` del rack (PUL-095) sobresalen de su colisión: el jugador
+## no puede quedar dentro de ellas.
+func test_rack_plates_cannot_be_walked_into() -> void:
+	await _load_level()
+	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(_player())
+	var shelf: Node3D = _level.get_node("Stations/BoxShelf")
+	var plates: Array[Node] = shelf.find_children("Size*_*", "MeshInstance3D", true, false)
+	assert_gt(plates.size(), 0, "placas del rack")
+	for node: Node in plates:
+		var plate: MeshInstance3D = node as MeshInstance3D
+		var bounds: AABB = plate.global_transform * plate.get_aabb()
+		for cell: Vector2i in reachable:
+			var pos: Vector2 = _cell_pos(cell)
+			var inside: bool = (
+				pos.x > bounds.position.x
+				and pos.x < bounds.end.x
+				and pos.y > bounds.position.z
+				and pos.y < bounds.end.z
+			)
+			assert_false(inside, "el jugador atraviesa %s en %s" % [plate.name, pos])
 
 
 ## AC2 de PUL-061: recorridos más cortos andando (8 direcciones, sin cortar esquinas) sobre las
@@ -314,7 +457,7 @@ func _front_access(path: String) -> Array[Vector2]:
 ## Celdas de acceso de los pasaplatos por un lado (`side` −1 cocina, +1 servicio).
 func _pass_access(side: float) -> Array[Vector2]:
 	var points: Array[Vector2] = []
-	for i: int in PASS_COLUMNS.size():
+	for i: int in PASS_COUNT:
 		var slot: Node3D = _level.get_node("Stations/PassSlot%02d" % (i + 1))
 		points.append(_flat(slot.global_position) + Vector2(0.0, side * ACCESS_OFFSET))
 	return points
@@ -683,7 +826,7 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 		(hold.get_held_item() as Node).free()
 
 	# Pasaplatos: una caja en cada slot de la barra, dejada desde un lado y recogida desde el otro.
-	for i: int in PASS_COLUMNS.size():
+	for i: int in PASS_COUNT:
 		var slot: Slot = _level.get_node("Stations/PassSlot%02d" % (i + 1))
 		var spawner: Node3D = shelf.get_node(spawners[i % spawners.size()])
 		assert_true(await _reach(player, spawner, reachable), "alcanza %s" % spawner.name)

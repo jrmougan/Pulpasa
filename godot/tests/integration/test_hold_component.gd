@@ -1,3 +1,4 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-012 AC3/AC4: HoldComponent coge y suelta por el contrato `pickable` (B4) y valida
 ## antes de mutar (B5). Usa la escena real del jugador.
@@ -139,6 +140,46 @@ func test_ac3_drop_places_item_in_front_and_above_under_items_root() -> void:
 	var expected: Vector3 = _player.global_position + Vector3(0.6, 0.6, 0.0)
 	assert_almost_eq(item.global_position, expected, Vector3.ONE * 0.001)
 	assert_null(_hold.get_held_item())
+
+
+## PUL-101 (R11, ADR-003 §9.5): frente a un cuerpo de la capa `world` (la barra) no se suelta sobre
+## él ni dentro: el objeto queda a los pies del portador.
+func _add_bar_in_front() -> void:
+	var bar: StaticBody3D = StaticBody3D.new()
+	bar.collision_layer = 1
+	bar.collision_mask = 0
+	var shape: CollisionShape3D = CollisionShape3D.new()
+	var box: BoxShape3D = BoxShape3D.new()
+	box.size = Vector3(4.0, 1.1, 1.0)
+	shape.shape = box
+	bar.add_child(shape)
+	_items_root.get_parent().add_child(bar)
+	# El jugador (1, 0, 2) mira a −Z por defecto: la barra queda a 0,6 m por delante.
+	bar.global_position = Vector3(1.0, 0.55, 1.4)
+
+
+func test_r11_drop_in_front_of_a_world_body_lands_at_the_feet() -> void:
+	_add_bar_in_front()
+	await wait_physics_frames(2)
+	var item: CountingPickable = _make_pickable()
+	_hold.pick_up(item)
+	assert_eq(_hold.drop(), item)
+	var expected: Vector3 = _player.global_position + Vector3(0.0, 0.6, 0.0)
+	assert_almost_eq(item.global_position, expected, Vector3.ONE * 0.001, "a los pies")
+	assert_eq(item.get_parent(), _items_root)
+	assert_eq(item.dropped_calls, 1)
+
+
+func test_r11_drop_in_front_of_free_floor_is_unchanged() -> void:
+	_add_bar_in_front()
+	await wait_physics_frames(2)
+	var item: CountingPickable = _make_pickable()
+	_player.rotation.y = PI  # de espaldas a la barra
+	_hold.pick_up(item)
+	_hold.drop()
+	assert_almost_eq(
+		item.global_position, _player.global_position + Vector3(0.0, 0.6, 0.6), Vector3.ONE * 0.001
+	)
 
 
 func test_ac3_drop_calls_on_dropped_once_and_restores_physics() -> void:
