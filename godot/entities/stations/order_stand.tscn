@@ -7,12 +7,19 @@
 [ext_resource type="Script" path="res://components/highlightable.gd" id="6_hl"]
 [ext_resource type="Script" path="res://entities/stations/order_stand_model.gd" id="7_view"]
 [ext_resource type="Script" path="res://components/feedback_player.gd" id="8_fb"]
+[ext_resource type="Resource" path="res://data/config/stand_palette.tres" id="9_pal"]
+[ext_resource type="Material" path="res://assets/models/stations/order_stand/delivery_zone_off.tres" id="10_off"]
+[ext_resource type="Material" path="res://assets/models/stations/order_stand/delivery_zone_on.tres" id="11_on"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_body"]
 size = Vector3(1.482, 0.975, 0.39)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_zone"]
-size = Vector3(1.404, 0.975, 1.56)
+size = Vector3(1.45, 0.975, 1.05)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_proximity"]
+height = 1.0
+radius = 2.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_hull_counter"]
 size = Vector3(1.36, 0.93, 0.4)
@@ -24,6 +31,9 @@ size = Vector3(1.46, 0.02, 0.61)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("1_script")
+palette = ExtResource("9_pal")
+material_off = ExtResource("10_off")
+material_on = ExtResource("11_on")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4875, 0)
@@ -61,16 +71,27 @@ root = NodePath("../OutlineHull")
 
 [node name="DeliveryZone" type="Area3D" parent="."]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.4)
 collision_layer = 16
 collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeliveryZone"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4875, 1.17)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4875, 0)
 shape = SubResource("BoxShape3D_zone")
+
+[node name="ProximityArea" type="Area3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.4)
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ProximityArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_proximity")
 
 [node name="OrderLabel" type="Label3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.755, -0.0878)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.905, -0.23)
 billboard = 1
 no_depth_test = true
 modulate = Color(0.20392157, 0.1882353, 0.18039216, 1)

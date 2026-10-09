@@ -8,6 +8,9 @@ extends StaticBody3D
 ## `EventBus`. Cada hecho de su `slot_id` suena y se ve en `%Feedback` (ADR-006 §4): entrega
 ## correcta (`POP` del puesto) y errónea (`SHAKE`), nueva comanda y caducada (sobre el label).
 ## La comanda viva y el label salen de esas señales, sin consultar sistemas (B16).
+## Zona iluminada (PUL-100, R12, ADR-003 §9.4): `%DeliveryMark` de PUL-096 (`DeliveryFrame` del
+## modelo) se enciende con el color del puesto (`palette`, en `albedo_color` y `emission`) mientras
+## un portador a ≤ 2,0 m (`%ProximityArea`) lleva una caja que la zona aceptaría. No entrega nada.
 ## Contrato `interactable` (ADR-003 §4).
 
 ## Texto del label cuando el puesto no tiene comanda.
@@ -15,6 +18,12 @@ const EMPTY_LABEL: String = "–"
 
 ## Puesto de comandas al que entrega (`deliverySlotId`).
 @export var slot_id: int = 1
+
+## Color de cada puesto (D23, R13).
+@export var palette: StandPalette
+## Materiales de la marca de entrega (PUL-096): apagado (compartido) y encendido (se duplica).
+@export var material_off: Material
+@export var material_on: Material
 
 var _bus: Node
 var _service: Node
@@ -27,8 +36,12 @@ var _order: ActiveOrder
 ## Tick de física en que caducó la comanda de este puesto: en ese tick la zona no entrega a la
 ## repuesta, aunque sea la misma receta (AC5b: la entrega de ese tick va a la caducada).
 var _expired_frame: int = -1
+var _frame: MeshInstance3D
+var _lit_material: StandardMaterial3D
+var _lit: bool = false
 
 @onready var _zone: Area3D = %DeliveryZone
+@onready var _proximity: Area3D = %ProximityArea
 @onready var _label: Label3D = %OrderLabel
 @onready var _feedback: FeedbackPlayer = %Feedback
 
@@ -46,6 +59,7 @@ func _ready() -> void:
 	_bus.delivery_rejected.connect(_on_delivery_rejected)
 	_zone.body_entered.connect(_on_body_entered)
 	_rebuild_label()
+	_setup_delivery_mark()
 
 
 ## Inyecta el bus (tests). Llamar antes de añadir el nodo al árbol; por defecto, el autoload.
@@ -58,6 +72,11 @@ func set_service(service: Node) -> void:
 	_service = service
 
 
+## `true` si la marca de entrega está encendida (para tests).
+func is_zone_lit() -> bool:
+	return _lit
+
+
 func can_interact(actor: InteractionComponent) -> bool:
 	return _held_box(actor.holder if actor != null else null) != null
 
@@ -68,6 +87,41 @@ func interact(actor: InteractionComponent) -> bool:
 		return false
 	_try_deliver(actor.holder)
 	return true
+
+
+func _setup_delivery_mark() -> void:
+	_frame = find_child("DeliveryFrame", true, false) as MeshInstance3D
+	var on: StandardMaterial3D = material_on as StandardMaterial3D
+	if on != null:
+		_lit_material = on.duplicate() as StandardMaterial3D
+		var color: Color = palette.color_for(slot_id) if palette != null else on.albedo_color
+		_lit_material.albedo_color = color
+		_lit_material.emission = color
+	_apply_lit(false)
+
+
+func _physics_process(_delta: float) -> void:
+	_apply_lit(_carrier_in_range())
+
+
+## Algún cuerpo a ≤ 2,0 m lleva una caja que `_zone_accepts` daría por buena.
+func _carrier_in_range() -> bool:
+	for body: Node3D in _proximity.get_overlapping_bodies():
+		var actor: InteractionComponent = (
+			body.get_node_or_null(^"%InteractionComponent") as InteractionComponent
+		)
+		if actor == null:
+			continue
+		var box: Box = _held_box(actor.holder)
+		if box != null and _zone_accepts(box):
+			return true
+	return false
+
+
+func _apply_lit(lit: bool) -> void:
+	_lit = lit
+	if _frame != null:
+		_frame.material_override = _lit_material if lit else material_off
 
 
 func _held_box(holder: Holder) -> Box:
@@ -111,6 +165,8 @@ func _rebuild_label() -> void:
 
 func _set_order(order: ActiveOrder) -> void:
 	_order = order
+	if order == null:
+		_apply_lit(false)
 	_label.text = EMPTY_LABEL if order == null else "#%d" % order.id
 
 
