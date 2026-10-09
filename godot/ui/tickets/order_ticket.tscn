@@ -26,6 +26,13 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
+[node name="Stripe" type="ColorRect" parent="Content" unique_id=1630399800]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.5, 0.5, 0.5, 1)
+
 [node name="Header" type="PanelContainer" parent="Content" unique_id=1630399830]
 layout_mode = 2
 mouse_filter = 2
