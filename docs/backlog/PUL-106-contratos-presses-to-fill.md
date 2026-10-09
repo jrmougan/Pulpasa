@@ -1,7 +1,7 @@
 ---
 id: PUL-106
 title: Enmendar contratos y diseño con presses_to_fill
-status: draft
+status: ready
 milestone: M3c
 role: godot-architect
 deps: [PUL-104]
