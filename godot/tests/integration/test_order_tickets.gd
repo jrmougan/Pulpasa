@@ -1,3 +1,4 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-020: tickets integrados con un servicio real y un bus aislado.
 ## PUL-086: estética de referencia (reloj de 7 segmentos, aviso de paciencia, sal clara).
@@ -14,6 +15,7 @@ const SWEET: SeasoningData = preload("res://data/seasonings/paprika.tres")
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const SMALL_BOX: BoxData = preload("res://data/boxes/small.tres")
+const PALETTE: StandPalette = preload("res://data/config/stand_palette.tres")
 const THEME: Theme = preload("res://ui/theme/default_theme.tres")
 
 var _bus: Node
@@ -305,3 +307,57 @@ func _entry_with(seasoning: SeasoningData) -> TicketEntry:
 	data.seasonings = [seasoning] as Array[SeasoningData]
 	entry.setup(data)
 	return entry
+
+
+func test_pul099_palette_has_the_four_awning_colors_and_fallback() -> void:
+	var palette: StandPalette = PALETTE
+	assert_eq(palette.color_for(1).to_html(false), "d2473f")
+	assert_eq(palette.color_for(2).to_html(false), "3f7cc8")
+	assert_eq(palette.color_for(3).to_html(false), "e8c23a")
+	assert_eq(palette.color_for(4).to_html(false), "4fa05a")
+	assert_eq(palette.color_for(0), palette.fallback)
+	assert_eq(palette.color_for(5), palette.fallback)
+
+
+func test_pul099_ac1_r10_medium_box_ticket_shows_icon_and_letter_before_recipe() -> void:
+	var medium: BoxData = load("res://data/boxes/medium.tres")
+	var entry: TicketEntry = ENTRY_SCENE.instantiate()
+	add_child_autofree(entry)
+	var data: OrderData = OrderData.new()
+	data.recipe = RecipeData.new()
+	data.recipe.display_name = "Pulpo"
+	data.recipe.box = medium
+	entry.setup(data)
+	assert_eq((entry.get_node("%SizeLabel") as Label).text, "M")
+	assert_eq((entry.get_node("%SizeIcon") as TextureRect).texture, medium.icon)
+	assert_not_null(medium.icon)
+	var badge: Node = entry.get_node("%SizeBadge")
+	assert_eq(badge.get_parent(), entry.get_node("%Recipe").get_parent())
+	assert_lt(badge.get_index(), entry.get_node("%Recipe").get_index(), "talla antes del nombre")
+	assert_lt(entry.get_node("%SizeIcon").get_index(), entry.get_node("%SizeLabel").get_index())
+
+
+func test_pul099_ticket_without_box_hides_size() -> void:
+	var entry: TicketEntry = _entry_with(SALT)
+	assert_false((entry.get_node("%SizeBadge") as Control).visible)
+
+
+func test_pul099_every_live_ticket_size_matches_its_recipe_box() -> void:
+	_mount()
+	_fill()
+	for order: ActiveOrder in _service.get_active_orders():
+		var entry: TicketEntry = _ticket(order.id).get_node("%Entry")
+		assert_eq((entry.get_node("%SizeLabel") as Label).text, order.data.recipe.box.short_label)
+		assert_eq((entry.get_node("%SizeIcon") as TextureRect).texture, order.data.recipe.box.icon)
+
+
+func test_pul099_ac2_r13_four_live_orders_stripe_is_stand_color() -> void:
+	_mount()
+	_fill()
+	var palette: StandPalette = PALETTE
+	var seen: Dictionary[int, bool] = {}
+	for order: ActiveOrder in _service.get_active_orders():
+		var stripe: ColorRect = _ticket(order.id).get_node("%Stripe")
+		assert_eq(stripe.color, palette.color_for(order.slot_id), "slot %d" % order.slot_id)
+		seen[order.slot_id] = true
+	assert_eq(seen.size(), 4, "cuatro puestos distintos")

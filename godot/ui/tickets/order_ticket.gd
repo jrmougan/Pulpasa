@@ -7,10 +7,14 @@ extends PanelContainer
 const BLINK_PERIOD: float = 0.5
 const BLINK_MIN_ALPHA: float = 0.35
 
+## Color del puesto (franja superior, R13); el puesto lo lee de la misma paleta (PUL-100).
+const PALETTE: StandPalette = preload("res://data/config/stand_palette.tres")
+
 var order_id: int = -1
 var _bus: Node
 var _low: bool = false
 
+@onready var _stripe: ColorRect = %Stripe
 @onready var _bar: TextureProgressBar = %PatienceBar
 @onready var _clock: Label = %Clock
 
@@ -33,6 +37,7 @@ func set_bus(bus: Node) -> void:
 func setup(order: ActiveOrder) -> void:
 	order_id = order.id
 	%OrderId.text = _text("TICKET_ID_FORMAT", "#%d") % order_id
+	_stripe.color = PALETTE.color_for(order.slot_id)
 	%Entry.setup(order.data)
 	_show_patience(false)
 

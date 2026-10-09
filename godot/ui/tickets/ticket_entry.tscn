@@ -13,9 +13,35 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="Recipe" type="Label" parent="Details" unique_id=1350993805]
+[node name="RecipeRow" type="HBoxContainer" parent="Details" unique_id=1350993800]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="SizeBadge" type="HBoxContainer" parent="Details/RecipeRow" unique_id=1350993801]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="SizeIcon" type="TextureRect" parent="Details/RecipeRow/SizeBadge" unique_id=1350993802]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SizeLabel" type="Label" parent="Details/RecipeRow/SizeBadge" unique_id=1350993803]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+vertical_alignment = 1
+
+[node name="Recipe" type="Label" parent="Details/RecipeRow" unique_id=1350993805]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
 theme_override_font_sizes/font_size = 19
 
 [node name="SeasoningIcons" type="HBoxContainer" parent="Details" unique_id=869064649]

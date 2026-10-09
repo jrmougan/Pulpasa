@@ -1,6 +1,7 @@
 class_name TicketEntry
 extends HBoxContainer
-## Receta en texto y una pegatina por condimento en orden canónico (M1, PUL-030/031; PUL-060).
+## Talla de caja, receta en texto y una pegatina por condimento en orden canónico
+## (M1, PUL-030/031; PUL-060; talla: PUL-099).
 
 ## Mismo estilo que la fila de pegatinas de la caja: tamaño y marca de llama (D18).
 const BADGE_STYLE: BoxBadgeStyle = preload("res://data/config/box_badges.tres")
@@ -12,6 +13,7 @@ const MARK_FRACTION: float = 0.5
 
 func setup(data: OrderData) -> void:
 	%Recipe.text = ""
+	%SizeBadge.visible = false
 	for child: Node in %SeasoningIcons.get_children():
 		%SeasoningIcons.remove_child(child)
 		child.queue_free()
@@ -19,8 +21,20 @@ func setup(data: OrderData) -> void:
 		return
 	if data.recipe != null:
 		%Recipe.text = _translated(data.recipe.translation_key, data.recipe.display_name)
+		_show_size(data.recipe.box)
 	for seasoning: SeasoningData in SeasoningRules.canonical_order(data.seasonings):
 		%SeasoningIcons.add_child(_make_seasoning_widget(seasoning))
+
+
+## Silueta y letra de talla del mismo `BoxData` que el rack (R10).
+func _show_size(box: BoxData) -> void:
+	if box == null or (box.icon == null and box.short_label.is_empty()):
+		return
+	%SizeIcon.texture = box.icon
+	%SizeIcon.visible = box.icon != null
+	%SizeLabel.text = box.short_label
+	%SizeLabel.visible = not box.short_label.is_empty()
+	%SizeBadge.visible = true
 
 
 func _make_seasoning_widget(seasoning: SeasoningData) -> Control:
