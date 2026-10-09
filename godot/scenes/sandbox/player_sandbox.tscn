@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://entities/player/sandbox/sandbox_item.tscn" id="6_u34tm"]
 [ext_resource type="PackedScene" path="res://entities/stations/slot.tscn" id="7_46odq"]
 [ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="8_efnlh"]
+[ext_resource type="PackedScene" uid="uid://dikr5arcy4g4q" path="res://assets/models/furniture/counters/pass_1m.glb" id="pass_1m_bar"]
 
 [sub_resource type="Environment" id="Environment_ae2mo"]
 background_mode = 1
@@ -17,6 +18,9 @@ ambient_light_color = Color(0.6, 0.6, 0.65, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qvn7g"]
 size = Vector3(20, 0.2, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_passbar"]
+size = Vector3(1, 1.1, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_sp6j1"]
 size = Vector2(20, 20)
@@ -62,6 +66,26 @@ initial_item = ExtResource("6_u34tm")
 
 [node name="EmptySlot" parent="Stations" unique_id=398200472 instance=ExtResource("7_46odq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, -1.8)
+
+[node name="PassBar_SlotWithItem" type="StaticBody3D" parent="Stations"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0, -1.8)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Stations/PassBar_SlotWithItem"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("BoxShape3D_passbar")
+
+[node name="Model" parent="Stations/PassBar_SlotWithItem" instance=ExtResource("pass_1m_bar")]
+
+[node name="PassBar_EmptySlot" type="StaticBody3D" parent="Stations"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, -1.8)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Stations/PassBar_EmptySlot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("BoxShape3D_passbar")
+
+[node name="Model" parent="Stations/PassBar_EmptySlot" instance=ExtResource("pass_1m_bar")]
 
 [node name="Player" parent="." unique_id=370749224 node_paths=PackedStringArray("camera", "items_root") instance=ExtResource("8_efnlh")]
 camera = NodePath("../CameraRig")
