@@ -1,0 +1,13 @@
+
+real S (0.25)                  cortes [4, 4] | fill de cada caja [1.0, 1.0] | pulpo liberado: true | resto 0.000000000
+real M (0.16666667)            cortes [6, 6] | fill de cada caja [1.0, 1.0] | pulpo liberado: true | resto 0.000000000
+real L (0.1)                   cortes [10, 10] | fill de cada caja [1.0, 1.0] | pulpo liberado: true | resto 0.000000000
+variante M (0.1666667)         cortes [6, 6] | fill de cada caja [1.0, 1.0] | pulpo liberado: true | resto 0.000000000
+variante M (0.16666667)        cortes [6, 6] | fill de cada caja [1.0, 1.0] | pulpo liberado: true | resto 0.000000000
+variante M (0.166666667)       cortes [6, 6] | fill de cada caja [1.0, 1.0] | pulpo liberado: true | resto 0.000000000
+variante M (0.16666666)        cortes [6, 6] | fill de cada caja [1.0, 1.0] | pulpo liberado: false | resto 0.000004000
+variante M (0.1666666)         cortes [6, 6] | fill de cada caja [1.0, 1.0] | pulpo liberado: false | resto 0.000040000
+variante M (0.166666)          cortes [6, 6] | fill de cada caja [1.0, 1.0] | pulpo liberado: false | resto 0.000400000
+variante M (0.1666)            cortes [7, 6] | fill de cada caja [1.0, 0.9996] | pulpo liberado: true | resto 0.000000000
+variante M (0.17)              cortes [6, 6] | fill de cada caja [1.0, 1.0] | pulpo liberado: true | resto 0.000000000
+variante M (0.16)              cortes [7, 6] | fill de cada caja [1.0, 0.96] | pulpo liberado: true | resto 0.000000000
