@@ -7,6 +7,6 @@
 script = ExtResource("1_box")
 display_name = "Mediana"
 capacity = 100.0
-fill_per_press = 0.16666667
+presses_to_fill = 6
 short_label = "M"
 icon = ExtResource("2_icon")

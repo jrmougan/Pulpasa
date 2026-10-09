@@ -276,3 +276,51 @@ func test_pul057_ac2_remove_seasoning() -> void:
 	assert_false(box.remove_seasoning(null))
 	assert_signal_emit_count(box, "seasoning_removed", 1)
 	assert_signal_emit_count(box, "seasoned", 0)
+
+
+## PUL-104 AC2: dos cajas M gastan exactamente un pulpo (sin residuo) y lo liberan.
+func test_pul104_ac2_two_medium_boxes_spend_exactly_one_octopus() -> void:
+	var octopus: Ingredient = _octopus_in_hand(true)
+	var spent: float = 0.0
+	for i: int in 2:
+		var box: Box = _box(MEDIUM)
+		var before: float = octopus.remaining
+		_fill(box)
+		spent += before - octopus.remaining
+	assert_almost_eq(spent, 100.0, 0.00001, "gasto total exacto")
+	assert_true(octopus.is_queued_for_deletion())
+
+
+## PUL-104: si cambia la talla a mitad de llenado, la caja sigue llenando sin pasarse y el gasto
+## total es el de una caja.
+func test_pul104_resync_presses_when_data_changes() -> void:
+	var box: Box = _box(SMALL)
+	var octopus: Ingredient = _octopus_in_hand(true)
+	assert_true(box.interact(_actor))
+	box.data = LARGE
+	var presses: int = 1
+	while not box.is_full() and presses < 20:
+		assert_true(box.interact(_actor))
+		presses += 1
+	assert_true(box.is_full())
+	assert_eq(box.fill, 1.0)
+	assert_lt(presses, 10, "no repite lo ya llenado")
+	assert_almost_eq(octopus.remaining, 50.0, 0.001, "gasta una caja entera")
+
+
+func _assert_one_octopus_two_sizes(
+	first: BoxData, first_presses: int, second: BoxData, second_presses: int
+) -> void:
+	var octopus: Ingredient = _octopus_in_hand(true)
+	assert_eq(_fill(_box(first)), first_presses)
+	assert_eq(_fill(_box(second)), second_presses)
+	assert_almost_eq(100.0 - octopus.remaining, 100.0, 0.00001, "gasto total")
+	assert_true(octopus.is_queued_for_deletion())
+
+
+func test_pul104_one_octopus_small_then_large() -> void:
+	_assert_one_octopus_two_sizes(SMALL, 4, LARGE, 10)
+
+
+func test_pul104_one_octopus_large_then_small() -> void:
+	_assert_one_octopus_two_sizes(LARGE, 10, SMALL, 4)
