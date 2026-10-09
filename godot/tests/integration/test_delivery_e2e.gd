@@ -15,8 +15,13 @@ extends GutTest
 
 const Walker: GDScript = preload("res://tests/integration/level_walker.gd")
 const CACHELOS_SEASONING: SeasoningData = preload("res://data/seasonings/cachelos.tres")
-## Distancia al puesto desde la que se empieza a acercar, fuera de `%DeliveryZone` (m).
+## Distancia al puesto desde la que se empieza a acercar (m): del lado del kiosco de
+## `%DeliveryZone` (PUL-100: marca en Z local 3,40, entre la barra y el kiosco), fuera de ella.
 const STAND_FRONT: float = 2.5
+## Pasillos (X) entre zonas de entrega por los que se llega al kiosco sin cruzar ninguna zona.
+const LANES: Dictionary = {1: -5.0, 2: -2.3, 3: 0.2, 4: 5.0}
+## Z desde la que se baja por el pasillo: al norte de las zonas (ocupan Z 1,83 a 2,88).
+const LANE_ENTRY_Z: float = 1.2
 ## Del centro de una estación al punto desde el que se usa (m).
 const ACCESS: float = 1.0
 ## Rincón de la cocina donde se suelta el pulpo que sobra.
@@ -79,8 +84,11 @@ func test_ac3_deliver_with_e_in_front_of_the_stand() -> void:
 	var revenue: int = RoundManager.round_state.get_revenue()
 	# Delante del puesto, de cara a él y fuera de su zona: la entrega la hace la tecla E.
 	var front: Vector2 = _xz(stand.global_position) + Vector2(0.0, -STAND_FRONT)
-	await _service.walk_to(front + Vector2(0.0, -1.0))
-	await _service.walk_to(front)
+	await _walk_around_zones(stand, front)
+	var zone: Area3D = stand.get_node("%DeliveryZone") as Area3D
+	assert_gt(
+		_xz(_player.global_position).distance_to(_xz(zone.global_position)), 0.7, "fuera de la zona"
+	)
 	# Paso a paso hacia el puesto hasta que el detector lo elige.
 	for _i: int in 20:
 		if _detector.get_target() == stand:
@@ -110,10 +118,13 @@ func test_ac3_deliver_by_walking_into_the_delivery_zone() -> void:
 		return
 	var stand: OrderStand = _stand(order.slot_id)
 	var revenue: int = RoundManager.round_state.get_revenue()
-	await _service.walk_to(_xz(stand.global_position) + Vector2(0.0, -STAND_FRONT))
-	assert_signal_emit_count(EventBus, "order_completed", 0)
-	# Sin pulsar E: andar hacia el puesto hasta entrar en la zona.
-	await _service.push_towards(_xz(stand.global_position), 60)
+	# Llega por un pasillo entre zonas, del lado del kiosco, sin cruzar ninguna zona.
+	await _walk_around_zones(stand, _xz(stand.global_position) + Vector2(0.0, -STAND_FRONT))
+	assert_signal_emit_count(EventBus, "order_completed", 0, "antes de entrar no ha entregado")
+	assert_true(stand.is_zone_lit(), "a menos de 2 m con la caja correcta, la zona se enciende")
+	# Sin pulsar E: andar hacia la marca hasta entrar en la zona.
+	var zone: Area3D = stand.get_node("%DeliveryZone") as Area3D
+	await _service.push_towards(_xz(zone.global_position), 60)
 	assert_signal_emit_count(EventBus, "order_completed", 1)
 	assert_signal_emit_count(EventBus, "delivery_rejected", 0)
 	assert_gt(RoundManager.round_state.get_revenue(), revenue, "sube la recaudación")
@@ -284,6 +295,14 @@ func _assert_not_expired(order: ActiveOrder) -> void:
 	for i: int in get_signal_emit_count(EventBus, "order_expired"):
 		var expired: ActiveOrder = get_signal_parameters(EventBus, "order_expired", i)[0]
 		assert_ne(expired.id, order.id, "la comanda no caduca con la paciencia real")
+
+
+## Va a `target` (del lado del kiosco) por el pasillo entre zonas de `stand`, sin cruzar zonas.
+func _walk_around_zones(stand: OrderStand, target: Vector2) -> void:
+	var lane: float = float(LANES[stand.slot_id])
+	await _service.walk_to(Vector2(lane, LANE_ENTRY_Z))
+	await _service.walk_to(Vector2(lane, target.y))
+	await _service.walk_to(target)
 
 
 func _stand(slot_id: int) -> OrderStand:

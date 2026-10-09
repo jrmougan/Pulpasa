@@ -16,6 +16,12 @@ const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
 const SLOT_ID: int = 2
 const FAR: Vector3 = Vector3(20, 0, 20)
+const PALETTE: StandPalette = preload("res://data/config/stand_palette.tres")
+const MAT_ON_PATH: String = "res://assets/models/stations/order_stand/delivery_zone_on.tres"
+const MAT_OFF_PATH: String = "res://assets/models/stations/order_stand/delivery_zone_off.tres"
+const ZONE_Z: float = 3.40
+## Ticks a 60 Hz que caben en 0,1 s (R12).
+const LIGHT_TICKS: int = 6
 
 var _bus: Node
 var _service: Node
@@ -401,15 +407,6 @@ func test_review_late_stand_shows_current_order_id() -> void:
 
 
 # --- PUL-100: zona de entrega iluminada (R12, ADR-003 §9.4) ---
-
-const PALETTE: StandPalette = preload("res://data/config/stand_palette.tres")
-const MAT_ON_PATH: String = "res://assets/models/stations/order_stand/delivery_zone_on.tres"
-const MAT_OFF_PATH: String = "res://assets/models/stations/order_stand/delivery_zone_off.tres"
-const ZONE_Z: float = 3.40
-## Ticks a 60 Hz que caben en 0,1 s (R12).
-const LIGHT_TICKS: int = 6
-
-
 ## Coloca al jugador a `distance` metros del centro de la zona (hacia +Z local), fuera de ella.
 func _stand_at(distance: float) -> void:
 	_player.global_position = _stand.get_node("%DeliveryZone").global_position

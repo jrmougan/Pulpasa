@@ -3,35 +3,30 @@
 160 files would be left unchanged
 
 == gdlint
-./tests/integration/test_order_stand.gd:405: Error: Definition out of order in global scope (class-definitions-order)
-./tests/integration/test_order_stand.gd:406: Error: Definition out of order in global scope (class-definitions-order)
-./tests/integration/test_order_stand.gd:407: Error: Definition out of order in global scope (class-definitions-order)
-./tests/integration/test_order_stand.gd:408: Error: Definition out of order in global scope (class-definitions-order)
-./tests/integration/test_order_stand.gd:410: Error: Definition out of order in global scope (class-definitions-order)
-Failure: 5 problems found
+Success: no problems found
 
 == import
 
 == tests (GUT)
-res://tests/integration/test_delivery_e2e.gd
-[0m- test_ac3_deliver_with_e_in_front_of_the_stand
-[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [0]: aún no ha entregado (Signals emitted: ["round_started", "round_time_changed", "score_changed", "phase_changed", "orders_reset", "order_generated", "order_completed", "order_patience_changed", "character_switched", "device_assigned"])
-          at line 89
-- test_ac3_deliver_by_walking_into_the_delivery_zone
-[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [0]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "phase_changed", "orders_reset", "order_generated", "order_completed", "order_patience_changed", "character_switched", "device_assigned"])
-          at line 114
+[1m3/3 passed.
+[0m
 
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
 Totals
 ------
 Scripts              68
 Tests               768
-Passing Tests       766
-Failing Tests         2
-Asserts           9372/9374
-Time              333.79s
+Passing Tests       768
+Asserts            9360
+Time              322.11s
 
 
-[31m---- 2 failing tests ----
+[32m---- All tests passed! ----
 [0m
 Results saved to res://.gut_reports/junit.xml
 WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).
@@ -42,4 +37,4 @@ ERROR: 4 resources still in use at exit (run with --verbose for details).
 == smoke run (escena principal, 120 frames)
 OK
 
-✗ verify FAILED
+✓ verify OK
