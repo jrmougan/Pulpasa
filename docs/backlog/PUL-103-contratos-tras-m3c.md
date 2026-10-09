@@ -7,7 +7,7 @@ role: godot-architect
 deps: [PUL-101]
 orca_task: null
 unity_sources: []
-owns: [docs/arch/scene-tree.md, docs/arch/ADR-003-arbol-escenas-composicion.md, docs/design/level-layouts.md, docs/evidence/PUL-103/**, docs/backlog/PUL-103-contratos-tras-m3c.md]
+owns: [docs/arch/scene-tree.md, docs/arch/signals.md, docs/arch/ADR-003-arbol-escenas-composicion.md, docs/design/level-layouts.md, docs/evidence/PUL-103/**, docs/backlog/PUL-103-contratos-tras-m3c.md]
 touches_scenes: []
 ---
 
@@ -57,8 +57,8 @@ Gate humano: aprobado por el responsable antes de empezar (commit 30f8a6b). Solo
 - `level-layouts.md` L1: «no suelta nada (la mano no cambia)», ahora con referencia a `can_drop_freely()`.
 - Sin contradicción entre los tres. Se buscó «a los pies» en `docs/`: solo queda en ADR-003 como alternativa descartada y en el texto histórico de la ficha PUL-101 (AC1 previo a la decisión del coordinador).
 
-**Fuera de `owns` (no editado, para el coordinador)**
-- `docs/arch/signals.md` líneas 68, 70 y 73 (filas `orders_reset`, `order_completed`, `order_expired`): «M3c: apaga `%DeliveryMark`». Debería decir `DeliveryFrame` (la malla del `Model`). No es contradicción sobre soltar (AC2), pero sí un resto del nombre retirado.
+**`signals.md` (añadido a `owns` por el coordinador, misma enmienda aprobada)**
+- `docs/arch/signals.md` líneas 68, 70 y 73 (filas `orders_reset`, `order_completed`, `order_expired`): «M3c: apaga `%DeliveryMark`» pasa a «apaga `DeliveryFrame` (malla dentro de `Model`, `material_off`)», como hace `order_stand.gd::_apply_lit` (PUL-100). Solo cambia el nombre del nodo; ninguna señal, firma, emisor ni momento del catálogo.
 
 **Verificación**
 - `tools/verify.sh --quick`: OK (gdformat 161 sin cambios, gdlint sin problemas, import OK).
