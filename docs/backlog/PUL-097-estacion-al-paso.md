@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-092, PUL-093, PUL-094]
 orca_task: null
 unity_sources: []
-owns: [godot/entities/stations/seasoning_station.gd, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.*, godot/entities/stations/cachelos_bowl.*, godot/entities/stations/sandbox/seasoning_station_sandbox.*, godot/core/seasoning_rules.gd, godot/resources/seasoning_station_data.gd, godot/data/config/seasoning_station.tres, godot/tests/unit/test_seasoning_rules.gd, godot/tests/integration/test_seasoning_station.gd, godot/tests/integration/test_cachelos.gd, godot/tests/integration/test_m2b_station_selection.gd, godot/tests/integration/test_m2b_flow.gd, godot/tests/integration/test_station_level.gd, godot/tests/integration/test_delivery_e2e.gd, godot/tests/integration/test_kitchen_flow.gd, godot/tests/integration/test_m1_flow.gd, godot/tests/integration/test_m2_flow.gd, godot/tests/integration/test_parity_smoke.gd, docs/evidence/PUL-097/**, docs/backlog/PUL-097-estacion-al-paso.md]
+owns: [godot/entities/stations/seasoning_station.gd, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.*, godot/entities/stations/cachelos_bowl.*, godot/entities/stations/sandbox/seasoning_station_sandbox.*, godot/core/seasoning_rules.gd, godot/resources/seasoning_station_data.gd, godot/data/config/seasoning_station.tres, godot/tests/unit/test_seasoning_rules.gd, godot/tests/integration/test_seasoning_station.gd, godot/tests/integration/test_cachelos.gd, godot/tests/integration/test_m2b_station_selection.gd, godot/tests/integration/test_m2b_flow.gd, godot/tests/integration/test_station_level.gd, godot/tests/integration/test_delivery_e2e.gd, godot/tests/integration/test_kitchen_flow.gd, godot/tests/integration/test_m1_flow.gd, godot/tests/integration/test_m2_flow.gd, godot/tests/integration/test_parity_smoke.gd, godot/tests/unit/test_data_integrity.gd, godot/tests/integration/test_level_01.gd, docs/evidence/PUL-097/**, docs/backlog/PUL-097-estacion-al-paso.md]
 touches_scenes: [godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn, godot/entities/stations/sandbox/seasoning_station_sandbox.tscn]
 ---
 
@@ -39,10 +39,10 @@ Tests por AC:
 - AC3 (R7-R8): `test_seasoning_station.gd` (sin `Tray`, colision 5,2 m, barrido del mapa de objetivos con caja en mano a 1,0 m: franjas continuas >= 0,6 m sin huecos; guardado en `docs/evidence/PUL-097/target_map.txt`).
 - AC4: captura CLI del sandbox con cuenco a 0/2/4 en `docs/evidence/PUL-097/`.
 - Los 8 tests de flujo se adaptan: la caja descansa en un `PassSlot` mientras se corta, se coge y se lleva a los dispensadores en la mano; el resto de lo que probaban se mantiene.
-Fuera de `owns` (se reporta): `test_data_integrity.gd` (stock 3 / 1 racion) y `test_level_01.gd` (usa `get_tray`) quedan rotos por el contrato; los toca PUL-101 / coordinador.
+`test_data_integrity.gd` (stock 3 / 1 ración) y `test_level_01.gd` (usaba `get_tray`) quedaban rotos por el contrato: el coordinador los añadió a `owns` y aplicó el parche mínimo.
 
 ## Evidence
-- Verify: con el parche de `fuera_de_owns.patch` aplicado, `tools/verify.sh` termina en verde (745 tests, 745 pasan; `docs/evidence/PUL-097/verify_con_parche.log`). **Sin el parche, la rama deja 3 tests en rojo en ficheros fuera de `owns`** (ver Pendiente).
+- Verify: `tools/verify.sh` en verde, 745/745 (`docs/evidence/PUL-097/verify_con_parche.log`); el merge gate lo repite sobre la rama base.
 - AC1 (R1-R4): `tests/integration/test_seasoning_station.gd` (toggle con caja en la mano y `seasoned`/`seasoning_removed`, antirrebote 0,1 s vs 0,25 s con reloj inyectado, `BOX_NOT_FULL` con `season_error`, mano vacía/otro objeto sin objetivo ni resaltado, lado de pase sin objetivo) y `test_m2b_station_selection.gd` con el detector real en `level_01`.
 - AC2 (R5-R6): `test_seasoning_station.gd` (cachelos crudos/quemados, mano vacía y pulpo no son objetivo; caja desde el pase no es objetivo; cachelos cocidos desde los dos lados; +2 raciones, 3 pasa a 4, con 4 `BOWL_FULL`), `test_cachelos.gd` (olla a cuenco), `test_seasoning_rules.gd` (`restocked`/`can_restock`) y test de `Portions0..4` con exactamente una malla visible (escena sola y por stock 0/2/4).
 - AC3 (R7-R8): sin `Tray` (nodo, `get_tray` y `get_box` eliminados), colisión de 5,2 m; mapa de objetivos a 1,0 m con caja en la mano en `docs/evidence/PUL-097/target_map.txt`: dulce 1,15 m, picante 1,0 m, sal 1,0 m, aceite 1,0 m, cuenco 1,1 m, 0 huecos.
@@ -55,7 +55,5 @@ Fuera de `owns` (se reporta): `test_data_integrity.gd` (stock 3 / 1 racion) y `t
 - Se elimina el `Sprite3D` Icon flotante del dispensador: los GLB nuevos traen los botones con iconos.
 - Sandbox: el jugador empieza con la caja llena en la mano, con un cachelo en el cuenco (2 raciones).
 
-### Pendiente fuera de `owns` (lo ve el coordinador; PUL-101)
-1. `godot/tests/unit/test_data_integrity.gd` (`test_pul058_seasoning_station_values`): espera `cachelos_stock_max` 3 y `cachelos_portions_per_item` 1; pasan a 4 y 2.
-2. `godot/tests/integration/test_level_01.gd` usa `station.get_tray()`/`get_box()` (`_station_access` y el recorrido AC4). Sustituir por el cuenco y un `PassSlot`.
-Ambos parches mínimos están en `docs/evidence/PUL-097/fuera_de_owns.patch` (con ellos `test_level_01` pasa 18/18: la colisión de 5,2 m no rompe el alcance de ninguna estación en `level_01`).
+### Ampliación de `owns` (coordinador)
+Se añaden `test_data_integrity.gd` (valores 4 / 2 del cuenco) y `test_level_01.gd` (el recorrido AC4 deja la caja en `PassSlot01` y la recoge desde el lado de servicio; `_station_access` sin bandeja). Con ello `test_level_01` pasa 18/18.
