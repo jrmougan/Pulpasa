@@ -1,9 +1,12 @@
-[gd_resource type="Resource" script_class="BoxData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BoxData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://resources/box_data.gd" id="1_box"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/box_sizes/size_l.png" id="2_icon"]
 
 [resource]
 script = ExtResource("1_box")
 display_name = "Grande"
 capacity = 100.0
-fill_per_press = 0.05
+fill_per_press = 0.1
+short_label = "L"
+icon = ExtResource("2_icon")
