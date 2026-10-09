@@ -21,7 +21,8 @@ task_id = f"PUL-{int(m.group(1)):03d}"
 
 
 def git(*args: str) -> str:
-    return subprocess.run(["git", *args], check=True, capture_output=True, text=True).stdout
+    return subprocess.run(["git", *args], check=True, capture_output=True, text=True,
+                          encoding="utf-8").stdout
 
 
 cards = [p for p in git("ls-tree", "-r", "--name-only", branch, "docs/backlog/").splitlines()
