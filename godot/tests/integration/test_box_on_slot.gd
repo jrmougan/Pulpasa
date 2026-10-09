@@ -88,16 +88,16 @@ func _assert_fills_on_table(data: BoxData, presses: int) -> void:
 	assert_eq(_hold.get_held_item(), octopus)
 
 
-func test_review_small_box_on_table_fills_in_5_presses() -> void:
-	await _assert_fills_on_table(SMALL, 5)
+func test_review_small_box_on_table_fills_in_4_presses() -> void:
+	await _assert_fills_on_table(SMALL, 4)
 
 
-func test_review_medium_box_on_table_fills_in_10_presses() -> void:
-	await _assert_fills_on_table(MEDIUM, 10)
+func test_review_medium_box_on_table_fills_in_6_presses() -> void:
+	await _assert_fills_on_table(MEDIUM, 6)
 
 
-func test_review_large_box_on_table_fills_in_20_presses() -> void:
-	await _assert_fills_on_table(LARGE, 20)
+func test_review_large_box_on_table_fills_in_10_presses() -> void:
+	await _assert_fills_on_table(LARGE, 10)
 
 
 ## Paridad Unity: con algo incompatible en la mano (pulpo crudo) la caja de la mesa sigue siendo el

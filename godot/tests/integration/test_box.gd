@@ -75,16 +75,16 @@ func _assert_presses_to_fill(data: BoxData, expected: int) -> void:
 	assert_eq(contents.fill, 1.0)
 
 
-func test_ac1_small_box_fills_in_5_presses() -> void:
-	_assert_presses_to_fill(SMALL, 5)
+func test_ac1_small_box_fills_in_4_presses() -> void:
+	_assert_presses_to_fill(SMALL, 4)
 
 
-func test_ac1_medium_box_fills_in_10_presses() -> void:
-	_assert_presses_to_fill(MEDIUM, 10)
+func test_ac1_medium_box_fills_in_6_presses() -> void:
+	_assert_presses_to_fill(MEDIUM, 6)
 
 
-func test_ac1_large_box_fills_in_20_presses() -> void:
-	_assert_presses_to_fill(LARGE, 20)
+func test_ac1_large_box_fills_in_10_presses() -> void:
+	_assert_presses_to_fill(LARGE, 10)
 
 
 func test_ac1_each_press_spends_octopus_and_emits_fill_changed() -> void:
@@ -92,8 +92,8 @@ func test_ac1_each_press_spends_octopus_and_emits_fill_changed() -> void:
 	var octopus: Ingredient = _octopus_in_hand(true)
 	watch_signals(box)
 	assert_true(box.interact(_actor))
-	assert_almost_eq(box.fill, 0.2, 0.0001)
-	assert_almost_eq(octopus.remaining, 90.0, 0.0001)
+	assert_almost_eq(box.fill, 0.25, 0.0001)
+	assert_almost_eq(octopus.remaining, 87.5, 0.0001)
 	assert_signal_emitted_with_parameters(box, "fill_changed", [box.fill])
 	assert_null(box.get_contents().ingredient, "sin llenar no cuenta como ingrediente")
 
@@ -112,9 +112,9 @@ func test_ac1_raw_octopus_does_nothing() -> void:
 func test_ac1_one_octopus_fills_two_boxes_then_is_freed() -> void:
 	var first: Box = _box(MEDIUM)
 	var octopus: Ingredient = _octopus_in_hand(true)
-	assert_eq(_fill(first), 10)
+	assert_eq(_fill(first), 6)
 	var second: Box = _box(MEDIUM)
-	assert_eq(_fill(second), 10)
+	assert_eq(_fill(second), 6)
 	assert_true(second.is_full())
 	assert_true(octopus.is_queued_for_deletion(), "agotado se libera")
 	assert_null(_hold.get_held_item(), "la mano queda libre")
@@ -177,7 +177,7 @@ func test_box_without_fill_bar_does_not_crash() -> void:
 	box.get_node("%FillBar").free()
 	_level.add_child(box)
 	_octopus_in_hand(true)
-	assert_eq(_fill(box), 5)
+	assert_eq(_fill(box), 4)
 	assert_true(box.is_full())
 
 
@@ -255,9 +255,9 @@ func test_pul057_ac2_toggle_on_unfilled_box_is_rejected() -> void:
 	assert_signal_emit_count(empty, "seasoned", 0)
 	var half: Box = _box(MEDIUM)
 	_octopus_in_hand(true)
-	for i: int in 6:
+	for i: int in 3:
 		half.interact(_actor)
-	assert_almost_eq(half.fill, 0.6, 0.0001)
+	assert_almost_eq(half.fill, 0.5, 0.0001)
 	watch_signals(half)
 	assert_eq(half.toggle_seasoning(OIL, true), SeasoningRules.Rejection.BOX_NOT_FULL)
 	assert_eq(half.get_contents().seasonings.size(), 0)

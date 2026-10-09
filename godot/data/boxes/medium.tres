@@ -1,9 +1,12 @@
-[gd_resource type="Resource" script_class="BoxData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BoxData" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://resources/box_data.gd" id="1_box"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/box_sizes/size_m.png" id="2_icon"]
 
 [resource]
 script = ExtResource("1_box")
 display_name = "Mediana"
 capacity = 100.0
-fill_per_press = 0.1
+fill_per_press = 0.16666667
+short_label = "M"
+icon = ExtResource("2_icon")
