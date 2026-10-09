@@ -1,7 +1,7 @@
 ---
 id: PUL-100
 title: Encender la zona de entrega del kiosco con la caja correcta
-status: review
+status: done
 milestone: M3c
 role: gameplay-engineer
 deps: [PUL-093, PUL-096, PUL-099]

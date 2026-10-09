@@ -1,7 +1,7 @@
 ---
 id: PUL-099
 title: Mostrar el tamaño y el color del puesto en el ticket
-status: review
+status: done
 milestone: M3c
 role: ui-engineer
 deps: [PUL-093, PUL-096, PUL-098]

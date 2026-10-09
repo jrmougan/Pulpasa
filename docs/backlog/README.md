@@ -111,7 +111,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-096 | M3c | asset-pipeline | done | Rehacer los kioscos con placa de comanda y zona de entrega (arte, Codex) |
 | PUL-097 | M3c | gameplay-engineer | done | Implementar la estación de condimentos al paso |
 | PUL-098 | M3c | gameplay-engineer | done | Aplicar los cortes 4/6/10 y el tamaño legible de las bandejas |
-| PUL-099 | M3c | ui-engineer | ready | Mostrar el tamaño y el color del puesto en el ticket |
-| PUL-100 | M3c | gameplay-engineer | ready | Encender la zona de entrega del kiosco con la caja correcta |
+| PUL-099 | M3c | ui-engineer | done | Mostrar el tamaño y el color del puesto en el ticket |
+| PUL-100 | M3c | gameplay-engineer | done | Encender la zona de entrega del kiosco con la caja correcta |
 | PUL-101 | M3c | gameplay-engineer | ready | Montar level_01 con la línea al paso, el hueco nuevo y 6 pasaplatos |
 | PUL-102 | M3c | qa-tester | ready | Medir el rediseño de estaciones y preparar el playtest |
