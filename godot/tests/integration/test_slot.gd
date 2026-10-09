@@ -234,10 +234,15 @@ func test_pul024_interactable_shape_matches_unity_slot_and_hugs_the_anchor() -> 
 	assert_almost_eq(shape_node.position.y, anchor.position.y - box.size.y / 2.0, 0.06)
 
 
-func test_pul024_standalone_slot_table_still_blocks_on_world_layer() -> void:
-	var bodies: Array[Node] = _slot.get_node("Model").find_children("*", "StaticBody3D")
-	assert_eq(bodies.size(), 1)
-	assert_eq((bodies[0] as StaticBody3D).collision_layer, 1)
+## PUL-101 (ADR-003 §9.5): la marca `pass_mark` es parte del pasaplatos; sin mesa propia ni cuerpos
+## que frenen (la barra del nivel es la mesa).
+func test_pul101_slot_carries_the_visible_pass_mark_without_a_table() -> void:
+	var model: Node3D = _slot.get_node("Model") as Node3D
+	assert_true(model.visible)
+	assert_eq(model.scene_file_path, "res://assets/models/furniture/counters/pass_mark.glb")
+	assert_eq(model.find_children("*", "CollisionObject3D").size(), 0, "la marca no choca")
+	assert_gt(model.find_children("*", "MeshInstance3D").size(), 0, "tiene malla visible")
+	assert_almost_eq(model.position.y, 1.1, 0.001, "sobre la superficie de la barra")
 
 
 ## PUL-058 (ADR-003 §8.2): con `accepted_group`, lo que no está en el grupo se rechaza consumiendo

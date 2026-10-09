@@ -35,7 +35,8 @@ func interact_pressed() -> bool:
 		if _target.call(&"interact", self):
 			return true
 	if holder != null and holder.get_held_item() != null:
-		holder.drop()
+		if holder.can_drop_freely():
+			holder.drop()
 		return true
 	return false
 

@@ -10,10 +10,10 @@ const ARRIVED: float = 0.12
 const WALK_FRAMES: int = 400
 ## Frames empujando hacia un objetivo para quedar de cara a él.
 const FACE_FRAMES: int = 8
-## Barra de la fila 4 (planta B): z de su centro, medio fondo y paso por el hueco de la col. 14.
+## Barra de la fila 4 (planta B, D23): z de su centro, medio fondo y centro del hueco (x 2,8..4,2).
 const BAR_Z: float = 0.0
 const BAR_HALF_DEPTH: float = 0.5
-const GAP_X: float = 7.7
+const GAP_X: float = 3.5
 ## Distancia a la barra de los puntos de paso a cada lado del hueco (m).
 const GAP_CLEARANCE: float = 0.9
 ## Puntos de uso de la estación de condimentos: distancia al centro del mostrador en z. Todas las
