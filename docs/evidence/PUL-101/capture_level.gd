@@ -1,6 +1,6 @@
 extends SceneTree
 ## PUL-101: level_01 completo con la camara real a 1080p (AC4): 6 pasaplatos marcados, estacion al paso,
-## hueco de la barra a x 3,4 con umbral, kioscos en y=0. Deja tres cajas en pasaplatos para ver la marca en uso.
+## hueco de la barra a x 3,5 con umbral, kioscos en y=0. Deja tres cajas en pasaplatos para ver la marca en uso.
 ## Uso (desde godot/): timeout 300 godot --audio-driver Dummy --resolution 1920x1080 -s ../docs/evidence/PUL-101/capture_level.gd -- <dir absoluto>
 
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")

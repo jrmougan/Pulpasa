@@ -297,8 +297,8 @@ func test_r11_pass_marks_are_at_least_18_px_with_the_game_camera() -> void:
 
 
 ## R11: con algo en la mano frente a la barra, fuera de los pasaplatos y de la estación, interactuar
-## no deja el objeto sobre la barra ni dentro de ella ni en un `Slot`.
-func test_r11_pressing_in_front_of_the_bar_leaves_nothing_on_it() -> void:
+## no suelta nada: la mano no cambia y ningún `Slot` guarda la caja.
+func test_r11_pressing_in_front_of_the_bar_changes_nothing_in_the_hand() -> void:
 	await _load_level()
 	var player: Player = _player()
 	var actor: InteractionComponent = player.get_node("%InteractionComponent")
@@ -321,9 +321,9 @@ func test_r11_pressing_in_front_of_the_bar_leaves_nothing_on_it() -> void:
 			if not (target is Slot or target is SeasoningDispenser or target is CachelosBowl):
 				actor.interact_pressed()
 				checked += 1
-				var at: Vector3 = box.global_position
-				var on_bar: bool = absf(at.z - BAR_Z) < 0.5 and at.y < 1.2
-				assert_false(on_bar, "x %.1f lado %.0f: caja en la barra %s" % [x, side, at])
+				assert_eq(
+					hold.get_held_item(), box, "x %.1f lado %.0f: la mano no cambia" % [x, side]
+				)
 				for slot: Node in _level.find_children("*", "Slot", true, false):
 					assert_false((slot as Slot).has_item(), "ningún pasaplatos guarda la caja")
 			box.free()
@@ -334,6 +334,10 @@ func test_r11_pressing_in_front_of_the_bar_leaves_nothing_on_it() -> void:
 
 func test_r11_bar_is_closed_except_the_gap_and_the_old_gap_is_sealed() -> void:
 	await _load_level()
+	for body: Node in _level.get_node("KitchenLayout").find_children(
+		"*", "StaticBody3D", true, false
+	):
+		assert_eq((body as StaticBody3D).collision_layer, 1, "%s en capa world" % body.name)
 	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(_player())
 	var x: float = -5.6
 	while x <= 8.0:

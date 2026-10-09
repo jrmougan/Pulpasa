@@ -5,6 +5,7 @@ extends GutTest
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const IncompletePickable: GDScript = preload("res://tests/helpers/incomplete_pickable.gd")
+const SLOT_SCENE: PackedScene = preload("res://entities/stations/slot.tscn")
 const HELD_LAYER: int = 1 << 3
 const INTERACTABLE_LAYER: int = 1 << 2
 
@@ -158,28 +159,56 @@ func _add_bar_in_front() -> void:
 	bar.global_position = Vector3(1.0, 0.55, 1.4)
 
 
-func test_r11_drop_in_front_of_a_world_body_lands_at_the_feet() -> void:
+func test_r11_press_in_front_of_a_world_body_changes_nothing() -> void:
 	_add_bar_in_front()
 	await wait_physics_frames(2)
 	var item: CountingPickable = _make_pickable()
 	_hold.pick_up(item)
-	assert_eq(_hold.drop(), item)
-	var expected: Vector3 = _player.global_position + Vector3(0.0, 0.6, 0.0)
-	assert_almost_eq(item.global_position, expected, Vector3.ONE * 0.001, "a los pies")
-	assert_eq(item.get_parent(), _items_root)
-	assert_eq(item.dropped_calls, 1)
+	var actor: InteractionComponent = _player.get_node("%InteractionComponent")
+	watch_signals(_hold)
+	assert_false(_hold.can_drop_freely())
+	assert_true(actor.interact_pressed(), "la pulsación se consume")
+	assert_eq(_hold.get_held_item(), item, "la mano no cambia")
+	assert_eq(item.get_parent(), _player.get_node("%HoldPoint"))
+	assert_eq(item.dropped_calls, 0)
+	assert_signal_not_emitted(_hold, "item_dropped")
 
 
-func test_r11_drop_in_front_of_free_floor_is_unchanged() -> void:
+func test_r11_drop_on_free_floor_still_drops_ahead_without_overlapping_the_player() -> void:
 	_add_bar_in_front()
 	await wait_physics_frames(2)
 	var item: CountingPickable = _make_pickable()
 	_player.rotation.y = PI  # de espaldas a la barra
 	_hold.pick_up(item)
-	_hold.drop()
+	var actor: InteractionComponent = _player.get_node("%InteractionComponent")
+	var start_y: float = _player.global_position.y
+	assert_true(_hold.can_drop_freely())
+	assert_true(actor.interact_pressed())
+	assert_null(_hold.get_held_item())
+	assert_eq(item.dropped_calls, 1)
 	assert_almost_eq(
 		item.global_position, _player.global_position + Vector3(0.0, 0.6, 0.6), Vector3.ONE * 0.001
 	)
+	await wait_physics_frames(10)
+	assert_almost_eq(_player.global_position.y, start_y, 0.01, "el jugador no sube")
+	var flat: Vector2 = Vector2(item.global_position.x, item.global_position.z)
+	var mine: Vector2 = Vector2(_player.global_position.x, _player.global_position.z)
+	assert_gt(flat.distance_to(mine), 0.3, "la caja no solapa la cápsula")
+
+
+func test_r11_transfer_to_a_slot_next_to_the_bar_still_works() -> void:
+	_add_bar_in_front()
+	var slot: Slot = SLOT_SCENE.instantiate()
+	_items_root.get_parent().add_child(slot)
+	slot.global_position = Vector3(1.0, 0.0, 1.4)
+	await wait_physics_frames(2)
+	var item: CountingPickable = _make_pickable()
+	_hold.pick_up(item)
+	assert_false(_hold.can_drop_freely())
+	var actor: InteractionComponent = _player.get_node("%InteractionComponent")
+	assert_true(slot.interact(actor))
+	assert_eq(slot.get_item(), item)
+	assert_null(_hold.get_held_item())
 
 
 func test_ac3_drop_calls_on_dropped_once_and_restores_physics() -> void:

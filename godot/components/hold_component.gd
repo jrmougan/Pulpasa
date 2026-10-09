@@ -80,9 +80,13 @@ func _current_held() -> Node3D:
 	return _held
 
 
-## 0,6 m delante y 0,6 m arriba del portador (PlayerConfig), con "delante" en el suelo. Si ese
-## punto cae dentro de un cuerpo de la capa `world` (la barra, una pared), el objeto se suelta a los
-## pies del portador: nunca queda sobre la barra ni dentro de ella (R11, ADR-003 §9.5).
+## `false` si el punto de soltar (delante del portador) cae en un cuerpo de la capa `world` (la
+## barra, una pared): soltar al suelo no hace nada (R11, ADR-003 §9.5).
+func can_drop_freely() -> bool:
+	return not _is_blocked(_drop_position())
+
+
+## 0,6 m delante y 0,6 m arriba del portador (PlayerConfig), con "delante" en el suelo.
 func _drop_position() -> Vector3:
 	var cfg: PlayerConfig = config if config != null else PlayerConfig.new()
 	var origin: Vector3 = carrier.global_position if carrier != null else hold_point.global_position
@@ -93,7 +97,7 @@ func _drop_position() -> Vector3:
 	forward = forward.normalized() if forward.length_squared() > 0.0 else Vector3.FORWARD
 	var lift: Vector3 = Vector3.UP * cfg.drop_up_offset
 	var ahead: Vector3 = origin + forward * cfg.drop_forward_offset + lift
-	return origin + lift if _is_blocked(ahead) else ahead
+	return ahead
 
 
 ## Si hay un cuerpo de la capa `world` en `point` (esfera de `DROP_CLEARANCE`).

@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://bun2yncqn75kx" path="res://assets/models/furniture/counters/counter_end.glb" id="m_counter_end"]
 [ext_resource type="PackedScene" uid="uid://dikr5arcy4g4q" path="res://assets/models/furniture/counters/pass_1m.glb" id="m_pass_1m"]
 [ext_resource type="PackedScene" uid="uid://bqcmduox3t3qu" path="res://assets/models/furniture/counters/pass_2m.glb" id="m_pass_2m"]
-[ext_resource type="PackedScene" uid="uid://bxiyvjsg6ebvo" path="res://assets/models/furniture/counters/pass_3m.glb" id="m_pass_3m"]
 [ext_resource type="PackedScene" uid="uid://suspedoanuki" path="res://assets/models/furniture/counters/pass_end.glb" id="m_pass_end"]
 [ext_resource type="PackedScene" uid="uid://bbwbx53mvmhke" path="res://assets/models/furniture/counters/rail_1m.glb" id="m_rail_1m"]
 [ext_resource type="PackedScene" path="res://assets/models/furniture/counters/drain_grate.glb" id="m_drain_grate"]

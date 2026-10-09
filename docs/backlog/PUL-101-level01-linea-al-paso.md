@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-097, PUL-098, PUL-100]
 orca_task: null
 unity_sources: []
-owns: [godot/entities/stations/slot.tscn, godot/entities/stations/slot.gd, godot/components/hold_component.gd, godot/tests/**/test_slot.gd, godot/tests/**/test_hold*.gd, godot/scenes/levels/level_01.tscn, godot/entities/environment/kitchen_layout.tscn, godot/tests/integration/level_walker.gd, godot/tests/integration/test_level_01.gd, godot/tests/integration/test_level_01_r16.gd, godot/tests/integration/test_level_01_r16.gd.uid, docs/evidence/PUL-101/**, docs/backlog/PUL-101-level01-linea-al-paso.md]
+owns: [godot/entities/stations/slot.tscn, godot/entities/stations/slot.gd, godot/components/hold_component.gd, godot/tests/**/test_slot.gd, godot/tests/**/test_hold*.gd, godot/scenes/levels/level_01.tscn, godot/entities/environment/kitchen_layout.tscn, godot/tests/integration/level_walker.gd, godot/tests/integration/test_level_01.gd, godot/components/holder.gd, godot/components/interaction_component.gd, godot/tests/integration/test_level_01_r16.gd, godot/tests/integration/test_level_01_r16.gd.uid, docs/evidence/PUL-101/**, docs/backlog/PUL-101-level01-linea-al-paso.md]
 touches_scenes: [godot/entities/stations/slot.tscn, godot/scenes/levels/level_01.tscn, godot/entities/environment/kitchen_layout.tscn]
 ---
 
@@ -38,7 +38,7 @@ Ficheros: `slot.tscn` (Model = `pass_mark.glb`, sin `table_square`), `level_01.t
 
 ## Evidence
 - `tools/verify.sh`: gdformat y gdlint limpios, import, **778 tests GUT en verde** (69 scripts), smoke OK.
-- **AC1 R11** (`test_level_01.gd::test_r11_*`): exactamente 6 `Slot` en el nivel (`PassSlot01..06`, x -5,3 / -4,3 / -3,3 / 4,7 / 5,7 / 6,7), todos con `pass_mark.glb`, fuera de la estación (-2,4..2,8) y del hueco; cada marca >= 18 px a 1280x720 con la cámara real; barrido de la barra con una caja en la mano fuera de pasaplatos y estación (cada 0,5 m, por los dos lados, al menos 8 posiciones comprobadas): la caja no queda en la barra ni en un `Slot`. Test de `HoldComponent` en `test_hold_component.gd` (`test_r11_*`). El barrido falla sin el cambio de `HoldComponent` (comprobado) y pasa con él.
+- **AC1 R11** (`test_level_01.gd::test_r11_*`): exactamente 6 `Slot` en el nivel (`PassSlot01..06`, x -5,3 / -4,3 / -3,3 / 4,7 / 5,7 / 6,7), todos con `pass_mark.glb`, fuera de la estación (-2,4..2,8) y del hueco; cada marca >= 18 px a 1280x720 con la cámara real; barrido de la barra con una caja en la mano fuera de pasaplatos y estación (cada 0,5 m, por los dos lados, al menos 8 posiciones comprobadas): la mano no cambia (la caja sigue en ella) y ningún `Slot` la guarda. Test de `HoldComponent` en `test_hold_component.gd` (`test_r11_*`). El barrido falla sin el cambio de `HoldComponent` (comprobado) y pasa con él.
 - **AC2 R14** (`test_r14_*`, Dijkstra con la cápsula real): cara de condimentar (`%OperatorSide`) a cara de pase (`%PassSide`) = **7,93 m** (rango 6-10). Hueco libre de 1,4 m (x 2,8..4,2, centro 3,5), umbral `pass_threshold` en el hueco, x 7,7 cerrado (`test_r11_bar_is_closed_*`).
 - **AC3 R16** (`test_level_01_r16.gd`, con el walker y el teclado): Individual, 2 pedidos S (dulce+sal y aceite+dulce), un solo pulpo cocido (una vez de nevera), 2 `order_completed` y exactamente 2 pulsaciones de `p1_switch` (y 2 `character_switched`), sin `delivery_rejected`.
 - **AC4**: [nivel completo a 1080p](level_1080.png) y [zoom de la barra](bar_zoom.png) (6 marcas, hueco con umbral, estación al paso; cajas S y M sobre dos marcas). Script: `capture_level.gd`.
@@ -48,8 +48,9 @@ Ficheros: `slot.tscn` (Model = `pass_mark.glb`, sin `table_square`), `level_01.t
 Decisiones y desviaciones:
 - Layout 3 + 3 pasaplatos (no 4 + 2 de `scene-tree.md`): la estación de 5,2 m deja 3,4 m al oeste (3 marcas de 1 m) y las marcas se alinean con las ventanas de los módulos de barra `pass_*` (1 por metro) para que no queden marcos huérfanos. Barra oeste: `pass_2m` + `pass_1m` + `counter_1m`; barra este (4,2..8,2): `pass_end` girado + `pass_2m` + `counter_1m`.
 - Hueco x 2,8..4,2 (1,4 m, centro 3,5 en [2,7; 3,7]); `GAP_X` del walker = 3,5.
-- R11 estricta ("la mano no cambia") necesita un cambio fuera de mi owns (ver riesgos): en `HoldComponent.drop()` el objeto se suelta a los pies si el punto de soltar (0,6 m delante, esfera de 0,2 m) cae en la capa `world`, así nunca queda sobre/dentro de la barra (ADR-003 §9.5).
+- R11 literal (decisión del coordinador): `Holder.can_drop_freely()` (por defecto `true`; `HoldComponent` lo hace `false` si el punto de soltar cae en la capa `world`) e `InteractionComponent.interact_pressed()` consume la pulsación sin soltar; `drop()` no cambia para las transferencias (slot, olla, cuenco, puesto). Añadidos `holder.gd` e `interaction_component.gd` a `owns`.
 - `B_EXIT_J2_TO_J1` de `test_level_01.gd` pasa de 18,2 a 12,3 m (el hueco se acorta por D23; el resto de distancias de PUL-041 siguen dentro de +-1 m).
 - `test_slot.gd`: el test de la mesa propia del slot se sustituye por uno de la marca `pass_mark` (D23, §9.5).
 - `test_level_01.gd` superaba 1000 líneas: R16 va en `test_level_01_r16.gd` (nuevo, añadido a `owns` con su `.uid`).
 - Ficheros fuera de `owns` adaptados: ninguno (los tests de flujo `test_m2b_flow`, `test_delivery_e2e`, `test_parity_smoke`, `test_m2b_station_selection`, `test_station_level` pasan sin cambios; `PassSlot05` queda en x 5,7).
+- Pendiente para una ficha de sandbox: los `Slot` de `kitchen_sandbox`, `player_sandbox` e `items_sandbox` quedan con la marca flotando sin mesa.

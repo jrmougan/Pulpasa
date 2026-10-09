@@ -28,6 +28,12 @@ func pick_up(_item: Node) -> bool:
 	return false
 
 
+## `true` si soltar al suelo (sin objetivo) es posible; `false` lo bloquea sin cambiar la mano.
+## `drop()` no lo consulta: lo usan las transferencias (slot, olla, cuenco, puesto).
+func can_drop_freely() -> bool:
+	return true
+
+
 ## Suelta y devuelve el objeto; `null` si no llevaba nada.
 func drop() -> Node:
 	push_error("Holder.drop() es abstracto")
