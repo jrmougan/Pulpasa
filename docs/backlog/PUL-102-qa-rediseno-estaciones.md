@@ -1,7 +1,7 @@
 ---
 id: PUL-102
 title: Medir el rediseño de estaciones y preparar el playtest
-status: review
+status: done
 milestone: M3c
 role: qa-tester
 deps: [PUL-101]

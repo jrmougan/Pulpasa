@@ -114,7 +114,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-099 | M3c | ui-engineer | done | Mostrar el tamaño y el color del puesto en el ticket |
 | PUL-100 | M3c | gameplay-engineer | done | Encender la zona de entrega del kiosco con la caja correcta |
 | PUL-101 | M3c | gameplay-engineer | done | Montar level_01 con la línea al paso, el hueco nuevo y 6 pasaplatos |
-| PUL-102 | M3c | qa-tester | ready | Medir el rediseño de estaciones y preparar el playtest |
+| PUL-102 | M3c | qa-tester | done | Medir el rediseño de estaciones y preparar el playtest |
 | PUL-103 | M3c | godot-architect | done | Enmendar los contratos con lo que cambió al implementar M3c |
 | PUL-104 | M3c | gameplay-engineer | ready | Contar cortes en enteros y agotar ingredientes con épsilon |
 | PUL-105 | M3c | gameplay-engineer | ready | Dar superficie a los pasaplatos de los sandboxes |
