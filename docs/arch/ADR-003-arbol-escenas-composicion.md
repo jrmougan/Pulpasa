@@ -295,13 +295,14 @@ de PUL-090).
 |---|---|---|---|
 | `BoxData` (`resources/box_data.gd`, común) | `short_label` | `String` | «S», «M», «L» en `data/boxes/{small,medium,large}.tres` |
 | `BoxData` | `icon` | `Texture2D` | silueta + letra de `assets/textures/ui/box_sizes/` (PUL-095); la usan el ticket (vía `RecipeData.box`) y, si quiere, el rack. Mismo recurso en los dos (R10) |
-| `BoxData` | `fill_per_press` | `float` (ya existe) | 0,25 / 0,1667 / 0,1 → 4 / 6 / 10 pulsaciones (R9) |
+| `BoxData` | `presses_to_fill` | `int` (`@export_range(1, 20)`; enmienda PUL-106, sustituye a `fill_per_press: float`, eliminado en PUL-104) | 4 / 6 / 10 pulsaciones (R9) |
+| `BoxData` | `fill_after(presses: int) -> float` | método (PUL-104) | llenado tras `presses` cortes, `clampf(presses / presses_to_fill, 0, 1)`: exacto (1,0) en el último corte. `Box` cuenta los cortes enteros y gasta del pulpo la diferencia de llenado × `amount_per_full_box` |
 | `StandPalette` (`resources/stand_palette.gd`, común, nuevo) | `colors` | `Array[Color]` | índice `slot_id − 1`; 4 entradas: rojo, azul, amarillo, verde (hex de los toldos, PUL-096) |
 | `StandPalette` | `fallback` | `Color` | para un `slot_id` fuera de rango (no se espera en el nivel) |
 | `StandPalette` | `color_for(slot_id: int) -> Color` | método | única forma de leerla; la usan `order_ticket.gd` (franja, R13) y `order_stand.gd` (zona encendida). Instancia: `data/config/stand_palette.tres` |
 | `SeasoningStationData` (ya existe) | `cachelos_portions_per_item` / `cachelos_stock_max` | `int` | 1 → **2** / 3 → **4** (R6, D23); `operator_side_only` `true`, `toggle_guard` 0,25, `paprika_swap` `true` sin cambios |
 
-`StandPalette` y `BoxData` solo usan `Color`, `String` y `Texture2D`: capa común (§0), válidos en
+`StandPalette` y `BoxData` solo usan `Color`, `String`, `int` y `Texture2D`: capa común (§0), válidos en
 3D y 2D. El color del toldo del modelo del puesto (PUL-083/PUL-096) debe coincidir con la paleta;
 PUL-100 lo comprueba (o tiñe el toldo desde la paleta).
 

@@ -386,7 +386,7 @@ En M0 el menú muestra «Jugar» (= Individual con un solo personaje) y «Salir�
 
 ## 5. Datos (`data/`) [1]
 ```
-data/boxes/{small,medium,large}.tres            BoxData        (capacity, fill_per_press 0.2/0.1/0.05)
+data/boxes/{small,medium,large}.tres            BoxData        (capacity, presses_to_fill; M0: 5/10/20, M3c: 4/6/10)
 data/ingredients/octopus.tres                    IngredientData (cook_time 5)
 data/recipes/{individual,combo_duo,familiar}.tres RecipeData
 data/orders/order_{1,2,3}.tres                   OrderData
@@ -415,7 +415,8 @@ core/audio_mix.gd                                AudioMix (núcleo de AudioDirec
 ```
 resources/box_data.gd                            BoxData + short_label: String («S» / «M» / «L»), + icon: Texture2D
                                                  (silueta + letra de assets/textures/ui/box_sizes/, PUL-095); PUL-098
-data/boxes/{small,medium,large}.tres             fill_per_press 0.25 / 0.1667 / 0.1 (4 / 6 / 10 pulsaciones, R9),
+data/boxes/{small,medium,large}.tres             presses_to_fill 4 / 6 / 10 (R9; int desde PUL-104, que eliminó
+                                                 fill_per_press: float; llenado = BoxData.fill_after(cortes)),
                                                  short_label e icon rellenos; el ticket los lee por order.data.recipe.box
 resources/stand_palette.gd                       StandPalette (común) [PUL-099]: @export colors: Array[Color]
                                                  (índice slot_id − 1), @export fallback: Color,

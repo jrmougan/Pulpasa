@@ -8,9 +8,10 @@ extends StaticBody3D
 ## `EventBus`. Cada hecho de su `slot_id` suena y se ve en `%Feedback` (ADR-006 §4): entrega
 ## correcta (`POP` del puesto) y errónea (`SHAKE`), nueva comanda y caducada (sobre el label).
 ## La comanda viva y el label salen de esas señales, sin consultar sistemas (B16).
-## Zona iluminada (PUL-100, R12, ADR-003 §9.4): `%DeliveryMark` de PUL-096 (`DeliveryFrame` del
-## modelo) se enciende con el color del puesto (`palette`, en `albedo_color` y `emission`) mientras
-## un portador a ≤ 2,0 m (`%ProximityArea`) lleva una caja que la zona aceptaría. No entrega nada.
+## Zona iluminada (PUL-100, R12, ADR-003 §9.4): la malla `DeliveryFrame` de PUL-096, dentro de
+## `Model` (sin nodo propio, PUL-103; se halla con `find_child`), se enciende con el color del
+## puesto (`palette`, en `albedo_color` y `emission`) mientras un portador
+## a ≤ 2,0 m (`%ProximityArea`) lleva una caja que la zona aceptaría. No entrega nada.
 ## Contrato `interactable` (ADR-003 §4).
 
 ## Texto del label cuando el puesto no tiene comanda.

@@ -118,7 +118,9 @@ Defaults del prototipo que se mantienen (no son preguntas abiertas). Cualquier c
 - **Asignación por puesto**: cada comanda pertenece a un puesto de entrega y solo se valida ahí (`OrderSystem`, `deliverySlotId`).
 - **Reposición inmediata**: al entregar con éxito (o caducar) se pide otra comanda para ese puesto en el acto
   (`OrderTicketUIController.OnClearTicket`), hasta `max_active_orders` = 4.
-- **Corte**: por pulsación, con `fill_per_press` según el tipo de caja (Small 0,2 / Medium 0,1 / Large 0,05).
+- **Corte**: por pulsación, con `presses_to_fill` según el tipo de caja (Small 5 / Medium 10 / Large 20 en el prototipo;
+  4 / 6 / 10 desde D23). Desde PUL-104 es un `int` y la caja llena `BoxData.fill_after(cortes)`; sustituye a
+  `fill_per_press` (0,2 / 0,1 / 0,05). El pulpo se agota con un resto ≤ `Ingredient.EMPTY_EPSILON`.
 - **Cocción**: sin quemado (el quemado es el Should `olla-que-se-pasa`).
 
 ## 10. Propuestas para gate humano
