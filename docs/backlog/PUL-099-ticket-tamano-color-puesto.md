@@ -34,9 +34,11 @@ Crea `StandPalette` (`slot_id` 1–4 → color, hex de PUL-096). El ticket muest
 5. Captura con CLI de 4 tickets a 1080p (S/M/L mezclados) en `docs/evidence/PUL-099/`; verify y check_owns.
 
 ## Evidence
-- `tools/verify.sh` OK: 741 tests, 0 fallos (log en `verify.log`).
+- `tools/verify.sh` OK: 743 tests, 0 fallos (log en `verify.log`).
 - AC1: `test_pul099_ac1_r10_medium_box_ticket_shows_icon_and_letter_before_recipe` (+ `..._every_live_ticket_size_matches_its_recipe_box`, `..._ticket_without_box_hides_size`).
 - AC2: `test_pul099_ac2_r13_four_live_orders_stripe_is_stand_color` (+ `test_pul099_palette_has_the_four_awning_colors_and_fallback`).
 - AC3: `tickets_1080.png` (HUD completo, 4 tickets S/S/L/S con franjas rojo/azul/amarillo/verde) y `tickets_zoom.png`; reproducible con `capture_tickets.gd` (cabecera con el comando).
 - API para PUL-100: `StandPalette.color_for(slot_id: int) -> Color` (1-4; fuera de rango = `fallback`), instancia `res://data/config/stand_palette.tres`; sirve igual para `albedo_color` y `emission`.
 - Nota de diseno: el icono ya lleva la letra grabada; se muestra ademas la letra en texto grande, de modo que talla (silueta redonda/cuadrada + letra) es inequivoca.
+
+- Revisión (CHANGES): la letra en texto solo sale sin icono; `%Recipe` con `clip_text` + elipsis, ancho del ticket fijo a 212 (test con todas las recetas y tallas); test de `box == null` real; captura `level_tickets_1080.png` en `level_01` con 4 comandas vivas (los tickets solo tapan toldo/rótulo superior, no puestos ni estaciones). «Pulpo Individual» se trunca con elipsis a 212 px.

@@ -32,8 +32,9 @@ func _show_size(box: BoxData) -> void:
 		return
 	%SizeIcon.texture = box.icon
 	%SizeIcon.visible = box.icon != null
+	## El icono ya lleva la letra grabada: el texto es solo el respaldo sin icono.
 	%SizeLabel.text = box.short_label
-	%SizeLabel.visible = not box.short_label.is_empty()
+	%SizeLabel.visible = box.icon == null and not box.short_label.is_empty()
 	%SizeBadge.visible = true
 
 
