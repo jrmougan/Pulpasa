@@ -1,7 +1,7 @@
 ---
 id: PUL-101
 title: Montar level_01 con la línea al paso, el hueco nuevo y 6 pasaplatos
-status: review
+status: done
 milestone: M3c
 role: gameplay-engineer
 deps: [PUL-097, PUL-098, PUL-100]
