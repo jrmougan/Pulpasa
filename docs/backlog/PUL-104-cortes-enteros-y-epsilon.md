@@ -1,7 +1,7 @@
 ---
 id: PUL-104
 title: Contar cortes en enteros y agotar ingredientes con épsilon
-status: review
+status: done
 milestone: M3c
 role: gameplay-engineer
 deps: []
