@@ -1,7 +1,7 @@
 ---
 id: PUL-105
 title: Dar superficie a los pasaplatos de los sandboxes
-status: review
+status: done
 milestone: M3c
 role: gameplay-engineer
 deps: []
