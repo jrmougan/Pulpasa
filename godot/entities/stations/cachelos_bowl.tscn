@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://entities/stations/cachelos_bowl.gd" id="1_bowl"]
 [ext_resource type="PackedScene" path="res://assets/models/stations/seasoning_station/cachelos_bowl.glb" id="2_model"]
-[ext_resource type="PackedScene" path="res://assets/models/food/cachelos/cachelos_pieces.glb" id="3_5sqpn"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_hl"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_bowl"]
@@ -27,38 +26,11 @@ collision_mask = 0
 script = ExtResource("1_bowl")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=565859006]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0.25)
 shape = SubResource("CylinderShape3D_bowl")
 
 [node name="Model" parent="." unique_id=1095865069 instance=ExtResource("2_model")]
-
-[node name="Portions" type="Node3D" parent="Model" unique_id=1824324861]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
-
-[node name="Portion1" parent="Model/Portions" unique_id=413698629 instance=ExtResource("3_5sqpn")]
-
-[node name="cachelos_pieces_b" parent="Model/Portions/Portion1/cachelos_pieces" parent_id_path=PackedInt32Array(413698629, 613769494) index="1" unique_id=697496668]
-visible = false
-
-[node name="cachelos_pieces_c" parent="Model/Portions/Portion1/cachelos_pieces" parent_id_path=PackedInt32Array(413698629, 613769494) index="2" unique_id=245261287]
-visible = false
-
-[node name="Portion2" parent="Model/Portions" unique_id=2002103266 instance=ExtResource("3_5sqpn")]
-
-[node name="cachelos_pieces_a" parent="Model/Portions/Portion2/cachelos_pieces" parent_id_path=PackedInt32Array(2002103266, 613769494) index="0" unique_id=346576700]
-visible = false
-
-[node name="cachelos_pieces_c" parent="Model/Portions/Portion2/cachelos_pieces" parent_id_path=PackedInt32Array(2002103266, 613769494) index="2" unique_id=245261287]
-visible = false
-
-[node name="Portion3" parent="Model/Portions" unique_id=316236012 instance=ExtResource("3_5sqpn")]
-
-[node name="cachelos_pieces_a" parent="Model/Portions/Portion3/cachelos_pieces" parent_id_path=PackedInt32Array(316236012, 613769494) index="0" unique_id=346576700]
-visible = false
-
-[node name="cachelos_pieces_b" parent="Model/Portions/Portion3/cachelos_pieces" parent_id_path=PackedInt32Array(316236012, 613769494) index="1" unique_id=697496668]
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
 
 [node name="OutlineHull" type="Node3D" parent="Model"]
 
@@ -73,6 +45,16 @@ unique_name_in_owner = true
 script = ExtResource("4_hl")
 root = NodePath("../Model/OutlineHull")
 
-[editable path="Model/Portions/Portion1"]
-[editable path="Model/Portions/Portion2"]
-[editable path="Model/Portions/Portion3"]
+[node name="Portions1" parent="Model/cachelos_bowl" index="4"]
+visible = false
+
+[node name="Portions2" parent="Model/cachelos_bowl" index="5"]
+visible = false
+
+[node name="Portions3" parent="Model/cachelos_bowl" index="6"]
+visible = false
+
+[node name="Portions4" parent="Model/cachelos_bowl" index="7"]
+visible = false
+
+[editable path="Model"]

@@ -1,0 +1,5 @@
+Mapa de objetivos (R8) con una caja llena en la mano, jugador a 1,0 m del eje de la estacion, lado de condimentar.
+x de -2,6 a 2,6 m, un caracter = 0,05 m. d dulce, p picante, s sal, a aceite, c cuenco, . nada.
+Generado por test_r8_target_strips_are_continuous_and_at_least_06_m (tests/integration/test_seasoning_station.gd).
+
+mapa de objetivos (x -2,6..2,6; 0,05 m por carácter): dddddddddddddddddddddddppppppppppppppppppppssssssssssssssssssssaaaaaaaaaaaaaaaaaaaacccccccccccccccccccccc

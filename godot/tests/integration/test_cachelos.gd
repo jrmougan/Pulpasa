@@ -4,6 +4,7 @@ const KITCHEN_SCENE: PackedScene = preload("res://entities/stations/kitchen.tscn
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
+const STATION_SCENE: PackedScene = preload("res://entities/stations/seasoning_station.tscn")
 const SMALL_BOX: Resource = preload("res://data/boxes/small.tres")
 
 const STEP: float = 0.1
@@ -136,3 +137,23 @@ func _albedo(mesh: MeshInstance3D, material_name: String) -> Color:
 		if material != null and material.resource_name == material_name:
 			return material.albedo_color
 	return Color.BLACK
+
+
+## PUL-097 (R6): los cachelos cocidos en la olla van al cuenco de la estación: 2 raciones cada uno.
+func test_pul097_cooked_cachelo_from_the_pot_gives_two_portions_to_the_bowl() -> void:
+	var station: SeasoningStation = STATION_SCENE.instantiate()
+	station.position = Vector3(0.0, 0.0, 10.0)
+	_level.add_child(station)
+	var bowl: CachelosBowl = station.get_node("CachelosBowl")
+	var cachelo: Ingredient = CACHELOS_SCENE.instantiate()
+	_level.add_child(cachelo)
+	_hold.pick_up(cachelo)
+	_kitchen.interact(_actor)
+	_cook_for(5.0)
+	assert_true(cachelo.is_cooked())
+	_kitchen.interact(_actor)
+	assert_eq(_hold.get_held_item(), cachelo, "cachelo cocido en la mano")
+
+	assert_true(bowl.interact(_actor))
+	assert_eq(bowl.stock, 2)
+	assert_null(_hold.get_held_item())

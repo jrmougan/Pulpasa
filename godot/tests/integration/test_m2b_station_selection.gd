@@ -1,21 +1,23 @@
 extends GutTest
-## PUL-063: en `level_01.tscn` real, el detector del jugador elige lo que tiene delante en la
-## estación de condimentos. El personaje se coloca de frente a cada pieza (a 0,8–1,2 m del centro
-## del mostrador y desplazado ±0,1 m) y se lee el objetivo del `InteractionDetector` real, sin
-## llamar a `interact()` ni publicar `target_changed`.
-## AC1: con una caja en la bandeja, cada dispensador y el cuenco desde el lado de condimentar.
-## AC8 (PUL-064): con caja en la mano, ningún dispensador es objetivo y gana la bandeja a 0–0,4 m.
-## AC2: de frente a la bandeja, por los dos lados: mano vacía → la caja; caja en la mano → bandeja.
+## PUL-063/097: en `level_01.tscn` real, el detector del jugador elige lo que tiene delante en la
+## estación de condimentos al paso (D23). El personaje se coloca de frente a cada pieza (a 0,8–1,2 m
+## del centro del mostrador y desplazado ±0,1 m) y se lee el objetivo del `InteractionDetector`
+## real,
+## sin llamar a `interact()` ni publicar `target_changed`.
+## AC1 (R1): con una caja llena en la mano, cada dispensador y el cuenco desde el lado de
+## condimentar.
+## AC2 (R4): con la mano vacía, ni dispensadores ni cuenco son objetivo, desde los dos lados.
+## AC2b (R5): con una caja en la mano desde el pase, ni dispensadores ni cuenco.
+## AC8 (R5): con cachelos cocidos en la mano, solo el cuenco, desde los dos lados.
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
+const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
 const RECIPE: RecipeData = preload("res://data/recipes/individual.tres")
 ## Distancias al centro del mostrador (eje z de la estación) desde las que se prueba (m).
 const DEPTHS: Array[float] = [0.8, 1.0, 1.2]
 ## Desplazamientos laterales respecto a la pieza (m).
 const OFFSETS: Array[float] = [-0.1, 0.0, 0.1]
-## Desplazamientos laterales respecto al centro de la bandeja para AC8 (m).
-const TRAY_OFFSETS: Array[float] = [-0.4, -0.3, -0.2, 0.2, 0.3, 0.4, 0.0]
 const SETTLE_FRAMES: int = 3
 
 var _level: Node
@@ -49,12 +51,11 @@ func _new_box() -> Box:
 	return box
 
 
-## Deja una caja en la bandeja como lo haría el jugador (por `Slot.interact`).
-func _box_on_tray() -> Box:
+## Pone una caja llena en la mano del personaje.
+func _box_in_hand() -> Box:
 	var box: Box = _new_box()
+	box.fill = 1.0
 	assert_true(_hold.pick_up(box))
-	assert_true(_station.get_tray().interact(_player.get_node("%InteractionComponent")))
-	assert_eq(_station.get_box(), box, "caja en la bandeja")
 	return box
 
 
@@ -87,11 +88,11 @@ func _is_lit(node: Node) -> bool:
 	return false
 
 
-# --- AC1 -----------------------------------------------------------------------------------------
+# --- AC1 ----------------------------------------------------------------------------------------
 
 
-func test_ac1_front_of_each_dispenser_and_bowl_selects_it_with_box_on_tray() -> void:
-	var box: Box = _box_on_tray()
+func test_ac1_front_of_each_dispenser_and_bowl_selects_it_with_full_box_in_hand() -> void:
+	var box: Box = _box_in_hand()
 	assert_eq(_parts().size(), 5, "4 dispensadores y el cuenco")
 	for part: Node3D in _parts():
 		for depth: float in DEPTHS:
@@ -100,52 +101,58 @@ func test_ac1_front_of_each_dispenser_and_bowl_selects_it_with_box_on_tray() -> 
 				var where: String = "%s a %.1f m, %+.1f" % [part.name, depth, offset]
 				assert_eq(got, part, where)
 				assert_true(_is_lit(part), "%s resaltado" % where)
-				assert_false(_is_lit(box), "%s: la caja no se resalta" % where)
+				assert_false(_is_lit(box), "%s: la caja de la mano no se resalta" % where)
 
 
 # --- AC2 -----------------------------------------------------------------------------------------
 
 
-func test_ac2_front_of_tray_with_empty_hand_selects_the_box_from_both_sides() -> void:
-	var box: Box = _box_on_tray()
-	var tray: Slot = _station.get_tray()
-	for side: float in [1.0, -1.0]:
+func _is_station_part(node: Node) -> bool:
+	return node is SeasoningDispenser or node is CachelosBowl
+
+
+func test_ac2_empty_hand_no_dispenser_or_bowl_is_target_from_both_sides() -> void:
+	for part: Node3D in _parts():
+		for side: float in [1.0, -1.0]:
+			for depth: float in DEPTHS:
+				for offset: float in OFFSETS:
+					var got: Node = await _target_from(part, side, depth, offset)
+					var where: String = (
+						"%s lado %+d a %.1f m, %+.1f" % [part.name, int(side), depth, offset]
+					)
+					assert_false(_is_station_part(got), where)
+					assert_false(_is_lit(part), "%s: sin resaltar" % where)
+
+
+func test_ac2_box_in_hand_from_pass_side_no_dispenser_or_bowl_is_target() -> void:
+	_box_in_hand()
+	for part: Node3D in _parts():
 		for depth: float in DEPTHS:
 			for offset: float in OFFSETS:
-				var got: Node = await _target_from(tray, side, depth, offset)
-				var where: String = "lado %+d a %.1f m, %+.1f" % [int(side), depth, offset]
-				assert_eq(got, box, where)
-				assert_true(_is_lit(box), "%s: caja resaltada" % where)
+				var got: Node = await _target_from(part, -1.0, depth, offset)
+				var where: String = "%s desde el pase a %.1f m, %+.1f" % [part.name, depth, offset]
+				assert_false(_is_station_part(got), where)
+				assert_false(_is_lit(part), "%s: sin resaltar" % where)
 
 
-func test_ac2_front_of_tray_with_box_in_hand_selects_the_tray_from_both_sides() -> void:
-	var box: Box = _new_box()
-	assert_true(_hold.pick_up(box))
-	var tray: Slot = _station.get_tray()
-	for side: float in [1.0, -1.0]:
-		for depth: float in DEPTHS:
-			for offset: float in OFFSETS:
-				var got: Node = await _target_from(tray, side, depth, offset)
-				var where: String = "lado %+d a %.1f m, %+.1f" % [int(side), depth, offset]
-				assert_eq(got, tray, where)
-				assert_true(_is_lit(tray), "%s: bandeja resaltada" % where)
+# --- AC8 -----------------------------------------------------------------------------------------
 
 
-# --- AC8 (PUL-064) -------------------------------------------------------------------------------
-
-
-func test_ac8_box_in_hand_no_dispenser_is_target_and_tray_wins_near_tray_centre() -> void:
-	var box: Box = _new_box()
-	assert_true(_hold.pick_up(box))
-	var tray: Slot = _station.get_tray()
-	for side: float in [1.0, -1.0]:
-		for depth: float in DEPTHS:
-			for offset: float in TRAY_OFFSETS:
-				# Desde el pase a 0,8 m y ±0,4 m la bandeja queda fuera del alcance (no hay objetivo).
-				if side < 0.0 and depth < 1.0 and absf(offset) > 0.3:
-					continue
-				var got: Node = await _target_from(tray, side, depth, offset)
-				var where: String = "lado %+d a %.1f m, %+.2f" % [int(side), depth, offset]
-				assert_false(got is SeasoningDispenser, "%s: ningún dispensador" % where)
-				assert_eq(got, tray, where)
-				assert_true(_is_lit(tray), "%s: bandeja resaltada" % where)
+func test_ac8_cooked_cachelos_in_hand_only_the_bowl_is_target_from_both_sides() -> void:
+	var cachelos: Ingredient = CACHELOS_SCENE.instantiate()
+	_level.get_node("Items").add_child(cachelos)
+	cachelos.set_cooked()
+	assert_true(_hold.pick_up(cachelos))
+	var bowl: Node3D = _station.get_node("CachelosBowl")
+	for part: Node3D in _parts():
+		for side: float in [1.0, -1.0]:
+			for depth: float in DEPTHS:
+				for offset: float in OFFSETS:
+					var got: Node = await _target_from(part, side, depth, offset)
+					var where: String = (
+						"%s lado %+d a %.1f m, %+.1f" % [part.name, int(side), depth, offset]
+					)
+					assert_false(got is SeasoningDispenser, "%s: ningún dispensador" % where)
+					if part == bowl:
+						assert_eq(got, bowl, where)
+						assert_true(_is_lit(bowl), "%s: cuenco resaltado" % where)

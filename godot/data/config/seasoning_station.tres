@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_data")
 toggle_guard = 0.25
-cachelos_stock_max = 3
+cachelos_stock_max = 4
 cachelos_initial_stock = 0
-cachelos_portions_per_item = 1
+cachelos_portions_per_item = 2
 paprika_swap = true
 operator_side_only = true

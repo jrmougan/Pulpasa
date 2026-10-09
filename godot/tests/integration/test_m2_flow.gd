@@ -89,7 +89,7 @@ func _open_orders() -> void:
 
 
 ## Llena en la mano de `character` la caja que pide `order`: cortes reales y condimentos en los
-## dispensadores de la estación del nivel (la caja pasa por la bandeja, PUL-061).
+## dispensadores de la estación del nivel y el cuenco, siempre con la caja en la mano (D23).
 func _box_in_hand(character: Player, order: ActiveOrder) -> Box:
 	var actor: InteractionComponent = character.get_node("%InteractionComponent")
 	var hold: Holder = character.get_node("%HoldComponent")
@@ -109,33 +109,33 @@ func _box_in_hand(character: Player, order: ActiveOrder) -> Box:
 			hold.drop()
 			octopus.free()
 	var station: SeasoningStation = _scene.get_node("Stations/SeasoningStation")
+	var bowl: CachelosBowl = station.get_node("CachelosBowl")
+	bowl.clock = func() -> float: return _now
+	for seasoning: SeasoningData in order.data.seasonings:
+		if _dispenser(station, seasoning) == null:
+			_restock_bowl(bowl, actor)
 	assert_true(hold.pick_up(box))
-	assert_true(station.get_tray().interact(actor), "caja a la bandeja")
 	for seasoning: SeasoningData in order.data.seasonings:
 		var dispenser: SeasoningDispenser = _dispenser(station, seasoning)
 		if dispenser == null:
-			_cachelos_from_bowl(station, actor)
+			assert_true(bowl.interact(actor), "cuenco: cachelos a la caja en la mano")
 		else:
 			dispenser.clock = func() -> float: return _now
 			assert_true(dispenser.interact(actor))
 		_now += 1.0
 		assert_true(box.has_seasoning(seasoning), "caja con %s" % seasoning.display_name)
-	assert_true(station.get_tray().interact(actor), "caja de la bandeja a la mano")
-	assert_eq(hold.get_held_item(), box)
+	assert_eq(hold.get_held_item(), box, "la caja sigue en la mano")
 	return box
 
 
-## Cachelos cocidos al cuenco y, con la mano vacía, alterna cachelos en la caja de la bandeja.
-func _cachelos_from_bowl(station: SeasoningStation, actor: InteractionComponent) -> void:
-	var bowl: CachelosBowl = station.get_node("CachelosBowl")
-	bowl.clock = func() -> float: return _now
+## Un cachelo cocido al cuenco (mano libre): suma 2 raciones.
+func _restock_bowl(bowl: CachelosBowl, actor: InteractionComponent) -> void:
 	var cachelos: Ingredient = CACHELOS_SCENE.instantiate()
 	_scene.add_child(cachelos)
 	cachelos.state = IngredientData.CookingState.COOKED
 	assert_true(actor.holder.pick_up(cachelos))
 	assert_true(bowl.interact(actor), "cachelos al cuenco")
 	_now += 1.0
-	assert_true(bowl.interact(actor), "cachelos a la caja")
 
 
 func _dispenser(station: SeasoningStation, seasoning: SeasoningData) -> SeasoningDispenser:

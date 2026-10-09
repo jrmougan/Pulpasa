@@ -182,9 +182,9 @@ func _cooked_octopus(leftover: Ingredient) -> Ingredient:
 	return octopus
 
 
-## Cachelos de la cachelera → olla → cocidos al cuenco → alternados en la caja de la bandeja
-## (PUL-033, PUL-061).
-func _season_with_cachelos(box: Box) -> void:
+## Cachelos de la cachelera → olla → cocidos al cuenco (2 raciones, D23); la mano queda libre para
+## coger la caja y alternar cachelos en ella (PUL-033, PUL-061).
+func _restock_bowl_with_cachelos() -> void:
 	assert_true(_press(_level.get_node("Stations/CachelosStorage")), "cachelera: da cachelos")
 	var cachelos: Ingredient = _hold().get_held_item() as Ingredient
 	assert_not_null(cachelos)
@@ -195,13 +195,12 @@ func _season_with_cachelos(box: Box) -> void:
 	assert_eq(_hold().get_held_item(), cachelos)
 	var bowl: CachelosBowl = _station().get_node("CachelosBowl")
 	_press_station(bowl, "cachelos cocidos al cuenco")
-	_press_station(bowl, "cuenco: cachelos a la caja")
-	assert_true(box.has_seasoning(bowl.seasoning), "caja con cachelos")
+	assert_eq(bowl.stock, 2, "un cachelo cocido = 2 raciones")
 
 
-## Flujo completo para la comanda del puesto `slot_id`: caja de la estantería a la bandeja de la
-## estación, pulpo cocido, cortes hasta llenarla, condimentos de la comanda en los dispensadores y
-## el cuenco, y entrega. Devuelve el pulpo que
+## Flujo completo para la comanda del puesto `slot_id`: caja de la estantería a un pasaplatos,
+## pulpo cocido, cortes hasta llenarla, caja a la mano, condimentos de la comanda en los
+## dispensadores y el cuenco, y entrega. Devuelve el pulpo que
 ## sobra en el suelo, o `null` si se gastó entero.
 func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 	var order: ActiveOrder = _order_for(slot_id)
@@ -211,8 +210,9 @@ func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 	assert_true(_press(spawner), "estantería: da la caja")
 	var box: Box = _hold().get_held_item() as Box
 	assert_not_null(box)
-	assert_true(_press(_station().get_tray()), "deja la caja en la bandeja")
-	assert_eq(_station().get_box(), box)
+	var pass_slot: Slot = _level.get_node("Stations/PassSlot01") as Slot
+	assert_true(_press(pass_slot), "deja la caja en un pasaplatos")
+	assert_eq(pass_slot.get_item(), box)
 
 	var octopus: Ingredient = leftover
 	var presses: int = 0
@@ -231,13 +231,19 @@ func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 	assert_null(_hold().get_held_item())
 
 	for seasoning: SeasoningData in order.data.seasonings:
-		if seasoning.type == SeasoningData.SeasoningType.CACHELOS:
-			await _season_with_cachelos(box)
-			continue
-		_press_station(_dispenser(seasoning), "dispensador de %s" % seasoning.resource_path)
-		assert_true(box.has_seasoning(seasoning))
-	assert_true(_press(box), "coge la caja")
+		var bowl: CachelosBowl = _station().get_node("CachelosBowl")
+		# Un cachelo cocido da 2 raciones: se repone cuando el cuenco se vacía (sobra 1 de cada 2).
+		if seasoning.type == SeasoningData.SeasoningType.CACHELOS and bowl.stock == 0:
+			await _restock_bowl_with_cachelos()
+	assert_true(_press(box), "coge la caja llena del pasaplatos")
 	assert_eq(_hold().get_held_item(), box)
+	for seasoning: SeasoningData in order.data.seasonings:
+		if seasoning.type == SeasoningData.SeasoningType.CACHELOS:
+			_press_station(_station().get_node("CachelosBowl"), "cuenco: cachelos a la caja")
+		else:
+			_press_station(_dispenser(seasoning), "dispensador de %s" % seasoning.resource_path)
+		assert_true(box.has_seasoning(seasoning))
+	assert_eq(_hold().get_held_item(), box, "la caja condimentada sigue en la mano")
 	assert_true(_press(_stand(slot_id)), "puesto %d: entrega" % slot_id)
 	assert_true(_released(box), "la caja entregada se libera")
 	assert_null(_hold().get_held_item())
@@ -368,8 +374,7 @@ func test_ac4_twenty_deliveries_leave_no_empty_stands_duplicates_or_ghosts() -> 
 
 	assert_eq(_alive("Box").size(), 0, "sin cajas fantasma")
 	assert_eq(_alive("Ingredient").size(), 0, "20 cajas = 10 pulpos exactos, sin sobrantes")
-	assert_null(_station().get_box(), "la bandeja queda libre")
-	assert_eq((_station().get_node("CachelosBowl") as CachelosBowl).stock, 0, "cuenco sin sobras")
+	assert_eq((_level.get_node("Stations/PassSlot01") as Slot).get_item(), null, "pasaplatos libre")
 	assert_eq(_level.get_node("Items").get_child_count(), 0)
 	assert_null(_hold().get_held_item())
 	assert_false(_kitchen().is_cooking())

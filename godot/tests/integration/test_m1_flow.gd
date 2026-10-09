@@ -1,7 +1,7 @@
 extends GutTest
 ## PUL-032: partida M1 completa sobre `level_01.tscn` con los datos reales y los autoloads reales.
 ## Una comanda con aceite y cachelos (D10): pulpo y cachelos cuecen juntos en la olla (D9), la caja
-## se llena sobre la bandeja de la estación, los cachelos cocidos van al cuenco y la caja se
+## se llena sobre un pasaplatos, los cachelos cocidos van al cuenco y la caja se
 ## condimenta en el dispensador de aceite y el cuenco (PUL-061), y se entrega con bonus por tiempo
 ## (D2). Después una caducidad (−expire_penalty), una caja errónea
 ## (−wrong_delivery_penalty, D8) y el fin de ronda: recaudación y estrellas en el game over.
@@ -100,9 +100,9 @@ func _bonus(order: ActiveOrder) -> int:
 	return floori((order.time_left / order.max_time) * _config.time_bonus_max)
 
 
-## Nevera y cachelera → olla (dos plazas), la caja de la comanda a la bandeja, cocción, FIFO,
-## cortes sobre la bandeja hasta llenar, cachelos cocidos al cuenco y, en la estación, cachelos y
-## aceite. Devuelve la caja lista para entregar.
+## Nevera y cachelera → olla (dos plazas), la caja de la comanda a un pasaplatos, cocción, FIFO,
+## cortes sobre la caja del pasaplatos hasta llenar, cachelos cocidos al cuenco y, con la caja llena
+## en la mano, cachelos y aceite. Devuelve la caja lista para entregar (en la mano).
 func _prepare_box() -> Box:
 	var kitchen: CookingStation = _station("Kitchen")
 	assert_true(_press(_station("OctopusStorage")), "nevera: da un pulpo")
@@ -115,15 +115,16 @@ func _prepare_box() -> Box:
 	assert_true(_press(kitchen), "olla: cachelos crudos junto al pulpo")
 	assert_null(_hold.get_held_item())
 
-	# Mientras cuecen: la caja de la comanda, a la bandeja de la estación.
+	# Mientras cuecen: la caja de la comanda, a un pasaplatos (D23).
 	var spawner: ItemSpawner = _small_box_spawner()
 	assert_not_null(spawner)
 	assert_true(_press(spawner), "estantería: da la caja")
 	var box: Box = _hold.get_held_item() as Box
 	assert_eq(box.data, RECIPE.box)
 	var station: SeasoningStation = _seasoning_station()
-	assert_true(_press(station.get_tray()), "bandeja: guarda la caja")
-	assert_eq(station.get_box(), box)
+	var pass_slot: Slot = _station("PassSlot01") as Slot
+	assert_true(_press(pass_slot), "pasaplatos: guarda la caja mientras se corta")
+	assert_eq(pass_slot.get_item(), box)
 
 	simulate(kitchen, roundi((octopus.data.cook_time + COOK_MARGIN) / COOK_STEP), COOK_STEP)
 	assert_true(octopus.is_cooked(), "pulpo cocido")
@@ -144,13 +145,15 @@ func _prepare_box() -> Box:
 	var bowl: CachelosBowl = station.get_node("CachelosBowl")
 	assert_true(_press(bowl), "cachelos cocidos al cuenco")
 	assert_true(_is_released(cachelos), "los cachelos se consumen")
-	assert_eq(bowl.stock, 1)
-	assert_true(_press(bowl), "cuenco: cachelos a la caja")
+	assert_eq(bowl.stock, 2, "un cachelo cocido = 2 raciones")
+	assert_true(_press(box), "coge la caja llena del pasaplatos")
+	assert_eq(_hold.get_held_item(), box)
+	assert_true(_press(bowl), "cuenco: cachelos a la caja en la mano")
 	assert_true(box.has_seasoning(CACHELOS_SEASONING), "cachelos aplicados como condimento")
-	assert_eq(bowl.stock, 0)
+	assert_eq(bowl.stock, 1)
 	assert_true(_press(_dispenser(OIL)), "dispensador de aceite")
 	assert_true(box.has_seasoning(OIL))
-	assert_null(_hold.get_held_item())
+	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
 	assert_eq(box.get_contents().seasonings.size(), 2)
 	return box
 
@@ -177,8 +180,7 @@ func test_m1_full_round_oil_cachelos_bonus_expiry_wrong_box_and_stars() -> void:
 
 	# --- Entrega con bonus por tiempo -------------------------------------------------------
 	var box: Box = await _prepare_box()
-	assert_true(_press(box), "coge la caja")
-	assert_eq(_hold.get_held_item(), box)
+	assert_eq(_hold.get_held_item(), box, "la caja condimentada va en la mano")
 	RoundManager.round_state.advance(6.0)
 	var live: ActiveOrder = OrderService.get_active_orders()[0]
 	assert_eq(live.id, order.id)
