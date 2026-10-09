@@ -2,9 +2,12 @@
 
 - **Estado:** aceptado (2026-10-03); enmienda §8 (estación de condimentos) **propuesta**, pendiente
   del gate humano (PUL-056); enmienda §9 (estación al paso, D23) **aceptada** por el producer el 2026-10-07 tras la
-  revisión del producer (PUL-093); sustituye las partes de §8 que dependían de la bandeja
-- **Fecha:** 2026-10-03; enmiendas 2026-10-05 y 2026-10-07
-- **Ficha:** PUL-003; enmiendas PUL-056 (D18, D19) y PUL-093 (D23)
+  revisión del producer (PUL-093); sustituye las partes de §8 que dependían de la bandeja;
+  enmienda de §3 (API de `Holder`), §9.4 y §9.5 tras implementar M3c (PUL-103) **aprobada** por el
+  responsable en gate humano
+- **Fecha:** 2026-10-03; enmiendas 2026-10-05, 2026-10-07 y 2026-10-09
+- **Ficha:** PUL-003; enmiendas PUL-056 (D18, D19), PUL-093 (D23) y PUL-103 (lo que cambió al
+  implementar M3c en PUL-097…PUL-101)
 - **Relacionado:** `docs/arch/scene-tree.md` (árbol objetivo de M0), ADR-001 (carpetas), ADR-002
   (autoloads), ADR-005 (3D o 2D, D14 pendiente), inventario §1 (Characters, Game, Interaction,
   Interfaces) y §3 (prefabs, escenas)
@@ -86,9 +89,9 @@ El jugador y los objetos se componen de nodos-componente reutilizables en `compo
 | Componente | Capa | Nodo base (3D / 2D) | Sustituye a | Notas |
 |---|---|---|---|---|
 | `ControlComponent` | Común | `Node` | parte de `PlayerController` | `@export var player_index: int` (identidad del personaje), `var controlled_by: int` (jugador que lo controla, 0 = nadie), señal `control_changed(controlled_by)`. Crea el `PlayerInput` del jugador que lo controla (ADR-004) |
-| `Holder` | Común (abstracta) | `Node` | `IPickable` + `PlayerHoldSystem` (API) | API de la mano: `get_held_item() -> Node`, `can_hold(item: Node) -> bool`, `pick_up(item: Node) -> bool`, `drop() -> Node`; señales `item_picked_up`/`item_dropped`. Los métodos base fallan con `push_error`; los implementa `HoldComponent` |
-| `InteractionComponent` | Común | `Node` | `PlayerInteractionController` | `@export var control: ControlComponent`, `@export var holder: Holder`, `@export var detector: Node` (conecta `target_changed` por nombre). Al pulsar `p<n>_interact` llama `interact(self)` del objetivo; si nada acepta y lleva algo, `holder.drop()` |
-| `HoldComponent` | Específica | `Holder` + `Marker3D`/`Marker2D` `%HoldPoint` | `PlayerHoldSystem` | Implementa `Holder`: reparenta y coloca el objeto. Único camino: llama `on_picked_up`/`on_dropped` del objeto (B4); valida antes de mutar (B5) |
+| `Holder` | Común (abstracta) | `Node` | `IPickable` + `PlayerHoldSystem` (API) | API de la mano: `get_held_item() -> Node`, `can_hold(item: Node) -> bool`, `pick_up(item: Node) -> bool`, `drop() -> Node`, `can_drop_freely() -> bool` (PUL-101: si soltar al suelo sin objetivo es posible; la base devuelve `true`, §9.5); señales `item_picked_up`/`item_dropped`. Los métodos base fallan con `push_error` (salvo `can_drop_freely`); los implementa `HoldComponent` |
+| `InteractionComponent` | Común | `Node` | `PlayerInteractionController` | `@export var control: ControlComponent`, `@export var holder: Holder`, `@export var detector: Node` (conecta `target_changed` por nombre). Al pulsar `p<n>_interact` llama `interact(self)` del objetivo; si nada acepta y lleva algo, `holder.drop()` solo si `holder.can_drop_freely()`; si no, consume la pulsación sin soltar (PUL-101, §9.5) |
+| `HoldComponent` | Específica | `Holder` + `Marker3D`/`Marker2D` `%HoldPoint` | `PlayerHoldSystem` | Implementa `Holder`: reparenta y coloca el objeto. Único camino: llama `on_picked_up`/`on_dropped` del objeto (B4); valida antes de mutar (B5). `can_drop_freely()` es `false` si el punto de soltar cae en la capa `world` (§9.5) |
 | `InteractionDetector` | Específica | `Area3D` / `Area2D` | `InteractionDetector` | Un solo detector por jugador (B7); radio en `PlayerConfig.tres`. Delega la puntuación en `InteractionScoring` (común, `Vector2` del suelo) |
 | `Highlightable` | Específica | `Node` | `HighlightController`, `OutlineHighlighter`, `InteractableHighlight` | 3D: `material_overlay` con shader de contorno; 2D: shader `canvas_item` de contorno. Retícula opcional. Sin `EmissionHighlighter` (B3) |
 
@@ -194,7 +197,7 @@ dispensadores y cuenco lo implementen.
 
 #### 8.2 Consumir y rechazar
 `InteractionComponent.interact_pressed()` suelta lo que lleva la mano si el objetivo no consume la
-pulsación. En la estación un rechazo **no debe tirar nada** (AC8: «la mano no cambia»). Regla:
+pulsación y `holder.can_drop_freely()` (§9.5). En la estación un rechazo **no debe tirar nada** (AC8: «la mano no cambia»). Regla:
 - Dispensador: `can_interact(actor)` es `true` solo con `actor.holder` y la mano vacía (**enmienda
   PUL-064, aprobada por el responsable el 2026-10-05**: con algo en la mano no es objetivo —
   `is_reachable_from` devuelve `false`, §8.1—, así que el detector no lo resalta y gana la bandeja o el cuenco; `HAND_BUSY` queda en desuso). Cuenco:
@@ -240,7 +243,7 @@ pulsación. En la estación un rechazo **no debe tirar nada** (AC8: «la mano no
 E-A + N-A) quita la bandeja de la estación: la caja llena **se lleva en la mano** y se pulsa cada
 dispensador «al paso». Además: 6 pasaplatos marcados (el resto de la barra no acepta objetos),
 tamaño S/M/L legible en ticket y rack, color de puesto en el ticket y zona de entrega que se
-enciende, hueco de la barra a x ≈ 3,2 y 2 raciones por cachelo (máx. 4). Esta sección **sustituye**
+enciende, hueco de la barra a x ≈ 3,2 (montado con centro en x 3,5, §9.5) y 2 raciones por cachelo (máx. 4). Esta sección **sustituye**
 lo que en §8 dependía de la bandeja (fila `Tray` de §8.1, `accepted_group` de la bandeja en §8.2,
 `station.get_box()` en §8.3) y mantiene el resto de §8: la regla de lado (`StationSide`,
 `is_reachable_from`, `side_of`), consumir al rechazar, `SeasoningRules` y la API de la caja. Tecla
@@ -282,7 +285,8 @@ de PUL-090).
   `_physics_process` del propio nodo (se congela en pausa y sigue `Engine.time_scale`, como la olla).
   `clock: Callable` sigue siendo inyectable para tests; deja de usar `Time.get_ticks_usec`
   (pregunta abierta 4 de PUL-090). Aplica a dispensadores y al cuenco al alternar; la segunda
-  pulsación dentro de la guarda se consume en silencio.
+  pulsación dentro de la guarda se consume en silencio. Implementado en PUL-097 (`_game_time`;
+  `engine_seconds` eliminado).
 - Las pegatinas (`%BadgeRow`) siguen a la caja en la mano sin cambios: ya se rehacen con
   `seasoned`/`seasoning_removed`.
 
@@ -302,10 +306,19 @@ de PUL-090).
 PUL-100 lo comprueba (o tiñe el toldo desde la paleta).
 
 #### 9.4 Indicador de entrega en `order_stand.tscn`
-- `%DeliveryMark`: la pieza `delivery_zone` de PUL-096 en el suelo, sobre `%DeliveryZone`, con dos
-  estados (apagado / encendido; el encendido, emisivo en `palette.color_for(slot_id)`).
+- Marca de la zona (enmienda PUL-103, implementada en PUL-100): **no hay nodo `%DeliveryMark`**.
+  La pieza `delivery_zone` de PUL-096 viene dentro del `.glb` del puesto como la malla
+  `DeliveryFrame` (hija de `Model`); `order_stand.gd` la localiza con
+  `find_child("DeliveryFrame", true, false)` (búsqueda local en la propia escena, sin ruta absoluta)
+  y alterna su `material_override` entre `@export var material_off` (compartido) y un duplicado por
+  instancia de `@export var material_on` con `albedo_color` y `emission` =
+  `palette.color_for(slot_id)`. Dos estados: apagado / encendido. Si el `.glb` pierde la malla, el
+  puesto funciona igual y solo no se ve el encendido.
 - `%ProximityArea` (`Area3D`, `collision_layer` 0, máscara `player`): cilindro de **2,0 m** de radio
-  centrado en la zona (R12). El radio es geometría de la escena; el test de PUL-100 lo fija.
+  centrado en la zona (R12; el nodo está en la misma posición que `%DeliveryZone`, z 3,4 local). El
+  radio es geometría de la escena y se mide **al borde de la cápsula** del jugador: basta con que la
+  cápsula (radio 0,21 m) solape el cilindro, así que el centro del jugador se enciende hasta
+  ≈ 2,21 m. El test de PUL-100 lo fija (1,9 m enciende, 2,6 m no).
 - Regla (en `order_stand.gd`, `@export var palette: StandPalette`): encendida si algún cuerpo de
   `%ProximityArea` tiene un `%InteractionComponent` cuyo `holder` lleva una `Box` que cumple la misma
   comprobación que ya usa la zona para entregar sola (`_zone_accepts`: comanda viva y
@@ -320,14 +333,26 @@ PUL-100 lo comprueba (o tiñe el toldo desde la paleta).
   overrides del nivel desde el QA D9) por la marca `pass_mark` de `counters` (PUL-095): la marca es
   parte del pasaplatos, no del nivel, y el nivel deja de sobrescribir `Model`/`Body`. La retícula
   de `%Highlightable` no cambia. `Slot.accepted_group` se conserva (API probada, sin usuarios en el
-  nivel).
-- Soltar sin objetivo no cambia (§6: delante del portador, al nodo `Items`). R11 exige además que lo
-  soltado frente a la barra **no quede sobre ella**: PUL-101 lo prueba; si falla, la corrección va en
-  `HoldComponent._drop_position` (si el punto cae dentro de un cuerpo de la capa `world`, se suelta
-  a los pies del portador) en una ficha aparte que asigna el producer.
-- Hueco de la barra: de x 7,7 (col. 14) a **centro x ≈ 3,2**, ≥ 1 m de ancho, y la barra se cierra
-  hasta la pared derecha. La posición exacta la fija `level-layouts.md` (PUL-092) con R14 (rodeo
-  6–10 m). `level_walker.gd::GAP_X` sigue al hueco.
+  nivel). Reparto 3 + 3 (PUL-101): `PassSlot01..03` en x −5,3 / −4,3 / −3,3 y `PassSlot04..06` en
+  x 4,7 / 5,7 / 6,7, fuera del tramo de la estación (x −2,4…2,8) y del hueco.
+- Soltar sin objetivo (enmienda PUL-103, implementada en PUL-101; **sustituye** a «se suelta a los
+  pies del portador»): si el punto de soltar (delante y arriba del portador según
+  `PlayerConfig.drop_forward_offset` / `drop_up_offset`, 0,6 / 0,6 m en
+  `data/config/player_config.tres`; el destino `Items` es el de §6) cae en un cuerpo de la capa `world` (esfera de 0,2 m: la barra, una pared, el
+  mostrador de la estación), **no se suelta nada y la mano no cambia** (R11 literal). Contrato:
+  - `Holder.can_drop_freely() -> bool` (común; la base devuelve `true`). `HoldComponent` devuelve
+    `false` si el punto de soltar está bloqueado por `world`.
+  - `InteractionComponent.interact_pressed()`: si el objetivo no consume y la mano está llena,
+    llama `holder.drop()` solo si `holder.can_drop_freely()`; en los dos casos **consume** la
+    pulsación (devuelve `true`), sin señal ni cue.
+  - `Holder.drop()` no cambia ni consulta `can_drop_freely()`: lo siguen usando las transferencias
+    (slot, olla, cuenco, puesto), que dejan el objeto en su sitio aunque esté sobre la barra.
+  Sin objetivo y con el punto libre, soltar sigue como en §6 (delante del portador, al nodo `Items`).
+- Hueco de la barra (PUL-101): **1,4 m libres, de x 2,8 a 4,2 (centro 3,5)**, entre el extremo
+  este de la colisión de la estación (x 2,8) y el tramo este de la barra (x 4,2 hasta la pared
+  derecha), con el umbral `pass_threshold` (PUL-095). El hueco de x 7,7 (col. 14) queda
+  **cerrado**. Cumple R14 (rodeo cara de condimentar ↔ cara de pase 7,93 m, rango 6–10) y el
+  rango de centro x ∈ [2,7; 3,7] de `level-layouts.md` (L2). `level_walker.gd::GAP_X` = 3,5.
 
 #### 9.6 Señales
 **Ninguna señal nueva ni cambio de firma.** El condimento sigue en `seasoned` / `seasoning_removed`
@@ -346,6 +371,11 @@ color de datos (`RecipeData.box`, `ActiveOrder.slot_id` + `StandPalette`), sin e
    el nivel y el ticket no lo vería sin buscar nodos; un `Resource` compartido lo leen los dos.
 4. *Marca del pasaplatos como piezas de `kitchen_layout.tscn`.* La marca y el `Slot` podrían
    separarse al mover uno; en `slot.tscn` van juntos.
+5. *Soltar a los pies del portador si el punto delante está bloqueado* (texto original de §9.5).
+   Deja la caja en el suelo junto a la barra, que R11 prohíbe («no suelta nada»); PUL-101 lo
+   sustituyó por `can_drop_freely()` (enmienda PUL-103).
+6. *Nodo propio `%DeliveryMark` en `order_stand.tscn`.* Duplicaría la malla que ya trae el `.glb`
+   del puesto (PUL-096); se usa `DeliveryFrame` dentro de `Model` (enmienda PUL-103).
 
 ## Alternativas consideradas
 1. **Nivel monolítico como `Level_01.unity`.** Un solo dueño para casi todo, conflictos de merge en
