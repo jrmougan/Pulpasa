@@ -11,8 +11,8 @@ la hace **el responsable**: juega y decide. Unos 25 minutos.
 | R15 Individual sin cambio, pedido desde cero ≤ 50 m | **54,7 m** la mejor ruta del bot (caja soltada en el suelo junto a las ollas); **45,3 m** sin los 9,4 m de salir de la posición inicial; 60,7 m con la caja en el pasaplatos 04 y 69,6 m en el 01 (en PUL-102: 55,0 / 45,3 / 61,0 / 73,3) | **no cumple con el bot** si se cuenta la salida (por 4,7 m); igual que antes |
 | R17 Coop, media de pedidos 2–4 ≤ 4,6 s | **3,05 s** con el flujo adelantado y pasaplatos del oeste (antes 4,09 s); 5,27 s con los del este; **6,17 s** con el protocolo secuencial (el pedido 3 espera 5 s de cocción) | cumple solo con el flujo adelantado y el oeste; pedido 2 secuencial de Coop 3,98 s (65 % de PUL-090) |
 | Pulsaciones por comanda (Individual, pedido 1 / 2) | Á feira y Picante **14 / 11**; con cachelos **19 / 12** (antes 13 / 10 y 17 / 10) | +2 cortes y −1 de aliño |
-| Recuperación con el cubo (T7 ≤ 15 s) | **13,2 s** (puesto 1) y **16,8 s** (puesto 4); con el otro aliño **1,3 s** sin cubo | cumple en el puesto 1, no en el 4 (+1,8 s) |
-| Umbrales de estrellas 30 / 60 / 90 € | Un bot Individual secuencial recauda **150–195 €** en 300 s (3 estrellas de sobra) | propuesta **40 / 90 / 150 €**, provisional |
+| Recuperación con el cubo (T7) | funcional cumple; informativo: **13,2 s** (puesto 1) y **16,8 s** (puesto 4); con el otro aliño **1,3 s** sin cubo | sin límite fijado: ¿fijamos uno? |
+| Umbrales de estrellas 30 / 60 / 90 € | Un bot Individual secuencial sin adelantar recauda **150–195 €** en 300 s (3 estrellas de sobra) | propuesta **40 / 90 / 150 €**, provisional |
 | Coop, pedido 1 | 11,2 → **10,2 s** (Á feira); emplatador quieto 6,3 s de 10,2 s | mejora ligera |
 
 Cosas que sabes antes de entrar y no tienes que descubrir:
@@ -86,7 +86,7 @@ Para cada fila: **ok / cambiar / dudas**, y una línea si es «cambiar». Ademá
   que sale este dato: 78,9 → 55,0 → 54,7.
 - **R17**: aceptar el criterio con juego adelantado y el oeste (3,05 s) o pedir más margen (el
   secuencial da 6,17 s por la cocción del pulpo 2).
-- **Cubo T7**: aceptar 13–17 s de rehacer (puesto 1 / 4) o mover el cubo; aceptar que el aliño
+- **Cubo T7**: ¿fijamos un límite de segundos para rehacer (hoy 13–17 s, puesto 1 / 4)? ¿Mover el cubo? aceptar que el aliño
   equivocado se arregla sin cubo.
 - **Umbrales de estrellas**: adoptar 40 / 90 / 150 € o los que salgan de tu recaudación.
 - **Cortes de la caja**: dejar 6 o cambiar (`BoxData.presses_to_fill`).

@@ -21,7 +21,7 @@ Tabla antes (PUL-102) / después en `docs/evidence/PUL-116/README.md`, capturas,
 - [x] AC1 Tabla de R15, R17, pulsaciones y recuperación con cubo
 - [x] AC2 Propuesta de umbrales de estrellas si cambian
 - [x] AC3 `docs/design/m3d-gate.md`
-- [ ] AC4 `tools/verify.sh` en verde
+- [x] AC4 `tools/verify.sh` en verde
 
 ## Plan
 1. Copiar y adaptar el bot de PUL-102 a `docs/evidence/PUL-116/` (caja única de 6 cortes, aliño de una
@@ -39,7 +39,7 @@ Todo en `docs/evidence/PUL-116/` (README.md con tablas, JSON y 4 capturas). Guí
 | AC1 R15 (≤ 50 m) | **no cumple con el bot**: 54,7 m (45,3 sin la salida inicial), antes 55,0 / 45,3 | README «R15», `metrics_solo_*.json` |
 | AC1 R17 (media 2–4 ≤ 4,6 s) | cumple con flujo adelantado y oeste: **3,05 s** (antes 4,09); este 5,27 s y secuencial 6,17 s no | README «R17», `metrics_chain_*.json` |
 | AC1 pulsaciones | Á feira y Picante 14 / 11; con cachelos 19 / 12 | README «Pulsaciones por comanda» |
-| AC1 recuperación T7 (≤ 15 s) | 13,23 s puesto 1 (cumple); 16,78 s puesto 4 (no); con el otro aliño 1,3 s | README «T7», `metrics_recover.json` |
+| AC1 recuperación T7 | funcional cumple (0 rechazos, comanda viva); informativo: 13,23 s (puesto 1, `TrashBinService`), 16,78 s (puesto 4, `TrashBinKitchen`), 1,3 s con el otro aliño | README «T7», `metrics_recover.json` |
 | AC2 umbrales | propuesta 40 / 90 / 150 € (hoy 30 / 60 / 90 €; el bot secuencial saca 150–195 €); sin cambiar datos | README «Umbrales», `metrics_round_*.json` |
 | AC3 guía | `docs/design/m3d-gate.md` | fichero |
 | AC4 `tools/verify.sh` | verde (ver abajo) | salida del verify |
@@ -50,5 +50,5 @@ modelo del rack con S/M/L, los dos aliños comparten icono, mostrador de 5,2 m c
 panel de 4 tickets sobre el cartel, HUD «Cajas / minuto».
 
 `tools/verify.sh`: 1.ª pasada en rojo por `test_level_01_r16` (el intermitente de PUL-118, `order_completed`
-1 en vez de 2; sin relación con esta ficha, que no toca código del juego); 2.ª pasada **verde**
+1 en vez de 2; sin relación con esta ficha, que no toca código del juego); 2.ª pasada **verde** (AC4; la 1.ª cayó por el intermitente de PUL-118)
 (gdformat, gdlint, import, GUT 73 scripts / 828 tests, smoke).

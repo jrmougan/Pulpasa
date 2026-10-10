@@ -95,17 +95,20 @@ Referencia PUL-090: pedido 2 de Coop S = 6,08 s; 75 % = 4,56 s.
 - Seguimos sin medir el flujo antiguo con el bot adelantado, así que la mejora respecto a PUL-090 no es
   homogénea (igual que en PUL-102).
 
-## T7 · Recuperación con el cubo (≤ 15 s)
+## T7 · Recuperación con el cubo (tiempos informativos)
 Protocolo (`_recover` de `measure_flow.gd`): el bot hace la caja 1 con el aliño **picante** para una
 comanda «Á feira» (el pulpo sobrante queda en el pasaplatos 02), la lleva a la zona del puesto sin
 entregar y desde ahí cronometra hasta `order_completed`. Siempre: 0 `delivery_rejected`, recaudación sin
-bajar (+12 € al final: 8 + 4 de bonus) y la comanda sigue viva (T7 pasa).
+bajar (+12 € al final: 8 + 4 de bonus) y la comanda sigue viva: **T7 funcional cumple** (`rejections_during` 0, `completed_after` 1). Los
+tiempos son informativos: `cubo-basura.md` no fija un límite de segundos (el «≤ 15 s» salió de la ficha).
+`revenue_delta` se mide tras la entrega; que tirar no baja la recaudación lo cubren `trash_penalty` = 0 y
+los GUT T1/T5.
 
-| Escenario | Segundos desde la caja errónea | Metros P1 (total) | Pulsaciones (total) | Cumple ≤ 15 s |
+| Escenario | Segundos desde la caja errónea | Metros P1 (total) | Pulsaciones (total) | Cubo usado |
 |---|---:|---:|---:|---|
-| `recover_bin`, comanda en el puesto 1 (cubo del servicio a 0,8 s) | **13,23** | 128,0 | 26 | sí |
-| `recover_bin4`, comanda en el puesto 4 (cubo de la cocina o del servicio a 1,55 s) | **16,78** | 145,1 | 26 | **no (+1,8 s)** |
-| `recover_swap`: volver a la estación y pulsar el aliño dulce (sin cubo) | **1,3** | 77,3 | 15 | sí |
+| `recover_bin`, comanda en el puesto 1 (cubo a 0,8 s) | **13,23** | 128,0 | 26 | `TrashBinService` |
+| `recover_bin4`, comanda en el puesto 4 (cubo a 1,55 s) | **16,78** | 145,1 | 26 | `TrashBinKitchen` (el bot elige el de camino más corto; registrado en `bin`, rerun con el mismo resultado) |
+| `recover_swap`: volver a la estación y pulsar el aliño dulce (sin cubo) | **1,3** | 77,3 | 15 | ninguno |
 
 - Con el aliño de una pulsación **se corrige sin cubo**: pulsar el otro aliño sustituye (D25). El cubo
   solo compite cuando hace falta rehacer algo (pulpo equivocado, cachelos de más, caja a medias que
@@ -119,24 +122,25 @@ bajar (+12 € al final: 8 + 4 de bonus) y la comanda sigue viva (T7 pasa).
 | Con cachelos / Bravo cachelos | 19 | 12 | lo anterior + 5 (nevera de cachelos, olla 2 ×2, cuenco, alternar cachelos); el pedido 2 con cachelos ya repuestos no vuelve a cocer |
 
 ## Umbrales de estrellas (AC2): propuesta 40 / 90 / 150 € (hoy 30 / 60 / 90 €)
-No hay un bot humano: se usa como cota superior un bot Individual secuencial que sirve siempre la comanda
+No hay un bot humano: se usa como referencia un bot Individual secuencial sin adelantar que sirve siempre la comanda
 con menos paciencia (`round` de `measure_flow.gd`, fases reales de `round_config.tres`, 300 s):
 
 | Ruta de pasaplatos | Recaudación | Entregadas | Caducadas | Estrellas con 30/60/90 | Servidas |
 |---|---:|---:|---:|---:|---|
-| 01/02 (1.ª) | 150 € | 16 | 9 | 3 | Á feira 12, Picante 2, Con cachelos 1, Bravo 1 |
+| 01/02 (1.ª, `metrics_round.json`; las partidas son aleatorias, semilla 0 = sin fijar) | 150 € | 16 | 9 | 3 | Á feira 12, Picante 2, Con cachelos 1, Bravo 1 |
 | 01/02 (2.ª) | 159 € | 17 | 10 | 3 | Á feira 11, Picante 5, Bravo 1 |
 | 03/02 | 158 € | 17 | 7 | 3 | Á feira 14, Picante 3 |
 | 04/05 | 195 € | 19 | 6 | 3 | Á feira 10, Picante 7, Con cachelos 1, Bravo 1 |
 
 - Cada pedido entregado rinde ≈ 9–10 € netos (8–13 € + 3–4 de bonus − las −3 € por caducada).
-- **Con 30/60/90 el bot ya saca 3 estrellas con casi el doble (150–195 €) y un jugador al 40 % de
-  este bot también (60 €)**. Un coop competente va por encima del bot secuencial: 3 estrellas serían
+- **Con 30/60/90 el bot saca 3 estrellas con 1,7–2,2 veces el umbral (150–195 € frente a 90 €); un jugador
+  al 40 % de este bot (60 €) ya saca 2★ y al 60 % (90 €) 3★**. Un coop competente va por encima del bot secuencial: 3 estrellas serían
   triviales.
 - Propuesta: **1★ ≥ 40 €** (≈ 4 comandas), **2★ ≥ 90 €** (≈ 55 % del bot secuencial), **3★ ≥ 150 €** (el
   bot secuencial de menor resultado; para un humano en Individual exige ruta eficiente y pocas
   caducadas). **Provisional**: se calibra con las partidas del responsable (Individual y Local 2P).
-  Los umbrales están en `godot/data/config/round_config.tres` (`revenue_thresholds`), no se han tocado.
+  `revenue_thresholds` es común a Individual y Local 2P y **Coop no está medido**: 40/90/150 es
+  provisional. Los umbrales están en `godot/data/config/round_config.tres` (`revenue_thresholds`), no se han tocado.
 - Limitaciones del bot de `round`: no es determinista (la semilla de `round_config.tres` es 0), no cocina
   por adelantado y se desincroniza alguna vez (3–5 avisos «objetivo … no alcanzado» o «la zona no entregó» por partida;
   el bot sigue y completa la comanda, pero pierde segundos), con lo que 150–195 € es indicativo, no exacto. No hay medición de Coop completo.

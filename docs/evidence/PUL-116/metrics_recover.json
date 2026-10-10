@@ -1,5 +1,6 @@
 [
   {
+    "bin": "TrashBinService",
     "completed_after": 1,
     "cuts": 6,
     "delivery_rejections": 0,
@@ -17,6 +18,7 @@
     "trashed": 1
   },
   {
+    "bin": "TrashBinKitchen",
     "completed_after": 1,
     "cuts": 6,
     "delivery_rejections": 0,

@@ -674,6 +674,7 @@ func _recover(use_bin: bool) -> Dictionary:
 		await _cut_in_slot(w, slot, left)
 		await _season_and_deliver(w, slot)
 		var out: Dictionary = {
+			"bin": bin.name,
 			"recover_s": snappedf((_frame - wrong_at) / TICKS, 0.01),
 			"to_bin_s": snappedf((trashed_at - wrong_at) / TICKS, 0.01),
 		}
