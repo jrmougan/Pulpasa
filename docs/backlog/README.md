@@ -122,3 +122,5 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-107 | M3c | game-designer | done | Poner al día el GDD §9 (reglas vigentes) con decisions.md y el código |
 | PUL-108 | M3c | game-designer | done | Limpiar el diseño superado y registrar D24 (entrega en el tick de caducidad) |
 | PUL-109 | M3c | gameplay-engineer | done | Test de caja errónea entregada en el tick de caducidad (D24) |
+| PUL-110 | M3d | game-designer | in_progress | Registrar D25 (simplificación de mecánicas) y poner el diseño al día |
+| PUL-111 | M3d | godot-architect | in_progress | Enmendar los contratos para D25 (caja única, aliño, cubo de basura) |
