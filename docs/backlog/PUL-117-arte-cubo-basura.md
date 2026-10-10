@@ -1,7 +1,7 @@
 ---
 id: PUL-117
 title: Arte del cubo de basura (dirección A, D22)
-status: in_progress
+status: done
 milestone: M3d
 role: asset-pipeline
 deps: [PUL-112]
