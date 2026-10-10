@@ -1,0 +1,142 @@
+[
+  {
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Á feira",
+    "mean_orders_2_4": 8.21,
+    "meters_p1_total": 94.6,
+    "meters_p2_total": 40.3,
+    "mode": "chain_seq",
+    "orders": [
+      {
+        "completed": true,
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "BoxSpawner:9.4",
+          "PassSlot04:10.3",
+          "Kitchen:0.3",
+          "PassSlot04:6.9",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "SweetDressing:5.5",
+          "Zone:2.4"
+        ],
+        "meters_p1": 29.2,
+        "meters_p2": 13.8,
+        "order": 1,
+        "presses": 14,
+        "retargets": 0,
+        "seconds": 10.85,
+        "still_s_p1": 4.97,
+        "still_s_p2": 8.07
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "BoxSpawner:2.1",
+          "PassSlot04:10.3",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "SweetDressing:5.5",
+          "Zone:2.4"
+        ],
+        "meters_p1": 21.8,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 11,
+        "retargets": 0,
+        "seconds": 5.97,
+        "still_s_p1": 1.57,
+        "still_s_p2": 5.62
+      },
+      {
+        "completed": true,
+        "legs": [
+          "BoxSpawner:2.1",
+          "OctopusStorage:10.1",
+          "PassSlot04:10.3",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "PassSlot04:7.0",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "SweetDressing:5.5",
+          "Zone:2.4"
+        ],
+        "meters_p1": 21.8,
+        "meters_p2": 23.0,
+        "order": 3,
+        "presses": 14,
+        "retargets": 0,
+        "seconds": 12.68,
+        "still_s_p1": 8.28,
+        "still_s_p2": 8.05
+      },
+      {
+        "completed": true,
+        "legs": [
+          "Octopus:0.3",
+          "BoxSpawner:2.1",
+          "PassSlot04:10.3",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "SweetDressing:5.5",
+          "Zone:2.4"
+        ],
+        "meters_p1": 21.8,
+        "meters_p2": 1.7,
+        "order": 4,
+        "presses": 11,
+        "retargets": 0,
+        "seconds": 5.97,
+        "still_s_p1": 1.57,
+        "still_s_p2": 5.62
+      }
+    ],
+    "presses_total": 50,
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  },
+  {
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Á feira",
+    "mean_orders_2_4": 5.27,
+    "meters_p1_total": 119.4,
+    "meters_p2_total": 40.3,
+    "mode": "chain_pipe",
+    "orders": [
+      {
+        "at": 11.63,
+        "completed": true,
+        "order": 1,
+        "seconds": 11.63
+      },
+      {
+        "at": 17.67,
+        "completed": true,
+        "order": 2,
+        "seconds": 6.03
+      },
+      {
+        "at": 23.73,
+        "completed": true,
+        "order": 3,
+        "seconds": 6.07
+      },
+      {
+        "at": 27.43,
+        "completed": true,
+        "order": 4,
+        "seconds": 3.7
+      }
+    ],
+    "presses_total": 46,
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  }
+]

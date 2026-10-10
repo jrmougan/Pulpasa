@@ -1,0 +1,23 @@
+[
+  {
+    "cuts": 6,
+    "delivered": 17,
+    "delivery_rejections": 0,
+    "expired": 10,
+    "kind": "Á feira",
+    "meters_p1_total": 1052.0,
+    "mode": "round",
+    "orders": [],
+    "presses_total": 232,
+    "revenue": 159,
+    "served": {
+      "Bravo cachelos": 1,
+      "Picante": 5,
+      "Á feira": 11
+    },
+    "slots": "PassSlot01/PassSlot02",
+    "stars": 3,
+    "station_rejections": 0,
+    "trashed": 0
+  }
+]
