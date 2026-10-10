@@ -1,7 +1,8 @@
 # GDD de trabajo — PulpaSA (alpha)
 
 Resumen operativo en castellano del GDD original (`pulpasa_docs/main.tex`, gallego, solo lectura).
-Aplica las decisiones cerradas de `decisions.md` (D1–D7), que mandan sobre el original. Las erratas
+Aplica las decisiones cerradas de `decisions.md` (D1–D24), que mandan sobre el original y sobre este
+documento si discrepan. Las erratas
 del original se corrigen **solo aquí** (D7); `main.tex` no se toca.
 
 ## 1. Visión
@@ -23,6 +24,8 @@ Flujo del prototipo, que se mantiene por D1 (ver `roadmap.md`):
 7. A los 5 minutos (D5) acaba la partida: recaudación y 0–3 estrellas.
 
 ## 3. Decisiones de diseño aplicadas
+Fuente de verdad: `decisions.md` (D1–D24). La tabla recoge solo las siete primeras, que fijaron el
+diseño base; de D8 en adelante (caja errónea, olla, estaciones, entrega…) rige `decisions.md` y la §9.
 
 | # | Decisión | Cómo queda en el GDD de trabajo |
 |---|----------|----------------------------------|
@@ -40,7 +43,7 @@ Flujo del prototipo, que se mantiene por D1 (ver `roadmap.md`):
 |----------|------|---------------|
 | Atender comandas | Primaria | Máx. 4 comandas activas; cada una con límite de tiempo (paciencia) |
 | Coordinación cooperativa | Primaria | 2 jugadores locales comparten el puesto; sin combate (ver §8) |
-| Cocción | Secundaria | El pulpo **crudo** se cuece en la olla; temporizador visible; solo el cocido se puede cortar |
+| Cocción | Secundaria | El pulpo **crudo** se cuece en la olla; temporizador visible; solo el cocido se puede cortar; si no se retira se quema (`burn_time`, ADR-006 §5, `features/olla-que-se-pasa.md`) |
 | Corte | Secundaria | El pulpo **cocido** se corta sobre la caja (D1): cada pulsación llena la caja y gasta pulpo |
 | Condimentación | Secundaria | Decisiones sí/no (D4) aplicadas a la caja |
 | Dificultad | Sistema | La cadencia de comandas aumenta con el tiempo transcurrido |
@@ -70,7 +73,7 @@ cocer, cortar, condimentar, entregar y coordinarse.
 Alineado con «Alcance aprobado de la alpha» de `roadmap.md`.
 
 **Must** (cada punto del roadmap → feature):
-1. Paridad con Unity sin sus bugs → `features/paridad-unity.md`
+1. ~~Paridad con Unity sin sus bugs~~ → superado por D17 (la paridad ya no es requisito desde M1; PUL-108). Solo histórico: `features/paridad-unity.md`
 2. Ciclo de comandas sin bugs; 8. comanda reducida (D4) con iconos en el ticket; 3. paciencia → `features/comandas.md`
 4. Puntuación y objetivo (D2) → `features/entrega-y-puntuacion.md`
 5. Coop local 2P y mando Xbox → `features/jugadores-y-cambio.md` y `features/mando-y-reasignacion.md`
@@ -82,7 +85,7 @@ Alineado con «Alcance aprobado de la alpha» de `roadmap.md`.
 Soporte del flujo Must (también Must): `features/movimiento-e-interaccion.md`,
 `features/coccion-pulpo.md`, `features/corte-pulpo.md`, `features/partida-5-min.md`.
 
-**Should**: olla que se pasa (`features/olla-que-se-pasa.md`), dificultad por fases
+**Should**: olla que se pasa (implementada, ADR-006 §5; `features/olla-que-se-pasa.md`), dificultad por fases
 (`features/dificultad-progresiva.md`), opciones de volumen (`features/opciones-de-volumen.md`),
 textos en gallego (`features/textos-gallego.md`), tutorial breve (`features/tutorial-breve.md`).
 
@@ -115,8 +118,8 @@ Reglas en vigor de la alpha. Desde M1 el diseño manda sobre el prototipo (D17):
 Unity se indica como tal y lo que cambió cita su decisión. Cualquier cambio va a la sección 10.
 - **Caja errónea** (D8, `wrong_delivery_penalty` en `round_config.tres`, hoy 2 €): al entregar una caja que
   no coincide se resta la penalización de la recaudación (mínimo 0) y la caja se conserva en la mano
-  (`OrderBoard.try_deliver`, `OrderStand`). Entregar en un puesto sin comanda o con la comanda ya caducada
-  rechaza sin penalizar (0). La comanda caducada penaliza aparte (`expire_penalty`, hoy 3 €). Solo penaliza la
+  (`OrderBoard.try_deliver`, `OrderStand`). Entregar en un puesto sin comanda, con la comanda ya caducada o
+  que caduca en ese mismo tick rechaza sin penalizar (0; D24). La comanda caducada penaliza aparte (`expire_penalty`, hoy 3 €). Solo penaliza la
   entrega por interacción: la zona de entrega (`%DeliveryZone`) solo entrega si la caja coincide (PUL-039).
 - **Olla** (D9, D10, `KitchenData.capacity` en `data/config/kitchen.tres`, hoy 2): admite varias cocciones a la
   vez, una por plaza; pulpo y cachelos crudos compiten por las plazas y se devuelven cocidos por orden de
@@ -144,8 +147,8 @@ Rechazadas: asignar la comanda a cualquier puesto (D12); corte por «mantener pu
 ## 11. Preguntas abiertas
 1. **Estrellas**: umbrales exactos de recaudación para 1/2/3 estrellas (provisional en
    `entrega-y-puntuacion.md`; validar jugando).
-2. **Cachelos**: ¿se cuecen en la olla o son ingrediente listo? (el prototipo no los modela; se asume listo).
-3. **Modo individual**: ¿cambio con tecla fija o al personaje más cercano al objetivo?
+2. ~~Cachelos: ¿se cuecen en la olla?~~ Respondida por D10: se cuecen en la olla, compitiendo con el pulpo (PUL-108).
+3. ~~Modo individual: ¿tecla fija o personaje más cercano?~~ Respondida por D11: tecla fija que alterna entre los dos (PUL-108).
 4. **Modelos Pandazole (D6)**: ¿se usan o se sustituyen? Afecta a asset-pipeline, no a las features.
 5. **Fases de dificultad**: valores provisionales de `dificultad-progresiva.md` (límites de fase, puestos activos, `max_time`) a validar en playtest.
 6. **Número de puestos de entrega** del nivel: 4 asumidos por `max_active_orders`; confirmar con el inventario (PUL-001).
