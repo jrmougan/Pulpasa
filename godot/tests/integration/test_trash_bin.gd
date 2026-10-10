@@ -10,7 +10,7 @@ const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn"
 const SLOT_SCENE: PackedScene = preload("res://entities/stations/slot.tscn")
 const KITCHEN_SCENE: PackedScene = preload("res://entities/stations/kitchen.tscn")
 const OCTOPUS_DATA: IngredientData = preload("res://data/ingredients/octopus.tres")
-const SMALL: BoxData = preload("res://data/boxes/small.tres")
+const BOX_DATA: BoxData = preload("res://data/boxes/box.tres")
 const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const SETTLE_FRAMES: int = 3
@@ -21,10 +21,8 @@ const TRASH_POSITIONS: Dictionary[String, Vector2] = {
 }
 ## Z de la barra; el hueco se deriva del nivel (`_gap_span`).
 const BAR_Z: float = 0.0
-## Los 3 spawners por talla son de antes de D25: PUL-113 los sustituye por BoxSpawner.
-const LEGACY_SPAWNERS: Array[StringName] = [&"SmallSpawner", &"MediumSpawner", &"LargeSpawner"]
 ## Objetivos con la mano llena que el nivel debe tener (scene-tree.md §2); el spawner del rack se
-## comprueba aparte por su sufijo `Spawner`.
+## comprueba aparte (`BoxSpawner`).
 const EXPECTED_TARGETS: Array[String] = [
 	"OctopusStorage",
 	"CachelosStorage",
@@ -40,6 +38,7 @@ const EXPECTED_TARGETS: Array[String] = [
 	"OrderStand2",
 	"OrderStand3",
 	"OrderStand4",
+	"BoxSpawner",
 ]
 const SCREEN_SIZE: Vector2i = Vector2i(1280, 720)
 const MIN_VISUAL_TIME: float = 0.3
@@ -88,7 +87,7 @@ func _hold_item(scene: PackedScene, hold: HoldComponent = _hold) -> Node:
 
 func _full_box() -> Box:
 	var box: Box = BOX_SCENE.instantiate()
-	box.data = SMALL
+	box.data = BOX_DATA
 	_level.add_child(box)
 	box.toggle_seasoning(SALT, true)
 	assert_true(_hold.pick_up(box))
@@ -309,8 +308,6 @@ func test_t6_trash_bins_are_far_from_every_target_and_the_gap() -> void:
 	for bin: TrashBin in _bins_of(level):
 		var pos: Vector2 = _flat(bin.global_position)
 		for target: Node3D in targets:
-			if LEGACY_SPAWNERS.has(target.name):
-				continue
 			var gap: float = pos.distance_to(_flat(target.global_position))
 			assert_gte(gap, TRASH_MIN_DISTANCE, "%s a %s" % [bin.name, target.name])
 		var span: Vector2 = _gap_span(level)
