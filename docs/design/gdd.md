@@ -113,10 +113,11 @@ globalización (franquía vs. pulpeiros tradicionales). Textos de la alpha en ca
 ## 9. Reglas vigentes de las comandas, la olla y el corte
 Reglas en vigor de la alpha. Desde M1 el diseño manda sobre el prototipo (D17): lo que sigue igual que en
 Unity se indica como tal y lo que cambió cita su decisión. Cualquier cambio va a la sección 10.
-- **Caja errónea** (D8, `wrong_delivery_penalty` en `round_config.tres`, hoy 2 puntos): al entregar una caja que
+- **Caja errónea** (D8, `wrong_delivery_penalty` en `round_config.tres`, hoy 2 €): al entregar una caja que
   no coincide se resta la penalización de la recaudación (mínimo 0) y la caja se conserva en la mano
   (`OrderBoard.try_deliver`, `OrderStand`). Entregar en un puesto sin comanda o con la comanda ya caducada
-  rechaza sin penalizar (0). La comanda caducada penaliza aparte (`expire_penalty`, hoy 3).
+  rechaza sin penalizar (0). La comanda caducada penaliza aparte (`expire_penalty`, hoy 3 €). Solo penaliza la
+  entrega por interacción: la zona de entrega (`%DeliveryZone`) solo entrega si la caja coincide (PUL-039).
 - **Olla** (D9, D10, `KitchenData.capacity` en `data/config/kitchen.tres`, hoy 2): admite varias cocciones a la
   vez, una por plaza; pulpo y cachelos crudos compiten por las plazas y se devuelven cocidos por orden de
   finalización (`CookingStation`). Con la olla llena, el crudo no entra.
@@ -137,8 +138,8 @@ Unity se indica como tal y lo que cambió cita su decisión. Cualquier cambio va
 ## 10. Propuestas para gate humano
 Cambios sobre las reglas de arriba que NO rigen hasta aprobarse:
 1. Devolver la caja errónea a su origen (la penalización ya rige por D8).
-2. Asignar la comanda a cualquier puesto (rechazado en D12).
-3. Corte por «mantener pulsado» en vez de pulsar (rechazado en D13).
+
+Rechazadas: asignar la comanda a cualquier puesto (D12); corte por «mantener pulsado» (D13).
 
 ## 11. Preguntas abiertas
 1. **Estrellas**: umbrales exactos de recaudación para 1/2/3 estrellas (provisional en
