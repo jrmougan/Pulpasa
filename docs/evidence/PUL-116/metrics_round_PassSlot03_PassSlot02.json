@@ -1,0 +1,22 @@
+[
+  {
+    "cuts": 6,
+    "delivered": 17,
+    "delivery_rejections": 0,
+    "expired": 7,
+    "kind": "Á feira",
+    "meters_p1_total": 1000.1,
+    "mode": "round",
+    "orders": [],
+    "presses_total": 247,
+    "revenue": 158,
+    "served": {
+      "Picante": 3,
+      "Á feira": 14
+    },
+    "slots": "PassSlot03/PassSlot02",
+    "stars": 3,
+    "station_rejections": 0,
+    "trashed": 0
+  }
+]

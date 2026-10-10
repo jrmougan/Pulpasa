@@ -1,0 +1,52 @@
+[
+  {
+    "completed_after": 1,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Á feira",
+    "meters_p1_total": 128.0,
+    "mode": "recover_bin",
+    "orders": [],
+    "presses_total": 26,
+    "recover_s": 13.23,
+    "rejections_during": 0,
+    "revenue_delta": 12,
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0,
+    "to_bin_s": 0.8,
+    "trashed": 1
+  },
+  {
+    "completed_after": 1,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Á feira",
+    "meters_p1_total": 145.1,
+    "mode": "recover_bin4",
+    "orders": [],
+    "presses_total": 26,
+    "recover_s": 16.78,
+    "rejections_during": 0,
+    "revenue_delta": 12,
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0,
+    "to_bin_s": 1.55,
+    "trashed": 1
+  },
+  {
+    "completed_after": 1,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Á feira",
+    "meters_p1_total": 77.3,
+    "mode": "recover_swap",
+    "orders": [],
+    "presses_total": 15,
+    "recover_s": 1.3,
+    "rejections_during": 0,
+    "revenue_delta": 12,
+    "slots": "PassSlot01/PassSlot02",
+    "station_rejections": 0,
+    "trashed": 0
+  }
+]
