@@ -4,10 +4,10 @@ title: Estabilizar test_level_01_r16 (intermitente bajo carga)
 status: todo
 milestone: M3d
 role: gameplay-engineer
-deps: [PUL-112, PUL-113]
+deps: [PUL-115]
 orca_task: null
 unity_sources: []
-owns: [godot/tests/integration/test_level_01_r16.gd, godot/tests/tools/level_walker.gd, docs/evidence/PUL-118/**, docs/backlog/PUL-118-estabilizar-test-r16.md]
+owns: [godot/tests/integration/test_level_01_r16.gd, godot/tests/integration/level_walker.gd, docs/evidence/PUL-118/**, docs/backlog/PUL-118-estabilizar-test-r16.md]
 touches_scenes: []
 ---
 
