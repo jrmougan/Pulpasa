@@ -42,6 +42,6 @@ Verificado contra el código:
 - `grep -n octopus_burnt docs/design`: solo queda la mención histórica en `olla-que-se-pasa.md` AC1 («antes `octopus_burnt`»).
 
 Discrepancias nuevas (sin resolver, fuera de owns):
-1. En el tick de caducidad la repuesta ya existe en el puesto, pero la entrega se rechaza contra la caducada (`id_caducada`). D24 lo cubre; el test existente es `test_order_stand.gd` (`_assert_expiry_tick`); falta un test directo en `OrderBoard` (el AC5d lo anota).
+1. En el tick de caducidad la repuesta ya existe en el puesto, pero la entrega se rechaza contra la caducada (`id_caducada`). D24 lo cubre; los tests existentes son `test_order_board.gd` (`test_ac5b_delivery_on_expiry_tick_rejected_not_redirected`) y `test_order_stand.gd` (`_assert_expiry_tick`), con caja válida; falta el caso con caja errónea (el AC5d lo anota).
 2. Resueltas en la ampliación: `coccion-pulpo.md` (AC2 y AC6 tachados como histórico de M0; rigen AC2' y AC6', cabecera «Quemado vigente»), `gdd.md` §4 (cocción con quemado) y cabecera/§3 de `gdd.md` (remiten a `decisions.md`, D1–D24). `m0-gate.md` cita `paridad-unity.md` y se deja intacto por histórico.
-3. Pendiente (fuera de esta ficha): añadir un test directo en `OrderBoard` de la entrega en el tick de caducidad (AC5d de `entrega-y-puntuacion.md`).
+3. Pendiente (fuera de esta ficha): añadir a `test_order_board.gd` el caso de caja errónea en el tick de caducidad (penalización 0; AC5d de `entrega-y-puntuacion.md`).
