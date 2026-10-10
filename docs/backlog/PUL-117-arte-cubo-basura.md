@@ -1,13 +1,13 @@
 ---
 id: PUL-117
 title: Arte del cubo de basura (dirección A, D22)
-status: todo
+status: in_progress
 milestone: M3d
 role: asset-pipeline
 deps: [PUL-112]
 orca_task: null
 unity_sources: []
-owns: [godot/assets/models/trash_bin/**, godot/entities/stations/trash_bin.tscn, docs/evidence/PUL-117/**, docs/backlog/PUL-117-arte-cubo-basura.md]
+owns: [art/blender/trash_bin.blend, godot/assets/models/stations/trash_bin/**, godot/assets/models/trash_bin/**, godot/entities/stations/trash_bin.tscn, docs/evidence/PUL-117/**, docs/backlog/PUL-117-arte-cubo-basura.md]
 touches_scenes: [godot/entities/stations/trash_bin.tscn]
 ---
 
