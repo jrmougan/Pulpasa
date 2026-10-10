@@ -1,7 +1,7 @@
 ---
 id: PUL-115
 title: Escalar mecánicas por fase (comandas por fase)
-status: in_progress
+status: done
 milestone: M3d
 role: gameplay-engineer
 deps: [PUL-114]

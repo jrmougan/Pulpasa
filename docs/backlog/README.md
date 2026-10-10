@@ -127,7 +127,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-112 | M3d | gameplay-engineer | done | Implementar el cubo de basura y colocar 2 en level_01 |
 | PUL-113 | M3d | gameplay-engineer | done | Quitar los tamaños de caja (caja única de 6 cortes) |
 | PUL-114 | M3d | gameplay-engineer | done | Aliño de una pulsación y catálogo de 4 comandas |
-| PUL-115 | M3d | gameplay-engineer | in_progress | Escalar mecánicas por fase (comandas por fase) |
-| PUL-116 | M3d | qa-tester | todo | Re-medir R15/R17 tras D25 y preparar el playtest de M3d |
+| PUL-115 | M3d | gameplay-engineer | done | Escalar mecánicas por fase (comandas por fase) |
+| PUL-116 | M3d | qa-tester | in_progress | Re-medir R15/R17 tras D25 y preparar el playtest de M3d |
 | PUL-117 | M3d | asset-pipeline | todo | Arte del cubo de basura (dirección A, D22) |
-| PUL-118 | M3d | gameplay-engineer | todo | Estabilizar test_level_01_r16 (intermitente bajo carga) |
+| PUL-118 | M3d | gameplay-engineer | in_progress | Estabilizar test_level_01_r16 (intermitente bajo carga) |
