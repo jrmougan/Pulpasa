@@ -1,4 +1,4 @@
-# Entrega, validación y puntuación (Must, D2, D8, D12, D23, D24)
+# Entrega, validación y puntuación (Must, D2, D8, D12, D23, D24, D25)
 
 **Slug:** entrega-y-puntuacion · **Prototipo:** `OrderStand`, `OrderSystem.ValidateBox`, `RecipeSO.basePoints`, `GameOverUI`.
 
@@ -20,7 +20,7 @@ entrega pintada en el suelo** (`DeliveryZone`):
 ```
    Ticket #2 franja AZUL            Puesto 2, toldo AZUL
    ┌─[azul]────────────┐              ╔═══════╗
-   │ #2 (M) Pulpo Doble│              ║  #2   ║   ← placa clara detrás del número
+   │ #2 Bravo cachelos │              ║  #2   ║   ← placa clara detrás del número
    └───────────────────┘           ···║·······║···  ← zona en el suelo: encendida solo si
                                         ↑              la caja de la mano coincide
                                    J1 con la caja
@@ -36,9 +36,9 @@ entrega pintada en el suelo** (`DeliveryZone`):
 - Estrellas (provisional, pregunta abierta nº 1): 1★ ≥ 30 €, 2★ ≥ 60 €, 3★ ≥ 90 €.
 
 ## Criterios de aceptación
-- **AC1** Given una comanda de pulpo+sal+aceite y una caja llena de pulpo con sal+aceite, When se entrega en su puesto, Then la validación es verdadera, se emite `order_completed` una vez y la comanda desaparece.
-- **AC2** Given la misma comanda y una caja sin aceite, When se entrega, Then la validación es falsa, `order_completed` no se emite y la comanda sigue activa.
-- **AC3** Given una caja con un condimento extra no pedido, When se entrega, Then es inválida (coincidencia exacta).
+- **AC1** *(reescrito por D25)* Given una comanda «Á feira» (aliño dulce, sin cachelos) y una caja llena de pulpo con aliño dulce, When se entrega en su puesto, Then la validación es verdadera, se emite `order_completed` una vez y la comanda desaparece.
+- **AC2** *(reescrito por D25)* Given la misma comanda y una caja llena sin aliño (o con aliño picante), When se entrega, Then la validación es falsa, `order_completed` no se emite y la comanda sigue activa.
+- **AC3** *(reescrito por D25)* Given una caja con un elemento extra no pedido (cachelos en una caja para «Á feira»), When se entrega, Then es inválida (coincidencia exacta de aliño y cachelos).
 - **AC4** Given una receta con `base_points` = 10 y `max_time` = 60 s, When se entrega con 30 s restantes, Then se ingresan 10 + floor(0,5 × 5) = 12 €.
 - **AC5** Given una receta con `base_points` = 10 y `max_time` = 60 s, When se entrega con 1 s restante, Then se ingresan 10 € (bonus floor(1/60 × 5) = 0).
 - **AC5b** Given una comanda con `max_time` = 60 s, When la entrega llega con tiempo restante ≤ 0 (a los 60,0 s o después), Then se rechaza sin ingreso: la caducidad gana en el empate y la comanda ya se eliminó con `order_expired`.
@@ -50,14 +50,14 @@ entrega pintada en el suelo** (`DeliveryZone`):
 - **AC10** Given el HUD, When se completa una entrega por 12 €, Then el HUD muestra la recaudación anterior + 12 € en ≤ 0,2 s.
 - **AC11** Given el HUD, When una comanda caduca con recaudación 20 €, Then el HUD pasa a 17 € en ≤ 0,2 s (nunca por debajo de 0).
 - **AC12** Given 2 jugadores (Local 2P), When cada uno entrega una caja, Then un único contador compartido suma ambas.
-- **AC13** Given una recaudación de 10 € y una caja errónea (contenido o tamaño que no coincide), When se pulsa interactuar en el puesto, Then la entrega se rechaza (`delivery_rejected`), la recaudación pasa a 8 € (`wrong_delivery_penalty` = 2, D8; nunca por debajo de 0), la caja sigue en la mano y la comanda sigue activa. *Corregido en PUL-092: la versión anterior («sin penalización», paridad de M0) contradecía D8.*
+- **AC13** Given una recaudación de 10 € y una caja errónea (aliño o cachelos que no coinciden; sin tamaños desde D25), When se pulsa interactuar en el puesto, Then la entrega se rechaza (`delivery_rejected`), la recaudación pasa a 8 € (`wrong_delivery_penalty` = 2, D8; nunca por debajo de 0), la caja sigue en la mano y la comanda sigue activa. *Corregido en PUL-092: la versión anterior («sin penalización», paridad de M0) contradecía D8.*
 - **AC8** Given dos comandas iguales en puestos distintos, When se entrega la caja en el puesto A, Then solo se completa la comanda del puesto A.
-- **AC14 (R12)** Given el puesto 2 con una comanda viva y J1 con una caja que coincide, When J1 está a ≤ 2,0 m de la zona del puesto, Then la zona del suelo se ilumina en ≤ 0,1 s; Given una caja que no coincide (otro condimento u otro tamaño), Then se queda apagada; Given la mano vacía o el puesto sin comanda, Then apagada. *Test:* `test_order_stand.gd` (estado de resaltado) + captura.
+- **AC14 (R12)** Given el puesto 2 con una comanda viva y J1 con una caja que coincide, When J1 está a ≤ 2,0 m de la zona del puesto, Then la zona del suelo se ilumina en ≤ 0,1 s; Given una caja que no coincide (otro aliño o cachelos de más o de menos), Then se queda apagada; Given la mano vacía o el puesto sin comanda, Then apagada. *Test:* `test_order_stand.gd` (estado de resaltado) + captura.
 - **AC15** Given J1 con una caja que coincide entrando en la zona encendida del puesto 2, Then se emite `order_completed` una vez sin pulsar; Given una caja que no coincide entrando en la zona, Then no se emite nada ni se penaliza (solo pulsar penaliza, AC13). *Test:* `test_order_stand.gd`.
 - **AC16 (R13)** Given los 4 puestos, Then el toldo del puesto N usa `mat_canvas_stand_N` (1 rojo `#D2473F`, 2 azul `#3F7CC8`, 3 amarillo `#E8C23A`, 4 verde `#4FA05A`) y el mismo color que la franja de su ticket (`comandas.md` AC10). *Test:* `test_order_stand_model.gd` + captura.
 
 ## Datos (`.tres`)
-`base_points` por receta (8–14 €), `time_bonus_max`, `expire_penalty`, `wrong_delivery_penalty`, umbrales de estrellas. Color por `slot_id` en un dato de nivel (compartido con el ticket). Distancia de iluminación de la zona (2,0 m) en datos del puesto.
+`base_points` por receta (8 / 9 / 12 / 13 €, tabla de `comandas.md`), `time_bonus_max`, `expire_penalty`, `wrong_delivery_penalty`, umbrales de estrellas. Color por `slot_id` en un dato de nivel (compartido con el ticket). Distancia de iluminación de la zona (2,0 m) en datos del puesto.
 
 ## Verificación
 GUT para AC1–AC8 y AC13 (lógica pura); AC9–AC12 con UI instanciada y reloj simulado o captura del HUD;
@@ -65,6 +65,7 @@ AC14–AC16 con el puesto instanciado y captura en `docs/evidence/<ficha>/`.
 
 ## Preguntas abiertas
 1. **Estrellas** (provisional): umbrales 30/60/90 €.
-2. **Precio de la L** (PUL-090 §7.1). Con el corte de la L a 10 pulsaciones (`corte-pulpo.md`),
-   ¿baja `base_points` de 12 a 11? Lo decide el playtest de la ficha de QA con las medidas de R17
-   (`level-layouts.md`); hasta entonces no cambia.
+2. ~~Precio de la L~~ Superada por D25 (sin tamaños). Los precios de las 4 recetas (`comandas.md`) son
+   provisionales y se re-miden en QA junto con los umbrales de estrellas.
+3. **Entrega tras el cubo.** Sin cambios de reglas: tirar una caja no penaliza (`trash_penalty` = 0,
+   `cubo-basura.md`) y la comanda del puesto sigue viva hasta que caduca.

@@ -24,7 +24,7 @@ puesto), `rediseno-estaciones.md` (PUL-090).
  3 #..............#
  4 #===#CCCCC.===##     barra: 3 pasaplatos · línea de condimentos · HUECO x 2,8…4,2 · 3 pasaplatos
  5 #..............#                                                   (col. 14 cerrada)
- 6 B..............#     rack de cajas S/M/L en la pared izquierda del servicio
+ 6 B..............#     rack de cajas en la pared izquierda del servicio (S/M/L superado por D25: caja única)
  7 B..........a...#     salida J1 (servicio, emplatador)
  8 #..............#
  9 #..............#
@@ -73,7 +73,7 @@ ficha 7).
 
 - **L1 (R11)** Given `level_01.tscn`, Then hay exactamente 6 `PassSlot`, cada uno con marca visible (≥ 18 px de lado en una captura a 1280×720), y Given un jugador con algo en la mano frente a la barra fuera de los pasaplatos y de la línea de condimentos, When pulsa interactuar, Then no suelta nada (la mano no cambia). Lo hace `Holder.can_drop_freely()`: si el punto de soltar cae en la capa `world`, `InteractionComponent` consume la pulsación sin soltar (ADR-003 §9.5, PUL-101). *Test:* `test_level_01.gd::test_r11_*` (recuento y barrido de la barra) y `test_hold_component.gd` + captura.
 - **L2 (R14)** Given `level_01.tscn`, Then el camino más corto (Dijkstra de `test_level_01.gd`) de la cara de condimentar a la cara de pase de la estación mide 6–10 m, y el centro del hueco de la barra está en x ∈ [2,7; 3,7] con ≥ 1,0 m libre; no hay otro hueco (x 7,7 cerrado). Montado (PUL-101): 1,4 m libres en x 2,8…4,2, centro 3,5; rodeo 7,93 m. *Test:* `test_level_01.gd`.
-- **L3 (R15)** Given Individual con un solo personaje, When hace un pedido S sal+aceite desde cero con `measure_flow.gd`, Then recorre ≤ 50 m (hoy 78,9 m). *Test:* `measure_flow.gd` adaptado, `metrics.json` en `docs/evidence/<ficha QA>/`.
+- **L3 (R15)** Given Individual con un solo personaje, When hace un pedido S sal+aceite desde cero con `measure_flow.gd`, Then recorre ≤ 50 m (hoy 78,9 m). *(D25: «S sal+aceite» pasa a «Á feira» de caja única; se re-mide tras D25, `m3c-gate.md`.)* *Test:* `measure_flow.gd` adaptado, `metrics.json` en `docs/evidence/<ficha QA>/`.
 - **L4 (R16)** Given Individual con cambio, When se hacen 2 pedidos S con un solo pulpo, Then se completan 2 `order_completed` con exactamente 2 pulsaciones de `p1_switch` en total. *Test:* el mismo de `estacion-condimentos.md` AC16 (`test_station_level.gd`).
 - **L5 (R17)** Given Coop 2P con `measure_flow.gd`, When se encadenan 4 pedidos S, Then el tiempo medio de los pedidos 2–4 es ≤ 75 % del de hoy (≤ 4,6 s de juego del bot; hoy 6,1 s). *Test:* `measure_flow.gd` adaptado; se usa también para decidir el precio de la L (`entrega-y-puntuacion.md`, pregunta 2).
 - **L6** Given la cámara de juego a 1280×720, Then ningún pasaplatos, dispensador, el cuenco ni el hueco quedan bajo el HUD o la banda de tickets, y el hueco se distingue de la barra (umbral o cambio de suelo). *Test:* `test_level_01.gd::test_ui_does_not_cover_*` + captura.
@@ -105,6 +105,7 @@ en el encuadre con 0,4 m de margen respecto al HUD (la cocina actual mide unos 1
 **Supuestos de PUL-041 (sustituidos por D23 en lo que toca a la estación y los pasaplatos):**
 - Estación de condimentos = mostrador de 2 m con **un hueco de caja accesible por dos caras**. La
   caja se deja ahí y se aplican pimentón dulce/picante, sal, aceite y cachelos cocidos (D4, D10).
+  *(Superado por D23 y D25: sin bandeja; 2 aliños completos y cuenco de cachelos.)*
   Si PUL-040 la deja de una sola cara, las plantas valen orientándola hacia el servicio.
 - La caja se corta sobre una mesa (`Slot`): un jugador no puede llevar caja y pulpo a la vez.
   «Mesa de corte» y «pasaplatos» son `Slot` sobre una encimera; con `interact_range` 1,5 m un
@@ -192,6 +193,8 @@ cara de atrás de la estación (olla → condimentos 2 m). *Servicio (delante):*
 
 **Cruces.** Casi ninguno: cada uno tiene su mitad. Solo se juntan en el hueco de la columna 14,
 pensado como válvula de escape y no como camino habitual.
+
+*(Histórico de PUL-041. Superado por D25: no hay tamaños de caja, sal, aceite y pimentón sueltos ni bandeja; el reparto actual está en `features/estacion-condimentos.md`.)*
 
 **Coop (coordinación forzada).** Es la planta que más obliga a coordinarse, como pide D18:
 - el emplatador pone la caja del tamaño de la comanda en el pasaplatos **antes** de que salga el pulpo;

@@ -1,6 +1,15 @@
 # Rediseño jugable de las estaciones (PUL-090, M3c)
 
-**Estado:** propuesta para el gate humano. **Fecha:** 2026-10-07. **Rol:** game-designer.
+**Estado:** aprobado como D23 (2026-10-07) y **parcialmente modificado por D25** (2026-10-10, ver
+la nota siguiente). Documento histórico de diseño y medidas. **Fecha:** 2026-10-07. **Rol:** game-designer.
+
+> **Modificado por D25 (`decisions.md`).** Tras el playtest de M3c se simplifican las mecánicas.
+> Quedan **superados**: el tamaño S/M/L (B-A: ticket, rack, cortes 4/6/10 → **caja única de 6 cortes**;
+> R9 y R10), los cuatro dispensadores y su alternar (C-B: R1–R4, R7, R8 → **2 dispensadores de aliño
+> completo** de una pulsación, sin quitar) y la «caja errónea» por tamaño (E6). **Siguen** de D23: la
+> estación al paso sin bandeja, el cuenco de cachelos (R5, R6), los 6 pasaplatos (R11), la entrega con
+> color y zona iluminada (R12, R13), el hueco de la barra (R14) y los cachelos ×2. R15 y R17 se
+> **re-miden tras D25** (`m3c-gate.md`). Las features vigentes llevan los criterios nuevos.
 **Alcance:** estación de condimentos (bandeja, dispensadores, cuenco, lados), circuito de las
 bandejas/cajas (rack `box_shelf`, tamaño S/M/L, corte sobre la caja, pasaplatos `Slot`,
 distintivos `badge_row`) y entrega en los kioscos `order_stand`, en `level_01.tscn` (planta B).
