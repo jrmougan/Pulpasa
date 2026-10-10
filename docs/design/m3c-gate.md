@@ -5,7 +5,25 @@ entrega iluminada, hueco a x 3,5, cuenco de 2 raciones por cachelo) tras PUL-097
 está en `docs/evidence/PUL-102/` (tabla antes/después, hallazgos y capturas). Esta sesión la hace **el
 responsable**: juega y decide. Unos 25 minutos.
 
-## Lo que ya sabes antes de jugar (medido por el bot, `docs/evidence/PUL-102/README.md`)
+## Resultado del gate (2026-10-10)
+Playtest del responsable: **«mejor, pero sobran mecánicas»**. Resolución: **D25** (`decisions.md`,
+PUL-110), que simplifica caja, aliño, recetas, cubo y progresión.
+
+| Fila del gate | Resultado |
+|---|---|
+| R15 (Individual sin cambio ≤ 50 m) | **Se re-mide tras D25** (la caja única y los cubos cambian el flujo) |
+| R17 (Coop, pedidos 2–4 ≤ 4,6 s) | **Se re-mide tras D25** |
+| Cuenco 2 vs 4 raciones | Pendiente: el cuenco no cambia con D25; se sigue mirando en el playtest siguiente |
+| Cortar 4 / 6 / 10 (S / M / L) | **Superado**: caja única, 6 pulsaciones (provisional) |
+| Ticket recortado («Pulpo Individ…») y letra S/M/L | **Superado**: sin tamaños; las 4 recetas tienen nombre ≤ 14 caracteres (`features/comandas.md`) |
+| Silueta y letra de talla en ticket y rack | **Superado** (no hay talla) |
+| Dispensadores con la caja en la mano | **Superado** en su forma: 2 aliños de una pulsación; la caja en la mano se mantiene |
+| R11 soltar frente a la barra, 6 pasaplatos, hueco, recorrido | Pendiente: no los toca D25; se vuelven a mirar con los cubos colocados |
+| Chevrones de la zona de entrega, color de puesto | Pendiente: no los toca D25 |
+| Coop: reparto y espera del emplatador | Pendiente: se re-mide tras D25 junto con R17 |
+| Hallazgo 2 (`fill_per_press`) | Cubierto por PUL-104 (`presses_to_fill` entero) |
+
+## Lo que ya sabías antes de jugar (histórico, previo a D25) (medido por el bot, `docs/evidence/PUL-102/README.md`)
 | Criterio | Resultado | Estado |
 |---|---|---|
 | R15 Individual sin cambio, pedido S desde cero ≤ 50 m | 78,9 m → **55,0 m** la mejor ruta del bot (caja soltada en el suelo junto a las ollas; 45,3 m sin los 9,7 m de salir de la posición inicial); 61,0 m con la caja en el pasaplatos 04, 73,3 m en el 01 | **no cumple con el bot** (por 5 m si se cuenta la salida inicial) |

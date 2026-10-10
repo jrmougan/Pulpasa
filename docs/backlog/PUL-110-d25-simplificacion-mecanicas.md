@@ -38,13 +38,26 @@ D25 modifica D23 (corte 4/6/10, S/M/L en ticket y rack, «se pulsa cada dispensa
 - Sin código ni contratos (`docs/arch/` es de PUL-111, en paralelo).
 
 ## Acceptance
-- [ ] AC1 `decisions.md` tiene D25 con el contenido de arriba y las referencias cruzadas en D8, D18 y D23 (anotar «modificada por D25»)
-- [ ] AC2 GDD (§3, §4, §6, §9, §10) y `rediseno-estaciones.md` reflejan D25
-- [ ] AC3 `corte-pulpo.md`, `condimentacion.md`, `estacion-condimentos.md`, `comandas.md` y `entrega-y-puntuacion.md`: los AC que dependían de tamaños, de 4 dispensadores o de toggle quedan superados con su sustituto verificable
-- [ ] AC4 `cubo-basura.md` nuevo con T1–T6 (o más)
-- [ ] AC5 `dificultad-progresiva.md` y `tutorial-breve.md` con las 3 fases; `audio-y-fx.md` con el cue `trash`
-- [ ] AC6 Tabla de recetas (nombre, aliño, cachelos, precio) en `comandas.md`
+- [x] AC1 `decisions.md` tiene D25 con el contenido de arriba y las referencias cruzadas en D8, D18 y D23 (anotar «modificada por D25»)
+- [x] AC2 GDD (§3, §4, §6, §9, §10) y `rediseno-estaciones.md` reflejan D25
+- [x] AC3 `corte-pulpo.md`, `condimentacion.md`, `estacion-condimentos.md`, `comandas.md` y `entrega-y-puntuacion.md`: los AC que dependían de tamaños, de 4 dispensadores o de toggle quedan superados con su sustituto verificable
+- [x] AC4 `cubo-basura.md` nuevo con T1–T6 (o más)
+- [x] AC5 `dificultad-progresiva.md` y `tutorial-breve.md` con las 3 fases; `audio-y-fx.md` con el cue `trash`
+- [x] AC6 Tabla de recetas (nombre, aliño, cachelos, precio) en `comandas.md`
 
 ## Plan
+1. D25 en `decisions.md` (fila nueva + notas cruzadas en D4, D8, D18, D23).
+2. GDD (§2 bucle, §3, §4, §5, §6, §9, §10, §11) y nota de superación en `rediseno-estaciones.md`.
+3. Features: reescribir `corte-pulpo`, `condimentacion`, `estacion-condimentos`, `comandas`; retocar
+   `entrega-y-puntuacion`; crear `cubo-basura` (T1–T9); fases en `dificultad-progresiva` y
+   `tutorial-breve`; cue `trash` y gesto de aliño en `audio-y-fx`.
+4. Resultado del gate en `m3c-gate.md`.
+5. Elección de recetas: 4 nombres ≤ 14 caracteres con tono gallego, precios crecientes con el esfuerzo.
 
 ## Evidence
+Solo documentación; sin código ni capturas. Ficheros cambiados: `docs/design/decisions.md`, `gdd.md`,
+`rediseno-estaciones.md`, `m3c-gate.md`, `features/{corte-pulpo,condimentacion,estacion-condimentos,
+comandas,entrega-y-puntuacion,dificultad-progresiva,tutorial-breve,audio-y-fx,cubo-basura}.md` y esta
+ficha. Recetas elegidas (`comandas.md`): Á feira 8 €, Picante 9 €, Con cachelos 12 €, Bravo cachelos 13 €
+(todas provisionales, a datos). `grep` de «S/M/L», «Tray» y «paprika_swap» en las features vigentes:
+solo quedan en notas de «sustituido/retirado por D25».
