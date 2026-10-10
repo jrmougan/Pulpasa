@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-110, PUL-111]
 orca_task: null
 unity_sources: []
-owns: [godot/core/trash_rules.gd, godot/core/trash_rules.gd.uid, godot/resources/trash_bin_data.gd, godot/resources/trash_bin_data.gd.uid, godot/data/config/trash_bin.tres, godot/entities/stations/trash_bin.gd, godot/entities/stations/trash_bin.gd.uid, godot/entities/stations/trash_bin.tscn, godot/entities/stations/sandbox/**, godot/data/audio/feedback_map.tres, godot/tests/unit/test_trash_rules.gd, godot/tests/integration/test_trash_bin.gd, godot/tests/integration/test_level_01.gd, godot/tests/integration/test_audio_feedback.gd, docs/design/features/cubo-basura.md, docs/evidence/PUL-112/**, docs/backlog/PUL-112-cubo-basura.md]
+owns: [godot/core/trash_rules.gd, godot/core/trash_rules.gd.uid, godot/resources/trash_bin_data.gd, godot/resources/trash_bin_data.gd.uid, godot/data/config/trash_bin.tres, godot/entities/stations/trash_bin.gd, godot/entities/stations/trash_bin.gd.uid, godot/entities/stations/trash_bin.tscn, godot/entities/stations/sandbox/**, godot/data/audio/feedback_map.tres, godot/tests/unit/test_trash_rules.gd, godot/tests/unit/test_trash_rules.gd.uid, godot/tests/integration/test_trash_bin.gd, godot/tests/integration/test_trash_bin.gd.uid, godot/tests/integration/test_level_01.gd, godot/tests/integration/test_audio_feedback.gd, docs/design/features/cubo-basura.md, docs/evidence/PUL-112/**, docs/backlog/PUL-112-cubo-basura.md]
 touches_scenes: [godot/scenes/levels/level_01.tscn]
 ---
 
@@ -25,10 +25,23 @@ Cubo de basura de D25 (`docs/design/features/cubo-basura.md`) con el contrato de
 - En paralelo PUL-113 (caja única) toca muchos tests y datos de cajas/recetas: no los toques. Si necesitas una ruta fuera de owns, pregunta al coordinador.
 
 ## Acceptance
-- [ ] AC1–AC6: T1–T6 de `cubo-basura.md` con tests (`test_trash_rules.gd`, `test_trash_bin.gd`, `test_level_01.gd`, `test_audio_feedback.gd`)
-- [ ] AC7 Captura de `level_01` con los 2 cubos en `docs/evidence/PUL-112/`
-- [ ] AC8 `tools/verify.sh` en verde
+- [x] AC1–AC6: T1–T6 de `cubo-basura.md` con tests (`test_trash_rules.gd`, `test_trash_bin.gd`, `test_level_01.gd`, `test_audio_feedback.gd`)
+- [x] AC7 Captura de `level_01` con los 2 cubos en `docs/evidence/PUL-112/`
+- [x] AC8 `tools/verify.sh` en verde
 
 ## Plan
+Posiciones: las de `scene-tree.md` (x 2,6 z −3,1 y x −5,4 z 4,3), no las del texto de Change (contrato manda).
+- `core/trash_rules.gd` (`can_trash`), `resources/trash_bin_data.gd`, `data/config/trash_bin.tres`.
+- `entities/stations/trash_bin.gd/.tscn` (`TrashBin`, `trashed` local, `%Feedback` cue `trash`, `%Highlightable`).
+- `data/audio/feedback_map.tres`: cue `trash` (stream `fx_drop`, POP 0,4 s).
+- `level_01.tscn`: instancias `TrashBinKitchen` y `TrashBinService`.
+- Tests: T1/T2/T3/T4/T5/T7/T8/T9 en `test_trash_bin.gd`; `can_trash` y dato en `test_trash_rules.gd`;
+  T6 (2 cubos, distancias, hueco, HUD) en `test_trash_bin.gd` porque `test_level_01.gd` ya está en el
+  límite de 1000 líneas de gdlint; clave `trash` en `test_audio_feedback.gd`.
 
 ## Evidence
+- `tools/verify.sh` en verde tras mergear PUL-113 (T6 incluye el `BoxSpawner` único a 1,80 m).
+- Captura de `level_01` con los 2 cubos a 1280x720: `docs/evidence/PUL-112/level_01_cubos.png`.
+- T4 visual: lo cubre `test_t4_one_trash_cue_with_visual_response` (tween del POP en curso, `visual_time` 0,4 s >= 0,3 s).
+- Nota para la ficha de sonido: el cue `trash` reutiliza `fx_drop`, que ya suena con el cue `drop` del
+  jugador; al tirar suena doble. El sonido definitivo va aparte.

@@ -44,6 +44,7 @@ const CUES: Array[StringName] = [
 	&"burn_warning",
 	&"burnt",
 	&"discard",
+	&"trash",
 	&"phase_up",
 ]
 ## Acciones de AC5: cue con sonido y respuesta visual.
