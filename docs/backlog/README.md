@@ -119,4 +119,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-104 | M3c | gameplay-engineer | done | Contar cortes en enteros y agotar ingredientes con épsilon |
 | PUL-105 | M3c | gameplay-engineer | done | Dar superficie a los pasaplatos de los sandboxes |
 | PUL-106 | M3c | godot-architect | done | Enmendar contratos y diseño con presses_to_fill |
-| PUL-107 | M3c | game-designer | ready | Poner al día el GDD §9 (reglas vigentes) con decisions.md y el código |
+| PUL-107 | M3c | game-designer | done | Poner al día el GDD §9 (reglas vigentes) con decisions.md y el código |

@@ -1,7 +1,7 @@
 ---
 id: PUL-107
 title: Poner al día el GDD §9 (reglas vigentes) con decisions.md y el código
-status: review
+status: done
 milestone: M3c
 role: game-designer
 deps: []
