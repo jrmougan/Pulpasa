@@ -110,25 +110,35 @@ globalización (franquía vs. pulpeiros tradicionales). Textos de la alpha en ca
 7. **Plataforma/motor «Unity 6, C#»**: ahora Godot 4.7.2 y GDScript (decisiones técnicas T1–T2).
 8. **Pimentón «pementa, … etc.»** en tabla de mecánicas: condimentos cerrados en D4.
 
-## 9. Reglas vigentes de paridad con Unity
-Defaults del prototipo que se mantienen (no son preguntas abiertas). Cualquier cambio va a la sección 10.
-- **Caja errónea**: al entregar una caja que no coincide, se conserva en el puesto/mano y no hay penalización
-  (`OrderStand`); solo la comanda caducada penaliza.
-- **Olla**: admite una cocción a la vez (`KitchenStation`, `isBusy`).
-- **Asignación por puesto**: cada comanda pertenece a un puesto de entrega y solo se valida ahí (`OrderSystem`, `deliverySlotId`).
+## 9. Reglas vigentes de las comandas, la olla y el corte
+Reglas en vigor de la alpha. Desde M1 el diseño manda sobre el prototipo (D17): lo que sigue igual que en
+Unity se indica como tal y lo que cambió cita su decisión. Cualquier cambio va a la sección 10.
+- **Caja errónea** (D8, `wrong_delivery_penalty` en `round_config.tres`, hoy 2 puntos): al entregar una caja que
+  no coincide se resta la penalización de la recaudación (mínimo 0) y la caja se conserva en la mano
+  (`OrderBoard.try_deliver`, `OrderStand`). Entregar en un puesto sin comanda o con la comanda ya caducada
+  rechaza sin penalizar (0). La comanda caducada penaliza aparte (`expire_penalty`, hoy 3).
+- **Olla** (D9, D10, `KitchenData.capacity` en `data/config/kitchen.tres`, hoy 2): admite varias cocciones a la
+  vez, una por plaza; pulpo y cachelos crudos compiten por las plazas y se devuelven cocidos por orden de
+  finalización (`CookingStation`). Con la olla llena, el crudo no entra.
+- **Asignación por puesto** (D12, como en Unity): cada comanda pertenece a un puesto de entrega y solo se valida
+  ahí (`OrderBoard`, `slot_id`). Se rechaza «cualquier puesto».
 - **Reposición inmediata**: al entregar con éxito (o caducar) se pide otra comanda para ese puesto en el acto
-  (`OrderTicketUIController.OnClearTicket`), hasta `max_active_orders` = 4.
+  (`OrderBoard.request_order`), hasta `max_active_orders` = 4 (`OrderCatalog`). Con las fases de dificultad
+  (ADR-006 §6, `PhaseData.active_slots`, hoy 2/3/4) solo se reponen los puestos activos de la fase; la comanda
+  de un puesto que se desactiva sigue hasta entregarse o caducar y no se repone.
 - **Corte**: por pulsación, con `presses_to_fill` según el tipo de caja (Small 5 / Medium 10 / Large 20 en el prototipo;
   4 / 6 / 10 desde D23). Desde PUL-104 es un `int` y la caja llena `BoxData.fill_after(cortes)`; sustituye a
   `fill_per_press` (0,2 / 0,1 / 0,05). El pulpo se agota con un resto ≤ `Ingredient.EMPTY_EPSILON`.
-- **Cocción**: sin quemado (el quemado es el Should `olla-que-se-pasa`).
+- **Cocción** (ADR-006 §5, `olla-que-se-pasa`): un cocido que sigue en la olla avisa a `warn_time` (barra
+  parpadeando) y se quema a `burn_time` (10 s en pulpo y cachelos, en `IngredientData`): `Ingredient.set_burnt()`
+  y señal local `burnt`. Un quemado no se corta ni llega a la mano: con la mano vacía se desecha el más antiguo
+  (`discarded`) y la plaza queda libre. `burn_time` = 0 desactiva el quemado.
 
 ## 10. Propuestas para gate humano
-Cambios sobre los defaults de arriba que NO rigen hasta aprobarse:
-1. Penalizar o devolver la caja errónea.
-2. Olla con capacidad > 1.
-3. Asignar la comanda a cualquier puesto.
-4. Corte por «mantener pulsado» en vez de pulsar.
+Cambios sobre las reglas de arriba que NO rigen hasta aprobarse:
+1. Devolver la caja errónea a su origen (la penalización ya rige por D8).
+2. Asignar la comanda a cualquier puesto (rechazado en D12).
+3. Corte por «mantener pulsado» en vez de pulsar (rechazado en D13).
 
 ## 11. Preguntas abiertas
 1. **Estrellas**: umbrales exactos de recaudación para 1/2/3 estrellas (provisional en
