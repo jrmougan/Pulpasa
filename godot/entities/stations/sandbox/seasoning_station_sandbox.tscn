@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" path="res://entities/stations/seasoning_station.tscn" id="6_station"]
 [ext_resource type="PackedScene" path="res://entities/player/player.tscn" id="7_player"]
 [ext_resource type="PackedScene" path="res://entities/items/box.tscn" id="8_box"]
-[ext_resource type="Resource" path="res://data/boxes/medium.tres" id="9_medium"]
+[ext_resource type="Resource" path="res://data/boxes/box.tres" id="9_medium"]
 [ext_resource type="PackedScene" path="res://entities/items/cachelos.tscn" id="10_cachelos"]
 
 [sub_resource type="Environment" id="Environment_sbx"]

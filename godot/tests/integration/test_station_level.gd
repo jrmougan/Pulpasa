@@ -20,6 +20,7 @@ const ACCESS: float = 1.0
 const STAND_FRONT: float = 2.5
 ## Espera tras cambiar de personaje (> `switch_cooldown` de `input_config.tres`).
 const SWITCH_WAIT: float = 0.3
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _level: Node
 var _station: SeasoningStation
@@ -79,7 +80,7 @@ func _full_box_in_hand(character: Player) -> Box:
 	var actor: InteractionComponent = character.get_node("%InteractionComponent")
 	var hold: Holder = character.get_node("%HoldComponent")
 	var box: Box = BOX_SCENE.instantiate()
-	box.data = RECIPE.box
+	box.data = BOX
 	_level.get_node("Items").add_child(box)
 	box.global_position = character.global_position + Vector3(0.0, 0.5, 0.0)
 	while not box.is_full():

@@ -8,6 +8,7 @@ const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.t
 const CONFIG_PATH: String = "res://tests/helpers/m0_data/m0_round_config.tres"
 const SLOTS: Array[int] = [0, 1, 2, 3]
 const TICK: float = 1.0 / 60.0
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _board: OrderBoard
 var _round: RoundState
@@ -25,7 +26,7 @@ func before_each() -> void:
 
 func _contents_for(order: ActiveOrder) -> BoxContents:
 	return BoxContents.new(
-		order.data.recipe.box,
+		BOX,
 		order.data.recipe.ingredient,
 		IngredientData.CookingState.COOKED,
 		1.0,

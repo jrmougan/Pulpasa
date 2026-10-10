@@ -2,9 +2,9 @@ extends GutTest
 ## PUL-006 / PUL-028 AC2: OrderValidator es puro y aplica igualdad exacta (D4/D17).
 
 const ORDER_1_PATH: String = "res://data/orders/order_1.tres"
-const SMALL_BOX_PATH: String = "res://data/boxes/small.tres"
 const PAPRIKA_PATH: String = "res://data/seasonings/paprika.tres"
 const OIL_PATH: String = "res://data/seasonings/oil.tres"
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _order: OrderData
 
@@ -15,7 +15,7 @@ func before_each() -> void:
 
 func _valid_contents(order: OrderData) -> BoxContents:
 	return BoxContents.new(
-		order.recipe.box,
+		BOX,
 		order.recipe.ingredient,
 		IngredientData.CookingState.COOKED,
 		1.0,
@@ -27,16 +27,15 @@ func test_ac2_correct_box_matches() -> void:
 	assert_true(OrderValidator.matches(_order, _valid_contents(_order)))
 
 
-func test_ac2_wrong_box_does_not_match() -> void:
+func test_pul113_any_box_with_right_contents_matches() -> void:
+	## D25: la caja no se compara; vale cualquier BoxData (o ninguna) con el contenido correcto.
+	var other: BoxData = BoxData.new()
+	other.presses_to_fill = 3
 	var contents: BoxContents = _valid_contents(_order)
-	contents.box = load(SMALL_BOX_PATH) as BoxData
-	assert_false(OrderValidator.matches(_order, contents))
-
-
-func test_ac2_missing_box_does_not_match() -> void:
-	var contents: BoxContents = _valid_contents(_order)
+	contents.box = other
+	assert_true(OrderValidator.matches(_order, contents))
 	contents.box = null
-	assert_false(OrderValidator.matches(_order, contents))
+	assert_true(OrderValidator.matches(_order, contents))
 
 
 func test_ac2_no_ingredient_does_not_match() -> void:
@@ -78,7 +77,7 @@ func test_ac2_matches_does_not_mutate_contents() -> void:
 	var before: int = contents.seasonings.size()
 	OrderValidator.matches(_order, contents)
 	assert_eq(contents.seasonings.size(), before)
-	assert_eq(contents.box, _order.recipe.box)
+	assert_eq(contents.box, BOX)
 
 
 func test_ac2_exact_validation_with_oil() -> void:

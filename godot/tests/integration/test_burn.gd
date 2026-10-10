@@ -12,7 +12,7 @@ const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn"
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const OCTOPUS: IngredientData = preload("res://data/ingredients/octopus.tres")
 const CACHELOS: IngredientData = preload("res://data/ingredients/cachelos.tres")
-const SMALL: BoxData = preload("res://data/boxes/small.tres")
+const SMALL: BoxData = preload("res://data/boxes/box.tres")
 const STEP: float = 0.1
 
 var _level: Node3D

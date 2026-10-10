@@ -12,6 +12,7 @@ const SAMPLE_SEASONINGS: Array[String] = [
 	"res://data/seasonings/hot_paprika.tres",
 ]
 const GAME_OVER_SCENE: PackedScene = preload("res://ui/menus/game_over.tscn")
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _out_dir: String = ProjectSettings.globalize_path("res://../docs/evidence/PUL-030")
 
@@ -42,7 +43,7 @@ func _ready() -> void:
 	OrderService.board.advance(15.0)
 	var order: ActiveOrder = OrderService.get_active_orders()[0]
 	var contents: BoxContents = BoxContents.new(
-		order.data.recipe.box,
+		BOX,
 		order.data.recipe.ingredient,
 		IngredientData.CookingState.COOKED,
 		1.0,

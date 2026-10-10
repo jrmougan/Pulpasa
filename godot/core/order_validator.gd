@@ -3,14 +3,13 @@ extends RefCounted
 ## Validación pura de una caja contra una comanda (ADR-002, regla 5: validar no muta).
 
 
-## M1 (D4/D17): misma caja, mismo ingrediente cocido e igualdad exacta del conjunto de condimentos.
+## D25: no compara la caja (es única). Mismo ingrediente cocido e igualdad exacta del conjunto de
+## condimentos (D4).
 ## Condimento de más -> inválida; condimento de menos -> inválida; exacta -> válida.
 static func matches(order_data: OrderData, contents: BoxContents) -> bool:
 	if order_data == null or order_data.recipe == null or contents == null:
 		return false
 	var recipe: RecipeData = order_data.recipe
-	if contents.box == null or contents.box != recipe.box:
-		return false
 	if contents.ingredient == null or contents.ingredient != recipe.ingredient:
 		return false
 	if contents.ingredient_state != IngredientData.CookingState.COOKED:

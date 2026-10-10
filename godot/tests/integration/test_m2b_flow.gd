@@ -39,6 +39,7 @@ const STAND_FRONT: float = 2.5
 const COOK_MARGIN: float = 3.0
 ## Espera tras cambiar de personaje (> `switch_cooldown` de `input_config.tres`).
 const SWITCH_WAIT: float = 0.3
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _level: Node
 var _station: SeasoningStation
@@ -227,10 +228,10 @@ func _fill_box(cook: Walker, box: Box) -> void:
 
 
 ## Estantería → caja de la comanda al pasaplatos por el lado de condimentar.
-func _box_to_slot(server: Walker, order: ActiveOrder) -> Box:
+func _box_to_slot(server: Walker, _order: ActiveOrder) -> Box:
 	var spawner: Node3D = null
 	for child: Node in _stations("BoxShelf").get_children():
-		if child is ItemSpawner and (child as ItemSpawner).data == order.data.recipe.box:
+		if child is ItemSpawner and (child as ItemSpawner).data == BOX:
 			spawner = child as Node3D
 	assert_not_null(spawner, "plaza de la caja de la comanda")
 	var at: Vector2 = _xz(spawner)

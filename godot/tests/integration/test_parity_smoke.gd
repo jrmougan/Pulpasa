@@ -20,6 +20,7 @@ const PAUSE_TOLERANCE: float = 0.05
 const PAUSE_SECONDS: float = 0.5
 ## Margen sobre `cook_time` para esperar la cocción.
 const COOK_MARGIN: float = 3.0
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _expected_stock: int = 0
 var _level: Node
@@ -207,7 +208,7 @@ func _restock_bowl_with_cachelos() -> void:
 func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 	var order: ActiveOrder = _order_for(slot_id)
 	assert_not_null(order, "el puesto %d tiene comanda" % slot_id)
-	var spawner: ItemSpawner = _box_spawner(order.data.recipe.box)
+	var spawner: ItemSpawner = _box_spawner(BOX)
 	assert_not_null(spawner, "hay estantería para la caja de la comanda")
 	assert_true(_press(spawner), "estantería: da la caja")
 	var box: Box = _hold().get_held_item() as Box

@@ -6,6 +6,7 @@ const ORDER_1_PATH: String = "res://data/orders/order_1.tres"
 const SLOTS: Array[int] = [0, 1, 2, 3]
 const SEED: int = 12345
 const TICK: float = 1.0 / 60.0
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 
 func _rng(seed_value: int = SEED) -> RandomNumberGenerator:
@@ -29,7 +30,7 @@ func _single_recipe_board(max_time: float) -> OrderBoard:
 
 func _contents_for(order: ActiveOrder) -> BoxContents:
 	return BoxContents.new(
-		order.data.recipe.box,
+		BOX,
 		order.data.recipe.ingredient,
 		IngredientData.CookingState.COOKED,
 		1.0,

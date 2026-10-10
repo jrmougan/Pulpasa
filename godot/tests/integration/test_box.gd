@@ -9,9 +9,7 @@ const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
-const SMALL: BoxData = preload("res://data/boxes/small.tres")
-const MEDIUM: BoxData = preload("res://data/boxes/medium.tres")
-const LARGE: BoxData = preload("res://data/boxes/large.tres")
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
 const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
 const HOT_PAPRIKA: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
@@ -75,31 +73,23 @@ func _assert_presses_to_fill(data: BoxData, expected: int) -> void:
 	assert_eq(contents.fill, 1.0)
 
 
-func test_ac1_small_box_fills_in_4_presses() -> void:
-	_assert_presses_to_fill(SMALL, 4)
-
-
-func test_ac1_medium_box_fills_in_6_presses() -> void:
-	_assert_presses_to_fill(MEDIUM, 6)
-
-
-func test_ac1_large_box_fills_in_10_presses() -> void:
-	_assert_presses_to_fill(LARGE, 10)
+func test_pul113_ac5_single_box_fills_in_6_presses() -> void:
+	_assert_presses_to_fill(BOX, 6)
 
 
 func test_ac1_each_press_spends_octopus_and_emits_fill_changed() -> void:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
 	var octopus: Ingredient = _octopus_in_hand(true)
 	watch_signals(box)
 	assert_true(box.interact(_actor))
-	assert_almost_eq(box.fill, 0.25, 0.0001)
-	assert_almost_eq(octopus.remaining, 87.5, 0.0001)
+	assert_almost_eq(box.fill, 1.0 / 6.0, 0.0001)
+	assert_almost_eq(octopus.remaining, 100.0 - 50.0 / 6.0, 0.0001)
 	assert_signal_emitted_with_parameters(box, "fill_changed", [box.fill])
 	assert_null(box.get_contents().ingredient, "sin llenar no cuenta como ingrediente")
 
 
 func test_ac1_raw_octopus_does_nothing() -> void:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
 	var octopus: Ingredient = _octopus_in_hand(false)
 	# Paridad Unity: la caja consume la pulsación (no se suelta el pulpo) pero no corta.
 	assert_true(box.can_interact(_actor))
@@ -110,10 +100,10 @@ func test_ac1_raw_octopus_does_nothing() -> void:
 
 
 func test_ac1_one_octopus_fills_two_boxes_then_is_freed() -> void:
-	var first: Box = _box(MEDIUM)
+	var first: Box = _box(BOX)
 	var octopus: Ingredient = _octopus_in_hand(true)
 	assert_eq(_fill(first), 6)
-	var second: Box = _box(MEDIUM)
+	var second: Box = _box(BOX)
 	assert_eq(_fill(second), 6)
 	assert_true(second.is_full())
 	assert_true(octopus.is_queued_for_deletion(), "agotado se libera")
@@ -121,7 +111,7 @@ func test_ac1_one_octopus_fills_two_boxes_then_is_freed() -> void:
 
 
 func test_ac1_empty_hand_picks_up_the_box() -> void:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
 	assert_true(box.can_interact(_actor))
 	assert_true(box.interact(_actor))
 	assert_eq(_hold.get_held_item(), box)
@@ -131,7 +121,7 @@ func test_ac1_empty_hand_picks_up_the_box() -> void:
 ## AC12: con cachelos cocidos en la mano, la caja llena no se condimenta: la pulsación se consume
 ## sin efecto y los cachelos siguen en la mano (solo la estación condimenta).
 func test_pul061_ac12_cooked_cachelos_do_not_season_a_full_box() -> void:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
 	var octopus: Ingredient = _octopus_in_hand(true)
 	_fill(box)
 	_hold.drop()
@@ -151,7 +141,7 @@ func test_pul061_ac12_cooked_cachelos_do_not_season_a_full_box() -> void:
 ## AC12: la caja en la mano tampoco cambia por pulsar sobre ella con otra cosa (no condimenta ni
 ## se suelta): cualquier objeto que no corta solo consume la pulsación.
 func test_pul061_ac12_other_items_only_consume_the_press() -> void:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
 	var octopus: Ingredient = _octopus_in_hand(true)
 	_fill(box)
 	_hold.drop()
@@ -165,7 +155,7 @@ func test_pul061_ac12_other_items_only_consume_the_press() -> void:
 
 
 func test_ac2_contents_are_a_copy() -> void:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
 	box.get_contents().seasonings.append(SALT)
 	assert_eq(box.get_contents().seasonings.size(), 0)
 
@@ -173,24 +163,24 @@ func test_ac2_contents_are_a_copy() -> void:
 func test_box_without_fill_bar_does_not_crash() -> void:
 	# B8: la barra es opcional y se comprueba.
 	var box: Box = BOX_SCENE.instantiate()
-	box.data = SMALL
+	box.data = BOX
 	box.get_node("%FillBar").free()
 	_level.add_child(box)
 	_octopus_in_hand(true)
-	assert_eq(_fill(box), 4)
+	assert_eq(_fill(box), 6)
 	assert_true(box.is_full())
 
 
 func test_box_open_close_animations_exist() -> void:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
 	var player: AnimationPlayer = box.get_node("%AnimationPlayer")
 	assert_true(player.has_animation(&"box_open"))
 	assert_true(player.has_animation(&"box_close"))
 
 
-## Caja pequeña llena y mano vacía.
+## Caja llena y mano vacía.
 func _full_box() -> Box:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
 	var octopus: Ingredient = _octopus_in_hand(true)
 	_fill(box)
 	_hold.drop()
@@ -199,7 +189,7 @@ func _full_box() -> Box:
 
 
 func test_pul057_box_is_in_box_group() -> void:
-	assert_true(_box(SMALL).is_in_group(&"box"), "la bandeja acepta el grupo box")
+	assert_true(_box(BOX).is_in_group(&"box"), "la bandeja acepta el grupo box")
 
 
 func test_pul057_ac2_toggle_adds_then_removes_with_signals() -> void:
@@ -249,11 +239,11 @@ func test_pul057_ac2_paprika_without_swap_is_rejected_silently() -> void:
 
 
 func test_pul057_ac2_toggle_on_unfilled_box_is_rejected() -> void:
-	var empty: Box = _box(SMALL)
+	var empty: Box = _box(BOX)
 	watch_signals(empty)
 	assert_eq(empty.toggle_seasoning(SALT, true), SeasoningRules.Rejection.BOX_NOT_FULL)
 	assert_signal_emit_count(empty, "seasoned", 0)
-	var half: Box = _box(MEDIUM)
+	var half: Box = _box(BOX)
 	_octopus_in_hand(true)
 	for i: int in 3:
 		half.interact(_actor)
@@ -278,12 +268,12 @@ func test_pul057_ac2_remove_seasoning() -> void:
 	assert_signal_emit_count(box, "seasoned", 0)
 
 
-## PUL-104 AC2: dos cajas M gastan exactamente un pulpo (sin residuo) y lo liberan.
-func test_pul104_ac2_two_medium_boxes_spend_exactly_one_octopus() -> void:
+## PUL-104 AC2: dos cajas gastan exactamente un pulpo (sin residuo) y lo liberan.
+func test_pul104_ac2_two_boxes_spend_exactly_one_octopus() -> void:
 	var octopus: Ingredient = _octopus_in_hand(true)
 	var spent: float = 0.0
 	for i: int in 2:
-		var box: Box = _box(MEDIUM)
+		var box: Box = _box(BOX)
 		var before: float = octopus.remaining
 		_fill(box)
 		spent += before - octopus.remaining
@@ -291,36 +281,20 @@ func test_pul104_ac2_two_medium_boxes_spend_exactly_one_octopus() -> void:
 	assert_true(octopus.is_queued_for_deletion())
 
 
-## PUL-104: si cambia la talla a mitad de llenado, la caja sigue llenando sin pasarse y el gasto
+## PUL-104: si cambia `data` a mitad de llenado, la caja sigue llenando sin pasarse y el gasto
 ## total es el de una caja.
 func test_pul104_resync_presses_when_data_changes() -> void:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
+	var longer: BoxData = BoxData.new()
+	longer.presses_to_fill = 10
 	var octopus: Ingredient = _octopus_in_hand(true)
 	assert_true(box.interact(_actor))
-	box.data = LARGE
+	box.data = longer
 	var presses: int = 1
 	while not box.is_full() and presses < 20:
 		assert_true(box.interact(_actor))
 		presses += 1
 	assert_true(box.is_full())
 	assert_eq(box.fill, 1.0)
-	assert_lt(presses, 10, "no repite lo ya llenado")
+	assert_eq(presses, 10, "no repite lo ya llenado")
 	assert_almost_eq(octopus.remaining, 50.0, 0.001, "gasta una caja entera")
-
-
-func _assert_one_octopus_two_sizes(
-	first: BoxData, first_presses: int, second: BoxData, second_presses: int
-) -> void:
-	var octopus: Ingredient = _octopus_in_hand(true)
-	assert_eq(_fill(_box(first)), first_presses)
-	assert_eq(_fill(_box(second)), second_presses)
-	assert_almost_eq(100.0 - octopus.remaining, 100.0, 0.00001, "gasto total")
-	assert_true(octopus.is_queued_for_deletion())
-
-
-func test_pul104_one_octopus_small_then_large() -> void:
-	_assert_one_octopus_two_sizes(SMALL, 4, LARGE, 10)
-
-
-func test_pul104_one_octopus_large_then_small() -> void:
-	_assert_one_octopus_two_sizes(LARGE, 10, SMALL, 4)

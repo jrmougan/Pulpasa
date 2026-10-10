@@ -22,7 +22,6 @@ func test_ac1_catalog_has_four_orders() -> void:
 func test_ac1_order_1_familiar_with_two_spices() -> void:
 	var order: OrderData = (load(CATALOG_PATH) as OrderCatalog).orders[0]
 	assert_eq(order.recipe.display_name, "Pulpo Familiar")
-	assert_eq(order.recipe.box.display_name, "Grande")
 	assert_eq(order.recipe.ingredient.type, IngredientData.IngredientType.OCTOPUS)
 	assert_eq(
 		_seasoning_types(order),
@@ -33,7 +32,6 @@ func test_ac1_order_1_familiar_with_two_spices() -> void:
 func test_ac1_order_2_individual_with_two_spices() -> void:
 	var order: OrderData = (load(CATALOG_PATH) as OrderCatalog).orders[1]
 	assert_eq(order.recipe.display_name, "Pulpo Individual")
-	assert_eq(order.recipe.box.display_name, "Pequeña")
 	assert_eq(
 		_seasoning_types(order),
 		[SeasoningData.SeasoningType.PAPRIKA, SeasoningData.SeasoningType.SALT]
@@ -43,7 +41,6 @@ func test_ac1_order_2_individual_with_two_spices() -> void:
 func test_ac1_order_3_combo_duo_with_oil() -> void:
 	var order: OrderData = (load(CATALOG_PATH) as OrderCatalog).orders[2]
 	assert_eq(order.recipe.display_name, "Pulpo Doble")
-	assert_eq(order.recipe.box.display_name, "Mediana")
 	# M1 (PUL-027): el combo duo lleva aceite (comandas AC5: plantillas con aceite y pimentón).
 	assert_eq(_seasoning_types(order), [SeasoningData.SeasoningType.OIL])
 

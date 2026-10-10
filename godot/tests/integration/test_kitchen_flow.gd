@@ -13,6 +13,7 @@ const OTHER_SLOT_ID: int = 2
 const FAR: Vector3 = Vector3(-9, 0, -9)
 ## Margen sobre `cook_time` para la espera de la cocción.
 const COOK_MARGIN: float = 3.0
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _sandbox: Node3D
 var _player: Player
@@ -94,7 +95,7 @@ func _seasoned_order() -> ActiveOrder:
 ## cocido a
 ## la mano y cortes sobre la caja del pasaplatos hasta llenarla; el resto del pulpo se suelta y la
 ## caja llena pasa a la mano (D23: se condimenta en la mano). Devuelve la caja llena.
-func _cook_and_fill(order: ActiveOrder) -> Box:
+func _cook_and_fill(_order: ActiveOrder) -> Box:
 	assert_true(_press(_storage), "nevera: da un pulpo")
 	var octopus: Ingredient = _hold.get_held_item() as Ingredient
 	assert_not_null(octopus)
@@ -103,12 +104,12 @@ func _cook_and_fill(order: ActiveOrder) -> Box:
 	assert_true(_kitchen.is_cooking())
 	assert_null(_hold.get_held_item())
 
-	var spawner: ItemSpawner = _box_spawner(order.data.recipe.box)
+	var spawner: ItemSpawner = _box_spawner(BOX)
 	assert_not_null(spawner, "hay estantería para la caja de la comanda")
 	assert_true(_press(spawner), "estantería: da la caja")
 	var box: Box = _hold.get_held_item() as Box
 	assert_not_null(box)
-	assert_eq(box.data, order.data.recipe.box)
+	assert_eq(box.data, BOX)
 	var free_slot: Slot = _sandbox.get_node("Stations/FreeSlot")
 	assert_true(_press(free_slot), "pasaplatos: guarda la caja mientras cuece")
 	assert_eq(free_slot.get_item(), box)

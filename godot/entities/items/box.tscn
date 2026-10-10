@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://entities/items/box.gd" id="1_g4ra2"]
-[ext_resource type="Resource" path="res://data/boxes/small.tres" id="2_g7iey"]
+[ext_resource type="Resource" path="res://data/boxes/box.tres" id="2_g7iey"]
 [ext_resource type="Script" path="res://entities/items/box_model.gd" id="3_model"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_hjnlo"]
 [ext_resource type="PackedScene" path="res://assets/models/items/box/box.glb" id="5_plate"]
