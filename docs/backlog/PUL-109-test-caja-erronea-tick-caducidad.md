@@ -1,7 +1,7 @@
 ---
 id: PUL-109
 title: Test de caja errónea entregada en el tick de caducidad (D24)
-status: ready
+status: review
 milestone: M3c
 role: gameplay-engineer
 deps: [PUL-108]
@@ -22,12 +22,15 @@ touches_scenes: []
 - GDScript tipado. `tools/verify.sh` en verde.
 
 ## Acceptance
-- [ ] AC1 Given una comanda que caduca en el tick T y una caja errónea entregada en T, When se procesa, Then `delivery_rejected(slot, id_caducada, 0)` y la recaudación no baja por `wrong_delivery_penalty` → test
-- [ ] AC2 Given el tick T+1, When se entrega la misma caja errónea, Then se penaliza con `wrong_delivery_penalty` contra la repuesta → test
-- [ ] AC3 AC5d de `entrega-y-puntuacion.md` cita el test nuevo
+- [x] AC1 Given una comanda que caduca en el tick T y una caja errónea entregada en T, When se procesa, Then `delivery_rejected(slot, id_caducada, 0)` y la recaudación no baja por `wrong_delivery_penalty` → test
+- [x] AC2 Given el tick T+1, When se entrega la misma caja errónea, Then se penaliza con `wrong_delivery_penalty` contra la repuesta → test
+- [x] AC3 AC5d de `entrega-y-puntuacion.md` cita el test nuevo
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+- Fichero: `godot/tests/unit/test_order_board.gd`; sin señales nuevas.
+- Inyección: `OrderBoard.new(catalog, rng, reject_penalty, expire_penalty)` (como hace `order_service.gd` desde `RoundConfig`): 2 y 3.
+- AC1 y AC2: `test_ac5d_wrong_box_on_expiry_tick_rejected_with_zero_penalty` (tick T con rechazo 0 y T+1 con control).
+- AC3: línea *Test:* de AC5d en `entrega-y-puntuacion.md`.
 
 ## Evidence
-(Lo rellena el worker.)
+`tools/verify.sh` en verde (787/787 tests, smoke OK). El código ya cumple D24 con caja errónea: `order_board.gd` sin cambios.
