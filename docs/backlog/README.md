@@ -120,4 +120,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-105 | M3c | gameplay-engineer | done | Dar superficie a los pasaplatos de los sandboxes |
 | PUL-106 | M3c | godot-architect | done | Enmendar contratos y diseño con presses_to_fill |
 | PUL-107 | M3c | game-designer | done | Poner al día el GDD §9 (reglas vigentes) con decisions.md y el código |
-| PUL-108 | M3c | game-designer | ready | Limpiar el diseño superado y registrar D24 (entrega en el tick de caducidad) |
+| PUL-108 | M3c | game-designer | done | Limpiar el diseño superado y registrar D24 (entrega en el tick de caducidad) |

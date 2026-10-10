@@ -1,7 +1,7 @@
 ---
 id: PUL-108
 title: Limpiar el diseño superado y registrar D24 (entrega en el tick de caducidad)
-status: review
+status: done
 milestone: M3c
 role: game-designer
 deps: [PUL-107]
