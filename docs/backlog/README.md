@@ -124,3 +124,5 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-109 | M3c | gameplay-engineer | done | Test de caja errónea entregada en el tick de caducidad (D24) |
 | PUL-110 | M3d | game-designer | in_progress | Registrar D25 (simplificación de mecánicas) y poner el diseño al día |
 | PUL-111 | M3d | godot-architect | in_progress | Enmendar los contratos para D25 (caja única, aliño, cubo de basura) |
+| PUL-112 | M3d | gameplay-engineer | todo | Implementar el cubo de basura y colocar 2 en level_01 |
+| PUL-113 | M3d | gameplay-engineer | todo | Quitar los tamaños de caja (caja única de 6 cortes) |
