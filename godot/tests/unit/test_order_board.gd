@@ -209,6 +209,53 @@ func test_ac5b_delivery_on_expiry_tick_rejected_not_redirected() -> void:
 	assert_signal_emit_count(board, "order_completed", 1)
 
 
+## D24 / AC5d con caja errónea: en el tick de caducidad se rechaza contra la caducada con
+## penalización 0 (no `wrong_delivery_penalty`); un tick después sí penaliza contra la repuesta.
+func test_ac5d_wrong_box_on_expiry_tick_rejected_with_zero_penalty() -> void:
+	var wrong_penalty: int = 2
+	var expire_penalty: int = 3
+	var order: OrderData = (load(ORDER_1_PATH) as OrderData).duplicate() as OrderData
+	order.max_time = 60.0
+	var catalog: OrderCatalog = OrderCatalog.new()
+	catalog.orders = [order]
+	var board: OrderBoard = OrderBoard.new(catalog, _rng(), wrong_penalty, expire_penalty)
+	var round_state: RoundState = RoundState.new(RoundConfig.new(), board)
+	round_state.start([0])
+	# Recaudación previa para que las penalizaciones no queden ocultas por el suelo en 0.
+	assert_not_null(board.try_deliver(0, _contents_for(board.get_order_for_slot(0))))
+	var base_revenue: int = round_state.get_revenue()
+	assert_gt(base_revenue, wrong_penalty + expire_penalty, "recaudación previa suficiente")
+	var expiring: ActiveOrder = board.get_order_for_slot(0)
+	watch_signals(board)
+
+	for i: int in range(3600):
+		round_state.advance(TICK)
+
+	assert_signal_emit_count(board, "order_expired", 1)
+	assert_signal_emit_count(board, "order_generated", 1)
+	var replacement: ActiveOrder = get_signal_parameters(board, "order_generated")[0]
+	assert_ne(replacement.id, expiring.id)
+	var after_expiry: int = round_state.get_revenue()
+	assert_eq(after_expiry, base_revenue - expire_penalty, "solo baja por expire_penalty")
+
+	# Caja errónea en el tick de caducidad: contra la caducada y sin penalización.
+	assert_null(board.try_deliver(0, _wrong_contents()))
+	assert_signal_emit_count(board, "delivery_rejected", 1)
+	assert_signal_emitted_with_parameters(board, "delivery_rejected", [0, expiring.id, 0])
+	assert_signal_emit_count(board, "order_completed", 0)
+	assert_eq(round_state.get_revenue(), after_expiry, "sin wrong_delivery_penalty")
+	assert_eq(board.get_order_for_slot(0).id, replacement.id)
+
+	# Control (T+1): la misma caja errónea penaliza contra la repuesta.
+	round_state.advance(TICK)
+	assert_null(board.try_deliver(0, _wrong_contents()))
+	assert_signal_emit_count(board, "delivery_rejected", 2)
+	var params: Array = get_signal_parameters(board, "delivery_rejected", 1)
+	assert_eq(params, [0, replacement.id, wrong_penalty])
+	assert_eq(round_state.get_revenue(), after_expiry - wrong_penalty)
+	assert_signal_emit_count(board, "order_completed", 0)
+
+
 func test_ac5b_single_advance_of_sixty_expires() -> void:
 	var board: OrderBoard = _single_recipe_board(60.0)
 	board.reset()
