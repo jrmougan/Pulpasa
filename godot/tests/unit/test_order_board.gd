@@ -401,5 +401,11 @@ func test_pul115_order_pool_restricts_and_reset_clears_it() -> void:
 	for slot: int in SLOTS:
 		assert_eq(board.request_order(slot).data, only)
 	board.reset()
-	board.set_order_pool([] as Array[OrderData])
-	assert_not_null(board.request_order(0), "pool vacío = todo el catálogo")
+	var seen: Dictionary[String, bool] = {}
+	for slot: int in SLOTS:
+		seen[board.request_order(slot).data.resource_path] = true
+	for _i: int in 40:
+		var live: ActiveOrder = board.get_order_for_slot(0)
+		seen[live.data.resource_path] = true
+		board.try_deliver(0, _contents_for(live))
+	assert_gt(seen.size(), 1, "tras reset() vuelve todo el catálogo")

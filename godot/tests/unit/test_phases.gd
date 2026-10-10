@@ -13,6 +13,10 @@ const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
 const SLOTS: Array[int] = [1, 2, 3, 4]
 const TICK: float = 1.0 / 60.0
 const BOX: BoxData = preload("res://data/boxes/box.tres")
+const ORDER_A_FEIRA: String = "res://data/orders/a_feira.tres"
+const ORDER_PICANTE: String = "res://data/orders/picante.tres"
+const ORDER_CACHELOS: String = "res://data/orders/con_cachelos.tres"
+const ORDER_BRAVO: String = "res://data/orders/bravo_cachelos.tres"
 
 var _config: RoundConfig
 var _catalog: OrderCatalog
@@ -485,6 +489,8 @@ func test_restart_returns_to_phase_1() -> void:
 	assert_signal_emitted_with_parameters(_round, "phase_changed", [1])
 	_round.advance(_config.first_order_delay)
 	assert_eq(_active_slots(), [1, 2] as Array[int])
+	for order: ActiveOrder in _board.get_active_orders():
+		assert_eq(order.data.resource_path, ORDER_A_FEIRA, "reinicio: pool de la fase 1")
 
 
 func test_config_change_mid_round_does_not_alter_running_phases() -> void:
@@ -595,63 +601,65 @@ func _slots_of(orders: Array[ActiveOrder]) -> Array[int]:
 # --- PUL-115: comandas por fase (D25, AC7-AC9) ---
 
 
-## Nombres de receta de las comandas que salen al reponer `count` veces el puesto 1.
+## Comandas (por `resource_path` de su `OrderData`) de `count` generaciones en el puesto 1.
 func _generate_names(count: int) -> Dictionary[String, int]:
 	var names: Dictionary[String, int] = {}
-	_board.request_order(1)
 	for _i: int in count:
 		var order: ActiveOrder = _board.get_order_for_slot(1)
-		var key: String = order.data.recipe.display_name
+		var key: String = order.data.resource_path
 		names[key] = names.get(key, 0) + 1
 		_board.try_deliver(1, _contents_for(order))
 	return names
 
 
+## Arranca la ronda real y la lleva a la fase `phase_index` (0 = la 1) por `advance`: el pool lo
+## aplica `RoundState._enter_phase`, nada se pone a mano. La comanda viva puede ser de la fase
+## anterior, así que se entrega una vez para que la reposición ya salga del pool de la fase.
 func _enter(phase_index: int) -> void:
 	_board = OrderBoard.new(_catalog, _seeded_rng(5))
 	_round = RoundState.new(_config, _board)
 	_round.start(SLOTS)
 	var elapsed: float = _config.phases[phase_index].start_fraction * _config.duration
-	_advance_to(elapsed + 1.0)
-	_board.reset()
-	_board.set_order_pool(_config.phases[phase_index].orders)
+	_advance_to(elapsed + 6.0)
+	assert_eq(_round.get_phase(), phase_index + 1)
+	_round.advance(TICK)
+	_board.try_deliver(1, _contents_for(_board.get_order_for_slot(1)))
 
 
 func test_ac7_phase_1_only_a_feira() -> void:
 	_enter(0)
 	var names: Dictionary[String, int] = _generate_names(200)
-	assert_eq(names.size(), 1)
-	assert_eq(names.keys()[0], _catalog.orders[0].recipe.display_name)
+	assert_eq(names.keys(), [ORDER_A_FEIRA])
 
 
 func test_ac7_phase_2_a_feira_and_picante() -> void:
 	_enter(1)
 	var names: Dictionary[String, int] = _generate_names(200)
 	assert_eq(names.size(), 2, str(names))
-	assert_true(names.has(_catalog.orders[0].recipe.display_name))
-	assert_true(names.has(_catalog.orders[1].recipe.display_name))
+	assert_true(names.has(ORDER_A_FEIRA))
+	assert_true(names.has(ORDER_PICANTE))
 
 
 func test_ac7_phase_3_all_four_recipes() -> void:
 	_enter(2)
 	var names: Dictionary[String, int] = _generate_names(200)
 	assert_eq(names.size(), 4, str(names))
-	for count: int in names.values():
-		assert_gte(count, 1)
+	for path: String in [ORDER_A_FEIRA, ORDER_PICANTE, ORDER_CACHELOS, ORDER_BRAVO]:
+		assert_true(names.has(path), path)
 
 
 func test_ac7_round_state_applies_pool_on_enter_phase_without_reset() -> void:
 	_round.start(SLOTS)
 	_advance_to(5.0)
 	for order: ActiveOrder in _board.get_active_orders():
-		assert_eq(order.data, _catalog.orders[0], "fase 1: solo Á feira")
+		assert_eq(order.data.resource_path, ORDER_A_FEIRA, "fase 1: solo Á feira")
 	for _i: int in 40:
 		for slot: int in SLOTS:
 			var live: ActiveOrder = _board.get_order_for_slot(slot)
 			if live != null:
 				_board.try_deliver(slot, _contents_for(live))
 		for order: ActiveOrder in _board.get_active_orders():
-			assert_eq(order.data, _catalog.orders[0])
+			assert_eq(order.data.resource_path, ORDER_A_FEIRA)
 
 
 func test_ac8_phase_2_change_allows_picante_in_first_new_order() -> void:
@@ -665,11 +673,11 @@ func test_ac8_phase_2_change_allows_picante_in_first_new_order() -> void:
 	var seen: Dictionary[String, int] = {}
 	for _i: int in 120:
 		var order: ActiveOrder = _board.get_order_for_slot(1)
-		seen[order.data.recipe.display_name] = 1
+		seen[order.data.resource_path] = 1
 		_board.try_deliver(1, _contents_for(order))
-	assert_true(seen.has(_catalog.orders[1].recipe.display_name), "Picante puede salir")
-	assert_false(seen.has(_catalog.orders[2].recipe.display_name))
-	assert_false(seen.has(_catalog.orders[3].recipe.display_name))
+	assert_true(seen.has(ORDER_PICANTE), "Picante puede salir")
+	assert_false(seen.has(ORDER_CACHELOS))
+	assert_false(seen.has(ORDER_BRAVO))
 
 
 func test_ac8_phase_3_change_allows_cachelos_at_the_switch() -> void:
@@ -684,7 +692,7 @@ func test_ac8_phase_3_change_allows_cachelos_at_the_switch() -> void:
 		if order == null:
 			_board.request_order(1)
 			continue
-		seen[order.data.recipe.display_name] = 1
+		seen[order.data.resource_path] = 1
 		_board.try_deliver(1, _contents_for(order))
 	assert_eq(seen.size(), 4, str(seen))
 
@@ -711,5 +719,6 @@ func test_pool_same_seed_same_sequence_and_one_rng_call_per_order() -> void:
 func test_pool_cleared_by_board_reset() -> void:
 	_board.set_order_pool([_catalog.orders[0]] as Array[OrderData])
 	_board.reset()
+	_board.request_order(1)
 	var names: Dictionary[String, int] = _generate_names(100)
 	assert_eq(names.size(), 4)

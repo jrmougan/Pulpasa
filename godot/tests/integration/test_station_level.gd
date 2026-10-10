@@ -31,6 +31,7 @@ func before_each() -> void:
 	GameState.set_paused(false)
 	watch_signals(EventBus)
 	_sides.clear()
+	PhaselessConfig.disable()
 
 
 func after_each() -> void:
@@ -41,6 +42,7 @@ func after_each() -> void:
 	Input.flush_buffered_events()
 	GameState.set_paused(false)
 	GameState.reset_input()
+	PhaselessConfig.restore()
 
 
 func _release(keycode: Key) -> InputEventKey:

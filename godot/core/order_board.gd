@@ -78,9 +78,15 @@ func set_new_order_patience_multiplier(factor: float) -> void:
 
 
 ## Limita las comandas nuevas a este conjunto (D25, fases); vacío = todo el catálogo. Las vivas no
-## cambian. Cada generación consume una sola llamada al RNG, con pool o sin él.
+## cambian. Avisa si alguna no está en el catálogo (pool ⊆ catálogo).
+## Cada generación consume una sola llamada al RNG, con pool o sin él.
 func set_order_pool(orders: Array[OrderData]) -> void:
 	_order_pool = orders.duplicate()
+	if _catalog == null:
+		return
+	for order: OrderData in _order_pool:
+		if not _catalog.orders.has(order):
+			push_warning("OrderBoard: la comanda del pool no está en el catálogo")
 
 
 ## Pide una comanda por puesto, en el orden dado, hasta el máximo de activas.

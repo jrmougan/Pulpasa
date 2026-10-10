@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-114]
 orca_task: null
 unity_sources: []
-owns: [godot/resources/phase_data.gd, godot/resources/round_config.gd, godot/core/round_state.gd, godot/core/order_board.gd, godot/data/config/round_config.tres, godot/data/levels/**, godot/tests/unit/test_phases.gd, godot/tests/unit/test_round_state.gd, godot/tests/unit/test_order_board.gd, godot/tests/unit/test_data_integrity.gd, docs/evidence/PUL-115/**, docs/backlog/PUL-115-fases-de-comandas.md]
+owns: [godot/resources/phase_data.gd, godot/resources/round_config.gd, godot/core/round_state.gd, godot/core/order_board.gd, godot/data/config/round_config.tres, godot/data/levels/**, godot/tests/unit/test_phases.gd, godot/tests/unit/test_round_state.gd, godot/tests/unit/test_order_board.gd, godot/tests/unit/test_data_integrity.gd, godot/tests/integration/test_station_level.gd, docs/evidence/PUL-115/**, docs/backlog/PUL-115-fases-de-comandas.md]
 touches_scenes: []
 ---
 
@@ -36,4 +36,5 @@ Contrato de ADR-003 §10.5 (PUL-111): `PhaseData.orders: Array[OrderData]` (vac�
 
 ## Evidence
 - `tools/verify.sh`: OK (gdformat, gdlint, import, GUT 828/828, smoke). Sin AC visual.
-- No se tocaron tests de integración de nivel fuera de `owns`.
+- Mapeo: AC9 (dificultad-progresiva.md) -> `test_data_integrity.gd::test_pul115_phase_pools_subset_of_catalog_and_per_phase`; AC7/AC8 y AC13 de comandas.md -> `test_phases.gd::test_ac7_*` y `test_ac8_*`; AC2 (pool ⊆ catálogo) -> el mismo test de integridad, más `push_warning` en `OrderBoard.set_order_pool`.
+- `test_station_level.gd` usa `PhaselessConfig` (catálogo de una comanda, sin pool de fase).
