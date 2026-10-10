@@ -1,13 +1,11 @@
 extends GutTest
-## PUL-047: el `Model` de la caja (BoxModel) muestra el plato del tamaño de `data`, el relleno
-## progresivo con las rodajas y los cachelos si los lleva; las pegatinas 3D del `.glb` van ocultas
-## y los nodos de contrato de `box.tscn` siguen en su sitio. PUL-077: el resaltado sale del volumen
-## cerrado `hull_<tamaño>` de la talla visible, no de la bandeja abierta.
+## PUL-047: el `Model` de la caja (BoxModel) muestra el plato único (variante mediana del `.glb`),
+## el relleno progresivo con las rodajas y los cachelos si los lleva; las pegatinas 3D del `.glb`
+## van ocultas y los nodos de contrato de `box.tscn` siguen en su sitio. PUL-077: el resaltado sale
+## del volumen cerrado `hull_medium`, no de la bandeja abierta.
 
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
-const SMALL: BoxData = preload("res://data/boxes/small.tres")
-const MEDIUM: BoxData = preload("res://data/boxes/medium.tres")
-const LARGE: BoxData = preload("res://data/boxes/large.tres")
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
 const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 ## Diámetro exterior por tamaño (art-bible §2.1, ±10 %).
@@ -43,16 +41,14 @@ func _octopus_layers(box: Box) -> Array[bool]:
 	return shown
 
 
-func test_size_key_comes_from_the_data_file() -> void:
-	assert_eq(BoxModel.size_key(SMALL), &"small")
-	assert_eq(BoxModel.size_key(MEDIUM), &"medium")
-	assert_eq(BoxModel.size_key(LARGE), &"large")
-	assert_eq(BoxModel.size_key(null), BoxModel.DEFAULT_SIZE)
-	assert_eq(BoxModel.size_key(BoxData.new()), BoxModel.DEFAULT_SIZE)
+func test_single_variant_is_medium_for_any_data() -> void:
+	## D25: la caja única usa la variante mediana del `.glb`.
+	assert_eq(_model(_box(BOX)).get_size(), BoxModel.VARIANT)
+	assert_eq(BoxModel.VARIANT, &"medium")
 
 
 func test_each_size_shows_only_its_plate_with_the_bible_diameter() -> void:
-	for data: BoxData in [SMALL, MEDIUM, LARGE]:
+	for data: BoxData in [BOX]:
 		var box: Box = _box(data)
 		var size: StringName = _model(box).get_size()
 		for key: StringName in BoxModel.SIZES:
@@ -67,7 +63,7 @@ func test_each_size_shows_only_its_plate_with_the_bible_diameter() -> void:
 
 
 func test_outline_hull_follows_the_size() -> void:
-	for data: BoxData in [SMALL, MEDIUM, LARGE]:
+	for data: BoxData in [BOX]:
 		var box: Box = _box(data)
 		var size: StringName = _model(box).get_size()
 		var highlightable: Highlightable = box.get_node("%Highlightable") as Highlightable
@@ -86,12 +82,13 @@ func test_outline_hull_follows_the_size() -> void:
 
 
 func test_refresh_follows_data_assigned_after_ready() -> void:
-	var box: Box = _box(SMALL)
-	box.data = LARGE
+	var box: Box = _box(BOX)
+	box.data = BoxData.new()
 	_model(box).refresh()
-	assert_eq(_model(box).get_size(), &"large")
-	assert_true(_visible(box, "box_large"))
+	assert_eq(_model(box).get_size(), &"medium")
+	assert_true(_visible(box, "box_medium"))
 	assert_false(_visible(box, "box_small"))
+	assert_false(_visible(box, "box_large"))
 
 
 func test_fill_levels_show_progressive_slices() -> void:
@@ -100,7 +97,7 @@ func test_fill_levels_show_progressive_slices() -> void:
 	assert_eq(BoxModel.fill_level(0.5), 2)
 	assert_eq(BoxModel.fill_level(0.95), 2)
 	assert_eq(BoxModel.fill_level(1.0), 3)
-	var box: Box = _box(MEDIUM)
+	var box: Box = _box(BOX)
 	assert_eq(_octopus_layers(box), [false, false, false] as Array[bool], "vacía")
 	_set_fill(box, 0.1)
 	assert_eq(_octopus_layers(box), [true, false, false] as Array[bool], "empezada")
@@ -111,15 +108,15 @@ func test_fill_levels_show_progressive_slices() -> void:
 
 
 func test_slices_sit_on_the_plate_floor() -> void:
-	var box: Box = _box(LARGE)
+	var box: Box = _box(BOX)
 	var octopus: Node3D = box.get_node("Model/Octopus") as Node3D
-	var anchor: Node3D = box.get_node("Model").find_child("Anchor_Fill_large") as Node3D
+	var anchor: Node3D = box.get_node("Model").find_child("Anchor_Fill_medium") as Node3D
 	assert_almost_eq(octopus.position.y, anchor.position.y, 0.001)
 	assert_gt(anchor.position.y, 0.0)
 
 
 func test_cachelos_follow_the_seasoning() -> void:
-	var box: Box = _box(SMALL)
+	var box: Box = _box(BOX)
 	_set_fill(box, 1.0)
 	assert_false(_visible(box, "cachelos_pieces_a"))
 	assert_eq(box.toggle_seasoning(SALT, true), SeasoningRules.Rejection.NONE)
@@ -132,7 +129,7 @@ func test_cachelos_follow_the_seasoning() -> void:
 
 
 func test_3d_sticker_is_hidden_and_anchors_exist() -> void:
-	var box: Box = _box(MEDIUM)
+	var box: Box = _box(BOX)
 	assert_false(_visible(box, "sticker"), "la fila en juego es %BadgeRow")
 	for size: StringName in BoxModel.SIZES:
 		for i: int in 4:
@@ -141,7 +138,7 @@ func test_3d_sticker_is_hidden_and_anchors_exist() -> void:
 
 
 func test_contract_nodes_survive_the_new_model() -> void:
-	var box: Box = _box(MEDIUM)
+	var box: Box = _box(BOX)
 	assert_true(box.is_in_group(&"box"))
 	for path: String in ["%BadgeRow", "%AnimationPlayer", "%AnchorPoint", "%FillBar", "%Lid"]:
 		assert_not_null(box.get_node_or_null(path), path)
@@ -154,17 +151,11 @@ func test_contract_nodes_survive_the_new_model() -> void:
 	assert_eq(shape.size, Vector3(0.396, 0.333, 0.375))
 
 
-func test_collision_matches_the_model_of_each_size() -> void:
-	var expected: Dictionary[BoxData, Vector3] = {
-		SMALL: Vector3(0.338, 0.284, 0.320),
-		MEDIUM: Vector3(0.396, 0.333, 0.375),
-		LARGE: Vector3(0.491, 0.414, 0.466),
-	}
+func test_collision_matches_the_medium_plate_and_is_not_shared() -> void:
 	var shapes: Array[Shape3D] = []
-	for data: BoxData in expected:
-		var box: Box = _box(data)
+	for i: int in 2:
+		var box: Box = _box(BOX)
 		var body: CollisionShape3D = box.get_node("CollisionShape3D") as CollisionShape3D
-		assert_eq((body.shape as BoxShape3D).size, expected[data], str(data.display_name))
+		assert_eq((body.shape as BoxShape3D).size, Vector3(0.396, 0.333, 0.375))
 		shapes.append(body.shape)
 	assert_ne(shapes[0], shapes[1], "las cajas no comparten la forma")
-	assert_ne(shapes[1], shapes[2], "las cajas no comparten la forma")

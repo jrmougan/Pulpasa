@@ -19,6 +19,7 @@ const DEPTHS: Array[float] = [0.8, 1.0, 1.2]
 ## Desplazamientos laterales respecto a la pieza (m).
 const OFFSETS: Array[float] = [-0.1, 0.0, 0.1]
 const SETTLE_FRAMES: int = 3
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _level: Node
 var _station: SeasoningStation
@@ -45,7 +46,7 @@ func after_each() -> void:
 
 func _new_box() -> Box:
 	var box: Box = BOX_SCENE.instantiate()
-	box.data = RECIPE.box
+	box.data = BOX
 	_level.get_node("Items").add_child(box)
 	box.global_position = _player.global_position + Vector3(0.0, 0.5, 0.0)
 	return box

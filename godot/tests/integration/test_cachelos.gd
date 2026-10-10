@@ -5,7 +5,7 @@ const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
 const STATION_SCENE: PackedScene = preload("res://entities/stations/seasoning_station.tscn")
-const SMALL_BOX: Resource = preload("res://data/boxes/small.tres")
+const SMALL_BOX: Resource = preload("res://data/boxes/box.tres")
 
 const STEP: float = 0.1
 const INTERACTABLE_LAYER: int = 1 << 2

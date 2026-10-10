@@ -48,7 +48,7 @@ const MARK_MIN_PX: float = 18.0
 const DETOUR_MIN: float = 6.0
 const DETOUR_MAX: float = 10.0
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
-const SMALL_BOX: BoxData = preload("res://data/boxes/small.tres")
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 const CAMERA_PITCH_DEG: float = -37.7
 const CAMERA_SIZE: float = 12.74
 ## Rejilla del recorrido (AC4): paso y límites del suelo jugable (Godot).
@@ -313,7 +313,7 @@ func test_r11_pressing_in_front_of_the_bar_changes_nothing_in_the_hand() -> void
 			player.global_position = Vector3(x, player.global_position.y, BAR_Z + side * 0.85)
 			player.rotation.y = 0.0 if side > 0.0 else PI
 			var box: Box = BOX_SCENE.instantiate()
-			box.data = SMALL_BOX
+			box.data = BOX
 			items.add_child(box)
 			assert_true(hold.pick_up(box))
 			await wait_physics_frames(3)
@@ -427,7 +427,7 @@ func test_ac2_planta_b_distances_match_pul041_within_one_metre() -> void:
 	for spawner: Node in _level.get_node("Stations/BoxShelf").get_children():
 		if spawner is ItemSpawner:
 			boxes.append(_flat((spawner as Node3D).global_position) + Vector2(ACCESS_OFFSET, 0.0))
-	assert_eq(boxes.size(), 3)
+	assert_eq(boxes.size(), 1)
 
 	_assert_walk(reachable, boxes, pass_service, B_BOXES_TO_PASS, "cajas → pasaplatos")
 	_assert_walk(reachable, fridge, pots, B_FRIDGE_TO_POT, "nevera → olla")
@@ -736,7 +736,7 @@ func test_m1_level_wires_expire_penalty_from_data() -> void:
 	RoundManager.round_state.advance(5.0)
 	var order: ActiveOrder = OrderService.get_active_orders()[0]
 	var contents: BoxContents = BoxContents.new(
-		order.data.recipe.box,
+		BOX,
 		order.data.recipe.ingredient,
 		IngredientData.CookingState.COOKED,
 		1.0,
@@ -819,9 +819,8 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 
 	# Cajas: coge cada una y la entrega (vacía) en cada puesto.
 	var stands: Array[OrderStand] = _stands()
-	var spawners: Array[String] = ["SmallSpawner", "MediumSpawner", "LargeSpawner"]
 	for i: int in STAND_COUNT:
-		var spawner: Node3D = shelf.get_node(spawners[i % spawners.size()])
+		var spawner: Node3D = shelf.get_node("BoxSpawner")
 		assert_true(await _reach(player, spawner, reachable), "alcanza %s" % spawner.name)
 		assert_true(actor.interact_pressed())
 		assert_true(hold.get_held_item() is Box)
@@ -832,7 +831,7 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 	# Pasaplatos: una caja en cada slot de la barra, dejada desde un lado y recogida desde el otro.
 	for i: int in PASS_COUNT:
 		var slot: Slot = _level.get_node("Stations/PassSlot%02d" % (i + 1))
-		var spawner: Node3D = shelf.get_node(spawners[i % spawners.size()])
+		var spawner: Node3D = shelf.get_node("BoxSpawner")
 		assert_true(await _reach(player, spawner, reachable), "alcanza %s" % spawner.name)
 		assert_true(actor.interact_pressed())
 		var box: Box = hold.get_held_item() as Box
@@ -848,7 +847,7 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 
 	# Estación: caja llena a la bandeja por el pase, sal por el lado de condimentar, cuenco.
 	var station: SeasoningStation = _level.get_node("Stations/SeasoningStation")
-	assert_true(await _reach(player, shelf.get_node("SmallSpawner"), reachable))
+	assert_true(await _reach(player, shelf.get_node("BoxSpawner"), reachable))
 	assert_true(actor.interact_pressed())
 	var full: Box = hold.get_held_item() as Box
 	full.fill = 1.0

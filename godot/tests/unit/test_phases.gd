@@ -12,6 +12,7 @@ const CONFIG_PATH: String = "res://data/config/round_config.tres"
 const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
 const SLOTS: Array[int] = [1, 2, 3, 4]
 const TICK: float = 1.0 / 60.0
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _config: RoundConfig
 var _catalog: OrderCatalog
@@ -61,7 +62,7 @@ func _phase(start_fraction: float, active_slots: int, multiplier: float) -> Phas
 
 func _contents_for(order: ActiveOrder) -> BoxContents:
 	return BoxContents.new(
-		order.data.recipe.box,
+		BOX,
 		order.data.recipe.ingredient,
 		IngredientData.CookingState.COOKED,
 		1.0,

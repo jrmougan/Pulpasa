@@ -34,6 +34,7 @@ const ACCESS: float = 1.0
 const KITCHEN_DUMP: Vector2 = Vector2(4.5, -2.4)
 ## Espera tras cambiar de personaje (> `switch_cooldown` de `input_config.tres`).
 const SWITCH_WAIT: float = 0.3
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _scene: Node
 var _player: Player
@@ -142,7 +143,7 @@ func test_pul039_wrong_box_in_zone_does_nothing_and_e_rejects() -> void:
 	var order: ActiveOrder = _order_with_most_seasonings()
 	assert_not_null(order)
 	# Caja vacía de la estantería: no coincide con ninguna comanda.
-	await _take_box(order.data.recipe.box)
+	await _take_box(BOX)
 	var box: Box = _hold.get_held_item() as Box
 	assert_not_null(box)
 	var stand: OrderStand = _stand(order.slot_id)
@@ -227,12 +228,12 @@ func _prepare_box(order: ActiveOrder) -> Box:
 	var pass_slot: Slot = _scene.get_node("Stations/PassSlot05")
 	var pass_xz: Vector2 = Walker.xz(pass_slot.global_position)
 	# 1. Servicio: caja de la estantería al pasaplatos.
-	await _take_box(recipe.box)
+	await _take_box(BOX)
 	var box: Box = _hold.get_held_item() as Box
 	assert_not_null(box, "caja de la estantería")
 	if box == null:
 		return null
-	assert_eq(box.data, recipe.box)
+	assert_eq(box.data, BOX)
 	assert_eq(await _service.use(pass_xz, Vector2(pass_xz.x, ACCESS)), pass_slot, "pasaplatos")
 	assert_eq(pass_slot.get_item(), box, "caja en el pasaplatos")
 	# 2. Cocina: pulpo → olla → corte sobre el pasaplatos hasta llenar; cachelos al cuenco (desde el
@@ -358,7 +359,7 @@ func _inject_box(order: ActiveOrder) -> Box:
 	var items: Node = _scene.get_node("Items")
 	var box: Box = BOX_SCENE.instantiate()
 	items.add_child(box)
-	box.data = order.data.recipe.box
+	box.data = BOX
 	var guard: int = 0
 	while not box.is_full() and guard < 200:
 		var octopus: Ingredient = OCTOPUS_SCENE.instantiate()

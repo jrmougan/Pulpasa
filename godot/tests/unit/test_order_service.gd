@@ -5,6 +5,7 @@ extends GutTest
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 const OrderServiceScript: GDScript = preload("res://autoload/order_service.gd")
 const CATALOG_PATH: String = "res://data/orders/order_catalog.tres"
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _bus: Node
 var _service: Node
@@ -39,7 +40,7 @@ func _patient_catalog(max_time: float) -> OrderCatalog:
 
 func _contents_for(order: ActiveOrder) -> BoxContents:
 	return BoxContents.new(
-		order.data.recipe.box,
+		BOX,
 		order.data.recipe.ingredient,
 		IngredientData.CookingState.COOKED,
 		1.0,

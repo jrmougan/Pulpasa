@@ -12,8 +12,8 @@ extends Node3D
 ## `fill_changed`, `seasoned` y `seasoning_removed`; quien cambie `data` después llama a
 ## `refresh()`.
 
-## Variante si `data` no es uno de los tres `.tres` de `data/boxes/`.
-const DEFAULT_SIZE: StringName = &"medium"
+## Variantes que trae `box.glb`. La caja única (D25) usa solo `VARIANT`; las otras se ocultan.
+const VARIANT: StringName = &"medium"
 const SIZES: Array[StringName] = [&"small", &"medium", &"large"]
 ## Capas de rodajas visibles por nivel de relleno (0 vacía, 1 empezada, 2 a medias, 3 llena).
 const OCTOPUS_LAYERS: Array[StringName] = [
@@ -46,14 +46,6 @@ var _own_shape: BoxShape3D
 @onready var _cachelos: Node3D = $Cachelos as Node3D
 
 
-## Clave de tamaño estable de `data`: nombre de su `.tres` (`small`, `medium`, `large`).
-static func size_key(data: BoxData) -> StringName:
-	if data == null:
-		return DEFAULT_SIZE
-	var key: StringName = StringName(data.resource_path.get_file().get_basename())
-	return key if key in SIZES else DEFAULT_SIZE
-
-
 ## Nivel de relleno visible: 0 vacía, 1 empezada, 2 a medias (≥ 0,5), 3 llena.
 static func fill_level(fill: float) -> int:
 	if fill <= 0.0:
@@ -75,9 +67,9 @@ func _ready() -> void:
 	refresh()
 
 
-## Tamaño mostrado (para tests).
+## Variante mostrada (para tests).
 func get_size() -> StringName:
-	return size_key(_box.data if _box != null else null)
+	return VARIANT
 
 
 func refresh() -> void:

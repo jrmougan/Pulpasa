@@ -8,9 +8,7 @@ const SLOT_SCENE: PackedScene = preload("res://entities/stations/slot.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
-const SMALL: BoxData = preload("res://data/boxes/small.tres")
-const MEDIUM: BoxData = preload("res://data/boxes/medium.tres")
-const LARGE: BoxData = preload("res://data/boxes/large.tres")
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
 const INTERACTABLE_LAYER: int = 1 << 2
 ## Donde nacen los objetos antes de cogerlos: sin solapar la cápsula del jugador.
@@ -88,23 +86,15 @@ func _assert_fills_on_table(data: BoxData, presses: int) -> void:
 	assert_eq(_hold.get_held_item(), octopus)
 
 
-func test_review_small_box_on_table_fills_in_4_presses() -> void:
-	await _assert_fills_on_table(SMALL, 4)
-
-
-func test_review_medium_box_on_table_fills_in_6_presses() -> void:
-	await _assert_fills_on_table(MEDIUM, 6)
-
-
-func test_review_large_box_on_table_fills_in_10_presses() -> void:
-	await _assert_fills_on_table(LARGE, 10)
+func test_pul113_box_on_table_fills_in_6_presses() -> void:
+	await _assert_fills_on_table(BOX, 6)
 
 
 ## Paridad Unity: con algo incompatible en la mano (pulpo crudo) la caja de la mesa sigue siendo el
 ## objetivo; la pulsación la consume la caja sin efecto, así que no se suelta lo que se lleva
 ## (en Unity, Box.Interact → TryToggleHold con la mano llena no hace nada). M1: filtrar.
 func test_review_incompatible_hand_still_targets_box_on_table_and_press_does_nothing() -> void:
-	var box: Box = await _box_on_table(SMALL)
+	var box: Box = await _box_on_table(BOX)
 	var raw: Ingredient = _in_hand(OCTOPUS_SCENE.instantiate()) as Ingredient
 	await _settle()
 	assert_eq(_detector.get_target(), box)
@@ -117,10 +107,10 @@ func test_review_incompatible_hand_still_targets_box_on_table_and_press_does_not
 
 
 func test_review_season_box_on_table_then_pick_up_and_drop() -> void:
-	var box: Box = await _box_on_table(SMALL)
+	var box: Box = await _box_on_table(BOX)
 	_cooked_octopus()
 	await _settle()
-	for i: int in 5:
+	for i: int in 6:
 		_actor.interact_pressed()
 		await _settle()
 	assert_true(box.is_full())

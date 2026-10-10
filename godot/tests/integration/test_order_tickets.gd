@@ -6,6 +6,7 @@ extends GutTest
 const PANEL_SCENE: PackedScene = preload("res://ui/tickets/order_tickets_panel.tscn")
 const BusScript: GDScript = preload("res://autoload/event_bus.gd")
 const ServiceScript: GDScript = preload("res://autoload/order_service.gd")
+const TICKET_SCENE: PackedScene = preload("res://ui/tickets/order_ticket.tscn")
 const ENTRY_SCENE: PackedScene = preload("res://ui/tickets/ticket_entry.tscn")
 const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
 const HOT: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
@@ -14,10 +15,9 @@ const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 const SWEET: SeasoningData = preload("res://data/seasonings/paprika.tres")
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
-const MEDIUM_BOX: BoxData = preload("res://data/boxes/medium.tres")
-const SMALL_BOX: BoxData = preload("res://data/boxes/small.tres")
 const PALETTE: StandPalette = preload("res://data/config/stand_palette.tres")
 const THEME: Theme = preload("res://ui/theme/default_theme.tres")
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _bus: Node
 var _service: Node
@@ -77,7 +77,7 @@ func test_ac2_completion_replaces_only_its_ticket_then_reset_clears() -> void:
 	var order: ActiveOrder = orders[0]
 	var untouched: OrderTicket = _ticket(orders[1].id)
 	var contents: BoxContents = BoxContents.new(
-		order.data.recipe.box,
+		BOX,
 		order.data.recipe.ingredient,
 		IngredientData.CookingState.COOKED,
 		1.0,
@@ -222,7 +222,7 @@ func test_pul086_salt_sticker_is_light_with_ink_icon_and_ring() -> void:
 
 func test_pul086_box_badge_salt_uses_ink_icon_and_ringed_disc() -> void:
 	var box: Box = BOX_SCENE.instantiate()
-	box.data = SMALL_BOX
+	box.data = BOX
 	add_child_autofree(box)
 	box.fill = 1.0
 	box.toggle_seasoning(SALT, true)
@@ -320,76 +320,55 @@ func test_pul099_palette_has_the_four_awning_colors_and_fallback() -> void:
 	assert_eq(palette.color_for(5), palette.fallback)
 
 
-func test_pul099_ac1_r10_medium_box_ticket_shows_icon_and_letter_before_recipe() -> void:
-	var medium: BoxData = MEDIUM_BOX
+func test_pul113_ac4_ticket_has_no_size_nodes() -> void:
 	var entry: TicketEntry = ENTRY_SCENE.instantiate()
 	add_child_autofree(entry)
 	var data: OrderData = OrderData.new()
 	data.recipe = RecipeData.new()
 	data.recipe.display_name = "Pulpo"
-	data.recipe.box = medium
 	entry.setup(data)
-	assert_eq((entry.get_node("%SizeLabel") as Label).text, "M")
-	assert_eq((entry.get_node("%SizeIcon") as TextureRect).texture, medium.icon)
-	assert_not_null(medium.icon)
-	var badge: Node = entry.get_node("%SizeBadge")
-	assert_eq(badge.get_parent(), entry.get_node("%Recipe").get_parent())
-	assert_lt(badge.get_index(), entry.get_node("%Recipe").get_index(), "talla antes del nombre")
-	assert_lt(entry.get_node("%SizeIcon").get_index(), entry.get_node("%SizeLabel").get_index())
+	assert_null(entry.get_node_or_null("%SizeBadge"))
+	assert_null(entry.get_node_or_null("%SizeIcon"))
+	assert_null(entry.get_node_or_null("%SizeLabel"))
+	assert_false(entry.has_method("_show_size"))
+	assert_eq((entry.get_node("%Recipe") as Label).text, "Pulpo")
 
 
-func test_pul099_ticket_without_box_hides_size_but_keeps_recipe() -> void:
-	var entry: TicketEntry = ENTRY_SCENE.instantiate()
-	add_child_autofree(entry)
-	var with_box: OrderData = OrderData.new()
-	with_box.recipe = RecipeData.new()
-	with_box.recipe.display_name = "Pulpo"
-	with_box.recipe.box = MEDIUM_BOX
-	entry.setup(with_box)
-	assert_true((entry.get_node("%SizeBadge") as Control).visible)
-	var without: OrderData = OrderData.new()
-	without.recipe = RecipeData.new()
-	without.recipe.display_name = "Sin caja"
-	without.recipe.box = null
-	entry.setup(without)
-	assert_false((entry.get_node("%SizeBadge") as Control).visible)
-	assert_eq((entry.get_node("%Recipe") as Label).text, "Sin caja")
-
-
-func test_pul099_icon_carries_the_letter_text_only_as_fallback() -> void:
-	var entry: TicketEntry = ENTRY_SCENE.instantiate()
-	add_child_autofree(entry)
+func test_pul113_ac4_recipe_name_is_not_clipped_in_the_ticket() -> void:
+	## D25: sin la talla delante, un nombre de 14 caracteres cabe entero en el ancho del ticket.
+	var ticket: OrderTicket = TICKET_SCENE.instantiate()
+	ticket.set_bus(_bus)
+	add_child_autofree(ticket)
 	var data: OrderData = OrderData.new()
 	data.recipe = RecipeData.new()
-	data.recipe.box = MEDIUM_BOX
-	entry.setup(data)
-	assert_false((entry.get_node("%SizeLabel") as Label).visible, "icono con letra")
-	var plain: BoxData = BoxData.new()
-	plain.short_label = "M"
-	data.recipe.box = plain
-	entry.setup(data)
-	assert_true((entry.get_node("%SizeLabel") as Label).visible, "sin icono: letra")
+	data.recipe.display_name = "Pulpo Familiar"
+	data.seasonings = [HOT, SALT] as Array[SeasoningData]
+	ticket.setup(ActiveOrder.new(1, data, 1, 0.0))
+	await wait_process_frames(2)
+	var label: Label = ticket.get_node("%Entry").get_node("%Recipe") as Label
+	var font: Font = label.get_theme_font("font")
+	var font_size: int = label.get_theme_font_size("font_size")
+	var needed: float = font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	assert_gte(label.size.x, needed, "el nombre cabe sin recortar")
 
 
-func test_pul099_ticket_width_stays_212_for_longest_recipe_and_every_size() -> void:
+func test_pul099_ticket_width_stays_212_for_longest_recipe() -> void:
 	var names: Array[String] = ["Pulpo Individual", "Pulpo Familiar", "Combo Duo"]
 	for recipe: RecipeData in _catalog_recipes():
 		names.append(recipe.display_name)
 	names.append("Pulpo á feira gigante de la romería de San Froilán")
-	for size_name: String in ["small", "medium", "large"]:
-		for display: String in names:
-			var ticket: OrderTicket = load("res://ui/tickets/order_ticket.tscn").instantiate()
-			ticket.set_bus(_bus)
-			add_child_autofree(ticket)
-			var data: OrderData = OrderData.new()
-			data.recipe = RecipeData.new()
-			data.recipe.display_name = display
-			data.recipe.box = load("res://data/boxes/%s.tres" % size_name)
-			data.seasonings = [HOT, SALT] as Array[SeasoningData]
-			var order: ActiveOrder = ActiveOrder.new(1, data, 1, 0.0)
-			ticket.setup(order)
-			await wait_process_frames(1)
-			assert_eq(ticket.size.x, 212.0, "%s / %s" % [size_name, display])
+	for display: String in names:
+		var ticket: OrderTicket = TICKET_SCENE.instantiate()
+		ticket.set_bus(_bus)
+		add_child_autofree(ticket)
+		var data: OrderData = OrderData.new()
+		data.recipe = RecipeData.new()
+		data.recipe.display_name = display
+		data.seasonings = [HOT, SALT] as Array[SeasoningData]
+		var order: ActiveOrder = ActiveOrder.new(1, data, 1, 0.0)
+		ticket.setup(order)
+		await wait_process_frames(1)
+		assert_eq(ticket.size.x, 212.0, display)
 
 
 func _catalog_recipes() -> Array[RecipeData]:
@@ -398,15 +377,6 @@ func _catalog_recipes() -> Array[RecipeData]:
 		if order.recipe != null and not out.has(order.recipe):
 			out.append(order.recipe)
 	return out
-
-
-func test_pul099_every_live_ticket_size_matches_its_recipe_box() -> void:
-	_mount()
-	_fill()
-	for order: ActiveOrder in _service.get_active_orders():
-		var entry: TicketEntry = _ticket(order.id).get_node("%Entry")
-		assert_eq((entry.get_node("%SizeLabel") as Label).text, order.data.recipe.box.short_label)
-		assert_eq((entry.get_node("%SizeIcon") as TextureRect).texture, order.data.recipe.box.icon)
 
 
 func test_pul099_ac2_r13_four_live_orders_stripe_is_stand_color() -> void:

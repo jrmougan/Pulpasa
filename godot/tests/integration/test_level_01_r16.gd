@@ -5,9 +5,9 @@ extends GutTest
 ## (`level_walker.gd`): el test nunca llama a `interact()` ni publica `target_changed`.
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
-const SMALL_BOX: BoxData = preload("res://data/boxes/small.tres")
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 const Walker: GDScript = preload("res://tests/integration/level_walker.gd")
-## R16: comandas S del catálogo real sin cachelos (dulce+sal y aceite+dulce).
+## R16: comandas del catálogo real sin cachelos (dulce+sal y aceite+dulce).
 const R16_ORDERS: Array[OrderData] = [
 	preload("res://data/orders/order_2.tres"),
 	preload("res://data/orders/order_4.tres"),
@@ -88,16 +88,16 @@ func test_r16_single_with_switch_two_s_orders_one_octopus_two_switches() -> void
 	var cook: RefCounted = Walker.new(get_tree(), cook_player)
 	var stations: Node = _level.get_node("Stations")
 
-	# 1. Servicio: dos cajas S del rack, cada una a su pasaplatos por el lado de condimentar.
+	# 1. Servicio: dos cajas del rack, cada una a su pasaplatos por el lado de condimentar.
 	var boxes: Array[Box] = []
 	var slots: Array[Slot] = [stations.get_node("PassSlot01"), stations.get_node("PassSlot02")]
-	var spawner: Node3D = stations.get_node("BoxShelf/SmallSpawner")
+	var spawner: Node3D = stations.get_node("BoxShelf/BoxSpawner")
 	for i: int in 2:
 		var at: Vector2 = _xz(spawner)
 		assert_eq(await server.use(at, at + Vector2(0.9, 0.0)), spawner, "rack")
 		var box: Box = server_player.get_node("%HoldComponent").get_held_item() as Box
-		assert_not_null(box, "caja S en la mano")
-		assert_eq(box.data, SMALL_BOX)
+		assert_not_null(box, "caja en la mano")
+		assert_eq(box.data, BOX)
 		var slot_xz: Vector2 = _xz(slots[i])
 		assert_eq(await server.use(slot_xz, Vector2(slot_xz.x, 1.0)), slots[i], "pasaplatos")
 		assert_eq(slots[i].get_item(), box)

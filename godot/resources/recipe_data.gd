@@ -6,6 +6,5 @@ extends Resource
 ## Clave tr() explícita; no se deriva del nombre del fichero.
 @export var translation_key: String = ""
 @export var ingredient: IngredientData
-@export var box: BoxData
 @export var base_points: int = 0
 @export_multiline var description: String = ""
