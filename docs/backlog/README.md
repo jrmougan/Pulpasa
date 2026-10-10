@@ -126,3 +126,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-111 | M3d | godot-architect | done | Enmendar los contratos para D25 (caja única, aliño, cubo de basura) |
 | PUL-112 | M3d | gameplay-engineer | in_progress | Implementar el cubo de basura y colocar 2 en level_01 |
 | PUL-113 | M3d | gameplay-engineer | in_progress | Quitar los tamaños de caja (caja única de 6 cortes) |
+| PUL-114 | M3d | gameplay-engineer | todo | Aliño de una pulsación y catálogo de 4 comandas |
+| PUL-115 | M3d | gameplay-engineer | todo | Escalar mecánicas por fase (comandas por fase) |
+| PUL-116 | M3d | qa-tester | todo | Re-medir R15/R17 tras D25 y preparar el playtest de M3d |
+| PUL-117 | M3d | asset-pipeline | todo | Arte del cubo de basura (dirección A, D22) |
