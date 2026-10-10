@@ -12,16 +12,14 @@ const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
 const MEDIUM: BoxData = preload("res://data/boxes/box.tres")
-const SWEET: SeasoningData = preload("res://data/seasonings/paprika.tres")
-const HOT: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
-const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
+const HOT: SeasoningData = preload("res://data/seasonings/hot_dressing.tres")
 const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 const STATION_DATA: SeasoningStationData = preload("res://data/config/seasoning_station.tres")
 const SETTLE_FRAMES: int = 3
-## Carácter del mapa de objetivos (como el de PUL-090): dulce, picante, sal, aceite, cuenco.
+## Carácter del mapa de objetivos (como el de PUL-090): aliño dulce, aliño picante, cuenco.
 const MAP_CHARS: Dictionary = {
-	"-": ".", "SweetPaprika": "d", "HotPaprika": "p", "Salt": "s", "Oil": "a", "CachelosBowl": "c"
+	"-": ".", "SweetDressing": "d", "HotDressing": "p", "CachelosBowl": "c"
 }
 ## Posiciones del jugador en el suelo, en el pasillo de cada lado (la estación está en el origen).
 const PASS_Z: float = -1.2
@@ -61,7 +59,6 @@ func _add_station(data: SeasoningStationData) -> void:
 	_level.add_child(_station)
 	var clock: Callable = func() -> float: return _now
 	for dispenser: SeasoningDispenser in _dispensers():
-		dispenser.clock = clock
 		dispenser.rejected.connect(_on_rejected)
 	_bowl().clock = clock
 	_bowl().rejected.connect(_on_rejected)
@@ -147,17 +144,21 @@ func test_scene_contract_nodes_and_data() -> void:
 	assert_false(_station.is_in_group(&"interactable"), "la estación no es objetivo")
 	assert_null(_station.get_node_or_null("Tray"), "R7: sin bandeja")
 	assert_false(_station.has_method("get_tray"))
-	var expected: Dictionary = {"SweetPaprika": SWEET, "HotPaprika": HOT, "Salt": SALT, "Oil": OIL}
-	assert_eq(_dispensers().size(), 4)
+	var expected: Dictionary = {"SweetDressing": SWEET, "HotDressing": HOT}
+	assert_eq(_dispensers().size(), 2, "R7: exactamente 2 dispensadores de aliño")
+	assert_eq(_dispensers()[0].name, &"SweetDressing", "orden del ticket: dulce, picante, cuenco")
 	for node_name: String in expected:
 		var dispenser: SeasoningDispenser = _dispenser(node_name)
 		assert_eq(dispenser.seasoning, expected[node_name], node_name)
 		assert_eq(dispenser.station, _station, node_name)
 		assert_true(dispenser.get_node("%Highlightable") is Highlightable, node_name)
+		assert_true(dispenser.get_node("%Gesture") is GPUParticles3D, "%s: %%Gesture" % node_name)
+		assert_null(dispenser.get("clock"), "%s: sin reloj de antirrebote" % node_name)
 	assert_eq(_bowl().station, _station)
 	assert_eq(_bowl().seasoning, CACHELOS)
 	assert_true(_bowl().get_node("%Highlightable") is Highlightable)
 	assert_eq(InteractionContract.scan_tree(_station), [])
+	assert_null(STATION_DATA.get("paprika_swap"), "D25: sin paprika_swap")
 
 
 func test_scene_contract_dispensers_and_bowl_implement_reachability() -> void:
@@ -196,94 +197,75 @@ func test_station_data_comes_from_tres() -> void:
 # --- AC1 ---
 
 
-func test_ac1_salt_dispenser_seasons_full_box_once() -> void:
+func test_ac1_sweet_dispenser_applies_the_dressing_once() -> void:
 	var box: Box = _held_box()
 	watch_signals(box)
-	_press(_dispenser("Salt"))
-	assert_true(box.has_seasoning(SALT))
+	_press(_dispenser("SweetDressing"))
+	assert_true(box.has_seasoning(SWEET))
 	assert_signal_emit_count(box, "seasoned", 1)
-	assert_signal_emitted_with_parameters(box, "seasoned", [SALT])
-	assert_eq(box.get_contents().seasonings, [SALT] as Array[SeasoningData])
+	assert_signal_emitted_with_parameters(box, "seasoned", [SWEET])
+	assert_signal_not_emitted(box, "seasoning_removed")
+	assert_eq(box.get_contents().seasonings, [SWEET] as Array[SeasoningData], "y nada más")
+	assert_eq((box.get_node("%BadgeRow") as BadgeRow).get_shown(), [SWEET] as Array[SeasoningData])
+	assert_eq((box.get_node("%BadgeRow") as BadgeRow).get_child_count(), 1, "1 icono")
 	assert_eq(_rejections, [] as Array[SeasoningRules.Rejection])
 	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
 
 
-func test_ac1_ac2_second_press_after_guard_removes_salt() -> void:
-	var box: Box = _held_box()
-	_press(_dispenser("Salt"))
-	watch_signals(box)
-	_now += STATION_DATA.toggle_guard
-	_press(_dispenser("Salt"))
-	assert_false(box.has_seasoning(SALT))
-	assert_signal_emit_count(box, "seasoning_removed", 1)
-	assert_signal_emit_count(box, "seasoned", 0)
+## AC2: pulsar el mismo aliño (a 0,1 s o a 5 s) no hace nada y no suena ni se rechaza.
+func test_ac2_same_dressing_again_is_silent_already_applied() -> void:
+	for wait: float in [0.1, 5.0]:
+		_rejections.clear()
+		_cues.clear()
+		var box: Box = _held_box()
+		var sweet: SeasoningDispenser = _dispenser("SweetDressing")
+		assert_true(sweet.interact(_actor))
+		watch_signals(box)
+		watch_signals(sweet)
+		_now += wait
+		assert_true(sweet.interact(_actor), "consume la pulsación (%s s)" % wait)
+		assert_eq(box.apply_seasoning(SWEET), SeasoningRules.Rejection.ALREADY_APPLIED)
+		assert_true(box.has_seasoning(SWEET), "sigue con el aliño")
+		assert_signal_not_emitted(box, "seasoned")
+		assert_signal_not_emitted(box, "seasoning_removed")
+		assert_signal_not_emitted(sweet, "rejected")
+		assert_eq(_rejections.size(), 0, "sin rejected")
+		assert_eq(_error_sounds(), 0, "sin sonido de error")
+		assert_eq((box.get_node("%BadgeRow") as BadgeRow).get_child_count(), 1, "1 icono")
+		_hold.drop()
+		box.queue_free()
 
 
-# --- AC3 ---
-
-
-func test_ac3_second_press_within_guard_is_ignored_silently() -> void:
-	var box: Box = _held_box()
-	var salt: SeasoningDispenser = _dispenser("Salt")
-	assert_true(salt.interact(_actor))
-	watch_signals(box)
-	watch_signals(salt)
-	_now += 0.1
-	assert_true(salt.interact(_actor), "el antirrebote consume la pulsación")
-	assert_true(box.has_seasoning(SALT), "la caja sigue con sal")
-	assert_signal_not_emitted(box, "seasoning_removed")
-	assert_signal_not_emitted(salt, "rejected")
-	assert_eq(_error_sounds(), 0, "sin sonido de error")
-
-
-func test_ac3_guard_is_per_dispenser() -> void:
-	var box: Box = _held_box()
-	assert_true(_dispenser("Salt").interact(_actor))
-	_now += 0.1
-	assert_true(_dispenser("Oil").interact(_actor))
-	assert_true(box.has_seasoning(SALT))
-	assert_true(box.has_seasoning(OIL))
-
-
-func test_ac3_guard_reads_toggle_guard_from_data() -> void:
-	var data: SeasoningStationData = STATION_DATA.duplicate()
-	data.toggle_guard = 0.05
-	_add_station(data)
-	var box: Box = _held_box()
-	assert_true(_dispenser("Salt").interact(_actor))
-	_now += 0.1
-	assert_true(_dispenser("Salt").interact(_actor))
-	assert_false(box.has_seasoning(SALT), "0,1 s > 0,05 s: se quita")
-
+# --- AC3 (antirrebote: solo el cuenco, ver más abajo) ---
 
 # --- AC4 / AC5 por la escena ---
 
 
-func test_ac4_hot_dispenser_swaps_sweet_paprika() -> void:
+func test_ac4_hot_dispenser_replaces_sweet_dressing() -> void:
 	var box: Box = _held_box()
-	_press(_dispenser("SweetPaprika"))
+	_press(_dispenser("SweetDressing"))
+	var order: Array[String] = []
+	box.seasoning_removed.connect(
+		func(s: SeasoningData) -> void: order.append("removed:%s" % s.translation_key)
+	)
+	box.seasoned.connect(
+		func(s: SeasoningData) -> void: order.append("seasoned:%s" % s.translation_key)
+	)
 	watch_signals(box)
-	_press(_dispenser("HotPaprika"))
+	_press(_dispenser("HotDressing"))
 	assert_true(box.has_seasoning(HOT))
 	assert_false(box.has_seasoning(SWEET))
+	assert_eq(box.get_contents().seasonings, [HOT] as Array[SeasoningData], "nunca dos aliños")
 	assert_signal_emit_count(box, "seasoning_removed", 1)
 	assert_signal_emitted_with_parameters(box, "seasoning_removed", [SWEET])
 	assert_signal_emit_count(box, "seasoned", 1)
 	assert_signal_emitted_with_parameters(box, "seasoned", [HOT])
-
-
-func test_ac4_without_paprika_swap_other_paprika_is_rejected() -> void:
-	var data: SeasoningStationData = STATION_DATA.duplicate()
-	data.paprika_swap = false
-	_add_station(data)
-	var box: Box = _held_box()
-	_press(_dispenser("SweetPaprika"))
-	_press(_dispenser("HotPaprika"))
-	assert_true(box.has_seasoning(SWEET))
-	assert_false(box.has_seasoning(HOT))
 	assert_eq(
-		_rejections, [SeasoningRules.Rejection.EXCLUSIVE_TAKEN] as Array[SeasoningRules.Rejection]
+		order,
+		["removed:SEASONING_SWEET_DRESSING", "seasoned:SEASONING_HOT_DRESSING"] as Array[String],
+		"quitar antes de poner"
 	)
+	assert_eq(_rejections.size(), 0)
 
 
 func test_ac5_box_not_full_is_rejected_with_error_sound() -> void:
@@ -292,7 +274,7 @@ func test_ac5_box_not_full_is_rejected_with_error_sound() -> void:
 		_cues.clear()
 		var box: Box = _held_box(fill)
 		watch_signals(box)
-		_press(_dispenser("Salt"))
+		_press(_dispenser("SweetDressing"))
 		assert_eq(box.get_contents().seasonings, [] as Array[SeasoningData], "fill %s" % fill)
 		assert_signal_not_emitted(box, "seasoned")
 		assert_eq(
@@ -310,41 +292,41 @@ func test_ac6_unfilled_box_rejects_every_dispenser_with_error_sound() -> void:
 	var box: Box = _held_box(0.6)
 	for dispenser: SeasoningDispenser in _dispensers():
 		_press(dispenser)
-	assert_eq(_rejections.size(), 4)
+	assert_eq(_rejections.size(), 2)
 	for reason: SeasoningRules.Rejection in _rejections:
 		assert_eq(reason, SeasoningRules.Rejection.BOX_NOT_FULL)
-	assert_eq(_error_sounds(), 4, "un error por pulsación")
+	assert_eq(_error_sounds(), 2, "un error por pulsación")
 	assert_eq(box.get_contents().seasonings, [] as Array[SeasoningData])
 	assert_engine_error_count(0)
 
 
 func test_ac6_rejection_shakes_emitter_and_returns_to_rest() -> void:
-	var model: Node3D = _dispenser("Salt").get_node("Model")
+	var model: Node3D = _dispenser("SweetDressing").get_node("Model")
 	var rest: Vector3 = model.position
 	_held_box(0.6)
-	_press(_dispenser("Salt"))
-	var shake: Tween = _station.get_shake(_dispenser("Salt"))
+	_press(_dispenser("SweetDressing"))
+	var shake: Tween = _station.get_shake(_dispenser("SweetDressing"))
 	assert_not_null(shake)
 	shake.pause()
 	shake.custom_step(_shake_time() / 10.0)
 	assert_ne(model.position, rest, "se sacude")
 	shake.custom_step(_shake_time())
 	assert_true(model.position.is_equal_approx(rest), "vuelve a su sitio")
-	assert_null(_station.get_shake(_dispenser("Salt")), "la sacudida terminó")
+	assert_null(_station.get_shake(_dispenser("SweetDressing")), "la sacudida terminó")
 
 
 func test_ac6_repeated_rejection_restarts_shake_from_rest() -> void:
-	var salt: SeasoningDispenser = _dispenser("Salt")
-	var model: Node3D = salt.get_node("Model")
+	var sweet: SeasoningDispenser = _dispenser("SweetDressing")
+	var model: Node3D = sweet.get_node("Model")
 	var rest: Vector3 = model.position
 	_held_box(0.6)
-	_press(salt)
-	var first: Tween = _station.get_shake(salt)
+	_press(sweet)
+	var first: Tween = _station.get_shake(sweet)
 	first.pause()
 	first.custom_step(_shake_time() / 10.0)
-	_press(salt)
+	_press(sweet)
 	assert_false(first.is_valid(), "la primera se cancela")
-	var second: Tween = _station.get_shake(salt)
+	var second: Tween = _station.get_shake(sweet)
 	second.pause()
 	second.custom_step(_shake_time())
 	assert_true(model.position.is_equal_approx(rest), "reposo original, no el desplazado")
@@ -374,7 +356,7 @@ func test_ac7_dispenser_not_reachable_from_pass_side() -> void:
 
 func test_ac7_from_pass_side_dispenser_is_neither_target_nor_highlighted() -> void:
 	var box: Box = _held_box()
-	var sweet: SeasoningDispenser = _dispenser("SweetPaprika")
+	var sweet: SeasoningDispenser = _dispenser("SweetDressing")
 	await _stand_at(sweet.global_position.x, PASS_Z)
 	for dispenser: SeasoningDispenser in _dispensers():
 		assert_ne(_detector().get_target(), dispenser, dispenser.name)
@@ -386,7 +368,7 @@ func test_ac7_from_pass_side_dispenser_is_neither_target_nor_highlighted() -> vo
 
 func test_r1_from_operator_side_dispenser_is_target_and_highlighted() -> void:
 	_held_box()
-	var sweet: SeasoningDispenser = _dispenser("SweetPaprika")
+	var sweet: SeasoningDispenser = _dispenser("SweetDressing")
 	await _stand_at(sweet.global_position.x, OPERATOR_Z)
 	assert_eq(_detector().get_target(), sweet)
 	assert_true((sweet.get_node("%Highlightable") as Highlightable).is_highlighted())
@@ -433,8 +415,8 @@ func test_ac8_other_item_dispensers_are_not_interactable_and_hand_unchanged() ->
 
 func test_ac8_other_item_detector_does_not_pick_a_dispenser() -> void:
 	var cachelos: Ingredient = _held_cachelos(IngredientData.CookingState.COOKED)
-	var salt: SeasoningDispenser = _dispenser("Salt")
-	await _stand_at(salt.global_position.x, OPERATOR_Z)
+	var sweet: SeasoningDispenser = _dispenser("SweetDressing")
+	await _stand_at(sweet.global_position.x, OPERATOR_Z)
 	assert_false(_detector().get_target() is SeasoningDispenser, "el detector no elige uno")
 	assert_eq(_hold.get_held_item(), cachelos)
 
@@ -446,21 +428,38 @@ func test_default_clock_is_game_time_and_freezes_while_paused() -> void:
 	var extra: SeasoningStation = STATION_SCENE.instantiate()
 	extra.position = Vector3(30.0, 0.0, 0.0)
 	_level.add_child(extra)
-	var oil: SeasoningDispenser = extra.get_node("Dispensers/Oil")
+	var bowl: CachelosBowl = extra.get_node("CachelosBowl")
+	bowl.set("stock", 2)
 	var box: Box = _held_box()
-	assert_true(oil.interact(_actor))
-	assert_true(box.has_seasoning(OIL))
+	assert_true(bowl.interact(_actor))
+	assert_true(box.has_seasoning(CACHELOS))
 	get_tree().paused = true
-	var frozen: float = oil.get("_game_time")
+	var frozen: float = bowl.get("_game_time")
 	await wait_physics_frames(60)
-	assert_eq(float(oil.get("_game_time")), frozen, "congelado en pausa")
-	assert_true(oil.interact(_actor), "consume la pulsación")
-	assert_true(box.has_seasoning(OIL), "la guarda no vence en pausa: no se quita")
+	assert_eq(float(bowl.get("_game_time")), frozen, "congelado en pausa")
+	assert_true(bowl.interact(_actor), "consume la pulsación")
+	assert_true(box.has_seasoning(CACHELOS), "la guarda no vence en pausa: no se quita")
 	get_tree().paused = false
 	await wait_physics_frames(30)
-	assert_gt(float(oil.get("_game_time")), frozen, "avanza con el árbol en marcha")
-	assert_true(oil.interact(_actor), "pasada la guarda, alterna")
-	assert_false(box.has_seasoning(OIL))
+	assert_gt(float(bowl.get("_game_time")), frozen, "avanza con el árbol en marcha")
+	assert_true(bowl.interact(_actor), "pasada la guarda, alterna")
+	assert_false(box.has_seasoning(CACHELOS))
+
+
+## AC3 (D25): la guarda es solo del cuenco y lee `toggle_guard` de los datos.
+func test_ac3_bowl_second_press_within_guard_is_ignored_silently() -> void:
+	_station_with_stock(2)
+	var box: Box = _held_box()
+	assert_true(_bowl().interact(_actor))
+	watch_signals(box)
+	_now += 0.1
+	assert_true(_bowl().interact(_actor), "el antirrebote consume la pulsación")
+	assert_true(box.has_seasoning(CACHELOS))
+	assert_signal_not_emitted(box, "seasoning_removed")
+	assert_eq(_error_sounds(), 0, "sin sonido de error")
+	_now += STATION_DATA.toggle_guard
+	assert_true(_bowl().interact(_actor))
+	assert_false(box.has_seasoning(CACHELOS), "pasada la guarda, se quita")
 
 
 # --- R7 / R8: sin bandeja y franjas continuas ---
@@ -495,14 +494,14 @@ func test_selection_shapes_stay_inside_the_counter_collision() -> void:
 
 
 func test_r7_anchors_place_dispensers_and_bowl_one_meter_apart() -> void:
-	var expected: Dictionary = {"SweetPaprika": -2.0, "HotPaprika": -1.0, "Salt": 0.0, "Oil": 1.0}
+	var expected: Dictionary = {"SweetDressing": -1.0, "HotDressing": 0.0}
 	for node_name: String in expected:
 		var model: Vector3 = (_dispenser(node_name).get_node("Model") as Node3D).global_position
 		assert_almost_eq(model.x, expected[node_name], 0.0001, node_name)
 		assert_almost_eq(model.z, 0.35, 0.0001, node_name)
 		assert_almost_eq(model.y, 1.1, 0.0001, node_name)
 	var bowl: Vector3 = (_bowl().get_node("Model") as Node3D).global_position
-	assert_almost_eq(bowl.x, 2.0, 0.0001)
+	assert_almost_eq(bowl.x, 1.0, 0.0001)
 	assert_almost_eq(bowl.z, 0.15, 0.0001)
 
 
@@ -534,13 +533,13 @@ func test_r8_target_strips_are_continuous_and_at_least_06_m() -> void:
 	var names: Array[String] = []
 	for run: Array in runs:
 		names.append(String(run[0]))
-	var first: int = names.find("SweetPaprika")
+	var first: int = names.find("SweetDressing")
 	var last: int = names.find("CachelosBowl")
 	assert_gte(first, 0, "el primer dispensador es objetivo")
 	assert_gte(last, first, "el cuenco es objetivo")
 	for index: int in range(first, last + 1):
 		assert_ne(names[index], "-", "sin huecos entre el primero y el último")
-	for expected: String in ["SweetPaprika", "HotPaprika", "Salt", "Oil"]:
+	for expected: String in ["SweetDressing", "HotDressing", "CachelosBowl"]:
 		var index: int = names.find(expected)
 		assert_gte(index, 0, expected)
 		assert_gte(runs[index][1], 0.6 - 0.0001, "franja de %s" % expected)
@@ -753,19 +752,6 @@ func test_ac11_removing_cachelos_with_full_bowl_is_rejected() -> void:
 	assert_signal_not_emitted(bowl, "stock_changed")
 
 
-func test_ac3_rejection_does_not_arm_guard() -> void:
-	var salt: SeasoningDispenser = _dispenser("Salt")
-	var box: Box = _held_box(0.6)
-	assert_true(salt.interact(_actor), "caja a medio cortar: rechazo")
-	assert_eq(
-		_rejections, [SeasoningRules.Rejection.BOX_NOT_FULL] as Array[SeasoningRules.Rejection]
-	)
-	box.fill = 1.0
-	_now += 0.1
-	assert_true(salt.interact(_actor))
-	assert_true(box.has_seasoning(SALT), "0,1 s tras un rechazo sí condimenta")
-
-
 func test_ac11_bowl_rejection_does_not_arm_guard() -> void:
 	_station_with_stock(1)
 	var box: Box = _held_box(0.6)
@@ -785,3 +771,100 @@ func test_ac11_toggle_has_guard() -> void:
 	assert_true(_bowl().interact(_actor))
 	assert_true(box.has_seasoning(CACHELOS))
 	assert_eq(_bowl().stock, 1)
+
+
+# --- AC19 / audio-y-fx AC7: gesto visual y cues del aliño ---
+
+
+## Cues que ha reproducido el `%Feedback` de la caja.
+func _box_cues(box: Box) -> Array[StringName]:
+	var cues: Array[StringName] = []
+	(box.get_node("%Feedback") as FeedbackPlayer).played.connect(
+		func(cue: StringName) -> void: cues.append(cue)
+	)
+	return cues
+
+
+func test_ac19_dressing_launches_a_visual_gesture_of_at_least_0_3_s() -> void:
+	_held_box()
+	for node_name: String in ["SweetDressing", "HotDressing"]:
+		var dispenser: SeasoningDispenser = _dispenser(node_name)
+		var gesture: GPUParticles3D = dispenser.get_node("%Gesture")
+		assert_false(gesture.emitting, "%s: en reposo no emite" % node_name)
+		assert_true(gesture.one_shot)
+		assert_gte(gesture.lifetime, 0.3, "%s: gesto >= 0,3 s" % node_name)
+		assert_eq(gesture.get_child_count(), 2, "pimentón + sal gorda y aceite")
+	_press(_dispenser("SweetDressing"))
+	var sweet_gesture: GPUParticles3D = _dispenser("SweetDressing").get_node("%Gesture")
+	assert_true(sweet_gesture.emitting, "aplicar lanza el gesto")
+	assert_eq((sweet_gesture.material_override as StandardMaterial3D).albedo_color, SWEET.color)
+	for child: Node in sweet_gesture.get_children():
+		assert_true((child as GPUParticles3D).emitting, "%s emite" % child.name)
+	assert_false((_dispenser("HotDressing").get_node("%Gesture") as GPUParticles3D).emitting)
+	_press(_dispenser("HotDressing"))
+	var hot_gesture: GPUParticles3D = _dispenser("HotDressing").get_node("%Gesture")
+	assert_true(hot_gesture.emitting)
+	assert_eq((hot_gesture.material_override as StandardMaterial3D).albedo_color, HOT.color)
+
+
+func test_ac19_no_gesture_when_already_applied_or_rejected() -> void:
+	var box: Box = _held_box()
+	_press(_dispenser("SweetDressing"))
+	var gesture: GPUParticles3D = _dispenser("SweetDressing").get_node("%Gesture")
+	gesture.emitting = false
+	_press(_dispenser("SweetDressing"))
+	assert_false(gesture.emitting, "el mismo aliño no lanza el gesto")
+	_hold.drop()
+	box.queue_free()
+	_held_box(0.6)
+	var hot: GPUParticles3D = _dispenser("HotDressing").get_node("%Gesture")
+	_press(_dispenser("HotDressing"))
+	assert_false(hot.emitting, "caja sin llenar: sin gesto")
+
+
+## audio-y-fx AC7 (D25): 1 cue `season` por aliño (no 3); al sustituir suenan `unseason` y `season`
+## en ese orden; reaplicar el mismo aliño no suena.
+func test_audio_ac7_one_season_cue_per_dressing_and_unseason_before_season_on_replace() -> void:
+	var box: Box = _held_box()
+	var cues: Array[StringName] = _box_cues(box)
+	_press(_dispenser("SweetDressing"))
+	assert_eq(cues, [&"season"] as Array[StringName], "1 cue season, no 3")
+	_press(_dispenser("SweetDressing"))
+	assert_eq(cues, [&"season"] as Array[StringName], "reaplicar el mismo no suena")
+	_press(_dispenser("HotDressing"))
+	assert_eq(
+		cues,
+		[&"season", &"unseason", &"season"] as Array[StringName],
+		"sustituir: unseason y season, en ese orden"
+	)
+	assert_eq(_cues, [] as Array[StringName], "el error de la estación no suena")
+
+
+func test_audio_ac7_unfilled_box_plays_only_the_error_cue() -> void:
+	var box: Box = _held_box(0.6)
+	var cues: Array[StringName] = _box_cues(box)
+	_press(_dispenser("HotDressing"))
+	assert_eq(cues, [] as Array[StringName], "la caja no suena")
+	assert_eq(_cues, [&"season_error"] as Array[StringName])
+
+
+# --- AC20: caja errónea (D8) y corrección en una pulsación ---
+
+
+func test_ac20_wrong_dressing_is_fixed_by_pressing_the_right_one() -> void:
+	var box: Box = _held_box()
+	_press(_dispenser("HotDressing"))
+	var a_feira: OrderData = load("res://data/orders/a_feira.tres") as OrderData
+	assert_false(OrderValidator.matches(a_feira, _full_contents(box)), "picante no vale")
+	_press(_dispenser("SweetDressing"))
+	assert_true(box.has_seasoning(SWEET))
+	assert_false(box.has_seasoning(HOT))
+	assert_true(OrderValidator.matches(a_feira, _full_contents(box)), "sin pasar por el cubo")
+
+
+## Contenido de la caja como si fuera de pulpo cocido (el llenado ya lo exige la regla).
+func _full_contents(box: Box) -> BoxContents:
+	var contents: BoxContents = box.get_contents()
+	contents.ingredient = load("res://data/ingredients/octopus.tres") as IngredientData
+	contents.ingredient_state = IngredientData.CookingState.COOKED
+	return contents

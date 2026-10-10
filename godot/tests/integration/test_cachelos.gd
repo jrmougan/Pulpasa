@@ -85,19 +85,20 @@ func test_ac2_cachelo_raw_rejected_by_box() -> void:
 	assert_eq(_hold.get_held_item(), cachelo)
 
 
-## Los cuatro condimentos caben a la vez (pimentón, sal, aceite y cachelos) con la API de la
-## estación (`toggle_seasoning`, ADR-003 §8.3).
-func test_ac3_four_seasonings() -> void:
+## Aliño y cachelos caben a la vez con la API de la estación (D25: `apply_seasoning` y
+## `toggle_seasoning`, ADR-003 §10.2).
+func test_ac3_dressing_and_cachelos() -> void:
 	var box: Box = BOX_SCENE.instantiate()
 	_level.add_child(box)
 	box.data = SMALL_BOX
 	box.fill = 1.0  # full
-	for path: String in ["salt", "paprika", "oil", "cachelos"]:
-		var seasoning: SeasoningData = load("res://data/seasonings/%s.tres" % path)
-		assert_eq(box.toggle_seasoning(seasoning, true), SeasoningRules.Rejection.NONE, path)
+	var dressing: SeasoningData = load("res://data/seasonings/sweet_dressing.tres")
+	var cachelos: SeasoningData = load("res://data/seasonings/cachelos.tres")
+	assert_eq(box.apply_seasoning(dressing), SeasoningRules.Rejection.NONE)
+	assert_eq(box.toggle_seasoning(cachelos), SeasoningRules.Rejection.NONE)
 
 	var contents := box.get_contents()
-	assert_eq(contents.seasonings.size(), 4)
+	assert_eq(contents.seasonings.size(), 2)
 
 
 ## PUL-046: una malla por estado (cachelos_raw / cachelos_cooked) con los colores de la paleta

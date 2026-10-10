@@ -2,7 +2,7 @@ extends GutTest
 ## PUL-006: OrderBoard sin árbol (ADR-002). AC1 (B1), AC3 (AC5b), AC4 (paridad sin paciencia), AC6.
 
 const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
-const ORDER_1_PATH: String = "res://data/orders/order_1.tres"
+const ORDER_PATH: String = "res://data/orders/a_feira.tres"
 const SLOTS: Array[int] = [0, 1, 2, 3]
 const SEED: int = 12345
 const TICK: float = 1.0 / 60.0
@@ -19,9 +19,9 @@ func _parity_board(seed_value: int = SEED) -> OrderBoard:
 	return OrderBoard.new(load(CATALOG_PATH) as OrderCatalog, _rng(seed_value))
 
 
-## Catálogo con una sola receta (la de order_1) y la paciencia indicada.
+## Catálogo con una sola receta (la de «Á feira») y la paciencia indicada.
 func _single_recipe_board(max_time: float) -> OrderBoard:
-	var order: OrderData = (load(ORDER_1_PATH) as OrderData).duplicate() as OrderData
+	var order: OrderData = (load(ORDER_PATH) as OrderData).duplicate() as OrderData
 	order.max_time = max_time
 	var catalog: OrderCatalog = OrderCatalog.new()
 	catalog.orders = [order]
@@ -215,7 +215,7 @@ func test_ac5b_delivery_on_expiry_tick_rejected_not_redirected() -> void:
 func test_ac5d_wrong_box_on_expiry_tick_rejected_with_zero_penalty() -> void:
 	var wrong_penalty: int = 2
 	var expire_penalty: int = 3
-	var order: OrderData = (load(ORDER_1_PATH) as OrderData).duplicate() as OrderData
+	var order: OrderData = (load(ORDER_PATH) as OrderData).duplicate() as OrderData
 	order.max_time = 60.0
 	var catalog: OrderCatalog = OrderCatalog.new()
 	catalog.orders = [order]

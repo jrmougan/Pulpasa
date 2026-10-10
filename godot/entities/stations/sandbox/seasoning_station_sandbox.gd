@@ -2,7 +2,7 @@ extends Node3D
 ## Sandbox de PUL-058/097: la estación de condimentos al paso con un jugador en el lado de
 ## condimentar. Arranca una ronda como `level.gd` para que el jugador se mueva y prepara la escena
 ## por las rutas reales de interacción: un cachelo cocido en el cuenco (2 raciones) y una caja llena
-## en la mano del jugador, con picante, sal y aceite.
+## en la mano del jugador, con el aliño picante.
 ##
 ## `mcp_bridge` reenvía `p1_interact` sondeado (el `simulate_input` del MCP no genera
 ## `_unhandled_input`); apagado por defecto, como en `stations_sandbox.gd`.

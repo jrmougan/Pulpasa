@@ -121,7 +121,6 @@ func _box_in_hand(character: Player, order: ActiveOrder) -> Box:
 		if dispenser == null:
 			assert_true(bowl.interact(actor), "cuenco: cachelos a la caja en la mano")
 		else:
-			dispenser.clock = func() -> float: return _now
 			assert_true(dispenser.interact(actor))
 		_now += 1.0
 		assert_true(box.has_seasoning(seasoning), "caja con %s" % seasoning.display_name)

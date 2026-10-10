@@ -373,7 +373,7 @@ func _inject_box(order: ActiveOrder) -> Box:
 			_hold.drop()
 			octopus.free()
 	for seasoning: SeasoningData in order.data.seasonings:
-		box.toggle_seasoning(seasoning, true)
+		box.apply_seasoning(seasoning)
 	assert_true(_hold.pick_up(box))
 	return box
 

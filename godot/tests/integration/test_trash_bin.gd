@@ -11,7 +11,7 @@ const SLOT_SCENE: PackedScene = preload("res://entities/stations/slot.tscn")
 const KITCHEN_SCENE: PackedScene = preload("res://entities/stations/kitchen.tscn")
 const OCTOPUS_DATA: IngredientData = preload("res://data/ingredients/octopus.tres")
 const BOX_DATA: BoxData = preload("res://data/boxes/box.tres")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const SETTLE_FRAMES: int = 3
 const TRASH_MIN_DISTANCE: float = 1.5
@@ -89,7 +89,7 @@ func _full_box() -> Box:
 	var box: Box = BOX_SCENE.instantiate()
 	box.data = BOX_DATA
 	_level.add_child(box)
-	box.toggle_seasoning(SALT, true)
+	box.apply_seasoning(SWEET)
 	assert_true(_hold.pick_up(box))
 	return box
 

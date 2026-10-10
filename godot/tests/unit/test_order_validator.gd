@@ -1,16 +1,16 @@
 extends GutTest
 ## PUL-006 / PUL-028 AC2: OrderValidator es puro y aplica igualdad exacta (D4/D17).
 
-const ORDER_1_PATH: String = "res://data/orders/order_1.tres"
-const PAPRIKA_PATH: String = "res://data/seasonings/paprika.tres"
-const OIL_PATH: String = "res://data/seasonings/oil.tres"
+const ORDER_PATH: String = "res://data/orders/con_cachelos.tres"
+const A_FEIRA_PATH: String = "res://data/orders/a_feira.tres"
+const HOT_PATH: String = "res://data/seasonings/hot_dressing.tres"
 const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _order: OrderData
 
 
 func before_each() -> void:
-	_order = (load(ORDER_1_PATH) as OrderData).duplicate(true)
+	_order = (load(ORDER_PATH) as OrderData).duplicate(true)
 
 
 func _valid_contents(order: OrderData) -> BoxContents:
@@ -58,7 +58,7 @@ func test_ac2_missing_seasoning_does_not_match() -> void:
 
 func test_ac2_extra_seasoning_is_rejected_in_m1() -> void:
 	var contents: BoxContents = _valid_contents(_order)
-	contents.seasonings.append(load(PAPRIKA_PATH) as SeasoningData)
+	contents.seasonings.append(load(HOT_PATH) as SeasoningData)
 	assert_false(OrderValidator.matches(_order, contents))
 
 
@@ -80,11 +80,18 @@ func test_ac2_matches_does_not_mutate_contents() -> void:
 	assert_eq(contents.box, BOX)
 
 
-func test_ac2_exact_validation_with_oil() -> void:
-	var order: OrderData = _order.duplicate(true)
-	var oil: SeasoningData = load(OIL_PATH) as SeasoningData
-	order.seasonings.append(oil)
-	var contents: BoxContents = _valid_contents(order)
-	assert_true(OrderValidator.matches(order, contents))
-	contents.seasonings.erase(oil)
-	assert_false(OrderValidator.matches(order, contents))
+func test_pul114_wrong_dressing_does_not_match() -> void:
+	# D25: la caja errónea es de contenido; el aliño picante no vale para «Á feira».
+	var a_feira: OrderData = load(A_FEIRA_PATH) as OrderData
+	var contents: BoxContents = _valid_contents(a_feira)
+	assert_true(OrderValidator.matches(a_feira, contents))
+	contents.seasonings = [load(HOT_PATH) as SeasoningData]
+	assert_false(OrderValidator.matches(a_feira, contents))
+
+
+func test_pul114_cachelos_missing_or_extra_does_not_match() -> void:
+	var a_feira: OrderData = load(A_FEIRA_PATH) as OrderData
+	var with_cachelos: BoxContents = _valid_contents(_order)
+	assert_false(OrderValidator.matches(a_feira, with_cachelos), "cachelos de más")
+	var without: BoxContents = _valid_contents(a_feira)
+	assert_false(OrderValidator.matches(_order, without), "faltan cachelos")

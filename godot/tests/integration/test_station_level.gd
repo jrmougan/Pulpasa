@@ -8,9 +8,8 @@ extends GutTest
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const Walker: GDScript = preload("res://tests/integration/level_walker.gd")
-const RECIPE: RecipeData = preload("res://data/recipes/individual.tres")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
-const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
+const A_FEIRA: OrderData = preload("res://data/orders/a_feira.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
@@ -51,11 +50,9 @@ func _release(keycode: Key) -> InputEventKey:
 	return event
 
 
-## Nivel real en Individual con una sola comanda (pulpo + sal + aceite) en el puesto 1.
+## Nivel real en Individual con una sola comanda («Á feira») en el puesto 1.
 func _load_level() -> void:
-	var order: OrderData = OrderData.new()
-	order.recipe = RECIPE
-	order.seasonings = [SALT, OIL] as Array[SeasoningData]
+	var order: OrderData = A_FEIRA.duplicate() as OrderData
 	order.max_time = 300.0
 	var catalog: OrderCatalog = OrderCatalog.new()
 	catalog.orders = [order] as Array[OrderData]
@@ -122,13 +119,13 @@ func _dispenser(seasoning: SeasoningData) -> SeasoningDispenser:
 	return null
 
 
-## Coge la caja del pasaplatos, la condimenta con sal y aceite en la mano y la entrega en el puesto
+## Coge la caja del pasaplatos, la aliña en la mano y la entrega en el puesto
 ## 1, todo desde el lado de condimentar con `walker`.
 func _season_and_deliver(walker: Walker, box: Box) -> void:
 	var slot: Vector2 = _slot_xz()
 	assert_eq(await walker.use(slot, Vector2(slot.x, ACCESS)), box, "coge la caja del pasaplatos")
 	assert_eq(walker.holder().get_held_item(), box)
-	for seasoning: SeasoningData in [SALT, OIL]:
+	for seasoning: SeasoningData in [SWEET]:
 		var dispenser: SeasoningDispenser = _dispenser(seasoning)
 		var at: Vector2 = Walker.xz(dispenser.global_position)
 		var stand: Vector2 = Walker.station_stand(at, _station.global_position.z, 1.0)
@@ -226,7 +223,7 @@ func test_ac18_no_spice_shelf_nor_jars_in_the_level() -> void:
 
 
 ## Con una caja llena en cada uno de dos pasaplatos, pulsar cualquier `interactable` del nivel con
-## la mano vacía o con cachelos cocidos no cambia sus condimentos, salvo los 4 dispensadores y el
+## la mano vacía o con cachelos cocidos no cambia sus condimentos, salvo los 2 dispensadores y el
 ## cuenco (que además no son objetivo sin caja en la mano). Control positivo: con la caja en la mano
 ## sí cambian.
 func test_ac18_only_dispensers_and_bowl_change_a_box_seasoning() -> void:
@@ -303,3 +300,79 @@ func _reset_hand(
 	else:
 		hold.drop().free()
 	assert_null(hold.get_held_item())
+
+
+# --- AC11 (R7, D25): solo 2 dispensadores y el cuenco, sin Tray ni Slot ---------------------------
+
+
+func test_ac11_station_has_two_dressing_dispensers_one_bowl_and_no_tray_or_slot() -> void:
+	_level = LEVEL.instantiate()
+	add_child_autofree(_level)
+	_station = _level.get_node("Stations/SeasoningStation")
+	assert_null(_station.find_child("Tray*", true, false), "sin Tray")
+	assert_eq(_station.find_children("*", "Slot", true, false).size(), 0, "sin Slot")
+	var dispensers: Array[Node] = _station.find_children("*", "SeasoningDispenser", true, false)
+	assert_eq(dispensers.size(), 2, "2 dispensadores de aliño")
+	assert_eq(_station.find_children("*", "CachelosBowl", true, false).size(), 1, "1 cuenco")
+	var seasonings: Array[SeasoningData] = []
+	for dispenser: Node in dispensers:
+		seasonings.append((dispenser as SeasoningDispenser).seasoning)
+	assert_true(seasonings.has(SWEET))
+	var other: SeasoningData = seasonings[1] if seasonings[0] == SWEET else seasonings[0]
+	assert_eq(other.exclusivity_group, &"dressing", "el otro dispensador es el otro aliño")
+	assert_false(other.same_as(SWEET))
+	# Bloque centrado: raíces en x -1 / 0 / 1 locales, >= 1,0 m entre centros.
+	var parts: Array[Node] = _station.get_node("Dispensers").get_children()
+	parts.append(_station.get_node("CachelosBowl"))
+	var xs: Array[float] = []
+	for part: Node in parts:
+		xs.append(_station.to_local((part as Node3D).global_position).x)
+	assert_eq(xs.size(), 3)
+	for index: int in 3:
+		assert_almost_eq(xs[index], float(index - 1), 0.0001)
+
+
+## Con una caja llena en la mano, a 1,0 m del eje por el lado de aliñar, los únicos objetivos de los
+## ~2 m centrales del mostrador (x local -1...1) son los dos dispensadores y el cuenco: ningún
+## pasaplatos (`_`) ni cubo (`T`) en el tramo, y la franja entre el primero y el último es continua
+## (AC12, R8). El mapa de objetivos se imprime para la evidencia.
+func test_ac11_ac12_target_sweep_over_the_central_span() -> void:
+	_level = LEVEL.instantiate()
+	add_child_autofree(_level)
+	_station = _level.get_node("Stations/SeasoningStation")
+	var player: Player = _character(1)
+	var hold: Holder = player.get_node("%HoldComponent")
+	var detector: InteractionDetector = player.get_node("%InteractionDetector")
+	var box: Box = BOX_SCENE.instantiate()
+	box.data = BOX
+	_level.get_node("Items").add_child(box)
+	box.fill = 1.0
+	assert_true(hold.pick_up(box))
+	await wait_physics_frames(2)
+	var line: String = ""
+	var names: Array[String] = []
+	var x: float = -1.0
+	while x <= 1.0001:
+		var spot: Vector3 = _station.to_global(Vector3(x, 0.0, 1.0))
+		player.global_position = Vector3(spot.x, player.global_position.y, spot.z)
+		player.velocity = Vector3.ZERO
+		player.rotation = Vector3.ZERO
+		await wait_physics_frames(3)
+		var target: Node = detector.get_target()
+		var label: String = "-" if target == null else String(target.name)
+		names.append(label)
+		line += {"-": ".", "SweetDressing": "d", "HotDressing": "p", "CachelosBowl": "c"}.get(
+			label, "?"
+		)
+		assert_false(target is Slot, "x %.2f: ningún pasaplatos" % x)
+		assert_false(target is TrashBin, "x %.2f: ningún cubo" % x)
+		x += 0.25
+	gut.p("mapa de objetivos (x local -1..1, 0,25 m por carácter): " + line)
+	for label: String in names:
+		assert_has(["-", "SweetDressing", "HotDressing", "CachelosBowl"], label)
+	var first: int = names.find("SweetDressing")
+	var last: int = names.rfind("CachelosBowl")
+	assert_gte(first, 0)
+	assert_gt(last, first)
+	for index: int in range(first, last + 1):
+		assert_ne(names[index], "-", "sin huecos entre el primero y el último")

@@ -83,8 +83,6 @@ func _play_from_menu() -> Node:
 
 func _inject_station_clock() -> void:
 	var clock: Callable = func() -> float: return _now
-	for dispenser: Node in _station().get_node("Dispensers").get_children():
-		(dispenser as SeasoningDispenser).clock = clock
 	(_station().get_node("CachelosBowl") as CachelosBowl).clock = clock
 
 

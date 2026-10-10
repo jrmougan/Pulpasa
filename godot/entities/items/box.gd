@@ -5,15 +5,16 @@ extends RigidBody3D
 ## (D1/D13); con la mano vacía, se coge. Con cualquier otra cosa en la mano consume la pulsación
 ## sin efecto: fuera de la estación ya no se condimenta (D18, feature estacion-condimentos AC12).
 ## La entrega lee `get_contents()`.
-## Estación de condimentos (D18, ADR-003 §8.3): dispensadores y cuenco alternan condimentos con
-## `toggle_seasoning()` y `remove_seasoning()`; son los únicos que cambian sus condimentos.
+## Estación de condimentos (D18, D25; ADR-003 §10.2): los dispensadores aplican aliño con
+## `apply_seasoning()`, el cuenco alterna cachelos con `toggle_seasoning()`; son los únicos que
+## cambian sus condimentos.
 
 ## Cada corte (D1).
 signal fill_changed(fill: float)
 ## Al aplicar un condimento nuevo.
 signal seasoned(seasoning: SeasoningData)
-## Al quitar un condimento (alternar uno que ya lleva, intercambio de exclusivos o
-## `remove_seasoning`). En el intercambio se emite antes que el `seasoned` del nuevo.
+## Al quitar un condimento (alternar cachelos, sustituir un aliño o `remove_seasoning`). Al
+## sustituir se emite antes que el `seasoned` del nuevo.
 signal seasoning_removed(seasoning: SeasoningData)
 
 @export var data: BoxData
@@ -55,21 +56,17 @@ func has_seasoning_in_group(group: StringName) -> bool:
 	return SeasoningRules.find_in_group(_seasonings, group) != null
 
 
-## Alterna `seasoning` (SeasoningRules.toggle): lo quita si ya lo lleva, si no lo añade; con
-## `swap_exclusive` sustituye al del mismo grupo de exclusividad. `NONE` = cambió algo; otro valor
-## = rechazo sin cambios ni señales.
-func toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(
-		_seasonings, seasoning, is_full(), swap_exclusive
-	)
-	if result.rejection != SeasoningRules.Rejection.NONE:
-		return result.rejection
-	_seasonings = result.seasonings
-	if result.removed != null:
-		seasoning_removed.emit(result.removed)
-	if result.added != null:
-		seasoned.emit(result.added)
-	return SeasoningRules.Rejection.NONE
+## D25: aplica un aliño (`SeasoningRules.apply`). Con `NONE` emite `seasoning_removed(viejo)` (solo
+## al sustituir el otro aliño) antes que `seasoned(nuevo)`. Con otro valor (`BOX_NOT_FULL`,
+## `ALREADY_APPLIED`) no cambia nada ni emite.
+func apply_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection:
+	return _commit(SeasoningRules.apply(_seasonings, seasoning, is_full()))
+
+
+## Alterna `seasoning` (SeasoningRules.toggle): lo quita si ya lo lleva, si no lo añade. Solo lo
+## llama el cuenco (cachelos). `NONE` = cambió algo; otro valor = rechazo sin cambios ni señales.
+func toggle_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection:
+	return _commit(SeasoningRules.toggle(_seasonings, seasoning, is_full()))
 
 
 ## Quita `seasoning` si lo lleva y emite `seasoning_removed`; `false` si no lo llevaba.
@@ -120,6 +117,17 @@ func on_picked_up(_holder: Holder) -> void:
 
 func on_dropped() -> void:
 	is_held = false
+
+
+func _commit(result: SeasoningRules.Toggle) -> SeasoningRules.Rejection:
+	if result.rejection != SeasoningRules.Rejection.NONE:
+		return result.rejection
+	_seasonings = result.seasonings
+	if result.removed != null:
+		seasoning_removed.emit(result.removed)
+	if result.added != null:
+		seasoned.emit(result.added)
+	return SeasoningRules.Rejection.NONE
 
 
 func _can_cut(ingredient: Ingredient) -> bool:

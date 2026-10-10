@@ -1,18 +1,18 @@
 # gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-020: tickets integrados con un servicio real y un bus aislado.
-## PUL-086: estética de referencia (reloj de 7 segmentos, aviso de paciencia, sal clara).
+## PUL-086: estética de referencia (reloj de 7 segmentos, aviso de paciencia, pegatina clara).
+## PUL-114 (D25): tickets con los 2 aliños + cachelos y nombres de receta de hasta 14 caracteres.
 
 const PANEL_SCENE: PackedScene = preload("res://ui/tickets/order_tickets_panel.tscn")
 const BusScript: GDScript = preload("res://autoload/event_bus.gd")
 const ServiceScript: GDScript = preload("res://autoload/order_service.gd")
 const TICKET_SCENE: PackedScene = preload("res://ui/tickets/order_ticket.tscn")
 const ENTRY_SCENE: PackedScene = preload("res://ui/tickets/ticket_entry.tscn")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
-const HOT: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
-const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
+const HOT: SeasoningData = preload("res://data/seasonings/hot_dressing.tres")
 const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
-const SWEET: SeasoningData = preload("res://data/seasonings/paprika.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
+const SALT_ICON: Texture2D = preload("res://assets/textures/icons/salt.svg")
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const PALETTE: StandPalette = preload("res://data/config/stand_palette.tres")
@@ -130,31 +130,30 @@ func test_ac14_ticket_orders_stickers_canonically_whatever_the_tres_order() -> v
 	var entry: TicketEntry = ENTRY_SCENE.instantiate()
 	add_child_autofree(entry)
 	var data: OrderData = OrderData.new()
-	data.seasonings = [CACHELOS, OIL, SALT, HOT] as Array[SeasoningData]
+	data.seasonings = [CACHELOS, HOT] as Array[SeasoningData]
 	entry.setup(data)
 	var stickers: Array[Node] = entry.get_node("%SeasoningIcons").get_children()
-	assert_eq(stickers.size(), 4)
-	var want: Array[SeasoningData] = [HOT, SALT, OIL, CACHELOS]
-	for i: int in range(4):
+	assert_eq(stickers.size(), 2)
+	var want: Array[SeasoningData] = [HOT, CACHELOS]
+	for i: int in range(2):
 		assert_eq((stickers[i].get_node("Icon") as TextureRect).texture, want[i].icon)
 	assert_not_null(stickers[0].get_node_or_null("HotMark"), "el picante lleva la llama")
-	for i: int in range(1, 4):
-		assert_null(stickers[i].get_node_or_null("HotMark"))
+	assert_null(stickers[1].get_node_or_null("HotMark"))
 	assert_eq(data.seasonings[0], CACHELOS, "no muta la comanda")
 
 
 func test_ac4_sticker_uses_box_badge_style_and_seasoning_color() -> void:
 	var style: BoxBadgeStyle = load("res://data/config/box_badges.tres")
-	var sticker: Control = _entry_with(SALT).get_node("%SeasoningIcons").get_child(0)
+	var sticker: Control = _entry_with(SWEET).get_node("%SeasoningIcons").get_child(0)
 	assert_eq(sticker.custom_minimum_size, Vector2(style.badge_icon_px, style.badge_icon_px))
 	var disc: Panel = sticker.get_node("Disc")
 	var box: StyleBoxFlat = disc.get_theme_stylebox("panel") as StyleBoxFlat
-	assert_eq(box.bg_color, SALT.color)
+	assert_eq(box.bg_color, SWEET.color)
 	var hot: Control = _entry_with(HOT).get_node("%SeasoningIcons").get_child(0)
 	assert_eq((hot.get_node("Icon") as TextureRect).self_modulate, Color.WHITE)
 
 
-func test_ac4_sweet_and_hot_paprika_tickets_are_distinguishable() -> void:
+func test_ac4_sweet_and_hot_dressing_tickets_are_distinguishable() -> void:
 	var sweet_sticker: Control = _entry_with(SWEET).get_node("%SeasoningIcons").get_child(0)
 	var hot_sticker: Control = _entry_with(HOT).get_node("%SeasoningIcons").get_child(0)
 	assert_ne(_disc_color(sweet_sticker), _disc_color(hot_sticker), "tinte distinto")
@@ -206,31 +205,45 @@ func test_ac2_patience_is_hidden_in_m0_and_updates_only_own_id() -> void:
 	assert_false(bar.visible)
 
 
-func test_pul086_salt_sticker_is_light_with_ink_icon_and_ring() -> void:
-	assert_true(StickerInk.is_light(SALT.color), "sal #F7F4EC (biblia §2.5)")
-	var sticker: Control = _entry_with(SALT).get_node("%SeasoningIcons").get_child(0)
+## Condimento de prueba con la pegatina clara de la sal gorda (#F7F4EC, biblia §2.5): ya no hay
+## `.tres` de sal (D25), pero la regla de tinta oscura para colores claros sigue en pie.
+func _light_seasoning() -> SeasoningData:
+	var light: SeasoningData = SeasoningData.new()
+	light.display_name = "Clara"
+	light.type = SeasoningData.SeasoningType.SALT
+	light.sort_order = 1
+	light.color = Color("F7F4EC")
+	light.icon = SALT_ICON
+	return light
+
+
+func test_pul086_light_sticker_has_ink_icon_and_ring() -> void:
+	var light: SeasoningData = _light_seasoning()
+	assert_true(StickerInk.is_light(light.color), "sal #F7F4EC (biblia §2.5)")
+	var sticker: Control = _entry_with(light).get_node("%SeasoningIcons").get_child(0)
 	var box: StyleBoxFlat = (sticker.get_node("Disc") as Panel).get_theme_stylebox("panel")
 	assert_eq(box.border_color, StickerInk.INK)
 	assert_gt(box.border_width_left, 0, "anillo marrón")
 	assert_eq((sticker.get_node("Icon") as TextureRect).self_modulate, StickerInk.INK)
-	for other: SeasoningData in [SWEET, HOT, OIL, CACHELOS]:
+	for other: SeasoningData in [SWEET, HOT, CACHELOS]:
 		var plain: Control = _entry_with(other).get_node("%SeasoningIcons").get_child(0)
 		var style: StyleBoxFlat = (plain.get_node("Disc") as Panel).get_theme_stylebox("panel")
 		assert_eq(style.border_width_left, 0, "%s sin anillo" % other.display_name)
 		assert_eq((plain.get_node("Icon") as TextureRect).self_modulate, Color.WHITE)
 
 
-func test_pul086_box_badge_salt_uses_ink_icon_and_ringed_disc() -> void:
+func test_pul086_box_badge_light_uses_ink_icon_and_ringed_disc() -> void:
 	var box: Box = BOX_SCENE.instantiate()
 	box.data = BOX
 	add_child_autofree(box)
 	box.fill = 1.0
-	box.toggle_seasoning(SALT, true)
-	box.toggle_seasoning(HOT, true)
+	var light: SeasoningData = _light_seasoning()
+	box.toggle_seasoning(light)
+	box.apply_seasoning(HOT)
 	var row: BadgeRow = box.get_node("%BadgeRow") as BadgeRow
 	var hot_badge: Node = row.get_child(0)
 	var salt_badge: Node = row.get_child(1)
-	assert_eq((salt_badge.get_child(0) as Sprite3D).modulate, SALT.color)
+	assert_eq((salt_badge.get_child(0) as Sprite3D).modulate, light.color)
 	assert_eq((salt_badge.get_child(1) as Sprite3D).modulate, StickerInk.INK)
 	assert_eq((hot_badge.get_child(1) as Sprite3D).modulate, Color.WHITE)
 	var ringed: Image = (salt_badge.get_child(0) as Sprite3D).texture.get_image()
@@ -342,7 +355,7 @@ func test_pul113_ac4_recipe_name_is_not_clipped_in_the_ticket() -> void:
 	var data: OrderData = OrderData.new()
 	data.recipe = RecipeData.new()
 	data.recipe.display_name = "Pulpo Familiar"
-	data.seasonings = [HOT, SALT] as Array[SeasoningData]
+	data.seasonings = [HOT, CACHELOS] as Array[SeasoningData]
 	ticket.setup(ActiveOrder.new(1, data, 1, 0.0))
 	await wait_process_frames(2)
 	var label: Label = ticket.get_node("%Entry").get_node("%Recipe") as Label
@@ -353,7 +366,7 @@ func test_pul113_ac4_recipe_name_is_not_clipped_in_the_ticket() -> void:
 
 
 func test_pul099_ticket_width_stays_212_for_longest_recipe() -> void:
-	var names: Array[String] = ["Pulpo Individual", "Pulpo Familiar", "Combo Duo"]
+	var names: Array[String] = ["Pulpo Familiar"]
 	for recipe: RecipeData in _catalog_recipes():
 		names.append(recipe.display_name)
 	names.append("Pulpo á feira gigante de la romería de San Froilán")
@@ -364,7 +377,7 @@ func test_pul099_ticket_width_stays_212_for_longest_recipe() -> void:
 		var data: OrderData = OrderData.new()
 		data.recipe = RecipeData.new()
 		data.recipe.display_name = display
-		data.seasonings = [HOT, SALT] as Array[SeasoningData]
+		data.seasonings = [HOT, CACHELOS] as Array[SeasoningData]
 		var order: ActiveOrder = ActiveOrder.new(1, data, 1, 0.0)
 		ticket.setup(order)
 		await wait_process_frames(1)
@@ -389,3 +402,45 @@ func test_pul099_ac2_r13_four_live_orders_stripe_is_stand_color() -> void:
 		assert_eq(stripe.color, palette.color_for(order.slot_id), "slot %d" % order.slot_id)
 		seen[order.slot_id] = true
 	assert_eq(seen.size(), 4, "cuatro puestos distintos")
+
+
+func test_pul114_ac11_recipe_names_fit_14_characters_and_are_not_clipped() -> void:
+	## comandas.md AC11 (D25): el nombre más largo de las 4 recetas mide <= 14 caracteres y ningún
+	## ticket lo recorta (sin «…») en el ancho de 212 px. Los tickets viven en un lienzo con
+	## escalado uniforme, así que 1280×720 y 1920×1080 miden lo mismo en unidades de interfaz.
+	var recipes: Array[RecipeData] = _catalog_recipes()
+	assert_eq(recipes.size(), 4)
+	var longest: int = 0
+	for recipe: RecipeData in recipes:
+		longest = maxi(longest, recipe.display_name.length())
+		var ticket: OrderTicket = TICKET_SCENE.instantiate()
+		ticket.set_bus(_bus)
+		add_child_autofree(ticket)
+		var data: OrderData = OrderData.new()
+		data.recipe = recipe
+		data.seasonings = [HOT, CACHELOS] as Array[SeasoningData]
+		ticket.setup(ActiveOrder.new(1, data, 1, 0.0))
+		await wait_process_frames(2)
+		var label: Label = ticket.get_node("%Entry").get_node("%Recipe") as Label
+		assert_eq(label.text, recipe.display_name, "nombre completo")
+		assert_false(label.text.contains("…"), recipe.display_name)
+		var font: Font = label.get_theme_font("font")
+		var font_size: int = label.get_theme_font_size("font_size")
+		var needed: float = (
+			font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+		)
+		assert_gte(label.size.x, needed, "%s cabe sin recortar" % recipe.display_name)
+		assert_eq(ticket.size.x, 212.0, recipe.display_name)
+	assert_lte(longest, 14)
+	assert_eq(longest, 14, "Bravo cachelos es el más largo")
+
+
+func test_pul114_ticket_shows_dressing_then_cachelos_stickers() -> void:
+	## comandas.md AC4: 1 pegatina de aliño y cachelos si los lleva, en orden canónico.
+	_mount()
+	_fill()
+	for order: ActiveOrder in _service.get_active_orders():
+		var entry: TicketEntry = _ticket(order.id).get_node("%Entry")
+		var count: int = (entry.get_node("%SeasoningIcons") as HBoxContainer).get_child_count()
+		assert_eq(count, order.data.seasonings.size(), order.data.display_name)
+		assert_between(count, 1, 2, "1 aliño y, a lo sumo, cachelos")

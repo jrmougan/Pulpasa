@@ -99,9 +99,9 @@ func _box_in_hand(order: ActiveOrder) -> Box:
 			if is_instance_valid(octopus):
 				_hold.drop()
 				octopus.free()
-		# Condimentos con la API que usan los dispensadores y el cuenco (ADR-003 §8.3).
+		# Condimentos con la API de los dispensadores (apply_seasoning, ADR-003 §10.2).
 		for seasoning: SeasoningData in order.data.seasonings:
-			assert_eq(box.toggle_seasoning(seasoning, true), SeasoningRules.Rejection.NONE)
+			assert_eq(box.apply_seasoning(seasoning), SeasoningRules.Rejection.NONE)
 	assert_true(_hold.pick_up(box))
 	return box
 

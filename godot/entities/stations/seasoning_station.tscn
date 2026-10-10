@@ -4,10 +4,8 @@
 [ext_resource type="Resource" path="res://data/config/seasoning_station.tres" id="2_data"]
 [ext_resource type="PackedScene" path="res://entities/stations/seasoning_dispenser.tscn" id="4_disp"]
 [ext_resource type="PackedScene" path="res://entities/stations/cachelos_bowl.tscn" id="5_bowl"]
-[ext_resource type="Resource" path="res://data/seasonings/paprika.tres" id="6_sweet"]
-[ext_resource type="Resource" path="res://data/seasonings/hot_paprika.tres" id="7_hot"]
-[ext_resource type="Resource" path="res://data/seasonings/salt.tres" id="8_salt"]
-[ext_resource type="Resource" path="res://data/seasonings/oil.tres" id="9_oil"]
+[ext_resource type="Resource" path="res://data/seasonings/sweet_dressing.tres" id="6_sweet"]
+[ext_resource type="Resource" path="res://data/seasonings/hot_dressing.tres" id="7_hot"]
 [ext_resource type="PackedScene" path="res://assets/models/stations/seasoning_station/seasoning_station.glb" id="11_model"]
 [ext_resource type="Script" path="res://components/feedback_player.gd" id="12_fb"]
 
@@ -35,28 +33,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
 
 [node name="Dispensers" type="Node3D" parent="."]
 
-[node name="SweetPaprika" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.1, -0.1)
+[node name="SweetDressing" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.1, -0.1)
 seasoning = ExtResource("6_sweet")
 station = NodePath("../..")
 
-[node name="HotPaprika" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.1, -0.1)
+[node name="HotDressing" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.1)
 seasoning = ExtResource("7_hot")
 station = NodePath("../..")
 
-[node name="Salt" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.1)
-seasoning = ExtResource("8_salt")
-station = NodePath("../..")
-
-[node name="Oil" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.1, -0.1)
-seasoning = ExtResource("9_oil")
-station = NodePath("../..")
-
 [node name="CachelosBowl" parent="." node_paths=PackedStringArray("station") instance=ExtResource("5_bowl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.1, -0.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.1, -0.1)
 station = NodePath("..")
 
 [node name="Feedback" type="AudioStreamPlayer3D" parent="."]
@@ -64,24 +52,10 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 script = ExtResource("12_fb")
 
-[node name="paprika_sweet" parent="Dispensers/HotPaprika/Model/seasoning_dispenser" index="3"]
+[node name="paprika_sweet" parent="Dispensers/HotDressing/Model/seasoning_dispenser" index="3"]
 visible = false
 
-[node name="paprika_hot" parent="Dispensers/HotPaprika/Model/seasoning_dispenser" index="2"]
+[node name="paprika_hot" parent="Dispensers/HotDressing/Model/seasoning_dispenser" index="2"]
 visible = true
 
-[node name="paprika_sweet" parent="Dispensers/Salt/Model/seasoning_dispenser" index="3"]
-visible = false
-
-[node name="salt" parent="Dispensers/Salt/Model/seasoning_dispenser" index="4"]
-visible = true
-
-[node name="paprika_sweet" parent="Dispensers/Oil/Model/seasoning_dispenser" index="3"]
-visible = false
-
-[node name="oil" parent="Dispensers/Oil/Model/seasoning_dispenser" index="1"]
-visible = true
-
-[editable path="Dispensers/HotPaprika"]
-[editable path="Dispensers/Salt"]
-[editable path="Dispensers/Oil"]
+[editable path="Dispensers/HotDressing"]

@@ -1,16 +1,16 @@
 # gdlint: disable=max-public-methods
 extends GutTest
-## PUL-101 R16 (L4): Individual con cambio, dos pedidos S con un solo pulpo en `level_01.tscn` real
+## PUL-101 R16 (L4): Individual con cambio, dos pedidos con un solo pulpo en `level_01.tscn` real
 ## y exactamente 2 pulsaciones de `p1_switch`. Todo con el teclado y el detector reales
 ## (`level_walker.gd`): el test nunca llama a `interact()` ni publica `target_changed`.
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const BOX: BoxData = preload("res://data/boxes/box.tres")
 const Walker: GDScript = preload("res://tests/integration/level_walker.gd")
-## R16: comandas del catálogo real sin cachelos (dulce+sal y aceite+dulce).
+## R16: comandas del catálogo real sin cachelos («Á feira» y «Picante»).
 const R16_ORDERS: Array[OrderData] = [
-	preload("res://data/orders/order_2.tres"),
-	preload("res://data/orders/order_4.tres"),
+	preload("res://data/orders/a_feira.tres"),
+	preload("res://data/orders/picante.tres"),
 ]
 const R16_PATIENCE: float = 900.0
 const R16_STAND_FRONT: float = 2.5
@@ -41,7 +41,7 @@ func after_each() -> void:
 	PhaselessConfig.restore()
 
 
-## Nivel real en Individual con dos comandas S activas (dulce+sal y aceite+dulce), sin caducidad
+## Nivel real en Individual con dos comandas activas («Á feira» y «Picante»), sin caducidad
 ## práctica, para jugarlas con el teclado y el detector reales (`level_walker.gd`).
 func _load_two_order_level() -> void:
 	var catalog: OrderCatalog = OrderCatalog.new()

@@ -1,0 +1,12 @@
+PUL-114 AC11/AC12 (estacion-condimentos.md): mapa de objetivos con una caja llena en la mano,
+a 1,0 m del eje por el lado de alinar, barrido de x local -1..1 cada 0,25 m
+(test_station_level.gd::test_ac11_ac12_target_sweep_over_the_central_span).
+d = SweetDressing, p = HotDressing, c = CachelosBowl, . = sin objetivo, _ = pasaplatos, T = cubo
+
+x local: -1.00 -0.75 -0.50 -0.25  0.00  0.25  0.50  0.75  1.00
+         d     d     d     p     p     p     p     c     c
+
+dddppppcc    -> 0 `_`, 0 `T`, ningun `.` entre el primero y el ultimo.
+
+Barrido fino (test_seasoning_station.gd::test_r8_target_strips_are_continuous_and_at_least_06_m,
+0,05 m por caracter, x -2,6..2,6): cada pieza una unica franja continua >= 0,6 m.

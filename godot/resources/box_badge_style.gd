@@ -13,6 +13,6 @@ extends Resource
 @export var hot_mark: Texture2D
 
 
-## Si la pegatina de `seasoning` lleva `hot_mark` (pimentón picante).
+## Si la pegatina de `seasoning` lleva `hot_mark` (aliño picante).
 func has_hot_mark(seasoning: SeasoningData) -> bool:
-	return seasoning != null and seasoning.type == SeasoningData.SeasoningType.HOT_PAPRIKA
+	return seasoning != null and seasoning.type == SeasoningData.SeasoningType.HOT_DRESSING

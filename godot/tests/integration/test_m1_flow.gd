@@ -1,18 +1,18 @@
 extends GutTest
 ## PUL-032: partida M1 completa sobre `level_01.tscn` con los datos reales y los autoloads reales.
-## Una comanda con aceite y cachelos (D10): pulpo y cachelos cuecen juntos en la olla (D9), la caja
-## se llena sobre un pasaplatos, los cachelos cocidos van al cuenco y la caja se
-## condimenta en el dispensador de aceite y el cuenco (PUL-061), y se entrega con bonus por tiempo
-## (D2). Después una caducidad (−expire_penalty), una caja errónea
+## Una comanda «Con cachelos» (aliño dulce y cachelos, D10 y D25): pulpo y cachelos cuecen juntos
+## en la olla (D9), la caja se llena sobre un pasaplatos, los cachelos cocidos van al cuenco y la
+## caja se condimenta en el dispensador de aliño dulce y el cuenco (PUL-061), y se entrega con
+## bonus por tiempo (D2). Después una caducidad (−expire_penalty), una caja errónea
 ## (−wrong_delivery_penalty, D8) y el fin de ronda: recaudación y estrellas en el game over.
 ##
-## Usa la comanda del catálogo real con aceite y cachelos (PUL-033) y `max_active_orders = 1`.
+## Usa la comanda del catálogo real con aliño dulce y cachelos (PUL-033) y `max_active_orders = 1`.
 ## Como en `test_kitchen_flow.gd`, cada pulsación pasa por `InteractionComponent.interact_pressed()`
 ## con el objetivo que publicaría el detector (`target_changed`).
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
-const RECIPE: RecipeData = preload("res://data/recipes/individual.tres")
-const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
+const RECIPE: RecipeData = preload("res://data/recipes/con_cachelos.tres")
+const DRESSING: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
 const CACHELOS_SEASONING: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 const STAR_FULL: Texture2D = preload("res://assets/textures/icons/star_full.svg")
 const STAR_EMPTY: Texture2D = preload("res://assets/textures/icons/star_empty.svg")
@@ -61,7 +61,7 @@ func after_each() -> void:
 func _real_cachelos_order() -> OrderData:
 	var real: OrderCatalog = load("res://data/orders/order_catalog.tres") as OrderCatalog
 	for order: OrderData in real.orders:
-		if order.seasonings.has(OIL) and order.seasonings.has(CACHELOS_SEASONING):
+		if order.seasonings.has(DRESSING) and order.seasonings.has(CACHELOS_SEASONING):
 			return order
 	return null
 
@@ -103,7 +103,7 @@ func _bonus(order: ActiveOrder) -> int:
 
 ## Nevera y cachelera → olla (dos plazas), la caja de la comanda a un pasaplatos, cocción, FIFO,
 ## cortes sobre la caja del pasaplatos hasta llenar, cachelos cocidos al cuenco y, con la caja llena
-## en la mano, cachelos y aceite. Devuelve la caja lista para entregar (en la mano).
+## en la mano, cachelos y aliño dulce. Devuelve la caja lista para entregar (en la mano).
 func _prepare_box() -> Box:
 	var kitchen: CookingStation = _station("Kitchen")
 	assert_true(_press(_station("OctopusStorage")), "nevera: da un pulpo")
@@ -152,8 +152,8 @@ func _prepare_box() -> Box:
 	assert_true(_press(bowl), "cuenco: cachelos a la caja en la mano")
 	assert_true(box.has_seasoning(CACHELOS_SEASONING), "cachelos aplicados como condimento")
 	assert_eq(bowl.stock, 1)
-	assert_true(_press(_dispenser(OIL)), "dispensador de aceite")
-	assert_true(box.has_seasoning(OIL))
+	assert_true(_press(_dispenser(DRESSING)), "dispensador de aliño dulce")
+	assert_true(box.has_seasoning(DRESSING))
 	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
 	assert_eq(box.get_contents().seasonings.size(), 2)
 	return box
@@ -174,10 +174,10 @@ func _deliver_directly() -> void:
 	assert_eq(RoundManager.round_state.get_revenue(), _expected_revenue)
 
 
-func test_m1_full_round_oil_cachelos_bonus_expiry_wrong_box_and_stars() -> void:
+func test_m1_full_round_dressing_cachelos_bonus_expiry_wrong_box_and_stars() -> void:
 	var order: ActiveOrder = OrderService.get_active_orders()[0]
 	assert_eq(order.slot_id, 1)
-	assert_eq(order.data.seasonings.size(), 2, "comanda con aceite y cachelos")
+	assert_eq(order.data.seasonings.size(), 2, "comanda con aliño y cachelos")
 
 	# --- Entrega con bonus por tiempo -------------------------------------------------------
 	var box: Box = await _prepare_box()
@@ -198,7 +198,10 @@ func test_m1_full_round_oil_cachelos_bonus_expiry_wrong_box_and_stars() -> void:
 	assert_ne(OrderService.get_active_orders()[0].id, order.id, "el puesto repone la comanda")
 
 	# --- Más entregas hasta la primera estrella ---------------------------------------------
-	while _expected_revenue < _config.revenue_thresholds[0]:
+	# Margen para las penalizaciones que vienen después (2 caducidades y la caja errónea): la
+	# partida acaba con al menos la primera estrella.
+	var margin: int = 2 * _config.expire_penalty + _config.wrong_delivery_penalty
+	while _expected_revenue < _config.revenue_thresholds[0] + margin:
 		_deliver_directly()
 
 	# --- Caducidad: resta expire_penalty ------------------------------------------------------

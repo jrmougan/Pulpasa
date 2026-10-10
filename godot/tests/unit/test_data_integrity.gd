@@ -15,9 +15,9 @@ const MIN_PER_FOLDER: Dictionary[String, int] = {
 	"boxes": 1,
 	"config": 6,
 	"ingredients": 2,
-	"orders": 8,
-	"recipes": 3,
-	"seasonings": 5,
+	"orders": 5,
+	"recipes": 4,
+	"seasonings": 3,
 }
 ## Datos que deben existir, con su tipo.
 const KNOWN: Dictionary[String, String] = {
@@ -28,7 +28,6 @@ const KNOWN: Dictionary[String, String] = {
 	"res://data/config/round_config.tres": "RoundConfig",
 	"res://data/config/seasoning_station.tres": "SeasoningStationData",
 	"res://data/orders/order_catalog.tres": "OrderCatalog",
-	"res://data/orders/order_catalog_basic.tres": "OrderCatalog",
 	"res://data/audio/feedback_map.tres": "AudioFeedbackMap",
 	"res://data/audio/audio_mix.tres": "AudioMixConfig",
 }
@@ -91,17 +90,15 @@ func test_ac3_no_missing_dependencies() -> void:
 
 
 func test_ac3_references_are_filled() -> void:
-	for id: String in ["individual", "combo_duo", "familiar"]:
+	for id: String in ["a_feira", "picante", "con_cachelos", "bravo_cachelos"]:
 		var recipe: RecipeData = load("res://data/recipes/%s.tres" % id) as RecipeData
 		assert_not_null(recipe.ingredient, id)
 
 
 func test_ac3_seasoning_colors_are_distinct_and_opaque() -> void:
 	var expected: Dictionary = {
-		"salt": Color("F7F4EC"),
-		"paprika": Color("D6361F"),
-		"hot_paprika": Color("8F1A14"),
-		"oil": Color("F2C230"),
+		"sweet_dressing": Color("D6361F"),
+		"hot_dressing": Color("8F1A14"),
 		"cachelos": Color("F2D56B"),
 	}
 	for id: String in expected:
@@ -110,8 +107,8 @@ func test_ac3_seasoning_colors_are_distinct_and_opaque() -> void:
 		if seasoning:
 			assert_true(seasoning.color.is_equal_approx(expected[id] as Color), id)
 			assert_eq(seasoning.color.a, 1.0, "%s: color opaco" % id)
-	var sweet: SeasoningData = load("res://data/seasonings/paprika.tres")
-	var hot: SeasoningData = load("res://data/seasonings/hot_paprika.tres")
+	var sweet: SeasoningData = load("res://data/seasonings/sweet_dressing.tres")
+	var hot: SeasoningData = load("res://data/seasonings/hot_dressing.tres")
 	assert_ne(sweet.color, hot.color, "dulce y picante se distinguen")
 
 
@@ -124,33 +121,30 @@ func test_ac1_player_config_has_detector_scoring_values() -> void:
 	assert_almost_eq(cfg.detector_origin_height, 0.8, 0.001)
 
 
-## Comandas AC5: el catálogo de la alpha cumple los rangos de M1 (paciencia 40–90 s,
-## base 8–14 €) y hay plantillas con aceite y con pimentón.
-func test_comandas_ac5_m1_data_ranges() -> void:
-	var catalog: OrderCatalog = load("res://data/orders/order_catalog.tres") as OrderCatalog
-	assert_gte(catalog.orders.size(), 4, "al menos 4 plantillas distintas")
-	var has_oil: bool = false
-	var has_paprika: bool = false
-
-	for order: OrderData in catalog.orders:
-		assert_between(order.max_time, 80.0, 180.0, "La paciencia debe estar entre 80 y 180")
-		assert_between(order.recipe.base_points, 8, 14, "El precio base debe estar entre 8 y 14")
-		for s: SeasoningData in order.seasonings:
-			if s.type == SeasoningData.SeasoningType.OIL:
-				has_oil = true
-			if (
-				s.type == SeasoningData.SeasoningType.PAPRIKA
-				or s.type == SeasoningData.SeasoningType.HOT_PAPRIKA
-			):
-				has_paprika = true
-
-	assert_true(has_oil, "Debe haber al menos una comanda con aceite")
-	assert_true(has_paprika, "Debe haber al menos una comanda con pimentón")
+## condimentacion AC9 (D25): exactamente 3 SeasoningData (aliño dulce, aliño picante, cachelos); los
+## aliños comparten el grupo "dressing"; no quedan .tres de sal, aceite ni pimentón sueltos.
+func test_condimentacion_ac9_seasoning_catalog() -> void:
+	var files: Array[String] = []
+	for file: String in DirAccess.get_files_at("res://data/seasonings"):
+		if file.ends_with(".tres"):
+			files.append(file)
+	files.sort()
+	assert_eq(files, ["cachelos.tres", "hot_dressing.tres", "sweet_dressing.tres"])
+	var types: Dictionary = {
+		"sweet_dressing": SeasoningData.SeasoningType.SWEET_DRESSING,
+		"hot_dressing": SeasoningData.SeasoningType.HOT_DRESSING,
+	}
+	for id: String in types:
+		var dressing: SeasoningData = load("res://data/seasonings/%s.tres" % id) as SeasoningData
+		assert_eq(dressing.type, types[id] as int, id)
+		assert_eq(dressing.exclusivity_group, &"dressing", id)
+	for old: String in ["salt", "oil", "paprika", "hot_paprika"]:
+		assert_false(FileAccess.file_exists("res://data/seasonings/%s.tres" % old), old)
 
 
-## PUL-057: orden canónico de caja y ticket (pimentón → sal → aceite → cachelos).
-func test_pul057_seasoning_sort_order() -> void:
-	var expected: Dictionary = {"paprika": 0, "hot_paprika": 0, "salt": 1, "oil": 2, "cachelos": 3}
+## Orden canónico de caja y ticket (aliño → cachelos, D25).
+func test_pul114_seasoning_sort_order() -> void:
+	var expected: Dictionary = {"sweet_dressing": 0, "hot_dressing": 0, "cachelos": 3}
 	for id: String in expected:
 		var seasoning: SeasoningData = load("res://data/seasonings/%s.tres" % id) as SeasoningData
 		assert_eq(seasoning.sort_order, expected[id] as int, id)
@@ -166,16 +160,15 @@ func test_pul057_box_badge_style_values() -> void:
 	assert_not_null(style.hot_mark)
 	assert_eq(style.hot_mark.resource_path, "res://assets/textures/icons/small-fire.svg")
 	var hot: SeasoningData = SeasoningData.new()
-	hot.type = SeasoningData.SeasoningType.HOT_PAPRIKA
+	hot.type = SeasoningData.SeasoningType.HOT_DRESSING
 	var sweet: SeasoningData = SeasoningData.new()
-	sweet.type = SeasoningData.SeasoningType.PAPRIKA
+	sweet.type = SeasoningData.SeasoningType.SWEET_DRESSING
 	assert_true(style.has_hot_mark(hot))
 	assert_false(style.has_hot_mark(sweet))
 	assert_false(style.has_hot_mark(null))
 
 
-## PUL-057 (revisión): toda pegatina necesita un color de fondo visible
-## (aceite #F2C230, art-bible §2.6).
+## PUL-057 (revisión): toda pegatina necesita un color de fondo visible.
 func test_pul057_every_seasoning_color_is_opaque() -> void:
 	var count: int = 0
 	for file: String in DirAccess.get_files_at("res://data/seasonings"):
@@ -186,9 +179,7 @@ func test_pul057_every_seasoning_color_is_opaque() -> void:
 		if seasoning:
 			assert_eq(seasoning.color.a, 1.0, "%s: color opaco" % file)
 			count += 1
-	assert_eq(count, 5, "los cinco condimentos")
-	var oil: SeasoningData = load("res://data/seasonings/oil.tres") as SeasoningData
-	assert_eq(oil.color, Color(0.9490196, 0.7607843, 0.1882353, 1.0))
+	assert_eq(count, 3, "los tres condimentos")
 
 
 ## PUL-058: balance de la estación de condimentos (feature estacion-condimentos, Datos).
@@ -201,5 +192,5 @@ func test_pul058_seasoning_station_values() -> void:
 	assert_eq(data.cachelos_stock_max, 4)
 	assert_eq(data.cachelos_initial_stock, 0)
 	assert_eq(data.cachelos_portions_per_item, 2)
-	assert_true(data.paprika_swap)
+	assert_null(data.get("paprika_swap"), "D25: sin paprika_swap")
 	assert_true(data.operator_side_only)
