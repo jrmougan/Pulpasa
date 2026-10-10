@@ -1,7 +1,7 @@
 ---
 id: PUL-113
 title: Quitar los tamaños de caja (caja única de 6 cortes)
-status: in_progress
+status: done
 milestone: M3d
 role: gameplay-engineer
 deps: [PUL-110, PUL-111]
