@@ -18,6 +18,11 @@
   la cápsula (§3, PUL-100), colisión de la estación de 5,2 m, raíz de dispensadores y cuenco
   desplazada respecto al arte y antirrebote con reloj de juego (§3, PUL-097), soltar bloqueado por
   `world` (ADR-003 §9.5, PUL-101).
+- **Enmienda D25** (PUL-111, 2026-10-10, ADR-003 §10), **pendiente del gate humano**: caja única y
+  rack de un spawner (§3, §5), estación con 2 dispensadores de aliño + cuenco (§3), cubo de basura
+  `trash_bin.tscn` y sus 2 instancias en `level_01` (§2, §3), ticket sin talla (§4), datos de caja,
+  aliños, cubo y comandas por fase (§5), bajas (§7.2). Lo marcado **D25** lo implementan las fichas
+  de código que siguen a PUL-111.
 
 Árbol que debe existir al cerrar M0 (fase 8). Rutas relativas a `godot/` (estructura de ADR-001).
 `%Nombre` = nodo con nombre único de escena. Entre corchetes, la fase de M0 en que se crea la
@@ -60,14 +65,14 @@ coordenadas son orientativas: manda `docs/design/level-layouts/gen_layouts.py` c
 ```
    0123456789012345
  0 ##NK#O#O########     cocina: OctopusStorage, CachelosStorage, Kitchen, Kitchen2
- 1 #..............#
+ 1 #T.............#     D25: TrashBinKitchen (T), esquina NO de la cocina
  2 #.b............#     Player2 (b)
  3 #..............#
  4 #PPPCCCCCC.PPP##     M3c (D23, PUL-101): PassSlot01–03 · SeasoningStation (x −2,4…2,8) · hueco x 2,8…4,2 · PassSlot04–06
  5 #..............#
  6 B..............#     BoxShelf (pared izquierda del servicio)
  7 B..........a...#     Player1 (a)
- 8 #..............#
+ 8 #T.............#     D25: TrashBinService (T), al sur del rack
  9 #..............#
 10 ###1#2##3#4#####     OrderStand1–4
 ```
@@ -86,6 +91,22 @@ de M2b no caben: la estación mide 5,2 m (x −2,4…2,8) y pisaba el antiguo `P
 Son contrato el número, los nombres `PassSlot01..06`, la marca y que fuera de ellos no se deja nada
 (ADR-003 §9.5); las posiciones son las de `level_01.tscn` y las prueba `test_level_01.gd` (R11,
 R14: rodeo 7,93 m), con `level_walker.gd::GAP_X` = 3,5.
+
+**D25 (ADR-003 §10.3; Enmienda D25 (PUL-111, 2026-10-10)).** Dos cubos de basura, comprobados
+contra la colisión de `kitchen_layout.tscn` (`BackLeft` x −6,8…−5,3 / z −4,5…−3,5,
+`WallLeftKitchen` x ≤ −5,8 / z −3,5…1,5, `WallLeftFront` x ≤ −5,8 / z 3,5…6,5) y contra
+`level-layouts.md` (HUD sobre el suelo en x < −7,2, z > −0,1; tickets en z < −6,8):
+- `TrashBinKitchen` en **x −5,45, z −3,15** (esquina noroeste de la cocina, contra `BackLeft` y la
+  pared). D25 pide «junto a las ollas»; se usa la esquina libre más cercana de la cocina porque
+  delante de las ollas (x −1,3 / 0,7) el cubo competiría como objetivo con la olla cuando se lleva
+  un pulpo crudo y lo tiraría por error. Distancias: `PassSlot01` 3,2 m, hueco > 8 m, nevera 1,2 m
+  (la nevera no hace nada con la mano llena).
+- `TrashBinService` en **x −5,45, z 3,9** (pared oeste del servicio, al sur del rack `BoxShelf`,
+  contra la barandilla `WallLeftFront`). Distancias: `PassSlot01` 3,9 m, hueco > 9 m, `OrderStand1`
+  2,9 m, spawner del rack ≈ 1,4 m (con la mano llena consume la pulsación sin hacer nada).
+- Los dos a ≥ 1,5 m de todo `PassSlot` y del hueco (que conserva sus 1,4 m libres), fuera del HUD y
+  de la banda de tickets (T6 de `cubo-basura`). Las posiciones admiten ±0,2 m; las fija
+  `test_level_01.gd` (distancias y encuadre) en la ficha del nivel.
 
 ```
 Level01 (Node3D)                         scenes/levels/level.gd  (común, extends Node)
@@ -111,6 +132,9 @@ Level01 (Node3D)                         scenes/levels/level.gd  (común, extend
 │   │                    (M2b tenía PassSlot01..04 en las cols 1–4 y 05..09 en las cols 9–13; quedan 6, 3 + 3, §7)
 │   │                    Sin overrides de Model/Body: la marca pass_mark es parte de slot.tscn (§3)
 │   ├── BoxShelf         entities/stations/box_shelf.tscn          celdas (0, 6–7), de frente al servicio (+x)  [6; M2b]
+│   │                    D25: un solo spawner (BoxSpawner, box.tres); el nivel no cambia
+│   ├── TrashBinKitchen  entities/stations/trash_bin.tscn          x −5,45, z −3,15 (esquina NO de la cocina)  [D25]
+│   ├── TrashBinService  entities/stations/trash_bin.tscn          x −5,45, z 3,9 (al sur del rack)            [D25]
 │   ├── OrderStand1      entities/stations/order_stand.tscn  slot_id = 1  celda (3, 10)  [6]
 │   ├── OrderStand2      …                                   slot_id = 2  celda (5, 10)
 │   ├── OrderStand3      …                                   slot_id = 3  celda (8, 10)
@@ -129,7 +153,8 @@ Level01 (Node3D)                         scenes/levels/level.gd  (común, extend
     └── GameOver         ui/menus/game_over.tscn    oculto hasta round_finished  [7]
 ```
 No hay `SpiceShelf` ni ningún `SeasoningItem` (AC18 de la feature): los únicos puntos donde cambia
-el condimento de una caja son los 4 dispensadores y el cuenco de `SeasoningStation`. El nivel no
+el condimento de una caja son los 4 dispensadores (D25: **2 dispensadores de aliño**) y el cuenco de
+`SeasoningStation`. El nivel no
 sobrescribe nada dentro de la estación (ni datos ni marcadores): solo su transformación. Desde D23,
 con una caja en la mano, en el tramo de la estación solo son objetivo los dispensadores y el cuenco
 (R7): no hay `Slot` en esas 4 celdas.
@@ -178,6 +203,10 @@ seasoning.tscn [6] BAJA en M2b (PUL-061, §7). Seasoning (RigidBody3D; pickable,
 Tres cajas = una escena + `.tres` (`data/boxes/{small,medium,large}.tres`). Los cinco
 condimentos son datos (`data/seasonings/*.tres`) que usan los dispensadores, el cuenco, la fila de
 la caja y el ticket; ya no hay un objeto de mundo por condimento.
+**D25 (Enmienda D25 (PUL-111, 2026-10-10), ADR-003 §10.1–§10.2):** una sola caja
+(`data/boxes/box.tres`, `presses_to_fill` 6) y tres condimentos (`sweet_dressing`, `hot_dressing`,
+`cachelos`). La `%BadgeRow` muestra como mucho 2 pegatinas: el aliño (con llama si es picante) y
+los cachelos.
 
 Caja (API del contrato con la estación, M2b, PUL-057; ADR-003 §8.3):
 `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection`,
@@ -185,6 +214,9 @@ Caja (API del contrato con la estación, M2b, PUL-057; ADR-003 §8.3):
 `get_contents()`. `interact()` corta (D1) o se coge; con cualquier otra cosa en la mano consume la
 pulsación sin efecto (ya no condimenta, AC12). D23 no cambia esta API: el dispensador y el cuenco la
 llaman sobre la caja **de la mano** del actor en vez de la de la bandeja.
+**D25:** se añade `apply_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection` (la llama
+el dispensador de aliño: sustituye al otro aliño, `ALREADY_APPLIED` si ya lo lleva) y
+`toggle_seasoning(seasoning: SeasoningData)` pierde `swap_exclusive` (solo la llama el cuenco).
 
 ### `entities/stations/`
 ```
@@ -204,6 +236,19 @@ box_shelf.tscn        BoxShelf (StaticBody3D)  Model (mueble)
                       ├── SmallSpawner  (StaticBody3D; interactable)  item_spawner.gd  scene = box.tscn, data = small.tres
                       ├── MediumSpawner …                                                 data = medium.tres
                       └── LargeSpawner  …                                                 data = large.tres
+                      D25 (ADR-003 §10.1): los tres spawners se sustituyen por uno:
+                      └── BoxSpawner (StaticBody3D, capa interactable; grupo interactable)  item_spawner.gd
+                          scene = box.tscn, data = box.tres; colisión sobre el frente del mueble;
+                          %Highlightable root = Model/box_shelf/OutlineHull (resalta el mueble entero)
+trash_bin.tscn [D25]  TrashBin (StaticBody3D, capa interactable; grupo interactable)  trash_bin.gd  class_name TrashBin
+                      │   @export data: TrashBinData = data/config/trash_bin.tres (trash_penalty 0)
+                      │   is_reachable_from(floor_position, holder): TrashRules.can_trash(holder.get_held_item()),
+                      │   sin regla de lado; can_interact(actor): lo mismo con actor.holder
+                      │   interact(actor): item = actor.holder.drop() → trashed.emit(item) → item.queue_free()
+                      │   signal trashed(item: Node)   (local, signals.md §4)
+                      ├── CollisionShape3D (cilindro ≈ r 0,3 m, h 0,8 m), Model (placeholder → arte)
+                      ├── %Highlightable
+                      └── %Feedback (FeedbackPlayer)   cue trash, POP del cubo
 slot.tscn [5]         Slot (StaticBody3D; grupo interactable)  slot.gd  @export initial_item: PackedScene
                       │   @export accepted_group: StringName = &""  [M2b] vacío = acepta cualquier objeto; si no,
                       │   lo que no esté en el grupo se rechaza consumiendo la pulsación (ADR-003 §8.2).
@@ -251,6 +296,10 @@ Los modelos de nevera, olla, fogón y mesas dependen de D6 (Pandazole o sustitut
 Diseño: `docs/design/features/estacion-condimentos.md` y boceto `docs/evidence/PUL-040/boceto-estacion.svg`.
 Escenas y scripts de PUL-058; el `Model` definitivo, de PUL-052 (sin tocar el resto de nodos).
 Frente del modelo hacia −Z (biblia de arte) = lado de pase; +Z = lado de condimentar.
+**D25 (Enmienda D25 (PUL-111, 2026-10-10), ADR-003 §10.2):** 2 dispensadores de aliño
+(`SweetDressing`, `HotDressing`) + el cuenco, en bloque centrado (raíces en x −1 / 0 / 1 local, ≥ 1,0 m
+entre centros, ±0,5 m según R8); aplican, no alternan; sin antirrebote en los dispensadores; sin
+`paprika_swap`. El mostrador (5,2 m) no cambia. El árbol de abajo es el de M3c con las notas D25.
 **M3c (D23, PUL-097; modelos de PUL-094):** sin `Tray`; la caja se lleva en la mano y la estación
 es una línea de 4 dispensadores (≥ 1,0 m entre centros, orden del ticket: dulce, picante, sal,
 aceite) y el cuenco. Quién es objetivo con qué en la mano: ADR-003 §9.1 (resumen abajo).
@@ -261,7 +310,7 @@ SeasoningStation (StaticBody3D, capa world; sin grupos)   seasoning_station.gd  
 │   @export data: SeasoningStationData = data/config/seasoning_station.tres
 │   side_of(floor_position: Vector2) -> StationSide.Side       (ADR-003 §8.1)
 │   get_box() -> Box, get_tray() -> Slot                       BAJA en M3c (D23): no hay bandeja
-│   conecta rejected de los 4 dispensadores y del cuenco → %Feedback (season_error) + sacudida del emisor
+│   conecta rejected de los 4 dispensadores (D25: 2) y del cuenco → %Feedback (season_error) + sacudida del emisor
 ├── CollisionShape3D (Box 5,2 × 1,1 × 1,12 m, PUL-097)   mostrador, capa world: no se cruza ni se suelta encima
 ├── Model                                placeholder de primitivas (PUL-058) → .glb de PUL-052
 ├── %PassSide (Marker3D)                 en el suelo, centro del pasillo del lado de pase (z− local)
@@ -269,12 +318,14 @@ SeasoningStation (StaticBody3D, capa world; sin grupos)   seasoning_station.gd  
 ├── Tray        BAJA en M3c (D23). Era instancia de slot.tscn con accepted_group = &"box"
 ├── Dispensers (Node3D)                  fila hacia el lado de condimentar, ≥ 0,9 m entre centros (M3c: 1,0 m,
 │                                        raíces en x −2 / −1 / 0 / 1, z −0,1; cuenco en x 2, z −0,1)
-│   ├── SweetPaprika  seasoning_dispenser.tscn  seasoning = data/seasonings/paprika.tres
-│   ├── HotPaprika    seasoning_dispenser.tscn  seasoning = data/seasonings/hot_paprika.tres
-│   ├── Salt          seasoning_dispenser.tscn  seasoning = data/seasonings/salt.tres
-│   └── Oil           seasoning_dispenser.tscn  seasoning = data/seasonings/oil.tres
+│   ├── SweetPaprika  seasoning_dispenser.tscn  seasoning = data/seasonings/paprika.tres       BAJA D25
+│   ├── HotPaprika    seasoning_dispenser.tscn  seasoning = data/seasonings/hot_paprika.tres   BAJA D25
+│   ├── Salt          seasoning_dispenser.tscn  seasoning = data/seasonings/salt.tres          BAJA D25
+│   ├── Oil           seasoning_dispenser.tscn  seasoning = data/seasonings/oil.tres           BAJA D25
+│   ├── SweetDressing seasoning_dispenser.tscn  seasoning = data/seasonings/sweet_dressing.tres  [D25] x −1 local
+│   └── HotDressing   seasoning_dispenser.tscn  seasoning = data/seasonings/hot_dressing.tres    [D25] x 0 local
 │                     (cada uno: station = SeasoningStation, override de referencia dentro de la escena)
-├── CachelosBowl  cachelos_bowl.tscn     extremo del mostrador; station = SeasoningStation
+├── CachelosBowl  cachelos_bowl.tscn     extremo del mostrador; station = SeasoningStation  (D25: x 1 local, junto a HotDressing)
 └── %ErrorAudio (AudioStreamPlayer3D)    sonido de rechazo (dispensadores, cuenco) → M3: %Feedback (FeedbackPlayer), cue season_error
 
 seasoning_dispenser.tscn
@@ -287,11 +338,16 @@ SeasoningDispenser (StaticBody3D, capa interactable; grupo interactable)   seaso
 │   can_interact(actor) -> bool   M3c: true si actor.holder lleva una Box; interact(actor) -> bool  siempre consume
 │                     (ADR-003 §8.2): caja a medio cortar → rejected(BOX_NOT_FULL); llena → box.toggle_seasoning
 │                     sobre la caja de la mano (con paprika_swap); la caja sigue en la mano
+│                     D25: llena → box.apply_seasoning(seasoning): NONE → %Gesture; ALREADY_APPLIED → nada
+│                     (consumida en silencio); BOX_NOT_FULL → rejected
 │   antirrebote: data.toggle_guard s por dispensador; M3c (PUL-097): reloj de juego (_game_time acumulado en
 │                     _physics_process, se congela en pausa y sigue Engine.time_scale; sin Time.get_ticks_usec),
-│                     clock: Callable inyectable para tests (sin await)
-│   signal rejected(reason: SeasoningRules.Rejection)
+│                     clock: Callable inyectable para tests (sin await). BAJA D25 en el dispensador (aplicar es
+│                     idempotente): se quitan clock, _game_time y _last_change; el cuenco lo conserva
+│   signal rejected(reason: SeasoningRules.Rejection)   (D25: solo BOX_NOT_FULL)
 ├── CollisionShape3D, Model (bote fijo del condimento; color de SeasoningData)
+├── %Gesture  [D25]  gesto de sal gorda, pimentón y aceite al aplicar (GPUParticles3D one_shot o AnimationPlayer;
+│                    ≥ 0,3 s); lo lanza el propio dispensador, sin señal
 │   [M3c, PUL-097] el Model está en z +0,45 local: la raíz (objetivo del detector) queda 0,45 m hacia el
 │   pase respecto al arte para que las franjas de selección no tengan huecos (R8). Para anclar algo al
 │   arte del dispensador, usar Model, no global_position de la raíz
@@ -308,7 +364,8 @@ CachelosBowl (StaticBody3D, capa interactable; grupo interactable)   cachelos_bo
 │             o quemados, caja a medio cortar) false
 │   interact: cachelos cocidos → +data.cachelos_portions_per_item (máx. stock_max) y los libera; caja llena →
 │             alterna cachelos en la caja de la mano (±1 ración; BOWL_EMPTY / BOWL_FULL); antirrebote como el
-│             dispensador (reloj de juego propio, _game_time; PUL-097)
+│             dispensador (reloj de juego propio, _game_time; PUL-097). D25: sin cambios de comportamiento;
+│             llama box.toggle_seasoning(seasoning) sin swap_exclusive y es el único usuario de toggle_guard
 │   signal rejected(reason: SeasoningRules.Rejection); signal stock_changed(stock: int)
 ├── CollisionShape3D, Model (cuenco)   [M3c, PUL-097] Model en z +0,25 local: la raíz queda 0,25 m hacia el
 │                                      pase respecto al arte; para anclar algo al cuenco, usar Model
@@ -325,15 +382,17 @@ mano para condimentar.
 
 Objetivo por lo que hay en la mano (M3c, ADR-003 §9.1; «servicio» = lado de condimentar):
 
-| En la mano | Dispensador | Cuenco |
-|---|---|---|
-| Nada | — | — |
-| Caja llena | servicio: alterna | servicio: alterna cachelos |
-| Caja a medio cortar | servicio: rechaza `BOX_NOT_FULL` (R3) | — |
-| Cachelos cocidos | — | cualquier lado: repone +2 (máx. 4) |
-| Pulpo, cachelos crudos o quemados | — | — |
+| En la mano | Dispensador | Cuenco | Cubo (D25) |
+|---|---|---|---|
+| Nada | — | — | — |
+| Caja llena | servicio: alterna (D25: **aplica** su aliño, sustituye al otro; el mismo, nada) | servicio: alterna cachelos | tira |
+| Caja a medio cortar o vacía | servicio: rechaza `BOX_NOT_FULL` (R3) | — | tira |
+| Cachelos cocidos | — | cualquier lado: repone +2 (máx. 4) | tira |
+| Pulpo (crudo o cocido), cachelos crudos | — | — | tira |
 
-«—» = no es objetivo (ni se resalta).
+«—» = no es objetivo (ni se resalta). El cubo no tiene regla de lado y está fuera de la estación;
+la columna se incluye para leer en una tabla todo lo que hace la mano llena. Un quemado nunca llega a
+la mano (se desecha en la olla).
 
 ### `entities/environment/environment.tscn` [8; luz v2 en M3b, PUL-073/PUL-085]
 ```
@@ -380,6 +439,8 @@ ui/hud/hud.tscn              HUD (Control)             hud.gd         tiempo, ca
 ui/tickets/order_tickets_panel.tscn  (Control)         order_tickets_panel.gd  escucha orders_reset / order_generated / order_completed / order_expired; get_active_orders() para reconstruir
 ui/tickets/order_ticket.tscn         (PanelContainer)  order_ticket.gd   "#id" + ticket_entry + %PatienceBar (TextureProgressBar) que solo pinta order_patience_changed de su order_id; sin contador propio (M1)
 ui/tickets/ticket_entry.tscn         (HBoxContainer)   ticket_entry.gd   receta + condimentos; M2b (PUL-060): condimentos en SeasoningRules.canonical_order() y como pegatinas con BoxBadgeStyle (mismo icono y marca de llama que %BadgeRow)
+                                     D25: sin talla (bajas _show_size, %SizeBadge, %SizeIcon, %SizeLabel); nombre de receta (≤ 14
+                                     caracteres) + pegatina de aliño + la de cachelos si la lleva
 ui/widgets/world_progress_bar.tscn   (Sprite3D billboard + SubViewport con TextureProgressBar)
 ```
 En M0 el menú muestra «Jugar» (= Individual con un solo personaje) y «Salir»; «Local 2P» llega en M2.
@@ -427,6 +488,29 @@ data/config/stand_palette.tres                   StandPalette: 4 colores de told
 data/config/seasoning_station.tres               cachelos_portions_per_item 2, cachelos_stock_max 4 (D23, R6);
                                                  resto sin cambios (operator_side_only true, toggle_guard 0.25,
                                                  paprika_swap true, cachelos_initial_stock 0); PUL-097
+```
+**D25** (ADR-003 §10, ADR-006 §6; Enmienda D25 (PUL-111, 2026-10-10)):
+```
+resources/box_data.gd                            BoxData − short_label, − icon (sin talla)
+data/boxes/box.tres                              BoxData única: presses_to_fill 6 (provisional, QA); sustituye a
+                                                 small/medium/large.tres
+resources/recipe_data.gd                         RecipeData − box (la caja ya no distingue recetas)
+data/recipes/*.tres, data/orders/*.tres          4 recetas y 4 comandas (dulce/picante × con/sin cachelos); nombres,
+                                                 base_points y max_time del diseño (comandas.md); order_catalog.tres
+                                                 lista las 4
+resources/seasoning_data.gd                      SeasoningType + SWEET_DRESSING, HOT_DRESSING (al final; SALT, PAPRIKA,
+                                                 HOT_PAPRIKA, OIL en desuso)
+data/seasonings/{sweet_dressing,hot_dressing}.tres  SeasoningData: exclusivity_group &"dressing", sort_order 0;
+                                                 cachelos.tres sin cambios (sort_order 3)
+data/config/seasoning_station.tres               − paprika_swap; toggle_guard 0.25 solo para el cuenco; resto igual
+data/config/box_badges.tres                      sin cambios; has_hot_mark() mira HOT_DRESSING
+resources/trash_bin_data.gd                      TrashBinData (común): @export trash_penalty: int = 0
+data/config/trash_bin.tres                       TrashBinData: trash_penalty 0 (D25; > 0 exige enmienda)
+core/trash_rules.gd                              TrashRules (común): static can_trash(item: Node) -> bool
+resources/phase_data.gd                          PhaseData + orders: Array[OrderData] (vacía = todo el catálogo)
+data/config/round_config.tres                    fases: 1 [dulce] · 2 [dulce, picante] · 3 las 4 (puestos y paciencia
+                                                 sin cambios)
+data/audio/feedback_map.tres                     + cue trash (POP, visual_time ≥ 0,3 s)
 ```
 
 ## 6. Equivalencias si D14 = 2D
@@ -486,6 +570,23 @@ exacta), `IngredientData.as_seasoning` y la señal local `seasoned`.
 
 `SeasoningRules.Rejection.NO_BOX` y `HAND_BUSY` quedan en desuso (nadie los emite) sin quitarse del
 enum. `Slot.accepted_group` y el grupo `box` se conservan.
+
+### 7.2 Bajas por D25 (caja única, aliño, cubo; ADR-003 §10) — *Enmienda D25 (PUL-111, 2026-10-10)*
+
+| Qué | Dónde | Nota |
+|---|---|---|
+| Tallas S/M/L | `data/boxes/{small,medium,large}.tres`; `BoxData.short_label`, `BoxData.icon` | Las sustituye `data/boxes/box.tres`. `assets/textures/ui/box_sizes/` se queda sin usuario (asset-pipeline) |
+| `RecipeData.box` y la comparación de caja | `resources/recipe_data.gd`, `core/order_validator.gd` | `BoxContents.box` se conserva, informativo |
+| Spawners por talla | `SmallSpawner`, `MediumSpawner`, `LargeSpawner` de `box_shelf.tscn` | Uno: `BoxSpawner` |
+| Talla en el ticket | `ticket_entry.gd::_show_size`, `%SizeBadge`, `%SizeIcon`, `%SizeLabel` | — |
+| 4 dispensadores y sus datos | `SweetPaprika`, `HotPaprika`, `Salt`, `Oil` de `seasoning_station.tscn`; `data/seasonings/{salt,oil,paprika,hot_paprika}.tres` | Los sustituyen `SweetDressing`, `HotDressing` y sus `.tres` |
+| `paprika_swap` | `SeasoningStationData`, `seasoning_station.tres`, `seasoning_dispenser.gd`, `cachelos_bowl.gd` | Sustituir es la regla (`SeasoningRules.apply`) |
+| `swap_exclusive` | `SeasoningRules.toggle`, `Box.toggle_seasoning` | El cuenco llama sin él |
+| Antirrebote del dispensador | `seasoning_dispenser.gd` (`clock`, `_game_time`, `_last_change`) | El cuenco lo conserva |
+| Tests de tallas y de 4 dispensadores | `test_data_boxes.gd`, `test_order_tickets.gd` (talla), `test_seasoning_rules.gd` (`swap_exclusive`), `test_seasoning_station.gd`, `test_order_validator.gd` (caja), y los que usen `small/medium/large.tres` o `salt/oil/paprika/hot_paprika.tres` | Las fichas de código D25 los reescriben; el producer reparte los que no tengan dueño |
+
+`SeasoningType.SALT/PAPRIKA/HOT_PAPRIKA/OIL` y `Rejection.EXCLUSIVE_TAKEN` quedan en desuso sin
+quitarse de los enums.
 
 ## 8. Buses de audio (M3, ADR-006 §1)
 

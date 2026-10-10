@@ -4,10 +4,11 @@
   del gate humano (PUL-056); enmienda §9 (estación al paso, D23) **aceptada** por el producer el 2026-10-07 tras la
   revisión del producer (PUL-093); sustituye las partes de §8 que dependían de la bandeja;
   enmienda de §3 (API de `Holder`), §9.4 y §9.5 tras implementar M3c (PUL-103) **aprobada** por el
-  responsable en gate humano
-- **Fecha:** 2026-10-03; enmiendas 2026-10-05, 2026-10-07 y 2026-10-09
+  responsable en gate humano; enmienda §10 (D25: caja única, aliño de una pulsación, cubo de
+  basura y comandas por fase) **propuesta**, pendiente del gate humano (PUL-111)
+- **Fecha:** 2026-10-03; enmiendas 2026-10-05, 2026-10-07, 2026-10-09 y 2026-10-10
 - **Ficha:** PUL-003; enmiendas PUL-056 (D18, D19), PUL-093 (D23) y PUL-103 (lo que cambió al
-  implementar M3c en PUL-097…PUL-101)
+  implementar M3c en PUL-097…PUL-101) y PUL-111 (D25)
 - **Relacionado:** `docs/arch/scene-tree.md` (árbol objetivo de M0), ADR-001 (carpetas), ADR-002
   (autoloads), ADR-005 (3D o 2D, D14 pendiente), inventario §1 (Characters, Game, Interaction,
   Interfaces) y §3 (prefabs, escenas)
@@ -61,7 +62,7 @@ Reglas de la capa común:
 - Cada entidad, estación o pieza de UI es su propia escena con su script al lado
   (`entities/stations/kitchen.tscn` + `cooking_station.gd`, ADR-001).
 - Las variantes que solo difieren en datos son **una escena + un `Resource`**: una `box.tscn` con
-  `@export var data: BoxData` (S/M/L), una `seasoning_dispenser.tscn` con `SeasoningData` (§8; hasta
+  `@export var data: BoxData` (S/M/L hasta D25; desde D25 una sola `BoxData`, §10.1), una `seasoning_dispenser.tscn` con `SeasoningData` (§8; hasta
   PUL-061, también la `seasoning.tscn` de los botes, que se da de baja). Nada de escenas heredadas
   para variar un número.
 - Las escenas compuestas (`box_shelf.tscn`, `seasoning_station.tscn`) instancian escenas hijas; no
@@ -100,7 +101,7 @@ Godot no tiene interfaces; se usa **grupo + métodos con firma fija**, verificad
 
 | Grupo | Métodos obligatorios en el script raíz | Lo implementan |
 |---|---|---|
-| `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación). **Opcional** (§8): `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool` | estaciones, slots, caja, puesto de entrega, pulpo y cachelos; dispensadores y cuenco de la estación de condimentos (§8). Condimento (bote): baja en PUL-061 |
+| `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación). **Opcional** (§8): `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool` | estaciones, slots, caja, puesto de entrega, pulpo y cachelos; dispensadores y cuenco de la estación de condimentos (§8); cubo de basura (§10.3, *Enmienda D25 (PUL-111, 2026-10-10)*). Condimento (bote): baja en PUL-061 |
 | `pickable` | `on_picked_up(holder: Holder) -> void`; `on_dropped() -> void`; `var is_held: bool` | pulpo, cachelos, caja. Condimento (bote): baja en PUL-061 |
 | `kitchen` | Ninguno (marca). Lo usa `InteractionDetector` para el bonus de puntuación con mano vacía (`PlayerConfig.kitchen_bonus`, equivale al tag `Kitchen` de Unity). No es una capa de física | raíz de `kitchen.tscn` (obligatorio) |
 | `box` | Ninguno (marca, §8). Lo usaba `Slot.accepted_group` para que la bandeja de la estación solo aceptara cajas; sin usuario en el nivel desde D23 (§9), se conserva. No es una capa de física | raíz de `box.tscn` |
@@ -147,6 +148,11 @@ alternativa que salta al menú) → `scenes/levels/level_01.tscn`. Los cambios d
 escena cambia de escena por su cuenta. Pausa y game over son overlays dentro del nivel, no escenas.
 
 ### 8. Estación de condimentos (D18) — *enmienda 2026-10-05, PUL-056, pendiente del gate humano*
+
+> **Enmienda D25 (PUL-111, 2026-10-10):** los 4 dispensadores que alternan pasan a 2 dispensadores
+> de aliño que **aplican** (§10.2): `toggle_seasoning(…, swap_exclusive)` y `paprika_swap` dejan de
+> ser la API del dispensador y el antirrebote (`toggle_guard`) queda solo para el cuenco. La regla de
+> lado (§8.1), consumir al rechazar (§8.2) y el cuenco siguen vigentes.
 
 > **D23 (§9):** la bandeja (`Tray`) desaparece. Lo que aquí depende de ella (fila `Tray` de §8.1,
 > dispensador con la mano vacía, `accepted_group` de la bandeja en §8.2 y `station.get_box()` en
@@ -291,6 +297,10 @@ de PUL-090).
   `seasoned`/`seasoning_removed`.
 
 #### 9.3 Contratos de datos
+
+> **Enmienda D25 (PUL-111, 2026-10-10):** las filas de `BoxData` (`short_label`, `icon`, 4 / 6 / 10)
+> y `paprika_swap` quedan sustituidas por §10.1 y §10.2: una sola caja de 6 pulsaciones, sin talla
+> en ticket ni rack. `StandPalette` y las filas del cuenco siguen vigentes.
 | Recurso | Campo | Tipo | Valor / uso |
 |---|---|---|---|
 | `BoxData` (`resources/box_data.gd`, común) | `short_label` | `String` | «S», «M», «L» en `data/boxes/{small,medium,large}.tres` |
@@ -356,6 +366,7 @@ PUL-100 lo comprueba (o tiñe el toldo desde la paleta).
   rango de centro x ∈ [2,7; 3,7] de `level-layouts.md` (L2). `level_walker.gd::GAP_X` = 3,5.
 
 #### 9.6 Señales
+*Enmienda D25 (PUL-111, 2026-10-10): el ticket ya no lee `RecipeData.box` (§10.1).*
 **Ninguna señal nueva ni cambio de firma.** El condimento sigue en `seasoned` / `seasoning_removed`
 de la caja y `rejected` / `stock_changed` de dispensador y cuenco (locales, `signals.md` §4); la
 entrega y el puesto, en `order_generated` / `order_completed` / `order_expired` / `orders_reset` /
@@ -377,6 +388,187 @@ color de datos (`RecipeData.box`, `ActiveOrder.slot_id` + `StandPalette`), sin e
    sustituyó por `can_drop_freely()` (enmienda PUL-103).
 6. *Nodo propio `%DeliveryMark` en `order_stand.tscn`.* Duplicaría la malla que ya trae el `.glb`
    del puesto (PUL-096); se usa `DeliveryFrame` dentro de `Model` (enmienda PUL-103).
+
+### 10. Caja única, aliño de una pulsación, cubo de basura y comandas por fase (D25) — *Enmienda D25 (PUL-111, 2026-10-10), propuesta, pendiente del gate humano*
+
+**Contexto.** D25 (responsable, 2026-10-10, tras el playtest de M3c; registro en
+`docs/design/decisions.md`, PUL-110) quita las mecánicas que no piden decisión: tamaños S/M/L, los
+4 dispensadores que alternan y el toggle de quitar. Añade un cubo de basura y escala qué comandas
+salen por fase. Modifica D23 (corte 4/6/10, talla en ticket y rack, «se pulsa cada dispensador»),
+D18 (dispensadores que alternan, `paprika_swap`) y concreta D8 (la caja errónea es solo de
+contenido). Esta sección **sustituye** las partes de §8 y §9 citadas en sus notas; el resto de §8–§9
+(regla de lado, consumir al rechazar, caja en la mano, pasaplatos, hueco, entrega iluminada) sigue.
+Tecla única, InputMap y capas de física sin cambios.
+
+#### 10.1 Caja única
+| Pieza | Fichero | Contrato D25 |
+|---|---|---|
+| `BoxData` | `resources/box_data.gd` | Se quedan `display_name`, `capacity`, `presses_to_fill` (`@export_range(1, 20)`), `scene`, `description` y `fill_after(presses)`. **Se quitan** `short_label` e `icon` (nadie muestra talla) |
+| Instancia única | `data/boxes/box.tres` (nuevo) | `presses_to_fill` = **6** (provisional, se re-mide en QA). Se dan de baja `small.tres`, `medium.tres` y `large.tres`; las texturas de `assets/textures/ui/box_sizes/` se quedan sin usuario (baja del asset-pipeline). `box.tscn` lleva `data = box.tres` por defecto |
+| `RecipeData` | `resources/recipe_data.gd` | **Se quita `box`**: una receta es `display_name` (≤ 14 caracteres), `translation_key`, `ingredient` (pulpo), `base_points` (precio, D2) y `description`. Las recetas se distinguen por el contenido de la `OrderData` que las usa (§10.4) |
+| `OrderValidator.matches` | `core/order_validator.gd` | **Deja de comparar la caja**: mismo ingrediente, cocido e igualdad exacta del conjunto de condimentos (D4). La caja errónea de D8 es solo de contenido (aliño o cachelos). El llenado no se compara: un aliño exige caja llena (§10.2) y toda comanda lleva aliño, así que una caja sin llenar nunca coincide |
+| `BoxContents` | `core/box_contents.gd` | Sin cambio de firma: `box` se conserva como dato informativo (lo rellena `Box.get_contents()`) y **no se valida**. Quitarlo obligaría a reescribir todas las llamadas posicionales al constructor por un campo inofensivo |
+| Rack | `entities/stations/box_shelf.tscn` | Un solo spawner `BoxSpawner` (`item_spawner.gd`, `scene = box.tscn`, `data = box.tres`) en lugar de `SmallSpawner`/`MediumSpawner`/`LargeSpawner`; su colisión cubre el frente del mueble y `%Highlightable.root` es `Model/box_shelf/OutlineHull` (`Highlightable` recorre los descendientes: resalta el mueble entero). El `.glb` puede seguir mostrando tres huecos hasta que el arte lo cambie: es visual |
+| Ticket | `ui/tickets/ticket_entry.gd` / `.tscn` | **Se quitan** `_show_size()` y los nodos `%SizeBadge`, `%SizeIcon` y `%SizeLabel`. El ticket muestra nombre de receta + 1 pegatina de aliño + la de cachelos si la lleva, en `SeasoningRules.canonical_order()` |
+
+`level_01.tscn` no cambia por la caja: `BoxShelf` sigue siendo una instancia con su transformación.
+
+#### 10.2 Aliño de una pulsación
+**Datos.** Los condimentos de la caja pasan a ser **tres** `SeasoningData`:
+
+| `.tres` | `type` | `exclusivity_group` | `sort_order` | Nota |
+|---|---|---|---|---|
+| `data/seasonings/sweet_dressing.tres` (nuevo) | `SWEET_DRESSING` | `&"dressing"` | 0 | aliño dulce: sal gorda + aceite + pimentón dulce. Pegatina sin llama |
+| `data/seasonings/hot_dressing.tres` (nuevo) | `HOT_DRESSING` | `&"dressing"` | 0 | aliño picante: sal gorda + aceite + pimentón picante. Pegatina con `BoxBadgeStyle.hot_mark` |
+| `data/seasonings/cachelos.tres` (sin cambios) | `CACHELOS` | `&""` | 3 | lo sigue sirviendo el cuenco (D10, D23) |
+
+- `SeasoningData.SeasoningType` gana `SWEET_DRESSING` y `HOT_DRESSING` **al final del enum** (valores
+  5 y 6): `cachelos.tres` guarda `type = 4` como entero y no se renumera. `SALT`, `PAPRIKA`,
+  `HOT_PAPRIKA` y `OIL` quedan en desuso (sin `.tres`), como `NO_BOX` en `Rejection`.
+- Bajas: `salt.tres`, `oil.tres`, `paprika.tres`, `hot_paprika.tres`.
+- `BoxBadgeStyle.has_hot_mark(seasoning)` pasa a mirar `HOT_DRESSING`.
+- `same_as()` no cambia (compara `type`): dulce y picante son distintos y exclusivos por grupo.
+
+**Regla en el núcleo** (`core/seasoning_rules.gd`, común, puro). Nueva función:
+
+```gdscript
+## D25: aplica `seasoning` a una caja. Sin llenar: BOX_NOT_FULL. Si ya lo lleva: ALREADY_APPLIED
+## (sin cambios). Si lleva otro de su `exclusivity_group`, lo sustituye (removed = el viejo).
+## Si no, lo añade al final. No muta: devuelve copias en un `Toggle`.
+static func apply(current: Array[SeasoningData], seasoning: SeasoningData, is_full: bool) -> Toggle
+```
+- Orden de comprobación: `seasoning` nulo → `NOT_ACCEPTED`; `is_full` falso → `BOX_NOT_FULL`;
+  `find(current, seasoning)` → `ALREADY_APPLIED`; `find_in_group(current, group)` → sustituye; si no,
+  añade. Generaliza `paprika_swap` = `true` a cualquier grupo de exclusividad; deja de existir la
+  opción de rechazar con `EXCLUSIVE_TAKEN`.
+- `Rejection` gana **`ALREADY_APPLIED` al final** (valor 8, sin renumerar). `EXCLUSIVE_TAKEN` pasa a
+  desuso (como `NO_BOX`, `HAND_BUSY` y `NOT_ACCEPTED`).
+- `toggle()` pierde el parámetro `swap_exclusive`: `toggle(current, seasoning, is_full) -> Toggle`.
+  Solo la usa el cuenco (cachelos, sin grupo); si algún día se alterna algo con grupo, sustituye
+  siempre. `canonical_order`, `find`, `find_in_group`, `remove`, `can_restock` y `restocked` sin
+  cambios.
+
+**API de la caja** (`entities/items/box.gd`):
+- Nuevo `apply_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection` sobre
+  `SeasoningRules.apply`: con `NONE` emite `seasoning_removed(viejo)` (solo al sustituir) **antes** que
+  `seasoned(nuevo)`, una vez cada una y en la misma llamada (el orden de AC4 de `paprika_swap`).
+  Con otro valor no cambia nada ni emite.
+- `toggle_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection` pierde `swap_exclusive`
+  (la llama solo el cuenco). `remove_seasoning`, `has_seasoning`, `is_full` y `get_contents` sin
+  cambios.
+
+**Dispensador** (`entities/stations/seasoning_dispenser.gd`, `SeasoningDispenser`):
+- Hay **2** en la estación: `SweetDressing` (`seasoning = sweet_dressing.tres`) y `HotDressing`
+  (`seasoning = hot_dressing.tres`). Misma escena `seasoning_dispenser.tscn` (§1).
+- Quién es objetivo: **igual que §9.1** (caja en la mano, llena o a medio cortar, desde el lado de
+  condimentar; mano vacía u otra cosa: no es objetivo).
+- `interact(actor)`: siempre consume; caja de la mano = `actor.holder.get_held_item() as Box`;
+  `box.apply_seasoning(seasoning)` → `NONE`: lanza el gesto visual del dispensador (abajo);
+  `BOX_NOT_FULL`: `rejected(BOX_NOT_FULL)` (suena `season_error`); `ALREADY_APPLIED`: **se consume en
+  silencio** (ni `rejected` ni cue: «pulsar el mismo no hace nada», D25). No hay toggle de quitar: lo
+  que está mal se tira al cubo (§10.3).
+- **Sin antirrebote**: aplicar es idempotente (la segunda pulsación del mismo da `ALREADY_APPLIED`), así
+  que el dispensador pierde `clock`, `_game_time` y `_last_change`.
+- Gesto visual (D25: sal gorda, pimentón y aceite): nodo `%Gesture` dentro de
+  `seasoning_dispenser.tscn` (`GPUParticles3D` `one_shot` o `AnimationPlayer`, lo decide el arte), que
+  el propio dispensador lanza al aplicar con `NONE`; ≥ 0,3 s. Es visual interno de la escena: sin
+  señal. El sonido sigue siendo la cue `season` de la caja (`seasoned`).
+- Disposición: dispensadores y cuenco en bloque centrado del mostrador, ≥ 1,0 m entre centros, en el
+  orden del ticket (dulce, picante, cuenco): raíces en x −1 / 0 / 1 local, z −0,1 (ajustable ±0,5 m
+  por la ficha de la estación si el test de franjas de selección, R8, lo pide). El mostrador
+  (colisión de 5,2 m, x −2,4…2,8) y el hueco no cambian.
+
+**`SeasoningStationData`** (`resources/seasoning_station_data.gd`, `data/config/seasoning_station.tres`):
+se mantiene. **Se quita `paprika_swap`.** `toggle_guard` (0,25) queda **solo para el cuenco** (que
+sigue alternando cachelos). `operator_side_only`, `cachelos_stock_max` (4),
+`cachelos_initial_stock` (0) y `cachelos_portions_per_item` (2) sin cambios.
+
+**Motivos de rechazo que quedan** (`rejected`, señal local): dispensador → `BOX_NOT_FULL`;
+cuenco → `BOWL_EMPTY`, `BOWL_FULL`. `ALREADY_APPLIED` existe en el enum pero no se emite en `rejected`.
+
+**Cuenco** (`cachelos_bowl.gd`): sin cambio de comportamiento (§9.1); llama
+`box.toggle_seasoning(seasoning)` sin el segundo argumento.
+
+#### 10.3 Cubo de basura
+| Pieza | Capa | Contrato |
+|---|---|---|
+| `core/trash_rules.gd` (`class_name TrashRules extends RefCounted`) | Común | `static func can_trash(item: Node) -> bool`: `true` si `item` no es nulo, `is_instance_valid(item)`, no está `is_queued_for_deletion()` y está en el grupo `pickable` (caja vacía, a medias o llena con lo que lleve; pulpo crudo o cocido; cachelos). Usa solo `Node` + grupo (§0) |
+| `resources/trash_bin_data.gd` (`class_name TrashBinData extends Resource`) | Común | `@export var trash_penalty: int = 0` (euros que restaría cada tirada) |
+| `data/config/trash_bin.tres` | Datos | `TrashBinData` con `trash_penalty = 0` (D25). Un test de datos fija que vale 0 mientras no haya enmienda (abajo) |
+| `entities/stations/trash_bin.tscn` + `trash_bin.gd` (`class_name TrashBin extends StaticBody3D`) | Específica | Raíz `StaticBody3D` en la capa `interactable` (como `Kitchen`), grupo `interactable` (§4). `@export var data: TrashBinData` (por defecto `trash_bin.tres`, `preload` como `SeasoningStation.DEFAULT_DATA`) |
+
+Contrato `interactable` del cubo:
+- `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool`: `holder != null and
+  TrashRules.can_trash(holder.get_held_item())`. **Sin regla de lado.** Con la mano vacía no es
+  objetivo (no se resalta, T3).
+- `can_interact(actor: InteractionComponent) -> bool`: la misma condición con `actor.holder`
+  (defensa en profundidad, §9.1).
+- `interact(actor) -> bool`: si no `can_interact`, `false`. Si no: `var item: Node =
+  actor.holder.drop()` (único camino para vaciar la mano: llama `on_dropped` y emite `item_dropped`,
+  §3) → `trashed.emit(item)` → `item.queue_free()` → `true`. La mano queda vacía en el mismo frame
+  y el objeto se libera al final del frame (T1, T2). No suma ni resta recaudación.
+- `signal trashed(item: Node)` (**local**, `signals.md` §4): una vez por tirada, después de vaciar
+  la mano y antes de `queue_free`. Receptor: `%Feedback` del propio cubo (cue `trash`, ADR-006 §4).
+- El pulpo quemado se sigue desechando en la olla (ADR-006 §5): nunca llega a la mano, así que el
+  cubo no lo ve.
+- `trash_penalty`: el cubo **no** lo aplica mientras valga 0 y no hay señal de `EventBus` ni método
+  de autoload para restar. `TrashBin._ready()` hace `push_warning` si `data.trash_penalty != 0`. Para
+  usar un valor > 0 hace falta otra enmienda (señal o método de `RoundManager` que reste y reenvíe
+  `score_changed`).
+
+Escena:
+```
+trash_bin.tscn
+TrashBin (StaticBody3D, capa interactable; grupo interactable)   trash_bin.gd  class_name TrashBin
+│   @export data: TrashBinData = data/config/trash_bin.tres
+│   signal trashed(item: Node)
+├── CollisionShape3D (cilindro ≈ r 0,3 m, h 0,8 m)
+├── Model                  placeholder de primitivas → arte (cubo de feria)
+├── %Highlightable
+└── %Feedback (FeedbackPlayer)   cue trash, POP del cubo (pulse_target = la raíz)
+```
+Nivel: dos instancias, `TrashBinKitchen` y `TrashBinService`, en `Stations` de `level_01.tscn`
+(posiciones en `scene-tree.md` §2). Override permitido: solo la transformación (§2).
+
+#### 10.4 Comandas por fase
+El dato vive en la ronda (`RoundConfig.phases`), junto a puestos y paciencia. Contrato completo en
+ADR-006 §6 (*Enmienda D25*): `PhaseData.orders: Array[OrderData]` (vacío = todo el catálogo) y
+`OrderBoard.set_order_pool(orders)`, que `RoundState` aplica al entrar en cada fase. Recetas y
+comandas de D25:
+
+| Comanda (`OrderData`) | Receta (`RecipeData`) | `seasonings` | Fase en que entra |
+|---|---|---|---|
+| dulce sin cachelos | p. ej. «Á feira» | `[sweet_dressing]` | 1 |
+| picante sin cachelos | p. ej. «Picante» | `[hot_dressing]` | 2 |
+| dulce con cachelos | p. ej. «Con cachelos» | `[sweet_dressing, cachelos]` | 3 |
+| picante con cachelos | p. ej. «Picante e cachelos» | `[hot_dressing, cachelos]` | 3 |
+
+Nombres, precios (`base_points`, monótonos con el esfuerzo) y `max_time` los fija el diseño
+(`comandas.md`, PUL-110). Una `RecipeData` por comanda (1:1): el nombre y el precio son de la receta;
+el contenido, de la comanda. Ficheros: los de `data/recipes/` y `data/orders/` que decida la ficha de
+datos; `order_catalog.tres` lista las 4.
+
+#### 10.5 Señales
+**Ninguna señal nueva en `EventBus` ni cambio de firma.** Una señal local nueva, `TrashBin.trashed`.
+Los dispensadores siguen con `rejected` (solo `BOX_NOT_FULL`); la caja con `seasoned` /
+`seasoning_removed` (al sustituir aliño, en ese orden). Detalle en `signals.md`.
+
+**Alternativas descartadas.**
+1. *`RecipeData.box` apuntando a la única caja.* Campo que nadie necesita y una comparación de caja en
+   `OrderValidator` que siempre se cumple; si vuelven los tamaños, se repone con enmienda.
+2. *Reutilizar `PAPRIKA` / `HOT_PAPRIKA` como tipo de los aliños.* Menos cambio, pero el nombre del
+   tipo mentiría (el aliño lleva sal y aceite) y mezcla datos dados de baja con los nuevos.
+3. *`ALREADY_APPLIED` como rechazo con `season_error`.* D25 dice «no hace nada»; un error sonoro por
+   repetir una acción correcta castigaría la doble pulsación. Si el playtest pide feedback, basta con
+   emitirlo en `rejected` (señal local, sin enmienda del bus).
+4. *Cubo sin `drop()`, con un método nuevo `Holder.release()` que vacíe la mano sin reparentar.*
+   Evitaría la cue `drop` junto a `trash`, pero cambia la API común de `Holder` (§3) por un efecto que
+   ya se acepta en las estaciones (ADR-006 §4: suenan las dos).
+5. *Penalización del cubo con `EventBus.item_trashed(penalty)`.* Con `trash_penalty` = 0 no tiene
+   receptor; se añade con enmienda si el diseño sube el valor.
+6. *Comandas por fase como `OrderData.min_phase: int`.* Un campo por comanda y acumulativo por
+   construcción, pero ata cada comanda a la estructura de fases de una ronda concreta; el pool en
+   `PhaseData` deja que otra ronda (tutorial, otro nivel) reparta las mismas comandas de otra forma.
 
 ## Alternativas consideradas
 1. **Nivel monolítico como `Level_01.unity`.** Un solo dueño para casi todo, conflictos de merge en
@@ -418,5 +610,10 @@ color de datos (`RecipeData.box`, `ActiveOrder.slot_id` + `StandPalette`), sin e
   pieza que compartía caja entre lados, y con ella `get_box()` y la franja de la bandeja.
 - (§9, −) Se pierde la regla de dos lados para la caja (queda para dispensadores y cuenco), y el
   puesto hace una comprobación por tick mientras haya alguien a ≤ 2 m (≤ 2 cuerpos).
+- (§10, +) Una sola caja, dos dispensadores y una regla (`SeasoningRules.apply`) en lugar de tallas,
+  cuatro dispensadores y el toggle: menos datos, menos tests de combinatoria y un ticket más corto.
+- (§10, −) La caja ya no se corrige quitando condimento: el error se tira al cubo (coste en tiempo,
+  sin penalización en euros mientras `trash_penalty` = 0). Tirar suena `drop` + `trash`.
+- (§10, −) `SeasoningType` y `Rejection` acumulan valores en desuso para no renumerar los `.tres`.
 - El árbol concreto de M0 está en `docs/arch/scene-tree.md`. Cambiarlo en algo que afecte a otra
   ficha (nombres de escena, `@export` públicos, grupos, capas) requiere enmienda.

@@ -12,6 +12,11 @@
   dispensador y cuenco emiten `rejected` (§4: caja en la mano, sin bandeja), `NO_BOX` y
   `NOT_ACCEPTED` pasan a desuso (§1) y se documentan los receptores nuevos de señales existentes
   (indicador de entrega del puesto y franja de color del ticket, §2 y §4).
+- **Enmienda D25** (PUL-111, 2026-10-10, ADR-003 §10 y ADR-006 §4/§6), **pendiente del gate
+  humano**: **ninguna señal nueva ni cambio de firma en `EventBus`**. Una señal local nueva,
+  `trashed(item: Node)` del cubo de basura, con receptor `%Feedback` (§4). Cambian los casos de
+  `seasoned` / `seasoning_removed` / `rejected` del dispensador de aliño (§4), `Rejection` gana
+  `ALREADY_APPLIED` y `PhaseData` gana `orders` (§1); el ticket ya no lee la caja (§2, §4).
 
 Contrato entre fichas. Las señales de `EventBus` (§2) son las únicas que cruzan escenas; cambiarlas
 (añadir, renombrar, cambiar firma o emisor) requiere enmienda con ADR y gate humano. Las señales
@@ -34,11 +39,11 @@ posterior (M1, M2…). Todas se **declaran** en `event_bus.gd` en la fase 0, aun
 |---|---|---|---|
 | `ActiveOrder` | `RefCounted` | `core/active_order.gd` | `id: int`, `data: OrderData`, `slot_id: int`, `max_time: float` (de `OrderData`; 0 = sin paciencia, todo M0), `time_left: float`. Las señales y `get_active_orders()` entregan copias: modificarlas no altera el `OrderBoard` |
 | `RoundResult` | `RefCounted` | `core/round_result.gd` | `duration: float`, `boxes_delivered: int`, `boxes_per_minute: float`; M1: `revenue: int`, `stars: int` |
-| `BoxContents` | `RefCounted` | `core/box_contents.gd` | `box: BoxData`, `ingredient: IngredientData` (o `null`), `fill: float` (0–1), `seasonings: Array[SeasoningData]` |
+| `BoxContents` | `RefCounted` | `core/box_contents.gd` | `box: BoxData`, `ingredient: IngredientData` (o `null`), `fill: float` (0–1), `seasonings: Array[SeasoningData]`. *Enmienda D25:* `box` es informativo; `OrderValidator` ya no lo compara (ADR-003 §10.1) |
 | `OrderData`, `BoxData`, `IngredientData`, `SeasoningData` | `Resource` | `resources/*.gd` | Ver inventario §1 (ScriptableObjects) |
 | `GameMode.Mode` | enum | `core/game_mode.gd` | `SINGLE`, `COOP_2P` |
-| `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX` (en desuso desde D23: sin caja en la mano el dispensador no es objetivo), `BOX_NOT_FULL`, `HAND_BUSY` (en desuso desde PUL-064: nadie lo emite), `EXCLUSIVE_TAKEN` (solo con `paprika_swap` = `false`), `BOWL_EMPTY`, `BOWL_FULL`, `NOT_ACCEPTED` (en desuso desde D23: con cachelos crudos o quemados u otra cosa el cuenco no es objetivo). No se quitan del enum para no renumerar. Solo en señales locales (§4) |
-| `PhaseData` | `Resource` | `resources/phase_data.gd` | `start_fraction: float` (0–1 de `duration`), `active_slots: int`, `patience_multiplier: float` (1,0 = el `max_time` de `OrderData`; cambio del responsable al aprobar ADR-006). En `RoundConfig.phases`; no aparece en señales (M3, ADR-006 §6) |
+| `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX` (en desuso desde D23: sin caja en la mano el dispensador no es objetivo), `BOX_NOT_FULL`, `HAND_BUSY` (en desuso desde PUL-064: nadie lo emite), `EXCLUSIVE_TAKEN` (solo con `paprika_swap` = `false`), `BOWL_EMPTY`, `BOWL_FULL`, `NOT_ACCEPTED` (en desuso desde D23: con cachelos crudos o quemados u otra cosa el cuenco no es objetivo), `ALREADY_APPLIED` (*Enmienda D25*, al final del enum: el aliño ya está en la caja; lo devuelven `SeasoningRules.apply` y `Box.apply_seasoning`, pero el dispensador lo consume en silencio y **no** lo emite en `rejected`). Desde D25 `EXCLUSIVE_TAKEN` también queda en desuso (sin `paprika_swap`, sustituir es la regla). No se quitan del enum para no renumerar. Solo en señales locales (§4) |
+| `PhaseData` | `Resource` | `resources/phase_data.gd` | `start_fraction: float` (0–1 de `duration`), `active_slots: int`, `patience_multiplier: float` (1,0 = el `max_time` de `OrderData`; cambio del responsable al aprobar ADR-006), `orders: Array[OrderData]` (*Enmienda D25*: comandas que pueden salir en la fase; vacía = todo el catálogo). En `RoundConfig.phases`; no aparece en señales (M3, ADR-006 §6) |
 | `IngredientData.CookingState` | enum | `resources/ingredient_data.gd` | `RAW`, `COOKED`, `BURNT` (M3: `BURNT` lo pone la olla tras `burn_time`). No aparece en señales |
 | `StationSide.Side` | enum | `core/station_side.gd` | `PASS`, `OPERATOR` (ADR-003 §8.1). No aparece en ninguna señal; lo devuelve `SeasoningStation.side_of()` |
 
@@ -66,7 +71,7 @@ así el servicio valida datos y nunca recibe un nodo.
 | Señal | Emisor | Receptores | Cuándo | Fase |
 |---|---|---|---|---|
 | `orders_reset()` | `OrderService` (`OrderBoard.reset()`) | `order_stand.gd` (vacía su `#id`; M3c: apaga `DeliveryFrame` (malla dentro de `Model`, `material_off`)), `order_tickets_panel.gd` (borra tickets) | Al empezar ronda, antes de generar comandas (B10, B16) | 2 / 6, 7 |
-| `order_generated(order: ActiveOrder)` | `OrderService` (`OrderBoard`: `request_order` / `fill_slots` / reposición) | `order_tickets_panel.gd` (crea ticket con `time_left`/`max_time` iniciales; M3c: tamaño de `order.data.recipe.box` y franja `StandPalette.color_for(order.slot_id)`), `order_stand.gd` (si `order.slot_id == slot_id`, muestra `#id`; M3: cue `order_new`, con `delay`; M3c: nueva comanda viva para el indicador de entrega) | Al crear una comanda, máx. 4 activas; una por puesto | 2 / 6, 7 |
+| `order_generated(order: ActiveOrder)` | `OrderService` (`OrderBoard`: `request_order` / `fill_slots` / reposición) | `order_tickets_panel.gd` (crea ticket con `time_left`/`max_time` iniciales; M3c: ~~tamaño de `order.data.recipe.box`~~ (baja D25: sin talla) y franja `StandPalette.color_for(order.slot_id)`), `order_stand.gd` (si `order.slot_id == slot_id`, muestra `#id`; M3: cue `order_new`, con `delay`; M3c: nueva comanda viva para el indicador de entrega) | Al crear una comanda, máx. 4 activas; una por puesto | 2 / 6, 7 |
 | `order_completed(order: ActiveOrder, points: int)` | `OrderService` (`OrderBoard.try_deliver()` cuando la caja coincide) | `RoundState` (señal del núcleo: cuenta entrega; M1 suma `points`), `order_tickets_panel.gd` (quita ticket), `order_stand.gd` (limpia `#id`; M3: cue `deliver_ok` + `POP` si es su `slot_id`; M3c: apaga `DeliveryFrame` (malla dentro de `Model`, `material_off`)) | **Una vez por entrega**, sobre la comanda entregada (B1). Después se emite `order_generated` para reponer ese puesto | 2 / 6, 7 |
 | `delivery_rejected(slot_id: int, order_id: int, penalty: int)` | `OrderService` (`OrderBoard.try_deliver()` cuando la caja no coincide con la comanda viva del puesto, o cuando la comanda del puesto caducó en el último `advance`) | `order_stand.gd` (si es su `slot_id`: cue `deliver_error` + `SHAKE`; la caja se queda en la mano), `RoundState` (M1: resta `penalty`) | Cada intento fallido. `order_id` = comanda a la que se vinculó el intento (−1 si el puesto no tenía). Caja errónea: Penalización según datos (D8). Empate con caducidad: `order_id` de la caducada, `penalty` = 0 (ya penalizó `order_expired`) y sin redirigir a la repuesta (AC5b; ADR-002) | 2 / 6 |
 | `order_patience_changed(order_id: int, time_left: float, max_time: float)` | `OrderService` (`OrderBoard.advance()`) | `order_ticket.gd` (barra lineal de paciencia, Must 3; sin contador propio) | Una vez por comanda con `max_time > 0` en cada `advance` (cada tick de física). No se emite en pausa ni tras `round_finished` | M1 (firma desde fase 0) |
@@ -117,7 +122,7 @@ usan `Node` en sus firmas para valer en 3D y en 2D.
 |---|---|---|---|---|
 | `control_changed(controlled_by: int)` | `ControlComponent` (común) | `player.gd` (activa/desactiva movimiento e indicador), `InteractionComponent` (ignora input si 0) | Al cambiar quién controla el personaje (`CharacterSwitcher` o inicio de ronda) | 4 / M2 |
 | `item_picked_up(item: Node)` | `Holder` (base común; lo emite `HoldComponent`) | `player.gd` (parámetro `is_holding` del `AnimationTree`); M3: `%Feedback` de `player.tscn` (cue `pick_up`, `POP` de `item`) | Tras `on_picked_up` del objeto | 4 |
-| `item_dropped(item: Node)` | `Holder` (ídem) | `player.gd` (ídem); M3: `%Feedback` (cue `drop`) | Tras `on_dropped` del objeto. También al dejarlo en una estación: suena junto a la cue de la estación (ADR-006 §4) | 4 |
+| `item_dropped(item: Node)` | `Holder` (ídem) | `player.gd` (ídem); M3: `%Feedback` (cue `drop`) | Tras `on_dropped` del objeto. También al dejarlo en una estación: suena junto a la cue de la estación (ADR-006 §4). D25: también al tirar al cubo, antes de `trashed` | 4 |
 | `target_changed(previous: Node, current: Node)` | `InteractionDetector` (específico: `Area3D`/`Area2D`) | `interaction_component.gd` (guarda el objetivo). El propio `InteractionDetector` (capa específica) desactiva el `Highlightable` de `previous` y activa el de `current` antes de emitir; ambos pueden ser `null`. *Enmienda 2026-10-03, aprobada por el responsable tras la revisión de PUL-015* | Solo cuando cambia el objetivo, no cada frame (B7) | 5 |
 | `cooking_started(ingredient: Ingredient)` | `cooking_station.gd` | barra de progreso de `kitchen.tscn`, `AudioStreamPlayer3D` de hervir; M3: `%Feedback` (cue `cook_start`), vapor y fuego vivo | Al aceptar un ingrediente crudo cocinable (pulpo o cachelos, D10) en una plaza libre (D9) | 6 |
 | `cooking_finished(ingredient: Ingredient)` | `cooking_station.gd` | barra de progreso y audio de `kitchen.tscn`; M3: `%Feedback` (cue `cook_done`) | Al cumplirse `cook_time` de `IngredientData`. Desde M3 (con `burn_time` > 0) arranca el reloj de quemado de la plaza | 6 |
@@ -126,17 +131,19 @@ usan `Node` en sus firmas para valer en 3D y en 2D.
 | `discarded(ingredient: Ingredient)` | `cooking_station.gd` | `%Feedback` (cue `discard`) | Al desechar un `BURNT` (mano vacía sobre la olla; el quemado más antiguo antes que cualquier cocido), antes de `queue_free`; la plaza queda libre. *Enmienda PUL-066* | M3 |
 | `played(cue: StringName)` | `FeedbackPlayer` (`components/feedback_player.gd`, capa específica) | tests (AC2/AC5 de `audio-y-fx`) | Una vez por `play_cue()` con cue conocida, al llamar a `play()` (tras el `delay` si lo hay). *Enmienda PUL-066* | M3 |
 | `fill_changed(fill: float)` | `box.gd` | barra en mundo de `box.tscn`; M3: `%Feedback` (cue `cut`, sustituye a `%CutAudio`) | Cada corte sobre la caja (D1) | 6 |
-| `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn` (M3: `%Feedback`, cue `season`); `%BadgeRow` de `box.tscn` (M2, PUL-059) | Al aplicar un condimento. Desde D18 solo la emite `Box.toggle_seasoning()` (la llaman dispensadores y cuenco); `interact()` ya no condimenta | 6 / M2 |
-| `seasoning_removed(seasoning: SeasoningData)` | `box.gd` | `%BadgeRow` de `box.tscn` (rehace la fila); M3: `%Feedback` (cue `unseason`) | Al quitar un condimento: `toggle_seasoning()` sobre uno que ya lleva, o `remove_seasoning()`. En el intercambio de pimentón (`paprika_swap`) se emite **antes** que el `seasoned` del nuevo, una vez cada una, en la misma llamada (AC4). *Enmienda PUL-056* | M2 |
-| `rejected(reason: SeasoningRules.Rejection)` | `seasoning_dispenser.gd` (`SeasoningDispenser`) | `seasoning_station.gd` (suena `%ErrorAudio` y sacude el emisor; M3: `%Feedback`, cue `season_error`) | Al consumir una pulsación sin cambiar nada: caja de la mano sin llenar (`BOX_NOT_FULL`, R3), pimentón exclusivo con `paprika_swap` = `false`. **No** se emite por el antirrebote, ni desde el lado de pase (ADR-003 §8.1), ni sin una caja en la mano (el dispensador no es objetivo, `is_reachable_from` = `false`). *Enmienda PUL-056; PUL-064 quita «mano ocupada»; D23 (PUL-093, ADR-003 §9.1): actúa sobre la caja de la mano, sin bandeja* | M2 |
+| `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn` (M3: `%Feedback`, cue `season`); `%BadgeRow` de `box.tscn` (M2, PUL-059) | Al aplicar un condimento. Desde D18 solo la emite `Box.toggle_seasoning()` (la llaman dispensadores y cuenco); `interact()` ya no condimenta. *Enmienda D25:* el dispensador de aliño llama `Box.apply_seasoning()`; el cuenco, `toggle_seasoning()`. No se emite con `ALREADY_APPLIED` | 6 / M2 |
+| `seasoning_removed(seasoning: SeasoningData)` | `box.gd` | `%BadgeRow` de `box.tscn` (rehace la fila); M3: `%Feedback` (cue `unseason`) | Al quitar un condimento: `toggle_seasoning()` sobre uno que ya lleva, o `remove_seasoning()`. En el intercambio de pimentón (`paprika_swap`) se emite **antes** que el `seasoned` del nuevo, una vez cada una, en la misma llamada (AC4). *Enmienda PUL-056*. *Enmienda D25:* `apply_seasoning()` la emite solo al **sustituir** un aliño por el otro, con el mismo orden (antes del `seasoned` del nuevo); el dispensador ya no quita. El cuenco la sigue emitiendo al quitar cachelos | M2 |
+| `rejected(reason: SeasoningRules.Rejection)` | `seasoning_dispenser.gd` (`SeasoningDispenser`) | `seasoning_station.gd` (suena `%ErrorAudio` y sacude el emisor; M3: `%Feedback`, cue `season_error`) | Al consumir una pulsación sin cambiar nada: caja de la mano sin llenar (`BOX_NOT_FULL`, R3), ~~pimentón exclusivo con `paprika_swap` = `false`~~ (baja D25). **No** se emite por el antirrebote, ni desde el lado de pase (ADR-003 §8.1), ni sin una caja en la mano (el dispensador no es objetivo, `is_reachable_from` = `false`). *Enmienda PUL-056; PUL-064 quita «mano ocupada»; D23 (PUL-093, ADR-003 §9.1): actúa sobre la caja de la mano, sin bandeja.* *Enmienda D25 (PUL-111, ADR-003 §10.2):* 2 dispensadores de aliño; el único motivo es `BOX_NOT_FULL`; con el mismo aliño ya puesto (`ALREADY_APPLIED`) la pulsación se consume **en silencio**; sin antirrebote en el dispensador | M2 |
 | `rejected(reason: SeasoningRules.Rejection)` | `cachelos_bowl.gd` (`CachelosBowl`) | `seasoning_station.gd` (ídem) | Al consumir una pulsación sin cambiar nada: cuenco vacío al poner cachelos en la caja (`BOWL_EMPTY`), cuenco lleno al reponer o al quitar cachelos de la caja (`BOWL_FULL`). Desde D23 no hay `NO_BOX`, `BOX_NOT_FULL` ni `NOT_ACCEPTED`: solo es objetivo con cachelos cocidos o con una caja llena en la mano (ADR-003 §9.1). *Enmienda PUL-056; D23 (PUL-093)* | M2 |
 | `stock_changed(stock: int)` | `cachelos_bowl.gd` | visual de raciones de `cachelos_bowl.tscn` (`%Portions`) | Al reponer (+`cachelos_portions_per_item`), al poner cachelos en la caja (−1) y al quitarlos (+1). También una vez en `_ready()` con `cachelos_initial_stock`. *Enmienda PUL-056* | M2 |
 | `amount_changed(remaining: float)` | `ingredient.gd` | barra en mundo de `octopus.tscn` | Cada corte; a 0 el pulpo se libera solo (B9) | 6 |
+| `trashed(item: Node)` | `trash_bin.gd` (`TrashBin`, capa específica) | `%Feedback` de `trash_bin.tscn` (cue `trash`, `POP` del cubo, ADR-006 §4); tests (T1, T2, T4 de `cubo-basura`) | Una vez por tirada: tras vaciar la mano con `Holder.drop()` (que ya emitió `item_dropped`) y antes de `item.queue_free()`. Solo con algo en la mano (`TrashRules.can_trash`); con la mano vacía el cubo no es objetivo. **No sube a `EventBus`**: con `trash_penalty` = 0 nadie fuera del cubo la necesita (si sube, otra enmienda). *Enmienda D25 (PUL-111, 2026-10-10, ADR-003 §10.3)* | M3d |
 
 `Ingredient` es el `class_name` de `entities/items/ingredient.gd` (raíz de `octopus.tscn`).
 
 `SeasoningDispenser`, `CachelosBowl` y `SeasoningStation` son los `class_name` de
-`entities/stations/{seasoning_dispenser,cachelos_bowl,seasoning_station}.gd` (PUL-058).
+`entities/stations/{seasoning_dispenser,cachelos_bowl,seasoning_station}.gd` (PUL-058). `TrashBin`
+es el de `entities/stations/trash_bin.gd` (D25).
 
 **Estación de condimentos: por qué nada sube a `EventBus`** (PUL-056). Todos los receptores de
 `seasoned`, `seasoning_removed`, `rejected` y `stock_changed` están dentro de la misma escena que el
@@ -158,6 +165,17 @@ al alternar (caja llena en la mano): si la caja no lleva cachelos y `stock` = 0,
 `stock_changed` tras la señal de la caja. ~~`station.get_box()` nulo: `rejected(NO_BOX)`~~ (baja
 D23).
 
+**Secuencia de un dispensador de aliño** (*Enmienda D25*, sustituye a la anterior para los
+dispensadores; la del cuenco sigue): caja = `actor.holder.get_held_item() as Box` →
+`box.apply_seasoning(seasoning)` → `NONE`: la caja emite `seasoning_removed(otro aliño)` (solo si lo
+llevaba) y `seasoned(este)`, y el dispensador lanza su `%Gesture`; `BOX_NOT_FULL`:
+`rejected(BOX_NOT_FULL)`; `ALREADY_APPLIED`: nada (pulsación consumida en silencio). Sin antirrebote.
+
+**Cubo de basura: por qué no sube nada a `EventBus`** (D25). El único receptor de `trashed` es el
+`%Feedback` del propio cubo; la recaudación no cambia (`trash_penalty` = 0) y ningún HUD ni métrica
+cuenta tiradas. Si el diseño sube `trash_penalty`, hace falta enmienda: método de `RoundManager` que
+reste y reenvíe `score_changed`, o señal de bus con un emisor.
+
 **Estación al paso, puesto y ticket: por qué no hace falta ninguna señal nueva** (D23, PUL-093).
 Condimentar en la mano reutiliza `seasoned` / `seasoning_removed` / `rejected` / `stock_changed`
 con los mismos emisores y receptores. El indicador de la zona de entrega (`order_stand.gd`, ADR-003
@@ -165,7 +183,7 @@ con los mismos emisores y receptores. El indicador de la zona de entrega (`order
 `orders_reset` / `order_generated` / `order_completed` / `order_expired`) y la caja en la mano de los
 cuerpos de su `%ProximityArea` (lectura local, como `%DeliveryZone`); se recalcula en
 `_physics_process`, así que tampoco necesita `item_picked_up` ni `seasoned` del portador. El ticket
-lee el tamaño (`order.data.recipe.box.short_label` / `icon`) y el color
+lee ~~el tamaño (`order.data.recipe.box.short_label` / `icon`)~~ (baja D25) y el color
 (`StandPalette.color_for(order.slot_id)`) de los datos que ya recibe en `order_generated`. Se
 descartó `EventBus.delivery_hint_changed(slot_id, lit)`: ningún receptor fuera del puesto.
 
@@ -192,6 +210,8 @@ Cobertura de las features:
 | olla AC1 · AC2 · AC3 | `burnt` · `burn_warned` · `discarded` (locales) | `kitchen.tscn` |
 | olla AC4 (pausa) | — (reloj en `_physics_process`) | `CookingStation` |
 | fases AC1–AC6 | `EventBus.phase_changed` + secuencias §3 | `RoundState` / `RoundManager` |
+| cubo-basura T1, T2, T4 (D25) | `trashed` (local) | `trash_bin.tscn` (`%Feedback`, cue `trash`) |
+| fases D25 (comandas por fase) | — (`PhaseData.orders` → `OrderBoard.set_order_pool`, sin señal nueva) | `RoundState` / `OrderBoard` |
 
 AC2 de `audio-y-fx` dice "su señal de `EventBus`"; con ADR-006 §3 se lee "su señal (de `EventBus`
 o local)". Pendiente de R2 en el gate.
