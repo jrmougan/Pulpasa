@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-110, PUL-111]
 orca_task: null
 unity_sources: []
-owns: [godot/core/trash_rules.gd, godot/core/trash_rules.gd.uid, godot/resources/trash_bin_data.gd, godot/resources/trash_bin_data.gd.uid, godot/data/config/trash_bin.tres, godot/entities/stations/trash_bin.gd, godot/entities/stations/trash_bin.gd.uid, godot/entities/stations/trash_bin.tscn, godot/entities/stations/sandbox/**, godot/data/audio/feedback_map.tres, godot/tests/unit/test_trash_rules.gd, godot/tests/integration/test_trash_bin.gd, godot/tests/integration/test_level_01.gd, godot/tests/integration/test_audio_feedback.gd, docs/design/features/cubo-basura.md, docs/evidence/PUL-112/**, docs/backlog/PUL-112-cubo-basura.md]
+owns: [godot/core/trash_rules.gd, godot/core/trash_rules.gd.uid, godot/resources/trash_bin_data.gd, godot/resources/trash_bin_data.gd.uid, godot/data/config/trash_bin.tres, godot/entities/stations/trash_bin.gd, godot/entities/stations/trash_bin.gd.uid, godot/entities/stations/trash_bin.tscn, godot/entities/stations/sandbox/**, godot/data/audio/feedback_map.tres, godot/tests/unit/test_trash_rules.gd, godot/tests/unit/test_trash_rules.gd.uid, godot/tests/integration/test_trash_bin.gd, godot/tests/integration/test_trash_bin.gd.uid, godot/tests/integration/test_level_01.gd, godot/tests/integration/test_audio_feedback.gd, docs/design/features/cubo-basura.md, docs/evidence/PUL-112/**, docs/backlog/PUL-112-cubo-basura.md]
 touches_scenes: [godot/scenes/levels/level_01.tscn]
 ---
 
