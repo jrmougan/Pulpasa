@@ -75,7 +75,7 @@ func _station(path: String) -> Node:
 	return _level.get_node("Stations/%s" % path)
 
 
-func _small_box_spawner() -> ItemSpawner:
+func _box_spawner() -> ItemSpawner:
 	for child: Node in _station("BoxShelf").get_children():
 		if child is ItemSpawner and (child as ItemSpawner).data == BOX:
 			return child
@@ -117,7 +117,7 @@ func _prepare_box() -> Box:
 	assert_null(_hold.get_held_item())
 
 	# Mientras cuecen: la caja de la comanda, a un pasaplatos (D23).
-	var spawner: ItemSpawner = _small_box_spawner()
+	var spawner: ItemSpawner = _box_spawner()
 	assert_not_null(spawner)
 	assert_true(_press(spawner), "estantería: da la caja")
 	var box: Box = _hold.get_held_item() as Box
@@ -211,7 +211,7 @@ func test_m1_full_round_oil_cachelos_bonus_expiry_wrong_box_and_stars() -> void:
 	await wait_physics_frames(2)
 
 	# --- Caja errónea: resta wrong_delivery_penalty ---------------------------------------------
-	assert_true(_press(_small_box_spawner()))
+	assert_true(_press(_box_spawner()))
 	var wrong: Box = _hold.get_held_item() as Box
 	assert_true(_press(_station("OrderStand1")), "consume la pulsación aunque rechace")
 	assert_signal_emit_count(EventBus, "delivery_rejected", 1)

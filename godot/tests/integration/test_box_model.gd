@@ -1,8 +1,8 @@
 extends GutTest
-## PUL-047: el `Model` de la caja (BoxModel) muestra el plato del tamaño de `data`, el relleno
-## progresivo con las rodajas y los cachelos si los lleva; las pegatinas 3D del `.glb` van ocultas
-## y los nodos de contrato de `box.tscn` siguen en su sitio. PUL-077: el resaltado sale del volumen
-## cerrado `hull_<tamaño>` de la talla visible, no de la bandeja abierta.
+## PUL-047: el `Model` de la caja (BoxModel) muestra el plato único (variante mediana del `.glb`),
+## el relleno progresivo con las rodajas y los cachelos si los lleva; las pegatinas 3D del `.glb`
+## van ocultas y los nodos de contrato de `box.tscn` siguen en su sitio. PUL-077: el resaltado sale
+## del volumen cerrado `hull_medium`, no de la bandeja abierta.
 
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const BOX: BoxData = preload("res://data/boxes/box.tres")
@@ -41,11 +41,10 @@ func _octopus_layers(box: Box) -> Array[bool]:
 	return shown
 
 
-func test_size_key_comes_from_the_data_file() -> void:
-	## D25: la caja única (`box.tres`) usa la variante mediana del `.glb`.
-	assert_eq(BoxModel.size_key(BOX), &"medium")
-	assert_eq(BoxModel.size_key(null), BoxModel.DEFAULT_SIZE)
-	assert_eq(BoxModel.size_key(BoxData.new()), BoxModel.DEFAULT_SIZE)
+func test_single_variant_is_medium_for_any_data() -> void:
+	## D25: la caja única usa la variante mediana del `.glb`.
+	assert_eq(_model(_box(BOX)).get_size(), BoxModel.VARIANT)
+	assert_eq(BoxModel.VARIANT, &"medium")
 
 
 func test_each_size_shows_only_its_plate_with_the_bible_diameter() -> void:

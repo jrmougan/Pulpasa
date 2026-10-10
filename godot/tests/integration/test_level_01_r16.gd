@@ -7,7 +7,7 @@ extends GutTest
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const BOX: BoxData = preload("res://data/boxes/box.tres")
 const Walker: GDScript = preload("res://tests/integration/level_walker.gd")
-## R16: comandas S del catálogo real sin cachelos (dulce+sal y aceite+dulce).
+## R16: comandas del catálogo real sin cachelos (dulce+sal y aceite+dulce).
 const R16_ORDERS: Array[OrderData] = [
 	preload("res://data/orders/order_2.tres"),
 	preload("res://data/orders/order_4.tres"),
@@ -88,7 +88,7 @@ func test_r16_single_with_switch_two_s_orders_one_octopus_two_switches() -> void
 	var cook: RefCounted = Walker.new(get_tree(), cook_player)
 	var stations: Node = _level.get_node("Stations")
 
-	# 1. Servicio: dos cajas S del rack, cada una a su pasaplatos por el lado de condimentar.
+	# 1. Servicio: dos cajas del rack, cada una a su pasaplatos por el lado de condimentar.
 	var boxes: Array[Box] = []
 	var slots: Array[Slot] = [stations.get_node("PassSlot01"), stations.get_node("PassSlot02")]
 	var spawner: Node3D = stations.get_node("BoxShelf/BoxSpawner")

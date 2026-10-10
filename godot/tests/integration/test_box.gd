@@ -178,7 +178,7 @@ func test_box_open_close_animations_exist() -> void:
 	assert_true(player.has_animation(&"box_close"))
 
 
-## Caja pequeña llena y mano vacía.
+## Caja llena y mano vacía.
 func _full_box() -> Box:
 	var box: Box = _box(BOX)
 	var octopus: Ingredient = _octopus_in_hand(true)
@@ -268,8 +268,8 @@ func test_pul057_ac2_remove_seasoning() -> void:
 	assert_signal_emit_count(box, "seasoned", 0)
 
 
-## PUL-104 AC2: dos cajas M gastan exactamente un pulpo (sin residuo) y lo liberan.
-func test_pul104_ac2_two_medium_boxes_spend_exactly_one_octopus() -> void:
+## PUL-104 AC2: dos cajas gastan exactamente un pulpo (sin residuo) y lo liberan.
+func test_pul104_ac2_two_boxes_spend_exactly_one_octopus() -> void:
 	var octopus: Ingredient = _octopus_in_hand(true)
 	var spent: float = 0.0
 	for i: int in 2:
@@ -281,7 +281,7 @@ func test_pul104_ac2_two_medium_boxes_spend_exactly_one_octopus() -> void:
 	assert_true(octopus.is_queued_for_deletion())
 
 
-## PUL-104: si cambia la talla a mitad de llenado, la caja sigue llenando sin pasarse y el gasto
+## PUL-104: si cambia `data` a mitad de llenado, la caja sigue llenando sin pasarse y el gasto
 ## total es el de una caja.
 func test_pul104_resync_presses_when_data_changes() -> void:
 	var box: Box = _box(BOX)
@@ -296,5 +296,5 @@ func test_pul104_resync_presses_when_data_changes() -> void:
 		presses += 1
 	assert_true(box.is_full())
 	assert_eq(box.fill, 1.0)
-	assert_lte(presses, 10, "no repite lo ya llenado")
+	assert_eq(presses, 10, "no repite lo ya llenado")
 	assert_almost_eq(octopus.remaining, 50.0, 0.001, "gasta una caja entera")

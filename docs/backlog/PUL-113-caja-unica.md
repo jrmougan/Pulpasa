@@ -30,7 +30,7 @@ Implementar exactamente esa parte del contrato y adaptar los tests. **No** cambi
 - [x] AC3 El rack da una sola caja → test de estanterías
 - [x] AC4 El ticket no muestra talla y el nombre de la receta no se recorta → test de tickets y captura en `docs/evidence/PUL-113/`
 - [x] AC5 Cortar 6 veces llena la caja (AC8/AC9 de `corte-pulpo.md`) → test
-- [ ] AC6 `tools/verify.sh` en verde
+- [x] AC6 `tools/verify.sh` en verde
 
 ## Plan
 - Datos: `data/boxes/box.tres` (nuevo, `presses_to_fill` 6, sin `short_label`/`icon`); bajas de `small/medium/large.tres`; `BoxData` sin `short_label` ni `icon`; `RecipeData` sin `box` (las tres recetas viejas lo pierden, también las de `tests/helpers/m0_data/recipes/`, que se rehacen sin `box` en vez de darlas de baja: es lo mas simple); `box.tscn`, `box_shelf.tscn` y el sandbox de condimentos apuntan a `box.tres`.
@@ -43,4 +43,4 @@ Implementar exactamente esa parte del contrato y adaptar los tests. **No** cambi
 - Captura del ticket sin talla y con el nombre completo (Pulpo Individual / Pulpo Familiar): `docs/evidence/PUL-113/tickets_sin_talla.png` (level_01, MCP godot).
 - Tests dados de baja (solo probaban tallas): `test_box.gd` (small 4 / medium 6 / large 10 y `_assert_one_octopus_two_sizes` S+L), `test_box_on_slot.gd` (small/medium/large en mesa), `test_order_tickets.gd` (insignia de talla, letra de respaldo, ancho por talla, talla viva = caja de la receta), `test_data_boxes.gd` (AC2 etiqueta/icono, reescrito a caja unica), `test_validator` (caja equivocada/ausente -> ahora cualquier caja vale), `test_data_catalog.gd` (nombres de caja de las recetas), `test_shelves.gd` (3 spawners -> 1).
 - Adaptados: `test_box_model.gd` (la caja unica usa la variante `medium` del .glb: `BoxModel` no cambia), `test_level_01_r16.gd` (`BoxShelf/BoxSpawner`), y todos los tests que usaban `recipe.box` / `small|medium|large.tres` pasan a `box.tres`.
-- `tools/verify.sh`: gdformat, gdlint, import y smoke OK; GUT 735/735 en verde, **pero** el script falla por la regla de «scripts ignorados»: `tests/integration/test_level_01.gd` y `tests/integration/test_audio_feedback.gd` (propiedad de PUL-112) hacen `preload("res://data/boxes/small.tres")` y no compilan. Cambios que necesitan (para PUL-112 o el coordinador): `test_audio_feedback.gd:24` y `test_level_01.gd:51` -> `box.tres`; `test_level_01.gd:739` `order.data.recipe.box` -> la caja unica; `test_level_01.gd:822/851` `SmallSpawner/MediumSpawner/LargeSpawner` -> `BoxSpawner`. AC6 queda sin marcar por eso.
+- `tools/verify.sh` en verde: gdformat, gdlint, import, GUT 782/782 y smoke. `test_level_01.gd` y `test_audio_feedback.gd` (de PUL-112) se arreglaron aquí con cambios mínimos (`box.tres`, `BoxSpawner` único, 1 objetivo de caja en el test de distancias). `BoxModel` fija la variante única `VARIANT = &"medium"` (sin mapeo por nombre de fichero).
