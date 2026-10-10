@@ -1,7 +1,7 @@
 ---
 id: PUL-114
 title: Aliño de una pulsación y catálogo de 4 comandas
-status: in_progress
+status: done
 milestone: M3d
 role: gameplay-engineer
 deps: [PUL-112, PUL-113]
