@@ -86,7 +86,8 @@ Un carácter ≈ 0,25 m. Posiciones aproximadas; las fija la ficha de nivel (±0
    ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·  ·   ← lado de ALIÑAR
    J1 → pasa con la caja llena en la mano y pulsa en cada uno     →  puestos 1–4
 
-   Largo ≈ 3,5 m · fondo ≈ 1,2 m · 3 objetivos separados ≥ 1,0 m entre centros
+   Mostrador de 5,2 m (x −2,4…2,8, no cambia) · hueco fijo · 3 objetivos en los ≈ 2 m centrales
+   (x local −1 / 0 / 1) separados ≥ 1,0 m entre centros
    (franja de objetivo ≥ 0,6 m a 1,0 m del eje). Sin Tray ni Slot en el tramo.
 ```
 
@@ -124,7 +125,7 @@ real (reloj de juego inyectado). **R*n*** = criterio de `rediseno-estaciones.md`
 - **AC8 (R5)** Given un jugador con pulpo, con una caja sin llenar o con cachelos crudos o quemados en la mano, en cualquier punto a ≤ 1,5 m del cuenco (los dos lados), Then el cuenco no es objetivo; Given cachelos cocidos en la mano, Then sí lo es desde los dos lados; Given una caja llena en la mano, Then lo es solo desde el lado de aliñar. *Test:* `test_seasoning_station.gd` + mapa de objetivos.
 - **AC9 (R6)** Given el cuenco con 0 raciones y un jugador con cachelos cocidos en la mano (cualquier lado), When interactúa con el cuenco, Then el cuenco tiene **2** raciones y la mano queda vacía; Given el cuenco con 2 raciones, When se repone, Then queda en 4; Given 3 o 4 raciones, Then reponer se rechaza y los cachelos siguen en la mano. *Test:* `test_cachelos.gd`. (Sin cambios.)
 - **AC10** Given el cuenco con 2 raciones y una caja llena en la mano en el lado de aliñar, When pulsa el cuenco, Then la caja lleva cachelos (sigue en la mano) y el cuenco queda en 1; When pulsa otra vez a ≥ 0,25 s, Then la caja no lleva cachelos y el cuenco vuelve a 2. Con 0 raciones y la caja sin cachelos, poner se rechaza con `season_error`. *Test:* `test_cachelos.gd`. (Sin cambios.)
-- **AC11 (R7, reescrito)** Given `seasoning_station.tscn`, Then no tiene nodo `Tray` ni ningún `Slot`, tiene exactamente 2 dispensadores de aliño y 1 cuenco, y con una caja en la mano los únicos objetivos del tramo de la estación (≈ 3,5 m de barra) son esos 3: el barrido de `target_map.gd` da 0 `_` (pasaplatos) y 0 `T` en el tramo. *Test:* `test_station_level.gd` + `target_map.txt` en evidencia.
+- **AC11 (R7, reescrito)** Given `seasoning_station.tscn`, Then no tiene nodo `Tray` ni ningún `Slot`, tiene exactamente 2 dispensadores de aliño y 1 cuenco, y con una caja en la mano los únicos objetivos del tramo de la estación (los ≈ 2 m centrales del mostrador de 5,2 m, x local −1…1) son esos 3: el barrido de `target_map.gd` da 0 `_` (pasaplatos) y 0 `T` en el tramo. *Test:* `test_station_level.gd` + `target_map.txt` en evidencia.
 - **AC12 (R8, reescrito)** Given el mapa de objetivos con una caja llena en la mano, a 1,0 m del eje en el lado de aliñar, Then cada dispensador de aliño y el cuenco son objetivo en una franja continua ≥ 0,6 m y no hay ningún punto sin objetivo (`.`) entre el primero y el último. *Test:* `test_station_level.gd` (barrido de 0,25 m).
 - **AC13** Given una caja llena fuera de la estación (en un pasaplatos o en la mano lejos de la línea), When un jugador interactúa con ella llevando cachelos cocidos, Then no se condimenta (la caja no cambia y los cachelos siguen en la mano). *Test:* `test_box.gd`.
 - **AC14 (reescrito)** Given una caja con aliño picante y cachelos aplicados en ese orden o en el inverso, Then su fila de pegatinas muestra exactamente 2 iconos en el orden aliño → cachelos y el aliño picante lleva la marca de llama. *Test:* `test_box_badges.gd`.
@@ -169,6 +170,9 @@ real y reloj de juego inyectado). Mapa de objetivos (`docs/evidence/PUL-090/targ
 adaptado) para AC8, AC11 y AC12. Captura para AC15 y AC19.
 
 ## Preguntas abiertas
+0. **Mostrador sobredimensionado.** Con 2 dispensadores y el cuenco, la línea ocupa ≈ 2 m de un
+   mostrador que sigue midiendo 5,2 m (el hueco y la barra no se mueven por D25). ¿Se acorta el
+   mostrador en una ficha de nivel posterior? Decisión para el gate.
 1. **Lado de los dispensadores** (`operator_side_only`): se mantiene en true. Si el playtest de
    Individual pide aliñar desde la cocina, se libera en datos sin tocar código.
 2. **Raciones visibles en el cuenco.** PUL-090 §5 pedía ver 0–4 raciones; lo decide el playtest

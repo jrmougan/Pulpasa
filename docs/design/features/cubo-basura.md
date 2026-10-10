@@ -6,9 +6,10 @@
 ## Descripción
 Con el aliño sin quitar (D25) y la caja única, el error se arregla **tirando**: una caja mal
 aliñada, un pulpo equivocado o unos cachelos que sobran van al **cubo**. Hay **2 cubos**: uno en la
-**cocina**, en la **esquina noroeste** (x −5,45, z −3,15) y no pegado a las ollas, para que no compita
-como objetivo con la olla cuando se lleva pulpo crudo; y otro en el **servicio**, **al sur del rack**
-(x −5,45, z 3,9). Los dos aceptan todo. El cubo es objetivo **solo con algo en la mano**; pulsar interactuar lo **destruye** y
+**cocina** y otro en el **lado de servicio, cerca del rack**, ninguno pegado a una estación o spawner
+(ollas, nevera, rack…) para no competir con ellos como objetivo al llevar algo en la mano. Las
+posiciones concretas y su razón están en el contrato (ADR-003 §10 y `scene-tree.md`, PUL-111). Los dos
+aceptan todo. El cubo es objetivo **solo con algo en la mano**; pulsar interactuar lo **destruye** y
 la mano queda vacía. **Sin penalización** (`trash_penalty` = 0, en datos): tirar cuesta el tiempo de
 rehacer, no puntos. El pulpo **quemado** se sigue desechando en la olla (`olla-que-se-pasa.md`).
 
@@ -23,9 +24,8 @@ Los cachelos **ya repuestos en el cuenco** no se tiran (se quitan de una caja pu
 vuelven al cuenco, D23). Lo que haya en un pasaplatos se recoge primero.
 
 ```
-  COCINA: cubo en la esquina NO (−5,45; −3,15)     [olla][olla]  ·····  barra
-  SERVICIO: cubo al sur del rack (−5,45; 3,9)
-  Ambos a ≥ 1,5 m de cualquier pasaplatos y del hueco
+  COCINA: 1 cubo, apartado de ollas y nevera      SERVICIO: 1 cubo, cerca del rack pero sin pegarse
+  Posiciones exactas: scene-tree.md. Ambos a ≥ 1,5 m de cualquier pasaplatos y del hueco
 ```
 
 ## Criterios de aceptación
@@ -33,7 +33,7 @@ vuelven al cuenco, D23). Lo que haya en un pasaplatos se recoge primero.
 - **T2** Given pulpo crudo, pulpo cocido o cachelos en la mano, When pulsa interactuar frente al cubo, Then ocurre lo mismo que en T1 con ese objeto. Given un pulpo quemado en la olla, Then el cubo no lo ve (sigue desechándose en la olla con la mano vacía). *Test:* `test_trash_bin.gd`.
 - **T3** Given la mano vacía, When el jugador está a ≤ 1,5 m del cubo, Then el cubo no es objetivo (no se resalta, pulsar no hace nada y no suena ningún cue). *Test:* `test_trash_bin.gd` (candidatos del detector).
 - **T4** Given una tirada, Then suena 1 cue `trash` (ni 0 ni 2) y hay una respuesta visual (tapa que se sacude o puf) de ≥ 0,3 s. *Test:* `test_trash_bin.gd` (contador del servicio de audio y estado del efecto) + captura.
-- **T5** `trash_penalty` vive en datos (`TrashBinData` en `data/config/trash_bin.tres`) y vale 0; aplicar un valor > 0 requiere otra enmienda de contrato (el cubo no lo aplica en la alpha). Given el dato, Then `trash_penalty` = 0 y, tras una tirada, la recaudación no cambia. *Test:* test de datos + `test_trash_bin.gd`.
+- **T5** `trash_penalty` vive en datos con valor 0 (`TrashBinData` en `data/config/trash_bin.tres`); aplicar > 0 requiere enmienda de contrato (nota de contrato: el cubo no lo aplica en la alpha). Given el dato, Then `trash_penalty` = 0 y, tras una tirada, la recaudación no cambia. *Test:* test de datos + `test_trash_bin.gd`.
 - **T6** Given `level_01.tscn`, Then hay exactamente 2 cubos; cada uno está a ≥ 1,5 m de cualquier pasaplatos y del hueco de la barra, el hueco conserva ≥ 1,0 m libre de paso, y ninguno queda bajo el HUD a 1280×720. *Test:* `test_level_01.gd` (distancias) + captura a 1280×720.
 - **T7** Given una caja errónea en la mano frente a un puesto, When el jugador va al cubo, tira y rehace una caja correcta, Then no se emitió `delivery_rejected`, la recaudación no bajó y la comanda sigue viva (tirar no consume ni rechaza la comanda). *Test:* `test_trash_bin.gd` + `test_order_stand.gd`.
 - **T8** Given un jugador con algo en la mano a ≤ 1,5 m de un cubo y de un pasaplatos libre a la vez, Then solo uno es objetivo (el más cercano al frente del jugador) y no se resaltan los dos. *Test:* `test_trash_bin.gd` con el detector real.

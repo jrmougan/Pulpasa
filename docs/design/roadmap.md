@@ -40,7 +40,7 @@ Coop, audio completo y pulido no son M0.
 5. Coop local 2P y mando Xbox: teclado + mando o dos mandos; flujo menú → game over completable sin teclado.
 6. Modo individual: cambio entre 2 personajes en < 0,2 s (D3).
 7. Menú principal: Individual, Local 2P y Salir llevan al nivel en el modo correcto.
-8. Comanda reducida (D4): pimentón dulce/picante, sal sí/no, aceite sí/no, cachelos opcionales; iconos en el ticket.
+8. Comanda reducida (D4): pimentón dulce/picante, sal sí/no, aceite sí/no, cachelos opcionales; iconos en el ticket. *Superado por D25: aliño dulce o picante (sal gorda y aceite incluidos) + cachelos sí/no; 4 recetas; sin tamaños de caja.*
 9. Feedback mínimo: sonido y respuesta visual en coger, cocer, condimentar, entrega correcta y errónea; música y ambiente.
 
 **Should**: olla que se pasa, dificultad por fases, opciones de volumen, textos en gallego, tutorial breve.

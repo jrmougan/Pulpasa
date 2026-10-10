@@ -7,7 +7,7 @@ role: game-designer
 deps: []
 orca_task: null
 unity_sources: []
-owns: [docs/design/decisions.md, docs/design/gdd.md, docs/design/rediseno-estaciones.md, docs/design/m3c-gate.md, docs/design/features/corte-pulpo.md, docs/design/features/condimentacion.md, docs/design/features/estacion-condimentos.md, docs/design/features/comandas.md, docs/design/features/entrega-y-puntuacion.md, docs/design/features/dificultad-progresiva.md, docs/design/features/tutorial-breve.md, docs/design/features/audio-y-fx.md, docs/design/features/cubo-basura.md, docs/backlog/PUL-110-d25-simplificacion-mecanicas.md]
+owns: [docs/design/decisions.md, docs/design/roadmap.md, docs/design/level-layouts.md, docs/design/gdd.md, docs/design/rediseno-estaciones.md, docs/design/m3c-gate.md, docs/design/features/corte-pulpo.md, docs/design/features/condimentacion.md, docs/design/features/estacion-condimentos.md, docs/design/features/comandas.md, docs/design/features/entrega-y-puntuacion.md, docs/design/features/dificultad-progresiva.md, docs/design/features/tutorial-breve.md, docs/design/features/audio-y-fx.md, docs/design/features/cubo-basura.md, docs/backlog/PUL-110-d25-simplificacion-mecanicas.md]
 touches_scenes: []
 ---
 

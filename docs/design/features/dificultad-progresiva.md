@@ -24,8 +24,8 @@ pasar de fase. Valores provisionales (GDD §11, pregunta 5).
 - **AC4** Given un cambio de fase, Then las comandas ya activas conservan su `max_time` original (y su receta, aunque la fase nueva la excluyera).
 - **AC5** Given dos partidas con la misma semilla, Then la secuencia de comandas generadas es idéntica.
 - **AC6** Given `match_duration` distinto de 300 s, Then los límites de fase se escalan proporcionalmente (fase = tercio de la partida).
-- **AC7 (D25)** Given 200 comandas generadas con semilla fija en la fase 1, Then el 100 % son «Á feira»; en la fase 2, el 100 % son «Á feira» o «Picante» y aparecen ambas; en la fase 3, aparecen las 4 recetas y ≥ 1 de cada una en 200 generaciones. Ninguna comanda con cachelos ni picante antes de su fase. *Test:* `test_phase_catalog.gd`.
-- **AC8 (D25)** Given la fase 2 a 100,0 s, When se genera la primera comanda nueva, Then puede ser «Picante» y se emite `phase_changed`; Given la fase 3, Then «Con cachelos» y «Bravo cachelos» pueden salir desde el mismo instante del cambio (≤ 1 s). *Test:* `test_phase_catalog.gd`.
+- **AC7 (D25)** Given 200 comandas generadas con semilla fija en la fase 1, Then el 100 % son «Á feira»; en la fase 2, el 100 % son «Á feira» o «Picante» y aparecen ambas; en la fase 3, aparecen las 4 recetas y ≥ 1 de cada una en 200 generaciones. Ninguna comanda con cachelos ni picante antes de su fase. *Test:* `tests/unit/test_phases.gd`.
+- **AC8 (D25)** Given la fase 2 a 100,0 s, When se genera la primera comanda nueva, Then puede ser «Picante» y se emite `phase_changed`; Given la fase 3, Then «Con cachelos» y «Bravo cachelos» pueden salir desde el mismo instante del cambio (≤ 1 s). *Test:* `tests/unit/test_phases.gd`.
 - **AC9 (D25)** Given `PhaseData`, Then cada fase declara en `PhaseData.orders` las comandas permitidas (la fase 1, «Á feira»; la 2, «Á feira» y «Picante»; la 3, las 4) en datos y cambiarla no exige código. *Test:* `test_data_phases.gd`.
 
 ## Datos (`.tres`)
