@@ -64,8 +64,8 @@ const B_BOXES_TO_PASS: float = 1.0
 const B_FRIDGE_TO_POT: float = 3.0
 const B_CACHELERA_TO_POT: float = 2.0
 const B_POT_TO_PASS: float = 2.0
-## D25 (PUL-114): el cuenco pasa de x 2 a x 1 local (bloque centrado de 3), así que el pase queda
-## 1 m más lejos de lo medido en PUL-041 (1,4 m → 2,4 m).
+## D25 (PUL-114): medido con el contrato D25, no es la columna B de PUL-041. El primer dispensador
+## pasa de x local −2 a −1 (ADR-003 §10.2; global −1,8 → −0,8), así que el pase queda más lejos.
 const B_PASS_TO_STATION: float = 2.4
 const B_POT_TO_STATION: float = 2.0
 const B_STATION_TO_STANDS: Array[float] = [5.0, 4.0, 4.0, 5.0]

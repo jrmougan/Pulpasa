@@ -570,3 +570,28 @@ func test_pul100_order_label_sits_on_anchor_order_label() -> void:
 	assert_not_null(anchor)
 	var label: Label3D = _stand.get_node("%OrderLabel")
 	assert_almost_eq(label.global_position.distance_to(anchor.global_position), 0.0, 0.01)
+
+
+## estacion-condimentos AC20 (D25): «Á feira» con aliño picante se rechaza y la caja sigue en la
+## mano; al pulsar el aliño dulce (sustituye) la entrega se acepta sin pasar por el cubo.
+func test_ac20_a_feira_with_hot_dressing_is_rejected_then_fixed_and_delivered() -> void:
+	var catalog: OrderCatalog = OrderCatalog.new()
+	catalog.orders = [load("res://data/orders/a_feira.tres") as OrderData] as Array[OrderData]
+	catalog.max_active_orders = 4
+	_service.setup(catalog, null, RoundConfig.new())
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var order: ActiveOrder = _order_for(SLOT_ID)
+	var box: Box = _box_in_hand(order)
+	assert_true(box.remove_seasoning(order.data.seasonings[0]))
+	assert_eq(box.apply_seasoning(load("res://data/seasonings/hot_dressing.tres")), 0)
+	assert_true(_stand.can_interact(_actor))
+	assert_true(_stand.interact(_actor), "consume la pulsación")
+	assert_signal_emit_count(_bus, "delivery_rejected", 1)
+	assert_signal_not_emitted(_bus, "order_completed")
+	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
+	var sweet: SeasoningData = load("res://data/seasonings/sweet_dressing.tres")
+	assert_eq(box.apply_seasoning(sweet), SeasoningRules.Rejection.NONE)
+	await wait_physics_frames(2)
+	assert_true(_stand.interact(_actor))
+	assert_signal_emit_count(_bus, "order_completed", 1)
+	assert_true(_is_released(box))
