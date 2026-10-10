@@ -14,6 +14,8 @@ const FAR: Vector3 = Vector3(-9, 0, -9)
 ## Margen sobre `cook_time` para la espera de la cocción.
 const COOK_MARGIN: float = 3.0
 const BOX: BoxData = preload("res://data/boxes/box.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
+const HOT: SeasoningData = preload("res://data/seasonings/hot_dressing.tres")
 
 var _sandbox: Node3D
 var _player: Player
@@ -23,7 +25,7 @@ var _hold: Holder
 var _storage: Node
 var _kitchen: CookingStation
 var _station: SeasoningStation
-## Reloj de los dispensadores: cada pulsación avanza 1 s (antirrebote sin esperas reales).
+## Reloj del cuenco: cada pulsación avanza 1 s (antirrebote sin esperas reales).
 var _now: float = 100.0
 var _stand: OrderStand
 
@@ -40,8 +42,7 @@ func before_each() -> void:
 	_storage = _sandbox.get_node("Stations/OctopusStorage")
 	_kitchen = _sandbox.get_node("Stations/Kitchen")
 	_station = _sandbox.get_node("Stations/SeasoningStation")
-	for dispenser: Node in _station.get_node("Dispensers").get_children():
-		(dispenser as SeasoningDispenser).clock = func() -> float: return _now
+	_station.get_node("CachelosBowl").clock = func() -> float: return _now
 	_stand = _sandbox.get_node("Stations/OrderStand1")
 	await wait_physics_frames(2)
 	# M1: las comandas iniciales se generan tras first_order_delay (5 s, dato).
@@ -72,10 +73,16 @@ func _box_spawner(box_data: BoxData) -> ItemSpawner:
 	return null
 
 
-func _dispenser(seasoning: SeasoningData) -> SeasoningDispenser:
+## Pieza de la estación que pone `seasoning`: un dispensador de aliño o el cuenco de cachelos
+## (con raciones, para no depender de la cocción de cachelos).
+func _dispenser(seasoning: SeasoningData) -> Node:
+	var bowl: CachelosBowl = _station.get_node("CachelosBowl")
+	if seasoning.same_as(bowl.seasoning):
+		bowl.set("stock", 2)
+		return bowl
 	for child: Node in _station.get_node("Dispensers").get_children():
 		if (child as SeasoningDispenser).seasoning == seasoning:
-			return child as SeasoningDispenser
+			return child
 	return null
 
 
@@ -136,7 +143,7 @@ func _cook_and_fill(_order: ActiveOrder) -> Box:
 func _season(box: Box, seasonings: Array[SeasoningData]) -> void:
 	assert_eq(_hold.get_held_item(), box, "la caja está en la mano")
 	for seasoning: SeasoningData in seasonings:
-		var dispenser: SeasoningDispenser = _dispenser(seasoning)
+		var dispenser: Node = _dispenser(seasoning)
 		assert_not_null(dispenser, "dispensador de %s" % seasoning.resource_path)
 		assert_true(_press(dispenser), "pulsa el dispensador")
 		_now += 1.0
@@ -186,16 +193,9 @@ func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
 	assert_eq(_order_for(SLOT_ID).id, order.id, "la comanda sigue viva")
 
 	_season(box, [missing])
-	var extra: Array[SeasoningData] = []
-	for child: Node in _station.get_node("Dispensers").get_children():
-		var data: SeasoningData = (child as SeasoningDispenser).seasoning
-		var group: StringName = data.exclusivity_group
-		if wanted.has(data) or (not group.is_empty() and box.has_seasoning_in_group(group)):
-			continue
-		extra.append(data)
-		break
-	assert_gt(extra.size(), 0, "hay al menos un condimento que la comanda no pide")
-	_season(box, extra)
+	# D25: la caja errónea es solo de contenido; con el aliño equivocado sigue sin valer.
+	var wrong: SeasoningData = HOT if wanted[0].same_as(SWEET) else SWEET
+	_season(box, [wrong])
 	# El puesto ignora un segundo intento de la misma caja en el mismo tick de física.
 	await wait_physics_frames(1)
 

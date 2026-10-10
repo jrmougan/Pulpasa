@@ -1,9 +1,10 @@
 class_name SeasoningStation
 extends StaticBody3D
 ## Estación de condimentos al paso (D23, ADR-003 §8; scene-tree.md §3): mostrador de pase de
-## 5,2 m con cuatro dispensadores y el cuenco de cachelos, sin bandeja: actúan sobre la caja que el
-## actor lleva en la mano. No es `interactable`: lo son sus hijos. Da a los hijos el lado del
-## jugador (`side_of`) y oye sus rechazos: `%Feedback` suena `season_error` y sacude al emisor.
+## 5,2 m con dos dispensadores de aliño y el cuenco de cachelos, sin bandeja: actúan sobre la
+## caja que el actor lleva en la mano. No es `interactable`: lo son sus hijos. Da a los hijos el
+## lado del jugador (`side_of`) y oye sus rechazos: `%Feedback` suena
+## `season_error` y sacude al emisor.
 
 const DEFAULT_DATA: SeasoningStationData = preload("res://data/config/seasoning_station.tres")
 

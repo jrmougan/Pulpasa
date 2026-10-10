@@ -20,7 +20,8 @@ const STAND_SCENE: PackedScene = preload("res://entities/stations/order_stand.ts
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CATALOG: OrderCatalog = preload("res://data/orders/order_catalog.tres")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
+const HOT: SeasoningData = preload("res://data/seasonings/hot_dressing.tres")
 const SMALL: BoxData = preload("res://data/boxes/box.tres")
 const SLOT_ID: int = 3
 const STEP: float = 0.1
@@ -408,13 +409,16 @@ func test_ac5_cooking_pops_pot_and_cooked_ingredient() -> void:
 func test_ac5_seasoning_pops_the_box() -> void:
 	var box: Box = _box()
 	box.fill = 1.0
-	assert_eq(box.toggle_seasoning(SALT, true), SeasoningRules.Rejection.NONE)
+	assert_eq(box.apply_seasoning(SWEET), SeasoningRules.Rejection.NONE)
 	assert_eq(_cues("box"), [&"season"])
 	var feedback: FeedbackPlayer = box.get_node("%Feedback")
 	assert_eq(feedback.stream, MAP.get_cue(&"season").stream)
 	assert_eq(_assert_visual(feedback, box, &"season"), "pop")
-	box.toggle_seasoning(SALT, true)
-	assert_eq(_cues("box"), [&"season", &"unseason"])
+	# D25 (audio-y-fx AC7): sustituir suena unseason y season, en ese orden; repetir no suena.
+	assert_eq(box.apply_seasoning(HOT), SeasoningRules.Rejection.NONE)
+	assert_eq(_cues("box"), [&"season", &"unseason", &"season"])
+	assert_eq(box.apply_seasoning(HOT), SeasoningRules.Rejection.ALREADY_APPLIED)
+	assert_eq(_cues("box"), [&"season", &"unseason", &"season"])
 
 
 func test_ac5_correct_and_wrong_delivery_sound_and_look_different() -> void:

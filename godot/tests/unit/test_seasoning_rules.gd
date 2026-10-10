@@ -1,11 +1,11 @@
 # gdlint: disable=max-public-methods
 extends GutTest
-## PUL-057: reglas puras de condimento (estacion-condimentos.md AC2–AC5 y AC13, lógica).
+## PUL-057/114: reglas puras de condimento (condimentacion.md AC1–AC4 y AC7; estacion-condimentos.md
+## AC4, D25): aplicar un aliño (sustituye al otro, repetir no hace nada), alternar cachelos, orden
+## canónico y reposición del cuenco.
 
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
-const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
-const HOT_PAPRIKA: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
-const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
+const HOT: SeasoningData = preload("res://data/seasonings/hot_dressing.tres")
 const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 
 
@@ -15,168 +15,169 @@ func _list(items: Array) -> Array[SeasoningData]:
 	return result
 
 
-func _paprika_count(seasonings: Array[SeasoningData]) -> int:
+func _dressing_count(seasonings: Array[SeasoningData]) -> int:
 	var count: int = 0
 	for seasoning: SeasoningData in seasonings:
-		if seasoning.exclusivity_group == &"paprika":
+		if seasoning.exclusivity_group == &"dressing":
 			count += 1
 	return count
 
 
-func test_feature_ac1_toggle_adds_missing_seasoning() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([]), SALT, true, true)
-	assert_eq(result.rejection, SeasoningRules.Rejection.NONE)
-	assert_eq(result.added, SALT)
-	assert_null(result.removed)
-	assert_eq(result.seasonings, _list([SALT]))
+func test_data_dressing_types_are_appended_to_the_enum() -> void:
+	assert_eq(SeasoningData.SeasoningType.CACHELOS, 4, "cachelos.tres guarda type = 4")
+	assert_eq(SeasoningData.SeasoningType.SWEET_DRESSING, 5)
+	assert_eq(SeasoningData.SeasoningType.HOT_DRESSING, 6)
+	assert_eq(SeasoningRules.Rejection.ALREADY_APPLIED, 8, "al final, sin renumerar")
 
 
-func test_feature_ac2_toggle_again_removes_seasoning() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([SALT]), SALT, true, true)
+func test_ac1_apply_adds_the_dressing_to_an_empty_box() -> void:
+	var result: SeasoningRules.Toggle = SeasoningRules.apply(_list([]), SWEET, true)
 	assert_eq(result.rejection, SeasoningRules.Rejection.NONE)
-	assert_eq(result.removed, SALT)
+	assert_eq(result.added, SWEET)
+	assert_null(result.removed, "no se quita nada")
+	assert_eq(result.seasonings, _list([SWEET]), "solo el aliño, nada más")
+
+
+func test_ac2_apply_the_other_dressing_replaces_it() -> void:
+	var result: SeasoningRules.Toggle = SeasoningRules.apply(_list([SWEET]), HOT, true)
+	assert_eq(result.rejection, SeasoningRules.Rejection.NONE)
+	assert_eq(result.removed, SWEET)
+	assert_eq(result.added, HOT)
+	assert_eq(result.seasonings, _list([HOT]))
+	assert_eq(_dressing_count(result.seasonings), 1, "nunca hay dos aliños")
+
+
+func test_ac2_replacing_keeps_cachelos_and_puts_the_new_dressing_last() -> void:
+	var result: SeasoningRules.Toggle = SeasoningRules.apply(_list([SWEET, CACHELOS]), HOT, true)
+	assert_eq(result.seasonings, _list([CACHELOS, HOT]), "orden de aplicación")
+	assert_eq(_dressing_count(result.seasonings), 1)
+
+
+func test_ac3_apply_the_same_dressing_is_already_applied() -> void:
+	var current: Array[SeasoningData] = _list([SWEET])
+	var result: SeasoningRules.Toggle = SeasoningRules.apply(current, SWEET, true)
+	assert_eq(result.rejection, SeasoningRules.Rejection.ALREADY_APPLIED)
 	assert_null(result.added)
-	assert_eq(result.seasonings, _list([]))
-
-
-func test_feature_ac2_removing_keeps_the_others() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(
-		_list([PAPRIKA, SALT, OIL]), SALT, true, true
-	)
-	assert_eq(result.seasonings, _list([PAPRIKA, OIL]))
-
-
-func test_feature_ac2_same_type_from_another_instance_counts_as_same() -> void:
-	var copy: SeasoningData = SALT.duplicate()
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([SALT]), copy, true, true)
-	assert_eq(result.removed, SALT, "sale el que lleva la caja")
-	assert_eq(result.seasonings, _list([]))
-
-
-func test_feature_ac3_toggle_twice_returns_to_start() -> void:
-	# El antirrebote temporal (toggle_guard) es del dispensador (PUL-058); la regla sola alterna.
-	var first: SeasoningRules.Toggle = SeasoningRules.toggle(_list([SALT]), SALT, true, true)
-	var second: SeasoningRules.Toggle = SeasoningRules.toggle(first.seasonings, SALT, true, true)
-	assert_eq(second.seasonings, _list([SALT]))
-
-
-func test_feature_ac4_paprika_swap_replaces_sweet_with_hot() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(
-		_list([PAPRIKA, SALT]), HOT_PAPRIKA, true, true
-	)
-	assert_eq(result.rejection, SeasoningRules.Rejection.NONE)
-	assert_eq(result.removed, PAPRIKA)
-	assert_eq(result.added, HOT_PAPRIKA)
-	assert_eq(result.seasonings, _list([SALT, HOT_PAPRIKA]))
-	assert_eq(_paprika_count(result.seasonings), 1, "exactamente 1 del grupo paprika")
-
-
-func test_feature_ac4_paprika_swap_replaces_hot_with_sweet() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(
-		_list([HOT_PAPRIKA]), PAPRIKA, true, true
-	)
-	assert_eq(result.removed, HOT_PAPRIKA)
-	assert_eq(result.added, PAPRIKA)
-	assert_eq(result.seasonings, _list([PAPRIKA]))
-
-
-func test_feature_ac4_pressing_the_paprika_it_has_removes_it() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(
-		_list([HOT_PAPRIKA, OIL]), HOT_PAPRIKA, true, true
-	)
-	assert_eq(result.removed, HOT_PAPRIKA)
-	assert_null(result.added)
-	assert_eq(_paprika_count(result.seasonings), 0, "sin pimentón")
-
-
-func test_feature_ac4_without_swap_exclusive_is_rejected() -> void:
-	var current: Array[SeasoningData] = _list([PAPRIKA])
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(current, HOT_PAPRIKA, true, false)
-	assert_eq(result.rejection, SeasoningRules.Rejection.EXCLUSIVE_TAKEN)
 	assert_null(result.removed)
-	assert_null(result.added)
-	assert_eq(result.seasonings, _list([PAPRIKA]))
+	assert_eq(result.seasonings, current, "applied no cambia")
 
 
-func test_feature_ac4_without_swap_the_same_paprika_still_toggles() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(
-		_list([PAPRIKA]), PAPRIKA, true, false
-	)
-	assert_eq(result.rejection, SeasoningRules.Rejection.NONE)
-	assert_eq(result.removed, PAPRIKA)
+func test_ac3_same_type_from_another_instance_is_already_applied() -> void:
+	var result: SeasoningRules.Toggle = SeasoningRules.apply(_list([HOT]), HOT.duplicate(), true)
+	assert_eq(result.rejection, SeasoningRules.Rejection.ALREADY_APPLIED)
 
 
-func test_feature_ac4_non_exclusive_seasonings_coexist() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(
-		_list([PAPRIKA, SALT]), OIL, true, false
-	)
-	assert_eq(result.rejection, SeasoningRules.Rejection.NONE)
-	assert_null(result.removed)
-	assert_eq(result.seasonings, _list([PAPRIKA, SALT, OIL]))
+func test_ac3_already_applied_has_priority_over_replacing() -> void:
+	# La caja con aliño y cachelos: repetir el aliño no hace nada aunque haya más cosas.
+	var result: SeasoningRules.Toggle = SeasoningRules.apply(_list([CACHELOS, HOT]), HOT, true)
+	assert_eq(result.rejection, SeasoningRules.Rejection.ALREADY_APPLIED)
+	assert_eq(result.seasonings, _list([CACHELOS, HOT]))
 
 
-func test_feature_ac5_box_not_full_is_rejected() -> void:
+func test_ac4_box_not_full_is_rejected_for_any_seasoning() -> void:
 	# Caja vacía o a medio llenar (fill 0,6): la regla solo ve is_full = false.
-	for seasoning: SeasoningData in [SALT, PAPRIKA, HOT_PAPRIKA, OIL, CACHELOS]:
-		var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([]), seasoning, false, true)
-		assert_eq(result.rejection, SeasoningRules.Rejection.BOX_NOT_FULL, seasoning.display_name)
-		assert_null(result.added)
-		assert_null(result.removed)
-		assert_eq(result.seasonings, _list([]))
+	for seasoning: SeasoningData in [SWEET, HOT, CACHELOS]:
+		var applied: SeasoningRules.Toggle = SeasoningRules.apply(_list([]), seasoning, false)
+		assert_eq(applied.rejection, SeasoningRules.Rejection.BOX_NOT_FULL, seasoning.display_name)
+		assert_null(applied.added)
+		assert_eq(applied.seasonings, _list([]))
+		var toggled: SeasoningRules.Toggle = SeasoningRules.toggle(_list([]), seasoning, false)
+		assert_eq(toggled.rejection, SeasoningRules.Rejection.BOX_NOT_FULL, seasoning.display_name)
+		assert_eq(toggled.seasonings, _list([]))
 
 
-func test_feature_ac5_null_seasoning_is_not_accepted() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([SALT]), null, true, true)
+func test_ac4_box_not_full_wins_over_already_applied() -> void:
+	var result: SeasoningRules.Toggle = SeasoningRules.apply(_list([SWEET]), SWEET, false)
+	assert_eq(result.rejection, SeasoningRules.Rejection.BOX_NOT_FULL)
+
+
+func test_apply_null_seasoning_is_not_accepted() -> void:
+	var result: SeasoningRules.Toggle = SeasoningRules.apply(_list([SWEET]), null, true)
 	assert_eq(result.rejection, SeasoningRules.Rejection.NOT_ACCEPTED)
-	assert_eq(result.seasonings, _list([SALT]))
+	assert_eq(result.seasonings, _list([SWEET]))
+
+
+func test_apply_does_not_mutate_input() -> void:
+	var current: Array[SeasoningData] = _list([SWEET, CACHELOS])
+	SeasoningRules.apply(current, HOT, true)
+	SeasoningRules.apply(current, SWEET, true)
+	assert_eq(current, _list([SWEET, CACHELOS]))
+
+
+func test_toggle_cachelos_adds_then_removes() -> void:
+	var added: SeasoningRules.Toggle = SeasoningRules.toggle(_list([HOT]), CACHELOS, true)
+	assert_eq(added.rejection, SeasoningRules.Rejection.NONE)
+	assert_eq(added.added, CACHELOS)
+	assert_null(added.removed)
+	assert_eq(added.seasonings, _list([HOT, CACHELOS]))
+	var removed: SeasoningRules.Toggle = SeasoningRules.toggle(added.seasonings, CACHELOS, true)
+	assert_eq(removed.removed, CACHELOS)
+	assert_null(removed.added)
+	assert_eq(removed.seasonings, _list([HOT]))
+
+
+func test_toggle_same_type_from_another_instance_counts_as_same() -> void:
+	var copy: SeasoningData = CACHELOS.duplicate()
+	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([CACHELOS]), copy, true)
+	assert_eq(result.removed, CACHELOS, "sale el que lleva la caja")
+	assert_eq(result.seasonings, _list([]))
+
+
+func test_toggle_with_group_always_replaces() -> void:
+	# Si algún día se alterna algo con grupo, sustituye siempre (ADR-003 §10.2).
+	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([SWEET]), HOT, true)
+	assert_eq(result.rejection, SeasoningRules.Rejection.NONE)
+	assert_eq(result.removed, SWEET)
+	assert_eq(result.seasonings, _list([HOT]))
+
+
+func test_toggle_null_seasoning_is_not_accepted() -> void:
+	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([CACHELOS]), null, true)
+	assert_eq(result.rejection, SeasoningRules.Rejection.NOT_ACCEPTED)
+	assert_eq(result.seasonings, _list([CACHELOS]))
 
 
 func test_toggle_does_not_mutate_input() -> void:
-	var current: Array[SeasoningData] = _list([PAPRIKA, SALT])
-	SeasoningRules.toggle(current, SALT, true, true)
-	SeasoningRules.toggle(current, HOT_PAPRIKA, true, true)
-	SeasoningRules.toggle(current, OIL, true, true)
-	assert_eq(current, _list([PAPRIKA, SALT]))
+	var current: Array[SeasoningData] = _list([SWEET])
+	SeasoningRules.toggle(current, CACHELOS, true)
+	SeasoningRules.toggle(current, HOT, true)
+	assert_eq(current, _list([SWEET]))
 
 
 func test_remove_returns_copy_without_seasoning() -> void:
-	var current: Array[SeasoningData] = _list([SALT, OIL])
-	assert_eq(SeasoningRules.remove(current, SALT), _list([OIL]))
-	assert_eq(SeasoningRules.remove(current, PAPRIKA), _list([SALT, OIL]), "no lo lleva")
-	assert_eq(current, _list([SALT, OIL]), "no muta")
+	var current: Array[SeasoningData] = _list([SWEET, CACHELOS])
+	assert_eq(SeasoningRules.remove(current, CACHELOS), _list([SWEET]))
+	assert_eq(SeasoningRules.remove(current, HOT), _list([SWEET, CACHELOS]), "no lo lleva")
+	assert_eq(current, _list([SWEET, CACHELOS]), "no muta")
 
 
 func test_find_and_find_in_group() -> void:
-	var current: Array[SeasoningData] = _list([HOT_PAPRIKA, SALT])
-	assert_eq(SeasoningRules.find(current, SALT), SALT)
-	assert_null(SeasoningRules.find(current, OIL))
+	var current: Array[SeasoningData] = _list([HOT, CACHELOS])
+	assert_eq(SeasoningRules.find(current, CACHELOS), CACHELOS)
+	assert_null(SeasoningRules.find(current, SWEET))
 	assert_null(SeasoningRules.find(current, null))
-	assert_eq(SeasoningRules.find_in_group(current, &"paprika"), HOT_PAPRIKA)
+	assert_eq(SeasoningRules.find_in_group(current, &"dressing"), HOT)
 	assert_null(SeasoningRules.find_in_group(current, &""))
 
 
-func test_feature_ac13_canonical_order_hot_salt_oil_cachelos() -> void:
-	var applied: Array[SeasoningData] = _list([CACHELOS, OIL, SALT, HOT_PAPRIKA])
+func test_ac7_canonical_order_is_dressing_then_cachelos() -> void:
+	var applied: Array[SeasoningData] = _list([CACHELOS, HOT])
 	var ordered: Array[SeasoningData] = SeasoningRules.canonical_order(applied)
-	assert_eq(ordered, _list([HOT_PAPRIKA, SALT, OIL, CACHELOS]))
-	assert_eq(applied, _list([CACHELOS, OIL, SALT, HOT_PAPRIKA]), "no muta")
+	assert_eq(ordered, _list([HOT, CACHELOS]))
+	assert_eq(applied, _list([CACHELOS, HOT]), "no muta")
+	assert_eq(SeasoningRules.canonical_order(_list([SWEET, CACHELOS])), _list([SWEET, CACHELOS]))
 
 
-func test_feature_ac13_canonical_order_is_compact_and_stable() -> void:
-	assert_eq(SeasoningRules.canonical_order(_list([OIL, PAPRIKA])), _list([PAPRIKA, OIL]))
+func test_ac7_canonical_order_is_compact_and_stable() -> void:
 	assert_eq(
-		SeasoningRules.canonical_order(_list([OIL, null, SALT])), _list([SALT, OIL]), "sin huecos"
+		SeasoningRules.canonical_order(_list([CACHELOS, null, SWEET])),
+		_list([SWEET, CACHELOS]),
+		"sin huecos"
 	)
 	assert_eq(SeasoningRules.canonical_order(_list([])), _list([]))
 	# A igual sort_order se respeta el orden de entrada (estable).
-	assert_eq(
-		SeasoningRules.canonical_order(_list([SALT, HOT_PAPRIKA, PAPRIKA])),
-		_list([HOT_PAPRIKA, PAPRIKA, SALT])
-	)
-	assert_eq(
-		SeasoningRules.canonical_order(_list([PAPRIKA, SALT, HOT_PAPRIKA])),
-		_list([PAPRIKA, HOT_PAPRIKA, SALT])
-	)
+	assert_eq(SeasoningRules.canonical_order(_list([HOT, SWEET])), _list([HOT, SWEET]))
+	assert_eq(SeasoningRules.canonical_order(_list([SWEET, HOT])), _list([SWEET, HOT]))
 
 
 ## PUL-097 (R6): el cuenco suma 2 raciones por cachelo, con máximo 4 y recorte.

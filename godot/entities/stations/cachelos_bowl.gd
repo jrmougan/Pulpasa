@@ -6,8 +6,8 @@ extends StaticBody3D
 ## una caja en la mano y desde el lado de condimentar, alterna cachelos en esa caja (poner gasta 1
 ## ración, quitar la devuelve; la caja no se suelta). Con la mano vacía o cualquier otra cosa no es
 ## objetivo. Siempre consume la pulsación: al rechazar emite `rejected` sin cambiar nada
-## (ADR-003 §8.2). Al alternar tiene el mismo antirrebote que un dispensador (`toggle_guard`,
-## reloj inyectable). Quitar con el cuenco lleno se rechaza (`BOWL_FULL`).
+## (ADR-003 §8.2). Al alternar tiene antirrebote (`toggle_guard`, reloj inyectable; D25: solo el
+## cuenco lo usa). Quitar con el cuenco lleno se rechaza (`BOWL_FULL`).
 ## El modelo trae `Portions0..4` (estados exclusivos): solo se ve el de `stock`.
 
 ## Pulsación consumida sin cambios (signals.md §4).
@@ -105,7 +105,7 @@ func _toggle(box: Box) -> void:
 	if not removing and stock <= 0:
 		rejected.emit(SeasoningRules.Rejection.BOWL_EMPTY)
 		return
-	var result: SeasoningRules.Rejection = box.toggle_seasoning(seasoning, config.paprika_swap)
+	var result: SeasoningRules.Rejection = box.toggle_seasoning(seasoning)
 	if result != SeasoningRules.Rejection.NONE:
 		rejected.emit(result)
 		return

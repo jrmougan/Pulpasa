@@ -9,7 +9,7 @@ const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
 const BOX: BoxData = preload("res://data/boxes/box.tres")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
 const INTERACTABLE_LAYER: int = 1 << 2
 ## Donde nacen los objetos antes de cogerlos: sin solapar la cápsula del jugador.
 const AWAY: Vector3 = Vector3(5.0, 0.5, 5.0)
@@ -127,7 +127,7 @@ func test_review_season_box_on_table_then_pick_up_and_drop() -> void:
 	assert_signal_emit_count(box, "seasoned", 0)
 	assert_eq(_hold.get_held_item(), cachelos, "los cachelos no se consumen")
 	_discard_held()
-	assert_eq(box.toggle_seasoning(SALT, true), SeasoningRules.Rejection.NONE, "sal (API estación)")
+	assert_eq(box.apply_seasoning(SWEET), SeasoningRules.Rejection.NONE, "aliño (API estación)")
 	await _settle()
 	assert_eq(_detector.get_target(), box, "mano vacía: el objetivo es la caja, para cogerla")
 	assert_true(_actor.interact_pressed())

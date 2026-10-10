@@ -2,7 +2,8 @@
 extends GutTest
 ## PUL-016 AC1: la caja decide (ADR-003 §4) si el objeto en la mano la llena (pulpo cocido,
 ## corte por pulsación D1/D13) o se coge con la mano vacía.
-## PUL-057: API de la estación de condimentos (`toggle_seasoning`/`remove_seasoning`, D18).
+## PUL-057/114: API de la estación de condimentos (`apply_seasoning` de los aliños, D25;
+## `toggle_seasoning` del cuenco y `remove_seasoning`).
 ## PUL-061: fuera de la estación ya no se condimenta (feature estacion-condimentos AC12).
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
@@ -10,10 +11,9 @@ const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
 const BOX: BoxData = preload("res://data/boxes/box.tres")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
-const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
-const HOT_PAPRIKA: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
-const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
+const HOT: SeasoningData = preload("res://data/seasonings/hot_dressing.tres")
+const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 
 var _level: Node3D
 var _hold: HoldComponent
@@ -156,7 +156,7 @@ func test_pul061_ac12_other_items_only_consume_the_press() -> void:
 
 func test_ac2_contents_are_a_copy() -> void:
 	var box: Box = _box(BOX)
-	box.get_contents().seasonings.append(SALT)
+	box.get_contents().seasonings.append(SWEET)
 	assert_eq(box.get_contents().seasonings.size(), 0)
 
 
@@ -192,25 +192,20 @@ func test_pul057_box_is_in_box_group() -> void:
 	assert_true(_box(BOX).is_in_group(&"box"), "la bandeja acepta el grupo box")
 
 
-func test_pul057_ac2_toggle_adds_then_removes_with_signals() -> void:
+func test_pul114_ac1_apply_adds_the_dressing_with_one_seasoned() -> void:
 	var box: Box = _full_box()
 	watch_signals(box)
-	assert_eq(box.toggle_seasoning(SALT, true), SeasoningRules.Rejection.NONE)
-	assert_true(box.has_seasoning(SALT))
+	assert_eq(box.apply_seasoning(SWEET), SeasoningRules.Rejection.NONE)
+	assert_true(box.has_seasoning(SWEET))
+	assert_eq(box.get_contents().seasonings, [SWEET] as Array[SeasoningData], "solo el aliño")
 	assert_signal_emit_count(box, "seasoned", 1)
-	assert_signal_emitted_with_parameters(box, "seasoned", [SALT])
+	assert_signal_emitted_with_parameters(box, "seasoned", [SWEET])
 	assert_signal_emit_count(box, "seasoning_removed", 0)
-	assert_eq(box.toggle_seasoning(SALT, true), SeasoningRules.Rejection.NONE)
-	assert_false(box.has_seasoning(SALT))
-	assert_eq(box.get_contents().seasonings.size(), 0)
-	assert_signal_emit_count(box, "seasoned", 1)
-	assert_signal_emit_count(box, "seasoning_removed", 1)
-	assert_signal_emitted_with_parameters(box, "seasoning_removed", [SALT])
 
 
-func test_pul057_ac2_paprika_swap_emits_removed_before_seasoned() -> void:
+func test_pul114_ac2_replacing_emits_removed_before_seasoned() -> void:
 	var box: Box = _full_box()
-	assert_eq(box.toggle_seasoning(PAPRIKA, true), SeasoningRules.Rejection.NONE)
+	assert_eq(box.apply_seasoning(SWEET), SeasoningRules.Rejection.NONE)
 	var order: Array[String] = []
 	box.seasoning_removed.connect(
 		func(s: SeasoningData) -> void: order.append("removed:%s" % s.translation_key)
@@ -219,29 +214,31 @@ func test_pul057_ac2_paprika_swap_emits_removed_before_seasoned() -> void:
 		func(s: SeasoningData) -> void: order.append("seasoned:%s" % s.translation_key)
 	)
 	watch_signals(box)
-	assert_eq(box.toggle_seasoning(HOT_PAPRIKA, true), SeasoningRules.Rejection.NONE)
-	assert_eq(box.get_contents().seasonings, [HOT_PAPRIKA] as Array[SeasoningData])
+	assert_eq(box.apply_seasoning(HOT), SeasoningRules.Rejection.NONE)
+	assert_eq(box.get_contents().seasonings, [HOT] as Array[SeasoningData])
+	assert_false(box.has_seasoning(SWEET))
 	assert_signal_emit_count(box, "seasoning_removed", 1)
 	assert_signal_emit_count(box, "seasoned", 1)
 	assert_eq(
-		order, ["removed:SEASONING_PAPRIKA", "seasoned:SEASONING_HOT_PAPRIKA"] as Array[String]
+		order,
+		["removed:SEASONING_SWEET_DRESSING", "seasoned:SEASONING_HOT_DRESSING"] as Array[String]
 	)
 
 
-func test_pul057_ac2_paprika_without_swap_is_rejected_silently() -> void:
+func test_pul114_ac3_same_dressing_is_silent_already_applied() -> void:
 	var box: Box = _full_box()
-	box.toggle_seasoning(PAPRIKA, true)
+	box.apply_seasoning(SWEET)
 	watch_signals(box)
-	assert_eq(box.toggle_seasoning(HOT_PAPRIKA, false), SeasoningRules.Rejection.EXCLUSIVE_TAKEN)
-	assert_eq(box.get_contents().seasonings, [PAPRIKA] as Array[SeasoningData])
+	assert_eq(box.apply_seasoning(SWEET), SeasoningRules.Rejection.ALREADY_APPLIED)
+	assert_eq(box.get_contents().seasonings, [SWEET] as Array[SeasoningData])
 	assert_signal_emit_count(box, "seasoned", 0)
 	assert_signal_emit_count(box, "seasoning_removed", 0)
 
 
-func test_pul057_ac2_toggle_on_unfilled_box_is_rejected() -> void:
+func test_pul114_ac4_apply_on_unfilled_box_is_rejected() -> void:
 	var empty: Box = _box(BOX)
 	watch_signals(empty)
-	assert_eq(empty.toggle_seasoning(SALT, true), SeasoningRules.Rejection.BOX_NOT_FULL)
+	assert_eq(empty.apply_seasoning(SWEET), SeasoningRules.Rejection.BOX_NOT_FULL)
 	assert_signal_emit_count(empty, "seasoned", 0)
 	var half: Box = _box(BOX)
 	_octopus_in_hand(true)
@@ -249,20 +246,52 @@ func test_pul057_ac2_toggle_on_unfilled_box_is_rejected() -> void:
 		half.interact(_actor)
 	assert_almost_eq(half.fill, 0.5, 0.0001)
 	watch_signals(half)
-	assert_eq(half.toggle_seasoning(OIL, true), SeasoningRules.Rejection.BOX_NOT_FULL)
+	assert_eq(half.apply_seasoning(HOT), SeasoningRules.Rejection.BOX_NOT_FULL)
+	assert_eq(half.toggle_seasoning(CACHELOS), SeasoningRules.Rejection.BOX_NOT_FULL)
 	assert_eq(half.get_contents().seasonings.size(), 0)
 	assert_signal_emit_count(half, "seasoned", 0)
 
 
+func test_pul114_cachelos_toggle_adds_then_removes_with_signals() -> void:
+	var box: Box = _full_box()
+	watch_signals(box)
+	assert_eq(box.toggle_seasoning(CACHELOS), SeasoningRules.Rejection.NONE)
+	assert_true(box.has_seasoning(CACHELOS))
+	assert_signal_emit_count(box, "seasoned", 1)
+	assert_eq(box.toggle_seasoning(CACHELOS), SeasoningRules.Rejection.NONE)
+	assert_false(box.has_seasoning(CACHELOS))
+	assert_signal_emit_count(box, "seasoned", 1)
+	assert_signal_emit_count(box, "seasoning_removed", 1)
+	assert_signal_emitted_with_parameters(box, "seasoning_removed", [CACHELOS])
+
+
+func test_pul114_ac5_contents_have_at_most_two_entries() -> void:
+	var box: Box = _full_box()
+	assert_eq(box.get_contents().seasonings.size(), 0, "sin nada, 0")
+	box.apply_seasoning(HOT)
+	assert_eq(box.get_contents().seasonings.size(), 1, "solo aliño, 1")
+	box.toggle_seasoning(CACHELOS)
+	box.apply_seasoning(SWEET)
+	box.apply_seasoning(HOT)
+	var seasonings: Array[SeasoningData] = box.get_contents().seasonings
+	assert_eq(seasonings.size(), 2, "aliño y cachelos, 2")
+	assert_eq(seasonings.count(CACHELOS), 1)
+	for seasoning: SeasoningData in seasonings:
+		assert_true(
+			seasoning.same_as(CACHELOS) or seasoning.exclusivity_group == &"dressing",
+			"nunca sal, aceite ni pimentón sueltos"
+		)
+
+
 func test_pul057_ac2_remove_seasoning() -> void:
 	var box: Box = _full_box()
-	box.toggle_seasoning(SALT, true)
-	box.toggle_seasoning(OIL, true)
+	box.apply_seasoning(SWEET)
+	box.toggle_seasoning(CACHELOS)
 	watch_signals(box)
-	assert_true(box.remove_seasoning(SALT))
-	assert_eq(box.get_contents().seasonings, [OIL] as Array[SeasoningData])
-	assert_signal_emitted_with_parameters(box, "seasoning_removed", [SALT])
-	assert_false(box.remove_seasoning(SALT), "ya no la lleva")
+	assert_true(box.remove_seasoning(SWEET))
+	assert_eq(box.get_contents().seasonings, [CACHELOS] as Array[SeasoningData])
+	assert_signal_emitted_with_parameters(box, "seasoning_removed", [SWEET])
+	assert_false(box.remove_seasoning(SWEET), "ya no la lleva")
 	assert_false(box.remove_seasoning(null))
 	assert_signal_emit_count(box, "seasoning_removed", 1)
 	assert_signal_emit_count(box, "seasoned", 0)

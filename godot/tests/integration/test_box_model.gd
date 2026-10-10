@@ -6,7 +6,7 @@ extends GutTest
 
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const BOX: BoxData = preload("res://data/boxes/box.tres")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
 const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 ## Diámetro exterior por tamaño (art-bible §2.1, ±10 %).
 const DIAMETERS: Dictionary[StringName, float] = {&"small": 0.34, &"medium": 0.42, &"large": 0.49}
@@ -119,9 +119,9 @@ func test_cachelos_follow_the_seasoning() -> void:
 	var box: Box = _box(BOX)
 	_set_fill(box, 1.0)
 	assert_false(_visible(box, "cachelos_pieces_a"))
-	assert_eq(box.toggle_seasoning(SALT, true), SeasoningRules.Rejection.NONE)
+	assert_eq(box.apply_seasoning(SWEET), SeasoningRules.Rejection.NONE)
 	assert_false(_visible(box, "cachelos_pieces_a"), "otro condimento no añade cachelos")
-	assert_eq(box.toggle_seasoning(CACHELOS, true), SeasoningRules.Rejection.NONE)
+	assert_eq(box.toggle_seasoning(CACHELOS), SeasoningRules.Rejection.NONE)
 	assert_true(_visible(box, "cachelos_pieces_a"))
 	assert_true(_visible(box, "cachelos_pieces_b"))
 	assert_true(box.remove_seasoning(CACHELOS))

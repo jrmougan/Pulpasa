@@ -2,7 +2,9 @@ class_name SeasoningData
 extends Resource
 ## Condimento (porta SpicesSO). `scene` queda vacía hasta la fase 6.
 
-enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL, CACHELOS }
+## D25: SALT, PAPRIKA, HOT_PAPRIKA y OIL en desuso (sin `.tres`); los aliños van al final para no
+## renumerar `CACHELOS` (4).
+enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL, CACHELOS, SWEET_DRESSING, HOT_DRESSING }
 
 @export var display_name: String = ""
 ## Clave tr() explícita; no se deriva del nombre del fichero.
@@ -11,8 +13,8 @@ enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL, CACHELOS }
 ## Condimentos con el mismo grupo de exclusividad son mutuamente excluyentes (D4).
 ## Cadena vacía = sin exclusividad.
 @export var exclusivity_group: StringName = &""
-## Posición en el orden canónico de caja y ticket (`SeasoningRules.canonical_order`): pimentón 0,
-## sal 1, aceite 2, cachelos 3. Iguales = sin orden entre ellos (dulce y picante son exclusivos).
+## Posición en el orden canónico de caja y ticket (`SeasoningRules.canonical_order`): aliño 0,
+## cachelos 3. Iguales = sin orden entre ellos (dulce y picante son exclusivos).
 @export var sort_order: int = 0
 @export var color: Color = Color.WHITE
 @export var icon: Texture2D

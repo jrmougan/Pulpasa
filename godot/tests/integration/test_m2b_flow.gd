@@ -8,21 +8,20 @@ extends GutTest
 ## - SINGLE: J1 lleva al cocinero (Player2, cocina) y al servidor (Player1, servicio) y cambia con
 ##   Q; ningún personaje cruza la barra.
 ## - COOP_2P: J2 (flechas + Intro) cocina y J1 (WASD + E) condimenta y entrega.
-## En los dos: cero rechazos de la estación y del puesto, ninguna comanda caducada y el pimentón
-## se intercambia en la propia estación (se pulsa primero el otro, D18 `paprika_swap`).
+## En los dos: cero rechazos de la estación y del puesto, ninguna comanda caducada y el aliño
+## se sustituye en la propia estación (se pulsa primero el otro, D25).
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const Walker: GDScript = preload("res://tests/integration/level_walker.gd")
-## Comandas de caja pequeña del catálogo real: dulce+sal, aceite+dulce, picante+cachelos y
-## aceite+cachelos. Un pulpo da 15 cortes y una caja pequeña lleva 5.
+## Las 4 comandas del catálogo real (D25): Á feira, Picante, Con cachelos y Bravo cachelos.
 const ORDERS: Array[OrderData] = [
-	preload("res://data/orders/order_2.tres"),
-	preload("res://data/orders/order_4.tres"),
-	preload("res://data/orders/order_5.tres"),
-	preload("res://data/orders/order_6.tres"),
+	preload("res://data/orders/a_feira.tres"),
+	preload("res://data/orders/picante.tres"),
+	preload("res://data/orders/con_cachelos.tres"),
+	preload("res://data/orders/bravo_cachelos.tres"),
 ]
-const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
-const HOT_PAPRIKA: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
+const HOT: SeasoningData = preload("res://data/seasonings/hot_dressing.tres")
 const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 ## Entregas por partida (AC1 de la ficha).
 const DELIVERIES: int = 3
@@ -245,7 +244,7 @@ func _box_to_slot(server: Walker, _order: ActiveOrder) -> Box:
 
 
 ## Coge la caja llena del pasaplatos y pone los condimentos de la comanda con ella en la mano. Para
-## el pimentón pulsa antes el otro y comprueba que el bueno lo sustituye en una pulsación.
+## el aliño pulsa antes el otro y comprueba que el bueno lo sustituye en una pulsación.
 func _season(server: Walker, box: Box, order: ActiveOrder) -> void:
 	assert_eq(await _use_station(server, _pass_slot(), 1.0), box, "coge la caja llena")
 	assert_eq(_held(server), box)
@@ -253,13 +252,13 @@ func _season(server: Walker, box: Box, order: ActiveOrder) -> void:
 		if seasoning.same_as(CACHELOS):
 			assert_eq(await _use_station(server, _bowl(), 1.0), _bowl(), "cuenco")
 		else:
-			if seasoning.same_as(PAPRIKA) or seasoning.same_as(HOT_PAPRIKA):
-				var other: SeasoningData = HOT_PAPRIKA if seasoning.same_as(PAPRIKA) else PAPRIKA
-				var wrong: SeasoningDispenser = _dispenser(other)
-				assert_eq(await _use_station(server, wrong, 1.0), wrong, wrong.name)
-				assert_true(box.has_seasoning(other), "primero el otro pimentón")
+			var other: SeasoningData = HOT if seasoning.same_as(SWEET) else SWEET
+			var wrong: SeasoningDispenser = _dispenser(other)
+			assert_eq(await _use_station(server, wrong, 1.0), wrong, wrong.name)
+			assert_true(box.has_seasoning(other), "primero el otro aliño")
 			var dispenser: SeasoningDispenser = _dispenser(seasoning)
 			assert_eq(await _use_station(server, dispenser, 1.0), dispenser, dispenser.name)
+			assert_false(box.has_seasoning(other), "el bueno sustituye al otro")
 		assert_true(box.has_seasoning(seasoning), "caja con %s" % seasoning.display_name)
 	assert_eq(
 		box.get_contents().seasonings.size(), order.data.seasonings.size(), "solo lo que se pide"

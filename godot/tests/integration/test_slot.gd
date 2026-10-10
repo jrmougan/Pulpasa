@@ -4,8 +4,6 @@ extends GutTest
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const SLOT_SCENE: PackedScene = preload("res://entities/stations/slot.tscn")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
-const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
 const INTERACTABLE_LAYER: int = 1 << 2
 const EPSILON: float = 0.0001
 

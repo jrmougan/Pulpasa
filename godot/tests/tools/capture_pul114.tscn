@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/tools/capture_pul114.gd" id="1_cap"]
+[ext_resource type="PackedScene" path="res://entities/stations/sandbox/seasoning_station_sandbox.tscn" id="2_sbx"]
+
+[node name="CapturePul114" type="Node3D" node_paths=PackedStringArray("sandbox")]
+script = ExtResource("1_cap")
+sandbox = NodePath("Sandbox")
+
+[node name="Sandbox" parent="." instance=ExtResource("2_sbx")]

@@ -1,30 +1,26 @@
 class_name SeasoningDispenser
 extends StaticBody3D
-## Dispensador fijo de un condimento en la estación al paso (D23, ADR-003 §8; scene-tree.md §3).
-## Con una caja en la mano y desde el lado de condimentar, alterna su condimento en esa caja
-## (`Box.toggle_seasoning`; con `paprika_swap`, intercambia el pimentón). La caja no se suelta. Con
-## la mano vacía o con cualquier otra cosa no es objetivo. Siempre consume la pulsación: al
-## rechazar (p. ej. caja a medio cortar) emite `rejected` sin cambiar nada (ADR-003 §8.2).
-##
-## Antirrebote: tras un cambio, otra pulsación antes de `toggle_guard` s se consume en silencio.
-## El reloj es de juego (ADR-003 §9.2): `_game_time` suma el delta de `_physics_process`, así que se
-## congela en pausa y sigue `Engine.time_scale`. Es inyectable (`clock`) para probarlo sin esperar.
+## Dispensador fijo de un aliño completo en la estación al paso (D25, ADR-003 §10.2; scene-tree.md
+## §3). Con una caja en la mano y desde el lado de condimentar aplica su aliño en esa caja
+## (`Box.apply_seasoning`): llena sin aliño lo añade, con el otro aliño lo sustituye, con el
+## mismo no
+## hace nada (silencio). La caja no se suelta. Con la mano vacía o con cualquier otra cosa no es
+## objetivo. Siempre consume la pulsación: caja a medio cortar emite `rejected(BOX_NOT_FULL)`.
+## Sin antirrebote: aplicar es idempotente.
 
-## Pulsación consumida sin cambios (signals.md §4). No se emite por el antirrebote.
+## Pulsación consumida sin cambios (signals.md §4). Solo `BOX_NOT_FULL`.
 signal rejected(reason: SeasoningRules.Rejection)
 
 @export var seasoning: SeasoningData
 @export var station: SeasoningStation
 
-## Segundos de juego actuales; por defecto, `_game_time`.
-var clock: Callable = func() -> float: return _game_time
-
-var _game_time: float = 0.0
-var _last_change: float = -INF
+## Gesto visual de sal gorda, aceite y pimentón (>= 0,3 s); `%Gesture` es el pimentón y sus hijos
+## `Salt` y `Oil` la sal gorda y el aceite. Opcional en escenas de prueba.
+@onready var _gesture: GPUParticles3D = get_node_or_null(^"%Gesture") as GPUParticles3D
 
 
-func _physics_process(delta: float) -> void:
-	_game_time += delta
+func _ready() -> void:
+	_tint_paprika()
 
 
 ## Solo con una caja en la mano y desde el lado de condimentar (o los dos con
@@ -47,17 +43,39 @@ func interact(actor: InteractionComponent) -> bool:
 		return false
 	if station == null or seasoning == null:
 		return true
-	if clock.call() - _last_change < station.data.toggle_guard:
-		return true
 	var box: Box = actor.holder.get_held_item() as Box
-	var result: SeasoningRules.Rejection = box.toggle_seasoning(
-		seasoning, station.data.paprika_swap
-	)
-	if result == SeasoningRules.Rejection.NONE:
-		_last_change = clock.call()
-	else:
-		rejected.emit(result)
+	var result: SeasoningRules.Rejection = box.apply_seasoning(seasoning)
+	match result:
+		SeasoningRules.Rejection.NONE:
+			_play_gesture()
+		SeasoningRules.Rejection.ALREADY_APPLIED:
+			pass
+		_:
+			rejected.emit(result)
 	return true
+
+
+## Lanza el `%Gesture` (y sal y aceite) desde el principio.
+func _play_gesture() -> void:
+	if _gesture == null:
+		return
+	_gesture.restart()
+	for child: Node in _gesture.get_children():
+		var particles: GPUParticles3D = child as GPUParticles3D
+		if particles != null:
+			particles.restart()
+
+
+## El pimentón del gesto sale del color del aliño (dulce rojo, picante oscuro).
+func _tint_paprika() -> void:
+	if _gesture == null or seasoning == null:
+		return
+	var mesh: SphereMesh = _gesture.draw_pass_1 as SphereMesh
+	if mesh == null or not mesh.material is StandardMaterial3D:
+		return
+	var paint: StandardMaterial3D = (mesh.material as StandardMaterial3D).duplicate()
+	paint.albedo_color = seasoning.color
+	_gesture.material_override = paint
 
 
 static func _holds_box(holder: Holder) -> bool:

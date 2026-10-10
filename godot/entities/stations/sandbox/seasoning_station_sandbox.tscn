@@ -33,7 +33,7 @@ items_root = NodePath("Items")
 box_scene = ExtResource("8_box")
 box_data = ExtResource("9_medium")
 cachelos_scene = ExtResource("10_cachelos")
-staged_dispensers = Array[NodePath]([NodePath("Dispensers/Oil"), NodePath("Dispensers/Salt"), NodePath("Dispensers/HotPaprika")])
+staged_dispensers = Array[NodePath]([NodePath("Dispensers/HotDressing")])
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_sbx")

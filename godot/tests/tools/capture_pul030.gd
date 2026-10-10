@@ -8,8 +8,8 @@ const HUD_SCENE: PackedScene = preload("res://ui/hud/hud.tscn")
 const PANEL_SCENE: PackedScene = preload("res://ui/tickets/order_tickets_panel.tscn")
 const TICKET_ENTRY_SCENE: PackedScene = preload("res://ui/tickets/ticket_entry.tscn")
 const SAMPLE_SEASONINGS: Array[String] = [
-	"res://data/seasonings/paprika.tres",
-	"res://data/seasonings/hot_paprika.tres",
+	"res://data/seasonings/sweet_dressing.tres",
+	"res://data/seasonings/hot_dressing.tres",
 ]
 const GAME_OVER_SCENE: PackedScene = preload("res://ui/menus/game_over.tscn")
 const BOX: BoxData = preload("res://data/boxes/box.tres")

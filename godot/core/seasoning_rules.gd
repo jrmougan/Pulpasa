@@ -1,8 +1,8 @@
 class_name SeasoningRules
 extends RefCounted
-## Reglas puras de condimento de la estación (D4, D18; ADR-003 §8.3): alternar un condimento sobre
-## una caja llena, intercambio de exclusivos (pimentón dulce/picante) y orden canónico que comparten
-## la fila de pegatinas de la caja y el ticket. No muta nada: devuelve copias.
+## Reglas puras de condimento de la estación (D4, D25; ADR-003 §10.2): aplicar un aliño sobre una
+## caja llena (el otro aliño se sustituye), alternar cachelos y orden canónico que comparten la fila
+## de pegatinas de la caja y el ticket. No muta nada: devuelve copias.
 
 ## Por qué se consume una pulsación sin cambiar nada (señales locales `rejected`, signals.md §4).
 enum Rejection {
@@ -11,10 +11,14 @@ enum Rejection {
 	BOX_NOT_FULL,
 	# En desuso desde PUL-064: con la mano ocupada el dispensador no es objetivo.
 	HAND_BUSY,
+	# En desuso desde D25: sustituir el exclusivo es la regla.
 	EXCLUSIVE_TAKEN,
 	BOWL_EMPTY,
 	BOWL_FULL,
 	NOT_ACCEPTED,
+	# D25: el aliño ya está en la caja. Lo devuelven `apply` y `Box.apply_seasoning`; el
+	# dispensador lo consume en silencio (no se emite en `rejected`).
+	ALREADY_APPLIED,
 }
 
 
@@ -23,7 +27,7 @@ enum Rejection {
 class Toggle:
 	extends RefCounted
 	var rejection: SeasoningRules.Rejection = SeasoningRules.Rejection.NONE
-	## Lo que sale de la caja: el mismo condimento (quitar) o el exclusivo intercambiado.
+	## Lo que sale de la caja: el mismo condimento (quitar) o el exclusivo sustituido.
 	var removed: SeasoningData
 	## Lo que entra en la caja.
 	var added: SeasoningData
@@ -32,10 +36,10 @@ class Toggle:
 
 
 ## Alterna `seasoning` sobre `current`: si ya lo lleva, lo quita; si no, lo añade al final. Si la
-## caja lleva otro del mismo `exclusivity_group`, con `swap_exclusive` lo sustituye (sale el viejo
-## y entra el nuevo) y sin él se rechaza con `EXCLUSIVE_TAKEN`. Sin llenar: `BOX_NOT_FULL`.
+## caja lleva otro del mismo `exclusivity_group`, lo sustituye (sale el viejo y entra el nuevo).
+## Sin llenar: `BOX_NOT_FULL`. Solo lo usa el cuenco (cachelos, sin grupo).
 static func toggle(
-	current: Array[SeasoningData], seasoning: SeasoningData, is_full: bool, swap_exclusive: bool
+	current: Array[SeasoningData], seasoning: SeasoningData, is_full: bool
 ) -> Toggle:
 	var result: Toggle = Toggle.new()
 	result.seasonings = current.duplicate()
@@ -50,15 +54,26 @@ static func toggle(
 		result.seasonings.erase(existing)
 		result.removed = existing
 		return result
-	var exclusive: SeasoningData = find_in_group(current, seasoning.exclusivity_group)
-	if exclusive != null:
-		if not swap_exclusive:
-			result.rejection = Rejection.EXCLUSIVE_TAKEN
-			return result
-		result.seasonings.erase(exclusive)
-		result.removed = exclusive
-	result.seasonings.append(seasoning)
-	result.added = seasoning
+	_put(result, current, seasoning)
+	return result
+
+
+## D25: aplica `seasoning` a una caja. Sin llenar: `BOX_NOT_FULL`. Si ya lo lleva: `ALREADY_APPLIED`
+## (sin cambios). Si lleva otro de su `exclusivity_group`, lo sustituye (`removed` = el viejo).
+## Si no, lo añade al final. No muta: devuelve copias en un `Toggle`.
+static func apply(current: Array[SeasoningData], seasoning: SeasoningData, is_full: bool) -> Toggle:
+	var result: Toggle = Toggle.new()
+	result.seasonings = current.duplicate()
+	if seasoning == null:
+		result.rejection = Rejection.NOT_ACCEPTED
+		return result
+	if not is_full:
+		result.rejection = Rejection.BOX_NOT_FULL
+		return result
+	if find(current, seasoning) != null:
+		result.rejection = Rejection.ALREADY_APPLIED
+		return result
+	_put(result, current, seasoning)
 	return result
 
 
@@ -91,7 +106,7 @@ static func remove(current: Array[SeasoningData], seasoning: SeasoningData) -> A
 	return result
 
 
-## Copia ordenada por `SeasoningData.sort_order` (pimentón → sal → aceite → cachelos). Estable:
+## Copia ordenada por `SeasoningData.sort_order` (aliño → cachelos). Estable:
 ## a igual `sort_order` se respeta el orden de entrada. Los nulos se descartan.
 static func canonical_order(seasonings: Array[SeasoningData]) -> Array[SeasoningData]:
 	var result: Array[SeasoningData] = []
@@ -116,3 +131,12 @@ static func restocked(stock: int, per_item: int, max_stock: int) -> int:
 	if not can_restock(stock, max_stock):
 		return stock
 	return mini(stock + per_item, max_stock)
+
+
+static func _put(result: Toggle, current: Array[SeasoningData], seasoning: SeasoningData) -> void:
+	var exclusive: SeasoningData = find_in_group(current, seasoning.exclusivity_group)
+	if exclusive != null:
+		result.seasonings.erase(exclusive)
+		result.removed = exclusive
+	result.seasonings.append(seasoning)
+	result.added = seasoning

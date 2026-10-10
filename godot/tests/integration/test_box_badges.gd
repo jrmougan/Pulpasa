@@ -1,13 +1,11 @@
 extends GutTest
-## PUL-059 (estacion-condimentos AC13): la fila de pegatinas de la caja sigue el orden canónico,
-## se rehace al alternar condimentos y marca el picante con la llama.
+## PUL-059/114 (estacion-condimentos AC14, D25): la fila de pegatinas de la caja sigue el orden
+## canónico (aliño → cachelos), se rehace al aplicar o sustituir y marca el picante con la llama.
 
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const SMALL: BoxData = preload("res://data/boxes/box.tres")
-const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
-const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
-const HOT_PAPRIKA: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
-const OIL: SeasoningData = preload("res://data/seasonings/oil.tres")
+const SWEET: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
+const HOT: SeasoningData = preload("res://data/seasonings/hot_dressing.tres")
 const CACHELOS: SeasoningData = preload("res://data/seasonings/cachelos.tres")
 
 var _box: Box
@@ -41,53 +39,60 @@ func test_no_seasonings_hides_the_row() -> void:
 	assert_false(_row.visible)
 
 
-func test_ac13_canonical_order_and_hot_mark() -> void:
-	for seasoning: SeasoningData in [CACHELOS, OIL, SALT, HOT_PAPRIKA]:
-		assert_eq(_box.toggle_seasoning(seasoning, true), SeasoningRules.Rejection.NONE)
-	assert_eq(
-		_types(_row.get_shown()),
-		(
-			[
-				SeasoningData.SeasoningType.HOT_PAPRIKA,
-				SeasoningData.SeasoningType.SALT,
-				SeasoningData.SeasoningType.OIL,
-				SeasoningData.SeasoningType.CACHELOS,
-			]
-			as Array[int]
+func _apply(seasoning: SeasoningData) -> void:
+	if seasoning.same_as(CACHELOS):
+		assert_eq(_box.toggle_seasoning(seasoning), SeasoningRules.Rejection.NONE)
+	else:
+		assert_eq(_box.apply_seasoning(seasoning), SeasoningRules.Rejection.NONE)
+
+
+func test_ac14_canonical_order_and_hot_mark_in_either_application_order() -> void:
+	for applied: Array in [[HOT, CACHELOS], [CACHELOS, HOT]]:
+		_box.remove_seasoning(HOT)
+		_box.remove_seasoning(CACHELOS)
+		for seasoning: SeasoningData in applied:
+			_apply(seasoning)
+		assert_eq(
+			_types(_row.get_shown()),
+			(
+				[SeasoningData.SeasoningType.HOT_DRESSING, SeasoningData.SeasoningType.CACHELOS]
+				as Array[int]
+			)
 		)
-	)
-	assert_true(_row.visible)
-	assert_eq(_row.get_child_count(), 4)
-	assert_eq(_hot_marks(), 1, "solo el picante lleva llama")
+		assert_true(_row.visible)
+		assert_eq(_row.get_child_count(), 2, "exactamente 2 iconos")
+		assert_eq(_hot_marks(), 1, "solo el aliño picante lleva llama")
 
 
-func test_sweet_paprika_has_no_hot_mark() -> void:
-	_box.toggle_seasoning(PAPRIKA, true)
+func test_sweet_dressing_has_no_hot_mark() -> void:
+	_apply(SWEET)
 	assert_eq(_row.get_child_count(), 1)
 	assert_eq(_hot_marks(), 0)
 
 
-func test_toggle_off_removes_badge_and_compacts() -> void:
-	_box.toggle_seasoning(SALT, true)
-	_box.toggle_seasoning(OIL, true)
-	_box.toggle_seasoning(SALT, true)
-	assert_eq(_types(_row.get_shown()), [SeasoningData.SeasoningType.OIL] as Array[int])
-	_box.remove_seasoning(OIL)
+func test_cachelos_toggle_off_removes_badge_and_compacts() -> void:
+	_apply(SWEET)
+	_apply(CACHELOS)
+	assert_eq(_row.get_child_count(), 2)
+	_apply(CACHELOS)
+	assert_eq(_types(_row.get_shown()), [SeasoningData.SeasoningType.SWEET_DRESSING] as Array[int])
+	_box.remove_seasoning(SWEET)
 	assert_eq(_row.get_shown().size(), 0)
 	assert_false(_row.visible)
 
 
-func test_paprika_swap_replaces_badge() -> void:
-	_box.toggle_seasoning(PAPRIKA, true)
-	_box.toggle_seasoning(HOT_PAPRIKA, true)
-	assert_eq(_types(_row.get_shown()), [SeasoningData.SeasoningType.HOT_PAPRIKA] as Array[int])
+func test_dressing_swap_replaces_badge() -> void:
+	_apply(SWEET)
+	_apply(HOT)
+	assert_eq(_types(_row.get_shown()), [SeasoningData.SeasoningType.HOT_DRESSING] as Array[int])
+	assert_eq(_row.get_child_count(), 1, "nunca dos aliños")
 	assert_eq(_hot_marks(), 1)
 
 
 func test_badges_use_style_size_and_seasoning_color() -> void:
-	_box.toggle_seasoning(SALT, true)
+	_apply(SWEET)
 	var disc: Sprite3D = _row.get_child(0).get_child(0) as Sprite3D
-	assert_eq(disc.modulate, SALT.color)
+	assert_eq(disc.modulate, SWEET.color)
 	assert_true(disc.no_depth_test)
 	assert_eq(disc.billboard, BaseMaterial3D.BILLBOARD_ENABLED)
 	var side: float = disc.pixel_size * disc.texture.get_width()
@@ -107,7 +112,7 @@ func _tilted_camera() -> Camera3D:
 
 func test_row_keeps_a_screen_gap_above_the_box() -> void:
 	_tilted_camera()
-	_box.toggle_seasoning(SALT, true)
+	_apply(SWEET)
 	for height: float in [0.0, 1.0]:
 		_box.global_position = Vector3(0, height, 0)
 		_row._follow()
@@ -117,7 +122,7 @@ func test_row_keeps_a_screen_gap_above_the_box() -> void:
 
 func test_row_rebuilds_when_camera_size_changes() -> void:
 	var camera: Camera3D = _tilted_camera()
-	_box.toggle_seasoning(SALT, true)
+	_apply(SWEET)
 	var disc: Sprite3D = _row.get_child(0).get_child(0) as Sprite3D
 	var before: float = disc.pixel_size
 	camera.size = 6.37

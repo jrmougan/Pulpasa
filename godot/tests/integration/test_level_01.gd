@@ -64,7 +64,9 @@ const B_BOXES_TO_PASS: float = 1.0
 const B_FRIDGE_TO_POT: float = 3.0
 const B_CACHELERA_TO_POT: float = 2.0
 const B_POT_TO_PASS: float = 2.0
-const B_PASS_TO_STATION: float = 1.0
+## D25 (PUL-114): medido con el contrato D25, no es la columna B de PUL-041. El primer dispensador
+## pasa de x local −2 a −1 (ADR-003 §10.2; global −1,8 → −0,8), así que el pase queda más lejos.
+const B_PASS_TO_STATION: float = 2.4
 const B_POT_TO_STATION: float = 2.0
 const B_STATION_TO_STANDS: Array[float] = [5.0, 4.0, 4.0, 5.0]
 ## D23 (PUL-101): el hueco pasa de x 7,7 a x 3,5 y el rodeo de salida a salida baja de 18,2 m a

@@ -5,10 +5,10 @@
 
 [resource]
 script = ExtResource("1_sea")
-display_name = "Pimentón"
-translation_key = "SEASONING_PAPRIKA"
-type = 1
+display_name = "Aliño picante"
+translation_key = "SEASONING_HOT_DRESSING"
+type = 6
 sort_order = 0
-exclusivity_group = &"paprika"
-color = Color(0.8392157, 0.2117647, 0.1215686, 1)
+exclusivity_group = &"dressing"
+color = Color(0.5607843, 0.1019608, 0.0784314, 1)
 icon = ExtResource("2_icon")

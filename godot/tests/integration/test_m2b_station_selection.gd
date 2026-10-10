@@ -13,7 +13,6 @@ extends GutTest
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
-const RECIPE: RecipeData = preload("res://data/recipes/individual.tres")
 ## Distancias al centro del mostrador (eje z de la estación) desde las que se prueba (m).
 const DEPTHS: Array[float] = [0.8, 1.0, 1.2]
 ## Desplazamientos laterales respecto a la pieza (m).
@@ -94,7 +93,7 @@ func _is_lit(node: Node) -> bool:
 
 func test_ac1_front_of_each_dispenser_and_bowl_selects_it_with_full_box_in_hand() -> void:
 	var box: Box = _box_in_hand()
-	assert_eq(_parts().size(), 5, "4 dispensadores y el cuenco")
+	assert_eq(_parts().size(), 3, "2 dispensadores de aliño y el cuenco")
 	for part: Node3D in _parts():
 		for depth: float in DEPTHS:
 			for offset: float in OFFSETS:

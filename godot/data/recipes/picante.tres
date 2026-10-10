@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1_rec")
-display_name = "Pulpo Individual"
-translation_key = "RECIPE_INDIVIDUAL"
+display_name = "Picante"
+translation_key = "RECIPE_PICANTE"
 ingredient = ExtResource("2_ing")
-base_points = 8
+base_points = 9
