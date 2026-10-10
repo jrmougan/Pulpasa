@@ -1,7 +1,7 @@
 ---
 id: PUL-112
 title: Implementar el cubo de basura y colocar 2 en level_01
-status: in_progress
+status: done
 milestone: M3d
 role: gameplay-engineer
 deps: [PUL-110, PUL-111]
