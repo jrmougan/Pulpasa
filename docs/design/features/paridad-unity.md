@@ -1,5 +1,9 @@
 # Paridad con el prototipo Unity (Must)
 
+> **Estado: superada por D17** (2026-10-04, PUL-108). La paridad con Unity solo fue requisito en M0 y se
+> renunció a la puerta humana «lado a lado»; desde M1 manda el diseño (`gdd.md`, `decisions.md`). Se
+> conserva como registro histórico de M0 (`m0-gate.md`); no es un requisito vigente.
+
 **Slug:** paridad-unity · **Fuente:** `Assets/` y `docs/migration/inventory.md` (bugs que no se portan).
 
 ## Descripción

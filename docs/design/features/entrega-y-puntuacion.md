@@ -1,4 +1,4 @@
-# Entrega, validación y puntuación (Must, D2, D8, D12, D23)
+# Entrega, validación y puntuación (Must, D2, D8, D12, D23, D24)
 
 **Slug:** entrega-y-puntuacion · **Prototipo:** `OrderStand`, `OrderSystem.ValidateBox`, `RecipeSO.basePoints`, `GameOverUI`.
 
@@ -32,6 +32,7 @@ entrega pintada en el suelo** (`DeliveryZone`):
 ## Reglas
 - `time_bonus` = `floor(tiempo_restante / max_time × time_bonus_max)`, con `time_bonus_max` = 5 €.
 - Penalización por comanda caducada = `expire_penalty` = 3 €; por caja errónea entregada = `wrong_delivery_penalty` = 2 € (D8). La recaudación no baja de 0.
+- Entregar en un puesto sin comanda, con la comanda ya caducada o cuya comanda **caduca en ese mismo tick** se rechaza **sin penalizar** (0; D24, 2026-10-10, `OrderBoard.try_deliver`). La comanda caducada solo cobra `expire_penalty`, no además `wrong_delivery_penalty`.
 - Estrellas (provisional, pregunta abierta nº 1): 1★ ≥ 30 €, 2★ ≥ 60 €, 3★ ≥ 90 €.
 
 ## Criterios de aceptación
@@ -41,6 +42,7 @@ entrega pintada en el suelo** (`DeliveryZone`):
 - **AC4** Given una receta con `base_points` = 10 y `max_time` = 60 s, When se entrega con 30 s restantes, Then se ingresan 10 + floor(0,5 × 5) = 12 €.
 - **AC5** Given una receta con `base_points` = 10 y `max_time` = 60 s, When se entrega con 1 s restante, Then se ingresan 10 € (bonus floor(1/60 × 5) = 0).
 - **AC5b** Given una comanda con `max_time` = 60 s, When la entrega llega con tiempo restante ≤ 0 (a los 60,0 s o después), Then se rechaza sin ingreso: la caducidad gana en el empate y la comanda ya se eliminó con `order_expired`.
+- **AC5d (D24)** Given una comanda que caduca en el tick T y una entrega en el mismo tick T (válida o errónea), When se procesa, Then se emite `delivery_rejected(slot, id_de_la_caducada, 0)` aunque el puesto ya tenga la comanda repuesta, la recaudación solo baja por `expire_penalty` (3 €), no se emite `order_completed` y la caja sigue en la mano. *Test:* `test_order_board.gd` (`test_ac5b_delivery_on_expiry_tick_rejected_not_redirected`) y `test_order_stand.gd` (`_assert_expiry_tick`), ambos con caja válida; falta el caso con caja errónea (penalización 0, no `wrong_delivery_penalty`).
 - **AC5c** Given una comanda con 0,1 s restantes, When se entrega una caja válida antes de caducar, Then se ingresa `base_points` + 0 y no se emite `order_expired`.
 - **AC6** Given una recaudación de 59 €, 60 € y 90 €, When acaba la partida, Then las estrellas son 1, 2 y 3 respectivamente; con 29 € son 0.
 - **AC7** Given una comanda caducada con recaudación de 2 €, Then la recaudación queda en 0 € (no negativa).
