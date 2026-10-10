@@ -1,7 +1,7 @@
 ---
 id: PUL-111
 title: Enmendar los contratos para D25 (caja única, aliño, cubo de basura)
-status: in_progress
+status: done
 milestone: M3d
 role: godot-architect
 deps: []

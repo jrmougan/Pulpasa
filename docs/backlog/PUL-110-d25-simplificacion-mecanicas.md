@@ -1,7 +1,7 @@
 ---
 id: PUL-110
 title: Registrar D25 (simplificación de mecánicas) y poner el diseño al día
-status: in_progress
+status: done
 milestone: M3d
 role: game-designer
 deps: []

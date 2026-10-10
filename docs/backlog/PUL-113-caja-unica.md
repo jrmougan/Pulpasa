@@ -21,6 +21,7 @@ Implementar exactamente esa parte del contrato y adaptar los tests. **No** cambi
 - Contratos de PUL-111 tal cual; si algo no encaja, para y pregunta al coordinador.
 - `.uid` versionados; no inventes `uid://`; al borrar un recurso borra su `.uid` si lo tiene.
 - En paralelo PUL-112 (cubo) es dueño de `level_01.tscn`, `test_level_01.gd`, `test_audio_feedback.gd` y `feedback_map.tres`: no los toques salvo que un test no compile; en ese caso avisa al coordinador antes.
+- El catálogo nuevo de 4 comandas y las bajas de recetas/comandas viejas (ADR-003 §10.4) son de PUL-114 (aliño), que va después: aquí las recetas viejas solo pierden `box`. La posición nueva de `BoxSpawner` en `box_shelf.tscn` (§10.1/scene-tree) sí es de esta ficha.
 - `tools/verify.sh` en verde. Quita los tests que solo probaban tamaños (deja constancia en Evidence) y adapta el resto.
 
 ## Acceptance
