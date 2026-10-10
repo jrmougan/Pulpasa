@@ -194,3 +194,24 @@ func test_pul058_seasoning_station_values() -> void:
 	assert_eq(data.cachelos_portions_per_item, 2)
 	assert_null(data.get("paprika_swap"), "D25: sin paprika_swap")
 	assert_true(data.operator_side_only)
+
+
+## AC9 (dificultad-progresiva.md) y AC2 de PUL-115: el pool de cada fase está en datos.
+func test_pul115_phase_pools_subset_of_catalog_and_per_phase() -> void:
+	var config: RoundConfig = load("res://data/config/round_config.tres") as RoundConfig
+	var catalog: OrderCatalog = load("res://data/orders/order_catalog.tres") as OrderCatalog
+	var a_feira: OrderData = load("res://data/orders/a_feira.tres") as OrderData
+	var picante: OrderData = load("res://data/orders/picante.tres") as OrderData
+	var cachelos: OrderData = load("res://data/orders/con_cachelos.tres") as OrderData
+	var bravo: OrderData = load("res://data/orders/bravo_cachelos.tres") as OrderData
+	assert_eq(config.phases.size(), 3)
+	assert_eq(config.phases[0].orders, [a_feira] as Array[OrderData], "fase 1")
+	assert_eq(config.phases[1].orders.size(), 2, "fase 2")
+	assert_true(config.phases[1].orders.has(a_feira))
+	assert_true(config.phases[1].orders.has(picante))
+	assert_eq(config.phases[2].orders.size(), 4, "fase 3")
+	for order: OrderData in [a_feira, picante, cachelos, bravo]:
+		assert_true(config.phases[2].orders.has(order))
+	for phase: PhaseData in config.phases:
+		for order: OrderData in phase.orders:
+			assert_true(catalog.orders.has(order), "pool dentro del catálogo")

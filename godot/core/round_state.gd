@@ -150,13 +150,15 @@ func _advance_phases() -> void:
 			_board.fill_slots(_active_slot_ids)
 
 
-## Aplica la fase de índice `index` al tablero (puestos y paciencia) y emite `phase_changed`.
+## Aplica la fase de índice `index` al tablero (puestos, paciencia, comandas) y emite
+## `phase_changed`.
 func _enter_phase(index: int) -> void:
 	var phase: PhaseData = _phases[index]
 	var count: int = clampi(phase.active_slots, 0, _slot_ids.size())
 	_active_slot_ids = _slot_ids.slice(0, count)
 	_board.set_active_slots(_active_slot_ids)
 	_board.set_new_order_patience_multiplier(phase.patience_multiplier)
+	_board.set_order_pool(phase.orders)
 	_phase = index + 1
 	phase_changed.emit(_phase)
 
