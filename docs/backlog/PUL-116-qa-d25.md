@@ -1,7 +1,7 @@
 ---
 id: PUL-116
 title: Re-medir R15/R17 tras D25 y preparar el playtest de M3d
-status: in_progress
+status: done
 milestone: M3d
 role: qa-tester
 deps: [PUL-115]
