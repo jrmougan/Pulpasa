@@ -1,8 +1,10 @@
 # ADR-006 — Audio, feedback de acciones, quemado y fases
 
-- **Estado:** aceptado (2026-10-06, gate del responsable; fases con multiplicador de paciencia)
-- **Fecha:** 2026-10-06
-- **Ficha:** PUL-066
+- **Estado:** aceptado (2026-10-06, gate del responsable; fases con multiplicador de paciencia);
+  enmienda D25 (cue `trash` en §4, nota en §5 y comandas por fase en §6) **propuesta**, pendiente del
+  gate humano (PUL-111)
+- **Fecha:** 2026-10-06; enmienda 2026-10-10
+- **Ficha:** PUL-066; enmienda PUL-111 (D25, ADR-003 §10)
 - **Relacionado:** ADR-002 (Enmienda 1), ADR-003 (capa común / específica), ADR-005 (D14 = 3D),
   `signals.md`, `scene-tree.md`; features `audio-y-fx` (Must 9), `olla-que-se-pasa` (Should),
   `dificultad-progresiva` (Should), `opciones-de-volumen` (Should); fichas PUL-068..071
@@ -145,6 +147,13 @@ tienen `AudioCue` con `stream`):
 | `burnt` | `burnt` (local, olla) | `kitchen.tscn` · `%Feedback` | `SHAKE` de la olla + malla `_burnt` | olla AC1 |
 | `discard` | `discarded` (local, olla) | `kitchen.tscn` · `%Feedback` | `POP` de la olla | olla AC3 |
 | `phase_up` | `EventBus.phase_changed` (fase ≥ 2) | `LevelAudio` · `%PhaseCue` | (HUD, Could) | fases |
+| `trash` | `trashed` (local, `TrashBin`) | `trash_bin.tscn` · `%Feedback` | `POP` del cubo (`visual_time` ≥ 0,3 s) | cubo-basura T4 |
+
+*Enmienda D25 (PUL-111, 2026-10-10):* cue nueva `trash` (cubo de basura, ADR-003 §10.3). Una por
+tirada; la clave se añade a `data/audio/feedback_map.tres` con su `AudioCue` y `stream` (el test de
+claves cerradas lo exige). Tirar vacía la mano con `Holder.drop()`, así que suenan `drop` (jugador)
+y `trash` (cubo), como al dejar algo en una estación. Con D25, `unseason` solo suena al **sustituir**
+un aliño por el otro (justo antes de `season`, misma llamada): ya no hay quitar condimento.
 
 Correcta y errónea son distintas en sonido (`deliver_ok`/`deliver_error`) y en visual
 (`POP`/`SHAKE`), como pide AC5. `order_new` lleva `delay` para no pisarse con `deliver_ok` u
@@ -175,7 +184,9 @@ estación: suenan los dos (`drop` es suave por datos); no se suprime para no rom
 - **Desechar** (AC3): con la mano vacía, `interact` sobre la olla **desecha primero el quemado más
   antiguo** (lo libera con `queue_free`, emite `discarded` y la plaza queda libre); si no hay
   quemados, devuelve el cocido FIFO como hoy. Un quemado nunca llega a la mano. Sin escena nueva
-  (cubo) ni cambio de planta. Alternativa en R5.
+  (cubo) ni cambio de planta. Alternativa en R5. *Enmienda D25 (PUL-111, 2026-10-10):* D25 añade un
+  cubo de basura (ADR-003 §10.3) para lo que se lleva en la mano; el quemado **se sigue desechando
+  en la olla** y el cubo no lo ve.
 - **Vapor y fuego** (absorbe PUL-065): `Model/Steam` solo con alguna plaza cociendo; `Model/Fire`
   bajo en reposo y vivo al cocer, a partir de las mismas señales locales.
 
@@ -213,6 +224,29 @@ estación: suenan los dos (`drop` es suave por datos); no se suprime para no rom
   `config.rng_seed ≠ 0` crea el `RandomNumberGenerator` con esa semilla. El tablero consume un
   `randi_range` por comanda creada, así que con la misma semilla la secuencia de recetas es la
   misma. Los tests de núcleo siguen inyectando su RNG.
+- **Comandas por fase** (*Enmienda D25 (PUL-111, 2026-10-10)*; D25 punto 5: la dificultad escala
+  también las mecánicas: fase 1 solo aliño dulce sin cachelos, fase 2 entra el picante, fase 3 los
+  cachelos):
+  - `PhaseData` (`resources/phase_data.gd`) gana `@export var orders: Array[OrderData] = []`: las
+    comandas que pueden salir **mientras dura esa fase**. Lista explícita, no acumulativa (la fase 3
+    enumera las 4). **Vacía = todo `OrderCatalog.orders`** (compatibilidad: los `.tres` y tests de
+    hoy no cambian).
+  - Invariante de datos (test sobre los `.tres`): toda `OrderData` de `PhaseData.orders` está en el
+    `OrderCatalog` que el nivel pasa a `OrderService.setup` (`level_01`: `order_catalog.tres`). El
+    catálogo sigue siendo la lista completa y lo que vale sin fases.
+  - `OrderBoard.set_order_pool(orders: Array[OrderData])` (núcleo, sin señal): `request_order` elige
+    entre `orders` con **un** `randi_range(0, orders.size() − 1)` (misma semilla → misma secuencia,
+    AC5); vacía = el catálogo. `reset()` vuelve al catálogo. Las comandas vivas no cambian al
+    cambiar de fase (como la paciencia, AC4).
+  - `RoundState._enter_phase(index)` llama `set_order_pool(phase.orders)` junto a
+    `set_active_slots` y `set_new_order_patience_multiplier`, antes de `phase_changed` y del
+    relleno de puestos que abre la fase.
+  - `level_01` (`data/config/round_config.tres`): fase 1 `[dulce]`, fase 2 `[dulce, picante]`,
+    fase 3 las 4 (ADR-003 §10.4). Una ronda sin fases (flujos de test, tutorial si no las usa) sale
+    del catálogo entero; el tutorial, que enseña solo la fase 1 (D25), usa una `RoundConfig` de una
+    fase con `orders = [dulce]` o un catálogo de una comanda: lo decide su ficha, sin contrato
+    nuevo.
+  - Alternativa descartada: `OrderData.min_phase: int` (ADR-003 §10, alternativa 6).
 
 ## Alternativas consideradas
 
