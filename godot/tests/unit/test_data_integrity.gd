@@ -194,3 +194,19 @@ func test_pul058_seasoning_station_values() -> void:
 	assert_eq(data.cachelos_portions_per_item, 2)
 	assert_null(data.get("paprika_swap"), "D25: sin paprika_swap")
 	assert_true(data.operator_side_only)
+
+
+func test_pul115_phase_pools_subset_of_catalog_and_per_phase() -> void:
+	var config: RoundConfig = load("res://data/config/round_config.tres") as RoundConfig
+	var catalog: OrderCatalog = load("res://data/orders/order_catalog.tres") as OrderCatalog
+	assert_eq(config.phases.size(), 3)
+	var expected: Array[int] = [1, 2, 4]
+	for i: int in config.phases.size():
+		var phase: PhaseData = config.phases[i]
+		assert_eq(phase.orders.size(), expected[i], "fase %d" % (i + 1))
+		for order: OrderData in phase.orders:
+			assert_true(catalog.orders.has(order), "fase %d: pool dentro del catálogo" % (i + 1))
+	# Acumulativo: cada fase contiene a la anterior (D25).
+	for i: int in range(1, config.phases.size()):
+		for order: OrderData in config.phases[i - 1].orders:
+			assert_true(config.phases[i].orders.has(order))

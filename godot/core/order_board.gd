@@ -33,6 +33,8 @@ var _active_slots: Array[int] = []
 var _all_slots_active: bool = true
 ## Factor sobre el `max_time` de `OrderData` para las comandas que se creen desde ahora.
 var _patience_multiplier: float = 1.0
+## Comandas que pueden salir ahora; vacío = todo el catálogo (D25).
+var _order_pool: Array[OrderData] = []
 
 
 func _init(
@@ -57,6 +59,7 @@ func reset() -> void:
 	_active_slots.clear()
 	_all_slots_active = true
 	_patience_multiplier = 1.0
+	_order_pool.clear()
 	orders_reset.emit()
 
 
@@ -74,6 +77,12 @@ func set_new_order_patience_multiplier(factor: float) -> void:
 	_patience_multiplier = factor
 
 
+## Limita las comandas nuevas a este conjunto (D25, fases); vacío = todo el catálogo. Las vivas no
+## cambian. Cada generación consume una sola llamada al RNG, con pool o sin él.
+func set_order_pool(orders: Array[OrderData]) -> void:
+	_order_pool = orders.duplicate()
+
+
 ## Pide una comanda por puesto, en el orden dado, hasta el máximo de activas.
 func fill_slots(slot_ids: Array[int]) -> void:
 	for slot_id: int in slot_ids:
@@ -89,7 +98,8 @@ func request_order(slot_id: int) -> ActiveOrder:
 		return null
 	if _orders.has(slot_id) or _orders.size() >= _catalog.max_active_orders:
 		return null
-	var data: OrderData = _catalog.orders[_rng.randi_range(0, _catalog.orders.size() - 1)]
+	var source: Array[OrderData] = _catalog.orders if _order_pool.is_empty() else _order_pool
+	var data: OrderData = source[_rng.randi_range(0, source.size() - 1)]
 	var max_time: float = data.max_time * _patience_multiplier
 	var order: ActiveOrder = ActiveOrder.new(_next_order_id, data, slot_id, max_time)
 	_next_order_id += 1

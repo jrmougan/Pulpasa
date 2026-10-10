@@ -22,10 +22,18 @@ Contrato de ADR-003 §10.5 (PUL-111): `PhaseData.orders: Array[OrderData]` (vac�
 - `tools/verify.sh` en verde.
 
 ## Acceptance
-- [ ] AC1 `dificultad-progresiva.md` AC7–AC9 → tests
-- [ ] AC2 Invariante pool ⊆ catálogo → test de integridad
-- [ ] AC3 `tools/verify.sh` en verde
+- [x] AC1 `dificultad-progresiva.md` AC7–AC9 → tests
+- [x] AC2 Invariante pool ⊆ catálogo → test de integridad
+- [x] AC3 `tools/verify.sh` en verde
 
 ## Plan
+- `resources/phase_data.gd`: `orders: Array[OrderData]` (vacía = catálogo).
+- `core/order_board.gd`: `set_order_pool(orders)`; `request_order` elige del pool con una sola llamada al RNG; `reset()` lo vacía.
+- `core/round_state.gd`: `_enter_phase` aplica `phase.orders` al tablero.
+- `data/config/round_config.tres`: fase 1 [Á feira], fase 2 [+Picante], fase 3 las 4.
+- Tests: AC1 -> `test_phases.gd` (AC7 200 generaciones por fase, AC8 cambio de fase en `RoundState`, misma semilla/RNG); `test_order_board.gd` (pool y reset); AC2 -> `test_data_integrity.gd` (pool ⊆ catálogo, acumulativo).
+- Los helpers de AC4 de `test_phases.gd` pasan a fases sin pool porque usan un catálogo de una sola comanda.
 
 ## Evidence
+- `tools/verify.sh`: OK (gdformat, gdlint, import, GUT 828/828, smoke). Sin AC visual.
+- No se tocaron tests de integración de nivel fuera de `owns`.

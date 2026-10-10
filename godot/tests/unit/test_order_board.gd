@@ -1,3 +1,4 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-006: OrderBoard sin árbol (ADR-002). AC1 (B1), AC3 (AC5b), AC4 (paridad sin paciencia), AC6.
 
@@ -391,3 +392,14 @@ func test_ac6_boards_do_not_share_state() -> void:
 	assert_false(b.is_stopped())
 	b.fill_slots([1])
 	assert_eq(b.get_order_for_slot(1).id, 2)
+
+
+func test_pul115_order_pool_restricts_and_reset_clears_it() -> void:
+	var board: OrderBoard = _parity_board()
+	var only: OrderData = load(ORDER_PATH) as OrderData
+	board.set_order_pool([only] as Array[OrderData])
+	for slot: int in SLOTS:
+		assert_eq(board.request_order(slot).data, only)
+	board.reset()
+	board.set_order_pool([] as Array[OrderData])
+	assert_not_null(board.request_order(0), "pool vacío = todo el catálogo")

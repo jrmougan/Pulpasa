@@ -300,7 +300,10 @@ func _round_expiring_at_phase_2() -> RoundState:
 	var catalog: OrderCatalog = OrderCatalog.new()
 	catalog.orders = [data] as Array[OrderData]
 	_board = OrderBoard.new(catalog, _seeded_rng(1))
-	var round_state: RoundState = RoundState.new(_config_copy(300.0, 0.0), _board)
+	var config: RoundConfig = _config_copy(300.0, 0.0)
+	# Esta comanda es la única del catálogo: las fases no restringen el pool (PUL-115).
+	config.phases = [_phase(0.0, 2, 1.0), _phase(1.0 / 3.0, 3, 0.85), _phase(2.0 / 3.0, 4, 0.7)]
+	var round_state: RoundState = RoundState.new(config, _board)
 	round_state.start(SLOTS)
 	return round_state
 
@@ -587,3 +590,126 @@ func _slots_of(orders: Array[ActiveOrder]) -> Array[int]:
 	for order: ActiveOrder in orders:
 		ids.append(order.slot_id)
 	return ids
+
+
+# --- PUL-115: comandas por fase (D25, AC7-AC9) ---
+
+
+## Nombres de receta de las comandas que salen al reponer `count` veces el puesto 1.
+func _generate_names(count: int) -> Dictionary[String, int]:
+	var names: Dictionary[String, int] = {}
+	_board.request_order(1)
+	for _i: int in count:
+		var order: ActiveOrder = _board.get_order_for_slot(1)
+		var key: String = order.data.recipe.display_name
+		names[key] = names.get(key, 0) + 1
+		_board.try_deliver(1, _contents_for(order))
+	return names
+
+
+func _enter(phase_index: int) -> void:
+	_board = OrderBoard.new(_catalog, _seeded_rng(5))
+	_round = RoundState.new(_config, _board)
+	_round.start(SLOTS)
+	var elapsed: float = _config.phases[phase_index].start_fraction * _config.duration
+	_advance_to(elapsed + 1.0)
+	_board.reset()
+	_board.set_order_pool(_config.phases[phase_index].orders)
+
+
+func test_ac7_phase_1_only_a_feira() -> void:
+	_enter(0)
+	var names: Dictionary[String, int] = _generate_names(200)
+	assert_eq(names.size(), 1)
+	assert_eq(names.keys()[0], _catalog.orders[0].recipe.display_name)
+
+
+func test_ac7_phase_2_a_feira_and_picante() -> void:
+	_enter(1)
+	var names: Dictionary[String, int] = _generate_names(200)
+	assert_eq(names.size(), 2, str(names))
+	assert_true(names.has(_catalog.orders[0].recipe.display_name))
+	assert_true(names.has(_catalog.orders[1].recipe.display_name))
+
+
+func test_ac7_phase_3_all_four_recipes() -> void:
+	_enter(2)
+	var names: Dictionary[String, int] = _generate_names(200)
+	assert_eq(names.size(), 4, str(names))
+	for count: int in names.values():
+		assert_gte(count, 1)
+
+
+func test_ac7_round_state_applies_pool_on_enter_phase_without_reset() -> void:
+	_round.start(SLOTS)
+	_advance_to(5.0)
+	for order: ActiveOrder in _board.get_active_orders():
+		assert_eq(order.data, _catalog.orders[0], "fase 1: solo Á feira")
+	for _i: int in 40:
+		for slot: int in SLOTS:
+			var live: ActiveOrder = _board.get_order_for_slot(slot)
+			if live != null:
+				_board.try_deliver(slot, _contents_for(live))
+		for order: ActiveOrder in _board.get_active_orders():
+			assert_eq(order.data, _catalog.orders[0])
+
+
+func test_ac8_phase_2_change_allows_picante_in_first_new_order() -> void:
+	watch_signals(_round)
+	_round.start(SLOTS)
+	_advance_to(5.0)
+	_advance_to(100.0)
+	assert_signal_emit_count(_round, "phase_changed", 2)
+	_round.advance(TICK)  # limpia las caducadas del salto
+	# Las vivas siguen como estaban; la siguiente que se cree sale del pool de la fase 2.
+	var seen: Dictionary[String, int] = {}
+	for _i: int in 120:
+		var order: ActiveOrder = _board.get_order_for_slot(1)
+		seen[order.data.recipe.display_name] = 1
+		_board.try_deliver(1, _contents_for(order))
+	assert_true(seen.has(_catalog.orders[1].recipe.display_name), "Picante puede salir")
+	assert_false(seen.has(_catalog.orders[2].recipe.display_name))
+	assert_false(seen.has(_catalog.orders[3].recipe.display_name))
+
+
+func test_ac8_phase_3_change_allows_cachelos_at_the_switch() -> void:
+	_round.start(SLOTS)
+	_advance_to(5.0)
+	_advance_to(200.0)
+	assert_eq(_round.get_phase(), 3)
+	_round.advance(TICK)  # limpia las caducadas del salto
+	var seen: Dictionary[String, int] = {}
+	for _i: int in 200:
+		var order: ActiveOrder = _board.get_order_for_slot(1)
+		if order == null:
+			_board.request_order(1)
+			continue
+		seen[order.data.recipe.display_name] = 1
+		_board.try_deliver(1, _contents_for(order))
+	assert_eq(seen.size(), 4, str(seen))
+
+
+func test_pool_same_seed_same_sequence_and_one_rng_call_per_order() -> void:
+	var rng_a: RandomNumberGenerator = _seeded_rng(9)
+	var rng_b: RandomNumberGenerator = _seeded_rng(9)
+	var board_a: OrderBoard = OrderBoard.new(_catalog, rng_a)
+	var board_b: OrderBoard = OrderBoard.new(_catalog, rng_b)
+	board_a.set_order_pool(_catalog.orders)
+	board_a.request_order(1)
+	board_b.request_order(1)
+	for _i: int in 10:
+		var a: ActiveOrder = board_a.get_order_for_slot(1)
+		var b: ActiveOrder = board_b.get_order_for_slot(1)
+		assert_not_null(a)
+		assert_not_null(b)
+		assert_eq(a.data, b.data, "pool = catálogo completo: misma secuencia que sin pool")
+		board_a.try_deliver(1, _contents_for(a))
+		board_b.try_deliver(1, _contents_for(b))
+	assert_eq(rng_a.state, rng_b.state, "una llamada al RNG por comanda, con y sin pool")
+
+
+func test_pool_cleared_by_board_reset() -> void:
+	_board.set_order_pool([_catalog.orders[0]] as Array[OrderData])
+	_board.reset()
+	var names: Dictionary[String, int] = _generate_names(100)
+	assert_eq(names.size(), 4)

@@ -9,3 +9,6 @@ extends Resource
 ## Factor sobre el `max_time` de cada `OrderData` para las comandas creadas en esta fase
 ## (1,0 = el de la receta). Las comandas vivas conservan el suyo (AC4).
 @export var patience_multiplier: float = 1.0
+## Comandas que pueden salir en esta fase (D25, ADR-003 §10.5). Vacía = todo el catálogo.
+## Cada una debe estar en el `OrderCatalog` de la ronda.
+@export var orders: Array[OrderData] = []
