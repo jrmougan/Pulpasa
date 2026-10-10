@@ -4,28 +4,11 @@
 [ext_resource type="Resource" path="res://data/config/trash_bin.tres" id="2_data"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="3_hl"]
 [ext_resource type="Script" path="res://components/feedback_player.gd" id="4_fb"]
+[ext_resource type="PackedScene" path="res://assets/models/stations/trash_bin/trash_bin.glb" id="5_glb"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_bin"]
 height = 0.8
 radius = 0.3
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
-albedo_color = Color(0.26, 0.3, 0.34, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lid"]
-albedo_color = Color(0.4, 0.45, 0.5, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_body"]
-material = SubResource("StandardMaterial3D_body")
-top_radius = 0.3
-bottom_radius = 0.25
-height = 0.75
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_lid"]
-material = SubResource("StandardMaterial3D_lid")
-top_radius = 0.32
-bottom_radius = 0.32
-height = 0.08
 
 [node name="TrashBin" type="StaticBody3D" groups=["interactable"]]
 collision_layer = 4
@@ -39,13 +22,8 @@ shape = SubResource("CylinderShape3D_bin")
 
 [node name="Model" type="Node3D" parent="."]
 
-[node name="Body" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
-mesh = SubResource("CylinderMesh_body")
-
-[node name="Lid" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.79, 0)
-mesh = SubResource("CylinderMesh_lid")
+[node name="trash_bin" parent="Model" instance=ExtResource("5_glb")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
 
 [node name="Highlightable" type="Node" parent="."]
 unique_name_in_owner = true
