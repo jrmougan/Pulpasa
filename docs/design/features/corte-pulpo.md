@@ -39,7 +39,7 @@ flotante que absorbe `Ingredient.EMPTY_EPSILON`.
 - **AC6** Given pulpo crudo (no cocido) en la mano, When se pulsa interactuar sobre la caja, Then no se corta (la caja no cambia). *Test:* `test_box.gd`.
 - **AC7** Given una caja vacía en un pasaplatos de la barra, When el cocinero la corta desde el lado de cocina y el emplatador la recoge desde el de servicio, Then los dos lo consiguen sin rodear la barra (el pasaplatos se alcanza desde las dos caras). *Test:* `test_box_on_slot.gd` / `test_station_level.gd`.
 - **AC8 (D25)** Given `data/boxes/`, Then existe un único recurso de caja (`box.tres`), no existen `small/medium/large.tres` y `BoxData` no tiene `size`, `short_label` ni `icon` de talla. *Test:* `test_data_boxes.gd`.
-- **AC9 (D25)** Given el rack de cajas, When un jugador con la mano vacía pulsa interactuar a ≤ 1,0 m, Then recibe 1 caja vacía (`fill` = 0, sin condimentos); no hay pilas por talla (el rack tiene un solo objetivo). *Test:* `test_box_rack.gd`.
+- **AC9 (D25)** Given el rack de cajas, When un jugador con la mano vacía pulsa interactuar a ≤ 1,0 m, Then recibe 1 caja vacía (`fill` = 0, sin condimentos); no hay pilas por talla (el rack tiene un solo objetivo). *Test:* `test_shelves.gd`.
 
 *Superados por D25:* el cuadro S/M/L (4/6/10), la letra de ticket y rack, y el AC2/R9 «N = 4 / 6 / 10».
 

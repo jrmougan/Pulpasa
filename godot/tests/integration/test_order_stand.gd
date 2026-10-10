@@ -22,6 +22,7 @@ const MAT_OFF_PATH: String = "res://assets/models/stations/order_stand/delivery_
 const ZONE_Z: float = 3.40
 ## Ticks a 60 Hz que caben en 0,1 s (R12).
 const LIGHT_TICKS: int = 6
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _bus: Node
 var _service: Node
@@ -85,7 +86,7 @@ func _box_in_hand(order: ActiveOrder) -> Box:
 	var box: Box = BOX_SCENE.instantiate()
 	_level.add_child(box)
 	if order != null:
-		box.data = order.data.recipe.box
+		box.data = BOX
 		var guard: int = 0
 		while not box.is_full() and guard < 200:
 			var octopus: Ingredient = OCTOPUS_SCENE.instantiate()

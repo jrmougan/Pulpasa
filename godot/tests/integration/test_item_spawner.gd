@@ -6,7 +6,7 @@ extends GutTest
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const STORAGE_SCENE: PackedScene = preload("res://entities/stations/octopus_storage.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
-const MEDIUM: BoxData = preload("res://data/boxes/medium.tres")
+const MEDIUM: BoxData = preload("res://data/boxes/box.tres")
 const INTERACTABLE_LAYER: int = 1 << 2
 
 var _level: Node3D

@@ -19,6 +19,7 @@ const STAR_EMPTY: Texture2D = preload("res://assets/textures/icons/star_empty.sv
 const COOK_STEP: float = 0.1
 ## Margen sobre `cook_time` al avanzar la olla a mano.
 const COOK_MARGIN: float = 0.5
+const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _level: Node
 var _player: Player
@@ -76,7 +77,7 @@ func _station(path: String) -> Node:
 
 func _small_box_spawner() -> ItemSpawner:
 	for child: Node in _station("BoxShelf").get_children():
-		if child is ItemSpawner and (child as ItemSpawner).data == RECIPE.box:
+		if child is ItemSpawner and (child as ItemSpawner).data == BOX:
 			return child
 	return null
 
@@ -120,7 +121,7 @@ func _prepare_box() -> Box:
 	assert_not_null(spawner)
 	assert_true(_press(spawner), "estantería: da la caja")
 	var box: Box = _hold.get_held_item() as Box
-	assert_eq(box.data, RECIPE.box)
+	assert_eq(box.data, BOX)
 	var station: SeasoningStation = _seasoning_station()
 	var pass_slot: Slot = _station("PassSlot01") as Slot
 	assert_true(_press(pass_slot), "pasaplatos: guarda la caja mientras se corta")
@@ -162,7 +163,7 @@ func _prepare_box() -> Box:
 func _deliver_directly() -> void:
 	var order: ActiveOrder = OrderService.get_active_orders()[0]
 	var contents: BoxContents = BoxContents.new(
-		RECIPE.box,
+		BOX,
 		RECIPE.ingredient,
 		IngredientData.CookingState.COOKED,
 		1.0,

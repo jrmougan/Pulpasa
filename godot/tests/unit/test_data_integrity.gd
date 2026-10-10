@@ -12,7 +12,7 @@ const FOLDER_TYPES: Dictionary[String, String] = {
 ## Mínimo de `.tres` por carpeta: detecta un borrado sin fijar el total (añadir no rompe).
 const MIN_PER_FOLDER: Dictionary[String, int] = {
 	"audio": 2,
-	"boxes": 3,
+	"boxes": 1,
 	"config": 6,
 	"ingredients": 2,
 	"orders": 8,
@@ -94,7 +94,6 @@ func test_ac3_references_are_filled() -> void:
 	for id: String in ["individual", "combo_duo", "familiar"]:
 		var recipe: RecipeData = load("res://data/recipes/%s.tres" % id) as RecipeData
 		assert_not_null(recipe.ingredient, id)
-		assert_not_null(recipe.box, id)
 
 
 func test_ac3_seasoning_colors_are_distinct_and_opaque() -> void:

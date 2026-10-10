@@ -3,7 +3,7 @@ extends GutTest
 ## se rehace al alternar condimentos y marca el picante con la llama.
 
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
-const SMALL: BoxData = preload("res://data/boxes/small.tres")
+const SMALL: BoxData = preload("res://data/boxes/box.tres")
 const SALT: SeasoningData = preload("res://data/seasonings/salt.tres")
 const PAPRIKA: SeasoningData = preload("res://data/seasonings/paprika.tres")
 const HOT_PAPRIKA: SeasoningData = preload("res://data/seasonings/hot_paprika.tres")
