@@ -1,0 +1,57 @@
+run 1 PASS
+run 2 PASS
+run 3 FAIL
+[0m[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+run 4 PASS
+run 5 PASS
+run 6 FAIL
+[0m[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+run 7 PASS
+run 8 FAIL
+[0m[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+run 9 FAIL
+[0m[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+run 10 FAIL
+[0m[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+run 11 PASS
+run 12 PASS
+run 13 PASS
+run 14 PASS
+run 15 PASS
+run 16 PASS
+run 17 FAIL
+[0m[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]: entrega 2 (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected the signal [order_completed] emit count of [1] to equal [2]:  (Signals emitted: ["round_started", "round_time_changed", "score_changed", "orders_reset", "order_generated", "order_completed", "delivery_rejected", "order_patience_changed", "character_switched"])
+[31m    [Failed]:  [0mExpected object EventBus:<Node#60012103290>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+run 18 PASS
+run 19 PASS
+run 20 PASS
+pass=14 fail=6

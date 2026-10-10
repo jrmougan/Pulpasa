@@ -15,6 +15,12 @@ const R16_ORDERS: Array[OrderData] = [
 const R16_PATIENCE: float = 900.0
 const R16_STAND_FRONT: float = 2.5
 const R16_SWITCH_WAIT: float = 0.3
+## Semilla del RNG de comandas. Sin ella las dos comandas iniciales salen al azar y, si coinciden
+## en receta (50 %), la zona de entrega del primer puesto que cruza la caja la acepta (PUL-039):
+## la caja 1 se entrega al puesto 2 y la entrega 2 falla. Con la semilla 1 salen Picante, Á feira
+## y Picante (puesto 1, puesto 2 y la reposición del puesto 1 tras la primera entrega), así que
+## cada caja solo encaja en su puesto.
+const R16_SEED: int = 1
 
 var _level: Node
 var _switch_presses: int = 0
@@ -54,6 +60,9 @@ func _load_two_order_level() -> void:
 	catalog.max_active_orders = 2
 	_level = LEVEL.instantiate()
 	_level.set("order_catalog", catalog)
+	var seeded: RoundConfig = (_level.get("round_config") as RoundConfig).duplicate() as RoundConfig
+	seeded.rng_seed = R16_SEED
+	_level.set("round_config", seeded)
 	(_level.get_node("CharacterSwitcher") as CharacterSwitcher).set_mode(GameMode.Mode.SINGLE)
 	add_child(_level)
 	await wait_physics_frames(2)
@@ -82,6 +91,9 @@ func test_r16_single_with_switch_two_s_orders_one_octopus_two_switches() -> void
 	var switched_before: int = get_signal_emit_count(EventBus, "character_switched")
 	var active: Array[ActiveOrder] = OrderService.get_active_orders()
 	assert_eq(active.size(), 2, "dos pedidos")
+	assert_ne(
+		active[0].data, active[1].data, "recetas distintas: cada caja solo encaja en su puesto"
+	)
 	var server_player: Player = _level.get_node("Characters/Player1") as Player
 	var cook_player: Player = _level.get_node("Characters/Player2") as Player
 	var server: RefCounted = Walker.new(get_tree(), server_player)
