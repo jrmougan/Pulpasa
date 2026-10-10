@@ -45,3 +45,6 @@ Posiciones: las de `scene-tree.md` (x 2,6 z −3,1 y x −5,4 z 4,3), no las del
 - T6 excluye de la comprobación de distancia los 3 spawners por talla (`SmallSpawner`, `MediumSpawner`,
   `LargeSpawner`): `LargeSpawner` queda a 1,27 m de `TrashBinService` y PUL-113 los sustituye por el
   `BoxSpawner` único (1,80 m). Tras el merge de PUL-113 la exclusión sobra.
+- T4 visual: lo cubre `test_t4_one_trash_cue_with_visual_response` (tween del POP en curso, `visual_time` 0,4 s >= 0,3 s).
+- Nota para la ficha de sonido: el cue `trash` reutiliza `fx_drop`, que ya suena con el cue `drop` del
+  jugador; al tirar suena doble. El sonido definitivo va aparte.
