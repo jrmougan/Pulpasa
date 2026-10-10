@@ -1,7 +1,7 @@
 ---
 id: PUL-109
 title: Test de caja errónea entregada en el tick de caducidad (D24)
-status: review
+status: done
 milestone: M3c
 role: gameplay-engineer
 deps: [PUL-108]
