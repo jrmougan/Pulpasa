@@ -66,7 +66,9 @@ públicos, métodos privados. Es el orden de la guía oficial de estilo y el que
 
 ### Datos
 Números de balance en `Resource` `.tres` bajo `godot/data/`, nunca literales en código
-(tiempos, capacidades, `fill_per_press`, zona muerta, cooldown de cambio…). La aleatoriedad usa
+(tiempos, capacidades, `presses_to_fill`, zona muerta, cooldown de cambio…). Si un valor se
+deriva de otro (p. ej. el llenado por corte, `1 / presses_to_fill`), el `.tres` guarda el entero
+y el recurso lo calcula (`BoxData.fill_after()`, PUL-104). La aleatoriedad usa
 un `RandomNumberGenerator` inyectable con semilla fija en tests.
 
 ### Estructura de carpetas (`godot/`)

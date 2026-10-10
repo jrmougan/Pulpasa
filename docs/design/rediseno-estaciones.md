@@ -252,7 +252,8 @@ dispensadores · `c` cuenco · `1–4` puestos · `░` hueco de paso · `#` bar
   │ ███████░░░  01:12    │       │ L │
   └──────────────────────┘       └───┘
 ```
-- **Reglas/datos:** cortes **4 / 6 / 10** pulsaciones (`fill_per_press` 0,25 / 0,1667 / 0,1);
+- **Reglas/datos:** cortes **4 / 6 / 10** pulsaciones (`presses_to_fill`, `int` desde PUL-104;
+  antes `fill_per_press` 0,25 / 0,1667 / 0,1);
   sigue 1 pulpo = 2 cajas (`amount_per_full_box` 50) y la pulsación repetida (D13).
 - **Información:** el ticket muestra el **tamaño** con la misma silueta y letra que el rack y el
   plato (S/M/L), antes del nombre. El rack rotula cada pila. Los pasaplatos pasan de 9 invisibles a
@@ -380,7 +381,7 @@ Para las features que se reescriban tras el gate (`estacion-condimentos.md`, `co
 
 **Bandejas y corte (B-A)**
 - **R9** Given una caja vacía S/M/L y pulpo cocido de 100 unidades, When se pulsa N veces (N = 4 /
-  6 / 10, de `fill_per_press` en `data/boxes/*.tres`), Then la caja está llena y quedan 50 unidades.
+  6 / 10, de `presses_to_fill` en `data/boxes/*.tres`), Then la caja está llena y quedan 50 unidades.
 - **R10** Given una comanda de caja M, Then su ticket muestra la silueta y la letra «M» del mismo
   recurso que el rack (`BoxData.icon`/`short_label`, nuevo) antes del nombre de la receta.
 - **R11** Given `level_01.tscn`, Then hay exactamente 6 `PassSlot`, cada uno con marca visible
