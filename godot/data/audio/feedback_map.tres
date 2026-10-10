@@ -125,6 +125,14 @@ script = ExtResource("1_3p1oc")
 stream = ExtResource("13_f7mvv")
 pitch_jitter = 0.0
 
+[sub_resource type="Resource" id="Resource_trash"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("3_aj3yj")
+volume_db = -4.0
+visual = 1
+visual_time = 0.4
+pop_scale = 0.15
+
 [resource]
 script = ExtResource("14_lxye3")
 cues = Dictionary[StringName, ExtResource("1_3p1oc")]({
@@ -143,5 +151,6 @@ cues = Dictionary[StringName, ExtResource("1_3p1oc")]({
 &"pick_up": SubResource("Resource_af6f2"),
 &"season": SubResource("Resource_rtr1p"),
 &"season_error": SubResource("Resource_lgxhl"),
+&"trash": SubResource("Resource_trash"),
 &"unseason": SubResource("Resource_iru8r")
 })
