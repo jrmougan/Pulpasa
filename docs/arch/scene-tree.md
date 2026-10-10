@@ -65,14 +65,14 @@ coordenadas son orientativas: manda `docs/design/level-layouts/gen_layouts.py` c
 ```
    0123456789012345
  0 ##NK#O#O########     cocina: OctopusStorage, CachelosStorage, Kitchen, Kitchen2
- 1 #T.............#     D25: TrashBinKitchen (T), esquina NO de la cocina
+ 1 #........T.....#     D25: TrashBinKitchen (T), al este de Kitchen2
  2 #.b............#     Player2 (b)
  3 #..............#
  4 #PPPCCCCCC.PPP##     M3c (D23, PUL-101): PassSlot01–03 · SeasoningStation (x −2,4…2,8) · hueco x 2,8…4,2 · PassSlot04–06
  5 #..............#
  6 B..............#     BoxShelf (pared izquierda del servicio)
  7 B..........a...#     Player1 (a)
- 8 #T.............#     D25: TrashBinService (T), al sur del rack
+ 8 #T.............#     D25: TrashBinService (T), al sur del rack (fuera del alcance del spawner)
  9 #..............#
 10 ###1#2##3#4#####     OrderStand1–4
 ```
@@ -92,21 +92,24 @@ Son contrato el número, los nombres `PassSlot01..06`, la marca y que fuera de e
 (ADR-003 §9.5); las posiciones son las de `level_01.tscn` y las prueba `test_level_01.gd` (R11,
 R14: rodeo 7,93 m), con `level_walker.gd::GAP_X` = 3,5.
 
-**D25 (ADR-003 §10.3; Enmienda D25 (PUL-111, 2026-10-10)).** Dos cubos de basura, comprobados
-contra la colisión de `kitchen_layout.tscn` (`BackLeft` x −6,8…−5,3 / z −4,5…−3,5,
-`WallLeftKitchen` x ≤ −5,8 / z −3,5…1,5, `WallLeftFront` x ≤ −5,8 / z 3,5…6,5) y contra
-`level-layouts.md` (HUD sobre el suelo en x < −7,2, z > −0,1; tickets en z < −6,8):
-- `TrashBinKitchen` en **x −5,45, z −3,15** (esquina noroeste de la cocina, contra `BackLeft` y la
-  pared). D25 pide «junto a las ollas»; se usa la esquina libre más cercana de la cocina porque
-  delante de las ollas (x −1,3 / 0,7) el cubo competiría como objetivo con la olla cuando se lleva
-  un pulpo crudo y lo tiraría por error. Distancias: `PassSlot01` 3,2 m, hueco > 8 m, nevera 1,2 m
-  (la nevera no hace nada con la mano llena).
-- `TrashBinService` en **x −5,45, z 3,9** (pared oeste del servicio, al sur del rack `BoxShelf`,
-  contra la barandilla `WallLeftFront`). Distancias: `PassSlot01` 3,9 m, hueco > 9 m, `OrderStand1`
-  2,9 m, spawner del rack ≈ 1,4 m (con la mano llena consume la pulsación sin hacer nada).
-- Los dos a ≥ 1,5 m de todo `PassSlot` y del hueco (que conserva sus 1,4 m libres), fuera del HUD y
-  de la banda de tickets (T6 de `cubo-basura`). Las posiciones admiten ±0,2 m; las fija
-  `test_level_01.gd` (distancias y encuadre) en la ficha del nivel.
+**D25 (ADR-003 §10.3; Enmienda D25 (PUL-111, 2026-10-10)).** Dos cubos de basura. Regla de
+colocación (contrato): cada cubo a **≥ 1,5 m** (entre raíces, en el plano del suelo) de **todo lo
+que es objetivo con la mano llena** —`OctopusStorage`, `CachelosStorage` y `BoxShelf/BoxSpawner`
+(`ItemSpawner.can_interact` es `true` con la mano llena: consumen la pulsación), `Kitchen`,
+`Kitchen2`, los 6 `PassSlot`, dispensadores y cuenco, y los 4 `OrderStand`— y del hueco (segmento
+x 2,8…4,2, z 0), que conserva ≥ 1,0 m libre; sin solapar la colisión de `kitchen_layout.tscn` y
+fuera del HUD (suelo x < −7,2, z > −0,1) y de la banda de tickets (z < −6,8) a 1280×720.
+**`test_level_01.gd` lo exige** (T6 de `cubo-basura`): recorre esas instancias del nivel y comprueba
+la distancia mínima de cada `TrashBin`, además del encuadre.
+
+| Cubo | Posición (raíz) | Objetivo más cercano con la mano llena | Colisión vecina |
+|---|---|---|---|
+| `TrashBinKitchen` | **x 2,6, z −3,1** (cocina, al este de `Kitchen2`, contra la encimera del fondo) | `Kitchen2` (0,7; −4) 2,10 m · hueco (2,8; 0) 3,11 m · cuenco (x ≤ 2,7, z −0,1) ≥ 3,0 m · `PassSlot04` 3,74 m · `Kitchen` 4,0 m | `BackRight` z ≤ −3,5 (borde del cubo, r 0,3: z −3,4); colisión de `Kitchen2` x ≤ 1,15 |
+| `TrashBinService` | **x −5,4, z 4,3** (pared oeste del servicio, al sur del rack) | `BoxSpawner` (−5,52; 2,5) 1,80 m · `OrderStand1` (−3,3; 5,75) 2,55 m · `PassSlot01` 4,30 m | `WallLeftFront` x ≤ −5,8, z 3,5…6,5 (borde del cubo: x −5,7) |
+
+`BoxSpawner` se toma en `(0, 0,31, −0,78)` local de `BoxShelf` → (−5,52; 2,5) global (ADR-003 §10.1).
+D25 pide el de cocina «junto a las ollas»: queda a 2,1 m de `Kitchen2`, sin competir con ella. Las
+posiciones admiten ±0,2 m mientras la regla se cumpla.
 
 ```
 Level01 (Node3D)                         scenes/levels/level.gd  (común, extends Node)
@@ -133,8 +136,8 @@ Level01 (Node3D)                         scenes/levels/level.gd  (común, extend
 │   │                    Sin overrides de Model/Body: la marca pass_mark es parte de slot.tscn (§3)
 │   ├── BoxShelf         entities/stations/box_shelf.tscn          celdas (0, 6–7), de frente al servicio (+x)  [6; M2b]
 │   │                    D25: un solo spawner (BoxSpawner, box.tres); el nivel no cambia
-│   ├── TrashBinKitchen  entities/stations/trash_bin.tscn          x −5,45, z −3,15 (esquina NO de la cocina)  [D25]
-│   ├── TrashBinService  entities/stations/trash_bin.tscn          x −5,45, z 3,9 (al sur del rack)            [D25]
+│   ├── TrashBinKitchen  entities/stations/trash_bin.tscn          x 2,6, z −3,1 (al este de Kitchen2)       [D25]
+│   ├── TrashBinService  entities/stations/trash_bin.tscn          x −5,4, z 4,3 (al sur del rack)           [D25]
 │   ├── OrderStand1      entities/stations/order_stand.tscn  slot_id = 1  celda (3, 10)  [6]
 │   ├── OrderStand2      …                                   slot_id = 2  celda (5, 10)
 │   ├── OrderStand3      …                                   slot_id = 3  celda (8, 10)
@@ -495,9 +498,10 @@ resources/box_data.gd                            BoxData − short_label, − ic
 data/boxes/box.tres                              BoxData única: presses_to_fill 6 (provisional, QA); sustituye a
                                                  small/medium/large.tres
 resources/recipe_data.gd                         RecipeData − box (la caja ya no distingue recetas)
-data/recipes/*.tres, data/orders/*.tres          4 recetas y 4 comandas (dulce/picante × con/sin cachelos); nombres,
-                                                 base_points y max_time del diseño (comandas.md); order_catalog.tres
-                                                 lista las 4
+data/recipes/{a_feira,picante,con_cachelos,bravo_cachelos}.tres   RecipeData: 8 / 9 / 12 / 13 € (comandas.md)
+data/orders/{a_feira,picante,con_cachelos,bravo_cachelos}.tres    OrderData: [dulce] / [picante] / [dulce, cachelos] /
+                                                 [picante, cachelos]; max_time 60 / 60 / 80 / 80
+data/orders/order_catalog.tres                   rehecho: las 4 comandas (ADR-003 §10.4)
 resources/seasoning_data.gd                      SeasoningType + SWEET_DRESSING, HOT_DRESSING (al final; SALT, PAPRIKA,
                                                  HOT_PAPRIKA, OIL en desuso)
 data/seasonings/{sweet_dressing,hot_dressing}.tres  SeasoningData: exclusivity_group &"dressing", sort_order 0;
@@ -583,6 +587,8 @@ enum. `Slot.accepted_group` y el grupo `box` se conservan.
 | `paprika_swap` | `SeasoningStationData`, `seasoning_station.tres`, `seasoning_dispenser.gd`, `cachelos_bowl.gd` | Sustituir es la regla (`SeasoningRules.apply`) |
 | `swap_exclusive` | `SeasoningRules.toggle`, `Box.toggle_seasoning` | El cuenco llama sin él |
 | Antirrebote del dispensador | `seasoning_dispenser.gd` (`clock`, `_game_time`, `_last_change`) | El cuenco lo conserva |
+| Recetas, comandas y catálogo de M1 | `data/recipes/{individual,combo_duo,familiar}.tres`, `data/orders/order_1..6.tres`, `data/orders/order_catalog_basic.tres` | Los sustituyen las 4 recetas/comandas de ADR-003 §10.4 y `order_catalog.tres` rehecho. `kitchen_sandbox.tscn` y `test_data_integrity.gd` pasan a `order_catalog.tres` |
+| Datos de paridad M0 de tests | `tests/helpers/m0_data/` (apunta a tallas y condimentos de baja) | Se rehace sin `box` y con los aliños, o baja si ya no lo usa nadie (ficha dueña de esos tests) |
 | Tests de tallas y de 4 dispensadores | `test_data_boxes.gd`, `test_order_tickets.gd` (talla), `test_seasoning_rules.gd` (`swap_exclusive`), `test_seasoning_station.gd`, `test_order_validator.gd` (caja), y los que usen `small/medium/large.tres` o `salt/oil/paprika/hot_paprika.tres` | Las fichas de código D25 los reescriben; el producer reparte los que no tengan dueño |
 
 `SeasoningType.SALT/PAPRIKA/HOT_PAPRIKA/OIL` y `Rejection.EXCLUSIVE_TAKEN` quedan en desuso sin

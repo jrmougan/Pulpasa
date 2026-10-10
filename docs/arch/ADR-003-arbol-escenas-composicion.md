@@ -408,7 +408,7 @@ Tecla única, InputMap y capas de física sin cambios.
 | `RecipeData` | `resources/recipe_data.gd` | **Se quita `box`**: una receta es `display_name` (≤ 14 caracteres), `translation_key`, `ingredient` (pulpo), `base_points` (precio, D2) y `description`. Las recetas se distinguen por el contenido de la `OrderData` que las usa (§10.4) |
 | `OrderValidator.matches` | `core/order_validator.gd` | **Deja de comparar la caja**: mismo ingrediente, cocido e igualdad exacta del conjunto de condimentos (D4). La caja errónea de D8 es solo de contenido (aliño o cachelos). El llenado no se compara: un aliño exige caja llena (§10.2) y toda comanda lleva aliño, así que una caja sin llenar nunca coincide |
 | `BoxContents` | `core/box_contents.gd` | Sin cambio de firma: `box` se conserva como dato informativo (lo rellena `Box.get_contents()`) y **no se valida**. Quitarlo obligaría a reescribir todas las llamadas posicionales al constructor por un campo inofensivo |
-| Rack | `entities/stations/box_shelf.tscn` | Un solo spawner `BoxSpawner` (`item_spawner.gd`, `scene = box.tscn`, `data = box.tres`) en lugar de `SmallSpawner`/`MediumSpawner`/`LargeSpawner`; su colisión cubre el frente del mueble y `%Highlightable.root` es `Model/box_shelf/OutlineHull` (`Highlightable` recorre los descendientes: resalta el mueble entero). El `.glb` puede seguir mostrando tres huecos hasta que el arte lo cambie: es visual |
+| Rack | `entities/stations/box_shelf.tscn` | Un solo spawner `BoxSpawner` (`item_spawner.gd`, `scene = box.tscn`, `data = box.tres`) en lugar de `SmallSpawner`/`MediumSpawner`/`LargeSpawner`, en `(0, 0,31, −0,78)` local (el sitio de `MediumSpawner`; (−5,52; 2,5) en `level_01`); su colisión cubre el frente del mueble y `%Highlightable.root` es `Model/box_shelf/OutlineHull` (`Highlightable` recorre los descendientes: resalta el mueble entero). El `.glb` puede seguir mostrando tres huecos hasta que el arte lo cambie: es visual |
 | Ticket | `ui/tickets/ticket_entry.gd` / `.tscn` | **Se quitan** `_show_size()` y los nodos `%SizeBadge`, `%SizeIcon` y `%SizeLabel`. El ticket muestra nombre de receta + 1 pegatina de aliño + la de cachelos si la lleva, en `SeasoningRules.canonical_order()` |
 
 `level_01.tscn` no cambia por la caja: `BoxShelf` sigue siendo una instancia con su transformación.
@@ -528,7 +528,11 @@ TrashBin (StaticBody3D, capa interactable; grupo interactable)   trash_bin.gd  c
 └── %Feedback (FeedbackPlayer)   cue trash, POP del cubo (pulse_target = la raíz)
 ```
 Nivel: dos instancias, `TrashBinKitchen` y `TrashBinService`, en `Stations` de `level_01.tscn`
-(posiciones en `scene-tree.md` §2). Override permitido: solo la transformación (§2).
+(posiciones en `scene-tree.md` §2: x 2,6 / z −3,1 y x −5,4 / z 4,3). Override permitido: solo la
+transformación (§2). **Regla de colocación** (contrato, la exige `test_level_01.gd`): cada cubo a
+≥ 1,5 m de todo lo que es objetivo con la mano llena (spawners —`ItemSpawner.can_interact` es `true`
+con la mano llena—, ollas, pasaplatos, dispensadores, cuenco y puestos) y del hueco, para que no
+compitan como objetivo y no se tire nada por error.
 
 #### 10.4 Comandas por fase
 El dato vive en la ronda (`RoundConfig.phases`), junto a puestos y paciencia. Contrato completo en
@@ -536,17 +540,33 @@ ADR-006 §6 (*Enmienda D25*): `PhaseData.orders: Array[OrderData]` (vacío = tod
 `OrderBoard.set_order_pool(orders)`, que `RoundState` aplica al entrar en cada fase. Recetas y
 comandas de D25:
 
-| Comanda (`OrderData`) | Receta (`RecipeData`) | `seasonings` | Fase en que entra |
-|---|---|---|---|
-| dulce sin cachelos | p. ej. «Á feira» | `[sweet_dressing]` | 1 |
-| picante sin cachelos | p. ej. «Picante» | `[hot_dressing]` | 2 |
-| dulce con cachelos | p. ej. «Con cachelos» | `[sweet_dressing, cachelos]` | 3 |
-| picante con cachelos | p. ej. «Picante e cachelos» | `[hot_dressing, cachelos]` | 3 |
+| Receta (`display_name`) | `base_points` | `seasonings` de la comanda | `max_time` | Fase en que entra | Ficheros |
+|---|---|---|---|---|---|
+| Á feira | 8 | `[sweet_dressing]` | 60 | 1 | `data/recipes/a_feira.tres`, `data/orders/a_feira.tres` |
+| Picante | 9 | `[hot_dressing]` | 60 | 2 | `data/recipes/picante.tres`, `data/orders/picante.tres` |
+| Con cachelos | 12 | `[sweet_dressing, cachelos]` | 80 | 3 | `data/recipes/con_cachelos.tres`, `data/orders/con_cachelos.tres` |
+| Bravo cachelos | 13 | `[hot_dressing, cachelos]` | 80 | 3 | `data/recipes/bravo_cachelos.tres`, `data/orders/bravo_cachelos.tres` |
 
-Nombres, precios (`base_points`, monótonos con el esfuerzo) y `max_time` los fija el diseño
-(`comandas.md`, PUL-110). Una `RecipeData` por comanda (1:1): el nombre y el precio son de la receta;
-el contenido, de la comanda. Ficheros: los de `data/recipes/` y `data/orders/` que decida la ficha de
-datos; `order_catalog.tres` lista las 4.
+Nombres, precios (€) y `max_time` (s) son los de `docs/design/features/comandas.md` (PUL-110); si el
+diseño los cambia, manda `comandas.md` y solo cambian los `.tres`. Una `RecipeData` por comanda
+(1:1): nombre, `translation_key` y precio en la receta; contenido y paciencia en la `OrderData`.
+`ingredient` = `data/ingredients/octopus.tres` en las cuatro.
+
+**Datos que se van o se rehacen** (lo más simple: bajas y un único catálogo):
+- `data/orders/order_catalog.tres` se **rehace** con las 4 comandas de arriba (mismo fichero y `uid`).
+- **Bajas**: `data/recipes/{individual,combo_duo,familiar}.tres`, `data/orders/order_1..6.tres` y
+  `data/orders/order_catalog_basic.tres`. Sus usuarios pasan a `order_catalog.tres`:
+  `scenes/sandbox/kitchen_sandbox.tscn` (su `order_catalog`) y
+  `tests/unit/test_data_integrity.gd` (rutas esperadas; las recetas por id pasan a
+  `a_feira`/`picante`/`con_cachelos`/`bravo_cachelos`), y los tests que cargan `order_N.tres`
+  (`test_data_catalog.gd`, `test_order_board.gd`, `test_order_validator.gd`, `test_m1_flow.gd`,
+  `test_m2b_flow.gd`, `test_m2b_station_selection.gd`, `test_station_level.gd`,
+  `test_level_01_r16.gd`) usan las comandas nuevas.
+- `tests/helpers/m0_data/` (copias de paridad M0) apunta a `small/medium/large.tres` y a los
+  condimentos de baja: se rehace sin `box` y con los aliños nuevos, o se da de baja si ya no lo usa
+  ningún test; lo decide la ficha que tenga esos tests.
+- Catálogo de fase 1 para el tutorial o el sandbox: no hace falta fichero; se expresa con
+  `PhaseData.orders` (ADR-006 §6).
 
 #### 10.5 Señales
 **Ninguna señal nueva en `EventBus` ni cambio de firma.** Una señal local nueva, `TrashBin.trashed`.

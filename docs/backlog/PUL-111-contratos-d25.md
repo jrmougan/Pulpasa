@@ -100,19 +100,23 @@ Enmienda que fije el contrato que implementarán las fichas de código siguiente
     valor 0. El cubo no lo aplica; `push_warning` si ≠ 0. **Hueco con T5 de PUL-110** («cambiarlo no
     exige código»): subirlo exige una enmienda (señal de bus o método de `RoundManager`), como pide
     esta ficha. El gate decide si T5 se lee como «el valor vive en datos».
-14. **Posiciones de los cubos** (comprobadas contra la colisión de `kitchen_layout.tscn`):
-    `TrashBinKitchen` x −5,45, z −3,15 (esquina NO de la cocina) y `TrashBinService` x −5,45, z 3,9
-    (al sur del rack). Las aproximadas de la ficha (x −5,8, z −3,5) son la arista de `BackLeft` y de
-    la pared: un cubo de r 0,3 m centrado ahí las pisaría; junto al rack, la barandilla
-    `WallLeftFront` (x ≤ −5,8) obliga a x ≥ −5,5. **Desviación de D25**: «junto a
-    las ollas» se interpreta como la esquina libre de la cocina, porque delante de las ollas el cubo
-    competiría como objetivo con la olla al llevar un pulpo crudo. Ambos a ≥ 3 m de pasaplatos y a
-    > 8 m del hueco; fuera del HUD y de los tickets. ±0,2 m, los fija `test_level_01.gd`.
+14. **Posiciones de los cubos** (revisión del coordinador): regla de contrato, exigida en
+    `test_level_01.gd`: ≥ 1,5 m de todo objetivo con la mano llena (nevera, saco de cachelos,
+    `BoxSpawner`, ollas, pasaplatos, dispensadores, cuenco, puestos) y del hueco, sin solapar la
+    colisión de `kitchen_layout.tscn`. `TrashBinKitchen` **x 2,6, z −3,1** (al este de `Kitchen2`,
+    2,10 m de ella: «junto a las ollas» sin competir) y `TrashBinService` **x −5,4, z 4,3** (al sur
+    del rack, 1,80 m del `BoxSpawner` en (−5,52; 2,5), 2,55 m de `OrderStand1`). ±0,2 m.
 15. **Comandas por fase**: `PhaseData.orders: Array[OrderData]` (lista explícita por fase, vacía =
     todo el catálogo) + `OrderBoard.set_order_pool(orders)` aplicado en `RoundState._enter_phase`;
     un `randi_range` por comanda (semilla determinista); invariante de datos: el pool es subconjunto
     del catálogo. Descartado `OrderData.min_phase`. El tutorial (solo fase 1) lo resuelve su ficha
     con datos, sin contrato nuevo.
-16. **Recetas**: una `RecipeData` por comanda (1:1): nombre y precio en la receta, contenido en la
-    `OrderData`. Nombres, precios y `max_time` los fija el diseño (PUL-110).
+16. **Recetas** (nombres de `comandas.md`): Á feira 8 €, Picante 9 €, Con cachelos 12 €, Bravo
+    cachelos 13 €; `max_time` 60/60/80/80. Una `RecipeData` por comanda (1:1), ficheros
+    `data/{recipes,orders}/{a_feira,picante,con_cachelos,bravo_cachelos}.tres`; `order_catalog.tres`
+    rehecho con las 4. Bajas: `individual/combo_duo/familiar.tres`, `order_1..6.tres`,
+    `order_catalog_basic.tres` (sus usuarios, `kitchen_sandbox.tscn` y `test_data_integrity.gd`, pasan
+    a `order_catalog.tres`). `tests/helpers/m0_data/` se rehace o se da de baja en la ficha dueña.
 17. **Señales**: ninguna nueva ni cambio de firma en `EventBus`; una local nueva (`trashed`).
+18. Confirmado en revisión: al sustituir un aliño suenan `unseason` y luego `season`; el mostrador se
+    queda en 5,2 m (PUL-110 alinea el diseño).
