@@ -1,7 +1,7 @@
 ---
 id: PUL-122
 title: Escala de UI, safe area, perfil de plataforma y menús móviles
-status: in_progress
+status: done
 milestone: M3e
 role: ui-engineer
 deps: [PUL-119, PUL-120]
@@ -29,8 +29,24 @@ ADR-005 E1–E4 (sin la disposición de HUD y tickets, que es de PUL-129: aquí 
 - Nombres exactos del contrato (manda sobre el diseño; equivalencias en PUL-120).
 
 ## Acceptance
-
+- [x] AC1 `PlatformProfile.detect`: `--touch` o `--profile=mobile` -> `MOBILE`; `--profile=desktop` -> `DESKTOP`; features `mobile`/`web_android`/`web_ios` -> `MOBILE`; resto -> `DESKTOP` (`test_platform_profile.gd`)
+- [x] AC2 `project.godot`: `stretch/mode` `canvas_items`, `aspect` `expand`, `handheld/orientation` 4 (`test_project_settings.gd`)
+- [x] AC3 `UiScale`: 72 dp = 180 px a 1080 con cualquier lienzo; `px_to_units`; `safe_margins` 132 / 0 / 132 / 63 y safe area nula (`test_ui_scale_math.gd`)
+- [x] AC4 Con `--touch`, el menú solo muestra «Individual» con foco y carga el nivel en `SINGLE`; en escritorio siguen los 3 botones (`test_main_menu_touch.gd`)
+- [x] AC5 Perfil móvil a 2340x1080: ningún texto de menú, pausa o game over < 36 px; a 1600x720 < 24 px (`test_ui_scale.gd`)
+- [x] AC6 Botones de menú, pausa y game over >= 120 px de alto y >= 24 px de separación en `MOBILE`; reanudar <= 0,1 s (`test_touch_menus.gd`)
+- [x] AC7 Perder el foco o Atrás en ronda pausan en <= 1 frame y no se reanuda sola; solo en `MOBILE` (`test_app_lifecycle.gd`)
+- [x] AC8 En escritorio, HUD y tickets conservan su tamaño a 1280x720 y 1920x1080 (`test_hud.gd`, `test_order_tickets.gd`); capturas de menús en `docs/evidence/PUL-122/`
 
 ## Plan
+1. `core/platform_profile.gd`, `resources/ui_profile.gd` y dos `.tres`; `UiScale` nuevo; `SafeAreaMargin`.
+2. `project.godot` (stretch, orientación, `quit_on_go_back=false`); `GameState`: `platform`, `ui_profile`, `set_platform`, ciclo de vida y pantalla encendida.
+3. Menús: `SafeAreaMargin` raíz, `TextFloor`/`MenuMobile`/`FocusRing`, solo «Individual», «Reiniciar» en la pausa móvil.
+4. Quitar `UiScale.factor` de `hud.gd` y `order_tickets_panel.gd`.
+5. Tests GUT y capturas.
 
 ## Evidence
+- `tools/verify.sh` en verde (ver commit final). Capturas en `docs/evidence/PUL-122/`: `main_menu_*`, `menu_touch_2340x1080`, `pause_*`, `gameover_*`, `pause_warning_touch_2340x1080`, `main_menu_touch_1280x720` (escritorio a 1280x720 y 1920x1080; táctil a 2340x1080 con `--touch`). Generadas con un script `SceneTree` (`godot --resolution WxH -s capture.gd -- <pantalla> <png> [--touch]`).
+- Decisiones: «Reiniciar» solo en la pausa `MOBILE` (escritorio sin cambios); botón de salida se llama «Menú» en `MOBILE`; en `MOBILE` se oculta la insignia de la tarjeta y la tarjeta mide 720 u de ancho para que quepa en 720 de alto del lienzo; `quit_on_go_back=false` para que Atrás pause en vez de salir; `SafeAreaMargin.set_safe_rect(rect, window_size)` admite el tamaño de ventana para tests.
+- Decisión: los mínimos de texto móviles se aplican en tiempo de ejecución con `ui/theme/text_floor.gd` (también en overrides de escena) en lugar de subir los tamaños de `default_theme.tres`: subir el tema cambiaría HUD, tickets y menús de escritorio (AC8, sin regresión) y los `theme_override_font_sizes` de las escenas ganarían igualmente al tema. Es reversible y reutilizable por PUL-129.
+- `GameState` solo toca la pantalla encendida en `MOBILE` (llamada inyectable); Atrás en el menú principal móvil sale del juego porque `quit_on_go_back=false`; el ancho de tarjeta móvil es `UiProfile.menu_card_width`.

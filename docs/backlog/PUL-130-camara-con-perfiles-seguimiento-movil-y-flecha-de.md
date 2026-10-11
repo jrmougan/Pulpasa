@@ -1,7 +1,7 @@
 ---
 id: PUL-130
 title: Cámara con perfiles, seguimiento móvil y flecha de borde
-status: todo
+status: in_progress
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-122, PUL-123]
