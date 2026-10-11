@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2lkhn27h726y"
-path="res://.godot/imported/size_m.png-893a028b15fb2f026cc7537d7fe9beb2.ctex"
+uid="uid://ykt643s35l47"
+path="res://.godot/imported/icon_mark_plate.svg-0ea79b2cff9188d95c5cffcdf60114dc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/ui/box_sizes/size_m.png"
-dest_files=["res://.godot/imported/size_m.png-893a028b15fb2f026cc7537d7fe9beb2.ctex"]
+source_file="res://assets/textures/ui/actions/icon_mark_plate.svg"
+dest_files=["res://.godot/imported/icon_mark_plate.svg-0ea79b2cff9188d95c5cffcdf60114dc.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

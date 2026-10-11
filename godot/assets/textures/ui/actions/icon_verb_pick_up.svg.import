@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bjwr44q4vk6u"
-path="res://.godot/imported/size_s.png-8083abebd5a873806c762cd574834d89.ctex"
+uid="uid://criqs7n68cyo4"
+path="res://.godot/imported/icon_verb_pick_up.svg-3d683d5edaa3bf9b4dd9217de24deda7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/ui/box_sizes/size_s.png"
-dest_files=["res://.godot/imported/size_s.png-8083abebd5a873806c762cd574834d89.ctex"]
+source_file="res://assets/textures/ui/actions/icon_verb_pick_up.svg"
+dest_files=["res://.godot/imported/icon_verb_pick_up.svg-3d683d5edaa3bf9b4dd9217de24deda7.ctex"]
 
 [params]
 
@@ -38,3 +38,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false
