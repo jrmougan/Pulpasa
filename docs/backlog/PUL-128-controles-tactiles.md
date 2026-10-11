@@ -1,7 +1,7 @@
 ---
 id: PUL-128
 title: Controles táctiles
-status: todo
+status: in_progress
 milestone: M3e
 role: ui-engineer
 deps: [PUL-121, PUL-122, PUL-123]

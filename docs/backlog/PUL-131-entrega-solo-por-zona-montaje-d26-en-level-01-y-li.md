@@ -28,6 +28,7 @@ ADR-003 §11.7 del puesto; `seasoning_station.gd` y `order_stand.gd` sin `season
 
 ### Pendientes heredados (producer)
 - Revisión de PUL-121: (1) añadir al CSV `tests/fixtures/action_matrix.csv` las 3 filas F (zona de entrega: receptor `delivery_zone`, `reachable=0`, NONE); (2) test del invariante ADR-002 Enmienda 2: tras varios Q y en COOP_2P, ≤ 1 `InteractionComponent` con `controlled_by == p`; (3) `components/interaction_component.gd:81-82`: receptor con verbo real cuyo `interact` devuelve false → hoy `push_error` sin `interaction_resolved` (pulsación muda); emitir la respuesta; (4) quitar los bucles `for _i in 20 … get_target() == stand` de `test_m2b_flow.gd:274` y `test_station_level.gd:140`; (5) listas literales de verbos/motivos en `test_action_icon_set.gd` y `test_icons_silhouettes.gd` → `ActionVerb.ALL`/`ActionReason.ALL`; (6) placas lisas `SizePanel_*` del rack: renombrar/retirar al cambiar `test_level_01.gd`; (7) texto obsoleto de `box_sizes`/S/M/L en `docs/assets/licenses.md` (pídelo si no está en owns).
+- PUL-127: el aro inactivo es un nodo hermano `%InactiveIndicator` (no el mismo `%ActiveIndicator` de `scene-tree.md`) porque `test_m2_flow.gd` exige `%ActiveIndicator.visible == false` en el inactivo. Unifica al actualizar ese test o actualiza `scene-tree.md` (pídelo). Materiales `assets/materials/active_indicator_p*.tres` sustituidos por `shaders/ring_*.tres`: da de baja los viejos si nada los usa.
 
 ## Constraints
 - Solo las rutas de `owns`/`touches_scenes`. Si un cambio rompe un test fuera de tus owns, para y avisa al producer.

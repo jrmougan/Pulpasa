@@ -444,3 +444,25 @@ func test_pul114_ticket_shows_dressing_then_cachelos_stickers() -> void:
 		var count: int = (entry.get_node("%SeasoningIcons") as HBoxContainer).get_child_count()
 		assert_eq(count, order.data.seasonings.size(), order.data.display_name)
 		assert_between(count, 1, 2, "1 aliño y, a lo sumo, cachelos")
+
+
+func test_pul122_ac8_tickets_keep_size_at_720p_and_1080p_without_double_scale() -> void:
+	## ADR-005 E2: la escala la da `stretch`; el panel de tickets no se escala a sí mismo.
+	_mount()
+	_fill()
+	var container: Control = _panel.get_node("%Tickets")
+	assert_eq(container.scale, Vector2.ONE, "sin escala propia")
+	var original: Vector2i = get_window().size
+	var sizes: Array[Vector2] = []
+	var fractions: Array[float] = []
+	for resolution: Vector2i in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = resolution
+		await wait_process_frames(3)
+		var stretch: float = get_viewport().get_final_transform().get_scale().x
+		var ticket: OrderTicket = _tickets()[0] as OrderTicket
+		sizes.append(ticket.size)
+		fractions.append(ticket.size.x * stretch / float(resolution.y))
+	get_window().size = original
+	assert_eq(sizes[0], sizes[1], "mismas unidades de interfaz")
+	assert_eq(sizes[0].x, 212.0, "ancho del ticket intacto")
+	assert_almost_eq(fractions[0], fractions[1], 0.0001, "misma proporción de pantalla")
