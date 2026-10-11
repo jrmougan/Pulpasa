@@ -8,7 +8,7 @@ extends Resource
 @export var cachelos_initial_stock: int = 0
 ## Raciones que suma cada cachelos cocido echado al cuenco (D23: 2; se recorta al máximo).
 @export var cachelos_portions_per_item: int = 2
-## Dispensadores (y alternar cachelos) solo desde el lado de condimentar; false = los dos lados.
+## Dispensadores (y poner cachelos con una caja) solo desde el lado de condimentar; false = ambos.
 @export var operator_side_only: bool = true
 
 ## %StockMeter del cuenco (D26.6, ADR-003 §11.8): muescas por ración, medidas en px a 1080 de alto.

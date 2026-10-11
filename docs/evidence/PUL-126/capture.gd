@@ -1,8 +1,7 @@
 extends SceneTree
 ## Capturas de PUL-126: estación de condimentos en la cámara real de `level_01` (cuenco con
 ## `%StockMeter`, dispensadores con el icono propio de cada aliño), pegatinas dulce/picante en
-## cajas y ticket de comanda. El prompt de acción del mundo es PUL-127: aquí se coloca el icono del
-## aliño sobre cada dispensador solo para enseñarlo (no es código del juego).
+## cajas y ticket de comanda.
 ## Uso (con ventana), desde `godot/`:
 ##   godot --audio-driver Dummy --resolution 1920x1080 -s ../docs/evidence/PUL-126/capture.gd -- <dir>
 
@@ -31,27 +30,19 @@ func _init() -> void:
 	var bowl: Node3D = station.get_node("CachelosBowl")
 	var base_size: float = cam.size
 	var forward: Vector3 = -cam.global_transform.basis.z
-	var floating_nodes: Array[Node] = []
 
-	# 1. Estación: cuenco con 2 raciones y el icono propio de cada aliño sobre su dispensador.
+	# 1. Estación: cuenco con 2 raciones e icono propio de cada aliño en su dispensador.
 	bowl.set(&"stock", 2)
-	for node_name: String in ["SweetDressing", "HotDressing"]:
-		var dispenser: Node3D = station.get_node("Dispensers/" + node_name)
-		_floating_icon(level, dispenser.get(&"seasoning"), dispenser.global_position + Vector3(0, 1.05, 0.4))
-		floating_nodes.append(level.get_child(level.get_child_count() - 1))
 	cam.size = base_size * 0.28
 	cam.global_position = station.global_position + Vector3(0, 1.2, 0) - forward * 20.0
 	await _shot(dir + "/station_dispensers_and_meter.png")
 
-	# 2. Medidor del cuenco con 0, 1... 4 raciones (collage de 5 capturas recortadas).
+	# 2. Medidor del cuenco con 0, 1... 4 raciones (5 capturas, una por stock).
 	cam.size = base_size * 0.1
 	cam.global_position = bowl.global_position + Vector3(0, 0.5, 0) - forward * 20.0
 	for stock: int in [0, 1, 2, 3, 4]:
 		bowl.set(&"stock", stock)
 		await _shot(dir + "/bowl_stock_%d.png" % stock)
-
-	for node: Node in floating_nodes:
-		node.queue_free()
 
 	# 3. Pegatinas de la caja: dulce y picante (el picante lleva además la marca de guindilla).
 	var spot: Vector3 = station.global_position + Vector3(-1.4, 0.3, -2.6)
@@ -98,32 +89,6 @@ func _box(level: Node, at: Vector3, seasoning: Resource) -> Node3D:
 	box.set(&"fill", 1.0)
 	box.call(&"apply_seasoning", seasoning)
 	return box
-
-
-func _floating_icon(level: Node, seasoning: Resource, at: Vector3) -> void:
-	var plate: Sprite3D = Sprite3D.new()
-	var image: Image = Image.create(80, 80, false, Image.FORMAT_RGBA8)
-	image.fill(Color(0, 0, 0, 0))
-	for y: int in 80:
-		for x: int in 80:
-			if Vector2(x + 0.5, y + 0.5).distance_to(Vector2(40, 40)) <= 40.0:
-				image.set_pixel(x, y, Color(0.106, 0.106, 0.122, 0.85))
-	plate.texture = ImageTexture.create_from_image(image)
-	var icon: Sprite3D = Sprite3D.new()
-	icon.texture = seasoning.get(&"icon")
-	icon.render_priority = 31
-	icon.no_depth_test = true
-	icon.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	icon.shaded = false
-	icon.pixel_size = 64.0 / maxf(icon.texture.get_width(), 1.0) * (12.74 / 1080.0) * 0.28
-	plate.pixel_size = (12.74 / 1080.0) * 0.28
-	plate.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	plate.no_depth_test = true
-	plate.shaded = false
-	plate.render_priority = 30
-	level.add_child(plate)
-	plate.global_position = at
-	plate.add_child(icon)
 
 
 func _shot(path: String) -> void:

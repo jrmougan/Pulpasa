@@ -159,7 +159,7 @@ func test_pul057_box_badge_style_values() -> void:
 	assert_eq(style.badge_gap_px, 3)
 	assert_almost_eq(style.badge_height, 0.35, 0.0001)
 	assert_not_null(style.hot_mark)
-	assert_eq(style.hot_mark.resource_path, ICON_DIR + "icon_verb_season_hot.svg")
+	assert_eq(style.hot_mark.resource_path, "res://assets/textures/icons/small-fire.svg")
 	var hot: SeasoningData = SeasoningData.new()
 	hot.type = SeasoningData.SeasoningType.HOT_DRESSING
 	var sweet: SeasoningData = SeasoningData.new()

@@ -41,6 +41,9 @@ func before_all() -> void:
 	var header: PackedStringArray = file.get_csv_line()
 	while not file.eof_reached():
 		var cells: PackedStringArray = file.get_csv_line()
+		if cells.size() == 1 and cells[0].is_empty():
+			continue  # línea en blanco final
+		assert_eq(cells.size(), header.size(), "fila mal formada: %s" % ",".join(cells))
 		if cells.size() != header.size():
 			continue
 		var row: Dictionary = {}
@@ -156,7 +159,15 @@ func _describe(hint: ActionHint) -> String:
 
 
 func test_fixture_has_the_station_rows() -> void:
-	assert_gte(_rows.size(), 120, "D (40) + E (6 casos × 13 manos)")
+	var dispensers: int = 0
+	var bowls: int = 0
+	for row: Dictionary in _rows:
+		if row["receiver"] == "bowl":
+			bowls += 1
+		else:
+			dispensers += 1
+	assert_eq(dispensers, 40, "D: 2 dispensadores × 2 lados × 10 manos")
+	assert_eq(bowls, 130, "E: 10 casos de lado y stock × 13 manos")
 
 
 func test_ac1_hint_matches_the_matrix_for_every_dispenser_and_bowl_row() -> void:

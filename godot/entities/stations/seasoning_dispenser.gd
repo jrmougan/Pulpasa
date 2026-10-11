@@ -12,6 +12,13 @@ extends StaticBody3D
 ## Pulsación consumida sin cambios (signals.md §4): `BOX_NOT_FULL` o `ALREADY_APPLIED`.
 signal rejected(reason: SeasoningRules.Rejection)
 
+## Placa del icono propio sobre el frontal (D26.7); `PLATE` es `icon_mark_plate.svg`.
+const PLATE: Texture2D = preload("res://assets/textures/ui/actions/icon_mark_plate.svg")
+const SIGN_MATERIAL: StringName = &"seasoning_signs"
+const PLATE_COLOR: Color = Color("F2EBDD")
+const ICON_COLOR: Color = Color("1B1B1F")
+const ICON_RATIO: float = 0.72
+
 @export var seasoning: SeasoningData
 @export var station: SeasoningStation
 
@@ -22,6 +29,7 @@ signal rejected(reason: SeasoningRules.Rejection)
 
 func _ready() -> void:
 	_tint_paprika()
+	_show_own_icon()
 
 
 ## Solo desde el lado de condimentar (o los dos con `operator_side_only` = false). ADR-003 §8.1.
@@ -102,3 +110,60 @@ func _tint_paprika() -> void:
 	var paint: StandardMaterial3D = (mesh.material as StandardMaterial3D).duplicate()
 	paint.albedo_color = seasoning.color
 	_gesture.material_override = paint
+
+
+## El modelo trae el mismo cartel (guindilla) en los dos dispensadores: se tapa y se coloca en su
+## sitio una placa con `seasoning.icon` (pimentonera o guindilla), la del ticket y la pegatina.
+func _show_own_icon() -> void:
+	if seasoning == null or seasoning.icon == null:
+		return
+	for mesh: MeshInstance3D in find_children("*", "MeshInstance3D", true, false):
+		if not mesh.visible or mesh.mesh == null:
+			continue
+		for surface: int in mesh.mesh.get_surface_count():
+			var material: Material = mesh.get_active_material(surface)
+			if material == null or material.resource_name != SIGN_MATERIAL:
+				continue
+			_cover_sign(mesh, surface)
+			return
+
+
+func _cover_sign(mesh: MeshInstance3D, surface: int) -> void:
+	var arrays: Array = mesh.mesh.surface_get_arrays(surface)
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+	if vertices.is_empty():
+		return
+	var bounds: AABB = AABB(vertices[0], Vector3.ZERO)
+	var normal: Vector3 = Vector3.ZERO
+	for index: int in vertices.size():
+		bounds = bounds.expand(vertices[index])
+		if index < normals.size():
+			normal += normals[index]
+	var hidden: StandardMaterial3D = StandardMaterial3D.new()
+	hidden.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	hidden.albedo_color = Color(1.0, 1.0, 1.0, 0.0)
+	mesh.set_surface_override_material(surface, hidden)
+	var side: float = maxf(bounds.size.x, maxf(bounds.size.y, bounds.size.z))
+	var plate: Sprite3D = _make_sprite(PLATE, side / PLATE.get_width(), 30)
+	plate.modulate = PLATE_COLOR
+	var icon: Sprite3D = _make_sprite(
+		seasoning.icon, side * ICON_RATIO / maxf(seasoning.icon.get_width(), 1.0), 31
+	)
+	icon.modulate = ICON_COLOR
+	plate.name = "FrontPlate"
+	icon.name = "FrontIcon"
+	mesh.add_child(plate)
+	plate.add_child(icon)
+	plate.position = bounds.get_center() + normal.normalized() * 0.01
+	plate.basis = Basis.looking_at(-normal.normalized()) if normal.length() > 0.001 else Basis()
+
+
+func _make_sprite(texture: Texture2D, pixel_size: float, priority: int) -> Sprite3D:
+	var sprite: Sprite3D = Sprite3D.new()
+	sprite.texture = texture
+	sprite.pixel_size = pixel_size
+	sprite.shaded = false
+	sprite.double_sided = true
+	sprite.render_priority = priority
+	return sprite

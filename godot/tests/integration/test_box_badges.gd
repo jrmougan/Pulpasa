@@ -132,14 +132,14 @@ func _box_top_y() -> float:
 	return _row.get_box_top_screen_y()
 
 
-## PUL-126 AC5 (D26.7): la pegatina lleva el icono propio de cada aliño y la marca del picante es la
-## guindilla del verbo, la misma que ve el dispensador y el ticket.
-func test_pul126_badges_use_each_dressings_own_icon_and_the_hot_mark_is_the_chilli() -> void:
+## PUL-126 AC5 (D26.7): la pegatina lleva el icono propio de cada aliño y la marca del picante sigue
+## siendo la llama (acento).
+func test_pul126_badges_use_each_dressings_own_icon_and_the_hot_mark_is_the_flame() -> void:
 	var style: BoxBadgeStyle = load("res://data/config/box_badges.tres") as BoxBadgeStyle
 	var dir: String = "res://assets/textures/ui/actions/"
 	assert_eq(SWEET.icon.resource_path, dir + "icon_verb_season_sweet.svg")
 	assert_eq(HOT.icon.resource_path, dir + "icon_verb_season_hot.svg")
-	assert_eq(style.hot_mark.resource_path, dir + "icon_verb_season_hot.svg")
+	assert_eq(style.hot_mark.resource_path, "res://assets/textures/icons/small-fire.svg")
 	_apply(HOT)
 	var badge: Node = _row.get_child(0)
 	var icon: Sprite3D = badge.get_child(1) as Sprite3D

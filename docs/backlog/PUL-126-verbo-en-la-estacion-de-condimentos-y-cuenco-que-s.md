@@ -43,9 +43,9 @@ ADR-006 §4.1, `signals.md`, `scene-tree.md` §9). Partición original y notas d
 ## Plan
 Ficheros (todos en `owns` / `touches_scenes`):
 - `resources/seasoning_data.gd`: `@export var verb: StringName`. `data/seasonings/*.tres`: `verb` (`season_sweet`, `season_hot`, `cachelos`); `icon` de dulce y picante = `icon_verb_season_sweet.svg` / `icon_verb_season_hot.svg`.
-- `data/config/box_badges.tres`: `hot_mark` = `icon_verb_season_hot.svg` (pendiente heredado).
+- `data/config/box_badges.tres`: `hot_mark` se queda en la llama `small-fire.svg` (decisión del producer: el icono propio ya distingue; la llama es acento).
 - `resources/seasoning_station_data.gd` + `data/config/seasoning_station.tres`: baja `toggle_guard`; alta de los datos del medidor (`stock_notch_px` 24, hueco, contorno, colores, opacidad de la placa).
-- `entities/stations/seasoning_dispenser.gd`: `_resolve` → `ActionRules.for_dispenser`; `get_action_hint`; `can_interact` = `is_target()`; `interact` ejecuta la rama del hint (`OK` aplica y gesto, `BLOCKED` emite `rejected` y consume, `NONE` `false`); `is_reachable_from` = solo el lado.
+- `entities/stations/seasoning_dispenser.gd`: placa con `seasoning.icon` sobre el cartel baked del frontal (se oculta el cartel `seasoning_signs`); `_resolve` → `ActionRules.for_dispenser`; `get_action_hint`; `can_interact` = `is_target()`; `interact` ejecuta la rama del hint (`OK` aplica y gesto, `BLOCKED` emite `rejected` y consume, `NONE` `false`); `is_reachable_from` = solo el lado.
 - `entities/stations/cachelos_bowl.gd` + `cachelos_bowl.tscn`: `_resolve` → `ActionRules.for_bowl`; solo pone (`Box.apply_seasoning`), repone si `stock + 2 <= 4`; sin `_toggle`, `toggle_guard` ni reloj; `%StockMeter` (`Sprite3D` billboard, textura generada por `build_meter_image`); `stock` con setter que refresca modelo y medidor.
 - Señales: ninguna nueva ni cambiada. `rejected(SeasoningRules.Rejection)` local sigue (dispensador: `BOX_NOT_FULL`, `ALREADY_APPLIED`; cuenco: además `BOWL_EMPTY`, `BOWL_FULL`). Sin cues de error en estas entidades (los da el jugador, ADR-003 §11.4).
 Tests:
@@ -58,7 +58,7 @@ Tests:
 ## Evidence
 - `bash tools/verify.sh` completo en verde (981 tests GUT, 0 fallos; gdformat, gdlint, import, smoke).
 - Capturas (1920×1080, cámara real de `level_01`; `docs/evidence/PUL-126/capture.gd` las regenera):
-  - `station_dispensers_and_meter.png`: estación con el cuenco a 2 raciones (4 muescas, 2 llenas) y el icono propio de cada aliño (pimentonera, guindilla) sobre su dispensador. El prompt del mundo es PUL-127: el icono flotante lo coloca el script de captura solo para enseñarlo.
+  - `station_dispensers_and_meter.png`: estación con el cuenco a 2 raciones (4 muescas, 2 llenas) e icono propio de cada aliño (pimentonera, guindilla) en el frontal de su dispensador.
   - `bowl_stock_0.png` … `bowl_stock_4.png`: el medidor con 0…4 raciones.
   - `box_badges_sweet_hot.png` y `box_badges_sweet_hot_zoom.png` (recorte ×4): pegatinas de la caja dulce, picante y dulce + cachelos.
   - `tickets_stickers.png` (ticket ×3): pegatina dulce (pimentonera) y picante (guindilla) en las cuatro comandas.
@@ -66,4 +66,5 @@ Tests:
   - `seasoning_station.gd` (fuera de `owns`, PUL-131) sigue reproduciendo `season_error` al oír `rejected`; el fin del cue de error en estaciones llega con el montaje. Los tests de esta ficha que lo ven (`test_ac5_*`, `test_audio_ac7_unfilled_*`) no cambian de comportamiento.
   - `CachelosBowl.clock` se queda como `Callable` vacío en desuso (sin efecto) porque `test_kitchen_flow`, `test_m2_flow` y `test_parity_smoke` (fuera de `owns`, PUL-131) todavía lo asignan; PUL-131 lo retira con ellos. `Box.toggle_seasoning` no se toca (`box.gd` es de PUL-131): ya no lo llama nadie en `entities/`.
   - `is_reachable_from` pasa a ser solo el filtro de lado (la mano la decide el hint), como fija la columna `reachable` del fixture: dispensador, solo lado; cuenco, solo lado con caja en la mano.
-  - `hot_mark` apunta a la guindilla (`icon_verb_season_hot.svg`) como pedía el pendiente heredado: en la pegatina picante el icono y la marca son el mismo glifo (se ve doblado en la esquina). Volver a la llama `small-fire.svg` es un cambio de una línea en `box_badges.tres`.
+  - `hot_mark` se queda en la llama (`small-fire.svg`) por decisión del producer; el icono propio de cada aliño va en el disco de la pegatina.
+  - El `.glb` trae la misma guindilla en los dos dispensadores: `seasoning_dispenser.gd` tapa ese cartel y pone una placa con `seasoning.icon` (sin tocar el `.glb`).

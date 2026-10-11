@@ -806,7 +806,8 @@ func test_ac19_no_gesture_when_already_applied_or_rejected() -> void:
 
 
 ## audio-y-fx AC7 (D25): 1 cue `season` por aliño (no 3); al sustituir suenan `unseason` y `season`
-## en ese orden; reaplicar el mismo aliño no suena.
+## en ese orden; reaplicar el mismo aliño no suena en la caja (la estación suena su rechazo hasta
+## PUL-131).
 func test_audio_ac7_one_season_cue_per_dressing_and_unseason_before_season_on_replace() -> void:
 	var box: Box = _held_box()
 	var cues: Array[StringName] = _box_cues(box)
@@ -820,7 +821,9 @@ func test_audio_ac7_one_season_cue_per_dressing_and_unseason_before_season_on_re
 		[&"season", &"unseason", &"season"] as Array[StringName],
 		"sustituir: unseason y season, en ese orden"
 	)
-	# El rechazo de reaplicar lo suena el jugador (D26.3); el cue de la estación lo retira PUL-131.
+	assert_eq(
+		_cues, [&"season_error"] as Array[StringName], "transitorio: lo retira PUL-131 (D26.3)"
+	)
 
 
 func test_audio_ac7_unfilled_box_plays_only_the_error_cue() -> void:
@@ -828,7 +831,7 @@ func test_audio_ac7_unfilled_box_plays_only_the_error_cue() -> void:
 	var cues: Array[StringName] = _box_cues(box)
 	_press(_dispenser("HotDressing"))
 	assert_eq(cues, [] as Array[StringName], "la caja no suena")
-	assert_eq(_cues, [&"season_error"] as Array[StringName])
+	assert_eq(_cues, [&"season_error"] as Array[StringName], "transitorio: lo retira PUL-131")
 
 
 # --- AC20: caja errónea (D8) y corrección en una pulsación ---
