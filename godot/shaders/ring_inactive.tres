@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/ring_inactive.gdshader" id="1_shader"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_shader")
+shader_parameter/ring_color = Color(0.815686, 0.815686, 0.815686, 1)
+shader_parameter/dashes = 16.0
+shader_parameter/duty = 0.5

@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://components/action_prompt.gd" id="1_prompt"]
+
+[node name="ActionPrompt" type="Node3D"]
+top_level = true
+script = ExtResource("1_prompt")
+
+[node name="Plate" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+
+[node name="VerbIcon" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+
+[node name="ReasonIcon" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+visible = false
+
+[node name="Cross" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+visible = false
+
+[node name="ReplaceBadge" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+visible = false
+
+[node name="PlayerMarker" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+visible = false
