@@ -234,6 +234,43 @@ func test_d26_ac4_desktop_has_no_touch_controls_and_a_fixed_camera() -> void:
 	assert_almost_eq(rig.size, 12.74, 0.0001)
 
 
+## PUL-131 (revisión de PUL-128): al acabar la ronda el game over suelta, oculta y desactiva los
+## controles táctiles (el árbol no se pausa); la ronda siguiente los reactiva.
+func test_d26_game_over_turns_the_touch_controls_off() -> void:
+	GameState.set_platform(PlatformProfile.Kind.MOBILE)
+	GameState.mode = GameMode.Mode.SINGLE
+	await _load_level()
+	var touch: TouchControls = _level.get_node("UI/TouchControls") as TouchControls
+	touch.set_last_source(TouchInput.Source.TOUCH)
+	assert_true(touch.visible, "visibles durante la partida")
+	EventBus.round_finished.emit(RoundResult.new())
+	var game_over: GameOver = _level.get_node("UI/GameOver") as GameOver
+	assert_true(game_over.visible)
+	assert_false(touch.visible, "ocultos con el game over")
+	assert_eq(touch.process_mode, Node.PROCESS_MODE_DISABLED, "y sin recibir input")
+	EventBus.round_started.emit(120.0)
+	assert_false(game_over.visible)
+	assert_eq(touch.process_mode, Node.PROCESS_MODE_INHERIT)
+	assert_true(touch.visible, "vuelven con la ronda siguiente")
+
+
+## PUL-131 (revisión de PUL-125): con la cámara móvil (7,0 m) los anillos de coccion siguen
+## midiendo 64 px a 1080 de alto y las plazas se separan en consecuencia.
+func test_d26_cook_rings_follow_the_mobile_camera_zoom() -> void:
+	GameState.set_platform(PlatformProfile.Kind.MOBILE)
+	await _load_level()
+	await wait_process_frames(2)
+	var rig: CameraRig = _level.get_node("CameraRig") as CameraRig
+	assert_almost_eq(rig.size, 7.0, 0.0001, "perfil móvil")
+	var kitchen: CookingStation = _level.get_node("Stations/Kitchen") as CookingStation
+	var rings: Array[WorldProgressRing] = kitchen.get_rings()
+	assert_gte(rings.size(), 2)
+	assert_almost_eq(rings[0].get_diameter_px(7.0, 1080.0), 64.0, 0.1)
+	assert_gte(rings[0].get_thickness_px(7.0, 1080.0) + 0.001, 8.0)
+	var spacing: float = rings[1].position.x - rings[0].position.x
+	assert_almost_eq(spacing, 64.0 * CookingStation.RING_SPACING_RATIO * 7.0 / 1080.0, 0.001)
+
+
 func test_ac1_level_root_only_uses_level_script() -> void:
 	var state: SceneState = LEVEL.get_state()
 	assert_eq(_level_script_path(state), "res://scenes/levels/level.gd")

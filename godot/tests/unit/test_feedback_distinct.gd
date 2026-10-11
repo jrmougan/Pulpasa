@@ -42,6 +42,6 @@ func test_rejected_shakes() -> void:
 	assert_almost_eq(data.shake_amplitude, 0.06, 0.001)
 
 
-func test_legacy_keys_remain_until_pul_131() -> void:
+func test_legacy_keys_are_gone() -> void:
 	for cue: StringName in [&"cook_done", &"season_error", &"deliver_error"]:
-		assert_not_null(MAP.get_cue(cue), String(cue))
+		assert_null(MAP.get_cue(cue), String(cue))
