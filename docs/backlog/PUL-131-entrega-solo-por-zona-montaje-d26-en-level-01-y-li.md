@@ -1,7 +1,7 @@
 ---
 id: PUL-131
 title: Entrega solo por zona, montaje D26 en `level_01` y limpieza de contrato
-status: review
+status: done
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-121, PUL-130]
