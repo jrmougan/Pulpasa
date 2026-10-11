@@ -7,7 +7,7 @@ role: gameplay-engineer
 deps: [PUL-121, PUL-123, PUL-124]
 orca_task: null
 unity_sources: []
-owns: [godot/components/action_prompt.gd*, godot/entities/player/player.gd*, godot/shaders/**, godot/tests/integration/test_action_prompt.gd*, godot/tests/integration/test_player.gd*, godot/tests/integration/test_player_ring.gd*, godot/tests/integration/test_player_feedback.gd*, docs/evidence/PUL-127/**, docs/backlog/PUL-127-prompt-de-accion-en-el-mundo-respuesta-del-jugador.md]
+owns: [godot/tests/integration/test_player_animation.gd*, godot/components/highlightable.gd*, godot/tests/integration/test_highlightable.gd*, godot/components/action_prompt.gd*, godot/entities/player/player.gd*, godot/shaders/**, godot/tests/integration/test_action_prompt.gd*, godot/tests/integration/test_player.gd*, godot/tests/integration/test_player_ring.gd*, godot/tests/integration/test_player_feedback.gd*, docs/evidence/PUL-127/**, docs/backlog/PUL-127-prompt-de-accion-en-el-mundo-respuesta-del-jugador.md]
 touches_scenes: [godot/entities/player/player.tscn, godot/entities/player/action_prompt.tscn]
 ---
 
