@@ -8,10 +8,13 @@
 [ext_resource type="Script" path="res://components/hold_component.gd" id="6_7thud"]
 [ext_resource type="Script" path="res://components/interaction_detector.gd" id="7_26q78"]
 [ext_resource type="Script" path="res://components/interaction_component.gd" id="8_bectd"]
-[ext_resource type="Material" path="res://assets/materials/active_indicator_p1.tres" id="9_actp1"]
-[ext_resource type="Material" path="res://assets/materials/active_indicator_p2.tres" id="10_actp2"]
+[ext_resource type="Material" path="res://shaders/ring_active_p1.tres" id="9_actp1"]
+[ext_resource type="Material" path="res://shaders/ring_active_p2.tres" id="10_actp2"]
 [ext_resource type="Script" path="res://entities/player/player_animation.gd" id="11_anim"]
 [ext_resource type="Script" path="res://components/feedback_player.gd" id="12_fb"]
+[ext_resource type="Material" path="res://shaders/ring_inactive.tres" id="13_inactive"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_mark_active.svg" id="14_mark"]
+[ext_resource type="PackedScene" path="res://entities/player/action_prompt.tscn" id="15_prompt"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_a1qjk"]
 radius = 0.21
@@ -21,10 +24,16 @@ height = 1.54
 radius = 2.2
 
 [sub_resource type="TorusMesh" id="TorusMesh_actind"]
-inner_radius = 0.36
+inner_radius = 0.34
 outer_radius = 0.46
 rings = 32
 ring_segments = 8
+
+[sub_resource type="TorusMesh" id="TorusMesh_inactive"]
+inner_radius = 0.395
+outer_radius = 0.425
+rings = 48
+ring_segments = 6
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_Idle"]
 animation = &"Idle"
@@ -150,6 +159,7 @@ collision_mask = 5
 script = ExtResource("1_8fjmc")
 config = ExtResource("2_qiwj3")
 indicator_materials = Array[Material]([ExtResource("9_actp1"), ExtResource("10_actp2")])
+inactive_material = ExtResource("13_inactive")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=318568288]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.77, 0)
@@ -199,6 +209,28 @@ transform = Transform3D(1, 0, 0, 0, 0.25, 0, 0, 0, 1, 0, 0.02, 0)
 cast_shadow = 0
 mesh = SubResource("TorusMesh_actind")
 material_override = ExtResource("9_actp1")
+
+[node name="InactiveIndicator" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+cast_shadow = 0
+mesh = SubResource("TorusMesh_inactive")
+material_override = ExtResource("13_inactive")
+
+[node name="ActiveMarker" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.05, 0)
+cast_shadow = 0
+billboard = 1
+no_depth_test = true
+render_priority = 90
+texture = ExtResource("14_mark")
+
+[node name="ActionPrompt" parent="." node_paths=PackedStringArray("detector", "actor", "hold") instance=ExtResource("15_prompt")]
+unique_name_in_owner = true
+detector = NodePath("../InteractionDetector")
+actor = NodePath("../InteractionComponent")
+hold = NodePath("../HoldComponent")
 
 [node name="AnimationTree" type="AnimationTree" parent="." node_paths=PackedStringArray("player", "holder", "control", "model")]
 unique_name_in_owner = true
