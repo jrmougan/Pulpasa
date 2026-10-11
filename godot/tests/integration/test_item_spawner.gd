@@ -1,7 +1,7 @@
 extends GutTest
 ## PUL-017 AC1: la nevera (`octopus_storage.tscn`, `item_spawner.gd`) pone un pulpo crudo en la
-## mano vacía (ADR-003 §6); con la mano llena consume la pulsación sin hacer nada (paridad
-## `OctopusSpawner.Interact`: no suelta lo que se lleva).
+## mano vacía (ADR-003 §6). D26 (PUL-125): con la mano llena no es objetivo y ya no se traga la
+## pulsación (`can_interact` honesto): la pulsación cae al suelo, como con cualquier otra cosa.
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const STORAGE_SCENE: PackedScene = preload("res://entities/stations/octopus_storage.tscn")
@@ -52,18 +52,24 @@ func test_ac1_full_hand_does_nothing() -> void:
 	_level.add_child(box)
 	assert_true(_hold.pick_up(box))
 	var before: int = _level.get_child_count()
-	assert_true(_storage.interact(_actor), "consume la pulsación (no suelta la caja)")
+	assert_false(_storage.can_interact(_actor), "con la mano llena no es objetivo")
+	assert_eq(_storage.get_action_hint(_actor).state, ActionHint.State.NONE)
+	assert_false(_storage.interact(_actor), "no consume la pulsación")
 	assert_eq(_hold.get_held_item(), box, "sigue la caja en la mano")
 	assert_eq(_level.get_child_count(), before, "no aparece ningún pulpo")
 
 
-func test_ac1_full_hand_press_via_detector_keeps_item() -> void:
+## D26: la nevera no es objetivo con la mano llena y la pulsación cae al suelo (A8).
+func test_ac1_full_hand_press_via_detector_never_spawns() -> void:
 	var box: Box = BOX_SCENE.instantiate()
 	_level.add_child(box)
 	assert_true(_hold.pick_up(box))
 	await wait_physics_frames(3)
-	assert_true(_actor.interact_pressed())
-	assert_eq(_hold.get_held_item(), box, "no la suelta delante de la nevera")
+	assert_ne(_actor.detector.get_target(), _storage, "la nevera no es objetivo")
+	var before: int = get_tree().get_nodes_in_group(&"pickable").size()
+	assert_true(_actor.interact_pressed(), "responde: suelta al suelo")
+	assert_null(_hold.get_held_item(), "la caja cae al suelo")
+	assert_eq(get_tree().get_nodes_in_group(&"pickable").size(), before, "no aparece ningún pulpo")
 
 
 func test_ac1_interact_press_via_detector_spawns_in_hand() -> void:

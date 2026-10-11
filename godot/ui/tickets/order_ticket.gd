@@ -13,10 +13,14 @@ const PALETTE: StandPalette = preload("res://data/config/stand_palette.tres")
 var order_id: int = -1
 var _bus: Node
 var _low: bool = false
+var _mobile_built: bool = false
+var _min_text_units: float = 0.0
 
 @onready var _stripe: ColorRect = %Stripe
 @onready var _bar: TextureProgressBar = %PatienceBar
 @onready var _clock: Label = %Clock
+@onready var _order_id: Label = %OrderId
+@onready var _entry: TicketEntry = %Entry
 
 
 func _ready() -> void:
@@ -36,10 +40,29 @@ func set_bus(bus: Node) -> void:
 
 func setup(order: ActiveOrder) -> void:
 	order_id = order.id
-	%OrderId.text = _text("TICKET_ID_FORMAT", "#%d") % order_id
+	_order_id.text = _text("TICKET_ID_FORMAT", "#%d") % order_id
 	_stripe.color = PALETTE.color_for(order.slot_id)
-	%Entry.setup(order.data)
+	_entry.setup(order.data)
 	_show_patience(false)
+	if _mobile_built:
+		_apply_floor()
+
+
+## Ticket MOBILE (PUL-129, controles-tactiles.md): `width_units` x `ticket_height` px, receta
+## arriba y, debajo, pegatinas + id + reloj en una fila, con la barra de paciencia de 12 px. Se
+## puede repetir al cambiar el alto del lienzo; la reestructuración solo ocurre la primera vez.
+func apply_mobile_layout(profile: UiProfile, width_units: float) -> void:
+	var canvas_height: float = get_viewport().get_visible_rect().size.y
+	if not _mobile_built:
+		_build_mobile_structure(profile, canvas_height)
+	custom_minimum_size = Vector2(
+		width_units, UiScale.px_to_units(profile.ticket_height, canvas_height)
+	)
+	size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	_bar.custom_minimum_size.y = UiScale.px_to_units(profile.patience_bar_px, canvas_height)
+	_entry.set_icon_px(UiScale.px_to_units(profile.ticket_icon_px, canvas_height))
+	_min_text_units = UiScale.px_to_units(profile.text_min_px, canvas_height)
+	_apply_floor()
 
 
 ## Paciencia por debajo del umbral de aviso (para tests).
@@ -86,6 +109,38 @@ func _set_low(low: bool) -> void:
 	_clock.add_theme_color_override(&"font_color", get_theme_color(digits, &"OrderTicket"))
 	_bar.self_modulate.a = 1.0
 	set_process(low)
+
+
+func _build_mobile_structure(profile: UiProfile, canvas_height: float) -> void:
+	_mobile_built = true
+	%Header.hide()
+	_stripe.custom_minimum_size.y = 4.0
+	$Content.add_theme_constant_override(&"separation", 2)
+	var extras: HBoxContainer = _entry.extras()
+	_order_id.reparent(extras, false)
+	%ClockWell.reparent(extras, false)
+	extras.show()
+	_entry.compact()
+	for digits: Label in [_clock, %Ghost]:
+		digits.add_theme_font_size_override(
+			&"font_size", roundi(UiScale.px_to_units(profile.text_min_px, canvas_height))
+		)
+	var well: StyleBox = (%ClockWell as PanelContainer).get_theme_stylebox(&"panel").duplicate()
+	well.content_margin_top = 0.0
+	well.content_margin_bottom = 0.0
+	well.content_margin_left = 4.0
+	well.content_margin_right = 4.0
+	%ClockWell.add_theme_stylebox_override(&"panel", well)
+	var card: StyleBox = get_theme_stylebox(&"panel").duplicate()
+	card.content_margin_top = 6.0
+	card.content_margin_bottom = 6.0
+	card.content_margin_left = 8.0
+	card.content_margin_right = 8.0
+	add_theme_stylebox_override(&"panel", card)
+
+
+func _apply_floor() -> void:
+	TextFloor.apply(self, _min_text_units)
 
 
 func _text(key: String, fallback: String) -> String:

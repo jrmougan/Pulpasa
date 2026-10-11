@@ -172,8 +172,12 @@ func test_indicator_colours_match_variant_palette() -> void:
 	for material: Material in _player.indicator_materials:
 		colours.append((material as StandardMaterial3D).albedo_color)
 	assert_eq(colours.size(), 2)
-	assert_eq(colours[0].to_html(false), "2f6fb5", "J1 azul (art-bible §2.6)")
-	assert_eq(colours[1].to_html(false), "e0a02e", "J2 ámbar (art-bible §2.6)")
+	assert_eq(colours[0].to_html(false), "1f5fbf", "J1 azul (D26 AC5')")
+	assert_eq(
+		colours[1].to_html(false),
+		"b8325e",
+		"J2 carmín: D26 AC5' veta el ámbar/amarillo y exige contraste >= 3:1"
+	)
 
 
 func test_active_indicator_still_visible() -> void:

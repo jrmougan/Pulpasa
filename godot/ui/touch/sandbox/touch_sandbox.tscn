@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://ui/touch/sandbox/touch_sandbox.gd" id="1_box"]
+[ext_resource type="PackedScene" path="res://ui/touch/touch_controls.tscn" id="2_ctl"]
+[ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="3_thm"]
+
+[node name="TouchSandbox" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("3_thm")
+script = ExtResource("1_box")
+
+[node name="Floor" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.560784, 0.490196, 0.380392, 1)
+
+[node name="Counter" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 190.0
+grow_horizontal = 2
+mouse_filter = 2
+color = Color(0.258824, 0.329412, 0.364706, 1)
+
+[node name="Caption" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 400.0
+offset_top = 260.0
+offset_right = 800.0
+offset_bottom = 320.0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 24
+
+[node name="TouchControls" parent="." instance=ExtResource("2_ctl")]
+unique_name_in_owner = true
+layout_mode = 1

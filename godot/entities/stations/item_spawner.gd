@@ -2,8 +2,8 @@ class_name ItemSpawner
 extends Node
 ## Spawner genérico (ADR-003 §6): con la mano vacía, instancia `scene` directamente en la mano del
 ## actor. Sustituye a OctopusSpawner (nevera) y al modo spawner de Box (estantería de cajas).
-## Con la mano llena consume la pulsación sin hacer nada, como `OctopusSpawner.Interact`: así no
-## se suelta lo que se lleva. Contrato `interactable` (ADR-003 §4); va en la raíz de un cuerpo.
+## Con la mano llena no es objetivo (D26: ya no consume la pulsación en silencio). Contrato
+## `interactable` (ADR-003 §4); va en la raíz de un cuerpo.
 
 ## Objeto que se genera (cogible).
 @export var scene: PackedScene
@@ -12,16 +12,28 @@ extends Node
 @export var data: Resource
 
 
+## A1–A3: coger de la nevera, la cachelera o el rack con la mano vacía (`ActionRules.for_spawner`).
+func get_action_hint(actor: InteractionComponent) -> ActionHint:
+	return _resolve(actor.holder if actor != null else null)
+
+
 func can_interact(actor: InteractionComponent) -> bool:
-	return scene != null and actor != null and actor.holder != null
+	return get_action_hint(actor).is_target()
 
 
 func interact(actor: InteractionComponent) -> bool:
-	if not can_interact(actor):
+	var hint: ActionHint = get_action_hint(actor)
+	if hint.state != ActionHint.State.OK:
 		return false
-	if actor.holder.get_held_item() == null:
-		_spawn_into(actor.holder)
+	_spawn_into(actor.holder)
 	return true
+
+
+## Única resolución de rama de `get_action_hint` e `interact` (ADR-003 §11.2).
+func _resolve(holder: Holder) -> ActionHint:
+	if holder == null or scene == null:
+		return ActionHint.none()
+	return ActionRules.for_spawner(HeldKind.of(holder.get_held_item()))
 
 
 func _spawn_into(holder: Holder) -> void:

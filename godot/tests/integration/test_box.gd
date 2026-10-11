@@ -63,7 +63,8 @@ func _assert_presses_to_fill(data: BoxData, expected: int) -> void:
 	assert_false(box.is_full(), "%s no llena antes de %d" % [data.display_name, expected])
 	assert_true(box.interact(_actor))
 	assert_true(box.is_full(), "%s llena en %d" % [data.display_name, expected])
-	assert_true(box.interact(_actor), "llena: consume la pulsación (paridad Unity)...")
+	assert_eq(box.get_action_hint(_actor).reason, ActionReason.FULL)
+	assert_true(box.interact(_actor), "llena: rechazo con motivo `full`...")
 	assert_eq(box.fill, 1.0, "...sin cortar más")
 	assert_almost_eq(octopus.remaining, 100.0 - 50.0, 0.001, "gasta medio pulpo")
 	var contents: BoxContents = box.get_contents()
@@ -91,7 +92,11 @@ func test_ac1_each_press_spends_octopus_and_emits_fill_changed() -> void:
 func test_ac1_raw_octopus_does_nothing() -> void:
 	var box: Box = _box(BOX)
 	var octopus: Ingredient = _octopus_in_hand(false)
-	# Paridad Unity: la caja consume la pulsación (no se suelta el pulpo) pero no corta.
+	# D26: el pulpo crudo se rechaza con motivo (`BLOCKED not_cooked`): no corta ni se suelta.
+	var hint: ActionHint = box.get_action_hint(_actor)
+	assert_eq(
+		[hint.state, hint.verb, hint.reason], [ActionHint.State.BLOCKED, &"cut", &"not_cooked"]
+	)
 	assert_true(box.can_interact(_actor))
 	assert_true(box.interact(_actor))
 	assert_eq(box.fill, 0.0)
@@ -118,8 +123,8 @@ func test_ac1_empty_hand_picks_up_the_box() -> void:
 	assert_true(box.is_held)
 
 
-## AC12: con cachelos cocidos en la mano, la caja llena no se condimenta: la pulsación se consume
-## sin efecto y los cachelos siguen en la mano (solo la estación condimenta).
+## AC12: con cachelos cocidos en la mano, la caja llena no se condimenta: no es objetivo (D26) y los
+## cachelos siguen en la mano (solo la estación condimenta).
 func test_pul061_ac12_cooked_cachelos_do_not_season_a_full_box() -> void:
 	var box: Box = _box(BOX)
 	var octopus: Ingredient = _octopus_in_hand(true)
@@ -131,8 +136,9 @@ func test_pul061_ac12_cooked_cachelos_do_not_season_a_full_box() -> void:
 	cachelos.set_cooked()
 	assert_true(_hold.pick_up(cachelos))
 	watch_signals(box)
-	assert_true(box.can_interact(_actor))
-	assert_true(box.interact(_actor), "consume la pulsación")
+	assert_false(box.can_interact(_actor), "D26: la caja llena no es objetivo de unos cachelos")
+	assert_eq(box.get_action_hint(_actor).state, ActionHint.State.NONE)
+	assert_false(box.interact(_actor), "no consume la pulsación")
 	assert_eq(box.get_contents().seasonings.size(), 0, "la caja no cambia")
 	assert_signal_emit_count(box, "seasoned", 0)
 	assert_eq(_hold.get_held_item(), cachelos, "los cachelos siguen en la mano")

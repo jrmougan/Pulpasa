@@ -13,7 +13,7 @@ extends StaticBody3D
 ## Objeto con el que empieza el slot (`null`: vacío).
 @export var initial_item: PackedScene
 ## Grupo que acepta al dejar (ADR-003 §8.2). Vacío = cualquier objeto; si no, lo que no esté en el
-## grupo se rechaza consumiendo la pulsación (no se guarda ni se suelta). La bandeja usa `&"box"`.
+## grupo no es objetivo (D26: ya no se consume la pulsación). La bandeja usa `&"box"`.
 @export var accepted_group: StringName = &""
 
 var _item: Node3D
@@ -64,29 +64,29 @@ func _ready() -> void:
 			_store(item)
 
 
+## A4/A5 (ADR-003 §11.6): con objeto guardado y la mano vacía, lo devuelve (`COGER`); vacío, deja
+## lo que se lleva (`SOLTAR`) si `accepted_group` lo admite. Con la mano llena y objeto guardado no
+## es objetivo: el detector lo sustituye por el objeto guardado.
+func get_action_hint(actor: InteractionComponent) -> ActionHint:
+	return _resolve(actor.holder if actor != null else null)
+
+
 func can_interact(actor: InteractionComponent) -> bool:
-	var holder: Holder = actor.holder if actor != null else null
-	if holder == null:
-		return false
-	var held: Node = holder.get_held_item()
-	if has_item():
-		return held == null
-	return held is Node3D
+	return get_action_hint(actor).is_target()
 
 
 func interact(actor: InteractionComponent) -> bool:
-	if not can_interact(actor):
-		return false
-	var holder: Holder = actor.holder
-	if has_item():
-		return _give(holder)
-	if not accepts(holder.get_held_item()):
-		return true
-	var item: Node3D = holder.drop() as Node3D
-	if item == null:
-		return false
-	_store(item)
-	return true
+	var hint: ActionHint = get_action_hint(actor)
+	match hint.verb:
+		ActionVerb.PICK_UP:
+			return _give(actor.holder)
+		ActionVerb.DROP:
+			var item: Node3D = actor.holder.drop() as Node3D
+			if item == null:
+				return false
+			_store(item)
+			return true
+	return false
 
 
 ## Si `item` se puede dejar aquí según `accepted_group`.
@@ -105,6 +105,19 @@ func get_item() -> Node3D:
 	elif _item.get_parent() != _anchor:
 		_item = null
 	return _item
+
+
+## Única resolución de rama de `get_action_hint` e `interact` (ADR-003 §11.2).
+func _resolve(holder: Holder) -> ActionHint:
+	if holder == null:
+		return ActionHint.none()
+	var held_item: Node = holder.get_held_item()
+	var stored: Node3D = get_item()
+	if stored != null:
+		return ActionRules.for_loose_item(HeldKind.of(held_item), holder.can_hold(stored))
+	return ActionRules.for_pass_slot(
+		HeldKind.of(held_item), held_item is Node3D and accepts(held_item)
+	)
 
 
 ## Alinea `item` por su `%AnchorPoint` (o su origen) a `%Anchor`, congelado y sin capa.
