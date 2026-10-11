@@ -121,8 +121,15 @@ escenas reales; (3) montaje en `level_01`; (4) pendientes heredados; (5) partida
   `%CutNumeral`), sin `%FillBar`. `hud.tscn` sin `%BoxesPerMinute`.
 
 ### Desviaciones y avisos
-- Rutas fuera de `owns` que hubo que tocar (rompían por las bajas): `tests/integration/test_box.gd`, `test_box_model.gd`,
-  `test_order_tickets.gd` (usaban `toggle_seasoning`/`%FillBar`), `test_trash_bin.gd` (esperaba los puestos como objetivo) y
-  `tests/unit/test_feedback_distinct.gd` (esperaba las claves heredadas). `check_owns.py` las marca; el producer debe
-  ampliar `owns` o revertirlas. La entrada `godot/tests/integration/` de owns no cubre ficheros (solo coincide literal).
+- Rutas fuera de `owns` (`test_box`, `test_box_model`, `test_order_tickets`, `test_trash_bin`, `test_feedback_distinct`):
+  el producer ya las ha añadido a `owns` (commit 08e3310); `check_owns.py` pasa limpio.
+- Revisión: test de dos jugadores en la misma zona (COOP_2P) en `test_order_stand.gd`; `player.gd` con `input_config`
+  y fallback cacheado; el rechazo de un receptor que miente conserva el motivo si el hint era BLOCKED (`BUSY` solo con OK).
+
+### Hallazgos para fichas posteriores
+- `PlayerInput.get_move_strength()` (hoy `player.gd` calcula la magnitud con `Input.get_vector`).
+- `Highlightable` y `OutlineHull` del puesto (sin uso; `test_order_stand_model.gd` los exige).
+- `%Feedback` de `seasoning_station.tscn` (sin uso; el test comprueba que no suena).
+- `world_progress_ring` vive en `ui/widgets/` con tipos 3D (`Sprite3D`): contradice la regla 4; moverlo a capa específica.
+- `sandbox_pickable.gd` sin `get_action_hint`; nodo `SizePanel_*` del `.glb` del rack.
 - Commits con la línea `Co-Authored-By: Claude Sonnet 5.5` (la indicada por el sistema), no Opus 5.5.

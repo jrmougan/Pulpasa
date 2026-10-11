@@ -315,6 +315,18 @@ func test_pul131_receiver_that_lies_gives_an_error_and_a_rejection_not_silence()
 	assert_eq(_holder.get_held_item(), item, "la mano no cambia")
 
 
+## Si el hint ya era BLOCKED, el rechazo conserva su motivo (no se pisa con `busy`).
+func test_pul131_lying_blocked_receiver_keeps_its_reason() -> void:
+	var target: LyingTarget = add_child_autofree(LyingTarget.new())
+	target.hint = ActionHint.blocked(ActionVerb.CUT, ActionReason.FULL)
+	_detector.target_changed.emit(null, target)
+	# El doble miente tambien con BLOCKED: `interact` devuelve false.
+	target.lies_when_blocked = true
+	assert_true(_component.interact_pressed())
+	assert_push_error("interact() devolvió false")
+	assert_eq(_bus("interaction_resolved"), [1, &"cut", 2, &"full"])
+
+
 ## ADR-002 Enmienda 2: en cada instante hay como mucho un `InteractionComponent` controlado por
 ## cada jugador (es el emisor único del bus para ese `player_index`).
 func _controlled_count(components: Array[InteractionComponent], player: int) -> int:
@@ -498,5 +510,9 @@ func test_ac6_interval_comes_from_the_input_config() -> void:
 class LyingTarget:
 	extends FakeHintedInteractable
 
-	func interact(_actor: InteractionComponent) -> bool:
+	var lies_when_blocked: bool = false
+
+	func interact(actor: InteractionComponent) -> bool:
+		if hint.state == ActionHint.State.BLOCKED and not lies_when_blocked:
+			return super.interact(actor)
 		return false

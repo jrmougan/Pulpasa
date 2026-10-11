@@ -338,6 +338,72 @@ func test_d26_stand_is_not_interactable_and_sits_on_the_world_layer() -> void:
 
 ## El detector real no lo elige desde ningún punto de la zona ni de sus alrededores, con la caja
 ## de la comanda en la mano.
+## COOP_2P: dos jugadores dentro de la misma zona, cada uno con su caja. Una entrega por caja
+## que encaja, ningun `delivery_rejected`, y el segundo solo entrega si su caja encaja con la
+## comanda repuesta (aqui la misma receta, asi que entrega los dos).
+func test_d26_two_players_in_the_same_zone_deliver_one_box_each() -> void:
+	var catalog: OrderCatalog = OrderCatalog.new()
+	catalog.orders = [A_FEIRA] as Array[OrderData]
+	catalog.max_active_orders = 4
+	_service.setup(catalog, null, RoundConfig.new())
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var second: Player = PLAYER_SCENE.instantiate()
+	second.position = FAR + Vector3(5, 0, 0)
+	_level.add_child(second)
+	var second_hold: HoldComponent = second.get_node("%HoldComponent")
+	second_hold.items_root = _level
+	var first_box: Box = _box_in_hand(_order_for(SLOT_ID))
+	var other_box: Box = BOX_SCENE.instantiate()
+	other_box.data = BOX
+	_level.add_child(other_box)
+	other_box.fill = 1.0
+	# Caja del segundo: llena y con el aliño pedido pero sin pulpo (no encaja nunca).
+	for seasoning: SeasoningData in _order_for(SLOT_ID).data.seasonings:
+		other_box.apply_seasoning(seasoning)
+	assert_true(second_hold.pick_up(other_box))
+	var zone: Vector3 = _stand.get_node("%DeliveryZone").global_position
+	_player.global_position = zone + Vector3(-0.3, 0, 0)
+	second.global_position = zone + Vector3(0.3, 0, 0)
+	await wait_physics_frames(6)
+	assert_signal_emit_count(_bus, "order_completed", 1, "una sola entrega: la caja que encaja")
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+	assert_true(_is_released(first_box))
+	assert_eq(second_hold.get_held_item(), other_box, "la caja que no encaja se queda")
+	# Ahora el segundo recibe una caja que encaja con la comanda repuesta: entrega, una vez.
+	var fitting: Box = _box_for_player(second, second_hold, _order_for(SLOT_ID))
+	await wait_physics_frames(6)
+	assert_signal_emit_count(_bus, "order_completed", 2, "una entrega por caja que encaja")
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+	assert_true(_is_released(fitting))
+
+
+## Caja que encaja con `order`, preparada en la mano de `player` (que ya lleva otra: se suelta).
+func _box_for_player(player: Player, hold: HoldComponent, order: ActiveOrder) -> Box:
+	var old: Node = hold.drop()
+	if old != null:
+		old.free()
+	var actor: InteractionComponent = player.get_node("%InteractionComponent")
+	var box: Box = BOX_SCENE.instantiate()
+	_level.add_child(box)
+	box.data = BOX
+	var guard: int = 0
+	while not box.is_full() and guard < 200:
+		var octopus: Ingredient = OCTOPUS_SCENE.instantiate()
+		_level.add_child(octopus)
+		octopus.set_cooked()
+		assert_true(hold.pick_up(octopus))
+		while octopus.is_inside_tree() and not box.is_full() and guard < 200:
+			assert_true(box.interact(actor))
+			guard += 1
+		if is_instance_valid(octopus):
+			hold.drop()
+			octopus.free()
+	for seasoning: SeasoningData in order.data.seasonings:
+		assert_eq(box.apply_seasoning(seasoning), SeasoningRules.Rejection.NONE)
+	assert_true(hold.pick_up(box))
+	return box
+
+
 func test_d26_detector_never_picks_the_stand_from_any_point_of_the_zone() -> void:
 	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
 	_box_in_hand(_order_for(SLOT_ID))

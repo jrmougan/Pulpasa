@@ -31,6 +31,8 @@ var _bus: Node
 var _round_active: bool = false
 ## Acciones de movimiento del jugador que controla, en el orden de `Input.get_vector`.
 var _axis_actions: Array[StringName] = []
+## `InputConfig` por defecto si el `ControlComponent` no lleva uno (se crea una sola vez).
+var _fallback_input_config: InputConfig
 ## `switch` no suena en la asignación del arranque de ronda: se arma al acabar ese frame.
 var _switch_armed: bool = false
 
@@ -107,9 +109,17 @@ func _move_direction() -> Vector3:
 func _move_strength() -> float:
 	if _axis_actions.size() != 4:
 		return 1.0
-	var config: InputConfig = _control.config if _control.config != null else InputConfig.new()
+	var input_config: InputConfig = _control.config
+	if input_config == null:
+		if _fallback_input_config == null:
+			_fallback_input_config = InputConfig.new()
+		input_config = _fallback_input_config
 	var raw: Vector2 = Input.get_vector(
-		_axis_actions[0], _axis_actions[1], _axis_actions[2], _axis_actions[3], config.deadzone
+		_axis_actions[0],
+		_axis_actions[1],
+		_axis_actions[2],
+		_axis_actions[3],
+		input_config.deadzone
 	)
 	return clampf(raw.length(), 0.0, 1.0)
 
