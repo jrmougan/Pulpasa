@@ -5,8 +5,6 @@ extends RefCounted
 ## Última fuente de entrada vista. `NONE` = ninguna todavía.
 enum Source { NONE, TOUCH, KEYS, JOYPAD }
 
-## Un eje de mando por debajo de este valor no cuenta como entrada de mando.
-const JOYPAD_DEADZONE: float = 0.2
 ## Acciones que alimenta el stick virtual (J1).
 const MOVE_LEFT: StringName = &"p1_move_left"
 const MOVE_RIGHT: StringName = &"p1_move_right"
@@ -16,8 +14,9 @@ const MOVE_ACTIONS: Array[StringName] = [MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DO
 
 
 ## De dónde viene un evento. Ratón (también el emulado desde táctil) e `InputEventAction` (los que
-## inyectan los propios controles) no cambian la fuente: `NONE`.
-static func source_of(event: InputEvent) -> Source:
+## inyectan los propios controles) no cambian la fuente: `NONE`. Un eje de mando por debajo de
+## `joy_deadzone` (`InputConfig.deadzone`) tampoco cuenta.
+static func source_of(event: InputEvent, joy_deadzone: float) -> Source:
 	if event is InputEventScreenTouch or event is InputEventScreenDrag:
 		return Source.TOUCH
 	if event is InputEventKey:
@@ -25,7 +24,7 @@ static func source_of(event: InputEvent) -> Source:
 	if event is InputEventJoypadButton:
 		return Source.JOYPAD
 	var motion: InputEventJoypadMotion = event as InputEventJoypadMotion
-	if motion != null and absf(motion.axis_value) > JOYPAD_DEADZONE:
+	if motion != null and absf(motion.axis_value) > joy_deadzone:
 		return Source.JOYPAD
 	return Source.NONE
 

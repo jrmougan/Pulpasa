@@ -30,6 +30,22 @@ extends Resource
 @export var press_time: float = 0.1
 ## Contorno del aro del estado OK y BLOQUEADO.
 @export var ring_px_1080: float = 6.0
+@export_group("Aspecto")
+## Relleno, aro y pulgar del stick (color y opacidad) y grosor del aro del stick (px a 1080).
+@export var stick_fill_color: Color = Color(1.0, 1.0, 1.0, 0.16)
+@export var stick_ring_color: Color = Color(1.0, 1.0, 1.0, 0.5)
+@export var stick_thumb_color: Color = Color(1.0, 1.0, 1.0, 0.55)
+@export var stick_ring_px_1080: float = 3.0
+## Diámetro del pulgar respecto a la base (150 px frente a 300 px).
+@export_range(0.0, 1.0) var stick_thumb_ratio: float = 0.5
+## Opacidad del aro de los botones secundarios (cambiar y pausa).
+@export_range(0.0, 1.0) var ring_alpha: float = 0.55
+## Salto del icono del botón de acción en éxito (px a 1080 y escala añadida) y ciclos de la sacudida
+## de rechazo; duración y amplitud salen de `ActionIconSet` (`response_duration`,
+## `reject_shake_px`).
+@export var jump_px_1080: float = 12.0
+@export var jump_scale: float = 0.25
+@export var shake_cycles: float = 3.0
 @export_group("Háptica")
 @export var haptics_enabled: bool = true
 @export var haptic_ok_ms: int = 20

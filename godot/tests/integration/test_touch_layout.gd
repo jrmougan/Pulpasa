@@ -163,3 +163,28 @@ func test_ac21_desktop_profile_leaves_no_touch_nodes_in_the_tree() -> void:
 	add_child_autofree(_controls)
 	await wait_process_frames(3)
 	assert_eq(get_tree().root.find_children("*", "TouchControls", true, false).size(), 0)
+
+
+func _assert_touch_rects_in_button_zone(width: float) -> void:
+	var profile: UiProfile = GameState.ui_profile
+	var scale: float = _scale()
+	for button: TouchButton in [_action(), _switch()]:
+		var center: Vector2 = _center(button)
+		var reach: float = button.get_hit_radius() * scale
+		assert_gte(center.x - reach, width - profile.button_zone_width_px - 1.0, button.name)
+		assert_gte(center.y - reach, profile.button_zone_top_px - 1.0, button.name)
+
+
+func test_touch_rects_stay_inside_the_ui_profile_button_zone_at_2340() -> void:
+	await _open(Vector2i(2340, 1080), SAFE_2340)
+	_assert_touch_rects_in_button_zone(2340.0)
+
+
+func test_touch_rects_stay_inside_the_ui_profile_button_zone_at_1920() -> void:
+	await _open(Vector2i(1920, 1080))
+	_assert_touch_rects_in_button_zone(1920.0)
+
+
+func test_content_node_is_top_level_in_the_scene() -> void:
+	await _open(Vector2i(2340, 1080), SAFE_2340)
+	assert_true((_controls.get_node(^"%Content") as Control).top_level)

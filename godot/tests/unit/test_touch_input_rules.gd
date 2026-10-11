@@ -1,3 +1,4 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-128: reglas puras de los controles táctiles (ADR-004 §6.3) y datos de TouchConfig.
 
@@ -5,6 +6,7 @@ const MOBILE: PlatformProfile.Kind = PlatformProfile.Kind.MOBILE
 const DESKTOP: PlatformProfile.Kind = PlatformProfile.Kind.DESKTOP
 const SINGLE: GameMode.Mode = GameMode.Mode.SINGLE
 const COOP: GameMode.Mode = GameMode.Mode.COOP_2P
+const DEADZONE: float = 0.2
 const CONFIG: TouchConfig = preload("res://data/config/touch_config.tres")
 
 
@@ -16,26 +18,28 @@ func _motion(value: float) -> InputEventJoypadMotion:
 
 
 func test_source_of_touch_events() -> void:
-	assert_eq(TouchInput.source_of(InputEventScreenTouch.new()), TouchInput.Source.TOUCH)
-	assert_eq(TouchInput.source_of(InputEventScreenDrag.new()), TouchInput.Source.TOUCH)
+	assert_eq(TouchInput.source_of(InputEventScreenTouch.new(), DEADZONE), TouchInput.Source.TOUCH)
+	assert_eq(TouchInput.source_of(InputEventScreenDrag.new(), DEADZONE), TouchInput.Source.TOUCH)
 
 
 func test_source_of_keys_and_joypad() -> void:
-	assert_eq(TouchInput.source_of(InputEventKey.new()), TouchInput.Source.KEYS)
-	assert_eq(TouchInput.source_of(InputEventJoypadButton.new()), TouchInput.Source.JOYPAD)
-	assert_eq(TouchInput.source_of(_motion(0.9)), TouchInput.Source.JOYPAD)
-	assert_eq(TouchInput.source_of(_motion(-0.9)), TouchInput.Source.JOYPAD)
+	assert_eq(TouchInput.source_of(InputEventKey.new(), DEADZONE), TouchInput.Source.KEYS)
+	assert_eq(
+		TouchInput.source_of(InputEventJoypadButton.new(), DEADZONE), TouchInput.Source.JOYPAD
+	)
+	assert_eq(TouchInput.source_of(_motion(0.9), DEADZONE), TouchInput.Source.JOYPAD)
+	assert_eq(TouchInput.source_of(_motion(-0.9), DEADZONE), TouchInput.Source.JOYPAD)
 
 
 func test_joypad_motion_inside_deadzone_is_not_a_source() -> void:
-	assert_eq(TouchInput.source_of(_motion(0.1)), TouchInput.Source.NONE)
-	assert_eq(TouchInput.source_of(_motion(0.0)), TouchInput.Source.NONE)
+	assert_eq(TouchInput.source_of(_motion(0.1), DEADZONE), TouchInput.Source.NONE)
+	assert_eq(TouchInput.source_of(_motion(0.0), DEADZONE), TouchInput.Source.NONE)
 
 
 func test_mouse_and_actions_do_not_change_the_source() -> void:
-	assert_eq(TouchInput.source_of(InputEventMouseButton.new()), TouchInput.Source.NONE)
-	assert_eq(TouchInput.source_of(InputEventMouseMotion.new()), TouchInput.Source.NONE)
-	assert_eq(TouchInput.source_of(InputEventAction.new()), TouchInput.Source.NONE)
+	assert_eq(TouchInput.source_of(InputEventMouseButton.new(), DEADZONE), TouchInput.Source.NONE)
+	assert_eq(TouchInput.source_of(InputEventMouseMotion.new(), DEADZONE), TouchInput.Source.NONE)
+	assert_eq(TouchInput.source_of(InputEventAction.new(), DEADZONE), TouchInput.Source.NONE)
 
 
 func test_controls_visible_only_on_mobile_single() -> void:
@@ -155,3 +159,22 @@ func test_touch_adds_no_events_to_the_input_map() -> void:
 			assert_false(event is InputEventScreenTouch, action)
 			assert_false(event is InputEventScreenDrag, action)
 			assert_false(event is InputEventAction, action)
+
+
+func test_joypad_deadzone_comes_from_the_parameter() -> void:
+	assert_eq(TouchInput.source_of(_motion(0.3), 0.5), TouchInput.Source.NONE)
+	assert_eq(TouchInput.source_of(_motion(0.6), 0.5), TouchInput.Source.JOYPAD)
+	assert_eq(preload("res://data/config/input_config.tres").deadzone, DEADZONE)
+
+
+func test_config_stick_zone_matches_the_mobile_ui_profile() -> void:
+	var profile: UiProfile = load("res://data/config/ui_profile_mobile.tres")
+	assert_eq(CONFIG.stick_zone_fraction, profile.stick_zone_fraction)
+	assert_eq(CONFIG.stick_zone_top_px_1080, profile.stick_zone_top_px)
+
+
+func test_config_visual_values_are_sane() -> void:
+	assert_between(CONFIG.stick_thumb_ratio, 0.1, 1.0)
+	assert_between(CONFIG.ring_alpha, 0.0, 1.0)
+	assert_gt(CONFIG.jump_px_1080, 0.0)
+	assert_gt(CONFIG.shake_cycles, 0.0)

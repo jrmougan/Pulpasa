@@ -1,3 +1,4 @@
+# gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-128 AC6/AC7/AC20/AC21 (controles-tactiles AC6, AC7, AC20, AC21): los controles táctiles
 ## producen las mismas acciones que teclado y mando de J1 (sin eventos nuevos en el InputMap), el
@@ -293,3 +294,39 @@ func test_ac21_local_two_player_mode_keeps_the_controls_hidden() -> void:
 	GameState.mode = GameMode.Mode.SINGLE
 	_controls.set_last_source(TouchInput.Source.TOUCH)
 	assert_true(_controls.visible)
+
+
+func test_ac20_the_touch_that_brings_the_controls_back_acts_on_the_stick() -> void:
+	_deliver(_joypad_button())
+	assert_false(_controls.visible)
+	_touch(0, STICK_PX, true)
+	_drag(0, STICK_PX + Vector2(150.0, 0.0))
+	assert_true(_controls.visible)
+	assert_true(_stick_node().is_active())
+	assert_almost_eq(Input.get_action_strength(&"p1_move_right"), 1.0, 0.01)
+	_touch(0, STICK_PX, false)
+
+
+func test_ac20_the_touch_that_brings_the_controls_back_presses_the_button() -> void:
+	_deliver(_joypad_button())
+	var probe: Probe = add_child_autofree(Probe.new())
+	_touch(0, ACTION_PX, true)
+	assert_eq(probe.seen, [&"p1_interact"] as Array[StringName])
+	_touch(0, ACTION_PX, false)
+
+
+func test_focus_loss_and_pause_notifications_release_everything() -> void:
+	for what: int in [
+		Node.NOTIFICATION_APPLICATION_FOCUS_OUT,
+		Node.NOTIFICATION_APPLICATION_PAUSED,
+		Node.NOTIFICATION_WM_WINDOW_FOCUS_OUT,
+	]:
+		_touch(0, STICK_PX, true)
+		_drag(0, STICK_PX + Vector2(150.0, 0.0))
+		_touch(1, ACTION_PX, true)
+		_controls.notification(what)
+		Input.flush_buffered_events()
+		assert_false(_stick_node().is_active(), str(what))
+		assert_false(_action_button().is_pressed(), str(what))
+		assert_eq(Input.get_action_strength(&"p1_move_right"), 0.0, str(what))
+		assert_false(Input.is_action_pressed(&"p1_interact"), str(what))

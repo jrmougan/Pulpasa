@@ -7,11 +7,6 @@ extends TouchButton
 
 ## Jugador cuyo hint muestra el botón.
 const PLAYER: int = 1
-## Salto del icono en éxito (px a 1080 de alto) y escala máxima.
-const JUMP_PX: float = 12.0
-const JUMP_SCALE: float = 0.25
-const SHAKE_CYCLES: float = 3.0
-
 ## Llamada de vibración (duración en ms). `Input.vibrate_handheld` no hace nada en escritorio.
 var vibrate: Callable = Input.vibrate_handheld
 
@@ -129,14 +124,14 @@ func _on_interaction_resolved(
 func _apply_response(progress: float, is_blocked: bool) -> void:
 	var unit: float = UiScale.px_to_units(1.0, _canvas_height())
 	if is_blocked:
-		var shake: float = sin(progress * SHAKE_CYCLES * TAU) * icons.reject_shake_px * unit
+		var shake: float = sin(progress * config.shake_cycles * TAU) * icons.reject_shake_px * unit
 		_offset = Vector2(shake, 0.0)
 		_icon_scale = 1.0
 		_cross_alpha = 0.5 + 0.5 * cos(progress * TAU)
 	else:
 		var arc: float = sin(progress * PI)
-		_offset = Vector2(0.0, -JUMP_PX * unit * arc)
-		_icon_scale = 1.0 + JUMP_SCALE * arc
+		_offset = Vector2(0.0, -config.jump_px_1080 * unit * arc)
+		_icon_scale = 1.0 + config.jump_scale * arc
 		_cross_alpha = 1.0
 	queue_redraw()
 

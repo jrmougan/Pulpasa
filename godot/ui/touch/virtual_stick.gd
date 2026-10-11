@@ -5,17 +5,13 @@ extends Control
 ## `p1_move_*` con `Input.action_press(acción, fuerza)`, sin eventos nuevos en el InputMap. Si el
 ## dedo pasa del radio, la base lo sigue. El control ocupa la zona del stick (su propio rectángulo).
 
-const BASE_FILL: Color = Color(1.0, 1.0, 1.0, 0.16)
-const BASE_RING: Color = Color(1.0, 1.0, 1.0, 0.5)
-const THUMB_FILL: Color = Color(1.0, 1.0, 1.0, 0.55)
-## Diámetro del pulgar respecto a la base (150 px frente a 300 px).
-const THUMB_RATIO: float = 0.5
-
 var config: TouchConfig
 ## Safe area en coordenadas globales: la base queda entera dentro.
 var safe_rect: Rect2 = Rect2()
 ## Controles sobre los que un toque no inicia el stick (botones; el HUD queda fuera de la zona).
 var blockers: Array[TouchButton] = []
+## Puerta de entrada que pone `TouchControls` (ver `TouchButton.gate`).
+var gate: Callable = Callable()
 
 var _index: int = -1
 var _center: Vector2 = Vector2.ZERO
@@ -84,7 +80,7 @@ func _input(event: InputEvent) -> void:
 	var touch: InputEventScreenTouch = event as InputEventScreenTouch
 	if touch != null:
 		if touch.pressed:
-			if _index == -1 and _can_start(touch.position):
+			if _index == -1 and _can_start(touch):
 				_begin(touch.index, touch.position)
 				get_viewport().set_input_as_handled()
 		elif touch.index == _index:
@@ -97,8 +93,10 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func _can_start(point: Vector2) -> bool:
-	if config == null or not is_visible_in_tree():
+func _can_start(touch: InputEventScreenTouch) -> bool:
+	var point: Vector2 = touch.position
+	var open: bool = gate.call(touch) if gate.is_valid() else is_visible_in_tree()
+	if config == null or not open:
 		return false
 	if not get_global_rect().has_point(point):
 		return false
@@ -166,12 +164,21 @@ func _draw() -> void:
 	var radius: float = get_base_diameter() / 2.0
 	var travel: float = get_travel_radius()
 	var offset: Vector2 = (_finger - _center).limit_length(travel)
-	var fill: Color = BASE_FILL
-	var ring: Color = BASE_RING
-	var thumb: Color = THUMB_FILL
+	var fill: Color = config.stick_fill_color
+	var ring: Color = config.stick_ring_color
+	var thumb: Color = config.stick_thumb_color
 	fill.a *= _alpha
 	ring.a *= _alpha
 	thumb.a *= _alpha
 	draw_circle(center, radius, fill)
-	draw_arc(center, radius, 0.0, TAU, 64, ring, 3.0, true)
-	draw_circle(center + offset, radius * THUMB_RATIO, thumb)
+	draw_arc(
+		center,
+		radius,
+		0.0,
+		TAU,
+		64,
+		ring,
+		UiScale.px_to_units(config.stick_ring_px_1080, _canvas_height()),
+		true
+	)
+	draw_circle(center + offset, radius * config.stick_thumb_ratio, thumb)

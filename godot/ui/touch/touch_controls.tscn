@@ -33,6 +33,7 @@ script = ExtResource("4_safe")
 
 [node name="Content" type="Control" parent="SafeArea"]
 unique_name_in_owner = true
+top_level = true
 layout_mode = 2
 mouse_filter = 2
 

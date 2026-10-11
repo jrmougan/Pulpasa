@@ -10,8 +10,6 @@ signal pressed_changed(is_pressed: bool)
 
 enum Icon { NONE, SWITCH, PAUSE }
 
-const RING_ALPHA: float = 0.55
-
 ## Acción de entrada que pulsa (`p1_switch`, `pause`, `p1_interact`).
 @export var action: StringName = &""
 @export var icon_kind: Icon = Icon.NONE
@@ -20,6 +18,9 @@ var config: TouchConfig
 var icons: ActionIconSet
 ## Margen añadido al radio de la zona táctil, en unidades de lienzo.
 var hit_slop: float = 0.0
+## Puerta de entrada que pone `TouchControls`: recibe el evento y dice si los controles lo aceptan.
+## Sin ella vale `is_visible_in_tree()`.
+var gate: Callable = Callable()
 
 var _index: int = -1
 var _press_tween: Tween
@@ -81,7 +82,7 @@ func _input(event: InputEvent) -> void:
 	var touch: InputEventScreenTouch = event as InputEventScreenTouch
 	if touch != null:
 		if touch.pressed:
-			if _index == -1 and is_visible_in_tree() and hit_test(touch.position):
+			if _index == -1 and _is_open(touch) and hit_test(touch.position):
 				_begin(touch.index)
 				get_viewport().set_input_as_handled()
 		elif touch.index == _index:
@@ -91,6 +92,12 @@ func _input(event: InputEvent) -> void:
 	var drag: InputEventScreenDrag = event as InputEventScreenDrag
 	if drag != null and drag.index == _index:
 		get_viewport().set_input_as_handled()
+
+
+func _is_open(event: InputEvent) -> bool:
+	if gate.is_valid():
+		return gate.call(event)
+	return is_visible_in_tree()
 
 
 func _begin(touch_index: int) -> void:
@@ -151,7 +158,7 @@ func _plate_color() -> Color:
 
 func _ring_color() -> Color:
 	var color: Color = icons.ok_color
-	color.a = RING_ALPHA
+	color.a = config.ring_alpha if config != null else 0.55
 	return color
 
 

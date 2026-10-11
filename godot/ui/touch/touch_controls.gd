@@ -7,6 +7,7 @@ extends Control
 
 @export var config: TouchConfig
 @export var icons: ActionIconSet
+@export var input_config: InputConfig = preload("res://data/config/input_config.tres")
 
 var _last_source: TouchInput.Source = TouchInput.Source.NONE
 
@@ -28,8 +29,11 @@ func _ready() -> void:
 	_action.setup(config, icons)
 	_switch.setup(config, icons)
 	_pause.setup(config, icons)
+	_stick.gate = accepts_input
+	_action.gate = accepts_input
+	_switch.gate = accepts_input
+	_pause.gate = accepts_input
 	_stick.blockers = [_action, _switch, _pause] as Array[TouchButton]
-	_content.top_level = true
 	get_viewport().size_changed.connect(refresh_layout)
 	EventBus.pause_changed.connect(_on_pause_changed)
 	refresh_layout()
@@ -41,7 +45,28 @@ func _exit_tree() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	var source: TouchInput.Source = TouchInput.source_of(event)
+	_note(event)
+
+
+func _notification(what: int) -> void:
+	if (
+		what == NOTIFICATION_APPLICATION_FOCUS_OUT
+		or what == NOTIFICATION_APPLICATION_PAUSED
+		or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT
+	):
+		release_all()
+
+
+## Puerta de los controles hijos: anota la fuente del evento (por si es el toque que los hace
+## reaparecer) y dice si ahora se ven. Así ese mismo toque actúa aunque los hijos reciban `_input`
+## antes que este nodo.
+func accepts_input(event: InputEvent) -> bool:
+	_note(event)
+	return visible
+
+
+func _note(event: InputEvent) -> void:
+	var source: TouchInput.Source = TouchInput.source_of(event, input_config.deadzone)
 	if source == TouchInput.Source.NONE or source == _last_source:
 		return
 	_last_source = source
