@@ -137,9 +137,9 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-122 | M3e | ui-engineer | in_progress | Escala de UI, safe area, perfil de plataforma y menús móviles |
 | PUL-123 | M3e | asset-pipeline | done | Iconos de verbos, motivos y marcas; aliño picante propio; rack y caja sin S/M/L |
 | PUL-124 | M3e | asset-pipeline | done | Cues de D26 |
-| PUL-125 | M3e | gameplay-engineer | todo | Verbo en cocina y objetos; anillo de cocción, contador de corte y aviso de quemado |
-| PUL-126 | M3e | gameplay-engineer | todo | Verbo en la estación de condimentos y cuenco que solo pone |
-| PUL-127 | M3e | gameplay-engineer | todo | Prompt de acción en el mundo, respuesta del jugador, aro activo y contorno |
+| PUL-125 | M3e | gameplay-engineer | in_progress | Verbo en cocina y objetos; anillo de cocción, contador de corte y aviso de quemado |
+| PUL-126 | M3e | gameplay-engineer | in_progress | Verbo en la estación de condimentos y cuenco que solo pone |
+| PUL-127 | M3e | gameplay-engineer | in_progress | Prompt de acción en el mundo, respuesta del jugador, aro activo y contorno |
 | PUL-128 | M3e | ui-engineer | todo | Controles táctiles |
 | PUL-129 | M3e | ui-engineer | todo | HUD y tickets para móvil |
 | PUL-130 | M3e | gameplay-engineer | todo | Cámara con perfiles, seguimiento móvil y flecha de borde |

@@ -1,7 +1,7 @@
 ---
 id: PUL-125
 title: Verbo en cocina y objetos; anillo de cocción, contador de corte y aviso de quemado
-status: todo
+status: in_progress
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-121, PUL-124]
