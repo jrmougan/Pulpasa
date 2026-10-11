@@ -10,8 +10,31 @@ const ICON_FRACTION: float = 0.7
 ## Fracción de la pegatina que ocupa la marca de llama.
 const MARK_FRACTION: float = 0.5
 
+## Lado de la pegatina en unidades de lienzo (el de la caja; MOBILE lo cambia, PUL-129).
+var icon_px: float = float(BADGE_STYLE.badge_icon_px)
+var _data: OrderData
+
+
+## Fila bajo la receta, a la derecha de las pegatinas: el ticket móvil mete aquí id y reloj.
+func extras() -> HBoxContainer:
+	return %Extras
+
+
+## Receta y fila de pegatinas sin hueco entre ellas (ticket móvil, PUL-129).
+func compact() -> void:
+	$Details.add_theme_constant_override(&"separation", 0)
+
+
+## Cambia el lado de las pegatinas y las vuelve a montar con la misma comanda.
+func set_icon_px(side: float) -> void:
+	if is_equal_approx(side, icon_px):
+		return
+	icon_px = side
+	setup(_data)
+
 
 func setup(data: OrderData) -> void:
+	_data = data
 	%Recipe.text = ""
 	for child: Node in %SeasoningIcons.get_children():
 		%SeasoningIcons.remove_child(child)
@@ -31,7 +54,7 @@ func _make_seasoning_widget(seasoning: SeasoningData) -> Control:
 		label.text = name_text
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		return label
-	var side: float = float(BADGE_STYLE.badge_icon_px)
+	var side: float = icon_px
 	var sticker: Control = Control.new()
 	sticker.name = "Sticker"
 	sticker.custom_minimum_size = Vector2(side, side)

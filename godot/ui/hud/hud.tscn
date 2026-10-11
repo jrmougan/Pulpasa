@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://ui/hud/hud.gd" id="1_xmswo"]
 [ext_resource type="Texture2D" uid="uid://bk2ecjgyqafyj" path="res://assets/textures/brand/pulpasa_compacta.png" id="3_badge"]
 
-[node name="HUD" type="Control" unique_id=1410909336]
+[node name="HUD" type="MarginContainer" unique_id=1410909336]
 layout_mode = 3
 anchors_preset = 2
 anchor_top = 1.0
@@ -19,12 +19,9 @@ theme = ExtResource("1_4d6w6")
 script = ExtResource("1_xmswo")
 
 [node name="Background" type="PanelContainer" parent="." unique_id=1469453156]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(176, 0)
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-grow_vertical = 0
+layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"UiPanel"
 
@@ -93,27 +90,6 @@ layout_mode = 2
 theme_type_variation = &"FigureLabel"
 horizontal_alignment = 2
 
-[node name="Rate" type="VBoxContainer" parent="Background/Stats" unique_id=6399693]
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 2
-
-[node name="RateTitle" type="Label" parent="Background/Stats/Rate" unique_id=1752798135]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"CaptionLabel"
-
-[node name="RateWell" type="PanelContainer" parent="Background/Stats/Rate" unique_id=202806496]
-layout_mode = 2
-mouse_filter = 2
-theme_type_variation = &"DisplayWell"
-
-[node name="BoxesPerMinute" type="Label" parent="Background/Stats/Rate/RateWell" unique_id=1036724537]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"FigureLabel"
-horizontal_alignment = 2
-
 [node name="Revenue" type="VBoxContainer" parent="Background/Stats" unique_id=1998093434]
 layout_mode = 2
 mouse_filter = 2
@@ -135,3 +111,8 @@ layout_mode = 2
 theme_type_variation = &"FigureLabel"
 text = "0 €"
 horizontal_alignment = 2
+
+[node name="BoxesPerMinute" type="Label" parent="Background/Stats" unique_id=6399694]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2

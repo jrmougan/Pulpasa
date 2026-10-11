@@ -466,3 +466,15 @@ func test_pul122_ac8_tickets_keep_size_at_720p_and_1080p_without_double_scale() 
 	assert_eq(sizes[0], sizes[1], "mismas unidades de interfaz")
 	assert_eq(sizes[0].x, 212.0, "ancho del ticket intacto")
 	assert_almost_eq(fractions[0], fractions[1], 0.0001, "misma proporción de pantalla")
+
+
+func test_pul129_desktop_panel_keeps_its_strip_and_ticket_size() -> void:
+	_mount()
+	_fill()
+	await wait_process_frames(2)
+	assert_almost_eq(_panel.global_position.y, 8.0, 0.5)
+	assert_lte(_panel.size.y, 250.0)
+	for ticket: OrderTicket in _tickets():
+		assert_almost_eq(ticket.size.x, 212.0, 40.0, "tarjeta de escritorio")
+		assert_lt(ticket.custom_minimum_size.y, 1.0, "sin alto fijo")
+		assert_true((ticket.get_node("%Header") as Control).visible, "cabecera Comanda")
