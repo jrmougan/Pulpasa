@@ -86,6 +86,31 @@ func test_inactive_ring_is_dashed_gray_and_at_most_3px() -> void:
 	assert_almost_eq(gray.g, gray.b, 0.02)
 
 
+## PUL-133 AC3 (H-02): el trazo no depende del zoom: con la cámara de escritorio y con la
+## móvil el activo mide >= 8 px y el inactivo <= 3 px a 1080.
+func test_ac3_ring_thickness_is_the_same_with_desktop_and_mobile_cameras() -> void:
+	var profiles: Array[CameraProfile] = [
+		preload("res://data/config/camera_desktop.tres"),
+		preload("res://data/config/camera_mobile.tres"),
+	]
+	for profile: CameraProfile in profiles:
+		_player.camera.size = profile.ortho_size
+		await wait_process_frames(2)
+		_camera_size = profile.ortho_size
+		assert_gte(_thickness_px(_active()), 8.0, "activo con zoom %s" % profile.ortho_size)
+		assert_lte(_thickness_px(_inactive()), 3.0, "inactivo con zoom %s" % profile.ortho_size)
+		assert_gt(_thickness_px(_inactive()), 0.5, "no desaparece")
+
+
+func test_ac3_each_player_owns_its_ring_meshes() -> void:
+	var other: Player = PLAYER_SCENE.instantiate()
+	other.set_bus(_bus)
+	other.camera = _player.camera
+	_level.add_child(other)
+	assert_ne(_active().mesh, (other.get_node(^"%ActiveIndicator") as MeshInstance3D).mesh)
+	assert_ne(_inactive().mesh, (other.get_node(^"%InactiveIndicator") as MeshInstance3D).mesh)
+
+
 func test_marker_only_on_the_active_character() -> void:
 	_control.controlled_by = 1
 	assert_true(_marker().visible)

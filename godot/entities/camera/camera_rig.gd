@@ -111,13 +111,38 @@ func view_half_extents() -> Vector2:
 
 func _target_focus() -> Vector2:
 	var pos: Vector3 = characters[_active].global_position
-	return CameraFollow.clamp_focus(
-		Vector2(pos.x, pos.z),
-		view_half_extents(),
+	var ground: Vector2 = Vector2(pos.x, pos.z)
+	var half: Vector2 = view_half_extents()
+	if not profile.respect_top_band:
+		return CameraFollow.clamp_focus(
+			ground, half, profile.play_area_min, profile.play_area_max, profile.camera_margin_m
+		)
+	var cover: float = top_cover_m()
+	return CameraFollow.clamp_focus_covered(
+		CameraFollow.covered_focus(ground, cover),
+		half,
 		profile.play_area_min,
 		profile.play_area_max,
-		profile.camera_margin_m
+		profile.camera_margin_m,
+		cover,
+		top_reach_m()
 	)
+
+
+## Alto (m sobre el suelo) de la zona tapada arriba: safe area superior + banda de HUD y tickets
+## (`UiProfile.top_band_max_px`), de unidades de lienzo a metros por la fracción del alto de vista.
+func top_cover_m() -> float:
+	var canvas: Vector2 = get_viewport().get_visible_rect().size
+	var ui: UiProfile = ui_profile if ui_profile != null else GameState.ui_profile
+	var margins: Vector4 = _safe_override if _has_safe_override else _current_safe_margins(canvas)
+	var units: float = margins.y + UiScale.px_to_units(ui.top_band_max_px, canvas.y)
+	return units / maxf(canvas.y, 1.0) * view_half_extents().y * 2.0
+
+
+## `top_reach_height_m` (altura sobre el suelo) como metros equivalentes hacia el norte del suelo.
+func top_reach_m() -> float:
+	var ground_z: float = maxf(absf(global_basis.y.z), MIN_AXIS)
+	return profile.top_reach_height_m * absf(global_basis.y.y) / ground_z
 
 
 ## Corte del eje de la cámara con el suelo (y = 0).

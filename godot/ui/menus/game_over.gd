@@ -15,6 +15,8 @@ func _ready() -> void:
 		_game_state = GameState
 	hide()
 	panel.configure("Turno terminado", "Reintentar")
+	# D26.7: la métrica de la partida es la recaudación; sin «cajas/minuto» (sigue en RoundResult).
+	panel.ratio.hide()
 	panel.primary_button.pressed.connect(_restart)
 	panel.exit_button.pressed.connect(_exit)
 	EventBus.round_started.connect(_on_round_started)
@@ -43,7 +45,6 @@ func _on_round_finished(result: RoundResult) -> void:
 	if visible:
 		return
 	panel.description.text = tr(result.get_performance_description())
-	panel.ratio.text = tr("Rendimiento: %.2f cajas/minuto") % result.boxes_per_minute
 	%Revenue.text = tr("Recaudación: %d €") % result.revenue
 	var stars: Array[Node] = %Stars.get_children()
 	for i: int in range(stars.size()):

@@ -52,7 +52,8 @@ func test_ac2_all_four_performance_bands() -> void:
 		EventBus.round_finished.emit(_result(i * 2 + 1))
 		assert_true(_menu.visible)
 		assert_eq(_menu.panel.description.text, CONFIG.performance_texts[i])
-		assert_eq(_menu.panel.ratio.text, "Rendimiento: %.2f cajas/minuto" % (i + 0.5))
+		assert_false(_menu.panel.ratio.is_visible_in_tree(), "PUL-133 AC4: sin cajas/minuto")
+		assert_false(_menu.panel.ratio.text.contains("cajas"))
 		assert_eq(get_viewport().gui_get_focus_owner(), _menu.panel.primary_button)
 
 

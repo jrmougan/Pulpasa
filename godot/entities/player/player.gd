@@ -21,6 +21,10 @@ extends CharacterBody3D
 @export var inactive_material: Material
 ## Lado del marcador ▼ del activo en px de pantalla a 1080 de alto (>= 24, D26.6).
 @export var marker_px_1080: float = 28.0
+## Trazo de los aros en px de pantalla a 1080 de alto, con cualquier zoom de cámara (H-02): activo
+## sólido >= 8 px, inactivo <= 3 px (D26.6). El tubo del toro se rehace al cambiar `size`.
+@export var active_ring_px_1080: float = 10.0
+@export var inactive_ring_px_1080: float = 2.5
 
 ## Velocidad horizontal actual (m/s), para el futuro AnimationTree (PUL-013).
 var speed: float = 0.0
@@ -35,6 +39,8 @@ var _axis_actions: Array[StringName] = []
 var _fallback_input_config: InputConfig
 ## `switch` no suena en la asignación del arranque de ronda: se arma al acabar ese frame.
 var _switch_armed: bool = false
+## `size` de la cámara con el que se dimensionaron los aros (0 = aún sin dimensionar).
+var _ring_camera_size: float = 0.0
 
 @onready var _control: ControlComponent = %Control
 @onready var _hold: HoldComponent = %HoldComponent
@@ -56,6 +62,7 @@ func _ready() -> void:
 	_bus.round_finished.connect(_on_round_finished)
 	_bus.character_switched.connect(_on_character_switched)
 	_control.control_changed.connect(_on_control_changed)
+	_own_ring_meshes()
 	if _inactive_indicator != null and inactive_material != null:
 		_inactive_indicator.material_override = inactive_material
 	if _feedback != null:
@@ -63,10 +70,43 @@ func _ready() -> void:
 		_hold.item_picked_up.connect(_on_item_picked_up)
 		_hold.item_dropped.connect(_on_item_dropped)
 	_on_control_changed(_control.controlled_by)
+	_size_rings()
 
 
 func _process(_delta: float) -> void:
 	_size_marker()
+	_size_rings()
+
+
+## Cada personaje con su propio toro: la malla de la escena se comparte y cada uno la reescala.
+func _own_ring_meshes() -> void:
+	for ring: GeometryInstance3D in [_indicator, _inactive_indicator]:
+		var mesh_instance: MeshInstance3D = ring as MeshInstance3D
+		if mesh_instance != null and mesh_instance.mesh != null:
+			mesh_instance.mesh = mesh_instance.mesh.duplicate()
+
+
+## El trazo de los aros mide `*_ring_px_1080` px a 1080 con la cámara ortográfica activa (H-02): el
+## grosor en el mundo es `px * size / 1080`, así que no crece con el zoom de la cámara móvil.
+func _size_rings() -> void:
+	var view: Camera3D = camera if camera != null else get_viewport().get_camera_3d()
+	if view == null or view.projection != Camera3D.PROJECTION_ORTHOGONAL:
+		return
+	if is_equal_approx(view.size, _ring_camera_size):
+		return
+	_ring_camera_size = view.size
+	_set_ring_thickness(_indicator, active_ring_px_1080 * view.size / 1080.0)
+	_set_ring_thickness(_inactive_indicator, inactive_ring_px_1080 * view.size / 1080.0)
+
+
+## Deja el toro con el mismo radio medio y el grosor `thickness_m` (m en el suelo).
+func _set_ring_thickness(ring: GeometryInstance3D, thickness_m: float) -> void:
+	var torus: TorusMesh = (ring as MeshInstance3D).mesh as TorusMesh if ring != null else null
+	if torus == null:
+		return
+	var middle: float = (torus.inner_radius + torus.outer_radius) * 0.5
+	torus.inner_radius = middle - thickness_m * 0.5
+	torus.outer_radius = middle + thickness_m * 0.5
 
 
 func _physics_process(delta: float) -> void:

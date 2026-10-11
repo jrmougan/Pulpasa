@@ -45,6 +45,21 @@ func _run(seconds: float) -> void:
 		_rig.step(DT)
 
 
+## Foco esperado: personaje en el centro de la parte visible y límites del nivel (PUL-133).
+func _expected_focus(node: Node3D) -> Vector2:
+	var ground: Vector2 = Vector2(node.global_position.x, node.global_position.z)
+	var cover: float = _rig.top_cover_m()
+	return CameraFollow.clamp_focus_covered(
+		CameraFollow.covered_focus(ground, cover),
+		_rig.view_half_extents(),
+		MOBILE.play_area_min,
+		MOBILE.play_area_max,
+		MOBILE.camera_margin_m,
+		cover,
+		_rig.top_reach_m()
+	)
+
+
 func _screen_fraction(node: Node3D) -> Vector2:
 	var p: Vector2 = _rig.unproject_position(node.global_position + Vector3.UP * 0.8)
 	return p / Vector2(CANVAS)
@@ -86,13 +101,7 @@ func test_ac11_running_character_stays_inside_screen_and_stops_cleanly() -> void
 		var f: Vector2 = _screen_fraction(_a)
 		assert_between(f.y, 0.2, 0.8, "y en el 60 %% central (paso %d)" % i)
 		assert_between(f.x, 0.1, 0.9, "x en el 80 %% central (paso %d)" % i)
-	var target: Vector2 = CameraFollow.clamp_focus(
-		Vector2(_a.global_position.x, _a.global_position.z),
-		_rig.view_half_extents(),
-		MOBILE.play_area_min,
-		MOBILE.play_area_max,
-		MOBILE.camera_margin_m
-	)
+	var target: Vector2 = _expected_focus(_a)
 	var side: float = signf(_rig.get_focus().x - target.x)
 	var crossed: bool = false
 	for i: int in 36:
@@ -105,6 +114,8 @@ func test_ac11_running_character_stays_inside_screen_and_stops_cleanly() -> void
 
 func test_view_never_leaves_level_margin() -> void:
 	var lo: Vector2 = MOBILE.play_area_min - Vector2.ONE * MOBILE.camera_margin_m
+	# PUL-133: por el norte la banda tapa el borde de la vista y hay que ver lo que hay sobre el suelo.
+	lo.y -= _rig.top_cover_m() + _rig.top_reach_m()
 	var hi: Vector2 = MOBILE.play_area_max + Vector2.ONE * MOBILE.camera_margin_m
 	for at: Vector3 in [
 		Vector3(80.0, 0.0, 80.0),
@@ -136,13 +147,7 @@ func test_switch_pans_to_new_character_in_pan_time() -> void:
 	assert_lt(_rig.get_focus().distance_to(start), 4.0, "no salta de golpe")
 	assert_gt(_rig.get_focus().distance_to(start), 0.1, "ya se mueve")
 	_run(0.3)
-	var target: Vector2 = CameraFollow.clamp_focus(
-		Vector2(_b.global_position.x, _b.global_position.z),
-		_rig.view_half_extents(),
-		MOBILE.play_area_min,
-		MOBILE.play_area_max,
-		MOBILE.camera_margin_m
-	)
+	var target: Vector2 = _expected_focus(_b)
 	assert_lt(_rig.get_focus().distance_to(target), 0.05, "a los 0,4 s centrada en el nuevo activo")
 	_run(0.1)
 	var f: Vector2 = _screen_fraction(_b)
@@ -195,13 +200,7 @@ func test_arrow_follows_active_switch() -> void:
 	assert_true(_arrow_layer().visible)
 	_bus.character_switched.emit(1, 2)
 	_run(1.5)
-	var target: Vector2 = CameraFollow.clamp_focus(
-		Vector2(_b.global_position.x, _b.global_position.z),
-		_rig.view_half_extents(),
-		MOBILE.play_area_min,
-		MOBILE.play_area_max,
-		MOBILE.camera_margin_m
-	)
+	var target: Vector2 = _expected_focus(_b)
 	assert_lt(_rig.get_focus().distance_to(target), 0.05, "la cámara sigue al nuevo activo")
 	_run(0.0)
 	var f: Vector2 = _screen_fraction(_b)
