@@ -6,8 +6,6 @@ extends PanelContainer
 ## Periodo del parpadeo de paciencia baja (s): el aviso nunca es solo color (biblia §2.6).
 const BLINK_PERIOD: float = 0.5
 const BLINK_MIN_ALPHA: float = 0.35
-## Cifras del reloj en MOBILE: el suelo de texto (24 unidades a 720) ya las deja a 36 px a 1080.
-const MOBILE_CLOCK_UNITS: int = 24
 
 ## Color del puesto (franja superior, R13); el puesto lo lee de la misma paleta (PUL-100).
 const PALETTE: StandPalette = preload("res://data/config/stand_palette.tres")
@@ -56,7 +54,7 @@ func setup(order: ActiveOrder) -> void:
 func apply_mobile_layout(profile: UiProfile, width_units: float) -> void:
 	var canvas_height: float = get_viewport().get_visible_rect().size.y
 	if not _mobile_built:
-		_build_mobile_structure()
+		_build_mobile_structure(profile, canvas_height)
 	custom_minimum_size = Vector2(
 		width_units, UiScale.px_to_units(profile.ticket_height, canvas_height)
 	)
@@ -113,7 +111,7 @@ func _set_low(low: bool) -> void:
 	set_process(low)
 
 
-func _build_mobile_structure() -> void:
+func _build_mobile_structure(profile: UiProfile, canvas_height: float) -> void:
 	_mobile_built = true
 	%Header.hide()
 	_stripe.custom_minimum_size.y = 4.0
@@ -124,7 +122,9 @@ func _build_mobile_structure() -> void:
 	extras.show()
 	_entry.compact()
 	for digits: Label in [_clock, %Ghost]:
-		digits.add_theme_font_size_override(&"font_size", MOBILE_CLOCK_UNITS)
+		digits.add_theme_font_size_override(
+			&"font_size", roundi(UiScale.px_to_units(profile.text_min_px, canvas_height))
+		)
 	var well: StyleBox = (%ClockWell as PanelContainer).get_theme_stylebox(&"panel").duplicate()
 	well.content_margin_top = 0.0
 	well.content_margin_bottom = 0.0

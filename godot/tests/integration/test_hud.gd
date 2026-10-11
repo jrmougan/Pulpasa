@@ -19,6 +19,8 @@ var _state: StateSpy
 class StateSpy:
 	extends Node
 	var mode: GameMode.Mode = GameMode.Mode.SINGLE
+	var platform: PlatformProfile.Kind = PlatformProfile.Kind.DESKTOP
+	var ui_profile: UiProfile = preload("res://data/config/ui_profile_desktop.tres")
 
 
 func before_each() -> void:

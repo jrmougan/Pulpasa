@@ -4,26 +4,33 @@ extends RefCounted
 ## superior»; ADR-005 E4). Todo en px de pantalla a 1080 de alto; UiScale.px_to_units las pasa a
 ## unidades de lienzo. Puro: sin nodos.
 
-## Margen a los bordes de la safe area (`button_margin_px` del diseño).
-const EDGE_MARGIN_PX: float = 48.0
-## Distancia del borde superior al HUD y a los tickets.
+const CONFIG: TouchConfig = preload("res://data/config/touch_config.tres")
+## Distancia del borde superior al HUD y a los tickets (diseño: 24 px; sin dato propio).
 const TOP_PX: float = 24.0
-## Diámetro del botón de pausa (esquina superior derecha; lo monta PUL-128).
-const PAUSE_BUTTON_PX: float = 120.0
-## Hueco mínimo entre el HUD, los tickets y el botón de pausa.
+## Hueco mínimo entre el HUD, los tickets y el botón de pausa (diseño: 24 px; sin dato propio).
 const BLOCK_GAP_PX: float = 24.0
 ## Tickets en la fila: uno por puesto.
 const TICKET_COUNT: int = 4
 
 
+## Margen a los bordes de la safe area: `button_margin_px_1080` de `touch_config.tres`.
+static func edge_margin_px() -> float:
+	return CONFIG.button_margin_px_1080
+
+
+## Diámetro del botón de pausa: `small_button_dp` x `px_per_dp_at_1080`.
+static func pause_button_px() -> float:
+	return CONFIG.small_button_dp * CONFIG.px_per_dp_at_1080
+
+
 ## Desplazamiento (px) del borde izquierdo de la fila de tickets respecto a la safe area.
 static func tickets_left_px(profile: UiProfile) -> float:
-	return EDGE_MARGIN_PX + profile.hud_block_width + BLOCK_GAP_PX
+	return edge_margin_px() + profile.hud_block_width + BLOCK_GAP_PX
 
 
 ## Espacio (px) que se deja a la derecha de la fila para el botón de pausa.
 static func tickets_right_px() -> float:
-	return EDGE_MARGIN_PX + PAUSE_BUTTON_PX + BLOCK_GAP_PX
+	return edge_margin_px() + pause_button_px() + BLOCK_GAP_PX
 
 
 ## Ancho de cada ticket: `clamp((disponible - huecos) / 4, min, max)`.

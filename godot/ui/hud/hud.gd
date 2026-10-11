@@ -26,11 +26,11 @@ var _mobile: bool = false
 
 
 func _ready() -> void:
-	super._ready()
 	if _bus == null:
 		_bus = EventBus
 	if _game_state == null:
 		_game_state = GameState
+	super._ready()
 	_bus.round_started.connect(_on_round_started)
 	_bus.round_time_changed.connect(_on_time_changed)
 	_bus.score_changed.connect(_on_score_changed)
@@ -113,13 +113,14 @@ func _render() -> void:
 
 ## Disposición del perfil (ADR-005 E4). En DESKTOP no cambia nada de la escena.
 func _apply_layout() -> void:
-	_mobile = GameState.platform == PlatformProfile.Kind.MOBILE
+	_mobile = _game_state.platform == PlatformProfile.Kind.MOBILE
 	if not _mobile:
 		return
-	var profile: UiProfile = GameState.ui_profile
+	var profile: UiProfile = _game_state.ui_profile
 	var canvas_height: float = get_viewport().get_visible_rect().size.y
-	var left: float = UiScale.px_to_units(TouchHudLayout.EDGE_MARGIN_PX, canvas_height)
+	var left: float = UiScale.px_to_units(TouchHudLayout.edge_margin_px(), canvas_height)
 	var top: float = UiScale.px_to_units(TouchHudLayout.TOP_PX, canvas_height)
+	add_theme_constant_override(&"margin_bottom", 0)
 	anchor_left = 0.0
 	anchor_top = 0.0
 	anchor_right = 0.0

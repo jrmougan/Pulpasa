@@ -23,6 +23,15 @@ func _ready() -> void:
 		_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 		_overlay.draw.connect(_draw_zones)
 		add_child(_overlay)
+		get_viewport().size_changed.connect(_overlay.queue_redraw)
+		set_process(true)
+	else:
+		set_process(false)
+
+
+## La safe area se puede inyectar después de montar: el overlay se repinta cada frame.
+func _process(_delta: float) -> void:
+	_overlay.queue_redraw()
 
 
 func _draw_zones() -> void:
@@ -41,8 +50,8 @@ func _draw_zones() -> void:
 	)
 	_overlay.draw_rect(stick, ZONE_COLOR)
 	_overlay.draw_rect(buttons, ZONE_COLOR)
-	var pause_side: float = UiScale.px_to_units(TouchHudLayout.PAUSE_BUTTON_PX, height)
-	var edge: float = UiScale.px_to_units(TouchHudLayout.EDGE_MARGIN_PX, height)
+	var pause_side: float = UiScale.px_to_units(TouchHudLayout.pause_button_px(), height)
+	var edge: float = UiScale.px_to_units(TouchHudLayout.edge_margin_px(), height)
 	var right_margin: float = ($OrderTicketsPanel as SafeAreaMargin).get_theme_constant(
 		&"margin_right"
 	)

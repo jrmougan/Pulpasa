@@ -167,7 +167,10 @@ func test_ac15_hud_tickets_and_pause_do_not_overlap_and_band_is_at_most_200_px()
 	var first: Rect2 = _px(tickets[0], stretch)
 	var last: Rect2 = _px(tickets[3], stretch)
 	assert_gte(first.position.x - hud.end.x, 23.0, "hueco HUD-tickets")
-	var pause: Rect2 = Rect2(2040.0, 48.0, 120.0, 120.0)
+	var side: float = TouchHudLayout.pause_button_px()
+	var edge: float = TouchHudLayout.edge_margin_px()
+	var pause: Rect2 = Rect2(2340.0 - SAFE_LEFT - edge - side, edge, side, side)
+	assert_eq(pause, Rect2(2040.0, 48.0, 120.0, 120.0), "pausa del diseño")
 	assert_gte(pause.position.x - last.end.x, 23.0, "hueco tickets-pausa")
 	assert_lte(maxf(hud.end.y, last.end.y), 200.0, "banda superior")
 
@@ -237,12 +240,16 @@ func test_hud_shows_only_revenue_then_time_without_boxes_per_minute() -> void:
 func test_ticket_icons_use_the_seasoning_icon_at_48_px() -> void:
 	var stretch: float = await _mount(Vector2i(2340, 1080), true)
 	var checked: int = 0
-	for ticket: OrderTicket in _tickets():
-		var entry: TicketEntry = ticket.get_node("%Entry")
-		for sticker: Node in entry.get_node("%SeasoningIcons").get_children():
-			var icon: TextureRect = sticker.get_node("Icon")
-			assert_not_null(icon.texture)
-			assert_almost_eq(_px(sticker as Control, stretch).size.x, 48.0, 1.0)
+	var tickets: Array[OrderTicket] = _tickets()
+	for i: int in tickets.size():
+		var entry: TicketEntry = tickets[i].get_node("%Entry")
+		var stickers: Array[Node] = entry.get_node("%SeasoningIcons").get_children()
+		var seasonings: Array[SeasoningData] = SeasoningRules.canonical_order(RECIPES[i].seasonings)
+		assert_eq(stickers.size(), seasonings.size(), "una pegatina por aliño")
+		for k: int in stickers.size():
+			var icon: TextureRect = stickers[k].get_node("Icon")
+			assert_eq(icon.texture, seasonings[k].icon, "icono de %s" % seasonings[k].display_name)
+			assert_almost_eq(_px(stickers[k] as Control, stretch).size.x, 48.0, 1.0)
 			checked += 1
 	assert_gt(checked, 0)
 

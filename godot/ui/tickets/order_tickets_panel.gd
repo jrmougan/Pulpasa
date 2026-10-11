@@ -89,6 +89,7 @@ func _apply_layout() -> void:
 		return
 	var profile: UiProfile = GameState.ui_profile
 	var canvas_height: float = get_viewport().get_visible_rect().size.y
+	add_theme_constant_override(&"margin_bottom", 0)
 	anchor_left = 0.0
 	anchor_right = 1.0
 	anchor_top = 0.0
