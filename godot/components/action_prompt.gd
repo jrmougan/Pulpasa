@@ -66,16 +66,22 @@ var _registered_target_id: int = 0
 @onready var _marker: Sprite3D = %PlayerMarker
 
 
+## Tamaño del viewport en píxeles reales: con `stretch canvas_items` el rectángulo visible está en
+## unidades de interfaz (720 de alto en base 1280x720), así que se multiplica por la escala final.
+static func real_size_of(viewport: Viewport) -> Vector2:
+	return viewport.get_visible_rect().size * viewport.get_final_transform().get_scale()
+
+
 ## Metros por píxel de pantalla de `node` (cámara ortográfica del viewport). Lo usa también el
 ## marcador del personaje activo.
 static func meters_per_pixel_of(node: Node3D) -> float:
 	var viewport: Viewport = node.get_viewport() if node.is_inside_tree() else null
 	var camera: Camera3D = viewport.get_camera_3d() if viewport != null else null
-	var height: float = viewport.get_visible_rect().size.y if viewport != null else 0.0
+	var height: float = real_size_of(viewport).y if viewport != null else 0.0
 	if camera == null or camera.projection != Camera3D.PROJECTION_ORTHOGONAL or height <= 0.0:
 		return FALLBACK_CAMERA_SIZE / REFERENCE_HEIGHT
 	if camera.keep_aspect == Camera3D.KEEP_WIDTH:
-		return camera.size / viewport.get_visible_rect().size.x
+		return camera.size / real_size_of(viewport).x
 	return camera.size / height
 
 
@@ -320,7 +326,7 @@ func _view_height_px() -> float:
 	if _view_height > 0.0:
 		return _view_height
 	var viewport: Viewport = get_viewport() if is_inside_tree() else null
-	return viewport.get_visible_rect().size.y if viewport != null else REFERENCE_HEIGHT
+	return real_size_of(viewport).y if viewport != null else REFERENCE_HEIGHT
 
 
 ## `[derecha, arriba]` de la cámara en el mundo.

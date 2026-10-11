@@ -19,6 +19,7 @@ const DEFAULT_BLOCKED_MATERIAL: Material = preload("res://shaders/highlight_outl
 ## Material del contorno.
 @export var material: Material = DEFAULT_MATERIAL
 ## Material del contorno de un objetivo BLOQUEADO (D26.6): `.tres` ámbar propio, sin copias.
+## No sigue a un `material` personalizado: quien cambie `material` debe asignar también este.
 @export var blocked_material: Material = DEFAULT_BLOCKED_MATERIAL
 ## Raíz de las mallas a contornear; por defecto, el padre.
 @export var root: Node3D

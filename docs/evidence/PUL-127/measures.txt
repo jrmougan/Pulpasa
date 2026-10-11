@@ -1,6 +1,6 @@
 1920x1080 prompt OK: icono 64.0 px, placa 80.0 px
 1920x1080 local_2p separacion de centros de placa: 88.0 px (placa 80.0 px, hueco 8.0 px)
-1920x1080 cubo desde el sur: contorno 21254 px, visibles con el personaje delante 11371 px (53.5 %)
+1920x1080 cubo desde el sur: contorno 26561 px, visibles con el personaje delante 14480 px (54.5 %)
 1280x720 prompt OK: icono 48.0 px, placa 60.0 px
 1280x720 local_2p separacion de centros de placa: 68.0 px (placa 60.0 px, hueco 8.0 px)
-1280x720 cubo desde el sur: contorno 9888 px, visibles con el personaje delante 4172 px (42.2 %)
+1280x720 cubo desde el sur: contorno 7482 px, visibles con el personaje delante 3558 px (47.6 %)

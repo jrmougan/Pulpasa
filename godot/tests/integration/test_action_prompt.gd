@@ -6,6 +6,7 @@ extends GutTest
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
+const CAMERA_SCENE: PackedScene = preload("res://entities/camera/camera_rig.tscn")
 const CAMERA_SIZE: float = 12.74
 const OUTLINE_CREAM: Color = Color("FFF4D6")
 const AMBER: Color = Color("FFB020")
@@ -300,8 +301,8 @@ func test_two_presses_give_two_responses_and_each_restarts() -> void:
 func test_response_freezes_with_the_tree_paused() -> void:
 	await _show(ActionHint.ok(ActionVerb.PICK_UP))
 	_press(ActionHint.ok(ActionVerb.PICK_UP))
+	_level.process_mode = Node.PROCESS_MODE_PAUSABLE
 	get_tree().paused = true
-	_prompt.process_mode = Node.PROCESS_MODE_PAUSABLE
 	await wait_process_frames(3)
 	var frozen: float = _prompt.get_icon_scale()
 	await wait_process_frames(3)
@@ -400,3 +401,75 @@ func _xray_of(material: Material) -> ShaderMaterial:
 func _assert_color(actual: Color, expected: Color) -> void:
 	var close: bool = absf(actual.r - expected.r) < 0.003 and absf(actual.g - expected.g) < 0.003
 	assert_true(close and absf(actual.b - expected.b) < 0.003, "%s ~ %s" % [actual, expected])
+
+
+func test_every_outline_pass_shares_grow_and_width_with_its_xray() -> void:
+	for path: String in [
+		"res://shaders/highlight_outline.tres", "res://shaders/highlight_outline_blocked.tres"
+	]:
+		var hull: ShaderMaterial = load(path) as ShaderMaterial
+		var xray: ShaderMaterial = _xray_of(hull)
+		assert_not_null(xray, path)
+		for parameter: StringName in [&"grow", &"width"]:
+			assert_eq(
+				xray.get_shader_parameter(parameter),
+				hull.get_shader_parameter(parameter),
+				"%s: %s" % [path, parameter]
+			)
+
+
+# --- Píxeles reales con stretch canvas_items (base 1280x720) ------------------------------------
+
+
+func _real_sizes_at(resolution: Vector2i) -> Dictionary:
+	var original: Vector2i = get_window().size
+	get_window().size = resolution
+	await wait_process_frames(3)
+	var camera: Camera3D = CAMERA_SCENE.instantiate()
+	_level.add_child(camera)
+	camera.make_current()
+	_prompt.set_view(0.0, 0.0)
+	await _show(ActionHint.ok(ActionVerb.PICK_UP))
+	var result: Dictionary = {
+		&"icon": _prompt.icon_px(),
+		&"plate": _prompt.plate_px(),
+		&"mpp": _prompt.meters_per_pixel(),
+		&"height": ActionPrompt.real_size_of(get_viewport()).y,
+		&"camera": camera.size
+	}
+	get_window().size = original
+	await wait_process_frames(2)
+	return result
+
+
+func test_prompt_uses_real_pixels_at_1920x1080_on_a_720_base() -> void:
+	var sizes: Dictionary = await _real_sizes_at(Vector2i(1920, 1080))
+	assert_almost_eq(float(sizes[&"height"]), 1080.0, 0.5)
+	assert_almost_eq(float(sizes[&"icon"]), 64.0, 0.1)
+	assert_almost_eq(float(sizes[&"plate"]), 80.0, 0.1)
+	assert_almost_eq(float(sizes[&"mpp"]), float(sizes[&"camera"]) / 1080.0, 0.0001)
+
+
+func test_prompt_keeps_the_48px_floor_in_a_small_window() -> void:
+	var sizes: Dictionary = await _real_sizes_at(Vector2i(960, 540))
+	assert_almost_eq(float(sizes[&"height"]), 540.0, 0.5)
+	assert_gte(float(sizes[&"icon"]), 48.0)
+	assert_gte(float(sizes[&"plate"]), 48.0)
+
+
+func test_marker_is_28px_at_1080_and_24px_at_least_in_a_small_window() -> void:
+	var original: Vector2i = get_window().size
+	var camera: Camera3D = CAMERA_SCENE.instantiate()
+	_level.add_child(camera)
+	camera.make_current()
+	var marker: Sprite3D = _player.get_node(^"%ActiveMarker") as Sprite3D
+	var sides: Array[float] = []
+	for resolution: Vector2i in [Vector2i(1920, 1080), Vector2i(960, 540)]:
+		get_window().size = resolution
+		await wait_process_frames(3)
+		var mpp: float = ActionPrompt.meters_per_pixel_of(_player)
+		sides.append(marker.pixel_size * float(marker.texture.get_width()) / mpp)
+	get_window().size = original
+	await wait_process_frames(2)
+	assert_almost_eq(sides[0], 28.0, 0.1)
+	assert_gte(sides[1], 24.0 - 0.01)

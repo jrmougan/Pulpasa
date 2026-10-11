@@ -76,3 +76,8 @@ contorno con `Highlightable.acquire`, como haria el detector). Mediciones en `me
   `test_m2_flow.gd` exige `%ActiveIndicator.visible == false` en el inactivo (owns ampliado por el coordinador). Unificarlos es trivial cuando se actualice ese test.
 - Los materiales de aro nuevos (`shaders/ring_active_p1/p2.tres`, `ring_inactive.tres`) viven en `shaders/` (unica ruta de materiales en `owns`) y sustituyen a `assets/materials/active_indicator_p*.tres`.
 
+
+### Revision (CHANGES) aplicada
+- Tamaños en px reales: `ActionPrompt.real_size_of(viewport)` = `get_visible_rect().size * get_final_transform().get_scale()` en `meters_per_pixel_of`, `icon_px` y `player.gd::_size_marker`; tests con la ventana real a 1920x1080 (64/80/28) y 960x540 (>= 48 / >= 24) sobre base 1280x720.
+- Test de `grow`/`width` de cada `highlight_outline*.tres` contra su xray; comentario de `blocked_material` en `highlightable.gd`; test de pausa sin forzar `process_mode` del prompt (el nivel es PAUSABLE).
+- Capturas rehechas: `rings_active_inactive_1920x1080.png` (ambos aros) y `local_2p_two_prompts_1280x720.png` (sin cortes). AC6 marcado.

@@ -118,11 +118,11 @@ func _on_control_changed(controlled_by: int) -> void:
 	_size_marker()
 
 
-## El ▼ mide `marker_px_1080` px a 1080 de alto en pantalla (con mínimo de 24 px).
+## El ▼ mide `marker_px_1080` px a 1080 de alto en pantalla (con mínimo de 24 px), en px reales.
 func _size_marker() -> void:
 	if _marker.texture == null or not _marker.visible:
 		return
-	var height: float = get_viewport().get_visible_rect().size.y
+	var height: float = ActionPrompt.real_size_of(get_viewport()).y
 	var px: float = maxf(marker_px_1080 * height / 1080.0, 24.0)
 	_marker.pixel_size = (
 		px * ActionPrompt.meters_per_pixel_of(self) / float(_marker.texture.get_width())

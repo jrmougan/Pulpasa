@@ -86,15 +86,15 @@ func _session(size: Vector2i) -> void:
 	await _measure_prompt(shown[0] as ActionPrompt, tag)
 	_clear(shown)
 	# 2. Aro del activo y del inactivo.
-	_park(p1, trash.global_position + Vector3(-2.0, 0.0, 3.0))
-	_park(p2, trash.global_position + Vector3(0.0, 0.0, 3.0))
-	_focus(trash.global_position + Vector3(-1.0, 0.0, 3.0), 2.4)
+	_park(p1, trash.global_position + Vector3(-1.0, 0.0, 0.5))
+	_park(p2, trash.global_position + Vector3(1.0, 0.0, 0.5))
+	_focus(trash.global_position + Vector3(0.0, 0.5, 0.5), 3.6)
 	await _shot("rings_active_inactive_" + tag)
 	# 3. Local 2P: dos prompts sobre el mismo objetivo.
 	_control(p2).controlled_by = 2
 	_park(p1, trash.global_position + Vector3(-1.2, 0.0, 1.6))
 	_park(p2, trash.global_position + Vector3(1.2, 0.0, 1.6))
-	_focus(trash.global_position + Vector3(0.0, 0.0, 1.0), 3.4)
+	_focus(trash.global_position + Vector3(0.0, 0.8, 0.6), 5.0)
 	for pair: Array in [
 		[p1, ActionHint.ok(ActionVerb.TRASH)],
 		[p2, ActionHint.blocked(ActionVerb.TRASH, ActionReason.BUSY)]
