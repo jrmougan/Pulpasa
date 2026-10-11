@@ -1,0 +1,7 @@
+box_full.wav: 0.310 s, pico 0.70, rms 0.178
+burn_warning.wav: 0.190 s, pico 0.55, rms 0.341
+cook_ready.wav: 0.500 s, pico 0.70, rms 0.132
+discard.wav: 0.450 s, pico 0.65, rms 0.097
+rejected.wav: 0.280 s, pico 0.70, rms 0.181
+switch.wav: 0.220 s, pico 0.60, rms 0.141
+trash.wav: 0.450 s, pico 0.70, rms 0.077

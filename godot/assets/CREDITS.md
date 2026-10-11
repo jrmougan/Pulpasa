@@ -25,6 +25,8 @@ Detalle por fichero en `docs/assets/licenses.md` (y `licenses-pul-009.md`, `lice
 - Sonidos de OpenGameArt.org: «boiling water loops» (TinyWorlds), «various scissors» (sinny), «scrapes» (AntumDeluge).
 - «Interface Sounds» de Kenney (kenney.nl).
 
+Efectos de D26 (`audio/sfx/{cook_ready,box_full,switch,rejected,trash,discard,burn_warning}.wav`, PUL-124): síntesis procedural propia del equipo Pulpasa (Python estándar, sin muestras de terceros; PCM 16 bit mono 44,1 kHz, < 0,6 s), sin atribución. Campanilla de dos notas, golpe de cierre, whoosh de ruido filtrado, zumbido descendente, golpe metálico de cubo, siseo de vapor y pitidos cuadrados de alarma.
+
 `textures/logo/PulpaSA.png` es propio del equipo Pulpasa.
 
 ## Retirados

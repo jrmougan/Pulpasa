@@ -13,6 +13,13 @@
 [ext_resource type="AudioStream" path="res://assets/audio/fx_burn_warning.ogg" id="11_5drf2"]
 [ext_resource type="AudioStream" path="res://assets/audio/fx_burned.ogg" id="12_qg6pt"]
 [ext_resource type="AudioStream" path="res://assets/audio/fx_phase_change.ogg" id="13_f7mvv"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/cook_ready.wav" id="sfx_cook_ready"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/box_full.wav" id="sfx_box_full"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/switch.wav" id="sfx_switch"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/rejected.wav" id="sfx_rejected"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/trash.wav" id="sfx_trash"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/discard.wav" id="sfx_discard"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/burn_warning.wav" id="sfx_burn_warning"]
 [ext_resource type="Script" path="res://resources/audio_feedback_map.gd" id="14_lxye3"]
 
 [sub_resource type="Resource" id="Resource_af6f2"]
@@ -101,7 +108,7 @@ shake_amplitude = 0.08
 
 [sub_resource type="Resource" id="Resource_l3wg6"]
 script = ExtResource("1_3p1oc")
-stream = ExtResource("11_5drf2")
+stream = ExtResource("sfx_burn_warning")
 volume_db = -2.0
 pitch_jitter = 0.0
 
@@ -114,7 +121,7 @@ shake_amplitude = 0.08
 
 [sub_resource type="Resource" id="Resource_dgmik"]
 script = ExtResource("1_3p1oc")
-stream = ExtResource("3_aj3yj")
+stream = ExtResource("sfx_discard")
 volume_db = -2.0
 visual = 1
 visual_time = 0.35
@@ -127,17 +134,51 @@ pitch_jitter = 0.0
 
 [sub_resource type="Resource" id="Resource_trash"]
 script = ExtResource("1_3p1oc")
-stream = ExtResource("3_aj3yj")
+stream = ExtResource("sfx_trash")
 volume_db = -4.0
 visual = 1
 visual_time = 0.4
 pop_scale = 0.15
 
+[sub_resource type="Resource" id="Resource_cookready"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("sfx_cook_ready")
+visual = 1
+visual_time = 0.5
+pop_scale = 0.25
+
+[sub_resource type="Resource" id="Resource_boxfull"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("sfx_box_full")
+pitch_jitter = 0.0
+visual = 1
+visual_time = 0.5
+pop_scale = 0.2
+
+[sub_resource type="Resource" id="Resource_switch"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("sfx_switch")
+volume_db = -3.0
+visual = 1
+visual_time = 0.35
+pop_scale = 0.15
+
+[sub_resource type="Resource" id="Resource_rejected"]
+script = ExtResource("1_3p1oc")
+stream = ExtResource("sfx_rejected")
+volume_db = -2.0
+pitch_jitter = 0.0
+visual = 2
+visual_time = 0.35
+shake_amplitude = 0.06
+
 [resource]
 script = ExtResource("14_lxye3")
 cues = Dictionary[StringName, ExtResource("1_3p1oc")]({
+&"box_full": SubResource("Resource_boxfull"),
 &"burn_warning": SubResource("Resource_l3wg6"),
 &"burnt": SubResource("Resource_elxnh"),
+&"cook_ready": SubResource("Resource_cookready"),
 &"cook_done": SubResource("Resource_xggkn"),
 &"cook_start": SubResource("Resource_hfrm7"),
 &"cut": SubResource("Resource_l6o6f"),
@@ -150,7 +191,9 @@ cues = Dictionary[StringName, ExtResource("1_3p1oc")]({
 &"phase_up": SubResource("Resource_kjbxn"),
 &"pick_up": SubResource("Resource_af6f2"),
 &"season": SubResource("Resource_rtr1p"),
+&"rejected": SubResource("Resource_rejected"),
 &"season_error": SubResource("Resource_lgxhl"),
+&"switch": SubResource("Resource_switch"),
 &"trash": SubResource("Resource_trash"),
 &"unseason": SubResource("Resource_iru8r")
 })

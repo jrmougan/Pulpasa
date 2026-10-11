@@ -47,6 +47,10 @@ const CUES: Array[StringName] = [
 	&"discard",
 	&"trash",
 	&"phase_up",
+	&"cook_ready",
+	&"box_full",
+	&"switch",
+	&"rejected",
 ]
 ## Acciones de AC5: cue con sonido y respuesta visual.
 const AC5_CUES: Array[StringName] = [
