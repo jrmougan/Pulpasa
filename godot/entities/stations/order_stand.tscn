@@ -27,8 +27,8 @@ size = Vector3(1.36, 0.93, 0.4)
 [sub_resource type="BoxMesh" id="BoxMesh_hull_awning"]
 size = Vector3(1.46, 0.02, 0.61)
 
-[node name="OrderStand" type="StaticBody3D" groups=["interactable"]]
-collision_layer = 4
+[node name="OrderStand" type="StaticBody3D"]
+collision_layer = 1
 collision_mask = 0
 script = ExtResource("1_script")
 palette = ExtResource("9_pal")

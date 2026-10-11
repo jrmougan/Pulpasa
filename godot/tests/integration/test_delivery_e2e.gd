@@ -8,10 +8,11 @@ extends GutTest
 ## el cambio de personaje (Q), como el pase de `level-layouts.md`: el de servicio deja la caja en
 ## un pasaplatos; el de cocina cuece, corta sobre ella, la pasa a la bandeja de la estación por el
 ## lado de pase y echa los cachelos al cuenco; el de servicio condimenta en los dispensadores (y
-## alterna cachelos en el cuenco) y la recoge.
-## La entrega es en su puesto pulsando E delante de él o entrando en `%DeliveryZone`, con la
-## paciencia real de los `.tres` (sin caducar). La zona no hace nada con una caja que no es la del
-## puesto (E sí la rechaza, D8) y el puesto al que apunta E se resalta.
+## echa cachelos con el cuenco, que solo pone) y la recoge.
+## D26 (ADR-003 §11.7): la entrega es solo entrando en `%DeliveryZone` con la caja de la comanda
+## (o estando ya dentro cuando la caja pasa a coincidir), con la paciencia real de los `.tres`
+## (sin caducar). El puesto no es objetivo de E ni se resalta; con una caja que no es la del puesto
+## la zona no hace nada y no penaliza.
 
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
@@ -80,7 +81,7 @@ func after_each() -> void:
 	_scene = null
 
 
-func test_ac3_deliver_with_e_in_front_of_the_stand() -> void:
+func test_d26_pressing_e_in_front_of_the_stand_does_not_deliver() -> void:
 	var order: ActiveOrder = _order_with_most_seasonings()
 	assert_not_null(order)
 	var box: Box = await _prepare_box(order)
@@ -89,30 +90,20 @@ func test_ac3_deliver_with_e_in_front_of_the_stand() -> void:
 		return
 	var stand: OrderStand = _stand(order.slot_id)
 	var revenue: int = RoundManager.round_state.get_revenue()
-	# Delante del puesto, de cara a él y fuera de su zona: la entrega la hace la tecla E.
+	# Delante del puesto, de cara a él y fuera de su zona: ya no se entrega con la tecla E.
 	var front: Vector2 = _xz(stand.global_position) + Vector2(0.0, -STAND_FRONT)
 	await _walk_around_zones(stand, front)
 	var zone: Area3D = stand.get_node("%DeliveryZone") as Area3D
 	assert_gt(
 		_xz(_player.global_position).distance_to(_xz(zone.global_position)), 0.7, "fuera de la zona"
 	)
-	# Paso a paso hacia el puesto hasta que el detector lo elige.
-	for _i: int in 20:
-		if _detector.get_target() == stand:
-			break
+	for _i: int in 6:
 		await _service.push_towards(_xz(stand.global_position), 1)
-	assert_signal_emit_count(EventBus, "order_completed", 0, "aún no ha entregado")
-	assert_true(_highlight(stand).is_highlighted(), "el puesto apuntado se resalta")
-	for other: int in [1, 2, 3, 4]:
-		if other != order.slot_id:
-			assert_false(_highlight(_stand(other)).is_highlighted(), "solo uno resaltado")
-	assert_eq(_detector.get_target(), stand, "el detector elige el puesto")
+		assert_ne(_detector.get_target(), stand, "el puesto no es objetivo")
 	await _service.tap_interact()
-	assert_signal_emit_count(EventBus, "order_completed", 1)
+	assert_signal_emit_count(EventBus, "order_completed", 0, "E no entrega")
 	assert_signal_emit_count(EventBus, "delivery_rejected", 0)
-	assert_eq((get_signal_parameters(EventBus, "order_completed")[0] as ActiveOrder).id, order.id)
-	assert_gt(RoundManager.round_state.get_revenue(), revenue, "sube la recaudación")
-	assert_null(_hold.get_held_item(), "la caja se ha entregado")
+	assert_eq(RoundManager.round_state.get_revenue(), revenue, "sin cobro ni penalización")
 	_assert_not_expired(order)
 
 
@@ -139,7 +130,7 @@ func test_ac3_deliver_by_walking_into_the_delivery_zone() -> void:
 	_assert_not_expired(order)
 
 
-func test_pul039_wrong_box_in_zone_does_nothing_and_e_rejects() -> void:
+func test_pul039_wrong_box_in_zone_does_nothing_and_e_neither() -> void:
 	var order: ActiveOrder = _order_with_most_seasonings()
 	assert_not_null(order)
 	# Caja vacía de la estantería: no coincide con ninguna comanda.
@@ -149,6 +140,7 @@ func test_pul039_wrong_box_in_zone_does_nothing_and_e_rejects() -> void:
 	var stand: OrderStand = _stand(order.slot_id)
 	var zone: Area3D = stand.get_node("%DeliveryZone") as Area3D
 	var zone_xz: Vector2 = _xz(zone.global_position)
+	var revenue: int = RoundManager.round_state.get_revenue()
 	# Cruza las zonas de los cuatro puestos (a su altura) y se para dentro de la suya.
 	await _walk_around_zones(_stand(1), Vector2(LANE_LEFT, KIOSK_LANE_Z))
 	await _service.walk_to(Vector2(LANE_LEFT, zone_xz.y))
@@ -164,17 +156,16 @@ func test_pul039_wrong_box_in_zone_does_nothing_and_e_rejects() -> void:
 	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
 	await _service.push_towards(zone_xz, 4)
 	assert_true(zone.overlaps_body(_player), "sigue dentro de la zona")
-	# Sale hacia el kiosco, enfrente de él, hasta que el detector lo elige.
+	# Sale hacia el kiosco, enfrente de él, y pulsa E: nada (ni entrega ni rechazo, D26).
 	var front: Vector2 = Vector2(zone_xz.x, KIOSK_LANE_Z)
 	await _service.walk_to(front)
-	for _i: int in 20:
-		if _detector.get_target() == stand:
-			break
+	for _i: int in 6:
 		await _service.push_towards(_xz(stand.global_position), 1)
-	assert_eq(_detector.get_target(), stand)
+		assert_ne(_detector.get_target(), stand, "el puesto no es objetivo")
 	await _service.tap_interact()
-	assert_signal_emit_count(EventBus, "delivery_rejected", 1, "E valida y rechaza (D8)")
-	assert_eq(_hold.get_held_item(), box)
+	assert_signal_emit_count(EventBus, "delivery_rejected", 0, "D26: no existe el rechazo")
+	assert_signal_not_emitted(EventBus, "order_completed")
+	assert_eq(RoundManager.round_state.get_revenue(), revenue, "sin penalización")
 
 
 ## Aproximación determinista a los 4 puestos con una caja que coincide inyectada en la mano: rodear
@@ -191,10 +182,13 @@ func test_pul100_every_stand_lights_and_delivers_on_entry() -> void:
 		if order == null:
 			return
 		var stand: OrderStand = _stand(slot)
-		_inject_box(order)
+		# Primero sale de la zona anterior: con la caja nueva en la mano, estar dentro de otra zona
+		# la entregaría ahí si encajara (D26: entrega también a quien ya estaba dentro).
 		var start_x: float = LANE_LEFT if slot <= 2 else LANE_RIGHT
 		_player.global_position = Vector3(start_x, 0.0, LANE_ENTRY_Z)
 		await wait_physics_frames(3)
+		_inject_box(order)
+		await wait_physics_frames(2)
 		var done: int = get_signal_emit_count(EventBus, "order_completed")
 		await _walk_around_zones(stand, _xz(stand.global_position) + Vector2(0.0, -STAND_FRONT))
 		assert_eq(
@@ -333,10 +327,6 @@ func _box_spawner(data: BoxData) -> Node3D:
 		if child is ItemSpawner and (child as ItemSpawner).data == data:
 			return child as Node3D
 	return null
-
-
-func _highlight(stand: OrderStand) -> Highlightable:
-	return stand.get_node("%Highlightable") as Highlightable
 
 
 func _assert_not_expired(order: ActiveOrder) -> void:

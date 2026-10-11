@@ -36,6 +36,7 @@ func _exit() -> void:
 
 func _on_round_started(_duration: float) -> void:
 	hide()
+	_set_touch_controls_enabled(true)
 
 
 func _on_round_finished(result: RoundResult) -> void:
@@ -48,4 +49,25 @@ func _on_round_finished(result: RoundResult) -> void:
 	for i: int in range(stars.size()):
 		(stars[i] as TextureRect).texture = STAR_FULL if i < result.stars else STAR_EMPTY
 	show()
+	_set_touch_controls_enabled(false)
 	panel.focus_primary()
+
+
+## El árbol no se pausa al acabar la ronda (el game over es un menú sobre el juego): los controles
+## táctiles hermanos de la `UI` se sueltan, se ocultan y dejan de recibir input mientras dure.
+## Al arrancar otra ronda se reactivan y recuperan su visibilidad según la última entrada.
+func _set_touch_controls_enabled(enabled: bool) -> void:
+	var parent: Node = get_parent()
+	if parent == null:
+		return
+	for sibling: Node in parent.get_children():
+		var touch: TouchControls = sibling as TouchControls
+		if touch == null or touch.is_queued_for_deletion():
+			continue
+		if enabled:
+			touch.process_mode = Node.PROCESS_MODE_INHERIT
+			touch.set_last_source(touch.get_last_source())
+		else:
+			touch.release_all()
+			touch.hide()
+			touch.process_mode = Node.PROCESS_MODE_DISABLED

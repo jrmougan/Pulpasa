@@ -7,9 +7,10 @@ const GROUP_INTERACTABLE: StringName = &"interactable"
 const GROUP_PICKABLE: StringName = &"pickable"
 
 ## Consulta de acción (ADR-003 §11.2): `get_action_hint(actor: InteractionComponent) ->
-## ActionHint`. Opcional hasta la oleada de montaje de D26: el detector tolera su ausencia.
+## ActionHint`. Obligatoria en todo `interactable` desde el montaje de D26; el detector tolera su
+## ausencia solo para dobles de test (`hint_of`).
 const HINT_METHOD: StringName = &"get_action_hint"
-const INTERACTABLE_METHODS: PackedStringArray = ["can_interact", "interact"]
+const INTERACTABLE_METHODS: PackedStringArray = ["can_interact", "interact", "get_action_hint"]
 ## Métodos opcionales de `interactable` (ADR-003 §8.1): si existen, el detector los consulta.
 ## `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool`.
 const INTERACTABLE_OPTIONAL_METHODS: PackedStringArray = ["is_reachable_from"]
@@ -30,9 +31,10 @@ static func violations(node: Node) -> Array[String]:
 
 
 ## Qué haría la pulsación de `actor` sobre `entity` (ADR-003 §11.2-§11.3). Con
-## `get_action_hint`, lo que devuelva (`null` cuenta como `NONE`). Equivalencia transitoria para
-## entidades sin migrar: `ok(&"")` (objetivo heredado, sin verbo) si `can_interact` es `true`, y
-## `none()` si no. No mira el lado (`is_reachable_from` se evalúa antes, por quien llama).
+## `get_action_hint`, lo que devuelva (`null` cuenta como `NONE`). Equivalencia para dobles de test
+## sin consulta: `ok(&"")` (objetivo heredado, sin verbo) si `can_interact` es `true`, y `none()` si
+## no; ninguna entidad de `entities/` puede depender de ella (`test_items_contract.gd`,
+## `test_stations_contract.gd`). No mira el lado (`is_reachable_from` se evalúa antes).
 static func hint_of(entity: Node, actor: InteractionComponent) -> ActionHint:
 	if entity.has_method(HINT_METHOD):
 		var hint: ActionHint = entity.call(HINT_METHOD, actor) as ActionHint

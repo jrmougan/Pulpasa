@@ -10,7 +10,6 @@ var _bus: Node
 var _game_state: Node
 var _duration: float = 0.0
 var _time_left: float = 0.0
-var _boxes: int = 0
 var _revenue: int = 0
 var _notice_tween: Tween
 var _mobile: bool = false
@@ -18,8 +17,6 @@ var _mobile: bool = false
 @onready var _background: PanelContainer = %Background
 @onready var _stats: VBoxContainer = %Background/Stats
 @onready var _time_label: Label = %TimeLeft
-## Oculto: lo conserva `test_parity_smoke.gd` (PUL-131 lo retira con el montaje).
-@onready var _rate_label: Label = %BoxesPerMinute
 @onready var _revenue_label: Label = %Revenue
 @onready var _active_label: Label = %ActiveCharacter
 @onready var _notice: Label = %DeviceNotice
@@ -63,7 +60,6 @@ func set_game_state(state: Node) -> void:
 func _on_round_started(duration: float) -> void:
 	_duration = duration
 	_time_left = duration
-	_boxes = 0
 	_revenue = 0
 	_render()
 
@@ -73,8 +69,7 @@ func _on_time_changed(time_left: float) -> void:
 	_render()
 
 
-func _on_score_changed(boxes_delivered: int, revenue: int) -> void:
-	_boxes = boxes_delivered
+func _on_score_changed(_boxes_delivered: int, revenue: int) -> void:
 	_revenue = maxi(revenue, 0)
 	_render()
 
@@ -105,9 +100,6 @@ func _on_pause_changed(paused: bool) -> void:
 
 func _render() -> void:
 	_time_label.text = _text("HUD_SECONDS_FORMAT", "%.1fs") % _time_left
-	var elapsed: float = maxf(_duration - _time_left, 0.0)
-	var rate: float = float(_boxes) * 60.0 / elapsed if elapsed > 0.0 else 0.0
-	_rate_label.text = "%.2f" % rate
 	_revenue_label.text = _text("HUD_REVENUE_FORMAT", "%d €") % _revenue
 
 

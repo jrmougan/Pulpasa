@@ -105,8 +105,6 @@ func _ready() -> void:
 	_ring_base.visible = false
 	var slot_count: int = data.capacity
 	_ring_base.configure(data.ring_diameter_px, data.ring_thickness_px, data.warn_blink_hz)
-	var ring_spacing: float = _ring_base.diameter_px * RING_SPACING_RATIO
-	ring_spacing *= _ring_base.camera_size / _ring_base.screen_height
 	var total_width := float(slot_count - 1) * SLOT_SPACING
 	var start_x := -total_width / 2.0
 	for i: int in slot_count:
@@ -124,10 +122,21 @@ func _ready() -> void:
 
 		# Anclas simétricas y anillos en fila sobre la olla (uno por plaza).
 		slot_data.anchor.position.x = curr_x
-		slot_data.ring.position.x = (float(i) - float(slot_count - 1) / 2.0) * ring_spacing
 		_slots.append(slot_data)
+	_layout_rings()
+	_ring_base.metrics_changed.connect(_layout_rings)
 	_update_effects()
 	_connect_feedback()
+
+
+## Anillos en fila sobre la olla (uno por plaza), separados `RING_SPACING_RATIO` diámetros con el
+## tamaño de la cámara activa (se repite si el perfil de cámara cambia el zoom).
+func _layout_rings() -> void:
+	var spacing: float = (
+		_ring_base.diameter_px * RING_SPACING_RATIO * _ring_base.get_meters_per_px()
+	)
+	for i: int in _slots.size():
+		_slots[i].ring.position.x = (float(i) - float(_slots.size() - 1) / 2.0) * spacing
 
 
 func _physics_process(delta: float) -> void:

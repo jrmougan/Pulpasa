@@ -316,12 +316,11 @@ func _seeded_rng() -> RandomNumberGenerator:
 
 ## Crea tablero y ronda con los datos reales de M1 (paciencia, `first_order_delay` y
 ## penalizaciones de `round_config.tres`) y arranca la ronda. Sin mutar los recursos cargados.
-func _start_m1_round(slot_ids: Array[int]) -> void:
+func _start_m1_round(slot_ids: Array[int], wrong_penalty: int = -1) -> void:
 	var catalog: OrderCatalog = load(M1_CATALOG_PATH) as OrderCatalog
 	var config: RoundConfig = load(M1_CONFIG_PATH) as RoundConfig
-	_m1_board = OrderBoard.new(
-		catalog, _seeded_rng(), config.wrong_delivery_penalty, config.expire_penalty
-	)
+	var wrong: int = config.wrong_delivery_penalty if wrong_penalty < 0 else wrong_penalty
+	_m1_board = OrderBoard.new(catalog, _seeded_rng(), wrong, config.expire_penalty)
 	_m1_round = RoundState.new(config, _m1_board)
 	_m1_round.start(slot_ids)
 
@@ -403,7 +402,7 @@ func test_comandas_ac3_expire_replenish() -> void:
 
 ## D8: caja errónea por `try_deliver` real: `delivery_rejected` con `penalty` 2 (datos) y −2 €.
 func test_entrega_d8_wrong_box_penalty() -> void:
-	_start_m1_round([1] as Array[int])
+	_start_m1_round([1] as Array[int], 2)
 	_advance_past_first_order_delay()
 	var revenue: int = _m1_deliver(1)
 	var order: ActiveOrder = _m1_board.get_order_for_slot(1)
@@ -415,12 +414,19 @@ func test_entrega_d8_wrong_box_penalty() -> void:
 
 ## D8: la recaudación nunca baja de 0 aunque la penalización supere lo recaudado.
 func test_entrega_d8_wrong_box_penalty_min_zero() -> void:
-	_start_m1_round([1] as Array[int])
+	_start_m1_round([1] as Array[int], 2)
 	_advance_past_first_order_delay()
 	watch_signals(_m1_round)
 	assert_null(_m1_board.try_deliver(1, BoxContents.new()))
 	assert_eq(_m1_round.get_revenue(), 0)
 	assert_signal_emitted_with_parameters(_m1_round, "score_changed", [0, 0])
+
+
+## D26 (PUL-131): el dato del juego es 0 (no hay entrega por pulsación); el núcleo conserva el
+## campo y sus tests de arriba lo ejercitan con 2 explícito.
+func test_entrega_d26_data_wrong_delivery_penalty_is_zero() -> void:
+	var config: RoundConfig = load(M1_CONFIG_PATH) as RoundConfig
+	assert_eq(config.wrong_delivery_penalty, 0)
 
 
 func test_entrega_ac6_stars() -> void:

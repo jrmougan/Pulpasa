@@ -6,7 +6,8 @@ extends GutTest
 ## lado y de mapa de objetivos pasan por el detector real del jugador.
 ## PUL-126 (D26): hint y pulsación salen de la misma `_resolve`; el cuenco solo pone (sin
 ## antirrebote ni quitar) y el mismo aliño emite `rejected(ALREADY_APPLIED)`.
-## PUL-071: el sonido de error y la sacudida salen de `%Feedback` (cue `season_error`, ADR-006 §4).
+## PUL-131 (D26.3): la estación no suena nada, ni siquiera al rechazar (cue `season_error` de baja):
+## el rechazo lo reproduce el jugador (`rejected`, `test_player_feedback.gd`).
 
 const STATION_SCENE: PackedScene = preload("res://entities/stations/seasoning_station.tscn")
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
@@ -32,7 +33,7 @@ var _player: Player
 var _hold: HoldComponent
 var _actor: InteractionComponent
 var _rejections: Array[SeasoningRules.Rejection] = []
-## Cues que ha reproducido el `%Feedback` de la estación.
+## Cues que ha reproducido el `%Feedback` de la estación (debe quedar vacío, D26.3).
 var _cues: Array[StringName] = []
 
 
@@ -63,12 +64,6 @@ func _add_station(data: SeasoningStationData) -> void:
 	feedback.played.connect(func(cue: StringName) -> void: _cues.append(cue))
 
 
-## Duración de la sacudida de rechazo (dato de la cue `season_error`).
-func _shake_time() -> float:
-	var feedback: FeedbackPlayer = _station.get_node("%Feedback") as FeedbackPlayer
-	return feedback.map.get_cue(&"season_error").visual_time
-
-
 func _on_rejected(reason: SeasoningRules.Rejection) -> void:
 	_rejections.append(reason)
 
@@ -86,11 +81,6 @@ func _dispenser(node_name: String) -> SeasoningDispenser:
 
 func _bowl() -> CachelosBowl:
 	return _station.get_node("CachelosBowl") as CachelosBowl
-
-
-## Veces que ha sonado el error de la estación.
-func _error_sounds() -> int:
-	return _cues.count(&"season_error")
 
 
 func _new_box(fill: float) -> Box:
@@ -289,7 +279,7 @@ func test_ac4_hot_dispenser_replaces_sweet_dressing() -> void:
 	assert_eq(_rejections.size(), 0)
 
 
-func test_ac5_box_not_full_is_rejected_with_error_sound() -> void:
+func test_ac5_box_not_full_is_rejected_and_the_station_stays_silent() -> void:
 	for fill: float in [0.0, 0.6]:
 		_rejections.clear()
 		_cues.clear()
@@ -301,7 +291,7 @@ func test_ac5_box_not_full_is_rejected_with_error_sound() -> void:
 		assert_eq(
 			_rejections, [SeasoningRules.Rejection.BOX_NOT_FULL] as Array[SeasoningRules.Rejection]
 		)
-		assert_eq(_cues, [&"season_error"] as Array[StringName], "suena el error una vez")
+		assert_eq(_cues, [] as Array[StringName], "la estación no suena (lo hace el jugador)")
 		_hold.drop()
 		box.queue_free()
 
@@ -309,48 +299,16 @@ func test_ac5_box_not_full_is_rejected_with_error_sound() -> void:
 # --- AC6 ---
 
 
-func test_ac6_unfilled_box_rejects_every_dispenser_with_error_sound() -> void:
+func test_ac6_unfilled_box_rejects_every_dispenser_silently() -> void:
 	var box: Box = _held_box(0.6)
 	for dispenser: SeasoningDispenser in _dispensers():
 		_press(dispenser)
 	assert_eq(_rejections.size(), 2)
 	for reason: SeasoningRules.Rejection in _rejections:
 		assert_eq(reason, SeasoningRules.Rejection.BOX_NOT_FULL)
-	assert_eq(_error_sounds(), 2, "un error por pulsación")
+	assert_eq(_cues, [] as Array[StringName], "la estación no suena")
 	assert_eq(box.get_contents().seasonings, [] as Array[SeasoningData])
 	assert_engine_error_count(0)
-
-
-func test_ac6_rejection_shakes_emitter_and_returns_to_rest() -> void:
-	var model: Node3D = _dispenser("SweetDressing").get_node("Model")
-	var rest: Vector3 = model.position
-	_held_box(0.6)
-	_press(_dispenser("SweetDressing"))
-	var shake: Tween = _station.get_shake(_dispenser("SweetDressing"))
-	assert_not_null(shake)
-	shake.pause()
-	shake.custom_step(_shake_time() / 10.0)
-	assert_ne(model.position, rest, "se sacude")
-	shake.custom_step(_shake_time())
-	assert_true(model.position.is_equal_approx(rest), "vuelve a su sitio")
-	assert_null(_station.get_shake(_dispenser("SweetDressing")), "la sacudida terminó")
-
-
-func test_ac6_repeated_rejection_restarts_shake_from_rest() -> void:
-	var sweet: SeasoningDispenser = _dispenser("SweetDressing")
-	var model: Node3D = sweet.get_node("Model")
-	var rest: Vector3 = model.position
-	_held_box(0.6)
-	_press(sweet)
-	var first: Tween = _station.get_shake(sweet)
-	first.pause()
-	first.custom_step(_shake_time() / 10.0)
-	_press(sweet)
-	assert_false(first.is_valid(), "la primera se cancela")
-	var second: Tween = _station.get_shake(sweet)
-	second.pause()
-	second.custom_step(_shake_time())
-	assert_true(model.position.is_equal_approx(rest), "reposo original, no el desplazado")
 
 
 # --- AC7 / R4: lado de condimentar y mano ---
@@ -413,7 +371,7 @@ func test_r4_empty_hand_dispensers_are_not_interactable_nor_targets() -> void:
 		assert_false(dispenser.interact(_actor), "%s no consume" % dispenser.name)
 		assert_false(dispenser.get_action_hint(_actor).is_target(), dispenser.name)
 	assert_eq(_rejections.size(), 0)
-	assert_eq(_error_sounds(), 0)
+	assert_eq(_cues.size(), 0, "la estación no suena")
 
 
 func test_r4_empty_hand_detector_picks_no_dispenser_or_bowl() -> void:
@@ -447,7 +405,7 @@ func test_ac8_other_item_detector_does_not_pick_a_dispenser() -> void:
 
 func test_pul126_bowl_has_no_guard_or_clock() -> void:
 	assert_null(STATION_DATA.get("toggle_guard"), "baja de toggle_guard")
-	assert_true(_bowl().clock.is_null(), "el reloj del cuenco ya no hace nada")
+	assert_false("clock" in _bowl(), "el reloj del cuenco se retiró (D26)")
 	_station_with_stock(2)
 	var box: Box = _held_box()
 	assert_true(_bowl().interact(_actor))
@@ -806,8 +764,8 @@ func test_ac19_no_gesture_when_already_applied_or_rejected() -> void:
 
 
 ## audio-y-fx AC7 (D25): 1 cue `season` por aliño (no 3); al sustituir suenan `unseason` y `season`
-## en ese orden; reaplicar el mismo aliño no suena en la caja (la estación suena su rechazo hasta
-## PUL-131).
+## en ese orden; reaplicar el mismo aliño no suena en la caja ni en la estación (D26.3: el rechazo
+## lo suena el jugador).
 func test_audio_ac7_one_season_cue_per_dressing_and_unseason_before_season_on_replace() -> void:
 	var box: Box = _held_box()
 	var cues: Array[StringName] = _box_cues(box)
@@ -821,17 +779,15 @@ func test_audio_ac7_one_season_cue_per_dressing_and_unseason_before_season_on_re
 		[&"season", &"unseason", &"season"] as Array[StringName],
 		"sustituir: unseason y season, en ese orden"
 	)
-	assert_eq(
-		_cues, [&"season_error"] as Array[StringName], "transitorio: lo retira PUL-131 (D26.3)"
-	)
+	assert_eq(_cues, [] as Array[StringName], "la estación no suena nada")
 
 
-func test_audio_ac7_unfilled_box_plays_only_the_error_cue() -> void:
+func test_audio_ac7_unfilled_box_makes_no_sound_in_box_or_station() -> void:
 	var box: Box = _held_box(0.6)
 	var cues: Array[StringName] = _box_cues(box)
 	_press(_dispenser("HotDressing"))
 	assert_eq(cues, [] as Array[StringName], "la caja no suena")
-	assert_eq(_cues, [&"season_error"] as Array[StringName], "transitorio: lo retira PUL-131")
+	assert_eq(_cues, [] as Array[StringName], "la estación no suena")
 
 
 # --- AC20: caja errónea (D8) y corrección en una pulsación ---

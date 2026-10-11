@@ -30,9 +30,6 @@ const DEFAULT_CAMERA_SIZE: float = 12.74
 ## emite `stock_changed`.
 var stock: int = 0:
 	set = _set_stock
-## En desuso (D26: el cuenco ya no tiene antirrebote); solo evita romper flujos que aún lo asignan.
-## Se retira con el montaje (PUL-131).
-var clock: Callable = Callable()
 
 ## Estados del modelo (`Portions0` = fondo vacío … `Portions4`), uno visible a la vez.
 @onready var _portions: Array[Node3D] = _find_portions()

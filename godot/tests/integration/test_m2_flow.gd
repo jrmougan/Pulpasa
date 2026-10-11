@@ -6,8 +6,8 @@ extends GutTest
 ## - Dos mandos simulados: cada stick mueve solo a su personaje.
 ## - Menú → partida → game over → reintentar solo con eventos de mando.
 ##
-## La entrega pasa por el input real (`p<n>_interact` → `InteractionComponent._unhandled_input`)
-## con el objetivo que publicaría el detector (`target_changed`), como en `test_m1_flow.gd`.
+## La entrega es solo por zona (D26, ADR-003 §11.7): el personaje entra en la `%DeliveryZone` de su
+## puesto con la caja de la comanda. Los cambios de personaje pasan por el input real (Q).
 
 const MENU_SCENE: String = "res://ui/menus/main_menu.tscn"
 const LEVEL_SCENE: String = "res://scenes/levels/level_01.tscn"
@@ -21,8 +21,6 @@ const MOVED: float = 0.2
 const BOX: BoxData = preload("res://data/boxes/box.tres")
 
 var _scene: Node
-## Reloj de los dispensadores: cada pulsación avanza 1 s (antirrebote sin esperas reales).
-var _now: float = 100.0
 
 
 func before_each() -> void:
@@ -111,7 +109,6 @@ func _box_in_hand(character: Player, order: ActiveOrder) -> Box:
 			octopus.free()
 	var station: SeasoningStation = _scene.get_node("Stations/SeasoningStation")
 	var bowl: CachelosBowl = station.get_node("CachelosBowl")
-	bowl.clock = func() -> float: return _now
 	for seasoning: SeasoningData in order.data.seasonings:
 		if _dispenser(station, seasoning) == null:
 			_restock_bowl(bowl, actor)
@@ -122,7 +119,6 @@ func _box_in_hand(character: Player, order: ActiveOrder) -> Box:
 			assert_true(bowl.interact(actor), "cuenco: cachelos a la caja en la mano")
 		else:
 			assert_true(dispenser.interact(actor))
-		_now += 1.0
 		assert_true(box.has_seasoning(seasoning), "caja con %s" % seasoning.display_name)
 	assert_eq(hold.get_held_item(), box, "la caja sigue en la mano")
 	return box
@@ -135,7 +131,6 @@ func _restock_bowl(bowl: CachelosBowl, actor: InteractionComponent) -> void:
 	cachelos.state = IngredientData.CookingState.COOKED
 	assert_true(actor.holder.pick_up(cachelos))
 	assert_true(bowl.interact(actor), "cachelos al cuenco")
-	_now += 1.0
 
 
 func _dispenser(station: SeasoningStation, seasoning: SeasoningData) -> SeasoningDispenser:
@@ -145,9 +140,10 @@ func _dispenser(station: SeasoningStation, seasoning: SeasoningData) -> Seasonin
 	return null
 
 
-## Pone el puesto como objetivo del detector de `character` (lo que publicaría al acercarse).
-func _aim(character: Player, target: Node) -> void:
-	character.get_node("%InteractionDetector").emit_signal(&"target_changed", null, target)
+## Mete a `character` en la zona de entrega del puesto (D26: se entrega al entrar) y espera.
+func _enter_zone(character: Player, stand: OrderStand) -> void:
+	character.global_position = (stand.get_node("%DeliveryZone") as Node3D).global_position
+	await wait_physics_frames(3)
 
 
 func _key_event(keycode: Key, pressed: bool) -> InputEventKey:
@@ -229,14 +225,17 @@ func test_ac1_single_switch_moves_and_delivers_with_each_character() -> void:
 	assert_true(p1.get_node("%ActiveIndicator").visible)
 	assert_false(p2.get_node("%ActiveIndicator").visible)
 
-	# Entrega con el primero (tecla E = p1_interact).
+	# Entrega con el primero: entra en la zona de su puesto.
 	var first: ActiveOrder = _order_for(1)
 	var box1: Box = _box_in_hand(p1, first)
-	_aim(p1, _stand(1))
-	await _tap_key(KEY_E)
+	var p1_home: Vector3 = p1.global_position
+	await _enter_zone(p1, _stand(1))
 	assert_signal_emit_count(EventBus, "order_completed", 1)
 	assert_eq(_completed_id(0), first.id)
 	assert_true(not is_instance_valid(box1) or box1.is_queued_for_deletion())
+	# El primero sale de la zona con la mano vacía: con otra caja dentro entregaría allí.
+	p1.global_position = p1_home
+	await wait_physics_frames(3)
 
 	# Cambio (tecla Q = p1_switch): J1 pasa al segundo.
 	await _tap_key(KEY_Q)
@@ -257,17 +256,15 @@ func test_ac1_single_switch_moves_and_delivers_with_each_character() -> void:
 	assert_gt(p2.global_position.x - p2_start.x, MOVED, "el segundo se mueve")
 	assert_almost_eq(p1.global_position.distance_to(p1_start), 0.0, 0.01, "el primero, quieto")
 
-	# Entrega con el segundo; el primero, sin jugador, ya no responde a E.
+	# Entrega con el segundo; el primero, fuera de toda zona, conserva su caja.
 	var second: ActiveOrder = _order_for(2)
 	var box_idle: Box = _box_in_hand(p1, _order_for(3))
-	_aim(p1, _stand(3))
 	var box2: Box = _box_in_hand(p2, second)
-	_aim(p2, _stand(2))
-	await _tap_key(KEY_E)
+	await _enter_zone(p2, _stand(2))
 	assert_signal_emit_count(EventBus, "order_completed", 2)
 	assert_eq(_completed_id(1), second.id)
 	assert_true(not is_instance_valid(box2) or box2.is_queued_for_deletion())
-	assert_eq(p1.get_node("%HoldComponent").get_held_item(), box_idle, "sin control no entrega")
+	assert_eq(p1.get_node("%HoldComponent").get_held_item(), box_idle, "fuera de zona no entrega")
 	assert_eq(RoundManager.round_state.get_boxes_delivered(), 2)
 
 	# Y vuelta al primero.
@@ -288,18 +285,16 @@ func test_ac2_coop_deliveries_of_both_players_share_revenue() -> void:
 	assert_true(_character(2).get_node("%ActiveIndicator").visible)
 
 	var box1: Box = _box_in_hand(_character(1), _order_for(1))
-	_aim(_character(1), _stand(1))
-	await _tap_key(KEY_E)
+	await _enter_zone(_character(1), _stand(1))
 	assert_signal_emit_count(EventBus, "order_completed", 1)
 	var after_p1: int = RoundManager.round_state.get_revenue()
 	assert_eq(_last_score_revenue(), after_p1)
 	assert_gt(after_p1, 0)
 	assert_true(not is_instance_valid(box1) or box1.is_queued_for_deletion())
 
-	# J2 entrega con Intro (p2_interact): suma a la misma recaudación.
+	# J2 entrega con su personaje en otra zona: suma a la misma recaudación.
 	var box2: Box = _box_in_hand(_character(2), _order_for(2))
-	_aim(_character(2), _stand(2))
-	await _tap_key(KEY_ENTER)
+	await _enter_zone(_character(2), _stand(2))
 	assert_signal_emit_count(EventBus, "order_completed", 2)
 	assert_true(not is_instance_valid(box2) or box2.is_queued_for_deletion())
 	assert_eq(_last_score_revenue(), RoundManager.round_state.get_revenue(), "una sola recaudación")

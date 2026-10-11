@@ -1,10 +1,13 @@
 # gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-018: el puesto de entrega llama a `OrderService.try_deliver` al entrar el portador en
-## `%DeliveryZone` y al interactuar (B12); una entrega = una `order_completed` (B1). La caja
-## entregada se libera; la rechazada se queda en la mano. El label vive de señales (B16).
+## `%DeliveryZone`; una entrega = una `order_completed` (B1). La caja entregada se libera. El label
+## vive de señales (B16).
 ## PUL-039: la zona solo entrega una caja que coincide con la comanda viva del puesto; con otra
-## no hace nada (sin rechazo ni penalización). E sigue rechazando (D8). El puesto se resalta.
+## no hace nada (sin rechazo ni penalización).
+## PUL-131 (D26, ADR-003 §11.7): el puesto ya no es `interactable` (capa `world`), no se elige
+## desde ningún punto de la zona, y entrega también a quien ya estaba dentro cuando la caja pasa
+## a coincidir. `wrong_delivery_penalty` = 0 y no hay `deliver_error`.
 ## PUL-071: los sonidos salen de `%Feedback` (ADR-006 §4); se cuentan sus `played`.
 
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
@@ -23,6 +26,7 @@ const ZONE_Z: float = 3.40
 ## Ticks a 60 Hz que caben en 0,1 s (R12).
 const LIGHT_TICKS: int = 6
 const BOX: BoxData = preload("res://data/boxes/box.tres")
+const A_FEIRA: OrderData = preload("res://data/orders/a_feira.tres")
 
 var _bus: Node
 var _service: Node
@@ -178,7 +182,7 @@ func test_pul039_wrong_box_in_zone_does_nothing() -> void:
 	await _enter_zone()
 	assert_signal_not_emitted(_bus, "delivery_rejected", "sin rechazo ni penalización")
 	assert_signal_not_emitted(_bus, "order_completed")
-	assert_eq(_played(&"deliver_error"), 0)
+	assert_eq(_played(&"deliver_ok"), 0)
 	assert_eq(_hold.get_held_item(), box)
 
 
@@ -218,7 +222,7 @@ func _expiring_board(first: OrderData, replacement: OrderData) -> ActiveOrder:
 	catalog.orders = [first] as Array[OrderData]
 	catalog.max_active_orders = 4
 	var config: RoundConfig = RoundConfig.new()
-	config.wrong_delivery_penalty = 2
+	config.wrong_delivery_penalty = 0
 	config.expire_penalty = 3
 	_service.setup(catalog, null, config)
 	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
@@ -227,7 +231,7 @@ func _expiring_board(first: OrderData, replacement: OrderData) -> ActiveOrder:
 
 
 ## Caduca de verdad con `advance` (reposición en el mismo tick) con la caja de la caducada en la
-## mano: la zona no entrega ni rechaza; E rechaza con penalización 0 (AC5b).
+## mano: la zona no entrega ni rechaza (AC5b; ya no hay entrega por pulsación).
 func _assert_expiry_tick(first: OrderData, replacement: OrderData) -> void:
 	var old: ActiveOrder = _expiring_board(first, replacement)
 	var box: Box = _box_in_hand(old)
@@ -239,15 +243,6 @@ func _assert_expiry_tick(first: OrderData, replacement: OrderData) -> void:
 	_stand._on_body_entered(_player)
 	assert_signal_not_emitted(_bus, "order_completed", "la zona no entrega a la repuesta")
 	assert_signal_not_emitted(_bus, "delivery_rejected", "la zona no rechaza")
-	assert_eq(_hold.get_held_item(), box)
-	assert_true(_stand.interact(_actor))
-	assert_signal_not_emitted(_bus, "order_completed")
-	assert_signal_emit_count(_bus, "delivery_rejected", 1)
-	assert_eq(
-		get_signal_parameters(_bus, "delivery_rejected"),
-		[SLOT_ID, old.id, 0],
-		"AC5b: va a la caducada, penalización 0"
-	)
 	assert_eq(_hold.get_held_item(), box)
 
 
@@ -279,67 +274,49 @@ func test_pul039_zone_delivers_replacement_in_a_later_tick() -> void:
 	assert_signal_not_emitted(_bus, "delivery_rejected")
 
 
-func test_pul039_stand_has_highlightable() -> void:
-	var highlight: Highlightable = _stand.get_node_or_null("%Highlightable") as Highlightable
-	assert_not_null(highlight)
-	assert_eq(highlight.get_parent(), _stand)
-
-
-func test_ac2_wrong_box_is_rejected_error_sounds_and_box_stays_in_hand() -> void:
-	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
-	var box: Box = _box_in_hand(null)
-	assert_true(_stand.interact(_actor))
-	assert_signal_emit_count(_bus, "delivery_rejected", 1)
-	assert_eq(get_signal_parameters(_bus, "delivery_rejected", 0)[0], SLOT_ID)
-	assert_signal_not_emitted(_bus, "order_completed")
-	assert_eq(_played(&"deliver_error"), 1)
-	assert_eq(_played(&"deliver_ok"), 0)
-	assert_eq(_hold.get_held_item(), box)
-	assert_false(_is_released(box))
-
-
-func test_ac2_error_sound_only_for_own_slot() -> void:
-	_bus.delivery_rejected.emit(SLOT_ID + 1, 1, 0)
-	assert_signal_not_emitted(_feedback(), "played")
+func test_d26_a_rejection_on_the_bus_does_not_sound_in_the_stand() -> void:
 	_bus.delivery_rejected.emit(SLOT_ID, 1, 0)
-	assert_signal_emit_count(_feedback(), "played", 1)
-	assert_eq(_played(&"deliver_error"), 1)
-	assert_true(_feedback().playing)
+	assert_signal_not_emitted(_feedback(), "played")
 
 
-func test_ac3_already_inside_zone_interact_delivers() -> void:
-	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+## D26: quien ya está dentro de la zona entrega en el primer tick en que su caja pasa a coincidir
+## con la comanda viva (aquí, la comanda sale con él dentro), sin pulsar nada.
+func test_d26_carrier_already_inside_delivers_when_the_order_appears() -> void:
+	var catalog: OrderCatalog = OrderCatalog.new()
+	catalog.orders = [A_FEIRA] as Array[OrderData]
+	catalog.max_active_orders = 4
+	_service.setup(catalog, null, RoundConfig.new())
+	var order: ActiveOrder = ActiveOrder.new(7, catalog.orders[0], SLOT_ID)
+	var box: Box = _box_in_hand(order)
 	await _enter_zone()
-	assert_signal_not_emitted(_bus, "order_completed")
-	var box: Box = _box_in_hand(_order_for(SLOT_ID))
-	await wait_physics_frames(2)
-	assert_signal_not_emitted(_bus, "order_completed", "coger la caja dentro no entrega solo")
-	assert_true(_stand.can_interact(_actor))
-	assert_true(_stand.interact(_actor))
-	assert_signal_emit_count(_bus, "order_completed", 1)
-	assert_true(_is_released(box))
-	assert_null(_hold.get_held_item())
-
-
-func test_ac3_interact_with_wrong_box_consumes_press_and_keeps_box() -> void:
-	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
-	var box: Box = _box_in_hand(null)
-	assert_true(_stand.can_interact(_actor))
-	assert_true(_stand.interact(_actor), "consume la pulsación: no suelta la caja")
-	assert_signal_emit_count(_bus, "delivery_rejected", 1)
+	await wait_physics_frames(3)
+	assert_signal_not_emitted(_bus, "order_completed", "sin comanda no hay entrega")
 	assert_eq(_hold.get_held_item(), box)
-
-
-func test_ac3_interact_without_box_does_nothing() -> void:
-	assert_false(_stand.can_interact(_actor))
-	assert_false(_stand.interact(_actor))
-	var octopus: Ingredient = OCTOPUS_SCENE.instantiate()
-	_level.add_child(octopus)
-	assert_true(_hold.pick_up(octopus))
-	assert_false(_stand.can_interact(_actor))
-	assert_false(_stand.interact(_actor))
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	await wait_physics_frames(3)
+	assert_signal_emit_count(_bus, "order_completed", 1)
 	assert_signal_not_emitted(_bus, "delivery_rejected")
-	assert_eq(_hold.get_held_item(), octopus)
+	assert_true(_is_released(box))
+
+
+## D26: completar la caja dentro de la zona entrega en el primer tick en que coincide.
+func test_d26_carrier_inside_delivers_when_the_box_becomes_the_right_one() -> void:
+	var catalog: OrderCatalog = OrderCatalog.new()
+	catalog.orders = [A_FEIRA] as Array[OrderData]
+	catalog.max_active_orders = 4
+	_service.setup(catalog, null, RoundConfig.new())
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var order: ActiveOrder = _order_for(SLOT_ID)
+	var box: Box = _box_in_hand(order)
+	assert_true(box.remove_seasoning(order.data.seasonings[0]))
+	await _enter_zone()
+	await wait_physics_frames(3)
+	assert_signal_not_emitted(_bus, "order_completed", "la caja no coincide")
+	assert_eq(box.apply_seasoning(order.data.seasonings[0]), SeasoningRules.Rejection.NONE)
+	await wait_physics_frames(3)
+	assert_signal_emit_count(_bus, "order_completed", 1)
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+	assert_true(_is_released(box))
 
 
 func test_ac4_player_without_box_or_with_other_item_does_not_deliver() -> void:
@@ -348,39 +325,118 @@ func test_ac4_player_without_box_or_with_other_item_does_not_deliver() -> void:
 	assert_signal_not_emitted(_bus, "order_completed")
 
 
-func test_ac4_stand_fulfils_interaction_contract() -> void:
-	assert_true(_stand.is_in_group(&"interactable"))
-	assert_eq(InteractionContract.scan_tree(_stand), [])
+func test_d26_stand_is_not_interactable_and_sits_on_the_world_layer() -> void:
+	assert_false(_stand.is_in_group(&"interactable"))
+	assert_false(_stand.has_method(&"can_interact"))
+	assert_false(_stand.has_method(&"interact"))
+	assert_false(_stand.has_method(&"get_action_hint"))
+	assert_eq(InteractionContract.scan_tree(_stand), [] as Array[String])
+	assert_eq(_stand.collision_layer, 1, "capa world: sigue siendo un mostrador que no se cruza")
 	var zone: Area3D = _stand.get_node("%DeliveryZone")
 	assert_eq(zone.collision_layer, 1 << 4, "capa delivery_zone")
+
+
+## El detector real no lo elige desde ningún punto de la zona ni de sus alrededores, con la caja
+## de la comanda en la mano.
+## COOP_2P: dos jugadores dentro de la misma zona, cada uno con su caja. Una entrega por caja
+## que encaja, ningun `delivery_rejected`, y el segundo solo entrega si su caja encaja con la
+## comanda repuesta (aqui la misma receta, asi que entrega los dos).
+func test_d26_two_players_in_the_same_zone_deliver_one_box_each() -> void:
+	var catalog: OrderCatalog = OrderCatalog.new()
+	catalog.orders = [A_FEIRA] as Array[OrderData]
+	catalog.max_active_orders = 4
+	_service.setup(catalog, null, RoundConfig.new())
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	var second: Player = PLAYER_SCENE.instantiate()
+	second.position = FAR + Vector3(5, 0, 0)
+	_level.add_child(second)
+	var second_hold: HoldComponent = second.get_node("%HoldComponent")
+	second_hold.items_root = _level
+	var first_box: Box = _box_in_hand(_order_for(SLOT_ID))
+	var other_box: Box = BOX_SCENE.instantiate()
+	other_box.data = BOX
+	_level.add_child(other_box)
+	other_box.fill = 1.0
+	# Caja del segundo: llena y con el aliño pedido pero sin pulpo (no encaja nunca).
+	for seasoning: SeasoningData in _order_for(SLOT_ID).data.seasonings:
+		other_box.apply_seasoning(seasoning)
+	assert_true(second_hold.pick_up(other_box))
+	var zone: Vector3 = _stand.get_node("%DeliveryZone").global_position
+	_player.global_position = zone + Vector3(-0.3, 0, 0)
+	second.global_position = zone + Vector3(0.3, 0, 0)
+	await wait_physics_frames(6)
+	assert_signal_emit_count(_bus, "order_completed", 1, "una sola entrega: la caja que encaja")
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+	assert_true(_is_released(first_box))
+	assert_eq(second_hold.get_held_item(), other_box, "la caja que no encaja se queda")
+	# Ahora el segundo recibe una caja que encaja con la comanda repuesta: entrega, una vez.
+	var fitting: Box = _box_for_player(second, second_hold, _order_for(SLOT_ID))
+	await wait_physics_frames(6)
+	assert_signal_emit_count(_bus, "order_completed", 2, "una entrega por caja que encaja")
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+	assert_true(_is_released(fitting))
+
+
+## Caja que encaja con `order`, preparada en la mano de `player` (que ya lleva otra: se suelta).
+func _box_for_player(player: Player, hold: HoldComponent, order: ActiveOrder) -> Box:
+	var old: Node = hold.drop()
+	if old != null:
+		old.free()
+	var actor: InteractionComponent = player.get_node("%InteractionComponent")
+	var box: Box = BOX_SCENE.instantiate()
+	_level.add_child(box)
+	box.data = BOX
+	var guard: int = 0
+	while not box.is_full() and guard < 200:
+		var octopus: Ingredient = OCTOPUS_SCENE.instantiate()
+		_level.add_child(octopus)
+		octopus.set_cooked()
+		assert_true(hold.pick_up(octopus))
+		while octopus.is_inside_tree() and not box.is_full() and guard < 200:
+			assert_true(box.interact(actor))
+			guard += 1
+		if is_instance_valid(octopus):
+			hold.drop()
+			octopus.free()
+	for seasoning: SeasoningData in order.data.seasonings:
+		assert_eq(box.apply_seasoning(seasoning), SeasoningRules.Rejection.NONE)
+	assert_true(hold.pick_up(box))
+	return box
+
+
+func test_d26_detector_never_picks_the_stand_from_any_point_of_the_zone() -> void:
+	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
+	_box_in_hand(_order_for(SLOT_ID))
+	var detector: InteractionDetector = _player.get_node("%InteractionDetector")
+	var zone_center: Vector3 = _stand.get_node("%DeliveryZone").global_position
+	var checked: int = 0
+	for x: float in [-0.7, -0.35, 0.0, 0.35, 0.7]:
+		for z: float in [-1.5, -0.5, 0.0, 0.5, 1.0, 1.5, 2.5]:
+			_player.global_position = zone_center + Vector3(x, 0.0, z)
+			for yaw: float in [0.0, PI / 2.0, PI, -PI / 2.0]:
+				_player.rotation.y = yaw
+				await wait_physics_frames(1)
+				detector.refresh()
+				assert_ne(detector.get_target(), _stand, "(%s, %s) yaw %s" % [x, z, yaw])
+				checked += 1
+	assert_eq(checked, 140)
+
+
+func test_d26_wrong_delivery_penalty_is_zero_and_no_deliver_error_cue() -> void:
+	var config: RoundConfig = load("res://data/config/round_config.tres") as RoundConfig
+	assert_eq(config.wrong_delivery_penalty, 0)
+	var map: AudioFeedbackMap = load("res://data/audio/feedback_map.tres") as AudioFeedbackMap
+	assert_null(map.get_cue(&"deliver_error"))
 
 
 func test_review_same_tick_both_entry_points_valid_box_completes_once() -> void:
 	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
 	var box: Box = _box_in_hand(_order_for(SLOT_ID))
 	_stand._on_body_entered(_player)
-	_stand.interact(_actor)
+	_stand._deliver_to_carriers_inside()
 	assert_signal_emit_count(_bus, "order_completed", 1)
 	assert_signal_not_emitted(_bus, "delivery_rejected")
 	assert_true(_is_released(box))
-
-
-func test_review_same_tick_both_entry_points_wrong_box_rejects_once() -> void:
-	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
-	var box: Box = _box_in_hand(null)
-	_stand._on_body_entered(_player)
-	assert_true(_stand.interact(_actor))
-	assert_signal_emit_count(_bus, "delivery_rejected", 1)
-	assert_eq(_hold.get_held_item(), box)
-
-
-func test_review_deliberate_retry_in_later_tick_is_allowed() -> void:
-	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
-	_box_in_hand(null)
-	_stand.interact(_actor)
-	await wait_physics_frames(2)
-	_stand.interact(_actor)
-	assert_signal_emit_count(_bus, "delivery_rejected", 2)
 
 
 func test_review_box_staying_in_zone_does_not_retry_by_itself() -> void:
@@ -502,7 +558,7 @@ func test_pul100_ac1_zone_turns_off_when_order_is_delivered() -> void:
 	_box_in_hand(_order_for(SLOT_ID))
 	await _stand_at(1.5)
 	assert_true(_stand.is_zone_lit())
-	assert_true(_stand.interact(_actor))
+	await _enter_zone()
 	assert_signal_emit_count(_bus, "order_completed", 1)
 	assert_false(_stand.is_zone_lit(), "entregada: apagada")
 
@@ -572,11 +628,11 @@ func test_pul100_order_label_sits_on_anchor_order_label() -> void:
 	assert_almost_eq(label.global_position.distance_to(anchor.global_position), 0.0, 0.01)
 
 
-## estacion-condimentos AC20 (D25): «Á feira» con aliño picante se rechaza y la caja sigue en la
-## mano; al pulsar el aliño dulce (sustituye) la entrega se acepta sin pasar por el cubo.
-func test_ac20_a_feira_with_hot_dressing_is_rejected_then_fixed_and_delivered() -> void:
+## estacion-condimentos AC20 (D25, D26): «Á feira» con aliño picante no entrega ni penaliza ni
+## enciende la zona; al aplicar el dulce (sustituye) dentro de la zona entrega sola, sin cubo.
+func test_ac20_a_feira_with_hot_dressing_waits_then_fixed_and_delivered() -> void:
 	var catalog: OrderCatalog = OrderCatalog.new()
-	catalog.orders = [load("res://data/orders/a_feira.tres") as OrderData] as Array[OrderData]
+	catalog.orders = [A_FEIRA] as Array[OrderData]
 	catalog.max_active_orders = 4
 	_service.setup(catalog, null, RoundConfig.new())
 	_service.board.fill_slots([1, 2, 3, 4] as Array[int])
@@ -584,14 +640,15 @@ func test_ac20_a_feira_with_hot_dressing_is_rejected_then_fixed_and_delivered() 
 	var box: Box = _box_in_hand(order)
 	assert_true(box.remove_seasoning(order.data.seasonings[0]))
 	assert_eq(box.apply_seasoning(load("res://data/seasonings/hot_dressing.tres")), 0)
-	assert_true(_stand.can_interact(_actor))
-	assert_true(_stand.interact(_actor), "consume la pulsación")
-	assert_signal_emit_count(_bus, "delivery_rejected", 1)
+	await _enter_zone()
+	await wait_physics_frames(LIGHT_TICKS)
+	assert_signal_not_emitted(_bus, "delivery_rejected")
 	assert_signal_not_emitted(_bus, "order_completed")
+	assert_false(_stand.is_zone_lit(), "la caja no encaja: zona apagada")
 	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
 	var sweet: SeasoningData = load("res://data/seasonings/sweet_dressing.tres")
 	assert_eq(box.apply_seasoning(sweet), SeasoningRules.Rejection.NONE)
 	await wait_physics_frames(2)
-	assert_true(_stand.interact(_actor))
 	assert_signal_emit_count(_bus, "order_completed", 1)
+	assert_signal_not_emitted(_bus, "delivery_rejected")
 	assert_true(_is_released(box))

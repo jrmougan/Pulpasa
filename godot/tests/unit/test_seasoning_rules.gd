@@ -81,9 +81,6 @@ func test_ac4_box_not_full_is_rejected_for_any_seasoning() -> void:
 		assert_eq(applied.rejection, SeasoningRules.Rejection.BOX_NOT_FULL, seasoning.display_name)
 		assert_null(applied.added)
 		assert_eq(applied.seasonings, _list([]))
-		var toggled: SeasoningRules.Toggle = SeasoningRules.toggle(_list([]), seasoning, false)
-		assert_eq(toggled.rejection, SeasoningRules.Rejection.BOX_NOT_FULL, seasoning.display_name)
-		assert_eq(toggled.seasonings, _list([]))
 
 
 func test_ac4_box_not_full_wins_over_already_applied() -> void:
@@ -104,44 +101,9 @@ func test_apply_does_not_mutate_input() -> void:
 	assert_eq(current, _list([SWEET, CACHELOS]))
 
 
-func test_toggle_cachelos_adds_then_removes() -> void:
-	var added: SeasoningRules.Toggle = SeasoningRules.toggle(_list([HOT]), CACHELOS, true)
-	assert_eq(added.rejection, SeasoningRules.Rejection.NONE)
-	assert_eq(added.added, CACHELOS)
-	assert_null(added.removed)
-	assert_eq(added.seasonings, _list([HOT, CACHELOS]))
-	var removed: SeasoningRules.Toggle = SeasoningRules.toggle(added.seasonings, CACHELOS, true)
-	assert_eq(removed.removed, CACHELOS)
-	assert_null(removed.added)
-	assert_eq(removed.seasonings, _list([HOT]))
-
-
-func test_toggle_same_type_from_another_instance_counts_as_same() -> void:
-	var copy: SeasoningData = CACHELOS.duplicate()
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([CACHELOS]), copy, true)
-	assert_eq(result.removed, CACHELOS, "sale el que lleva la caja")
-	assert_eq(result.seasonings, _list([]))
-
-
-func test_toggle_with_group_always_replaces() -> void:
-	# Si algún día se alterna algo con grupo, sustituye siempre (ADR-003 §10.2).
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([SWEET]), HOT, true)
-	assert_eq(result.rejection, SeasoningRules.Rejection.NONE)
-	assert_eq(result.removed, SWEET)
-	assert_eq(result.seasonings, _list([HOT]))
-
-
-func test_toggle_null_seasoning_is_not_accepted() -> void:
-	var result: SeasoningRules.Toggle = SeasoningRules.toggle(_list([CACHELOS]), null, true)
-	assert_eq(result.rejection, SeasoningRules.Rejection.NOT_ACCEPTED)
-	assert_eq(result.seasonings, _list([CACHELOS]))
-
-
-func test_toggle_does_not_mutate_input() -> void:
-	var current: Array[SeasoningData] = _list([SWEET])
-	SeasoningRules.toggle(current, CACHELOS, true)
-	SeasoningRules.toggle(current, HOT, true)
-	assert_eq(current, _list([SWEET]))
+## D26 (ADR-003 §11.7): el cuenco solo pone; `toggle` y `Box.toggle_seasoning` no existen.
+func test_d26_no_toggle_in_the_rules() -> void:
+	assert_false(SeasoningRules.new().has_method(&"toggle"))
 
 
 func test_remove_returns_copy_without_seasoning() -> void:

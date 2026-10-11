@@ -4,8 +4,8 @@ extends GutTest
 ##
 ## Cada pulsación de interactuar pasa por `InteractionComponent.interact_pressed()` con el objetivo
 ## que publicaría el detector (`target_changed`), como en `test_kitchen_flow.gd`. El detector del
-## jugador se congela para que no cambie de objetivo por su cuenta; el jugador no se mueve (el
-## recorrido físico hasta cada puesto ya lo cubre `test_level_01.gd` AC4).
+## jugador se congela para que no cambie de objetivo por su cuenta; el jugador solo se coloca en la
+## `%DeliveryZone` del puesto para entregar (D26: la entrega es por zona).
 
 const MENU_SCENE: String = "res://ui/menus/main_menu.tscn"
 const LEVEL_SCENE: String = "res://scenes/levels/level_01.tscn"
@@ -21,12 +21,12 @@ const PAUSE_SECONDS: float = 0.5
 ## Margen sobre `cook_time` para esperar la cocción.
 const COOK_MARGIN: float = 3.0
 const BOX: BoxData = preload("res://data/boxes/box.tres")
+## Salida de Player1 en `level_01`: fuera de las zonas de entrega.
+const HOME: Vector3 = Vector3(4.7, 0.005, 3.0)
 
 var _expected_stock: int = 0
 var _level: Node
 var _menu: Node
-## Reloj de los dispensadores y del cuenco: cada pulsación avanza 1 s (antirrebote sin esperas).
-var _now: float = 100.0
 
 
 func before_each() -> void:
@@ -75,15 +75,9 @@ func _play_from_menu() -> Node:
 	_menu.free()
 	_menu = null
 	_freeze_detector()
-	_inject_station_clock()
 	# M1: las comandas iniciales se generan tras first_order_delay (5 s, dato).
 	RoundManager.round_state.advance(5.0)
 	return _level
-
-
-func _inject_station_clock() -> void:
-	var clock: Callable = func() -> float: return _now
-	(_station().get_node("CachelosBowl") as CachelosBowl).clock = clock
 
 
 func _tap(action: StringName) -> void:
@@ -146,10 +140,17 @@ func _dispenser(seasoning: SeasoningData) -> SeasoningDispenser:
 	return null
 
 
-## Pulsa `target` de la estación y avanza su reloj.
+## Pulsa `target` de la estación.
 func _press_station(target: Node, message: String) -> void:
 	assert_true(_press(target), message)
-	_now += 1.0
+
+
+## Mete al jugador en la zona de entrega del puesto y deja pasar unos ticks.
+func _enter_zone(slot_id: int) -> void:
+	_player().global_position = (
+		(_stand(slot_id).get_node("%DeliveryZone") as Node3D).global_position
+	)
+	await wait_physics_frames(3)
 
 
 func _released(node: Variant) -> bool:
@@ -206,6 +207,8 @@ func _restock_bowl_with_cachelos() -> void:
 func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 	var order: ActiveOrder = _order_for(slot_id)
 	assert_not_null(order, "el puesto %d tiene comanda" % slot_id)
+	# Fuera de toda zona mientras se prepara la caja (no debe entregar a otro puesto).
+	_player().global_position = HOME
 	var spawner: ItemSpawner = _box_spawner(BOX)
 	assert_not_null(spawner, "hay estantería para la caja de la comanda")
 	assert_true(_press(spawner), "estantería: da la caja")
@@ -248,11 +251,9 @@ func _serve(slot_id: int, leftover: Ingredient) -> Ingredient:
 			_press_station(_dispenser(seasoning), "dispensador de %s" % seasoning.resource_path)
 		assert_true(box.has_seasoning(seasoning))
 	assert_eq(_hold().get_held_item(), box, "la caja condimentada sigue en la mano")
-	assert_true(_press(_stand(slot_id)), "puesto %d: entrega" % slot_id)
+	await _enter_zone(slot_id)
 	assert_true(_released(box), "la caja entregada se libera")
 	assert_null(_hold().get_held_item())
-	# El puesto ignora dos intentos con la misma caja en un tick; deja pasar uno.
-	await wait_physics_frames(1)
 	return octopus
 
 
@@ -348,8 +349,7 @@ func test_ac3_full_flow_completes_one_order_and_adds_exactly_one() -> void:
 	assert_eq(completed.id, order.id, "se completa la comanda entregada")
 	assert_eq(RoundManager.round_state.get_boxes_delivered(), 1, "+1 exacto")
 	assert_eq(get_signal_parameters(EventBus, "score_changed")[0], 1)
-	var hud_rate: Label = _level.get_node("UI/HUD/%BoxesPerMinute")
-	assert_ne(hud_rate.text, "0.00", "el HUD cuenta la entrega")
+	assert_null(_level.get_node_or_null("UI/HUD/%BoxesPerMinute"), "D26.7: sin «Cajas / minuto»")
 	assert_ne(_order_for(slot_id).id, order.id, "el puesto recibe comanda nueva")
 	for other: int in others:
 		assert_eq(_order_for(other).id, others[other].id, "el puesto %d no cambia" % other)

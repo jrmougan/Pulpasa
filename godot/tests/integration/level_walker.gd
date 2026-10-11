@@ -1,8 +1,8 @@
 extends RefCounted
 ## Ayudante de los tests que juegan `level_01.tscn` con el teclado (PUL-039, PUL-061): mueve al
 ## personaje activo con las teclas de su jugador, rodea la barra de la planta B por el hueco de la
-## columna 14 y pulsa interactuar delante de un objetivo con el detector real. Nunca llama a
-## `interact()` ni publica `target_changed` a mano.
+## columna 14, pulsa interactuar delante de un objetivo con el detector real y entra en la zona de
+## entrega de un puesto (D26). Nunca llama a `interact()` ni publica `target_changed` a mano.
 
 ## Distancia a la que se considera alcanzado un punto del camino (m).
 const ARRIVED: float = 0.12
@@ -19,6 +19,9 @@ const GAP_CLEARANCE: float = 0.9
 ## Puntos de uso de la estación de condimentos: distancia al centro del mostrador en z. Todas las
 ## piezas (bandeja, dispensadores, cuenco) se usan de frente desde ahí (PUL-063).
 const STATION_ACCESS: float = 1.0
+## Desde cuánto al norte (cocina) de una `%DeliveryZone` se entra en ella (m): por encima de todas
+## las zonas (ocupan 0,5 m a cada lado de su centro), así no se cruza la de otro puesto.
+const ZONE_APPROACH: float = 1.15
 ## Teclas de cada jugador: arriba, abajo, izquierda, derecha, interactuar.
 const KEYS: Dictionary[int, Array] = {
 	1: [KEY_W, KEY_S, KEY_A, KEY_D, KEY_E],
@@ -86,6 +89,15 @@ func use(aim: Vector2, stand: Vector2, face_frames: int = FACE_FRAMES) -> Node:
 	var target: Node = detector().get_target()
 	await tap_interact()
 	return target
+
+
+## Entra andando en la `%DeliveryZone` de `stand` (D26: la entrega es solo por zona) por el norte,
+## sin cruzar las zonas de los otros puestos, y deja unos ticks para que entregue.
+func walk_into_zone(stand: Node3D) -> void:
+	var center: Vector2 = xz((stand.get_node("%DeliveryZone") as Node3D).global_position)
+	await walk_to(center - Vector2(0.0, ZONE_APPROACH))
+	await walk_to(center)
+	await _frames(3)
 
 
 ## Empuja hacia `target` unos frames para girarse hacia él.

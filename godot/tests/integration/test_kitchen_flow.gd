@@ -1,7 +1,8 @@
 extends GutTest
 ## PUL-019: flujo completo de cocina sobre `kitchen_sandbox.tscn` con los autoloads reales
 ## (`OrderService`, `RoundManager`, `EventBus`). Nevera → olla → esperar cocción → caja a la bandeja
-## de la estación → llenar → condimentos de la comanda en los dispensadores (PUL-061) → entrega.
+## de la estación → llenar → condimentos de la comanda en los dispensadores (PUL-061) → entrega
+## al entrar en la zona del puesto (D26).
 ## Sin física de movimiento: el jugador se aparta para que su detector no vea nada y cada
 ## pulsación pasa por `InteractionComponent.interact_pressed()` con el objetivo que publicaría el
 ## detector (`target_changed`).
@@ -25,8 +26,6 @@ var _hold: Holder
 var _storage: Node
 var _kitchen: CookingStation
 var _station: SeasoningStation
-## Reloj del cuenco: cada pulsación avanza 1 s (antirrebote sin esperas reales).
-var _now: float = 100.0
 var _stand: OrderStand
 
 
@@ -42,11 +41,17 @@ func before_each() -> void:
 	_storage = _sandbox.get_node("Stations/OctopusStorage")
 	_kitchen = _sandbox.get_node("Stations/Kitchen")
 	_station = _sandbox.get_node("Stations/SeasoningStation")
-	_station.get_node("CachelosBowl").clock = func() -> float: return _now
 	_stand = _sandbox.get_node("Stations/OrderStand1")
 	await wait_physics_frames(2)
 	# M1: las comandas iniciales se generan tras first_order_delay (5 s, dato).
 	RoundManager.round_state.advance(5.0)
+
+
+## Mete al jugador en la `%DeliveryZone` del puesto 1 y deja pasar unos ticks (D26: se entrega al
+## entrar, o al pasar la caja a coincidir estando dentro).
+func _enter_zone() -> void:
+	_player.global_position = (_stand.get_node("%DeliveryZone") as Node3D).global_position
+	await wait_physics_frames(4)
 
 
 ## Una pulsación de interactuar con `target` como objetivo del detector (`null` = nada delante).
@@ -146,7 +151,6 @@ func _season(box: Box, seasonings: Array[SeasoningData]) -> void:
 		var dispenser: Node = _dispenser(seasoning)
 		assert_not_null(dispenser, "dispensador de %s" % seasoning.resource_path)
 		assert_true(_press(dispenser), "pulsa el dispensador")
-		_now += 1.0
 		assert_true(box.has_seasoning(seasoning))
 	assert_eq(_hold.get_held_item(), box, "la caja sigue en la mano")
 
@@ -159,7 +163,7 @@ func test_ac1_full_flow_completes_exactly_one_order_and_stand_gets_new_one() -> 
 	_season(box, order.data.seasonings)
 	assert_eq(_hold.get_held_item(), box)
 
-	assert_true(_press(_stand), "puesto: entrega")
+	await _enter_zone()
 	assert_signal_emit_count(EventBus, "order_completed", 1)
 	assert_signal_not_emitted(EventBus, "delivery_rejected")
 	var completed: ActiveOrder = get_signal_parameters(EventBus, "order_completed", 0)[0]
@@ -177,31 +181,32 @@ func test_ac1_full_flow_completes_exactly_one_order_and_stand_gets_new_one() -> 
 	assert_signal_emit_count(EventBus, "order_completed", 1, "una sola vez, también después")
 
 
-func test_ac2_missing_seasoning_rejected_extra_seasoning_rejected() -> void:
+func test_ac2_wrong_box_in_zone_does_nothing_and_fixing_it_inside_delivers() -> void:
 	var order: ActiveOrder = _seasoned_order()
 	var box: Box = await _cook_and_fill(order)
 	var wanted: Array[SeasoningData] = order.data.seasonings
-	var missing: SeasoningData = wanted[wanted.size() - 1]
 	var partial: Array[SeasoningData] = wanted.slice(0, wanted.size() - 1)
 	_season(box, partial)
 
-	assert_true(_press(_stand), "consume la pulsación aunque rechace")
-	assert_signal_emit_count(EventBus, "delivery_rejected", 1)
-	assert_eq(get_signal_parameters(EventBus, "delivery_rejected", 0), [SLOT_ID, order.id, 0])
+	# Falta un condimento: la zona no entrega, no rechaza y no penaliza.
+	await _enter_zone()
 	assert_signal_not_emitted(EventBus, "order_completed")
-	assert_eq(_hold.get_held_item(), box, "la caja rechazada se queda en la mano")
+	assert_signal_not_emitted(EventBus, "delivery_rejected")
+	assert_false(_stand.is_zone_lit(), "la caja no encaja: zona apagada")
+	assert_eq(_hold.get_held_item(), box, "la caja se queda en la mano")
 	assert_eq(_order_for(SLOT_ID).id, order.id, "la comanda sigue viva")
 
-	_season(box, [missing])
-	# D25: la caja errónea es solo de contenido; con el aliño equivocado sigue sin valer.
+	# D25: con el aliño equivocado sigue sin valer.
 	var wrong: SeasoningData = HOT if wanted[0].same_as(SWEET) else SWEET
 	_season(box, [wrong])
-	# El puesto ignora un segundo intento de la misma caja en el mismo tick de física.
-	await wait_physics_frames(1)
-
-	assert_true(_press(_stand))
+	await wait_physics_frames(2)
 	assert_signal_not_emitted(EventBus, "order_completed")
-	assert_signal_emit_count(EventBus, "delivery_rejected", 2)
-	assert_eq(get_signal_parameters(EventBus, "delivery_rejected", 1), [SLOT_ID, order.id, 0])
-	assert_eq(_hold.get_held_item(), box, "la caja rechazada se queda en la mano")
-	assert_eq(_order_for(SLOT_ID).id, order.id, "la comanda sigue viva")
+	assert_signal_not_emitted(EventBus, "delivery_rejected")
+
+	# Dentro de la zona, la pulsación que completa la caja la entrega en el tick siguiente.
+	_season(box, wanted)
+	await wait_physics_frames(3)
+	assert_signal_emit_count(EventBus, "order_completed", 1)
+	assert_signal_not_emitted(EventBus, "delivery_rejected")
+	assert_true(_is_released(box), "la caja entregada se libera")
+	assert_gt(RoundManager.round_state.get_revenue(), 0)

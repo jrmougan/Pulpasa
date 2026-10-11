@@ -34,10 +34,6 @@ const EXPECTED_TARGETS: Array[String] = [
 	"PassSlot04",
 	"PassSlot05",
 	"PassSlot06",
-	"OrderStand1",
-	"OrderStand2",
-	"OrderStand3",
-	"OrderStand4",
 	"BoxSpawner",
 ]
 const SCREEN_SIZE: Vector2i = Vector2i(1280, 720)

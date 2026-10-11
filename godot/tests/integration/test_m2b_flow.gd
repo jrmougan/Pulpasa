@@ -32,8 +32,6 @@ const PATIENCE: float = 900.0
 const BACK_ACCESS: float = 0.9
 ## Distancia en x desde una plaza de la estantería de cajas al punto de uso (m).
 const SHELF_ACCESS: float = 0.9
-## Distancia al puesto desde la que se le pulsa interactuar, fuera de su `%DeliveryZone` (m).
-const STAND_FRONT: float = 2.5
 ## Margen sobre `cook_time` para la espera de la cocción (s).
 const COOK_MARGIN: float = 3.0
 ## Espera tras cambiar de personaje (> `switch_cooldown` de `input_config.tres`).
@@ -265,17 +263,11 @@ func _season(server: Walker, box: Box, order: ActiveOrder) -> void:
 	)
 
 
-## Entrega en el puesto de la comanda la caja condimentada que lleva en la mano.
+## Entrega en el puesto de la comanda la caja condimentada que lleva en la mano, entrando en su
+## zona (D26).
 func _deliver(server: Walker, box: Box, order: ActiveOrder) -> void:
 	assert_eq(_held(server), box, "la caja condimentada va en la mano")
-	var stand: OrderStand = _stations("OrderStand%d" % order.slot_id) as OrderStand
-	var stand_xz: Vector2 = _xz(stand)
-	await server.walk_to(stand_xz + Vector2(0.0, -STAND_FRONT))
-	for _i: int in 20:
-		if server.detector().get_target() == stand:
-			break
-		await server.push_towards(stand_xz, 1)
-	await server.tap_interact()
+	await server.walk_into_zone(_stations("OrderStand%d" % order.slot_id))
 
 
 func _switch(walker: Walker) -> void:
