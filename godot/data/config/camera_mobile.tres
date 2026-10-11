@@ -13,3 +13,5 @@ play_area_min = Vector2(-7, -5)
 play_area_max = Vector2(9.4, 6.6)
 px_per_meter_min = 120.0
 offscreen_arrow_px = 48.0
+respect_top_band = true
+top_reach_height_m = 2.6

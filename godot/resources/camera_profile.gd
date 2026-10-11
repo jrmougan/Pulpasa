@@ -19,3 +19,9 @@ extends Resource
 @export var px_per_meter_min: float = 0.0
 ## Lado de la flecha de borde en px a 1080 de alto.
 @export var offscreen_arrow_px: float = 48.0
+## Si la banda superior de HUD y tickets (y la safe area) cuenta como zona tapada: el foco se
+## calcula sobre la parte visible. Su alto sale de `UiProfile.top_band_max_px`.
+@export var respect_top_band: bool = false
+## Alto (m) que debe verse sobre un punto del borde norte del área: anillo de la olla,
+## prompt y cabeza (solo con `respect_top_band`).
+@export var top_reach_height_m: float = 0.0

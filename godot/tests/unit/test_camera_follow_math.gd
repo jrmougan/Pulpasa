@@ -139,3 +139,51 @@ func test_edge_point_avoids_button_zone() -> void:
 			arrow.intersects(avoid.grow(15.0)), "a 16 px de la zona de botones: %s" % target
 		)
 		assert_true(bounds.grow(0.01).has_point(p), "dentro de los límites: %s" % target)
+
+
+# --- PUL-133: banda superior tapada (H-01) ---------------------------------------------------
+
+
+func test_covered_focus_centers_target_in_visible_part() -> void:
+	var focus: Vector2 = CameraFollow.covered_focus(Vector2(2.0, 1.0), 3.0)
+	assert_eq(focus, Vector2(2.0, -0.5), "medio tramo de banda al norte")
+	assert_eq(CameraFollow.covered_focus(Vector2(2.0, 1.0), 0.0), Vector2(2.0, 1.0))
+
+
+func test_covered_clamp_without_cover_matches_plain_clamp() -> void:
+	var half: Vector2 = Vector2(6.0, 5.0)
+	for focus: Vector2 in [Vector2(-20, -20), Vector2(0, 0), Vector2(30, 30)]:
+		assert_eq(
+			CameraFollow.clamp_focus_covered(focus, half, AREA_MIN, AREA_MAX, 1.0, 0.0, 0.0),
+			CameraFollow.clamp_focus(focus, half, AREA_MIN, AREA_MAX, 1.0)
+		)
+
+
+func test_covered_clamp_lets_north_edge_clear_the_band() -> void:
+	var half: Vector2 = Vector2(6.0, 3.0)
+	var cover: float = 1.5
+	var reach: float = 2.0
+	var focus: Vector2 = CameraFollow.clamp_focus_covered(
+		Vector2(0.0, -50.0), half, AREA_MIN, AREA_MAX, 1.0, cover, reach
+	)
+	var top: float = CameraFollow.visible_top(focus.y, half.y, cover)
+	assert_almost_eq(top, AREA_MIN.y - 1.0 - reach, 0.0001, "la parte visible llega al alcance")
+	assert_lt(top, AREA_MIN.y - reach, "el borde norte y lo que tiene encima quedan visibles")
+
+
+func test_covered_clamp_keeps_south_and_side_limits() -> void:
+	var half: Vector2 = Vector2(6.0, 3.0)
+	var plain: Vector2 = CameraFollow.clamp_focus(
+		Vector2(50.0, 50.0), half, AREA_MIN, AREA_MAX, 1.0
+	)
+	var covered: Vector2 = CameraFollow.clamp_focus_covered(
+		Vector2(50.0, 50.0), half, AREA_MIN, AREA_MAX, 1.0, 1.5, 2.0
+	)
+	assert_eq(covered, plain, "al sur y al este no cambia")
+
+
+func test_covered_clamp_centers_when_view_is_larger_than_area() -> void:
+	var focus: Vector2 = CameraFollow.clamp_focus_covered(
+		Vector2(3.0, 3.0), Vector2(40.0, 40.0), AREA_MIN, AREA_MAX, 1.0, 1.0, 1.0
+	)
+	assert_eq(focus.y, (AREA_MIN.y + AREA_MAX.y) * 0.5)

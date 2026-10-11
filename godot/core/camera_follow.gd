@@ -85,6 +85,36 @@ static func clamp_focus(
 	)
 
 
+## Foco que deja al objetivo en el centro de la parte visible cuando una banda de `top_cover_m` m
+## (medidos sobre el suelo) tapa el borde superior de la vista: el foco queda medio tramo al norte.
+static func covered_focus(target: Vector2, top_cover_m: float) -> Vector2:
+	return Vector2(target.x, target.y - top_cover_m * 0.5)
+
+
+## Como `clamp_focus`, pero con una banda de `top_cover_m` m que tapa el borde superior de la vista
+## (HUD, tickets y safe area) y un alcance `top_reach_m` m: lo que mide de alto lo que
+## debe verse sobre un punto del borde norte (anillo, prompt, cabeza). La parte visible puede salir
+## `margin + top_reach_m` m del límite norte; el resto de bordes, solo `margin`.
+static func clamp_focus_covered(
+	focus: Vector2,
+	half_extents: Vector2,
+	area_min: Vector2,
+	area_max: Vector2,
+	margin: float,
+	top_cover_m: float,
+	top_reach_m: float
+) -> Vector2:
+	var low: float = area_min.y - margin - top_reach_m + half_extents.y - top_cover_m
+	var high: float = area_max.y + margin - half_extents.y
+	var y: float = (area_min.y + area_max.y) * 0.5 if low > high else clampf(focus.y, low, high)
+	return Vector2(_clamp_axis(focus.x, half_extents.x, area_min.x, area_max.x, margin), y)
+
+
+## Y del suelo (m) del borde superior de la parte visible: bajo la banda que tapa `top_cover_m`.
+static func visible_top(focus_y: float, half_height: float, top_cover_m: float) -> float:
+	return focus_y - half_height + top_cover_m
+
+
 ## Punto de la flecha de borde: donde el rayo del centro de `bounds` hacia `target` corta el
 ## borde de `bounds`; si cae dentro de `avoid` (más `gap`) para un icono de `arrow_size`, se
 ## desliza por el borde fuera de esa zona. Si `target` está dentro de `bounds`, lo devuelve.
