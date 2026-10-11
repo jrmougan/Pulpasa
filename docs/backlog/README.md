@@ -131,5 +131,5 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-116 | M3d | qa-tester | done | Re-medir R15/R17 tras D25 y preparar el playtest de M3d |
 | PUL-117 | M3d | asset-pipeline | done | Arte del cubo de basura (dirección A, D22) |
 | PUL-118 | M3d | gameplay-engineer | done | Estabilizar test_level_01_r16 (intermitente bajo carga) |
-| PUL-119 | M3e | game-designer | in_progress | Registrar D26 (lenguaje de acciones y móvil) y poner el diseño al día |
+| PUL-119 | M3e | game-designer | done | Registrar D26 (lenguaje de acciones y móvil) y poner el diseño al día |
 | PUL-120 | M3e | godot-architect | in_progress | Enmendar los contratos para D26 (verbo de acción, prompt, táctil, cámara móvil) |

@@ -1,7 +1,7 @@
 ---
 id: PUL-119
 title: Registrar D26 (lenguaje de acciones y móvil) y poner el diseño al día
-status: in_progress
+status: done
 milestone: M3e
 role: game-designer
 deps: []
