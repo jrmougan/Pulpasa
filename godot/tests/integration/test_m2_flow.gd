@@ -233,6 +233,9 @@ func test_ac1_single_switch_moves_and_delivers_with_each_character() -> void:
 	assert_signal_emit_count(EventBus, "order_completed", 1)
 	assert_eq(_completed_id(0), first.id)
 	assert_true(not is_instance_valid(box1) or box1.is_queued_for_deletion())
+	# El primero sale de la zona con la mano vacía: con otra caja dentro entregaría allí.
+	p1.global_position = p1_home
+	await wait_physics_frames(3)
 
 	# Cambio (tecla Q = p1_switch): J1 pasa al segundo.
 	await _tap_key(KEY_Q)
@@ -254,7 +257,6 @@ func test_ac1_single_switch_moves_and_delivers_with_each_character() -> void:
 	assert_almost_eq(p1.global_position.distance_to(p1_start), 0.0, 0.01, "el primero, quieto")
 
 	# Entrega con el segundo; el primero, fuera de toda zona, conserva su caja.
-	p1.global_position = p1_home
 	var second: ActiveOrder = _order_for(2)
 	var box_idle: Box = _box_in_hand(p1, _order_for(3))
 	var box2: Box = _box_in_hand(p2, second)
