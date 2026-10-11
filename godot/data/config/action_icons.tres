@@ -1,0 +1,60 @@
+[gd_resource type="Resource" script_class="ActionIconSet" format=3]
+
+[ext_resource type="Script" path="res://resources/action_icon_set.gd" id="1_set"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_verb_pick_up.svg" id="2_v"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_verb_drop.svg" id="3_v"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_verb_cook.svg" id="4_v"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_verb_cut.svg" id="5_v"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_verb_season_sweet.svg" id="6_v"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_verb_season_hot.svg" id="7_v"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_verb_cachelos.svg" id="8_v"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_verb_trash.svg" id="9_v"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_reason_box_not_full.svg" id="10_r"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_reason_busy.svg" id="11_r"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_reason_empty.svg" id="12_r"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_reason_full.svg" id="13_r"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_reason_already_applied.svg" id="14_r"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_reason_not_cooked.svg" id="15_r"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_mark_plate.svg" id="16_m"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_mark_cross.svg" id="17_m"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_mark_replace.svg" id="18_m"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_mark_player_1.svg" id="19_m"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/actions/icon_mark_player_2.svg" id="20_m"]
+
+[resource]
+script = ExtResource("1_set")
+verb_icons = Dictionary[StringName, Texture2D]({
+&"pick_up": ExtResource("2_v"),
+&"drop": ExtResource("3_v"),
+&"cook": ExtResource("4_v"),
+&"cut": ExtResource("5_v"),
+&"season_sweet": ExtResource("6_v"),
+&"season_hot": ExtResource("7_v"),
+&"cachelos": ExtResource("8_v"),
+&"trash": ExtResource("9_v")
+})
+reason_icons = Dictionary[StringName, Texture2D]({
+&"box_not_full": ExtResource("10_r"),
+&"busy": ExtResource("11_r"),
+&"empty": ExtResource("12_r"),
+&"full": ExtResource("13_r"),
+&"already_applied": ExtResource("14_r"),
+&"not_cooked": ExtResource("15_r")
+})
+plate = ExtResource("16_m")
+cross = ExtResource("17_m")
+replace = ExtResource("18_m")
+player_markers = Array[Texture2D]([ExtResource("19_m"), ExtResource("20_m")])
+ok_color = Color(1, 1, 1, 1)
+blocked_color = Color(1, 0.690196, 0.12549, 1)
+plate_color = Color(0.105882, 0.105882, 0.121569, 0.85)
+idle_color = Color(0.419608, 0.419608, 0.45098, 1)
+idle_alpha = 0.4
+prompt_icon_px_1080 = 64
+prompt_plate_px_1080 = 80
+prompt_min_px = 48
+reason_icon_px_1080 = 32
+cross_px_1080 = 24
+prompt_offset = 0.9
+response_duration = 0.35
+reject_shake_px = 6
