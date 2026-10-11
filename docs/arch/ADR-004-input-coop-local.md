@@ -1,8 +1,9 @@
 # ADR-004 — Input para coop local y cambio de personaje
 
-- **Estado:** aceptado (2026-10-03)
-- **Fecha:** 2026-10-03
-- **Ficha:** PUL-003
+- **Estado:** aceptado (2026-10-03); enmienda §6 (D26: input táctil en Individual y corte al
+  mantener) **propuesta**, pendiente del gate humano (PUL-120)
+- **Fecha:** 2026-10-03; enmienda 2026-10-11
+- **Ficha:** PUL-003; enmienda PUL-120 (D26)
 - **Relacionado:** D3 y D11 (`docs/design/decisions.md`), ADR-005 (D14, 3D o 2D), Must 5–7 (`docs/design/roadmap.md`), features
   `jugadores-y-cambio`, `mando-y-reasignacion`, `menu-principal` (PUL-002), ADR-002 (`GameState`),
   inventario §3 (`PlayerInputActions.inputactions`) y B13
@@ -149,6 +150,103 @@ Los menús usan `Button` con foco nativo y las acciones `ui_*` (B14). El menú p
 `GameState.mode` antes de cargar el nivel. La pausa (`pause_menu.tscn`, `PROCESS_MODE_ALWAYS`)
 escucha `pause` y llama `GameState.set_paused()`.
 
+### 6. Input táctil y corte al mantener (D26) — *Enmienda D26 (PUL-120, 2026-10-11), propuesta, pendiente del gate humano*
+
+D26.8: móvil entra en el alcance de la alpha **solo en Individual** (con cambio de personaje),
+apaisado. Local 2P sigue siendo de PC/mando. Diseño medible en
+`docs/design/features/controles-tactiles.md` (PUL-119). Escala, safe area y perfil de plataforma en
+ADR-005 (Enmienda D26). Export Android: fuera de esta oleada (`export.md`).
+
+**6.1 Sin eventos táctiles en el InputMap.** Los controles táctiles **alimentan las acciones que ya
+existen** (`p1_move_*`, `p1_interact`, `p1_switch`, `pause`) desde código; `project.godot` no gana
+acciones ni eventos (`InputEventScreenTouch` no es un binding). Así todo el juego (jugador,
+`InteractionComponent`, `CharacterSwitcher`, pausa) sigue leyendo `PlayerInput` y `_unhandled_input`
+sin saber de dónde viene la pulsación, y el test de bindings (teclado + mando) no cambia.
+
+| Control | Cómo alimenta | Acción |
+|---|---|---|
+| Stick virtual | `Input.action_press(acción, fuerza)` / `Input.action_release(acción)` por eje en cada `InputEventScreenDrag` y al soltar: `x > 0` → `p1_move_right` con fuerza `x`, `x < 0` → `p1_move_left` con `−x` (y la opuesta liberada); igual en `y` con `p1_move_down` / `p1_move_up`. `Input.get_vector` de `PlayerInput` lo lee igual que un stick | `p1_move_*` |
+| Botón de acción | `Input.parse_input_event()` de un `InputEventAction` (`action = &"p1_interact"`, `pressed = true`, `strength = 1.0`) al tocar y otro con `pressed = false` al levantar el dedo: llega a `_unhandled_input` (pulsación) y deja `Input.is_action_pressed` verdadero mientras se mantiene (corte al mantener, 6.4) | `p1_interact` |
+| Botón de cambiar | `InputEventAction` `p1_switch` (pulsar y soltar) | `p1_switch` |
+| Botón de pausa | `InputEventAction` `pause` (pulsar y soltar) | `pause` |
+
+Al ocultarse los controles o salir del árbol se liberan todas las acciones que hubieran pulsado
+(`action_release` y `InputEventAction` con `pressed = false`), para que no quede nada pegado.
+
+**6.2 Escenas y datos** (capa común: `ui/`, `core/`, `resources/`, sin tipos de mundo):
+
+```
+ui/touch/touch_controls.tscn
+TouchControls (Control, anclas a pantalla completa, mouse_filter IGNORE)   touch_controls.gd  class_name TouchControls
+│   @export config: TouchConfig = data/config/touch_config.tres
+│   @export icons: ActionIconSet = data/config/action_icons.tres
+│   visible según TouchInput.controls_visible(...) (6.3); en COOP_2P oculto y sin procesar input
+└── %SafeArea (SafeAreaMargin, ADR-005)
+    ├── %MoveStick     (Control)  virtual_stick.gd  class_name VirtualStick   mitad izquierda, flotante
+    ├── %ActionButton  (Control)  action_button.gd  class_name ActionButton   abajo a la derecha
+    ├── %SwitchButton  (Control)  touch_button.gd   class_name TouchButton    action = &"p1_switch"
+    └── %PauseButton   (Control)  touch_button.gd                             action = &"pause"
+```
+- **Multitáctil**: cada control procesa `InputEventScreenTouch` / `InputEventScreenDrag` en `_input`
+  filtrando por `event.index` (el stick recuerda el índice del dedo que lo abrió; cada botón, el suyo)
+  y marca el evento como gestionado. `mouse_filter = IGNORE` en todos para que la emulación de ratón
+  desde táctil (activa por defecto; la usan los menús) no los dispare dos veces.
+- **Stick flotante**: un toque en la zona del stick (`stick_zone_fraction` del ancho desde la
+  izquierda, dentro del safe area y fuera de los botones) fija el centro; el vector es
+  `TouchInput.stick_vector(center, point, radius, deadzone)` (puro): `(point − center) / radius`
+  recortado a longitud 1, y cero por debajo de `deadzone`. Al levantar el dedo, vector cero y
+  acciones liberadas.
+- **Botón de acción**: escucha `EventBus.action_hint_changed` con `player_index == 1` y muestra
+  `icons.verb_icons[verb]`: `OK` blanco (`ok_color`), `BLOCKED` ámbar (`blocked_color`) con
+  `icons.reason_icons[reason]`; sin objetivo (`NONE`), placa gris (`idle_color`) sin verbo. Con
+  `EventBus.interaction_resolved` de J1 da la misma respuesta que el prompt (salto en `OK`, sacudida
+  en `BLOCKED`, ≥ 0,3 s). Pulsarlo sin objetivo envía igualmente `p1_interact` (soltar, ADR-003 §9.5).
+- Tamaños (D26.8): botón de acción **≥ 72 dp**, cambiar y pausa **≥ 48 dp**; 1 dp = 2,5 px a 1080 de
+  alto (`TouchConfig.px_per_dp_at_1080`). Conversión a unidades de lienzo con `UiScale.dp_to_units()`
+  (ADR-005, Enmienda D26).
+- `resources/touch_config.gd` (`class_name TouchConfig extends Resource`): `px_per_dp_at_1080: float =
+  2.5`, `stick_radius_dp: float = 60.0`, `stick_deadzone: float = 0.2`, `stick_zone_fraction: float =
+  0.5`, `action_button_dp: float = 72.0`, `small_button_dp: float = 48.0`, `edge_margin_dp: float =
+  16.0`. Instancia `data/config/touch_config.tres`. Test de datos: `action_button_dp ≥ 72`,
+  `small_button_dp ≥ 48`.
+- `TouchControls` se instancia en la `UI` (`CanvasLayer`) del nivel, encima de HUD y tickets y debajo
+  de pausa y game over (orden de hijos, `scene-tree.md` §2).
+
+**6.3 Cuándo se ven** (`core/touch_input.gd`, `class_name TouchInput extends RefCounted`, puro):
+- `enum Source { NONE, TOUCH, KEYS, JOYPAD }`.
+- `static func source_of(event: InputEvent) -> Source`: `InputEventScreenTouch` / `ScreenDrag` →
+  `TOUCH`; `InputEventKey` → `KEYS`; `InputEventJoypadButton` y `InputEventJoypadMotion` por encima de
+  la zona muerta → `JOYPAD`; el resto (ratón, también el emulado desde táctil, e `InputEventAction`,
+  que inyectan los propios controles) → `NONE` = no cambia la fuente.
+- `static func controls_visible(touch_available: bool, mode: GameMode.Mode, last: Source) -> bool`:
+  `touch_available and mode == GameMode.Mode.SINGLE and last in [Source.NONE, Source.TOUCH]`. Visibles
+  si hay pantalla táctil (`DisplayServer.is_touchscreen_available()`) y la última entrada no fue
+  teclado ni mando; se ocultan al usar teclado o mando y vuelven al tocar la pantalla. En `COOP_2P`,
+  nunca.
+- `static func stick_vector(center: Vector2, point: Vector2, radius: float, deadzone: float) -> Vector2`
+  (6.2).
+- `TouchControls` guarda la última fuente en `_input` (sin consumir el evento) y reevalúa.
+
+**6.4 Corte al mantener.** Común a teclado, mando y táctil: `PlayerInput.is_interact_pressed()` +
+`HoldRepeat` (núcleo) con `InputConfig.cut_repeat_interval` (0,2 s) en `InteractionComponent`
+(ADR-003 §11.4). Solo repite verbos de `ActionVerb.REPEATABLE` (`cut`). Pulsar sigue valiendo (D13).
+
+**6.5 Menú y pausa en móvil.** En el perfil `MOBILE` (ADR-005, Enmienda D26) el menú principal oculta
+«Local 2P» (D26.8) y el foco inicial sigue en Individual; los menús funcionan con toque gracias a la
+emulación de ratón de Godot (sin código táctil propio). Si la aplicación pierde el foco
+(`NOTIFICATION_APPLICATION_FOCUS_OUT`, p. ej. al cambiar de app) durante la ronda en el perfil
+`MOBILE`, `GameState` llama `set_paused(true)`.
+
+**Alternativas descartadas (§6).**
+1. *Eventos `InputEventScreenTouch` en el InputMap.* No llevan zona ni índice útiles para un stick y
+   romperían el test de bindings y la reasignación de `GameState.apply_devices()`.
+2. *Leer el táctil directamente en `player.gd`.* Duplica la ruta de input y ata la capa específica a
+   la UI; con acciones, el personaje no cambia.
+3. *Addon de joystick virtual.* Dependencia en `addons/` (no editable) para un cálculo puro de pocas
+   líneas.
+4. *Táctil también en Local 2P.* Dos jugadores en un teléfono no es viable (estudio de PUL-119,
+   diagnóstico 7).
+
 ## Alternativas consideradas
 1. **Acciones sin prefijo y filtrado por dispositivo en código** (leer `InputEvent.device` y
    `Input.get_joy_axis(device, …)` a mano). Pierde `get_vector`, el remapeo del InputMap y la
@@ -178,5 +276,10 @@ escucha `pause` y llama `GameState.set_paused()`.
   `device` deben restaurarlo (`GameState.reset_input()`) en `after_each`.
 - (−) Dos jugadores en un teclado pueden sufrir ghosting de teclas; es aceptable (el Must habla de
   teclado + mando o dos mandos).
+- (§6, +) El táctil no añade rutas de input: el juego sigue leyendo `p1_*`; los tests de jugador e
+  interacción valen igual y el táctil se prueba inyectando `InputEventScreenTouch` / `Drag`.
+- (§6, −) `Input.action_press` de los controles convive con el teclado y el mando de J1; si se usan
+  a la vez gana la fuerza mayor (`Input.get_vector`). Aceptable: los controles se ocultan al usar
+  teclado o mando.
 - (−) La plantilla `device = 0/1` hace que, sin `GameState`, el primer mando controle a J1; solo
   ocurre en escenas lanzadas sueltas desde el editor.

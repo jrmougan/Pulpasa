@@ -2,9 +2,10 @@
 
 - **Estado:** aceptado (2026-10-06, gate del responsable; fases con multiplicador de paciencia);
   enmienda D25 (cue `trash` en §4, nota en §5 y comandas por fase en §6) **propuesta**, pendiente del
-  gate humano (PUL-111)
-- **Fecha:** 2026-10-06; enmienda 2026-10-10
-- **Ficha:** PUL-066; enmienda PUL-111 (D25, ADR-003 §10)
+  gate humano (PUL-111); enmienda D26 (§4.1: cues de respuesta y de estado distintos, `rejected` único)
+  **propuesta**, pendiente del gate humano (PUL-120)
+- **Fecha:** 2026-10-06; enmiendas 2026-10-10 y 2026-10-11
+- **Ficha:** PUL-066; enmiendas PUL-111 (D25, ADR-003 §10) y PUL-120 (D26, ADR-003 §11)
 - **Relacionado:** ADR-002 (Enmienda 1), ADR-003 (capa común / específica), ADR-005 (D14 = 3D),
   `signals.md`, `scene-tree.md`; features `audio-y-fx` (Must 9), `olla-que-se-pasa` (Should),
   `dificultad-progresiva` (Should), `opciones-de-volumen` (Should); fichas PUL-068..071
@@ -155,6 +156,50 @@ claves cerradas lo exige). Tirar vacía la mano con `Holder.drop()`, así que su
 y `trash` (cubo), como al dejar algo en una estación. Con D25, `unseason` solo suena al **sustituir**
 un aliño por el otro (justo antes de `season`, misma llamada): ya no hay quitar condimento.
 
+#### 4.1 Enmienda D26 (PUL-120, 2026-10-11): una respuesta por pulsación y cues distintos
+
+D26.3: toda pulsación con objetivo da **exactamente una** respuesta ≥ 0,3 s: éxito (el icono salta +
+el cue del efecto) o rechazo (× + motivo + sacudida + **un único** cue de error). El estudio de
+PUL-119 midió que `drop`, `trash`, cocer y descartar compartían sample y que listo / quemándose /
+lleno / cambio de personaje casi no sonaban.
+
+**Cues nuevos o cambiados** (claves de `data/audio/feedback_map.tres`):
+
+| Cue | Señal (tipo) | Escena · nodo | Visual | Nota |
+|---|---|---|---|---|
+| `cook_ready` | `cooking_finished` (local, olla) | `kitchen.tscn` · `%Feedback` | `POP` del ingrediente | **Renombra** `cook_done`; sonido propio de «listo» |
+| `burn_warning` | `burn_warned` (local, olla) | `kitchen.tscn` · `%Feedback` | parpadeo ámbar/rojo de `%CookBar` hasta quemar o recoger | Ya existía; pasa a tener sonido propio (alarma), ≥ 3 s antes de quemar (ADR-006 §5) |
+| `box_full` | `fill_changed` (local, `Box`) con `fill ≥ 1` (el último corte) | `box.tscn` · `%Feedback` | `POP` de la caja | Sustituye a `cut` **en ese corte** (sigue siendo un cue por señal) |
+| `switch` | `EventBus.character_switched(1, c)` con `c` = su `player_index`, con la ronda en curso | `player.tscn` · `%Feedback` (el personaje que **recibe** el control) | `POP` del personaje | No suena en la asignación del arranque de ronda |
+| `rejected` | `InteractionComponent.interaction_resolved` (local) con `BLOCKED` y `reason != already_applied` | `player.tscn` · `%Feedback` | `SHAKE` del objetivo (`play_cue(cue, target)`) | **Único** cue de rechazo de toda pulsación (ADR-003 §11.4) |
+| `already_applied` | ídem con `reason == already_applied` | `player.tscn` · `%Feedback` | `SHAKE` corto del objetivo | Más suave que `rejected`: repetir lo hecho no es un error grave |
+| `trash` | `trashed` (local, `TrashBin`) | `trash_bin.tscn` · `%Feedback` | `POP` del cubo | Ya existía; pasa a tener sonido propio, distinto de `drop` |
+
+**Bajas del mapa** (las retira la ficha de montaje cuando ningún emisor las use; hasta entonces
+conviven con las nuevas para que cada ficha cambie su escena sin romper el test de claves):
+`cook_done` (renombrado a `cook_ready`), `season_error` (la estación deja de sonar al rechazar: lo
+hace el jugador con `rejected`) y `deliver_error` (sin disparador: la entrega es solo por zona y
+`delivery_rejected` no se emite en el juego, ADR-003 §11.7). `order_stand.gd` deja de llamar
+`play_cue(&"deliver_error")`.
+
+**Verbo → respuesta de éxito** (un cue por pulsación `OK`; lo reproduce la escena que cambia):
+
+| Verbo | Cue de éxito |
+|---|---|
+| `pick_up` (COGER) | `pick_up` (jugador) |
+| `put_down` (SOLTAR en pasaplatos) | `drop` (jugador) |
+| `cook` (COCER) | `cook_start` (olla); también suena `drop` del jugador (§4, colocar en estación) |
+| `cut` (CORTAR) | `cut`, o `box_full` en el corte que llena (caja) |
+| `season_sweet` / `season_hot` (ALIÑAR) | `season` (caja); al sustituir, `unseason` + `season` (D25) |
+| `cachelos` (CACHELOS, poner en la caja) | `season` (caja); al reponer el cuenco, `drop` del jugador |
+| `trash` (TIRAR) | `trash` (cubo) o `discard` (olla, quemado); en el cubo también suena `drop` |
+
+**Distinción** (test de datos sobre `feedback_map.tres`): los `stream` de `cook_ready`,
+`burn_warning`, `box_full`, `switch`, `rejected`, `already_applied` y `trash` son distintos entre sí y
+de los de `drop`, `pick_up`, `cut`, `cook_start` y `season` (se comparan `resource_path`). `discard`
+puede compartir sample con `trash` (mismo verbo TIRAR). Cada uno con `visual_time ≥ 0.3` salvo los de
+visual `NONE`.
+
 Correcta y errónea son distintas en sonido (`deliver_ok`/`deliver_error`) y en visual
 (`POP`/`SHAKE`), como pide AC5. `order_new` lleva `delay` para no pisarse con `deliver_ok` u
 `order_expired`, que en la reposición llegan en el mismo frame (`signals.md` §3); sigue siendo
@@ -286,6 +331,10 @@ estación: suenan los dos (`drop` es suave por datos); no se suprime para no rom
 - (−) La lectura de AC2 de `audio-y-fx` cambia ("su señal de `EventBus`" → "su señal"): R2.
 - (−) Colocar en una estación suena doble (`drop` + la de la estación).
 - (−) `FeedbackPlayer` es de la capa específica: con 2D habría que duplicarlo (`AudioStreamPlayer2D`).
+- (§4.1, +) El rechazo suena igual en toda la cocina y lo da quien pulsa; las estaciones solo suenan
+  cuando cambian algo.
+- (§4.1, −) Durante la transición el mapa tiene claves de baja (`cook_done`, `season_error`,
+  `deliver_error`) hasta la ficha de montaje.
 - Owns de PUL-071 a ajustar: `core/audio_mix.gd(.uid)`, `tests/unit/test_audio_mix.gd(.uid)`,
   `components/feedback_player.gd(.uid)` (ya en `components/**`), `entities/**/*.gd` de las escenas
   que conecta, `scenes/levels/level_01.tscn` (instancia `LevelAudio`), `resources/audio_*.gd`.

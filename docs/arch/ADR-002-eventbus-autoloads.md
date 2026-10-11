@@ -1,6 +1,7 @@
 # ADR-002 — Bus de eventos y autoloads (sustituto de QFramework)
 
-- **Estado:** aceptado (2026-10-03); Enmienda 1 (PUL-066) pendiente del gate humano
+- **Estado:** aceptado (2026-10-03); Enmienda 1 (PUL-066) pendiente del gate humano; Enmienda 2
+  (PUL-120, D26) propuesta, pendiente del gate humano
 - **Fecha:** 2026-10-03
 - **Ficha:** PUL-003
 - **Relacionado:** `docs/arch/signals.md`, ADR-001, ADR-003, ADR-005 (D14); inventario §1 (Architecture, Systems,
@@ -225,3 +226,23 @@ Consecuencias de ese orden:
    llama `RoundState` (el núcleo que recibe el tablero, regla 3). No hay señales nuevas de tablero.
 4. **Semilla.** `RoundConfig.rng_seed` (0 = aleatoria). `OrderService.setup` la usa si no recibe
    `rng`. Los núcleos siguen sin crear su propio RNG (regla 7).
+
+## Enmienda 2 (2026-10-11, PUL-120) — Emisor de interacción y perfil de plataforma (D26)
+
+- **Estado:** propuesta, **pendiente del gate humano** (con ADR-003 §11, ADR-004 §6 y ADR-005
+  Enmienda D26).
+
+1. **Emisor no autoload en el bus.** Las dos señales nuevas, `action_hint_changed` e
+   `interaction_resolved` (`signals.md` §2, «Interacción»), las emite el componente común
+   `InteractionComponent` del personaje que controla `player_index`, no un autoload. Mismo caso que
+   `character_switched` (lo emite `character_switcher.gd`, nodo del nivel). La regla 2 se lee así:
+   **un emisor por señal y por `player_index`**; el invariante «como mucho un `InteractionComponent`
+   controlado por jugador» lo garantizan `CharacterSwitcher` y la asignación de coop (ADR-004 §4) y lo
+   prueba un test. No hay núcleo con señal homónima: la regla de qué verbo publica cada objetivo es
+   pura (`core/action_rules.gd`, ADR-003 §11.1) y el componente solo la reenvía, que es el papel de
+   adaptador fino de esta ADR.
+2. **`GameState` gana el perfil de plataforma** (`platform: PlatformProfile.Kind`, `set_platform()`,
+   ADR-005 E1) y aplica el `UiProfile` (`content_scale_factor` de la raíz) y la pausa al perder el
+   foco en móvil. La regla es pura (`core/platform_profile.gd`); `GameState` solo la aplica. Sin
+   señales nuevas: el perfil no cambia durante la sesión.
+3. Ningún autoload nuevo.
