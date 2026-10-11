@@ -6,6 +6,8 @@ const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
 const STATION_SCENE: PackedScene = preload("res://entities/stations/seasoning_station.tscn")
 const SMALL_BOX: Resource = preload("res://data/boxes/box.tres")
+const CACHELOS_DATA: SeasoningData = preload("res://data/seasonings/cachelos.tres")
+const SWEET_DATA: SeasoningData = preload("res://data/seasonings/sweet_dressing.tres")
 
 const STEP: float = 0.1
 const INTERACTABLE_LAYER: int = 1 << 2
@@ -14,6 +16,7 @@ var _level: Node3D
 var _hold: HoldComponent
 var _actor: InteractionComponent
 var _kitchen: CookingStation
+var _rejections: Array[SeasoningRules.Rejection] = []
 
 
 func before_each() -> void:
@@ -85,17 +88,17 @@ func test_ac2_cachelo_raw_rejected_by_box() -> void:
 	assert_eq(_hold.get_held_item(), cachelo)
 
 
-## Aliño y cachelos caben a la vez con la API de la estación (D25: `apply_seasoning` y
-## `toggle_seasoning`, ADR-003 §10.2).
+## Aliño y cachelos caben a la vez con la API de la estación (`apply_seasoning`, D26: el cuenco ya
+## no usa `toggle_seasoning`).
 func test_ac3_dressing_and_cachelos() -> void:
 	var box: Box = BOX_SCENE.instantiate()
 	_level.add_child(box)
 	box.data = SMALL_BOX
 	box.fill = 1.0  # full
-	var dressing: SeasoningData = load("res://data/seasonings/sweet_dressing.tres")
-	var cachelos: SeasoningData = load("res://data/seasonings/cachelos.tres")
+	var dressing: SeasoningData = SWEET_DATA
+	var cachelos: SeasoningData = CACHELOS_DATA
 	assert_eq(box.apply_seasoning(dressing), SeasoningRules.Rejection.NONE)
-	assert_eq(box.toggle_seasoning(cachelos), SeasoningRules.Rejection.NONE)
+	assert_eq(box.apply_seasoning(cachelos), SeasoningRules.Rejection.NONE)
 
 	var contents := box.get_contents()
 	assert_eq(contents.seasonings.size(), 2)
@@ -158,3 +161,142 @@ func test_pul097_cooked_cachelo_from_the_pot_gives_two_portions_to_the_bowl() ->
 	assert_true(bowl.interact(_actor))
 	assert_eq(bowl.stock, 2)
 	assert_null(_hold.get_held_item())
+
+
+# --- PUL-126 AC2 (D26): el cuenco solo pone ---
+
+
+func _bowl_with(stock: int) -> CachelosBowl:
+	var station: SeasoningStation = STATION_SCENE.instantiate()
+	station.position = Vector3(0.0, 0.0, 10.0)
+	_level.add_child(station)
+	var bowl: CachelosBowl = station.get_node("CachelosBowl")
+	bowl.stock = stock
+	_rejections.clear()
+	bowl.rejected.connect(
+		func(reason: SeasoningRules.Rejection) -> void: _rejections.append(reason)
+	)
+	return bowl
+
+
+func _hold_box(fill: float, with_cachelos: bool = false) -> Box:
+	var box: Box = BOX_SCENE.instantiate()
+	_level.add_child(box)
+	box.data = SMALL_BOX
+	box.fill = fill
+	if with_cachelos:
+		assert_eq(box.apply_seasoning(CACHELOS_DATA), SeasoningRules.Rejection.NONE)
+	assert_true(_hold.pick_up(box))
+	return box
+
+
+func _assert_hint(
+	bowl: CachelosBowl, state: ActionHint.State, reason: StringName, message: String
+) -> void:
+	var hint: ActionHint = bowl.get_action_hint(_actor)
+	assert_eq(hint.state, state, "%s: estado" % message)
+	assert_eq(hint.reason, reason, "%s: motivo" % message)
+	if state != ActionHint.State.NONE:
+		assert_eq(hint.verb, ActionVerb.CACHELOS, "%s: verbo" % message)
+
+
+func test_pul126_ac2_bowl_puts_cachelos_on_a_full_box_and_spends_a_portion() -> void:
+	var bowl: CachelosBowl = _bowl_with(2)
+	var box: Box = _hold_box(1.0)
+	_assert_hint(bowl, ActionHint.State.OK, ActionReason.NONE, "pone")
+	assert_true(bowl.interact(_actor))
+	assert_true(box.has_seasoning(CACHELOS_DATA))
+	assert_eq(bowl.stock, 1, "stock - 1")
+	assert_eq(_rejections.size(), 0)
+	assert_eq(_hold.get_held_item(), box, "la caja no se suelta")
+
+
+func test_pul126_ac2_box_that_already_has_cachelos_is_already_applied_even_with_stock_zero(
+) -> void:
+	for stock: int in [0, 2, 4]:
+		var bowl: CachelosBowl = _bowl_with(stock)
+		var box: Box = _hold_box(1.0, true)
+		_assert_hint(
+			bowl, ActionHint.State.BLOCKED, ActionReason.ALREADY_APPLIED, "stock %d" % stock
+		)
+		assert_true(bowl.interact(_actor), "consume")
+		assert_true(box.has_seasoning(CACHELOS_DATA), "stock %d: no quita" % stock)
+		assert_eq(bowl.stock, stock, "stock %d: sin cambios" % stock)
+		assert_eq(
+			_rejections,
+			[SeasoningRules.Rejection.ALREADY_APPLIED] as Array[SeasoningRules.Rejection]
+		)
+		_hold.drop()
+		box.queue_free()
+
+
+func test_pul126_ac2_empty_bowl_blocks_with_empty() -> void:
+	var bowl: CachelosBowl = _bowl_with(0)
+	var box: Box = _hold_box(1.0)
+	box.apply_seasoning(SWEET_DATA)
+	_assert_hint(bowl, ActionHint.State.BLOCKED, ActionReason.EMPTY, "vacío")
+	assert_true(bowl.interact(_actor))
+	assert_false(box.has_seasoning(CACHELOS_DATA))
+	assert_eq(_rejections, [SeasoningRules.Rejection.BOWL_EMPTY] as Array[SeasoningRules.Rejection])
+
+
+func test_pul126_ac2_box_not_full_blocks_with_box_not_full() -> void:
+	var bowl: CachelosBowl = _bowl_with(2)
+	for fill: float in [0.0, 0.6]:
+		_rejections.clear()
+		var box: Box = _hold_box(fill)
+		_assert_hint(bowl, ActionHint.State.BLOCKED, ActionReason.BOX_NOT_FULL, "fill %s" % fill)
+		assert_true(bowl.interact(_actor))
+		assert_false(box.has_seasoning(CACHELOS_DATA))
+		assert_eq(bowl.stock, 2)
+		assert_eq(
+			_rejections, [SeasoningRules.Rejection.BOX_NOT_FULL] as Array[SeasoningRules.Rejection]
+		)
+		_hold.drop()
+		box.queue_free()
+
+
+func test_pul126_ac2_restock_with_three_or_four_portions_blocks_with_full() -> void:
+	for stock: int in [3, 4]:
+		var bowl: CachelosBowl = _bowl_with(stock)
+		var cachelo: Ingredient = CACHELOS_SCENE.instantiate()
+		_level.add_child(cachelo)
+		cachelo.set_cooked()
+		assert_true(_hold.pick_up(cachelo))
+		_assert_hint(bowl, ActionHint.State.BLOCKED, ActionReason.FULL, "stock %d" % stock)
+		assert_true(bowl.interact(_actor))
+		assert_eq(bowl.stock, stock, "stock %d: sin cambios" % stock)
+		assert_eq(_hold.get_held_item(), cachelo, "el cachelo sigue en la mano")
+		assert_eq(
+			_rejections, [SeasoningRules.Rejection.BOWL_FULL] as Array[SeasoningRules.Rejection]
+		)
+		_hold.drop()
+		cachelo.queue_free()
+
+
+func test_pul126_ac2_restock_with_stock_two_gives_four_and_the_bowl_never_takes_back() -> void:
+	var bowl: CachelosBowl = _bowl_with(2)
+	var cachelo: Ingredient = CACHELOS_SCENE.instantiate()
+	_level.add_child(cachelo)
+	cachelo.set_cooked()
+	assert_true(_hold.pick_up(cachelo))
+	_assert_hint(bowl, ActionHint.State.OK, ActionReason.NONE, "repone")
+	assert_true(bowl.interact(_actor))
+	assert_eq(bowl.stock, 4)
+	var box: Box = _hold_box(1.0, true)
+	for i: int in 3:
+		assert_true(bowl.interact(_actor), "pulsar con la caja que ya lleva cachelos")
+	assert_true(box.has_seasoning(CACHELOS_DATA), "no hay quitar")
+	assert_eq(bowl.stock, 4, "ni devolver raciones")
+	assert_false(bowl.has_method("_toggle"), "sin rama de quitar")
+
+
+func test_pul126_ac2_empty_hand_or_other_items_are_not_a_target() -> void:
+	var bowl: CachelosBowl = _bowl_with(2)
+	_assert_hint(bowl, ActionHint.State.NONE, ActionReason.NONE, "mano vacía")
+	assert_false(bowl.interact(_actor))
+	var raw: Ingredient = CACHELOS_SCENE.instantiate()
+	_level.add_child(raw)
+	assert_true(_hold.pick_up(raw))
+	_assert_hint(bowl, ActionHint.State.NONE, ActionReason.NONE, "cachelos crudos")
+	assert_eq(_rejections.size(), 0)

@@ -2,6 +2,7 @@ extends GutTest
 ## AC3: todos los .tres de data/ cargan con su tipo y sin referencias rotas.
 
 const DATA_DIR: String = "res://data"
+const ICON_DIR: String = "res://assets/textures/ui/actions/"
 ## Carpetas de `data/` con un solo tipo de Resource.
 const FOLDER_TYPES: Dictionary[String, String] = {
 	"boxes": "BoxData",
@@ -158,7 +159,7 @@ func test_pul057_box_badge_style_values() -> void:
 	assert_eq(style.badge_gap_px, 3)
 	assert_almost_eq(style.badge_height, 0.35, 0.0001)
 	assert_not_null(style.hot_mark)
-	assert_eq(style.hot_mark.resource_path, "res://assets/textures/icons/small-fire.svg")
+	assert_eq(style.hot_mark.resource_path, ICON_DIR + "icon_verb_season_hot.svg")
 	var hot: SeasoningData = SeasoningData.new()
 	hot.type = SeasoningData.SeasoningType.HOT_DRESSING
 	var sweet: SeasoningData = SeasoningData.new()
@@ -182,13 +183,66 @@ func test_pul057_every_seasoning_color_is_opaque() -> void:
 	assert_eq(count, 3, "los tres condimentos")
 
 
+## PUL-126 AC5: cada aliño con `.tres` tiene un verbo válido y su icono propio (D26.7): el mismo
+## en dispensador, ticket y pegatina. El cuenco usa `cachelos`.
+func test_pul126_every_seasoning_has_a_valid_verb_and_its_own_icon() -> void:
+	var expected: Dictionary = {
+		"sweet_dressing": [ActionVerb.SEASON_SWEET, ICON_DIR + "icon_verb_season_sweet.svg"],
+		"hot_dressing": [ActionVerb.SEASON_HOT, ICON_DIR + "icon_verb_season_hot.svg"],
+	}
+	var count: int = 0
+	for file: String in DirAccess.get_files_at("res://data/seasonings"):
+		if not file.ends_with(".tres"):
+			continue
+		var seasoning: SeasoningData = load("res://data/seasonings/%s" % file) as SeasoningData
+		assert_true(ActionVerb.is_valid(seasoning.verb), "%s: verbo válido" % file)
+		assert_not_null(seasoning.icon, "%s: icono" % file)
+		var id: String = file.get_basename()
+		if expected.has(id):
+			assert_eq(seasoning.verb, expected[id][0] as StringName, id)
+			assert_eq(seasoning.icon.resource_path, expected[id][1] as String, id)
+		count += 1
+	assert_eq(count, 3)
+	assert_eq(_seasoning("cachelos").verb, ActionVerb.CACHELOS)
+	var sweet: SeasoningData = _seasoning("sweet_dressing")
+	var hot: SeasoningData = _seasoning("hot_dressing")
+	assert_ne(sweet.icon, hot.icon, "dulce y picante se distinguen por el icono, no por el color")
+
+
+## PUL-126 AC4: el medidor del cuenco cumple las medidas del diseño (24 px, contraste >= 3:1).
+func test_pul126_stock_meter_data_meets_the_design() -> void:
+	var data: SeasoningStationData = (
+		load("res://data/config/%s.tres" % "seasoning_station") as SeasoningStationData
+	)
+	assert_gte(data.stock_notch_px, 24)
+	assert_gte(data.stock_notch_outline_px, 2)
+	assert_gte(_contrast(data.stock_fill_color, data.stock_empty_color), 3.0)
+	assert_gte(_contrast(data.stock_outline_color, data.stock_empty_color), 3.0)
+
+
+func _seasoning(id: String) -> SeasoningData:
+	return load("res://data/seasonings/%s.tres" % id) as SeasoningData
+
+
+## Contraste WCAG entre dos colores sRGB.
+func _contrast(a: Color, b: Color) -> float:
+	var light: float = maxf(_luminance(a), _luminance(b))
+	var dark: float = minf(_luminance(a), _luminance(b))
+	return (light + 0.05) / (dark + 0.05)
+
+
+func _luminance(color: Color) -> float:
+	var linear: Color = color.srgb_to_linear()
+	return 0.2126 * linear.r + 0.7152 * linear.g + 0.0722 * linear.b
+
+
 ## PUL-058: balance de la estación de condimentos (feature estacion-condimentos, Datos).
 func test_pul058_seasoning_station_values() -> void:
 	var data: SeasoningStationData = (
 		load("res://data/config/seasoning_station.tres") as SeasoningStationData
 	)
 	assert_not_null(data)
-	assert_almost_eq(data.toggle_guard, 0.25, 0.0001)
+	assert_null(data.get("toggle_guard"), "D26: el cuenco ya no tiene antirrebote")
 	assert_eq(data.cachelos_stock_max, 4)
 	assert_eq(data.cachelos_initial_stock, 0)
 	assert_eq(data.cachelos_portions_per_item, 2)

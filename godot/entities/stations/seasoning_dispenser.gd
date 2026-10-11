@@ -1,14 +1,15 @@
 class_name SeasoningDispenser
 extends StaticBody3D
-## Dispensador fijo de un aliño completo en la estación al paso (D25, ADR-003 §10.2; scene-tree.md
-## §3). Con una caja en la mano y desde el lado de condimentar aplica su aliño en esa caja
-## (`Box.apply_seasoning`): llena sin aliño lo añade, con el otro aliño lo sustituye, con el
-## mismo no
-## hace nada (silencio). La caja no se suelta. Con la mano vacía o con cualquier otra cosa no es
-## objetivo. Siempre consume la pulsación: caja a medio cortar emite `rejected(BOX_NOT_FULL)`.
-## Sin antirrebote: aplicar es idempotente.
+## Dispensador fijo de un aliño completo en la estación al paso (D25, D26; ADR-003 §10.2 y §11.2;
+## scene-tree.md §3). Con una caja en la mano y desde el lado de condimentar aplica su aliño en esa
+## caja (`Box.apply_seasoning`): llena sin aliño lo añade, con el otro aliño lo sustituye
+## (`hint.replaces`). La caja no se suelta. Con la mano vacía o con cualquier otra cosa no es
+## objetivo. Una sola regla (`_resolve` → `ActionRules.for_dispenser`) decide el hint y la
+## pulsación: `BLOCKED` (caja a medias, o ya lleva el aliño) emite `rejected` sin cambiar nada y
+## consume. Ninguna estación suena un cue de error: lo hace el jugador. Sin antirrebote: aplicar es
+## idempotente.
 
-## Pulsación consumida sin cambios (signals.md §4). Solo `BOX_NOT_FULL`.
+## Pulsación consumida sin cambios (signals.md §4): `BOX_NOT_FULL` o `ALREADY_APPLIED`.
 signal rejected(reason: SeasoningRules.Rejection)
 
 @export var seasoning: SeasoningData
@@ -23,36 +24,61 @@ func _ready() -> void:
 	_tint_paprika()
 
 
-## Solo con una caja en la mano y desde el lado de condimentar (o los dos con
-## `operator_side_only` = false). ADR-003 §8.1.
-func is_reachable_from(floor_position: Vector2, holder: Holder) -> bool:
-	if station == null or not _holds_box(holder):
+## Solo desde el lado de condimentar (o los dos con `operator_side_only` = false). ADR-003 §8.1.
+## Qué hace la mano lo decide `get_action_hint`: aquí solo se filtra el lado (§11.2).
+func is_reachable_from(floor_position: Vector2, _holder: Holder) -> bool:
+	if station == null:
 		return false
 	if not station.data.operator_side_only:
 		return true
 	return station.side_of(floor_position) == StationSide.Side.OPERATOR
 
 
-## Defensa en profundidad: sin caja en la mano no consume la pulsación.
+func get_action_hint(actor: InteractionComponent) -> ActionHint:
+	if actor == null or actor.holder == null or seasoning == null:
+		return ActionHint.none()
+	return _resolve(actor.holder)
+
+
 func can_interact(actor: InteractionComponent) -> bool:
-	return actor != null and _holds_box(actor.holder)
+	return get_action_hint(actor).is_target()
 
 
 func interact(actor: InteractionComponent) -> bool:
-	if not can_interact(actor):
+	if actor == null or actor.holder == null or seasoning == null:
 		return false
-	if station == null or seasoning == null:
-		return true
-	var box: Box = actor.holder.get_held_item() as Box
-	var result: SeasoningRules.Rejection = box.apply_seasoning(seasoning)
-	match result:
-		SeasoningRules.Rejection.NONE:
-			_play_gesture()
-		SeasoningRules.Rejection.ALREADY_APPLIED:
-			pass
-		_:
-			rejected.emit(result)
-	return true
+	var hint: ActionHint = _resolve(actor.holder)
+	match hint.state:
+		ActionHint.State.OK:
+			var box: Box = actor.holder.get_held_item() as Box
+			var result: SeasoningRules.Rejection = box.apply_seasoning(seasoning)
+			if result == SeasoningRules.Rejection.NONE:
+				_play_gesture()
+			else:
+				rejected.emit(result)
+			return true
+		ActionHint.State.BLOCKED:
+			rejected.emit(_rejection_of(hint.reason))
+			return true
+	return false
+
+
+## Única resolución de la mano contra el dispensador (ADR-003 §11.2).
+func _resolve(holder: Holder) -> ActionHint:
+	var item: Node = holder.get_held_item()
+	var box: Box = item as Box
+	var has_it: bool = box != null and box.has_seasoning(seasoning)
+	var has_other: bool = (
+		box != null and not has_it and box.has_seasoning_in_group(seasoning.exclusivity_group)
+	)
+	return ActionRules.for_dispenser(HeldKind.of(item), seasoning.verb, has_it, has_other)
+
+
+## `rejected` local de cada motivo del hint (ADR-003 §11.7).
+static func _rejection_of(reason: StringName) -> SeasoningRules.Rejection:
+	if reason == ActionReason.ALREADY_APPLIED:
+		return SeasoningRules.Rejection.ALREADY_APPLIED
+	return SeasoningRules.Rejection.BOX_NOT_FULL
 
 
 ## Lanza el `%Gesture` (y sal y aceite) desde el principio.
@@ -76,7 +102,3 @@ func _tint_paprika() -> void:
 	var paint: StandardMaterial3D = (mesh.material as StandardMaterial3D).duplicate()
 	paint.albedo_color = seasoning.color
 	_gesture.material_override = paint
-
-
-static func _holds_box(holder: Holder) -> bool:
-	return holder != null and holder.get_held_item() is Box

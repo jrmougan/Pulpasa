@@ -45,6 +45,14 @@ unique_name_in_owner = true
 script = ExtResource("4_hl")
 root = NodePath("../Model/OutlineHull")
 
+[node name="StockMeter" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0.25)
+billboard = 1
+no_depth_test = true
+render_priority = 20
+texture_filter = 1
+
 [node name="Portions1" parent="Model/cachelos_bowl" index="4"]
 visible = false
 

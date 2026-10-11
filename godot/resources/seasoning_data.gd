@@ -16,6 +16,9 @@ enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL, CACHELOS, SWEET_DRESSING, 
 ## Posición en el orden canónico de caja y ticket (`SeasoningRules.canonical_order`): aliño 0,
 ## cachelos 3. Iguales = sin orden entre ellos (dulce y picante son exclusivos).
 @export var sort_order: int = 0
+## Verbo de la pulsación que lo aplica (`ActionVerb`, D26): lo lee el dispensador y el cuenco para
+## su `get_action_hint`. Conjunto cerrado; vacío = sin verbo (no válido para un `.tres`).
+@export var verb: StringName = &""
 @export var color: Color = Color.WHITE
 @export var icon: Texture2D
 @export var scene: PackedScene
