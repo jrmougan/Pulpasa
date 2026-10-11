@@ -1,4 +1,4 @@
-# gdlint: disable=max-public-methods
+# gdlint: disable=max-public-methods,max-file-lines
 extends GutTest
 ## PUL-024: `level_01.tscn` montado con los autoloads reales; PUL-061: planta B · barra partida
 ## (D19, `docs/design/level-layouts.md`; scene-tree.md §2).
@@ -30,6 +30,8 @@ const PLAN: Dictionary[String, Array] = {
 	"Stations/OrderStand2": [5, 10, 180.0],
 	"Stations/OrderStand3": [8, 10, 180.0],
 	"Stations/OrderStand4": [10, 10, 180.0],
+	"Stations/TrashBinKitchen": [8.9, 0.9, 0.0],
+	"Stations/TrashBinService": [0.9, 8.3, 0.0],
 	"Characters/Player1": [11, 7, 0.0],
 	"Characters/Player2": [2, 2, 0.0],
 }
@@ -103,6 +105,7 @@ func before_each() -> void:
 func after_each() -> void:
 	GameState.set_paused(false)
 	GameState.reset_input()
+	GameState.set_platform(PlatformProfile.Kind.DESKTOP)
 	get_tree().root.size = _window_size
 	if is_instance_valid(_level):
 		var was_current: bool = _level == get_tree().current_scene
@@ -192,6 +195,43 @@ func test_ac1_level_has_players_four_stands_with_orders_hud_and_tickets() -> voi
 	assert_false((_level.get_node("UI/GameOver") as GameOver).visible)
 	assert_false((_level.get_node("UI/PauseMenu") as PauseMenu).visible)
 	assert_true(_level.get_node("UI") is CanvasLayer)
+
+
+## PUL-131 AC4 (D26): con el perfil MOBILE, `TouchControls` cuelga de `UI` después de HUD y tickets
+## y antes de pausa y game over (scene-tree.md §2); `CameraRig.characters` son los dos personajes,
+## en el orden de los jugadores.
+func test_d26_ac4_touch_controls_are_mounted_in_order_and_camera_follows_both_characters() -> void:
+	GameState.set_platform(PlatformProfile.Kind.MOBILE)
+	await _load_level()
+	var ui: Node = _level.get_node("UI")
+	var names: Array[String] = []
+	for child: Node in ui.get_children():
+		names.append(String(child.name))
+	assert_eq(
+		names,
+		["HUD", "OrderTicketsPanel", "TouchControls", "PauseMenu", "GameOver"] as Array[String],
+		"orden de la UI"
+	)
+	assert_true(ui.get_node("TouchControls") is TouchControls)
+	var rig: CameraRig = _level.get_node("CameraRig") as CameraRig
+	assert_eq(
+		rig.characters,
+		(
+			[_level.get_node("Characters/Player1"), _level.get_node("Characters/Player2")]
+			as Array[Node3D]
+		)
+	)
+
+
+## En escritorio los controles táctiles no existen (se liberan al arrancar) y la cámara conserva
+## su perfil fijo.
+func test_d26_ac4_desktop_has_no_touch_controls_and_a_fixed_camera() -> void:
+	await _load_level()
+	await wait_process_frames(2)
+	assert_null(_level.get_node_or_null("UI/TouchControls"))
+	var rig: CameraRig = _level.get_node("CameraRig") as CameraRig
+	assert_eq(rig.characters.size(), 2)
+	assert_almost_eq(rig.size, 12.74, 0.0001)
 
 
 func test_ac1_level_root_only_uses_level_script() -> void:
@@ -388,14 +428,15 @@ func test_r14_detour_from_operator_face_to_pass_face_is_six_to_ten_metres() -> v
 	assert_between(walked, DETOUR_MIN, DETOUR_MAX, "rodeo de %.2f m" % walked)
 
 
-## Las placas `SizePanel_*` / `SizeFront_*` del rack (PUL-095) sobresalen de su colisión: el jugador
-## no puede quedar dentro de ellas.
-func test_rack_plates_cannot_be_walked_into() -> void:
+## Las placas lisas `SizePanel_*` del rack (PUL-095; sin letras desde PUL-123, `SizeFront_*` ya no
+## existe) sobresalen de su colisión: el jugador no puede quedar dentro de ellas. El nombre del
+## nodo es el del `.glb` (arte, fuera de esta ficha): renombrarlo a `RackPanel_*` es de assets.
+func test_rack_panels_cannot_be_walked_into() -> void:
 	await _load_level()
 	var reachable: Dictionary[Vector2i, bool] = _reachable_cells(_player())
 	var shelf: Node3D = _level.get_node("Stations/BoxShelf")
-	var plates: Array[Node] = shelf.find_children("Size*_*", "MeshInstance3D", true, false)
-	assert_gt(plates.size(), 0, "placas del rack")
+	var plates: Array[Node] = shelf.find_children("SizePanel_*", "MeshInstance3D", true, false)
+	assert_gt(plates.size(), 0, "placas lisas del rack")
 	for node: Node in plates:
 		var plate: MeshInstance3D = node as MeshInstance3D
 		var bounds: AABB = plate.global_transform * plate.get_aabb()
@@ -819,15 +860,19 @@ func test_ac4_player_reaches_and_interacts_with_every_station_and_slot() -> void
 	assert_true(actor.interact_pressed())
 	assert_true(kitchen2.is_cooking())
 
-	# Cajas: coge cada una y la entrega (vacía) en cada puesto.
+	# Cajas: coge cada una y comprueba que la zona de entrega de cada puesto se puede pisar (D26: el
+	# puesto ya no es objetivo; se entrega entrando en la zona).
 	var stands: Array[OrderStand] = _stands()
 	for i: int in STAND_COUNT:
 		var spawner: Node3D = shelf.get_node("BoxSpawner")
 		assert_true(await _reach(player, spawner, reachable), "alcanza %s" % spawner.name)
 		assert_true(actor.interact_pressed())
 		assert_true(hold.get_held_item() is Box)
-		assert_true(await _reach(player, stands[i], reachable), "alcanza %s" % stands[i].name)
-		assert_true(actor.interact_pressed(), "interactúa con %s" % stands[i].name)
+		var zone: Node3D = stands[i].get_node("%DeliveryZone")
+		assert_true(
+			reachable.has(_cell_of(_flat(zone.global_position))),
+			"la zona de %s se puede pisar" % stands[i].name
+		)
 		(hold.get_held_item() as Node).free()
 
 	# Pasaplatos: una caja en cada slot de la barra, dejada desde un lado y recogida desde el otro.

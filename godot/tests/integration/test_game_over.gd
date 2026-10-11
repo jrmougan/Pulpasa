@@ -3,6 +3,7 @@ extends GutTest
 ## PUL-030: recaudación y 0–3 estrellas del RoundResult (AC2 de partida-5-min).
 
 const MENU: PackedScene = preload("res://ui/menus/game_over.tscn")
+const TOUCH: PackedScene = preload("res://ui/touch/touch_controls.tscn")
 const CONFIG: RoundConfig = preload("res://data/config/round_config.tres")
 const STAR_FULL: Texture2D = preload("res://assets/textures/icons/star_full.svg")
 const STAR_EMPTY: Texture2D = preload("res://assets/textures/icons/star_empty.svg")
@@ -42,6 +43,7 @@ func before_each() -> void:
 
 func after_each() -> void:
 	GameState.set_paused(false)
+	GameState.set_platform(PlatformProfile.Kind.DESKTOP)
 
 
 func test_ac2_all_four_performance_bands() -> void:
@@ -146,3 +148,41 @@ func _tap(action: String) -> void:
 	event.pressed = false
 	Input.parse_input_event(event)
 	await get_tree().process_frame
+
+
+# --- PUL-131 (revisión de PUL-128): el game over apaga los controles táctiles ---------------
+
+
+func _add_touch_controls() -> TouchControls:
+	GameState.set_platform(PlatformProfile.Kind.MOBILE)
+	GameState.mode = GameMode.Mode.SINGLE
+	var touch: TouchControls = TOUCH.instantiate()
+	add_child_autofree(touch)
+	return touch
+
+
+func test_pul131_game_over_hides_and_disables_the_touch_controls() -> void:
+	var touch: TouchControls = _add_touch_controls()
+	touch.set_last_source(TouchInput.Source.TOUCH)
+	assert_true(touch.visible, "visibles antes de acabar (MOBILE, Individual, táctil)")
+	EventBus.round_finished.emit(_result(5))
+	assert_true(_menu.visible)
+	assert_false(touch.visible, "ocultos con el game over")
+	assert_eq(touch.process_mode, Node.PROCESS_MODE_DISABLED, "y sin recibir input")
+	assert_false(Input.is_action_pressed(&"p1_interact"), "nada queda pulsado")
+
+
+func test_pul131_new_round_restores_the_touch_controls() -> void:
+	var touch: TouchControls = _add_touch_controls()
+	touch.set_last_source(TouchInput.Source.TOUCH)
+	EventBus.round_finished.emit(_result(5))
+	assert_false(touch.visible)
+	EventBus.round_started.emit(120.0)
+	assert_false(_menu.visible)
+	assert_eq(touch.process_mode, Node.PROCESS_MODE_INHERIT)
+	assert_true(touch.visible, "vuelven con la ronda")
+
+
+func test_pul131_game_over_without_touch_controls_is_fine() -> void:
+	EventBus.round_finished.emit(_result(5))
+	assert_true(_menu.visible)
