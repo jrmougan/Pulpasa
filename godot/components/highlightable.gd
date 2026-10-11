@@ -13,14 +13,14 @@ extends Node
 
 const DEFAULT_MATERIAL: Material = preload("res://shaders/highlight_outline.tres")
 
-## Ámbar (D26.6) del contorno BLOQUEADO si no se asigna `blocked_material`.
-const BLOCKED_COLOR: Color = Color("FFB020")
+## Contorno ámbar (D26.6) del objetivo BLOQUEADO, con su pasada sin profundidad.
+const DEFAULT_BLOCKED_MATERIAL: Material = preload("res://shaders/highlight_outline_blocked.tres")
 
 ## Material del contorno.
 @export var material: Material = DEFAULT_MATERIAL
-## Material del contorno de un objetivo BLOQUEADO (D26.6). Sin asignar, se deriva de `material`
-## con el color ámbar.
-@export var blocked_material: Material
+## Material del contorno de un objetivo BLOQUEADO (D26.6): `.tres` ámbar propio, sin copias.
+## No sigue a un `material` personalizado: quien cambie `material` debe asignar también este.
+@export var blocked_material: Material = DEFAULT_BLOCKED_MATERIAL
 ## Raíz de las mallas a contornear; por defecto, el padre.
 @export var root: Node3D
 ## Visual opcional que solo se ve resaltado (retícula del slot).
@@ -38,8 +38,6 @@ func _ready() -> void:
 		root = get_parent() as Node3D
 	if reticle != null:
 		reticle.visible = false
-	if blocked_material == null:
-		blocked_material = _derive_blocked_material()
 
 
 func show() -> void:
@@ -102,26 +100,13 @@ func is_highlighted() -> bool:
 
 
 func _current_material() -> Material:
-	if _blocked:
-		if blocked_material == null:
-			blocked_material = _derive_blocked_material()
+	if _blocked and blocked_material != null:
 		return blocked_material
 	return material
 
 
 func _is_ours(overlay: Material) -> bool:
 	return overlay != null and (overlay == material or overlay == blocked_material)
-
-
-## Copia de `material` con el color ámbar; si no es un `ShaderMaterial` con `outline_color`,
-## el propio `material`.
-func _derive_blocked_material() -> Material:
-	var shader_material: ShaderMaterial = material as ShaderMaterial
-	if shader_material == null:
-		return material
-	var amber: ShaderMaterial = shader_material.duplicate() as ShaderMaterial
-	amber.set_shader_parameter(&"outline_color", BLOCKED_COLOR)
-	return amber
 
 
 func _collect(node: Node, is_root: bool) -> void:
