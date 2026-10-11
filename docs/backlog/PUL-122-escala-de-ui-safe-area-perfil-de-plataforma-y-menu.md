@@ -1,7 +1,7 @@
 ---
 id: PUL-122
 title: Escala de UI, safe area, perfil de plataforma y menús móviles
-status: in_progress
+status: done
 milestone: M3e
 role: ui-engineer
 deps: [PUL-119, PUL-120]
