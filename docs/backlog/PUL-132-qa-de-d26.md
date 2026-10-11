@@ -1,7 +1,7 @@
 ---
 id: PUL-132
 title: QA de D26
-status: in_progress
+status: done
 milestone: M3e
 role: qa-tester
 deps: [PUL-131]
