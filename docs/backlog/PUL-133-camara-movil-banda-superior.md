@@ -1,7 +1,7 @@
 ---
 id: PUL-133
 title: Cámara móvil que respeta la banda superior; aro inactivo fino en móvil; game over sin cajas/minuto
-status: review
+status: done
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-132]
