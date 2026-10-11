@@ -59,6 +59,7 @@ func test_ac1_full_hand_does_nothing() -> void:
 	assert_eq(_level.get_child_count(), before, "no aparece ningún pulpo")
 
 
+## D26: la nevera no es objetivo con la mano llena y la pulsación cae al suelo (A8).
 func test_ac1_full_hand_press_via_detector_never_spawns() -> void:
 	var box: Box = BOX_SCENE.instantiate()
 	_level.add_child(box)
@@ -66,7 +67,8 @@ func test_ac1_full_hand_press_via_detector_never_spawns() -> void:
 	await wait_physics_frames(3)
 	assert_ne(_actor.detector.get_target(), _storage, "la nevera no es objetivo")
 	var before: int = get_tree().get_nodes_in_group(&"pickable").size()
-	_actor.interact_pressed()
+	assert_true(_actor.interact_pressed(), "responde: suelta al suelo")
+	assert_null(_hold.get_held_item(), "la caja cae al suelo")
 	assert_eq(get_tree().get_nodes_in_group(&"pickable").size(), before, "no aparece ningún pulpo")
 
 

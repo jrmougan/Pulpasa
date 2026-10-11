@@ -35,7 +35,7 @@ ADR-006 §4.1, `signals.md`, `scene-tree.md` §9). Partición original y notas d
 - [x] AC3 (diseño AC14) Con k = 1…5 cortes se ve `k/6`, numeral >= 36 px y barra >= 8 px a 1080; k = 0 no se ve; en k = 6 muestra `6/6` 0,5 s, suena `box_full` 1 vez y se oculta -> `test_box_counter.gd` + captura
 - [x] AC4 (diseño AC15) Anillo >= 64 px y trazo >= 8 px a 1080; listo verde con ✓ y `cook_ready` 1 vez -> `test_cook_ring.gd` + captura
 - [x] AC5 (diseño AC16) Aviso a los 7,0 s (±0,1): parpadeo 3 Hz (±0,5) y `burn_warning` repetido cada 1 s hasta 3 veces; retirar a los 8 s lo para; a los 10 s rojo fijo -> `test_burn.gd`
-- [x] AC6 (con una salvedad: ver Evidence, `test_cachelos.gd` de PUL-126) Flujos (`test_kitchen_flow`, `test_m1_flow`, `test_m2_flow`, `test_parity_smoke`, `test_delivery_e2e`, `test_level_01*`) y `test_audio_feedback` en verde con el `can_interact` honesto
+- [x] AC6 Flujos (`test_kitchen_flow`, `test_m1_flow`, `test_m2_flow`, `test_parity_smoke`, `test_delivery_e2e`, `test_level_01*`) y `test_audio_feedback` en verde con el `can_interact` honesto
 
 ## Plan
 Ficheros (todos en `owns`/`touches_scenes`):
@@ -49,14 +49,9 @@ Senales: ninguna nueva (el contrato no anade; `burn_warned`, `cooking_finished`,
 Tests (AC -> fichero): AC1 `test_kitchen_hints.gd` (lee `tests/fixtures/action_matrix.csv`, escenas reales: spawner, loose_item, pass_slot, trash, box, pot; `hint == efecto de interact`); AC2 `test_box_cut_hold.gd`; AC3 `test_box_counter.gd`; AC4 `test_cook_ring.gd`; AC5 `test_burn.gd`; AC6 tests de flujo y `test_audio_feedback` existentes, ajustados a `can_interact` honesto y a `cook_ready`.
 
 ## Evidence
-`bash tools/verify.sh`: gdformat, gdlint, import y smoke en verde; GUT **998 tests, 997 pasan, 1 falla**
-(base 957 -> +41 nuevos). El unico rojo es `tests/integration/test_cachelos.gd:64`
-(`test_ac2_cachelo_cooked_no_longer_seasons_a_full_box`, **fichero de PUL-126**, fuera de mis `owns`):
-afirma `box.interact(_actor)` verdadero con cachelos cocidos y caja llena, y desde el contrato
-§11.2 eso es `NONE` (la caja ya no es objetivo; `interact` devuelve `false`, no consume la pulsacion).
-Arreglo de una linea para PUL-126 o el producer: `assert_false(box.can_interact(_actor))` y
-`assert_false(box.interact(_actor))` en lugar de `assert_true(box.interact(_actor))`.
-`python tools/check_owns.py jrmougan/pul-125 jrmougan/agentica-migracion-godot-alpha` limpio.
+`bash tools/verify.sh` completo en verde (gdformat, gdlint, import, GUT, smoke) y
+`check_owns` limpio. `test_cachelos.gd:64` se ajusto al `can_interact` honesto (owns ampliado por el coordinador).
+Cifras finales de GUT: ver `## Evidence` > Ultima ejecucion al final de esta seccion.
 
 Tests nuevos (41): `test_kitchen_hints.gd` 13 (AC1; lee `action_matrix.csv` y contrasta hint, `can_interact` y
 efecto de `interact` en escenas reales: spawner, pulpo suelto, pasaplatos vacio, cubo, caja y olla;
@@ -81,7 +76,8 @@ Desviaciones / decisiones:
 - `Box.COUNTER_FULL_TIME` (0,5 s del `6/6`) es una constante de la caja, no un `.tres`: `BoxData` queda fuera de owns.
 - `WorldProgressBar` gana `bar_size`, `segments`, `set_segments`, `get_thickness_px` y `get_segment_width_px`; `pixel_size` 0,006 y 120x22 (antes 0,003 y 160x22) para el grosor >= 8 px.
 - Los dos anillos de la olla van en fila (separacion 1,05 diametros), no apilados: apilados a 0,35 m se tapaban.
+- Deuda para PUL-131: `camera_size` 12,74 fijo en `world_progress_ring.gd` (export) y `cooking_station.gd` (separacion de anillos): leer `CameraProfile` (ya en la base con PUL-130); `Box.COUNTER_FULL_TIME` a `BoxData`; `unique_id` de los nodos nuevos de `world_progress_ring.tscn` y de `CutCounter`/`CutBar`/`CutNumeral` en `box.tscn`.
 - Cue `cook_done` sigue en `feedback_map.tres` (lo retira PUL-131); la olla ya reproduce `cook_ready`.
 - Las capturas no usan el MCP `run_script` (no disponible en esta sesion): las hace `capture_pul125.gd` con `godot -s` y ventana real.
 
-*Actualización:* tras ampliar owns, `test_cachelos.gd:64` usa `assert_false(can_interact)` y `assert_false(interact)`; merge de la rama de integración hecho; `verify.sh` en verde (1051 tests, 0 fallos).
+Ultima ejecucion (tras merge de la integracion con PUL-127/128/130): `verify.sh` OK, GUT 1244 tests, 1244 pasan.

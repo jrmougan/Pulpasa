@@ -13,6 +13,20 @@ const KITCHEN_SCENE: PackedScene = preload("res://entities/stations/kitchen.tscn
 const SLOT_SCENE: PackedScene = preload("res://entities/stations/slot.tscn")
 const TRASH_SCENE: PackedScene = preload("res://entities/stations/trash_bin.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
+const SPAWNER_SCENES: Dictionary[String, PackedScene] = {
+	"A1": preload("res://entities/stations/octopus_storage.tscn"),
+	"A2": preload("res://entities/stations/cachelos_storage.tscn"),
+	"A3": preload("res://entities/stations/box_shelf.tscn"),
+}
+## Filas del fixture por receptor (A1–A3 = 3 × 10 en `spawner`).
+const EXPECTED_ROWS: Dictionary[String, int] = {
+	"spawner": 30,
+	"loose_item": 10,
+	"pass_slot": 10,
+	"trash": 10,
+	"box": 30,
+	"pot": 60,
+}
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
 const OCTOPUS: IngredientData = preload("res://data/ingredients/octopus.tres")
@@ -31,6 +45,7 @@ var _level: Node3D
 var _hold: HoldComponent
 var _actor: InteractionComponent
 var _kitchen: CookingStation
+var _use_octopus: bool = true
 
 
 func before_all() -> void:
@@ -41,6 +56,9 @@ func before_all() -> void:
 	var header: PackedStringArray = file.get_csv_line()
 	while not file.eof_reached():
 		var cells: PackedStringArray = file.get_csv_line()
+		if cells.size() == 1 and cells[0] == "":
+			continue
+		assert_eq(cells.size(), header.size(), "fila mal formada: %s" % ",".join(cells))
 		if cells.size() != header.size():
 			continue
 		var row: Dictionary = {}
@@ -176,11 +194,13 @@ func _build_receiver(row: Dictionary) -> Node:
 	var node: Node = null
 	match String(row["receiver"]):
 		"spawner":
-			var spawner: ItemSpawner = ItemSpawner.new()
-			spawner.scene = OCTOPUS_SCENE
-			node = spawner
+			node = SPAWNER_SCENES[String(row["id"]).get_slice("-", 0)].instantiate()
+			_level.add_child(node)
+			if not node is ItemSpawner:
+				node = node.find_children("*", "ItemSpawner", true, false)[0]
 		"loose_item":
-			node = OCTOPUS_SCENE.instantiate()
+			# A4 se comprueba con pulpo y con cachelos sueltos (misma regla).
+			node = OCTOPUS_SCENE.instantiate() if _use_octopus else CACHELOS_SCENE.instantiate()
 		"pass_slot":
 			node = SLOT_SCENE.instantiate()
 		"trash":
@@ -243,11 +263,17 @@ func _check_receiver(receiver: String) -> void:
 	var discrepancies: Array[String] = []
 	var checked: int = 0
 	for row: Dictionary in _rows:
-		if row["receiver"] != receiver or row["reachable"] != "1":
+		if row["receiver"] != receiver:
 			continue
+		assert_eq(row["reachable"], "1", "fila %s: A–C siempre alcanzables" % row["id"])
+		assert_true(STATES.has(row["state"]), "fila %s bien formada" % row["id"])
 		checked += 1
+		_use_octopus = true
 		discrepancies.append_array(_check_row(row))
-	assert_gt(checked, 0, "filas de %s" % receiver)
+		if receiver == "loose_item":
+			_use_octopus = false
+			discrepancies.append_array(_check_row(row))
+	assert_eq(checked, EXPECTED_ROWS[receiver], "filas de %s" % receiver)
 	assert_eq(discrepancies, [] as Array[String], receiver)
 
 

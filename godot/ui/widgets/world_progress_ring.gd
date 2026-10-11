@@ -24,6 +24,9 @@ const MARK_WARNING: Texture2D = preload(
 	"res://assets/textures/ui/actions/icon_mark_burn_warning.svg"
 )
 
+## Textura del anillo ya generada, por grosor (px del `SubViewport`): las plazas la comparten.
+static var _texture_cache: Dictionary[float, Texture2D] = {}
+
 ## Diámetro y trazo del anillo en px de pantalla a `screen_height` (diseño: >= 64 y >= 8).
 @export var diameter_px: float = 64.0
 @export var thickness_px: float = 8.0
@@ -145,6 +148,8 @@ func _refresh() -> void:
 
 ## Anillo blanco con borde suave, `thickness` px de grosor, a todo el `SubViewport`.
 func _make_ring_texture(thickness: float) -> Texture2D:
+	if _texture_cache.has(thickness):
+		return _texture_cache[thickness]
 	var image: Image = Image.create_empty(TEXTURE_PX, TEXTURE_PX, false, Image.FORMAT_RGBA8)
 	var center: float = (TEXTURE_PX - 1) / 2.0
 	var outer: float = float(TEXTURE_PX - 2 * MARGIN_PX) / 2.0
@@ -155,4 +160,6 @@ func _make_ring_texture(thickness: float) -> Texture2D:
 			var alpha: float = clampf(outer - distance + 0.5, 0.0, 1.0)
 			alpha *= clampf(distance - inner + 0.5, 0.0, 1.0)
 			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, alpha))
-	return ImageTexture.create_from_image(image)
+	var made: ImageTexture = ImageTexture.create_from_image(image)
+	_texture_cache[thickness] = made
+	return made
