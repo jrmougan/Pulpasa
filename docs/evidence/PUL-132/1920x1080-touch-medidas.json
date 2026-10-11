@@ -1,0 +1,311 @@
+{
+	"active_marker_px": 28.0,
+	"active_marker_px_at_1080": 28.0,
+	"bowl": {
+		"meter_visible": true,
+		"notch_px": 24.0,
+		"notch_px_at_1080": 24.0,
+		"stock": 2
+	},
+	"box_counter": {
+		"bar_thickness_px": 16.7,
+		"bar_thickness_px_at_1080": 16.7,
+		"numeral_px": 68.9,
+		"numeral_px_at_1080": 68.9,
+		"segment_width_px": 27.8,
+		"segment_width_px_at_1080": 27.8,
+		"text": "3/6",
+		"visible": true
+	},
+	"camera_size_m": 7.0,
+	"character_px": 194.5,
+	"character_px_at_1080": 194.5,
+	"cook_rings": [
+		{
+			"diameter_px": 64.0,
+			"diameter_px_at_1080": 64.0,
+			"screen_px": [
+				993.6,
+				-65.3
+			],
+			"state": 3,
+			"thickness_px": 8.0,
+			"thickness_px_at_1080": 8.0,
+			"under_top_band": true
+		},
+		{
+			"diameter_px": 64.0,
+			"diameter_px_at_1080": 64.0,
+			"screen_px": [
+				926.4,
+				-65.3
+			],
+			"state": 0,
+			"thickness_px": 8.0,
+			"thickness_px_at_1080": 8.0,
+			"under_top_band": true
+		}
+	],
+	"game_over_buttons": [
+		{
+			"height_px": 120.0,
+			"height_px_at_1080": 120.0,
+			"text": "Reintentar",
+			"y_px": 634.5
+		},
+		{
+			"height_px": 120.0,
+			"height_px_at_1080": 120.0,
+			"text": "Menú",
+			"y_px": 778.5
+		}
+	],
+	"game_over_touch_controls_visible": false,
+	"inactive_marker_visible": false,
+	"menu_buttons": [
+		{
+			"height_px": 120.0,
+			"height_px_at_1080": 120.0,
+			"text": "Individual",
+			"y_px": 673.5
+		}
+	],
+	"min_text_game_over": {
+		"count": 7,
+		"min_px": 36.0,
+		"min_px_at_1080": 36.0,
+		"node": "/root/Level01/UI/GameOver/MenuPanel/SafeArea/Center/Card/Content/Brand",
+		"text": "FRANQUICIA GALEGA DE POLBO"
+	},
+	"min_text_menu_principal": {
+		"count": 2,
+		"min_px": 36.0,
+		"min_px_at_1080": 36.0,
+		"node": "/root/MainMenu/SafeArea/Center/Column/Tagline",
+		"text": "Pulpo á feira · Romerías gallegas"
+	},
+	"min_text_partida": {
+		"count": 18,
+		"min_px": 36.0,
+		"min_px_at_1080": 36.0,
+		"node": "/root/Level01/UI/HUD/Background/Stats/Revenue/RevenueWell/Revenue",
+		"text": "0 €"
+	},
+	"min_text_pausa": {
+		"count": 6,
+		"min_px": 36.0,
+		"min_px_at_1080": 36.0,
+		"node": "/root/Level01/UI/PauseMenu/MenuPanel/SafeArea/Center/Card/Content/Brand",
+		"text": "FRANQUICIA GALEGA DE POLBO"
+	},
+	"pause_buttons": [
+		{
+			"height_px": 120.0,
+			"height_px_at_1080": 120.0,
+			"text": "Reanudar",
+			"y_px": 447.0
+		},
+		{
+			"height_px": 120.0,
+			"height_px_at_1080": 120.0,
+			"text": "Reiniciar",
+			"y_px": 591.0
+		},
+		{
+			"height_px": 120.0,
+			"height_px_at_1080": 120.0,
+			"text": "Menú",
+			"y_px": 735.0
+		}
+	],
+	"platform": "MOBILE",
+	"player_ring_active": {
+		"thickness_px": 18.5,
+		"thickness_px_at_1080": 18.5,
+		"visible": true
+	},
+	"player_ring_inactive": {
+		"thickness_px": 4.6,
+		"thickness_px_at_1080": 4.6,
+		"visible": true
+	},
+	"prompt_bloqueado_caja_a_medias": {
+		"cross_px": 24.0,
+		"icon_px": 64.0,
+		"icon_px_at_1080": 64.0,
+		"icon_px_formula": 64.0,
+		"plate_px": 80.0,
+		"reason": "box_not_full",
+		"reason_icon_px": 32.0,
+		"shown": true,
+		"state": 2,
+		"verb": "season_sweet"
+	},
+	"prompt_ok_cachelos_cuenco": {
+		"icon_px": 64.0,
+		"icon_px_at_1080": 64.0,
+		"icon_px_formula": 64.0,
+		"plate_px": 80.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "cachelos"
+	},
+	"prompt_ok_coger": {
+		"icon_px": 64.0,
+		"icon_px_at_1080": 64.0,
+		"icon_px_formula": 64.0,
+		"plate_px": 80.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "pick_up"
+	},
+	"prompt_ok_cortar": {
+		"icon_px": 64.0,
+		"icon_px_at_1080": 64.0,
+		"icon_px_formula": 64.0,
+		"plate_px": 80.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "cut"
+	},
+	"prompt_zona": {
+		"icon_px": 64.0,
+		"icon_px_at_1080": 64.0,
+		"icon_px_formula": 64.0,
+		"plate_px": 80.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "drop"
+	},
+	"px_per_meter": 121.6,
+	"px_per_meter_at_1080": 121.6,
+	"stretch_scale": 1.5,
+	"tag": "1920x1080-touch",
+	"top_band": {
+		"band_fraction": 0.161,
+		"band_height_px": 174.0,
+		"button_zone_px": [
+			1530.0,
+			600.0,
+			390.0,
+			480.0
+		],
+		"hud_rect_px": [
+			48.0,
+			24.0,
+			240.0,
+			150.0
+		],
+		"overlaps": [],
+		"stick_zone_px": [
+			0.0,
+			200.0,
+			960.0,
+			880.0
+		],
+		"ticket_gap_px": 15.0,
+		"ticket_width_px": 342.0,
+		"tickets_px": [
+			[
+				312.0,
+				24.0,
+				342.0,
+				150.0
+			],
+			[
+				669.0,
+				24.0,
+				342.0,
+				150.0
+			],
+			[
+				1026.0,
+				24.0,
+				342.0,
+				150.0
+			],
+			[
+				1383.0,
+				24.0,
+				342.0,
+				150.0
+			]
+		]
+	},
+	"touch_controls": {
+		"action": {
+			"center_px": [
+				1782.0,
+				942.0
+			],
+			"diameter_px": 180.0,
+			"hit_px": 204.0,
+			"rect_px": [
+				1692.0,
+				852.0,
+				180.0,
+				180.0
+			]
+		},
+		"action_margin_px": {
+			"bottom": 48.0,
+			"right": 48.0
+		},
+		"pause": {
+			"center_px": [
+				1812.0,
+				108.0
+			],
+			"diameter_px": 120.0,
+			"rect_px": [
+				1752.0,
+				48.0,
+				120.0,
+				120.0
+			]
+		},
+		"safe_rect_px": [
+			0.0,
+			0.0,
+			1920.0,
+			1080.0
+		],
+		"stick_base_px": 300.0,
+		"stick_radius_px": 150.0,
+		"stick_zone_px": [
+			0.0,
+			200.0,
+			960.0,
+			880.0
+		],
+		"switch": {
+			"center_px": [
+				1782.0,
+				768.0
+			],
+			"diameter_px": 120.0,
+			"rect_px": [
+				1722.0,
+				708.0,
+				120.0,
+				120.0
+			]
+		},
+		"switch_to_action_gap_px": 24.0,
+		"visible": true
+	},
+	"user_args": [
+		"--touch",
+		"--out=C:/Users/jesus/.herdr/worktrees/Pulpasa/pul-132/docs/evidence/PUL-132",
+		"--tag=1920x1080-touch"
+	],
+	"window_px": [
+		1920,
+		1080
+	],
+	"zone_lit": true
+}
