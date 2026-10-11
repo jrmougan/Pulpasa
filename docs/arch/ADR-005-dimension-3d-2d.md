@@ -122,24 +122,24 @@ renderizador Compatibility.
 
 *Propuesta, pendiente del gate humano.* D26.8 lleva el juego a teléfonos (solo Individual,
 apaisado). El estudio de PUL-119 midió que sin `window/stretch` la UI no escala (salvo HUD y tickets
-con `UiScale` casero), no hay safe area y la cámara fija da ~85 px/m a 1080 de alto: en un 6" el
-texto de receta mide ~1,7 mm. Criterios medibles en `docs/design/features/controles-tactiles.md`
-(PUL-119). La cámara ortográfica fija de D14 **se mantiene en PC**; el móvil gana un perfil propio.
+con `UiScale` casero), no hay safe area y la cámara fija da 66,8 px/m sobre el personaje a 1080 de
+alto. Especificación medible en `docs/design/features/controles-tactiles.md` (PUL-119). La cámara
+ortográfica fija de D14 **se mantiene en PC**; el móvil gana un perfil propio.
 
 ### E1. Perfil de plataforma (común)
 - `core/platform_profile.gd` (`class_name PlatformProfile extends RefCounted`, puro): `enum Kind {
-  DESKTOP, MOBILE }`; `static func detect(has_mobile_feature: bool, has_web_feature: bool,
-  touch_available: bool, forced: String) -> Kind`. Regla, en orden: `forced` = `"mobile"` o
-  `"desktop"` gana; `has_mobile_feature` (`OS.has_feature("mobile")`) → `MOBILE`; web con pantalla
-  táctil (`OS.has_feature("web")` y `DisplayServer.is_touchscreen_available()`) → `MOBILE`; si no,
-  `DESKTOP`. `forced` sale del argumento de usuario `--profile=mobile|desktop`
-  (`OS.get_cmdline_user_args()`), para probar el perfil móvil en PC y con el MCP.
-- `GameState` (adaptador, ADR-002) gana `var platform: PlatformProfile.Kind` (calculado en `_ready`) y
-  `set_platform(kind: PlatformProfile.Kind)` (tests); al fijarlo aplica el `UiProfile` del perfil (E3).
-  No hay señal: el perfil no cambia durante la sesión.
-- Quién lo lee: el menú principal (oculta «Local 2P» en `MOBILE`, ADR-004 §6.5), `CameraRig` (E5) y
-  `GameState` (escala y pausa al perder el foco). Los controles táctiles **no** dependen del perfil,
-  sino de que haya pantalla táctil (ADR-004 §6.3).
+  DESKTOP, MOBILE }` (MOBILE = «perfil táctil» del diseño); `static func detect(features:
+  PackedStringArray, user_args: PackedStringArray) -> Kind`. Regla, en orden: un argumento de usuario
+  `--touch` o `--profile=mobile` → `MOBILE`; `--profile=desktop` → `DESKTOP`; alguna de las features
+  `mobile`, `web_android` o `web_ios` → `MOBILE`; si no, `DESKTOP`. El adaptador le pasa
+  `OS.get_cmdline_user_args()` y las features comprobadas con `OS.has_feature()`. `--touch` (nombre del
+  diseño) y `--profile=mobile` son equivalentes; se usan para verificar en PC y con el MCP
+  (`godot -- --touch`).
+- `GameState` (adaptador, ADR-002 Enmienda 2) gana `var platform: PlatformProfile.Kind` (calculado en
+  `_ready`), `var ui_profile: UiProfile` (el del perfil) y `set_platform(kind: PlatformProfile.Kind)`
+  (tests); al fijarlo aplica el `UiProfile` del perfil (E3). No hay señal: el perfil no cambia durante la sesión.
+- Quién lo lee: el menú principal (ADR-004 §6.5), `TouchControls` (ADR-004 §6.3), `CameraRig` (E5),
+  HUD y tickets (disposición, E4) y `GameState` (escala, pausa al perder el foco, pantalla encendida).
 
 ### E2. Escalado del lienzo (`project.godot`)
 ```
@@ -151,89 +151,100 @@ window/stretch/aspect="expand"
 window/handheld/orientation=4            (sensor_landscape: apaisado, gira con el sensor)
 ```
 - La UI se diseña en unidades de 1280 × 720 y Godot la escala por `min(ancho / 1280, alto / 720)`;
-  `expand` da el espacio extra de las pantallas más anchas (19,5:9) o más altas al lienzo. El 3D se
-  sigue pintando a la resolución nativa (`canvas_items` no la baja).
+  `expand` da el espacio extra de las pantallas anchas (de 16:9 a 2,4:1). El 3D se sigue pintando a la
+  resolución nativa. En escritorio el resultado coincide con el `UiScale` actual (alto / 720) hasta
+  1440 de alto: HUD y tickets conservan su tamaño (diseño AC21).
 - **Baja de la escala casera**: `UiScale.factor()` y las líneas de `hud.gd` y
-  `order_tickets_panel.gd` que ponen `scale` con él (con `stretch` escalarían dos veces). Su lugar lo
-  ocupan E3–E4.
-- Renderizador: sin cambios (`forward_plus`; web en `gl_compatibility`). El renderizador móvil y el
-  export Android quedan para una ficha futura con toolchain y dispositivo (`export.md`).
+  `order_tickets_panel.gd` que ponen `scale` con él (con `stretch` escalarían dos veces).
+- Renderizador: sin cambios (`forward_plus`; web en `gl_compatibility`). Renderizador móvil y export
+  Android: ficha futura (`export.md`).
 
 ### E3. Escala por perfil y mínimos en datos (común)
-- `resources/ui_profile.gd` (`class_name UiProfile extends Resource`): `@export var content_scale:
-  float = 1.0` (se aplica a `get_tree().root.content_scale_factor`, multiplica el estiramiento de E2)
-  y `@export var min_text_px_1080: float` (mínimo de altura de texto en píxeles reales a 1080 de
-  alto). Instancias `data/config/ui_profile_desktop.tres` (`content_scale` 1,0) y
-  `data/config/ui_profile_mobile.tres` (`min_text_px_1080` **36**, D26.8; `content_scale` lo ajusta su
-  ficha junto con los tamaños del tema).
-- Invariante (test sobre el tema y las escenas de `ui/` con el perfil móvil): todo `Label`/`Button`
-  visible en partida cumple `font_size × (1080 / 720) × content_scale ≥ min_text_px_1080`. Para no
-  inflar el `content_scale`, la ficha sube los tamaños mínimos del tema (`ui/theme/default_theme.tres`,
-  hoy 13–34 px).
-- Medidas en píxeles reales a cualquier resolución con `UiScale` (`ui/widgets/ui_scale.gd`, común,
-  puro; sustituye a `factor()`):
-  - `static func dp_to_units(dp: float, px_per_dp_at_1080: float, canvas_height: float) -> float` =
-    `dp × px_per_dp_at_1080 × canvas_height / 1080`: unidades de lienzo que miden `dp` dp con 1 dp =
-    `px_per_dp_at_1080` px a 1080 de alto (ADR-004 §6.2), con cualquier estiramiento y
-    `content_scale` (`canvas_height` = `get_viewport().get_visible_rect().size.y`).
+- `resources/ui_profile.gd` (`class_name UiProfile extends Resource`; el diseño lo llama `UiScaleData`).
+  Todas las medidas en **px de pantalla a 1080 de alto**:
+  `content_scale: float = 1.0` (se aplica a `get_tree().root.content_scale_factor`, multiplica el
+  estiramiento de E2), `text_min_px: float` (36 en móvil), `menu_button_min_px: float` (120),
+  `menu_button_gap_px: float` (24), `ticket_width_min: float` (330), `ticket_width_max: float` (380),
+  `ticket_height: float` (150), `ticket_gap: float` (16), `hud_block_width: float` (240),
+  `top_band_max_px: float` (200), `ticket_icon_px: float` (48), `patience_bar_px: float` (12) y las
+  zonas reservadas `stick_zone_fraction: float` (0,5), `stick_zone_top_px: float` (200),
+  `button_zone_width_px: float` (390), `button_zone_top_px: float` (600).
+  Instancias `data/config/ui_profile_desktop.tres` (`content_scale` 1,0; mínimos actuales) y
+  `data/config/ui_profile_mobile.tres` (valores del diseño). El rango `[0,67, 1,5]` del diseño se cumple
+  con el estiramiento de E2 entre 720 y 1080 de alto.
+- Invariante (test sobre el tema y las escenas de `ui/` con el perfil móvil, diseño AC14): todo
+  `Label`/`RichTextLabel`/`Button` visible mide en pantalla ≥ `text_min_px × alto / 1080` (36 px a
+  1080, 24 px a 720). Para no inflar `content_scale`, la ficha sube los tamaños mínimos del tema.
+- Conversión en `UiScale` (`ui/widgets/ui_scale.gd`, común, puro; sustituye a `factor()`):
   - `static func px_to_units(px_at_1080: float, canvas_height: float) -> float` = `px_at_1080 ×
-    canvas_height / 1080` (para comprobar mínimos «N px a 1080»).
+    canvas_height / 1080` (unidades de lienzo que miden `px_at_1080` px a 1080 de alto en cualquier
+    resolución, estiramiento y `content_scale`; `canvas_height` =
+    `get_viewport().get_visible_rect().size.y`).
+  - `static func dp_to_units(dp: float, px_per_dp_at_1080: float, canvas_height: float) -> float` =
+    `px_to_units(dp × px_per_dp_at_1080, canvas_height)` (ADR-004 §6.2).
   - `static func safe_margins(window_size: Vector2, safe_rect: Rect2, canvas_size: Vector2) ->
-    Vector4` (izquierda, arriba, derecha, abajo, en unidades de lienzo): márgenes de la zona segura
-    convertidos con `canvas_size / window_size`; `Vector4.ZERO` si `safe_rect` cubre la ventana o
-    está vacío.
+    Vector4` (izquierda, arriba, derecha, abajo, en unidades de lienzo); `Vector4.ZERO` si `safe_rect`
+    cubre la ventana o está vacío.
 
-### E4. Safe area (común)
-- `ui/widgets/safe_area_margin.gd` (`class_name SafeAreaMargin extends MarginContainer`): pone sus
-  márgenes con `UiScale.safe_margins(DisplayServer.window_get_size(),
-  DisplayServer.get_display_safe_area(), get_viewport().get_visible_rect().size)` en `_ready` y en
-  `get_viewport().size_changed`. Inyección para tests: `set_safe_rect(rect: Rect2)`.
-- Lo usan como contenedor raíz de su contenido `hud.tscn`, `order_tickets_panel.tscn`,
-  `touch_controls.tscn`, `pause_menu.tscn` y `game_over.tscn`.
-- Disposición en `MOBILE` (detalle y ACs en la feature): HUD fuera de la zona del stick (mitad
-  izquierda, mitad inferior), tickets en la banda superior sin recortar con 4 comandas, botones
-  táctiles a la derecha y nada interactivo bajo la muesca.
+### E4. Safe area y zonas reservadas (común)
+- `ui/widgets/safe_area_margin.gd` (`class_name SafeAreaMargin extends MarginContainer`): márgenes con
+  `UiScale.safe_margins(DisplayServer.window_get_size(), DisplayServer.get_display_safe_area(),
+  get_viewport().get_visible_rect().size)` en `_ready` y en `get_viewport().size_changed`. Inyección
+  para tests: `set_safe_rect(rect: Rect2)` (el diseño simula 132 / 0 / 132 / 63 a 2340×1080).
+- Lo usan como contenedor raíz `hud.tscn`, `order_tickets_panel.tscn`, `touch_controls.tscn`,
+  `pause_menu.tscn`, `game_over.tscn` y `main_menu.tscn`.
+- Disposición en `MOBILE` (`controles-tactiles.md`, «Maquetación de la banda superior»): HUD y 4
+  tickets en una banda superior ≤ `top_band_max_px`; **zonas reservadas** que ni HUD ni tickets tocan:
+  stick (x < 50 % del ancho, y ≥ 200 px) y botones (x ≥ ancho − 390 px, y ≥ 600 px), en `UiProfile`. En `DESKTOP` la
+  disposición actual no cambia.
 
 ### E5. Cámara: perfiles por datos (específica + núcleo común)
 - `entities/camera/camera_rig.tscn` gana script `entities/camera/camera_rig.gd` (`class_name CameraRig
-  extends Camera3D`). La rotación y la posición de reposo siguen siendo las de la escena (D14: vista
-  3/4 a ~38°); el nivel solo sobrescribe la transformación y la referencia a los personajes.
+  extends Camera3D`). Rotación y posición de reposo siguen siendo las de la escena (D14: vista 3/4).
   - `@export var desktop_profile: CameraProfile = data/config/camera_desktop.tres`
   - `@export var mobile_profile: CameraProfile = data/config/camera_mobile.tres`
   - `@export var characters: Array[Node3D]` (en `level_01`: `[Player1, Player2]`, índice =
     `character_index − 1`; override de referencia permitido, ADR-003 §2).
   - En `_ready`: perfil = `mobile_profile` si `GameState.platform == MOBILE`, si no `desktop_profile`;
     `set_profile(profile: CameraProfile)` para tests. Aplica `size = profile.ortho_size`.
-  - Con `profile.follow`: sigue al personaje activo de J1. Lo sabe por
-    `EventBus.character_switched(player_index, character_index)` con `player_index == 1` (empieza en
-    `characters[0]`). En `_process` (suavidad visual; el personaje se mueve en física): foco nuevo =
-    `CameraFollow.step(foco, suelo(personaje), profile.follow_smoothing, delta, profile.bounds_min,
-    profile.bounds_max)` y `position = posición_de_reposo + Vector3(foco.x − foco_reposo.x, 0, foco.y −
-    foco_reposo.y)`. `foco_reposo` = punto del suelo (y = 0) al que mira la cámara en reposo (corte
-    del eje de la cámara con el suelo, calculado una vez). Se congela en pausa.
-  - Sin `follow` (escritorio): no se mueve; idéntico a hoy (test: con el perfil de escritorio la
-    transformación y `size` 12,74 no cambian).
-- `resources/camera_profile.gd` (`class_name CameraProfile extends Resource`, común: `float`, `bool`,
-  `Vector2` del suelo): `@export var ortho_size: float = 12.74`, `@export var follow: bool = false`,
-  `@export var follow_smoothing: float = 0.25` (s, constante de tiempo; 0 = sin suavizado), `@export
-  var bounds_min: Vector2`, `@export var bounds_max: Vector2` (rango del foco en el suelo, `(x, z)`).
-  - `camera_desktop.tres`: `ortho_size` **12,74**, `follow` `false`.
-  - `camera_mobile.tres`: `ortho_size` **9,0** (= 1080 / 120: **120 px por metro a 1080 de alto**, D26.8),
-    `follow` `true`, `follow_smoothing` 0,25, límites que mantengan la vista dentro de la planta
-    (16 × 11 m, `scene-tree.md` §2); los fija su ficha con captura.
-- `core/camera_follow.gd` (`class_name CameraFollow extends RefCounted`, puro, plano del suelo):
-  `static func step(current: Vector2, target: Vector2, smoothing: float, delta: float, bounds_min:
-  Vector2, bounds_max: Vector2) -> Vector2` = `target` recortado a los límites y, si `smoothing > 0`,
-  `current.lerp(recortado, 1 − exp(−delta / smoothing))`; `static func px_per_meter(viewport_height_px:
-  float, ortho_size: float) -> float` = `viewport_height_px / ortho_size` (cámara ortográfica con
-  `keep_aspect` = `KEEP_HEIGHT`, el valor por defecto).
-- Test de datos: `px_per_meter(1080, camera_mobile.ortho_size) ≥ 120`.
+  - Con `profile.follow`: sigue al personaje activo de J1 (`EventBus.character_switched(1, c)`; empieza
+    en `characters[0]`). En `_process`: el foco (punto del suelo al que mira) se mueve con
+    `CameraFollow` (amortiguación crítica, `follow_time`); al cambiar de personaje, paneo ease-out de
+    `switch_pan_time` hasta el nuevo activo y después sigue (el control no espera a la cámara, D3). El
+    foco se recorta para que la vista no salga más de `camera_margin_m` de `play_area_min/max`.
+    `position = posición_de_reposo + Vector3(foco.x − foco_reposo.x, 0, foco.y − foco_reposo.y)`;
+    `foco_reposo` = corte del eje de la cámara de reposo con el suelo (y = 0). Se congela en pausa.
+  - **Flecha de borde** (diseño): nodo `%OffscreenArrow` dentro de `camera_rig.tscn` (`CanvasLayer` +
+    `TextureRect` con `icon_mark_offscreen`, como `Vignette` en `environment.tscn`): con el perfil
+    móvil, si el personaje inactivo proyecta fuera de pantalla, la flecha (`offscreen_arrow_px` 48 a
+    1080) señala su dirección dentro del safe area y a ≥ 16 px de la zona de botones (la lee de
+    `GameState.ui_profile`, sin conocer `TouchControls`). Solo lectura de posiciones.
+  - Sin `follow` (escritorio): no se mueve; idéntico a hoy.
+- `resources/camera_profile.gd` (`class_name CameraProfile extends Resource`, común; el diseño lo llama
+  `MobileCameraData`): `ortho_size: float = 12.74`, `follow: bool = false`, `follow_time: float = 0.2`,
+  `switch_pan_time: float = 0.35`, `camera_margin_m: float = 1.0`, `play_area_min: Vector2`,
+  `play_area_max: Vector2` (límite jugable en el suelo, `(x, z)`; los de `level_01` en el `.tres` del
+  perfil: hay un solo nivel; un segundo nivel los movería a un recurso del nivel con enmienda),
+  `px_per_meter_min: float = 0.0` (dato de verificación), `offscreen_arrow_px: float = 48.0`.
+  - `camera_desktop.tres`: `ortho_size` **12,74**, `follow` `false` (66,8 px/m sobre el personaje a
+    1080, sin regresión).
+  - `camera_mobile.tres`: `ortho_size` **7,0**, `follow` `true`, `follow_time` 0,2, `switch_pan_time`
+    0,35, `camera_margin_m` 1,0, `px_per_meter_min` **120**. Con la inclinación actual (factor ≈ 0,788,
+    medido: 66,8 px/m con 12,74) da ≈ 121 px/m: el personaje de 1,6 m mide ≥ 192 px a 1080.
+- **Medida** (diseño AC10): px/m = altura en pantalla de la proyección de pies y cabeza (1,6 m) del
+  personaje activo / 1,6. La mide el test con la cámara real; `ortho_size` se ajusta si no llega.
+- `core/camera_follow.gd` (`class_name CameraFollow extends RefCounted`, puro, plano del suelo): estado
+  `position: Vector2`, `velocity: Vector2`; `func follow(target: Vector2, smooth_time: float, delta:
+  float) -> Vector2` (amortiguación crítica, sin oscilación); `func pan_to(target: Vector2, duration:
+  float) -> void` y su avance en `follow` (ease-out); `static func clamp_focus(focus: Vector2,
+  half_extents: Vector2, area_min: Vector2, area_max: Vector2, margin: float) -> Vector2` (centra si la
+  vista es mayor que el área).
 
 ### E6. Qué no cambia
-D14 (3D ortográfica), capas, `InteractionScoring`, el árbol del nivel salvo `CameraRig` (script y
-`characters`) y `TouchControls` en `UI` (`scene-tree.md` §2). La capa común sigue sin tipos de mundo:
-`PlatformProfile`, `UiProfile`, `UiScale`, `SafeAreaMargin`, `CameraProfile` y `CameraFollow` usan
-solo primitivos, `Vector2`, `Vector4`, `Rect2` y `Control`.
+D14 (3D ortográfica), capas, `InteractionScoring` (salvo la histéresis, ADR-003 §11.3), el árbol del
+nivel salvo `CameraRig` (script y `characters`) y `TouchControls` en `UI` (`scene-tree.md` §2). La capa
+común sigue sin tipos de mundo: `PlatformProfile`, `UiProfile`, `UiScale`, `SafeAreaMargin`,
+`CameraProfile` y `CameraFollow` usan solo primitivos, `Vector2`, `Vector4`, `Rect2` y `Control`.
 
 **Alternativas descartadas (Enmienda D26).**
 1. *Mantener `UiScale.factor()` sin `stretch`.* Solo escalaba HUD y tickets; menús, pausa y game over
@@ -241,15 +252,17 @@ solo primitivos, `Vector2`, `Vector4`, `Rect2` y `Control`.
 2. *`stretch/mode = "viewport"`.* Pintaría el 3D a 1280 × 720 y lo estiraría: borroso en un 1080p.
 3. *Cámara en perspectiva o más alta en móvil.* Cambia la lectura de la planta (D14) y la oclusión;
    el zoom ortográfico + seguimiento conserva la vista 3/4.
-4. *Elegir el perfil solo por pantalla táctil.* Un portátil táctil acabaría con la cámara móvil; el
-   perfil es de plataforma y la visibilidad del táctil, de la última entrada (ADR-004 §6.3).
+4. *Elegir el perfil por «hay pantalla táctil».* Un portátil táctil acabaría con la cámara y los
+   controles móviles; manda la plataforma o la bandera.
 5. *Dos escenas de cámara.* El nivel tendría que elegir cuál instanciar; un `Resource` por perfil lo
    resuelve en datos.
+6. *Flecha de borde en `ui/` escuchando posiciones por el bus.* Metería posiciones de mundo en el
+   bus (D14); la cámara ya las conoce.
 
 **Consecuencias (Enmienda D26).**
 - (+) Toda la UI escala igual (menús incluidos) y se puede medir en píxeles reales por resolución.
 - (+) La cámara de PC no cambia; el móvil gana zoom sin tocar el nivel.
 - (−) Con `expand` el lienzo varía de proporción: HUD y tickets deben anclarse a bordes, no a
   posiciones fijas (lo comprueban los tests de disposición de la ficha de UI).
-- (−) Con el perfil móvil la cámara no enseña toda la cocina: el jugador depende del seguimiento y de
-  los avisos (tickets, sonidos) para lo que queda fuera.
+- (−) Con el perfil móvil la cámara no enseña toda la cocina: el jugador depende del seguimiento, la
+  flecha de borde y los avisos (tickets, sonidos) para lo que queda fuera.

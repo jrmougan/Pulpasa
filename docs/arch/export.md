@@ -46,6 +46,6 @@ a Forward+, y menos luces por objeto. Tampoco se ha medido FPS.
 ## Móvil (D26, 2026-10-11)
 D26 lleva el juego a teléfonos (solo Individual, apaisado; ADR-004 §6, ADR-005 Enmienda D26). En
 esta oleada **no hay preset Android** ni cambio de renderizador: el perfil `MOBILE` se prueba en PC
-con `--profile=mobile` (argumento de usuario, `-- --profile=mobile`) y en el build web abierto desde
+con `--touch` o `--profile=mobile` (argumento de usuario: `godot -- --touch`) y en el build web abierto desde
 un teléfono (Compatibility, ya vigente). El export Android (SDK, firma, `rendering_method.mobile`,
 permisos, orientación en el preset) queda para una ficha futura cuando haya toolchain y dispositivo.

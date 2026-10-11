@@ -54,10 +54,10 @@ posterior (M1, M2…). Todas se **declaran** en `event_bus.gd` en la fase 0, aun
 | `PhaseData` | `Resource` | `resources/phase_data.gd` | `start_fraction: float` (0–1 de `duration`), `active_slots: int`, `patience_multiplier: float` (1,0 = el `max_time` de `OrderData`; cambio del responsable al aprobar ADR-006), `orders: Array[OrderData]` (*Enmienda D25*: comandas que pueden salir en la fase; vacía = todo el catálogo). En `RoundConfig.phases`; no aparece en señales (M3, ADR-006 §6) |
 | `IngredientData.CookingState` | enum | `resources/ingredient_data.gd` | `RAW`, `COOKED`, `BURNT` (M3: `BURNT` lo pone la olla tras `burn_time`). No aparece en señales |
 | `StationSide.Side` | enum | `core/station_side.gd` | `PASS`, `OPERATOR` (ADR-003 §8.1). No aparece en ninguna señal; lo devuelve `SeasoningStation.side_of()` |
-| `ActionHint` | `RefCounted` | `core/action_hint.gd` | `verb: StringName`, `state: ActionHint.State`, `reason: StringName`, `progress: float` (−1 = sin progreso). Solo en señales **locales** (§4); en el bus viaja desglosado en primitivos (*Enmienda D26*, ADR-003 §11.1) |
+| `ActionHint` | `RefCounted` | `core/action_hint.gd` | `verb: StringName`, `state: ActionHint.State`, `reason: StringName`, `replaces: bool` (aliño que sustituye al otro), `progress: float` (−1 = sin progreso). Solo en señales **locales** (§4); en el bus viaja desglosado en primitivos (sin `replaces` ni `progress`) (*Enmienda D26*, ADR-003 §11.1) |
 | `ActionHint.State` | enum | `core/action_hint.gd` | `NONE = 0`, `OK = 1`, `BLOCKED = 2`. En el bus va como `int` con estos valores fijos |
-| `ActionVerb` | constantes `StringName` | `core/action_verb.gd` | Conjunto cerrado: `&""` (ninguno), `&"pick_up"`, `&"put_down"`, `&"cook"`, `&"cut"`, `&"season_sweet"`, `&"season_hot"`, `&"cachelos"`, `&"trash"` |
-| `ActionReason` | constantes `StringName` | `core/action_reason.gd` | Conjunto cerrado: `&""` (ninguno), `&"box_not_full"`, `&"busy"`, `&"empty"`, `&"full"`, `&"already_applied"` |
+| `ActionVerb` | constantes `StringName` | `core/action_verb.gd` | Conjunto cerrado: `&""` (ninguno), `&"pick_up"`, `&"drop"`, `&"cook"`, `&"cut"`, `&"season_sweet"`, `&"season_hot"`, `&"cachelos"`, `&"trash"` |
+| `ActionReason` | constantes `StringName` | `core/action_reason.gd` | Conjunto cerrado: `&""` (ninguno), `&"box_not_full"`, `&"busy"`, `&"empty"`, `&"full"`, `&"already_applied"`, `&"not_cooked"` |
 
 `Player` (`entities/player/player.gd`, `CharacterBody3D` o `CharacterBody2D` según D14) es de la
 capa específica y **no** aparece en ninguna firma común: ni en el bus ni en el contrato de
@@ -114,7 +114,7 @@ es `ActionHint.State` como `int`.
 | Señal | Emisor | Receptores | Cuándo | Fase |
 |---|---|---|---|---|
 | `action_hint_changed(player_index: int, verb: StringName, state: int, reason: StringName)` | `InteractionComponent` (reenvía `InteractionDetector.hint_changed` de su personaje) | `ui/touch/action_button.gd` (icono del verbo: blanco `OK`, ámbar + motivo `BLOCKED`, gris `NONE`; solo `player_index == 1`) | Cuando cambia el objetivo activo del jugador o su verbo/estado/motivo (no por `progress`). Sin objetivo: `(p, &"", 0, &"")`. Al perder el control el personaje saliente emite una vez `(p, &"", 0, &"")` y al ganarlo el entrante emite una vez su hint vigente, en ese orden y en el mismo frame (§3) | M3e |
-| `interaction_resolved(player_index: int, verb: StringName, state: int, reason: StringName)` | `InteractionComponent` (`interact_pressed()`, tras `interact()` del objetivo) | `ui/touch/action_button.gd` (salto con `OK`, sacudida con `BLOCKED`); tests (ninguna pulsación muda) | Una vez por pulsación **con objetivo** (`state` `OK` = cambió algo, `BLOCKED` = rechazada con motivo), también en cada repetición del corte al mantener. Sin objetivo (soltar o nada) **no** se emite | M3e |
+| `interaction_resolved(player_index: int, verb: StringName, state: int, reason: StringName)` | `InteractionComponent` (`interact_pressed()`, tras `interact()` del objetivo o tras soltar al suelo) | `ui/touch/action_button.gd` (salto con `OK`, sacudida con `BLOCKED`); tests (ninguna pulsación muda) | Una vez por pulsación con respuesta: con objetivo, o sin objetivo y con la mano llena (`drop` `OK` al soltar al suelo; `drop` `BLOCKED` `busy` contra barra o pared). `state` `OK` = cambió algo, `BLOCKED` = rechazada con motivo. También en cada repetición del corte al mantener. Con la mano vacía y sin objetivo **no** se emite | M3e |
 
 Declaración en `autoload/event_bus.gd` (*Enmienda D26*), bloque nuevo tras «Sesión y jugadores», con
 el mismo patrón que el resto:
@@ -168,13 +168,14 @@ controlado): candidatos (`is_reachable_from` → `get_action_hint(actor)`, fuera
 si cambió → `hint_changed(target, hint)` si cambió el objetivo o el hint (sin `progress`) →
 `InteractionComponent` → `EventBus.action_hint_changed(p, verb, state, reason)`.
 
-**Pulsación con objetivo** (*Enmienda D26*, `InteractionComponent.interact_pressed()`):
-`hint = target.get_action_hint(self)` → si `NONE`: regla de soltar (ADR-003 §9.5), sin señal → si no:
-`target.interact(self)` (cambia el estado solo con `OK`; las señales del efecto, p. ej. `fill_changed`
-o `seasoned`, salen aquí) → `interaction_resolved(target, hint)` local (el jugador suena `rejected` o
-`already_applied` con `BLOCKED`; `%ActionPrompt` salta o muestra ×) → `EventBus.interaction_resolved(p,
-verb, state, reason)`. Al mantener con `cut` en `OK`, se repite cada `cut_repeat_interval` con la
-misma secuencia hasta soltar o hasta que el hint deje de ser `cut` `OK`.
+**Pulsación** (*Enmienda D26*, `InteractionComponent.interact_pressed()`, ADR-003 §11.4):
+`hint` = el vigente (recalculado con `target.get_action_hint(self)` si hay objetivo) → `NONE`: nada,
+sin señal → con objetivo: `target.interact(self)` (cambia el estado solo con `OK`; las señales del
+efecto, p. ej. `fill_changed` o `seasoned`, salen aquí); sin objetivo: `holder.drop()` si es `drop`
+`OK` (sale `item_dropped`), nada si es `BLOCKED` `busy` → `interaction_resolved(target, hint)` local
+(con `BLOCKED` el jugador suena `rejected`; `%ActionPrompt` salta o muestra ×) →
+`EventBus.interaction_resolved(p, verb, state, reason)`. Al mantener con `cut` en `OK`, se repite cada
+`cut_repeat_interval` con la misma secuencia hasta soltar o hasta que el hint deje de ser `cut` `OK`.
 
 **Cambio de personaje** (*Enmienda D26*, Individual): `CharacterSwitcher` pone `controlled_by = 0` al
 saliente → su `InteractionComponent` emite `action_hint_changed(1, &"", 0, &"")` y su detector deja de
@@ -193,11 +194,11 @@ usan `Node` en sus firmas para valer en 3D y en 2D.
 | `item_picked_up(item: Node)` | `Holder` (base común; lo emite `HoldComponent`) | `player.gd` (parámetro `is_holding` del `AnimationTree`); M3: `%Feedback` de `player.tscn` (cue `pick_up`, `POP` de `item`) | Tras `on_picked_up` del objeto | 4 |
 | `item_dropped(item: Node)` | `Holder` (ídem) | `player.gd` (ídem); M3: `%Feedback` (cue `drop`) | Tras `on_dropped` del objeto. También al dejarlo en una estación: suena junto a la cue de la estación (ADR-006 §4). D25: también al tirar al cubo, antes de `trashed` | 4 |
 | `target_changed(previous: Node, current: Node)` | `InteractionDetector` (específico: `Area3D`/`Area2D`) | `interaction_component.gd` (guarda el objetivo). El propio `InteractionDetector` (capa específica) desactiva el `Highlightable` de `previous` y activa el de `current` antes de emitir; ambos pueden ser `null`. *Enmienda 2026-10-03, aprobada por el responsable tras la revisión de PUL-015* | Solo cuando cambia el objetivo, no cada frame (B7). *Enmienda D26:* solo son objetivo las entidades con hint ≠ `NONE`; con histéresis (ADR-003 §11.3); sin control, `current` = `null` | 5 |
-| `hint_changed(target: Node, hint: ActionHint)` | `InteractionDetector` | `interaction_component.gd` (lo reenvía a `EventBus.action_hint_changed` si su personaje está controlado), `%ActionPrompt` de `player.tscn` (icono sobre `target`) | Después de `target_changed` en el mismo `refresh()`, cuando cambia el objetivo o `verb`/`state`/`reason` de su hint (`ActionHint.same_as`); no por `progress`. Sin objetivo: `(null, ActionHint.none())`. *Enmienda D26 (PUL-120, ADR-003 §11.3)* | M3e |
-| `interaction_resolved(target: Node, hint: ActionHint)` | `InteractionComponent` (común) | `player.gd` (`%Feedback`: cue `rejected` o `already_applied` + `SHAKE` de `target` si `BLOCKED`), `%ActionPrompt` (salto `OK` / × y sacudida `BLOCKED`); tests | Una vez por pulsación con objetivo, tras `target.interact(self)` y antes de la señal de bus homónima; `hint` = el resuelto **antes** de `interact`. *Enmienda D26 (PUL-120, ADR-003 §11.4)* | M3e |
+| `hint_changed(target: Node, hint: ActionHint)` | `InteractionDetector` | `interaction_component.gd` (lo reenvía a `EventBus.action_hint_changed` si su personaje está controlado), `%ActionPrompt` de `player.tscn` (icono sobre `target` o sobre el punto de soltar) | Después de `target_changed` en el mismo `refresh()`, cuando cambia el objetivo o `verb`/`state`/`reason`/`replaces` de su hint (`ActionHint.same_as`); no por `progress`. Sin objetivo: `(null, hint de suelo)` con la mano llena (`drop` `OK` o `BLOCKED` `busy`) o `(null, ActionHint.none())` con la mano vacía. *Enmienda D26 (PUL-120, ADR-003 §11.3)* | M3e |
+| `interaction_resolved(target: Node, hint: ActionHint)` | `InteractionComponent` (común) | `player.gd` (`%Feedback`: cue `rejected` + `SHAKE` de `target`, o del personaje si `target` es `null`, cuando `BLOCKED`), `%ActionPrompt` (salto `OK` / × y sacudida `BLOCKED`); tests | Una vez por pulsación con respuesta (con objetivo o soltando al suelo), tras el efecto y antes de la señal de bus homónima; `hint` = el resuelto **antes** del efecto. *Enmienda D26 (PUL-120, ADR-003 §11.4)* | M3e |
 | `cooking_started(ingredient: Ingredient)` | `cooking_station.gd` | barra de progreso de `kitchen.tscn`, `AudioStreamPlayer3D` de hervir; M3: `%Feedback` (cue `cook_start`), vapor y fuego vivo | Al aceptar un ingrediente crudo cocinable (pulpo o cachelos, D10) en una plaza libre (D9) | 6 |
 | `cooking_finished(ingredient: Ingredient)` | `cooking_station.gd` | barra de progreso y audio de `kitchen.tscn`; M3: `%Feedback` (cue `cook_done`; *Enmienda D26:* `cook_ready`, sonido propio) | Al cumplirse `cook_time` de `IngredientData`. Desde M3 (con `burn_time` > 0) arranca el reloj de quemado de la plaza | 6 |
-| `burn_warned(ingredient: Ingredient)` | `cooking_station.gd` | `%CookBar` de la plaza (se muestra y parpadea), `%Feedback` (cue `burn_warning`) | Una vez por plaza al cumplirse `warn_time` (s desde `cooking_finished`) con el ingrediente aún en ella; no si `burn_time` = 0. Se congela en pausa. *Enmienda PUL-066* | M3 |
+| `burn_warned(ingredient: Ingredient)` | `cooking_station.gd` | `%CookBar` de la plaza (se muestra y parpadea), `%Feedback` (cue `burn_warning`). *Enmienda D26:* `%CookRing` de la plaza parpadea ámbar/rojo y la olla repite `burn_warning` cada `warn_repeat_interval` hasta `warn_repeat_count` veces (repetición interna de la olla, sin señal nueva) | Una vez por plaza al cumplirse `warn_time` (s desde `cooking_finished`) con el ingrediente aún en ella; no si `burn_time` = 0. Se congela en pausa. *Enmienda PUL-066* | M3 |
 | `burnt(ingredient: Ingredient)` | `cooking_station.gd` | `%Feedback` (cue `burnt`); la malla `_burnt` la pone `Ingredient.set_burnt()` antes de emitir | Una vez al cumplirse `burn_time`; el ingrediente pasa a `BURNT`. Es la `octopus_burnt` de `olla-que-se-pasa` AC1, generalizada a cualquier ingrediente. *Enmienda PUL-066* | M3 |
 | `discarded(ingredient: Ingredient)` | `cooking_station.gd` | `%Feedback` (cue `discard`) | Al desechar un `BURNT` (mano vacía sobre la olla; el quemado más antiguo antes que cualquier cocido), antes de `queue_free`; la plaza queda libre. *Enmienda PUL-066* | M3 |
 | `played(cue: StringName)` | `FeedbackPlayer` (`components/feedback_player.gd`, capa específica) | tests (AC2/AC5 de `audio-y-fx`) | Una vez por `play_cue()` con cue conocida, al llamar a `play()` (tras el `delay` si lo hay). *Enmienda PUL-066* | M3 |
@@ -209,10 +210,10 @@ usan `Node` en sus firmas para valer en 3D y en 2D.
 
 *Enmienda D26 (PUL-120, ADR-003 §11.2 y §11.7) para los dos `rejected`:* se emiten exactamente en las
 pulsaciones cuyo hint es `BLOCKED` (dispensador: `BOX_NOT_FULL`, y ahora también `ALREADY_APPLIED`;
-cuenco: `BOWL_EMPTY`, `BOWL_FULL` al reponer y `ALREADY_APPLIED` si la caja ya lleva cachelos; ya no
-hay quitar). **Nadie los convierte en sonido**: `seasoning_station.gd` deja de reproducir
-`season_error` (el rechazo suena en el jugador, `interaction_resolved`). Se conservan para tests y
-para la sacudida del emisor si su ficha la mantiene.
+cuenco: `BOWL_EMPTY`, `BOWL_FULL` al reponer, `ALREADY_APPLIED` si la caja ya lleva cachelos y
+`BOX_NOT_FULL` con una caja vacía o a medias; ya no hay quitar). **Nadie los convierte en sonido**:
+`seasoning_station.gd` deja de reproducir `season_error` (el rechazo suena en el jugador,
+`interaction_resolved`). Se conservan para tests.
 | `stock_changed(stock: int)` | `cachelos_bowl.gd` | visual de raciones de `cachelos_bowl.tscn` (`%Portions`) | Al reponer (+`cachelos_portions_per_item`), al poner cachelos en la caja (−1) y al quitarlos (+1). También una vez en `_ready()` con `cachelos_initial_stock`. *Enmienda PUL-056* | M2 |
 | `amount_changed(remaining: float)` | `ingredient.gd` | barra en mundo de `octopus.tscn` | Cada corte; a 0 el pulpo se libera solo (B9) | 6 |
 | `trashed(item: Node)` | `trash_bin.gd` (`TrashBin`, capa específica) | `%Feedback` de `trash_bin.tscn` (cue `trash`, `POP` del cubo, ADR-006 §4); tests (T1, T2, T4 de `cubo-basura`) | Una vez por tirada: tras vaciar la mano con `Holder.drop()` (que ya emitió `item_dropped`) y antes de `item.queue_free()`. Solo con algo en la mano (`TrashRules.can_trash`); con la mano vacía el cubo no es objetivo. **No sube a `EventBus`**: con `trash_penalty` = 0 nadie fuera del cubo la necesita (si sube, otra enmienda). *Enmienda D25 (PUL-111, 2026-10-10, ADR-003 §10.3)* | M3d |
@@ -290,7 +291,7 @@ Cobertura de las features:
 | fases AC1–AC6 | `EventBus.phase_changed` + secuencias §3 | `RoundState` / `RoundManager` |
 | cubo-basura T1, T2, T4 (D25) | `trashed` (local) | `trash_bin.tscn` (`%Feedback`, cue `trash`) |
 | lenguaje-acciones (D26): verbo antes de pulsar | `InteractionDetector.hint_changed` (local) · `EventBus.action_hint_changed` | `%ActionPrompt` de `player.tscn` · `ui/touch/action_button.gd` |
-| lenguaje-acciones (D26): una respuesta por pulsación | `InteractionComponent.interaction_resolved` (local) · `EventBus.interaction_resolved` | `player.tscn` (`%Feedback`: `rejected` / `already_applied`), `%ActionPrompt`, botón táctil; el cue de éxito, en la escena del efecto (ADR-006 §4.1) |
+| lenguaje-acciones (D26): una respuesta por pulsación | `InteractionComponent.interaction_resolved` (local) · `EventBus.interaction_resolved` | `player.tscn` (`%Feedback`: `rejected`), `%ActionPrompt`, botón táctil; el cue de éxito, en la escena del efecto (ADR-006 §4.1) |
 | audio D26: listo, quemándose, lleno, cambio | `cooking_finished` · `burn_warned` · `fill_changed` (`fill ≥ 1`) · `EventBus.character_switched` | `kitchen.tscn` (`cook_ready`, `burn_warning`) · `box.tscn` (`box_full`) · `player.tscn` (`switch`) |
 | fases D25 (comandas por fase) | — (`PhaseData.orders` → `OrderBoard.set_order_pool`, sin señal nueva) | `RoundState` / `OrderBoard` |
 
