@@ -39,9 +39,27 @@ func _ready() -> void:
 	_play.pressed.connect(_start.bind(GameMode.Mode.SINGLE, _play))
 	_local_2p.pressed.connect(_start.bind(GameMode.Mode.COOP_2P, _local_2p))
 	_exit.pressed.connect(_on_exit_pressed)
+	_apply_platform()
 	_play.grab_focus()
 	%Column.item_rect_changed.connect(queue_redraw)
 	resized.connect(queue_redraw)
+
+
+## Perfil MOBILE (ADR-004 §6.5): solo «Individual»; textos y botones con los mínimos del perfil.
+## El foco queda en «Individual» y no sale de él.
+func _apply_platform() -> void:
+	if GameState.platform != PlatformProfile.Kind.MOBILE:
+		return
+	_local_2p.hide()
+	_exit.hide()
+	%Mode.hide()
+	FocusRing.link([_play, _local_2p, _exit] as Array[Control])
+	_apply_mobile_profile()
+	get_viewport().size_changed.connect(_apply_mobile_profile)
+
+
+func _apply_mobile_profile() -> void:
+	MenuMobile.apply(self, GameState.ui_profile)
 
 
 func _draw() -> void:

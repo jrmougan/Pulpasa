@@ -227,3 +227,44 @@ func test_ac5_move_deadzone_comes_from_input_config() -> void:
 		for move: String in ["move_left", "move_right", "move_up", "move_down"]:
 			var action: StringName = StringName("p%d_%s" % [player, move])
 			assert_almost_eq(InputMap.action_get_deadzone(action), config.deadzone, 0.0001, action)
+
+
+func test_pul122_default_platform_is_desktop_with_desktop_profile() -> void:
+	assert_eq(_state.platform, PlatformProfile.Kind.DESKTOP)
+	assert_eq(_state.ui_profile.text_min_px, 0.0)
+
+
+func test_pul122_set_platform_mobile_applies_mobile_profile() -> void:
+	_state.set_platform(PlatformProfile.Kind.MOBILE)
+	assert_eq(_state.platform, PlatformProfile.Kind.MOBILE)
+	assert_eq(_state.ui_profile.text_min_px, 36.0)
+	assert_eq(_state.ui_profile.menu_button_min_px, 120.0)
+	assert_eq(get_tree().root.content_scale_factor, _state.ui_profile.content_scale)
+
+
+func test_pul122_set_platform_back_to_desktop_restores_profile() -> void:
+	_state.set_platform(PlatformProfile.Kind.MOBILE)
+	_state.set_platform(PlatformProfile.Kind.DESKTOP)
+	assert_eq(_state.ui_profile.text_min_px, 0.0)
+	assert_eq(get_tree().root.content_scale_factor, 1.0)
+
+
+func test_pul122_ui_profiles_load_with_design_values() -> void:
+	var mobile: UiProfile = load("res://data/config/ui_profile_mobile.tres")
+	assert_eq(mobile.text_min_px, 36.0)
+	assert_eq(mobile.menu_button_gap_px, 24.0)
+	assert_eq(mobile.ticket_width_min, 330.0)
+	assert_eq(mobile.ticket_width_max, 380.0)
+	assert_eq(mobile.ticket_height, 150.0)
+	assert_eq(mobile.ticket_gap, 16.0)
+	assert_eq(mobile.hud_block_width, 240.0)
+	assert_eq(mobile.top_band_max_px, 200.0)
+	assert_eq(mobile.ticket_icon_px, 48.0)
+	assert_eq(mobile.patience_bar_px, 12.0)
+	assert_eq(mobile.stick_zone_fraction, 0.5)
+	assert_eq(mobile.stick_zone_top_px, 200.0)
+	assert_eq(mobile.button_zone_width_px, 390.0)
+	assert_eq(mobile.button_zone_top_px, 600.0)
+	var desktop: UiProfile = load("res://data/config/ui_profile_desktop.tres")
+	assert_eq(desktop.content_scale, 1.0)
+	assert_eq(desktop.text_min_px, 0.0)
