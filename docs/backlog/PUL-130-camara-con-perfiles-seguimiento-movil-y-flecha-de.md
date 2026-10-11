@@ -28,9 +28,9 @@ ADR-005 E5.
 ## Acceptance
 - [x] AC1 Escritorio sin cambios: size 12,74, fija, 66,8 px/m (`test_camera_profile.gd`).
 - [x] AC2 Móvil: size 7,0, >= 120 px/m a 1080 de alto (2340x1080, 1920x1080, 2400x1000) y personaje >= 192 px.
-- [x] AC3 Seguimiento sin oscilación (<= 0,05 m en reposo), sin sobrepaso; personaje activo en el 60 % central.
+- [x] AC3 Seguimiento sin oscilación (<= 0,05 m en reposo). Corriendo a 5 m/s durante 2 s el personaje queda en el 60 % central del alto y el 80 % del ancho; al parar, desfase <= 0,1 m a los 0,6 s sin rebasar el objetivo (diseño AC11).
 - [x] AC4 Paneo ease-out de 0,35 s al `character_switched(1, c)`; otros jugadores se ignoran.
-- [x] AC5 La vista no sale más de 1,0 m del límite del nivel.
+- [x] AC5 La vista no sale más de 1,0 m del límite del nivel (medido con rayos de las 4 esquinas contra el suelo, en las esquinas del nivel y lejos de ellas).
 - [x] AC6 Flecha de borde 48 px para el inactivo fuera de cuadro, dentro de la safe area y a >= 16 px de los botones.
 
 ## Plan

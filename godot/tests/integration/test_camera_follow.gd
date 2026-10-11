@@ -77,33 +77,57 @@ func test_no_oscillation_at_rest() -> void:
 	assert_lt(worst, 0.05, "quieto: la cámara no se mueve más de 0,05 m")
 
 
-func test_follows_walking_character_smoothly() -> void:
-	_run(1.0)
-	var before: Vector3 = _rig.global_position
-	var last_x: float = before.x
-	for i: int in 60:
-		_a.global_position.x += 5.0 * DT * 0.2
+func test_ac11_running_character_stays_inside_screen_and_stops_cleanly() -> void:
+	_a.global_position = Vector3(-4.0, 0.005, 0.0)
+	_run(1.5)
+	for i: int in 120:
+		_a.global_position.x += 5.0 * DT
 		_rig.step(DT)
-		assert_gte(_rig.global_position.x, last_x - 0.0001, "no retrocede")
-		last_x = _rig.global_position.x
-	assert_gt(_rig.global_position.x, before.x, "la cámara avanza con el personaje")
+		var f: Vector2 = _screen_fraction(_a)
+		assert_between(f.y, 0.2, 0.8, "y en el 60 %% central (paso %d)" % i)
+		assert_between(f.x, 0.1, 0.9, "x en el 80 %% central (paso %d)" % i)
+	var target: Vector2 = CameraFollow.clamp_focus(
+		Vector2(_a.global_position.x, _a.global_position.z),
+		_rig.view_half_extents(),
+		MOBILE.play_area_min,
+		MOBILE.play_area_max,
+		MOBILE.camera_margin_m
+	)
+	var side: float = signf(_rig.get_focus().x - target.x)
+	var crossed: bool = false
+	for i: int in 36:
+		_rig.step(DT)
+		if side != 0.0 and signf(_rig.get_focus().x - target.x) == -side:
+			crossed = true
+	assert_lte(_rig.get_focus().distance_to(target), 0.1, "a los 0,6 s: desfase <= 0,1 m")
+	assert_false(crossed, "sin rebasar el objetivo")
 
 
 func test_view_never_leaves_level_margin() -> void:
-	var half: Vector2 = _rig.view_half_extents()
+	var lo: Vector2 = MOBILE.play_area_min - Vector2.ONE * MOBILE.camera_margin_m
+	var hi: Vector2 = MOBILE.play_area_max + Vector2.ONE * MOBILE.camera_margin_m
 	for at: Vector3 in [
-		Vector3(80.0, 0.0, 80.0), Vector3(-80.0, 0.0, -80.0), Vector3(9.4, 0.0, 6.6)
+		Vector3(80.0, 0.0, 80.0),
+		Vector3(-80.0, 0.0, -80.0),
+		Vector3(-80.0, 0.0, 80.0),
+		Vector3(80.0, 0.0, -80.0),
+		Vector3(9.4, 0.0, 6.6),
+		Vector3(-7.0, 0.0, -5.0)
 	]:
 		_a.global_position = at
 		_run(3.0)
-		var f: Vector2 = _rig.get_focus()
-		assert_gte(f.x - half.x, MOBILE.play_area_min.x - MOBILE.camera_margin_m - 0.01)
-		assert_lte(f.x + half.x, MOBILE.play_area_max.x + MOBILE.camera_margin_m + 0.01)
-		assert_gte(f.y - half.y, MOBILE.play_area_min.y - MOBILE.camera_margin_m - 0.01)
-		assert_lte(f.y + half.y, MOBILE.play_area_max.y + MOBILE.camera_margin_m + 0.01)
+		for corner: Vector2 in [
+			Vector2(0.0, 0.0), Vector2(CANVAS.x, 0.0), Vector2(0.0, CANVAS.y), Vector2(CANVAS)
+		]:
+			var origin: Vector3 = _rig.project_ray_origin(corner)
+			var dir: Vector3 = _rig.project_ray_normal(corner)
+			var ground: Vector3 = origin + dir * (-origin.y / dir.y)
+			assert_between(ground.x, lo.x - 0.01, hi.x + 0.01, "x esquina %s con %s" % [corner, at])
+			assert_between(ground.z, lo.y - 0.01, hi.y + 0.01, "z esquina %s con %s" % [corner, at])
 
 
 func test_switch_pans_to_new_character_in_pan_time() -> void:
+	_a.global_position = Vector3(4.0, 0.005, 3.0)
 	_run(1.0)
 	_bus.character_switched.emit(1, 2)
 	assert_eq(_rig.get_active_index(), 1)
@@ -120,6 +144,10 @@ func test_switch_pans_to_new_character_in_pan_time() -> void:
 		MOBILE.camera_margin_m
 	)
 	assert_lt(_rig.get_focus().distance_to(target), 0.05, "a los 0,4 s centrada en el nuevo activo")
+	_run(0.1)
+	var f: Vector2 = _screen_fraction(_b)
+	assert_between(f.x, 0.2, 0.8, "0,5 s después, x en el 60 %% central")
+	assert_between(f.y, 0.2, 0.8, "0,5 s después, y en el 60 %% central")
 
 
 func test_other_player_switch_is_ignored() -> void:
@@ -162,7 +190,7 @@ func test_arrow_keeps_16px_from_button_zone() -> void:
 
 func test_arrow_follows_active_switch() -> void:
 	_a.global_position = Vector3(9.0, 0.0, 6.0)
-	_b.global_position = Vector3(-6.5, 0.0, -4.0)
+	_b.global_position = Vector3(-4.9, 0.0, -2.0)
 	_run(1.5)
 	assert_true(_arrow_layer().visible)
 	_bus.character_switched.emit(1, 2)
@@ -175,4 +203,23 @@ func test_arrow_follows_active_switch() -> void:
 		MOBILE.camera_margin_m
 	)
 	assert_lt(_rig.get_focus().distance_to(target), 0.05, "la cámara sigue al nuevo activo")
+	_run(0.0)
+	var f: Vector2 = _screen_fraction(_b)
+	assert_between(f.x, 0.2, 0.8, "el nuevo activo en el 60 %% central")
+	assert_between(f.y, 0.2, 0.8, "el nuevo activo en el 60 %% central")
 	assert_true(_arrow_layer().visible, "el inactivo ahora es A, que sigue fuera de cuadro")
+
+
+func test_arrow_is_48_real_px_with_size_2d_override() -> void:
+	_viewport.size_2d_override = Vector2i(1560, 720)
+	_viewport.size_2d_override_stretch = true
+	_rig.set_safe_margins(Vector4(88.0, 0.0, 88.0, 42.0))
+	_a.global_position = Vector3(9.0, 0.0, 6.0)
+	_b.global_position = Vector3(-6.5, 0.0, -4.0)
+	_run(1.5)
+	assert_true(_arrow_layer().visible)
+	var arrow: TextureRect = _arrow()
+	assert_almost_eq(arrow.size.x * 1.5, 48.0, 0.01, "48 px reales a 1080 de alto")
+	var center: Vector2 = arrow.position + arrow.size * 0.5
+	assert_gte(center.x - arrow.size.x * 0.5, 88.0 - 0.01, "dentro de la safe area")
+	assert_lte(center.y + arrow.size.y * 0.5, 720.0 - 42.0 + 0.01, "dentro de la safe area")

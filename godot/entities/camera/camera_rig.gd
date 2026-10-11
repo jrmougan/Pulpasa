@@ -80,7 +80,10 @@ func get_focus() -> Vector2:
 
 ## Avanza el seguimiento `delta` s (lo llama `_process`; los tests lo llaman directamente).
 func step(delta: float) -> void:
-	if profile == null or not profile.follow or _active >= characters.size():
+	if profile == null or not profile.follow:
+		_set_arrow_visible(false)
+		return
+	if _active >= characters.size() or characters[_active] == null:
 		_set_arrow_visible(false)
 		return
 	var target: Vector2 = _target_focus()
