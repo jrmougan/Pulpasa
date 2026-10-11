@@ -15,8 +15,6 @@ const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
 ## Del centro de una pieza de la estación al punto desde el que se usa (m).
 const ACCESS: float = 1.0
-## Distancia al puesto desde la que se le pulsa E, fuera de su `%DeliveryZone` (m).
-const STAND_FRONT: float = 2.5
 ## Espera tras cambiar de personaje (> `switch_cooldown` de `input_config.tres`).
 const SWITCH_WAIT: float = 0.3
 const BOX: BoxData = preload("res://data/boxes/box.tres")
@@ -121,8 +119,8 @@ func _dispenser(seasoning: SeasoningData) -> SeasoningDispenser:
 	return null
 
 
-## Coge la caja del pasaplatos, la aliña en la mano y la entrega en el puesto
-## 1, todo desde el lado de condimentar con `walker`.
+## Coge la caja del pasaplatos, la aliña en la mano y la entrega en el puesto 1 (entrando en su
+## zona, D26), todo desde el lado de condimentar con `walker`.
 func _season_and_deliver(walker: Walker, box: Box) -> void:
 	var slot: Vector2 = _slot_xz()
 	assert_eq(await walker.use(slot, Vector2(slot.x, ACCESS)), box, "coge la caja del pasaplatos")
@@ -134,14 +132,7 @@ func _season_and_deliver(walker: Walker, box: Box) -> void:
 		assert_eq(await walker.use(at, stand), dispenser, dispenser.name)
 		assert_true(box.has_seasoning(seasoning), "caja con %s" % seasoning.display_name)
 	assert_eq(walker.holder().get_held_item(), box, "la caja condimentada sigue en la mano")
-	var stand: OrderStand = _level.get_node("Stations/OrderStand1")
-	var stand_xz: Vector2 = Walker.xz(stand.global_position)
-	await walker.walk_to(stand_xz + Vector2(0.0, -STAND_FRONT))
-	for _i: int in 20:
-		if walker.detector().get_target() == stand:
-			break
-		await walker.push_towards(stand_xz, 1)
-	await walker.tap_interact()
+	await walker.walk_into_zone(_level.get_node("Stations/OrderStand1"))
 
 
 # --- AC16 ----------------------------------------------------------------------------------------

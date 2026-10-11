@@ -1,8 +1,8 @@
 class_name SeasoningRules
 extends RefCounted
 ## Reglas puras de condimento de la estación (D4, D25; ADR-003 §10.2): aplicar un aliño sobre una
-## caja llena (el otro aliño se sustituye), alternar cachelos y orden canónico que comparten la fila
-## de pegatinas de la caja y el ticket. No muta nada: devuelve copias.
+## caja llena (el otro aliño se sustituye; el cuenco solo pone, D26) y orden canónico que comparten
+## la fila de pegatinas de la caja y el ticket. No muta nada: devuelve copias.
 
 ## Por qué se consume una pulsación sin cambiar nada (señales locales `rejected`, signals.md §4).
 enum Rejection {
@@ -16,13 +16,13 @@ enum Rejection {
 	BOWL_EMPTY,
 	BOWL_FULL,
 	NOT_ACCEPTED,
-	# D25: el aliño ya está en la caja. Lo devuelven `apply` y `Box.apply_seasoning`; el
-	# dispensador lo consume en silencio (no se emite en `rejected`).
+	# D25: el aliño ya está en la caja. Lo devuelven `apply` y `Box.apply_seasoning`; desde D26
+	# el dispensador y el cuenco lo emiten en `rejected` (el jugador suena `rejected`).
 	ALREADY_APPLIED,
 }
 
 
-## Resultado de `toggle()`. Con `rejection` distinto de `NONE`, `removed` y `added` son nulos y
+## Resultado de `apply()`. Con `rejection` distinto de `NONE`, `removed` y `added` son nulos y
 ## `seasonings` es una copia de la lista de entrada.
 class Toggle:
 	extends RefCounted
@@ -33,29 +33,6 @@ class Toggle:
 	var added: SeasoningData
 	## Lista resultante, en orden de aplicación.
 	var seasonings: Array[SeasoningData] = []
-
-
-## Alterna `seasoning` sobre `current`: si ya lo lleva, lo quita; si no, lo añade al final. Si la
-## caja lleva otro del mismo `exclusivity_group`, lo sustituye (sale el viejo y entra el nuevo).
-## Sin llenar: `BOX_NOT_FULL`. Solo lo usa el cuenco (cachelos, sin grupo).
-static func toggle(
-	current: Array[SeasoningData], seasoning: SeasoningData, is_full: bool
-) -> Toggle:
-	var result: Toggle = Toggle.new()
-	result.seasonings = current.duplicate()
-	if seasoning == null:
-		result.rejection = Rejection.NOT_ACCEPTED
-		return result
-	if not is_full:
-		result.rejection = Rejection.BOX_NOT_FULL
-		return result
-	var existing: SeasoningData = find(current, seasoning)
-	if existing != null:
-		result.seasonings.erase(existing)
-		result.removed = existing
-		return result
-	_put(result, current, seasoning)
-	return result
 
 
 ## D25: aplica `seasoning` a una caja. Sin llenar: `BOX_NOT_FULL`. Si ya lo lleva: `ALREADY_APPLIED`

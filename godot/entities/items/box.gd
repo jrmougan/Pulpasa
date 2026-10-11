@@ -8,19 +8,16 @@ extends RigidBody3D
 ## estación no se condimenta, D18). `%CutCounter` muestra los cortes `N/total` (D26.6).
 ## La entrega lee `get_contents()`.
 ## Estación de condimentos (D18, D25; ADR-003 §10.2): los dispensadores aplican aliño con
-## `apply_seasoning()`, el cuenco alterna cachelos con `toggle_seasoning()`; son los únicos que
-## cambian sus condimentos.
+## `apply_seasoning()` (el cuenco también, con cachelos); son los únicos que cambian sus
+## condimentos.
 
 ## Cada corte (D1).
 signal fill_changed(fill: float)
 ## Al aplicar un condimento nuevo.
 signal seasoned(seasoning: SeasoningData)
-## Al quitar un condimento (alternar cachelos, sustituir un aliño o `remove_seasoning`). Al
+## Al quitar un condimento (sustituir un aliño o `remove_seasoning`). Al
 ## sustituir se emite antes que el `seasoned` del nuevo.
 signal seasoning_removed(seasoning: SeasoningData)
-
-## Segundos que se ve `total/total` en el corte que llena antes de ocultarse el contador.
-const COUNTER_FULL_TIME: float = 0.5
 
 @export var data: BoxData
 
@@ -37,7 +34,6 @@ var _is_open: bool = false
 ## Segundos que quedan de mostrar el contador lleno.
 var _counter_left: float = 0.0
 
-@onready var _fill_bar: WorldProgressBar = get_node_or_null(^"%FillBar") as WorldProgressBar
 @onready var _animation: AnimationPlayer = get_node_or_null(^"%AnimationPlayer") as AnimationPlayer
 @onready var _feedback: FeedbackPlayer = get_node_or_null(^"%Feedback") as FeedbackPlayer
 @onready var _cut_counter: Node3D = get_node_or_null(^"%CutCounter") as Node3D
@@ -47,9 +43,6 @@ var _counter_left: float = 0.0
 
 func _ready() -> void:
 	set_physics_process(false)
-	# `%FillBar` queda oculta: la sustituye `%CutCounter` (la exige el contrato de items).
-	if _fill_bar != null:
-		_fill_bar.visible = false
 	if _cut_counter != null:
 		_cut_counter.visible = false
 		if _cut_bar != null and data != null:
@@ -60,7 +53,7 @@ func _ready() -> void:
 		seasoning_removed.connect(_on_feedback.bind(&"unseason").unbind(1))
 
 
-## Con el contador lleno visible, lo oculta pasado `COUNTER_FULL_TIME`.
+## Con el contador lleno visible, lo oculta pasado `BoxData.counter_full_time`.
 func _physics_process(delta: float) -> void:
 	_counter_left -= delta
 	if _counter_left <= 0.0:
@@ -86,12 +79,6 @@ func has_seasoning_in_group(group: StringName) -> bool:
 ## `ALREADY_APPLIED`) no cambia nada ni emite.
 func apply_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection:
 	return _commit(SeasoningRules.apply(_seasonings, seasoning, is_full()))
-
-
-## Alterna `seasoning` (SeasoningRules.toggle): lo quita si ya lo lleva, si no lo añade. Solo lo
-## llama el cuenco (cachelos). `NONE` = cambió algo; otro valor = rechazo sin cambios ni señales.
-func toggle_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection:
-	return _commit(SeasoningRules.toggle(_seasonings, seasoning, is_full()))
 
 
 ## Quita `seasoning` si lo lleva y emite `seasoning_removed`; `false` si no lo llevaba.
@@ -191,7 +178,7 @@ func _cut(ingredient: Ingredient) -> void:
 
 
 ## `%CutCounter` (D26.6): `N/total` con 0 < N < total; en el corte que llena, `total/total`
-## `COUNTER_FULL_TIME` s y se oculta.
+## `BoxData.counter_full_time` s y se oculta.
 func _update_counter() -> void:
 	if _cut_counter == null or data == null:
 		return
@@ -203,7 +190,7 @@ func _update_counter() -> void:
 	if _cut_numeral != null:
 		_cut_numeral.text = "%d/%d" % [mini(presses, total), total]
 	if presses >= total:
-		_counter_left = COUNTER_FULL_TIME
+		_counter_left = data.counter_full_time
 		set_physics_process(true)
 
 

@@ -3,8 +3,9 @@ extends GutTest
 ## Una comanda «Con cachelos» (aliño dulce y cachelos, D10 y D25): pulpo y cachelos cuecen juntos
 ## en la olla (D9), la caja se llena sobre un pasaplatos, los cachelos cocidos van al cuenco y la
 ## caja se condimenta en el dispensador de aliño dulce y el cuenco (PUL-061), y se entrega con
-## bonus por tiempo (D2). Después una caducidad (−expire_penalty), una caja errónea
-## (−wrong_delivery_penalty, D8) y el fin de ronda: recaudación y estrellas en el game over.
+## bonus por tiempo (D2), entregando al entrar en la zona del puesto (D26). Después una caducidad
+## (−expire_penalty), una caja errónea en la zona (sin penalización, `wrong_delivery_penalty` = 0)
+## y el fin de ronda: recaudación y estrellas en el game over.
 ##
 ## Usa la comanda del catálogo real con aliño dulce y cachelos (PUL-033) y `max_active_orders = 1`.
 ## Como en `test_kitchen_flow.gd`, cada pulsación pasa por `InteractionComponent.interact_pressed()`
@@ -64,6 +65,12 @@ func _real_cachelos_order() -> OrderData:
 		if order.seasonings.has(DRESSING) and order.seasonings.has(CACHELOS_SEASONING):
 			return order
 	return null
+
+
+## Mete al personaje en la `%DeliveryZone` del puesto (D26: la entrega es solo por zona).
+func _enter_zone(stand: Node) -> void:
+	_player.global_position = (stand.get_node("%DeliveryZone") as Node3D).global_position
+	await wait_physics_frames(3)
 
 
 func _press(target: Node) -> bool:
@@ -189,7 +196,7 @@ func test_m1_full_round_dressing_cachelos_bonus_expiry_wrong_box_and_stars() -> 
 	assert_gt(bonus, 0, "entrega rápida: bonus por tiempo")
 	assert_lt(bonus, _config.time_bonus_max, "con 6 s gastados no es el bonus máximo")
 	_expected_revenue = RECIPE.base_points + bonus
-	assert_true(_press(_station("OrderStand1")), "puesto 1: entrega")
+	await _enter_zone(_station("OrderStand1"))
 	assert_signal_emit_count(EventBus, "order_completed", 1)
 	assert_signal_not_emitted(EventBus, "delivery_rejected")
 	assert_eq(RoundManager.round_state.get_revenue(), _expected_revenue, "base + bonus")
@@ -213,16 +220,15 @@ func test_m1_full_round_dressing_cachelos_bonus_expiry_wrong_box_and_stars() -> 
 	assert_eq(_config.expire_penalty, 3, "dato de M1")
 	await wait_physics_frames(2)
 
-	# --- Caja errónea: resta wrong_delivery_penalty ---------------------------------------------
+	# --- Caja errónea en la zona: no entrega, no rechaza y no penaliza (D26) -------------------
+	_player.global_position = Vector3(20.0, 0.0, 20.0)
+	await wait_physics_frames(2)
 	assert_true(_press(_box_spawner()))
 	var wrong: Box = _hold.get_held_item() as Box
-	assert_true(_press(_station("OrderStand1")), "consume la pulsación aunque rechace")
-	assert_signal_emit_count(EventBus, "delivery_rejected", 1)
-	var rejected: Array = get_signal_parameters(EventBus, "delivery_rejected", 0)
-	assert_eq(rejected[2], _config.wrong_delivery_penalty)
-	assert_eq(_config.wrong_delivery_penalty, 2, "dato de M1")
-	_expected_revenue -= _config.wrong_delivery_penalty
-	assert_eq(RoundManager.round_state.get_revenue(), _expected_revenue, "caja errónea −2")
+	await _enter_zone(_station("OrderStand1"))
+	assert_signal_emit_count(EventBus, "delivery_rejected", 0)
+	assert_eq(_config.wrong_delivery_penalty, 0, "D26: ya no se penaliza")
+	assert_eq(RoundManager.round_state.get_revenue(), _expected_revenue, "caja errónea: sin cobro")
 	assert_eq(_hold.get_held_item(), wrong, "la caja errónea se queda en la mano")
 	assert_signal_emit_count(EventBus, "order_completed", 1 + _extra_deliveries())
 

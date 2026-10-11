@@ -7,3 +7,4 @@ script = ExtResource("1_box")
 display_name = "Caja"
 capacity = 100.0
 presses_to_fill = 6
+counter_full_time = 0.5

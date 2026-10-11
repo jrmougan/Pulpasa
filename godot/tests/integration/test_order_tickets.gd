@@ -238,7 +238,7 @@ func test_pul086_box_badge_light_uses_ink_icon_and_ringed_disc() -> void:
 	add_child_autofree(box)
 	box.fill = 1.0
 	var light: SeasoningData = _light_seasoning()
-	box.toggle_seasoning(light)
+	box.apply_seasoning(light)
 	box.apply_seasoning(HOT)
 	var row: BadgeRow = box.get_node("%BadgeRow") as BadgeRow
 	var hot_badge: Node = row.get_child(0)

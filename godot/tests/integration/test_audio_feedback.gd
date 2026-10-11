@@ -34,12 +34,9 @@ const CUES: Array[StringName] = [
 	&"drop",
 	&"cut",
 	&"cook_start",
-	&"cook_done",
 	&"season",
 	&"unseason",
-	&"season_error",
 	&"deliver_ok",
-	&"deliver_error",
 	&"order_new",
 	&"order_expired",
 	&"burn_warning",
@@ -54,7 +51,7 @@ const CUES: Array[StringName] = [
 ]
 ## Acciones de AC5: cue con sonido y respuesta visual.
 const AC5_CUES: Array[StringName] = [
-	&"pick_up", &"cook_start", &"cook_ready", &"season", &"deliver_ok", &"deliver_error"
+	&"pick_up", &"cook_start", &"cook_ready", &"season", &"deliver_ok", &"rejected"
 ]
 ## Carpetas cuyas escenas no pueden dejar un reproductor en `Master`.
 const SCENE_DIRS: Array[String] = ["res://entities", "res://scenes", "res://ui"]
@@ -185,11 +182,11 @@ func test_map_has_every_cue_with_a_stream() -> void:
 	assert_eq(MAP.cues.size(), CUES.size(), "sin claves de más")
 
 
-func test_ac5_map_actions_have_visual_and_deliveries_differ() -> void:
+func test_ac5_map_actions_have_visual_and_success_differs_from_rejection() -> void:
 	for cue: StringName in AC5_CUES:
 		assert_ne(MAP.get_cue(cue).visual, AudioCue.Visual.NONE, "%s: visual" % cue)
 	var ok: AudioCue = MAP.get_cue(&"deliver_ok")
-	var error: AudioCue = MAP.get_cue(&"deliver_error")
+	var error: AudioCue = MAP.get_cue(&"rejected")
 	assert_ne(ok.stream, error.stream, "suenan distinto")
 	assert_ne(ok.visual, error.visual, "se ven distinto")
 	assert_almost_eq(MAP.get_cue(&"order_new").delay, 0.5, 0.001, "order_new con retardo")
@@ -425,19 +422,16 @@ func test_ac5_seasoning_pops_the_box() -> void:
 	assert_eq(_cues("box"), [&"season", &"unseason", &"season"])
 
 
-func test_ac5_correct_and_wrong_delivery_sound_and_look_different() -> void:
+## D26 (ADR-006 §4.1): el puesto solo suena la entrega correcta; la errónea ya no existe (no se
+## puede entregar por pulsación) y `delivery_rejected` no suena en el puesto.
+func test_ac5_stand_sounds_the_delivery_and_stays_silent_on_a_rejection() -> void:
 	var stand: OrderStand = _stand()
 	var feedback: FeedbackPlayer = stand.get_node("%Feedback")
 	_bus.order_completed.emit(ActiveOrder.new(1, null, SLOT_ID), 0)
 	assert_eq(_cues("stand"), [&"deliver_ok"])
-	var ok_stream: AudioStream = feedback.stream
-	var ok_kind: String = _assert_visual(feedback, stand, &"deliver_ok")
+	assert_eq(_assert_visual(feedback, stand, &"deliver_ok"), "pop")
 	_bus.delivery_rejected.emit(SLOT_ID, 1, 0)
-	assert_eq(_cues("stand"), [&"deliver_ok", &"deliver_error"])
-	var error_kind: String = _assert_visual(feedback, stand, &"deliver_error")
-	assert_ne(feedback.stream, ok_stream, "suenan distinto")
-	assert_eq(ok_kind, "pop")
-	assert_eq(error_kind, "shake", "se ven distinto")
+	assert_eq(_cues("stand"), [&"deliver_ok"], "el rechazo del bus no suena en el puesto")
 
 
 func test_ac5_order_label_pops_on_new_and_shakes_on_expired() -> void:
@@ -454,13 +448,13 @@ func test_ac5_order_label_pops_on_new_and_shakes_on_expired() -> void:
 func test_visual_freezes_with_pause() -> void:
 	var stand: OrderStand = _stand()
 	var feedback: FeedbackPlayer = stand.get_node("%Feedback")
-	_bus.delivery_rejected.emit(SLOT_ID, 1, 0)
-	var model: Node3D = stand.get_node("Model")
+	var label: Label3D = stand.get_node("%OrderLabel")
+	_bus.order_expired.emit(ActiveOrder.new(4, null, SLOT_ID), 0)
 	get_tree().paused = true
-	var before: Vector3 = model.position
+	var before: Vector3 = label.position
 	await wait_process_frames(5)
-	assert_eq(model.position, before, "congelado en pausa")
-	assert_not_null(feedback.get_visual_tween(stand))
+	assert_eq(label.position, before, "congelado en pausa")
+	assert_not_null(feedback.get_visual_tween(label))
 
 
 func test_unknown_cue_does_nothing() -> void:

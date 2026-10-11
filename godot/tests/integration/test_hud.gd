@@ -204,7 +204,7 @@ func test_d26_hud_shows_no_boxes_per_minute_in_desktop() -> void:
 		if label.is_visible_in_tree():
 			assert_false(label.text.containsn("minuto"), label.name)
 	assert_null(_hud.find_child("RateTitle", true, false), "sin título de la métrica")
-	assert_false((_hud.get_node("%BoxesPerMinute") as Label).is_visible_in_tree())
+	assert_null(_hud.get_node_or_null("%BoxesPerMinute"), "D26.7: el nodo ya no existe")
 
 
 func test_pul129_desktop_hud_keeps_the_bottom_left_corner_and_scene_sizes() -> void:

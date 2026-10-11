@@ -3,7 +3,7 @@ extends GutTest
 ## PUL-016 AC1: la caja decide (ADR-003 §4) si el objeto en la mano la llena (pulpo cocido,
 ## corte por pulsación D1/D13) o se coge con la mano vacía.
 ## PUL-057/114: API de la estación de condimentos (`apply_seasoning` de los aliños, D25;
-## `toggle_seasoning` del cuenco y `remove_seasoning`).
+## cachelos del cuenco con la misma API, D26, y `remove_seasoning`).
 ## PUL-061: fuera de la estación ya no se condimenta (feature estacion-condimentos AC12).
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
@@ -166,11 +166,12 @@ func test_ac2_contents_are_a_copy() -> void:
 	assert_eq(box.get_contents().seasonings.size(), 0)
 
 
-func test_box_without_fill_bar_does_not_crash() -> void:
-	# B8: la barra es opcional y se comprueba.
+func test_box_without_cut_counter_does_not_crash() -> void:
+	# B8: el contador es opcional y se comprueba. D26: ya no hay `%FillBar`.
 	var box: Box = BOX_SCENE.instantiate()
 	box.data = BOX
-	box.get_node("%FillBar").free()
+	assert_null(box.get_node_or_null("%FillBar"), "la barra de llenado se retiró")
+	box.get_node("%CutCounter").free()
 	_level.add_child(box)
 	_octopus_in_hand(true)
 	assert_eq(_fill(box), 6)
@@ -253,22 +254,27 @@ func test_pul114_ac4_apply_on_unfilled_box_is_rejected() -> void:
 	assert_almost_eq(half.fill, 0.5, 0.0001)
 	watch_signals(half)
 	assert_eq(half.apply_seasoning(HOT), SeasoningRules.Rejection.BOX_NOT_FULL)
-	assert_eq(half.toggle_seasoning(CACHELOS), SeasoningRules.Rejection.BOX_NOT_FULL)
+	assert_eq(half.apply_seasoning(CACHELOS), SeasoningRules.Rejection.BOX_NOT_FULL)
 	assert_eq(half.get_contents().seasonings.size(), 0)
 	assert_signal_emit_count(half, "seasoned", 0)
 
 
-func test_pul114_cachelos_toggle_adds_then_removes_with_signals() -> void:
+func test_pul114_cachelos_apply_adds_once_and_remove_takes_it_out() -> void:
 	var box: Box = _full_box()
 	watch_signals(box)
-	assert_eq(box.toggle_seasoning(CACHELOS), SeasoningRules.Rejection.NONE)
+	assert_eq(box.apply_seasoning(CACHELOS), SeasoningRules.Rejection.NONE)
 	assert_true(box.has_seasoning(CACHELOS))
 	assert_signal_emit_count(box, "seasoned", 1)
-	assert_eq(box.toggle_seasoning(CACHELOS), SeasoningRules.Rejection.NONE)
-	assert_false(box.has_seasoning(CACHELOS))
+	assert_eq(
+		box.apply_seasoning(CACHELOS), SeasoningRules.Rejection.ALREADY_APPLIED, "no se quita"
+	)
+	assert_true(box.has_seasoning(CACHELOS))
 	assert_signal_emit_count(box, "seasoned", 1)
-	assert_signal_emit_count(box, "seasoning_removed", 1)
+	assert_signal_emit_count(box, "seasoning_removed", 0)
+	assert_true(box.remove_seasoning(CACHELOS))
+	assert_false(box.has_seasoning(CACHELOS))
 	assert_signal_emitted_with_parameters(box, "seasoning_removed", [CACHELOS])
+	assert_false(box.has_method(&"toggle_seasoning"), "D26: el cuenco solo pone")
 
 
 func test_pul114_ac5_contents_have_at_most_two_entries() -> void:
@@ -276,7 +282,7 @@ func test_pul114_ac5_contents_have_at_most_two_entries() -> void:
 	assert_eq(box.get_contents().seasonings.size(), 0, "sin nada, 0")
 	box.apply_seasoning(HOT)
 	assert_eq(box.get_contents().seasonings.size(), 1, "solo aliño, 1")
-	box.toggle_seasoning(CACHELOS)
+	box.apply_seasoning(CACHELOS)
 	box.apply_seasoning(SWEET)
 	box.apply_seasoning(HOT)
 	var seasonings: Array[SeasoningData] = box.get_contents().seasonings
@@ -292,7 +298,7 @@ func test_pul114_ac5_contents_have_at_most_two_entries() -> void:
 func test_pul057_ac2_remove_seasoning() -> void:
 	var box: Box = _full_box()
 	box.apply_seasoning(SWEET)
-	box.toggle_seasoning(CACHELOS)
+	box.apply_seasoning(CACHELOS)
 	watch_signals(box)
 	assert_true(box.remove_seasoning(SWEET))
 	assert_eq(box.get_contents().seasonings, [CACHELOS] as Array[SeasoningData])

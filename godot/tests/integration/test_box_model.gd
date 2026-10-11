@@ -121,7 +121,7 @@ func test_cachelos_follow_the_seasoning() -> void:
 	assert_false(_visible(box, "cachelos_pieces_a"))
 	assert_eq(box.apply_seasoning(SWEET), SeasoningRules.Rejection.NONE)
 	assert_false(_visible(box, "cachelos_pieces_a"), "otro condimento no añade cachelos")
-	assert_eq(box.toggle_seasoning(CACHELOS), SeasoningRules.Rejection.NONE)
+	assert_eq(box.apply_seasoning(CACHELOS), SeasoningRules.Rejection.NONE)
 	assert_true(_visible(box, "cachelos_pieces_a"))
 	assert_true(_visible(box, "cachelos_pieces_b"))
 	assert_true(box.remove_seasoning(CACHELOS))
@@ -140,7 +140,7 @@ func test_3d_sticker_is_hidden_and_anchors_exist() -> void:
 func test_contract_nodes_survive_the_new_model() -> void:
 	var box: Box = _box(BOX)
 	assert_true(box.is_in_group(&"box"))
-	for path: String in ["%BadgeRow", "%AnimationPlayer", "%AnchorPoint", "%FillBar", "%Lid"]:
+	for path: String in ["%BadgeRow", "%AnimationPlayer", "%AnchorPoint", "%CutCounter", "%Lid"]:
 		assert_not_null(box.get_node_or_null(path), path)
 	var player: AnimationPlayer = box.get_node("%AnimationPlayer") as AnimationPlayer
 	assert_true(player.has_animation(&"box_open"))

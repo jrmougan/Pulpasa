@@ -13,7 +13,6 @@ const R16_ORDERS: Array[OrderData] = [
 	preload("res://data/orders/picante.tres"),
 ]
 const R16_PATIENCE: float = 900.0
-const R16_STAND_FRONT: float = 2.5
 const R16_SWITCH_WAIT: float = 0.3
 ## Semilla del RNG de comandas. Sin ella las dos comandas iniciales salen al azar y, si coinciden
 ## en receta (50 %), la zona de entrega del primer puesto que cruza la caja la acepta (PUL-039):
@@ -154,14 +153,7 @@ func test_r16_single_with_switch_two_s_orders_one_octopus_two_switches() -> void
 			var at: Vector2 = _xz(dispenser)
 			var stand: Vector2 = Vector2(at.x, station.global_position.z + 1.0)
 			assert_eq(await server.use(at, stand), dispenser, dispenser.name)
-		var kiosk: OrderStand = stations.get_node("OrderStand%d" % order.slot_id) as OrderStand
-		var kiosk_xz: Vector2 = _xz(kiosk)
-		await server.walk_to(kiosk_xz + Vector2(0.0, -R16_STAND_FRONT))
-		for _n: int in 20:
-			if server.detector().get_target() == kiosk:
-				break
-			await server.push_towards(kiosk_xz, 1)
-		await server.tap_interact()
+		await server.walk_into_zone(stations.get_node("OrderStand%d" % order.slot_id))
 		assert_signal_emit_count(EventBus, "order_completed", i + 1, "entrega %d" % (i + 1))
 
 	assert_signal_emit_count(EventBus, "order_completed", 2)

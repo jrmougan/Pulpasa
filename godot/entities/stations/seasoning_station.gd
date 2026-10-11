@@ -3,8 +3,9 @@ extends StaticBody3D
 ## Estación de condimentos al paso (D23, ADR-003 §8; scene-tree.md §3): mostrador de pase de
 ## 5,2 m con dos dispensadores de aliño y el cuenco de cachelos, sin bandeja: actúan sobre la
 ## caja que el actor lleva en la mano. No es `interactable`: lo son sus hijos. Da a los hijos el
-## lado del jugador (`side_of`) y oye sus rechazos: `%Feedback` suena
-## `season_error` y sacude al emisor.
+## lado del jugador (`side_of`). No suena nada (D26.3, ADR-003 §11.7): el rechazo de un
+## dispensador o del cuenco lo reproduce el jugador (`rejected`); el `rejected` local de los hijos
+## solo queda para tests.
 
 const DEFAULT_DATA: SeasoningStationData = preload("res://data/config/seasoning_station.tres")
 
@@ -14,7 +15,6 @@ const DEFAULT_DATA: SeasoningStationData = preload("res://data/config/seasoning_
 @onready var _bowl: CachelosBowl = $CachelosBowl
 @onready var _pass_side: Node3D = %PassSide
 @onready var _operator_side: Node3D = %OperatorSide
-@onready var _feedback: FeedbackPlayer = %Feedback
 
 
 func _ready() -> void:
@@ -25,11 +25,9 @@ func _ready() -> void:
 		if dispenser != null:
 			if dispenser.station == null:
 				dispenser.station = self
-			dispenser.rejected.connect(_on_rejected.bind(dispenser))
 	if _bowl != null:
 		if _bowl.station == null:
 			_bowl.station = self
-		_bowl.rejected.connect(_on_rejected.bind(_bowl))
 
 
 ## Lado del mostrador en que está `floor_position` (`(x, z)` global), según `%PassSide` y
@@ -42,12 +40,3 @@ func side_of(floor_position: Vector2) -> StationSide.Side:
 		Vector2(pass_point.x, pass_point.z),
 		Vector2(operator_point.x, operator_point.z)
 	)
-
-
-## Sacudida en curso del `Model` de `emitter`, o `null` (para avanzarla a mano en tests).
-func get_shake(emitter: Node3D) -> Tween:
-	return _feedback.get_visual_tween(emitter)
-
-
-func _on_rejected(_reason: SeasoningRules.Rejection, emitter: Node3D) -> void:
-	_feedback.play_cue(&"season_error", emitter)
