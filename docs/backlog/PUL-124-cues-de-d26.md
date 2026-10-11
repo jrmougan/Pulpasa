@@ -28,8 +28,16 @@ claves nuevas `cook_ready`, `box_full`, `switch`, `rejected` y sample propio par
 - Nombres exactos del contrato (manda sobre el diseño; equivalencias en PUL-120).
 
 ## Acceptance
-
+- [x] AC1: `cook_ready`, `box_full`, `switch`, `rejected` nuevos; `trash`, `discard`, `burn_warning` con sample propio; 7 streams distintos entre sí y de `pick_up`, `drop`, `cook_start`, `cut`, `season` (`tests/unit/test_feedback_distinct.gd`).
+- [x] `cook_done`, `season_error` y `deliver_error` siguen en el mapa.
+- [x] `rejected`: `SHAKE`, `visual_time` 0,35, `shake_amplitude` 0,06.
+- [x] Cada sample < 0,6 s; origen en `godot/assets/CREDITS.md`.
 
 ## Plan
+- [x] Sintetizar 7 WAV (Python estándar) en `godot/assets/audio/sfx/`, pico 0,55-0,7.
+- [x] Registrar claves y samples en `feedback_map.tres`; ajustar `CUES` del test de integración.
+- [x] Test de distinción; `godot --headless --import` para los `.import`.
 
 ## Evidence
+- `docs/evidence/PUL-124/samples.txt`: duración, pico y RMS de cada sample.
+- Origen: síntesis procedural propia (sin packs de terceros en disco); `tools/verify.sh` en verde.
