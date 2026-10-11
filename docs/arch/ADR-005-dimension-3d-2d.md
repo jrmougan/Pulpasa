@@ -233,6 +233,14 @@ window/handheld/orientation=4            (sensor_landscape: apaisado, gira con e
     medido: 66,8 px/m con 12,74) da ≈ 121 px/m: el personaje de 1,6 m mide ≥ 192 px a 1080.
 - **Medida** (diseño AC10): px/m = altura en pantalla de la proyección de pies y cabeza (1,6 m) del
   personaje activo / 1,6. La mide el test con la cámara real; `ortho_size` se ajusta si no llega.
+- **Banda superior tapada** (PUL-133, hallazgo H-01 de PUL-132): `CameraProfile` gana
+  `respect_top_band: bool = false` y `top_reach_height_m: float = 0.0` (móvil: `true` y 2,6 m). Con
+  `respect_top_band`, la parte de arriba de la vista tapada por safe area + `UiProfile.top_band_max_px`
+  (`top_cover_m`, fracción del alto) no cuenta: el foco es el centro de la parte visible
+  (`CameraFollow.covered_focus`, `visible_top`) y el recorte (`CameraFollow.clamp_focus_covered`) deja
+  que la vista salga por el norte hasta `camera_margin_m + top_reach + top_cover` para que lo alcanzable
+  (ollas, su anillo y su prompt) quede bajo la banda. Escritorio sin cambios. Pendiente (PUL-134): la
+  flecha de borde y la zona de botones como rectángulo tapado.
 - `core/camera_follow.gd` (`class_name CameraFollow extends RefCounted`, puro, plano del suelo): estado
   `position: Vector2`, `velocity: Vector2`; `func follow(target: Vector2, smooth_time: float, delta:
   float) -> Vector2` (amortiguación crítica, sin oscilación); `func pan_to(target: Vector2, duration:

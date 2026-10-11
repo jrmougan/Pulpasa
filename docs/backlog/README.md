@@ -146,3 +146,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-131 | M3e | gameplay-engineer | done | Entrega solo por zona, montaje D26 en `level_01` y limpieza de contrato |
 | PUL-132 | M3e | qa-tester | done | QA de D26 |
 | PUL-133 | M3e | gameplay-engineer | done | Cámara móvil bajo la banda superior, aro inactivo fino y game over sin cajas/minuto |
+| PUL-134 | M3e | gameplay-engineer | todo | Flecha de borde y zona de botones como zonas tapadas en la cámara móvil |
