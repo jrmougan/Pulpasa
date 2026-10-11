@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="TouchConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/touch_config.gd" id="1_cfg"]
+
+[resource]
+script = ExtResource("1_cfg")
+px_per_dp_at_1080 = 2.5
+action_button_dp = 72.0
+small_button_dp = 48.0
+hit_slop_px_1080 = 12.0
+button_margin_px_1080 = 48.0
+button_gap_px_1080 = 24.0
+stick_base_dp = 120.0
+stick_radius_dp = 60.0
+stick_deadzone = 0.2
+stick_zone_fraction = 0.5
+stick_zone_top_px_1080 = 200.0
+stick_fade_s = 0.15
+action_icon_px_1080 = 96.0
+press_scale = 0.92
+press_time = 0.1
+ring_px_1080 = 6.0
+haptics_enabled = true
+haptic_ok_ms = 20
+haptic_reject_ms = 20
