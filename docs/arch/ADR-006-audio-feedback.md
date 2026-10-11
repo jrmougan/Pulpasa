@@ -2,9 +2,10 @@
 
 - **Estado:** aceptado (2026-10-06, gate del responsable; fases con multiplicador de paciencia);
   enmienda D25 (cue `trash` en §4, nota en §5 y comandas por fase en §6) **propuesta**, pendiente del
-  gate humano (PUL-111)
-- **Fecha:** 2026-10-06; enmienda 2026-10-10
-- **Ficha:** PUL-066; enmienda PUL-111 (D25, ADR-003 §10)
+  gate humano (PUL-111); enmienda D26 (§4.1: cues de respuesta y de estado distintos, `rejected` único)
+  **propuesta**, pendiente del gate humano (PUL-120)
+- **Fecha:** 2026-10-06; enmiendas 2026-10-10 y 2026-10-11
+- **Ficha:** PUL-066; enmiendas PUL-111 (D25, ADR-003 §10) y PUL-120 (D26, ADR-003 §11)
 - **Relacionado:** ADR-002 (Enmienda 1), ADR-003 (capa común / específica), ADR-005 (D14 = 3D),
   `signals.md`, `scene-tree.md`; features `audio-y-fx` (Must 9), `olla-que-se-pasa` (Should),
   `dificultad-progresiva` (Should), `opciones-de-volumen` (Should); fichas PUL-068..071
@@ -155,6 +156,53 @@ claves cerradas lo exige). Tirar vacía la mano con `Holder.drop()`, así que su
 y `trash` (cubo), como al dejar algo en una estación. Con D25, `unseason` solo suena al **sustituir**
 un aliño por el otro (justo antes de `season`, misma llamada): ya no hay quitar condimento.
 
+#### 4.1 Enmienda D26 (PUL-120, 2026-10-11): una respuesta por pulsación y cues distintos
+
+D26.3: toda pulsación con respuesta (con objetivo, o con la mano llena soltando al suelo) da
+**exactamente una** respuesta ≥ 0,3 s: éxito (el icono salta + el cue del efecto) o rechazo (× +
+motivo + sacudida + **un único** cue de rechazo). El estudio de PUL-119 midió que `drop`, `trash`,
+cocer y descartar compartían sample y que listo / quemándose / lleno / cambio de personaje casi no
+sonaban. Especificación: `lenguaje-acciones.md` («Cues por verbo», AC6–AC8, AC16, AC18).
+
+**Cues nuevos o cambiados** (claves de `data/audio/feedback_map.tres`; entre paréntesis, el nombre
+propuesto por el diseño):
+
+| Cue | Señal (tipo) | Escena · nodo | Visual | Nota |
+|---|---|---|---|---|
+| `cook_ready` (diseño: `cook_done`) | `cooking_finished` (local, olla) | `kitchen.tscn` · `%Feedback` | `POP` del ingrediente; `%CookRing` verde con ✓ | **Renombra** `cook_done`; sample propio de «listo» |
+| `burn_warning` | `burn_warned` (local, olla) y sus repeticiones | `kitchen.tscn` · `%Feedback` | parpadeo ámbar/rojo de `%CookRing` hasta quemar o retirar | Sample propio (alarma). Suena al empezar y la olla lo repite cada `KitchenData.warn_repeat_interval` (1 s) hasta `warn_repeat_count` (3) veces mientras siga el aviso: única excepción a «un cue por señal», es un aviso sostenido |
+| `box_full` | `fill_changed` (local, `Box`) con `fill ≥ 1` (el corte que llena) | `box.tscn` · `%Feedback` | `POP` de la caja; `%CutCounter` muestra `6/6` 0,5 s | Sustituye a `cut` **en ese corte** (un cue por señal) |
+| `switch` (diseño: `character_switch`) | `EventBus.character_switched(1, c)` con `c` = su `player_index`, con la ronda en curso | `player.tscn` · `%Feedback` (el personaje que **recibe** el control) | `POP` del personaje | No suena en la asignación del arranque de ronda |
+| `rejected` (diseño: `action_rejected`) | `InteractionComponent.interaction_resolved` (local) con `BLOCKED`, **cualquier motivo** | `player.tscn` · `%Feedback` | `SHAKE` del objetivo (`play_cue(cue, target)`; sin objetivo, del personaje), ±6 px, 3 ciclos en 0,35 s (`shake_amplitude`/`visual_time` del `AudioCue`) | **Único** cue de rechazo (diseño AC7). Sustituye a `season_error` y `deliver_error` |
+| `trash` | `trashed` (local, `TrashBin`) | `trash_bin.tscn` · `%Feedback` | `POP` del cubo | Sample propio, distinto de `drop` y de `discard` |
+| `discard` | `discarded` (local, olla) | `kitchen.tscn` · `%Feedback` | `POP` de la olla | Sample propio, distinto de `trash` (diseño AC8) |
+
+**Bajas del mapa** (las retira la ficha de montaje cuando ningún emisor las use; hasta entonces
+conviven con las nuevas para que cada ficha cambie su escena sin romper el test de claves):
+`cook_done` (renombrado a `cook_ready`), `season_error` y `deliver_error` (sustituidos por `rejected`;
+el puesto ya no rechaza: la entrega es solo por zona, ADR-003 §11.7). Sin alias: el mapa no tiene dos
+claves para el mismo hecho.
+
+**Verbo → respuesta de éxito** (un cue por pulsación `OK`; lo reproduce la escena que cambia):
+
+| Verbo | Cue de éxito |
+|---|---|
+| `pick_up` (COGER) | `pick_up` (jugador) |
+| `drop` (SOLTAR en pasaplatos o al suelo) | `drop` (jugador) |
+| `cook` (COCER) | `cook_start` (olla); también suena `drop` del jugador (§4, colocar en estación) |
+| `cut` (CORTAR) | `cut`, o `box_full` en el corte que llena (caja) |
+| `season_sweet` / `season_hot` (ALIÑAR) | `season` (caja); al sustituir, `unseason` + `season` (D25) |
+| `cachelos` (CACHELOS) | poner en la caja: `season` (caja); reponer el cuenco: `drop` (jugador) |
+| `trash` (TIRAR) | `trash` (cubo; también suena `drop`) o `discard` (olla, quemado) |
+
+**Distinción** (test de datos sobre `feedback_map.tres`, diseño AC8): los `stream` de `trash`,
+`discard`, `cook_ready`, `burn_warning`, `box_full`, `switch` y `rejected` son **7 distintos** entre sí
+y distintos de los de `pick_up`, `drop`, `cook_start`, `cut` y `season` (se comparan `resource_path`).
+Cada uno con `visual_time ≥ 0.3` salvo los de visual `NONE`.
+
+**Háptica** (diseño, `controles-tactiles.md`): la vibración de éxito y rechazo en móvil la hace el
+botón de acción táctil (ADR-004 §6) al oír `EventBus.interaction_resolved`, no el mapa de audio.
+
 Correcta y errónea son distintas en sonido (`deliver_ok`/`deliver_error`) y en visual
 (`POP`/`SHAKE`), como pide AC5. `order_new` lleva `delay` para no pisarse con `deliver_ok` u
 `order_expired`, que en la reposición llegan en el mismo frame (`signals.md` §3); sigue siendo
@@ -286,6 +334,10 @@ estación: suenan los dos (`drop` es suave por datos); no se suprime para no rom
 - (−) La lectura de AC2 de `audio-y-fx` cambia ("su señal de `EventBus`" → "su señal"): R2.
 - (−) Colocar en una estación suena doble (`drop` + la de la estación).
 - (−) `FeedbackPlayer` es de la capa específica: con 2D habría que duplicarlo (`AudioStreamPlayer2D`).
+- (§4.1, +) El rechazo suena igual en toda la cocina y lo da quien pulsa; las estaciones solo suenan
+  cuando cambian algo.
+- (§4.1, −) Durante la transición el mapa tiene claves de baja (`cook_done`, `season_error`,
+  `deliver_error`) hasta la ficha de montaje.
 - Owns de PUL-071 a ajustar: `core/audio_mix.gd(.uid)`, `tests/unit/test_audio_mix.gd(.uid)`,
   `components/feedback_player.gd(.uid)` (ya en `components/**`), `entities/**/*.gd` de las escenas
   que conecta, `scenes/levels/level_01.tscn` (instancia `LevelAudio`), `resources/audio_*.gd`.

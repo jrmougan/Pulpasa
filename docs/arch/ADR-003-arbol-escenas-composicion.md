@@ -5,10 +5,12 @@
   revisión del producer (PUL-093); sustituye las partes de §8 que dependían de la bandeja;
   enmienda de §3 (API de `Holder`), §9.4 y §9.5 tras implementar M3c (PUL-103) **aprobada** por el
   responsable en gate humano; enmienda §10 (D25: caja única, aliño de una pulsación, cubo de
-  basura y comandas por fase) **propuesta**, pendiente del gate humano (PUL-111)
-- **Fecha:** 2026-10-03; enmiendas 2026-10-05, 2026-10-07, 2026-10-09 y 2026-10-10
+  basura y comandas por fase) **propuesta**, pendiente del gate humano (PUL-111); enmienda §11
+  (D26: verbo de acción, prompt, histéresis, entrega solo por zona y cuenco que solo pone)
+  **propuesta**, pendiente del gate humano (PUL-120)
+- **Fecha:** 2026-10-03; enmiendas 2026-10-05, 2026-10-07, 2026-10-09, 2026-10-10 y 2026-10-11
 - **Ficha:** PUL-003; enmiendas PUL-056 (D18, D19), PUL-093 (D23) y PUL-103 (lo que cambió al
-  implementar M3c en PUL-097…PUL-101) y PUL-111 (D25)
+  implementar M3c en PUL-097…PUL-101), PUL-111 (D25) y PUL-120 (D26)
 - **Relacionado:** `docs/arch/scene-tree.md` (árbol objetivo de M0), ADR-001 (carpetas), ADR-002
   (autoloads), ADR-005 (3D o 2D, D14 pendiente), inventario §1 (Characters, Game, Interaction,
   Interfaces) y §3 (prefabs, escenas)
@@ -91,9 +93,10 @@ El jugador y los objetos se componen de nodos-componente reutilizables en `compo
 |---|---|---|---|---|
 | `ControlComponent` | Común | `Node` | parte de `PlayerController` | `@export var player_index: int` (identidad del personaje), `var controlled_by: int` (jugador que lo controla, 0 = nadie), señal `control_changed(controlled_by)`. Crea el `PlayerInput` del jugador que lo controla (ADR-004) |
 | `Holder` | Común (abstracta) | `Node` | `IPickable` + `PlayerHoldSystem` (API) | API de la mano: `get_held_item() -> Node`, `can_hold(item: Node) -> bool`, `pick_up(item: Node) -> bool`, `drop() -> Node`, `can_drop_freely() -> bool` (PUL-101: si soltar al suelo sin objetivo es posible; la base devuelve `true`, §9.5); señales `item_picked_up`/`item_dropped`. Los métodos base fallan con `push_error` (salvo `can_drop_freely`); los implementa `HoldComponent` |
-| `InteractionComponent` | Común | `Node` | `PlayerInteractionController` | `@export var control: ControlComponent`, `@export var holder: Holder`, `@export var detector: Node` (conecta `target_changed` por nombre). Al pulsar `p<n>_interact` llama `interact(self)` del objetivo; si nada acepta y lleva algo, `holder.drop()` solo si `holder.can_drop_freely()`; si no, consume la pulsación sin soltar (PUL-101, §9.5) |
+| `InteractionComponent` | Común | `Node` | `PlayerInteractionController` | `@export var control: ControlComponent`, `@export var holder: Holder`, `@export var detector: Node` (conecta `target_changed` por nombre). Al pulsar `p<n>_interact` llama `interact(self)` del objetivo; si nada acepta y lleva algo, `holder.drop()` solo si `holder.can_drop_freely()`; si no, consume la pulsación sin soltar (PUL-101, §9.5). *D26 (§11.4):* resuelve el `ActionHint` antes de `interact`, emite `interaction_resolved` (local y de bus), repite el corte manteniendo y publica `action_hint_changed` en `EventBus` |
 | `HoldComponent` | Específica | `Holder` + `Marker3D`/`Marker2D` `%HoldPoint` | `PlayerHoldSystem` | Implementa `Holder`: reparenta y coloca el objeto. Único camino: llama `on_picked_up`/`on_dropped` del objeto (B4); valida antes de mutar (B5). `can_drop_freely()` es `false` si el punto de soltar cae en la capa `world` (§9.5) |
-| `InteractionDetector` | Específica | `Area3D` / `Area2D` | `InteractionDetector` | Un solo detector por jugador (B7); radio en `PlayerConfig.tres`. Delega la puntuación en `InteractionScoring` (común, `Vector2` del suelo) |
+| `InteractionDetector` | Específica | `Area3D` / `Area2D` | `InteractionDetector` | Un solo detector por jugador (B7); radio en `PlayerConfig.tres`. Delega la puntuación en `InteractionScoring` (común, `Vector2` del suelo). *D26 (§11.3):* `@export var actor: InteractionComponent`; descarta candidatos con `ActionHint` `NONE`, aplica histéresis y emite `hint_changed`; sin control no publica objetivo |
+| `ActionPrompt` | Específica | `Node3D` (2D: `Node2D`) | — (nuevo, D26) | Icono del verbo sobre el objetivo activo del personaje controlado (§11.5). `components/action_prompt.gd`, escena `entities/player/action_prompt.tscn` |
 | `Highlightable` | Específica | `Node` | `HighlightController`, `OutlineHighlighter`, `InteractableHighlight` | 3D: `material_overlay` con shader de contorno; 2D: shader `canvas_item` de contorno. Retícula opcional. Sin `EmissionHighlighter` (B3) |
 
 ### 4. Contrato de interacción (sustituye a `IInteractable`/`IPickable`) — común
@@ -101,7 +104,7 @@ Godot no tiene interfaces; se usa **grupo + métodos con firma fija**, verificad
 
 | Grupo | Métodos obligatorios en el script raíz | Lo implementan |
 |---|---|---|
-| `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación). **Opcional** (§8): `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool` | estaciones, slots, caja, puesto de entrega, pulpo y cachelos; dispensadores y cuenco de la estación de condimentos (§8); cubo de basura (§10.3, *Enmienda D25 (PUL-111, 2026-10-10)*). Condimento (bote): baja en PUL-061 |
+| `interactable` | `can_interact(actor: InteractionComponent) -> bool`; `interact(actor: InteractionComponent) -> bool` (devuelve si consumió la pulsación). **Opcional** (§8): `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool`. *D26 (§11.2):* `get_action_hint(actor: InteractionComponent) -> ActionHint`, **obligatorio** en `entities/` (el test de contrato lo exige desde la oleada de montaje); `can_interact` = `get_action_hint(actor).is_target()` | estaciones, slots, caja, pulpo y cachelos; dispensadores y cuenco de la estación de condimentos (§8); cubo de basura (§10.3, *Enmienda D25 (PUL-111, 2026-10-10)*). Condimento (bote): baja en PUL-061. *D26 (§11.7):* el puesto de entrega **sale** del grupo |
 | `pickable` | `on_picked_up(holder: Holder) -> void`; `on_dropped() -> void`; `var is_held: bool` | pulpo, cachelos, caja. Condimento (bote): baja en PUL-061 |
 | `kitchen` | Ninguno (marca). Lo usa `InteractionDetector` para el bonus de puntuación con mano vacía (`PlayerConfig.kitchen_bonus`, equivale al tag `Kitchen` de Unity). No es una capa de física | raíz de `kitchen.tscn` (obligatorio) |
 | `box` | Ninguno (marca, §8). Lo usaba `Slot.accepted_group` para que la bandeja de la estación solo aceptara cajas; sin usuario en el nivel desde D23 (§9), se conserva. No es una capa de física | raíz de `box.tscn` |
@@ -337,6 +340,7 @@ PUL-100 lo comprueba (o tiñe el toldo desde la paleta).
   tick, R12 pide ≤ 0,1 s) y se apaga al vaciarse el área y con `orders_reset`, `order_completed` y
   `order_expired` de su puesto. Expone `is_zone_lit() -> bool` para tests.
 - No entrega nada: entregar sigue siendo `%DeliveryZone` (`body_entered`) o interactuar (B12).
+  *Enmienda D26 (PUL-120):* interactuar ya no entrega; solo la zona (§11.7).
 
 #### 9.5 Pasaplatos y barra
 - En el nivel hay exactamente **6** `PassSlot` (`slot.tscn`), y fuera de ellos y de la estación
@@ -355,7 +359,8 @@ PUL-100 lo comprueba (o tiñe el toldo desde la paleta).
     `false` si el punto de soltar está bloqueado por `world`.
   - `InteractionComponent.interact_pressed()`: si el objetivo no consume y la mano está llena,
     llama `holder.drop()` solo si `holder.can_drop_freely()`; en los dos casos **consume** la
-    pulsación (devuelve `true`), sin señal ni cue.
+    pulsación (devuelve `true`), sin señal ni cue. *Enmienda D26 (PUL-120):* sin objetivo, la
+    pulsación tiene hint de suelo (`drop` OK o BLOQUEADO `busy`) y siempre responde (§11.3–§11.4).
   - `Holder.drop()` no cambia ni consulta `can_drop_freely()`: lo siguen usando las transferencias
     (slot, olla, cuenco, puesto), que dejan el objeto en su sitio aunque esté sobre la barra.
   Sin objetivo y con el punto libre, soltar sigue como en §6 (delante del portador, al nodo `Items`).
@@ -466,7 +471,8 @@ static func apply(current: Array[SeasoningData], seasoning: SeasoningData, is_fu
   `box.apply_seasoning(seasoning)` → `NONE`: lanza el gesto visual del dispensador (abajo);
   `BOX_NOT_FULL`: `rejected(BOX_NOT_FULL)` (suena `season_error`); `ALREADY_APPLIED`: **se consume en
   silencio** (ni `rejected` ni cue: «pulsar el mismo no hace nada», D25). No hay toggle de quitar: lo
-  que está mal se tira al cubo (§10.3).
+  que está mal se tira al cubo (§10.3). *Enmienda D26 (PUL-120):* `ALREADY_APPLIED` deja de ser
+  silencioso: es `BLOCKED` con motivo y suena `rejected` en el jugador (§11.7).
 - **Sin antirrebote**: aplicar es idempotente (la segunda pulsación del mismo da `ALREADY_APPLIED`), así
   que el dispensador pierde `clock`, `_game_time` y `_last_change`.
 - Gesto visual (D25: sal gorda, pimentón y aceite): nodo `%Gesture` dentro de
@@ -488,6 +494,8 @@ cuenco → `BOWL_EMPTY`, `BOWL_FULL`. `ALREADY_APPLIED` existe en el enum pero n
 
 **Cuenco** (`cachelos_bowl.gd`): sin cambio de comportamiento (§9.1); llama
 `box.toggle_seasoning(seasoning)` sin el segundo argumento.
+*Enmienda D26 (PUL-120):* el cuenco solo pone, con `box.apply_seasoning(seasoning)`; se van el
+toggle y su antirrebote (§11.7).
 
 #### 10.3 Cubo de basura
 | Pieza | Capa | Contrato |
@@ -529,7 +537,9 @@ TrashBin (StaticBody3D, capa interactable; grupo interactable)   trash_bin.gd  c
 ```
 Nivel: dos instancias, `TrashBinKitchen` y `TrashBinService`, en `Stations` de `level_01.tscn`
 (posiciones en `scene-tree.md` §2: x 2,6 / z −3,1 y x −5,4 / z 4,3). Override permitido: solo la
-transformación (§2). **Regla de colocación** (contrato, la exige `test_level_01.gd`): cada cubo a
+transformación (§2). *Enmienda D26 (PUL-120):* con el contrato honesto (§11.2) los spawners ya no son
+objetivo con la mano llena y el puesto deja de ser objetivo; la regla se **conserva tal cual** (más
+estricta de lo necesario, inocua). **Regla de colocación** (contrato, la exige `test_level_01.gd`): cada cubo a
 ≥ 1,5 m de todo lo que es objetivo con la mano llena (spawners —`ItemSpawner.can_interact` es `true`
 con la mano llena—, ollas, pasaplatos, dispensadores, cuenco y puestos) y del hueco, para que no
 compitan como objetivo y no se tire nada por error.
@@ -590,6 +600,321 @@ Los dispensadores siguen con `rejected` (solo `BOX_NOT_FULL`); la caja con `seas
    construcción, pero ata cada comanda a la estructura de fases de una ronda concreta; el pool en
    `PhaseData` deja que otra ronda (tutorial, otro nivel) reparta las mismas comandas de otra forma.
 
+### 11. Lenguaje de acciones, prompt, histéresis, entrega por zona y cuenco que solo pone (D26) — *Enmienda D26 (PUL-120, 2026-10-11), propuesta, pendiente del gate humano*
+
+**Contexto.** D26 (producer con autorización del responsable, 2026-10-11; `docs/design/decisions.md`;
+estudio en `docs/evidence/PUL-119/README.md`). El contorno solo dice «esto es objetivo», no «esto va
+a pasar»; hay pulsaciones mudas porque `can_interact` miente a propósito (caja, olla, slot y spawner
+devuelven `true` y luego `interact` no hace nada); el objetivo salta entre candidatos cercanos; el
+puesto compite como objetivo con la caja en la mano. Esta sección fija: el verbo de cada pulsación y
+su estado **antes** de pulsar (§11.1–§11.2), cómo lo calcula y publica el detector con histéresis,
+también sin objetivo (§11.3), la respuesta única a cada pulsación y el corte al mantener (§11.4), el
+icono sobre el objetivo (§11.5), la tabla de ramas (§11.6), la entrega solo por zona y el cuenco que
+solo pone (§11.7) y el estado legible en el mundo (§11.8). El táctil está en ADR-004 §6, la escala y
+la cámara móvil en ADR-005 (Enmienda D26) y los cues en ADR-006 §4.1.
+
+**Especificación de diseño.** `docs/design/features/lenguaje-acciones.md` (PUL-119): vocabulario,
+tabla mano × objetivo (A–F), medidas y AC. La tabla de §11.6 es su **transcripción** a los nombres del
+contrato; si en el futuro difieren, manda la del diseño y solo cambian las ramas de `ActionRules` y su
+fixture (los tipos, firmas y señales de esta sección no). Un verbo o un motivo nuevo exige enmienda
+(constante + icono + test). Equivalencia de nombres diseño → contrato en la ficha PUL-120 («Nombres
+del diseño y del contrato»).
+
+#### 11.1 Tipos comunes (`core/`)
+
+| Pieza | Fichero | Contrato |
+|---|---|---|
+| `ActionVerb` | `core/action_verb.gd` (`class_name ActionVerb extends RefCounted`) | Constantes `StringName`, conjunto **cerrado**: `NONE = &""`; `PICK_UP = &"pick_up"` (COGER); `DROP = &"drop"` (SOLTAR: en pasaplatos o al suelo); `COOK = &"cook"` (COCER); `CUT = &"cut"` (CORTAR); `SEASON_SWEET = &"season_sweet"` (ALIÑAR DULCE); `SEASON_HOT = &"season_hot"` (ALIÑAR PICANTE); `CACHELOS = &"cachelos"` (CACHELOS: reponer el cuenco o poner en la caja); `TRASH = &"trash"` (TIRAR, incluye desechar el quemado). `const ALL: Array[StringName]` (los 8, sin `NONE`, en este orden); `const REPEATABLE: Array[StringName] = [CUT]` (§11.4); `static func is_valid(verb: StringName) -> bool` |
+| `ActionReason` | `core/action_reason.gd` (`class_name ActionReason extends RefCounted`) | Constantes `StringName`, conjunto **cerrado** de 6: `NONE = &""`; `BOX_NOT_FULL = &"box_not_full"` (caja a medias); `BUSY = &"busy"` (ocupado: olla sin plaza, soltar donde no cabe); `EMPTY = &"empty"` (vacío); `FULL = &"full"` (lleno); `ALREADY_APPLIED = &"already_applied"` (ya aplicado / ya lleva); `NOT_COOKED = &"not_cooked"` (sin cocer: cortar con pulpo crudo). `const ALL: Array[StringName]` (los 6, sin `NONE`); `static func is_valid(reason: StringName) -> bool` |
+| `ActionHint` | `core/action_hint.gd` (`class_name ActionHint extends RefCounted`) | `enum State { NONE = 0, OK = 1, BLOCKED = 2 }` (valores fijos: viajan como `int` por el bus). `var verb: StringName`, `var state: State`, `var reason: StringName`, `var replaces: bool = false` (ALIÑAR que sustituye al otro aliño: insignia del prompt), `var progress: float = -1.0` (0–1 o −1 = sin progreso). Constructores `static func none() -> ActionHint`, `static func ok(verb: StringName, progress: float = -1.0) -> ActionHint`, `static func blocked(verb: StringName, reason: StringName) -> ActionHint`. `func is_target() -> bool` (`state != NONE`); `func same_as(other: ActionHint) -> bool` (compara `verb`, `state`, `reason` y `replaces`; **ignora `progress`**). Invariantes (test): `NONE` ⇒ `verb == &""` y `reason == &""`; `OK` ⇒ `ActionVerb.is_valid(verb)` y `reason == &""` (única excepción: verbo vacío heredado, §11.3); `BLOCKED` ⇒ verbo válido y `ActionReason.is_valid(reason)` |
+| `ActionRules` | `core/action_rules.gd` (`class_name ActionRules extends RefCounted`) | Reglas puras mano × receptor (§11.6), **única fuente de ramas** de `get_action_hint` e `interact`. `enum Held { NOTHING, OCTOPUS_RAW, OCTOPUS_COOKED, CACHELOS_RAW, CACHELOS_COOKED, BOX_EMPTY, BOX_PARTIAL, BOX_FULL, OTHER }` (M0…M7 del diseño; M8/M9 = `BOX_FULL` + qué aliño lleva, que se pasa aparte; `OTHER` = cualquier otra cosa). Funciones `static`, solo con primitivos, `StringName` y `Held`, todas `-> ActionHint`: `for_loose_item(held: Held, can_hold: bool)` (A4: pulpo o cachelos sueltos o en un pasaplatos); `for_box(held: Held, box_full: bool, fill: float)` (B: caja suelta o en pasaplatos); `for_pot(held: Held, free_places: int, has_burnt: bool, has_ready: bool)` (C); `for_pass_slot(held: Held, accepts: bool)` (A5, pasaplatos **vacío**); `for_spawner(held: Held)` (A1–A3); `for_dispenser(held: Held, verb: StringName, box_has_it: bool, box_has_other: bool)` (D; `replaces` = `box_has_other`); `for_bowl(held: Held, stock: int, stock_max: int, portions_per_item: int, box_has_cachelos: bool)` (E); `for_trash(held: Held, can_trash: bool)` (A6); `for_floor(held: Held, can_drop: bool)` (A8–A9: sin objetivo) |
+| `HoldRepeat` | `core/hold_repeat.gd` (`class_name HoldRepeat extends RefCounted`) | Temporizador puro del corte al mantener (§11.4): `_init(interval: float)`, `arm()`, `disarm()`, `is_armed() -> bool`, `advance(delta: float) -> bool` (`true` como mucho una vez por llamada, al cumplirse `interval` desde `arm()` o desde el último `true`; el sobrante se conserva). Sin `Input` ni árbol |
+
+`HeldKind` (`entities/items/held_kind.gd`, `class_name HeldKind extends RefCounted`, **capa
+específica**: conoce `Box` e `Ingredient`): `static func of(item: Node) -> ActionRules.Held`. Es el único
+sitio que traduce el objeto de la mano a `Held`; lo usan todos los receptores y el detector.
+
+**Prioridad de motivos** (diseño): un único motivo por hint; primero el estado del **objetivo**
+(`busy` > `full` > `empty`), luego lo que se **lleva** (`already_applied` > `box_not_full` >
+`not_cooked`). **Excepción de la tabla**: en el cuenco con stock 0 y una caja llena que **ya lleva**
+cachelos el motivo es `already_applied`, no `empty` (fila E1 del diseño; el contrato sigue la tabla).
+
+#### 11.2 Contrato `interactable` desde D26
+
+- **`get_action_hint(actor: InteractionComponent) -> ActionHint`**: obligatorio en todo nodo del grupo
+  `interactable` de `entities/` (`InteractionContract.INTERACTABLE_METHODS` lo incluye en la oleada de
+  montaje; hasta entonces es opcional y el detector tolera su ausencia, §11.3). Consulta pura, sin
+  efectos ni señales. Devuelve `none()` si la pulsación no haría nada (la entidad **no se resalta ni
+  es objetivo**), `ok(verbo)` si cambia el juego y `blocked(verbo, motivo)` si no lo cambia pero el
+  motivo es útil (D26.2).
+- **Una sola resolución.** Cada receptor implementa `_resolve(holder: Holder) -> ActionHint`, que lee su
+  estado, clasifica la mano con `HeldKind.of(holder.get_held_item())` y delega en `ActionRules.for_*`.
+  `get_action_hint(actor)` = `_resolve(actor.holder)` (o `none()` sin `actor`/`holder`).
+  `interact(actor)` llama **una vez** a `_resolve` al empezar y ejecuta solo la rama de ese resultado:
+  - `NONE` → `false` sin efectos (el `InteractionComponent` ya no debería llamarlo).
+  - `BLOCKED` → `true` sin cambiar estado. Dispensador y cuenco siguen emitiendo su
+    `rejected(reason: SeasoningRules.Rejection)` local (tests y compatibilidad); **ninguna estación
+    reproduce un cue de error** (lo hace el jugador, §11.4 y ADR-006 §4.1).
+  - `OK` → ejecuta el efecto del verbo y `true`.
+  Prohibido decidir en `interact` una rama distinta de la publicada (AC2 del diseño, §11.6).
+- **`can_interact(actor) -> bool`** se conserva y pasa a ser honesto: `get_action_hint(actor).is_target()`.
+  Desaparecen los `true` que «consumían sin hacer nada» (caja con algo que no le sirve, olla con un
+  cocido o una caja en la mano, slot ocupado con la mano llena, spawner con la mano llena).
+- **`is_reachable_from`** (§8.1) no cambia de firma y se evalúa **antes** que `get_action_hint` (filtro
+  de lado). `get_action_hint` no repite la comprobación de lado.
+- `InteractionContract` (común) gana `const HINT_METHOD: StringName = &"get_action_hint"`; la oleada de
+  montaje lo mueve a `INTERACTABLE_METHODS`.
+
+#### 11.3 Detector: filtro honesto, histéresis, suelo y publicación del hint
+
+- `InteractionDetector` gana `@export var actor: InteractionComponent` (en `player.tscn`:
+  `%InteractionComponent`). Por cada entidad, en este orden: `is_reachable_from` (si existe) →
+  `hint := entity.get_action_hint(actor)` si tiene el método; si no, `ActionHint.ok(&"")` cuando
+  `can_interact(actor)` es `true` y `none()` si no → con `NONE` la entidad **no es candidata**. Guarda
+  el hint de cada candidato. `OK` con verbo vacío es la **única excepción** a las invariantes de
+  `ActionHint` («objetivo heredado sin verbo», solo dobles de test y entidades sin migrar): el botón
+  táctil lo pinta sin icono y el prompt no se muestra. Desde la oleada de montaje el test de contrato
+  impide que una entidad de `entities/` dependa de ella.
+- **Sin control no hay objetivo.** Si `actor == null`, `actor.control == null` o
+  `actor.control.controlled_by == 0`, el detector publica `null` con hint `none()` y apaga su
+  resaltado. El personaje no controlado no muestra contorno ni prompt.
+- **Sin objetivo con la mano llena** (filas A8–A9 del diseño): si no queda ningún candidato y el
+  `holder` lleva algo, el hint publicado (con objetivo `null`) es `ActionRules.for_floor(held,
+  holder.can_drop_freely())`: `ok(DROP)` si el punto de soltar está libre y `blocked(DROP, BUSY)` si cae
+  en `world` (barra, pared). Mano vacía y sin candidatos: `none()`.
+- **Histéresis** (D26.4) en `InteractionScoring` (común, pura). `pick_best` gana dos parámetros con
+  valor por defecto (los tests actuales no cambian):
+  ```gdscript
+  static func pick_best(origin: Vector2, forward: Vector2, candidates: Array[Candidate], holding: bool,
+          cone_half_angle_deg: float, near_distance: float, kitchen_bonus: float,
+          current: int = -1, hysteresis_margin: float = 0.0) -> int
+  ```
+  `current` = índice en `candidates` del objetivo publicado si sigue siendo candidato (si no, −1).
+  Regla: se calcula `best` como hoy (prioridad de cogible suelto incluida). Si `current` ≥ 0, pasa el
+  cono y `best != current`, se mantiene `current` salvo que (a) `best` tenga prioridad de cogible y
+  `current` no (regla categórica de PUL-063), o (b) `score(best) > score(current) + hysteresis_margin ×
+  absf(score(current))` (con puntuación positiva, `> score × 1,20`, AC9 del diseño), con las
+  puntuaciones ya con `kitchen_bonus`. Si `current` deja de ser candidato (fuera de radio o cono,
+  `is_reachable_from` falso, liberado o hint `NONE`) se cambia en ese tick. Pasar de `OK` a `BLOCKED`
+  (o al revés) **no** invalida al actual.
+- `PlayerConfig` (`resources/player_config.gd`) gana `@export var hysteresis_margin: float = 0.2`;
+  `data/config/player_config.tres` lo fija a **0,2**. 0 = sin histéresis (comportamiento previo).
+- **Resaltado** (§11.8): el detector llama `Highlightable.set_blocked(hint.state == BLOCKED)` sobre el
+  objetivo que enciende (contorno ámbar si está bloqueado).
+- **Publicación** (local): señal nueva `hint_changed(target: Node, hint: ActionHint)` y
+  `func get_hint() -> ActionHint` (nunca `null`). En cada `refresh()`, tras `target_changed` (si cambió
+  el objetivo), emite `hint_changed` si cambió el objetivo **o** `not hint.same_as(anterior)`. Los
+  cambios solo de `progress` no emiten: quien lo pinte lo lee con `get_hint()`. El hint de suelo
+  (A8–A9) viaja con `target = null`.
+
+#### 11.4 `InteractionComponent`: respuesta única, suelo, mantener y bus
+
+- `interact_pressed() -> bool` (D26.3):
+  1. `hint` = el vigente del detector (`get_hint()`, el mismo que se ve) y `target` = su objetivo; si
+     hay objetivo se recalcula con `target.get_action_hint(self)` (el estado puede haber cambiado en
+     este frame).
+  2. `hint.state == NONE` (mano vacía y sin objetivo): nada; devuelve `false`.
+  3. Sin objetivo (suelo): `OK` `drop` → `holder.drop()`; `BLOCKED` `busy` → nada cambia. En los dos
+     casos se emite la respuesta (paso 5). Sustituye a la regla «consumir en silencio» de §9.5: soltar
+     contra la barra o la pared ya **no es una pulsación muda**.
+  4. Con objetivo: `target.interact(self)` (debe devolver `true`; si devuelve `false`, `push_error`: el
+     receptor incumple §11.2).
+  5. Señal **local** `interaction_resolved(target: Node, hint: ActionHint)` (`target` puede ser `null`
+     en el suelo) → `EventBus.interaction_resolved(player_index, hint.verb, hint.state, hint.reason)` si
+     `control.controlled_by > 0`. Devuelve `true`.
+  `player_index` del bus = `control.controlled_by` (el **jugador**, no el personaje).
+- **Respuesta al rechazo** (D26.3): la da el jugador, no la estación. `player.gd` conecta
+  `interaction_resolved` local y, con `BLOCKED`, llama a su `%Feedback.play_cue(&"rejected", target)`
+  (`SHAKE` del objetivo; sin objetivo, del propio personaje): **un único cue de rechazo** para todos
+  los motivos (diseño AC7). `%ActionPrompt` muestra × + motivo y se sacude. Con `OK` el cue es el del
+  efecto (el de la escena que cambia: `pick_up`, `drop`, `cut`, `season`…) y el prompt «salta». Cada
+  pulsación con respuesta da **exactamente un** cue de respuesta (ADR-006 §4.1).
+- **Mantener para cortar** (D26.5, diseño AC13): `PlayerInput` gana `is_interact_pressed() -> bool`
+  (`Input.is_action_pressed(_interact, true)`). `InputConfig` gana `@export var cut_repeat_interval:
+  float = 0.2` (`input_config.tres`: 0,2). `InteractionComponent` guarda un `HoldRepeat`: tras una
+  pulsación resuelta `OK` con `hint.verb in ActionVerb.REPEATABLE` lo arma (recordando el objetivo); en
+  `_physics_process(delta)`, si `is_interact_pressed()` es `false`, cambió el objetivo o su hint ya no
+  es ese verbo en `OK` (caja llena, pulpo agotado), lo desarma **sin** pulsar (no hay rechazo mientras
+  se mantiene); si no, cuando `advance(delta)` da `true`, llama a `interact_pressed()`. Primer corte al
+  pulsar; los demás cada 0,2 s de juego (1,05 s mantenido = 6 cortes). Se congela en pausa. Pulsar
+  sigue valiendo (D13).
+- **Bus del hint** (ADR-002 Enmienda 2, `signals.md` §2): `InteractionComponent` conecta `hint_changed`
+  de su `detector` (por nombre) y emite `EventBus.action_hint_changed(controlled_by, hint.verb,
+  hint.state, hint.reason)` solo si `controlled_by > 0`. Al **perder** el control emite una vez
+  `action_hint_changed(jugador_anterior, &"", 0, &"")`; al **ganarlo**, una vez el hint vigente de su
+  detector. Como `CharacterSwitcher` pone 0 al saliente antes que 1 al entrante en la misma llamada
+  (ADR-004 §4), el último hecho para el jugador es el del entrante. En cada instante hay como mucho un
+  `InteractionComponent` controlado por cada jugador: es el emisor único de `action_hint_changed` e
+  `interaction_resolved` para ese `player_index`.
+
+#### 11.5 Prompt en el mundo (`ActionPrompt`)
+
+Decisión: el icono sobre el objetivo vive **en el mundo** (capa específica), no en `ui/` (regla 4: un
+`Control` que proyecte posiciones 3D necesitaría la cámara y `Vector3`). Obtiene el hint
+**localmente** de su detector, sin bus.
+
+```
+entities/player/action_prompt.tscn
+ActionPrompt (Node3D, top_level = true)   components/action_prompt.gd  class_name ActionPrompt
+│   @export detector: InteractionDetector     (el del mismo personaje)
+│   @export actor: InteractionComponent       (el del mismo personaje)
+│   @export hold: HoldComponent               (punto de soltar para el hint de suelo)
+│   @export icons: ActionIconSet = data/config/action_icons.tres
+│   hint_changed(target, hint) → se coloca y pinta; interaction_resolved(target, hint) → animación
+├── %Plate        (Sprite3D billboard, no_depth_test, render_priority alta)  placa circular oscura
+├── %VerbIcon     (Sprite3D, ídem)  icons.verb_icons[hint.verb]; ok_color / blocked_color
+├── %ReasonIcon   (Sprite3D, ídem)  icons.reason_icons[hint.reason]; solo BLOCKED (esquina inferior derecha)
+├── %Cross        (Sprite3D, ídem)  icons.cross; solo BLOCKED (esquina superior derecha)
+├── %ReplaceBadge (Sprite3D, ídem)  icons.replace; solo si hint.replaces (esquina superior izquierda)
+└── %PlayerMarker (Sprite3D, ídem)  icons.player_markers[jugador − 1]; solo en COOP_2P
+```
+- Visible solo con hint `OK` o `BLOCKED` (con verbo no vacío) y el personaje controlado.
+- **Posición**: con objetivo, su `%PromptAnchor` (`Marker3D`, opcional, hijo directo de la raíz del
+  objetivo; `target.get_node_or_null(^"%PromptAnchor")`) o, si no tiene, la parte alta de su
+  `Highlightable` (AABB de sus mallas) + `icons.prompt_offset` (0,9 m) hacia arriba. Sin objetivo
+  (hint de suelo), sobre el punto de soltar: `HoldComponent.get_drop_position() -> Vector3` (método
+  nuevo, específico; mismo punto que usa `can_drop_freely`). Se recoloca cada frame.
+- **Tamaño en pantalla** (diseño): icono `prompt_icon_px_1080` (64) y placa `prompt_plate_px_1080` (80)
+  × alto de ventana / 1080, con mínimo absoluto `prompt_min_px` (48) para el icono; motivo 32 px y aspa
+  24 px a 1080. Con la ortográfica, metros = píxeles × `size` / alto. Sin test de profundidad: el
+  jugador no lo tapa.
+- **Dos prompts en el mismo objetivo** (Local 2P): se colocan lado a lado separados 8 px. Coordinación
+  por un registro **estático de la clase** `ActionPrompt` (objetivo → prompts visibles), sin buscar
+  nodos en la escena.
+- **Respuesta** (`response_duration` 0,35 s): `OK` → el icono sube 12 px y escala 1,0 → 1,25 → 1,0;
+  `BLOCKED` → aspa y motivo parpadean una vez y el prompt se sacude ±`reject_shake_px` (6) px, 3 ciclos.
+  Cada pulsación reinicia la animación. Tween del nodo (se congela en pausa).
+- Lo instancia `player.tscn` como `%ActionPrompt` (uno por personaje). El nivel no cambia por él.
+
+**Datos de iconos y prompt** (`resources/action_icon_set.gd`, `class_name ActionIconSet extends
+Resource`, común: solo `Texture2D`, `Color`, `float`): `verb_icons: Dictionary[StringName, Texture2D]`
+(claves = `ActionVerb.ALL`), `reason_icons: Dictionary[StringName, Texture2D]` (claves =
+`ActionReason.ALL`), `plate`, `cross`, `replace: Texture2D`, `player_markers: Array[Texture2D]` (J1, J2),
+`ok_color` `#FFFFFF`, `blocked_color` `#FFB020`, `plate_color` `#1B1B1F` al 85 %, `idle_color` `#6B6B73`,
+`idle_alpha` 0,4 (botón táctil sin objetivo), `prompt_icon_px_1080` 64, `prompt_plate_px_1080` 80,
+`prompt_min_px` 48, `reason_icon_px_1080` 32, `cross_px_1080` 24, `prompt_offset` 0,9,
+`response_duration` 0,35, `reject_shake_px` 6. Instancia: `data/config/action_icons.tres`. La
+comparten `ActionPrompt` (mundo) y el botón de acción táctil (UI, ADR-004 §6): mismo icono en los dos.
+Texturas (SVG monocromos, diseño «Iconografía») en `assets/textures/ui/actions/`:
+`icon_verb_<id>.svg` (`<id>` = valor del `StringName` del verbo), `icon_reason_<id>.svg` (ídem del
+motivo) e `icon_mark_<nombre>.svg` (`cross`, `replace`, `ready`, `burn_warning`, `active`,
+`offscreen`, `player_1`, `player_2`); la placa es `icon_mark_plate.svg` o un círculo generado (decide
+el arte). Test de datos: todas las claves de `ALL` tienen textura.
+
+#### 11.6 Tabla por receptor (`ActionRules`; transcripción de `lenguaje-acciones.md` A–F)
+
+Notación: `OK:VERBO`, `B:motivo` (`BLOCKED` con el verbo de la columna de acción del receptor), `—` =
+`NONE` (ni contorno ni prompt). Manos: M0 `NOTHING`, M1 `OCTOPUS_RAW`, M2 `OCTOPUS_COOKED`, M3
+`CACHELOS_RAW`, M4 `CACHELOS_COOKED`, M5 `BOX_EMPTY`, M6 `BOX_PARTIAL`, M7–M9 `BOX_FULL` (sin aliño /
+dulce / picante; `+C` = con cachelos).
+
+| Receptor (fila del diseño) | Función | Regla |
+|---|---|---|
+| A1–A3 Nevera, cachelera, rack | `for_spawner` | M0 `OK:pick_up`; resto `—` |
+| A4 Pulpo/cachelos sueltos o en pasaplatos | `for_loose_item` | M0 `OK:pick_up` (si `can_hold`); resto `—` |
+| A5 Pasaplatos vacío | `for_pass_slot` | M0 `—`; M1–M9 `OK:drop` (si `accepts`; si no, `—`) |
+| A6 Cubo | `for_trash` | M0 `—`; M1–M9 `OK:trash` (`TrashRules.can_trash`) |
+| A7 Puesto | — | No es `interactable` (§11.7) |
+| A8–A9 Sin objetivo | `for_floor` | M0 `—`; M1–M9 `OK:drop` con sitio; `B:busy` (verbo `drop`) sin sitio |
+| B1–B2 Caja vacía o a medias | `for_box` | M0 `OK:pick_up`; M1 `B:not_cooked` (verbo `cut`); M2 `OK:cut` (`progress` = llenado); M3–M9 `—` |
+| B3 Caja llena | `for_box` | M0 `OK:pick_up`; M1 y M2 `B:full` (verbo `cut`); M3–M9 `—` |
+| C Olla | `for_pot` | M0: quemado → `OK:trash` (el más antiguo); si no, listo → `OK:pick_up`; si no `—`. M1/M3: plaza libre → `OK:cook`; si no `B:busy`. M2, M4–M9 `—` |
+| D Dispensador (lado de aliñar; desde el de pase no es candidato) | `for_dispenser` | M0–M4 `—`; M5/M6 `B:box_not_full`; M7 `OK:<verbo del aliño>`; con el mismo aliño `B:already_applied`; con el otro `OK:<verbo>` y `replaces = true` |
+| E Cuenco | `for_bowl` | M4: `stock + portions_per_item ≤ stock_max` → `OK:cachelos` (repone), si no `B:full` (cualquier lado). M5/M6 (lado de aliñar) `B:box_not_full`. M7–M9 (lado de aliñar): ya lleva cachelos → `B:already_applied` (también con stock 0); si no, stock 0 → `B:empty`, si no `OK:cachelos` (pone). M0–M3 `—`. Desde el lado de pase con caja: no es candidato |
+| F Zona de entrega | — | No usa el hint (§11.7) |
+
+- Un pasaplatos con objeto y la mano llena no es objetivo; su objeto lo sustituye (como hoy) y solo es
+  candidato si su verbo no es `—`.
+- **Fixture**: `godot/tests/fixtures/action_matrix.csv` (una fila por combinación del diseño, ≥ 250, con
+  mano, receptor, estado del receptor, verbo, estado y motivo esperados; no es dato de balance). La
+  lee `tests/unit/test_action_rules.gd` (reglas puras) y, en la oleada de montaje,
+  `tests/integration/test_action_matrix.gd` (escenas reales, AC1–AC2 y AC11 y AC20 del diseño: es la
+  **puerta** de D26).
+
+#### 11.7 Entrega solo por zona, cuenco que solo pone y verbo del aliño en datos
+
+**Puesto** (`order_stand.gd`, `order_stand.tscn`; D26.5, modifica D8):
+- La raíz `OrderStand` **sale del grupo `interactable`** y su `collision_layer` pasa de `interactable`
+  a `world` (sigue siendo un mostrador que no se cruza y bloquea el punto de soltar, §9.5). Se quitan
+  `can_interact`, `interact` y la rama de B12.
+- Entrega: solo `%DeliveryZone`. Además de `body_entered`, en `_physics_process` (ya existe por el
+  indicador, §9.4) entrega a un portador que **ya está dentro** de `%DeliveryZone` en el primer tick en
+  que su caja pasa a cumplir `_zone_accepts`. Mismo antirrebote por caja y tick. Una caja que no
+  encaja no enciende la zona ni hace nada.
+- `EventBus.delivery_rejected` y `OrderBoard` **se conservan** (firma, núcleo y tests de núcleo; P3 del
+  gate) pero la señal queda **sin emisión en el juego**. `order_stand.gd` deja de reproducir
+  `deliver_error` y `RoundConfig.wrong_delivery_penalty` pasa a **0** en `round_config.tres` (D8
+  modificada; ficha de montaje).
+
+**Cuenco** (`cachelos_bowl.gd`; D26.5, modifica D23/D25):
+- Con caja llena solo **pone**: `box.apply_seasoning(seasoning)` (cachelos, grupo `&""`) y gasta 1
+  ración. Se van `_toggle`, `clock`, `_game_time`, `_last_change`.
+- Reponer solo si `stock + cachelos_portions_per_item ≤ cachelos_stock_max` (con 2 y 4: stock ≤ 2);
+  con stock 3 ya no se repone «recortando» (cambio respecto a §9.3, por la tabla E3 del diseño). La
+  regla vive en `ActionRules.for_bowl`; `SeasoningRules.restocked` no cambia.
+- `is_reachable_from`: cachelos cocidos desde cualquier lado; **cualquier caja** (vacía, a medias o
+  llena) solo desde el lado de aliñar (antes, solo llena), para que la caja a medias dé `B:box_not_full`.
+- Bajas: `SeasoningStationData.toggle_guard` (y en `seasoning_station.tres`), `SeasoningRules.toggle()`
+  y `Box.toggle_seasoning()` (sin usuarios; las dos últimas en la oleada de montaje).
+  `Box.remove_seasoning()` se conserva.
+- `rejected` local del cuenco: `BOWL_EMPTY`, `BOWL_FULL`, `ALREADY_APPLIED` y `BOX_NOT_FULL` (mapeo de
+  los motivos de la tabla). Sin cue en la estación.
+
+**Dispensador** (`seasoning_dispenser.gd`; sustituye lo dicho en §10.2 sobre `ALREADY_APPLIED`): con el
+mismo aliño el hint es `B:already_applied` y la pulsación **deja de ser silenciosa**: emite
+`rejected(ALREADY_APPLIED)` local y el jugador suena `rejected` (D26.3; pregunta 3 del diseño). Caja
+vacía o a medias: `B:box_not_full`, como hoy.
+
+**Verbo del aliño en datos.** `SeasoningData` gana `@export var verb: StringName = &""`:
+`sweet_dressing.tres` → `&"season_sweet"`, `hot_dressing.tres` → `&"season_hot"`, `cachelos.tres` →
+`&"cachelos"`. Su `icon` pasa a ser el del verbo (`icon_verb_season_sweet.svg` pimentonera,
+`icon_verb_season_hot.svg` guindilla): mismo icono en dispensador, ticket y pegatina (D26.7). Test de
+datos: todo `SeasoningData` con `.tres` tiene `ActionVerb.is_valid(verb)`.
+
+**Estación** (`seasoning_station.gd`): deja de reproducir `season_error` al oír `rejected` (lo hace el
+jugador); la sacudida del emisor la da ya el `SHAKE` del cue `rejected` sobre el objetivo.
+
+#### 11.8 Estado legible en el mundo (D26.6; medidas a 1080 de alto)
+
+| Qué | Dónde | Contrato |
+|---|---|---|
+| Cocción por plaza | `kitchen.tscn`: un `%CookRing` por plaza (sustituye a `%CookBar`), instancia de `ui/widgets/world_progress_ring.tscn` (nuevo; `Sprite3D` + `SubViewport`, específico como `world_progress_bar`) | Diámetro ≥ 64 px, grosor ≥ 8 px. Cociendo: arco blanco 0→100 %. Listo: verde + `icon_mark_ready` + cue `cook_ready`. Quemándose (desde `burn_warned`): parpadeo ámbar `#FFB020` ↔ rojo `#E03A2F` a `warn_blink_hz` (3) + `icon_mark_burn_warning`; cue `burn_warning` al empezar y cada `warn_repeat_interval` (1 s) hasta `warn_repeat_count` (3) veces o hasta retirar. Quemado: rojo fijo. Datos en `KitchenData` (`warn_blink_hz`, `warn_repeat_interval`, `warn_repeat_count`, `ring_thickness_px` 8, `ring_diameter_px` 64) |
+| Corte en la caja | `box.tscn`, nodo nuevo `%CutCounter` (`Node3D`: 6 segmentos + `Label3D`, billboard, `no_depth_test`) | Barra de `presses_to_fill` segmentos (≥ 14 px de ancho, grosor ≥ 8 px) y numeral `"N/6"` ≥ 36 px. Visible con 0 < N < total; en el corte que llena muestra `6/6` 0,5 s, suena `box_full` y se oculta. `Box` expone `get_presses() -> int` |
+| Barras restantes | `ui/widgets/world_progress_bar.{gd,tscn}` (pulpo) | Grosor ≥ 8 px |
+| Raciones del cuenco | `cachelos_bowl.tscn`, `%StockMeter` (`Sprite3D` billboard) | 4 muescas ≥ 24 px, `stock` llenas, el resto huecas con contorno; contraste ≥ 3:1. `%Portions` del modelo se conserva |
+| Personaje activo | `player.tscn` `%ActiveIndicator` + `%ActiveMarker` (nuevo, `Sprite3D` billboard `icon_mark_active` ≥ 24 px sobre la cabeza) | Activo: anillo sólido ≥ 8 px del color del jugador + ▼. Inactivo: anillo discontinuo gris ≤ 3 px, sin ▼. `player.gd` gana `@export var inactive_material: Material`; contraste en gris ≥ 3:1 |
+| Contorno del objetivo | `components/highlightable.gd` + `shaders/highlight_outline*` | Color blanco cálido `#FFF4D6` (se retira el amarillo); `set_blocked(blocked: bool)` cambia a ámbar; el contorno se ve **a través** del personaje (pasada sin profundidad al 40 %). API `acquire`/`release`/`show`/`hide` sin cambios |
+
+#### 11.9 Señales
+`EventBus` gana **dos** señales: `action_hint_changed(player_index: int, verb: StringName, state: int,
+reason: StringName)` e `interaction_resolved(player_index: int, verb: StringName, state: int, reason:
+StringName)`, ambas con emisor `InteractionComponent` (§11.4). Señales locales nuevas:
+`InteractionDetector.hint_changed(target: Node, hint: ActionHint)` e
+`InteractionComponent.interaction_resolved(target: Node, hint: ActionHint)` (`target` `null` en el
+suelo). Detalle en `signals.md`.
+
+**Alternativas descartadas (§11).**
+1. *Derivar el icono de `can_interact` + tipo del objetivo.* `can_interact` mentía a propósito y el
+   verbo depende del estado (olla: coger o tirar); dos funciones que pueden divergir. Se prefiere una
+   sola resolución (`_resolve` → `ActionRules`).
+2. *Calcular el hint en `InteractionComponent` cada tick.* El detector ya lo necesita para filtrar
+   candidatos; calcularlo dos veces es coste y riesgo de divergencia entre lo resaltado y lo
+   publicado.
+3. *Prompt como `Control` en `ui/` que proyecta la posición del objetivo.* Necesita `Camera3D` y
+   `Vector3` en `ui/` (regla 4) y una ruta al objetivo.
+4. *`EventBus` con el nodo objetivo o su posición.* Rompe la regla de primitivos (D14); la UI de
+   pantalla solo necesita verbo y estado.
+5. *Verbos como `enum` entero.* El `StringName` se lee en `.tres` (`SeasoningData.verb`, diccionarios de
+   iconos), en nombres de fichero y en los logs; el conjunto se cierra con `ALL` + test.
+6. *Histéresis por tiempo mínimo en el objetivo.* D26.4 la define por margen de puntuación; el tiempo
+   retrasa también los cambios buenos.
+7. *Mantener el puesto como objetivo con BLOQUEADO para la caja que no encaja.* D26.5 lo quita de la
+   pulsación; la zona iluminada ya dice si encaja.
+8. *Un `ActionLanguageData` único* (propuesta del diseño). Mezclaría datos del detector
+   (`PlayerConfig`), del input (`InputConfig`) y del prompt; cada consumidor lee su recurso.
+9. *Un cue de rechazo distinto para «ya aplicado».* El diseño pide un único cue de rechazo (AC7); el
+   motivo ya lo dice el icono.
+
 ## Alternativas consideradas
 1. **Nivel monolítico como `Level_01.unity`.** Un solo dueño para casi todo, conflictos de merge en
    un `.tscn` grande y overrides opacos. Descartada.
@@ -635,5 +960,16 @@ Los dispensadores siguen con `rejected` (solo `BOX_NOT_FULL`); la caja con `seas
 - (§10, −) La caja ya no se corrige quitando condimento: el error se tira al cubo (coste en tiempo,
   sin penalización en euros mientras `trash_penalty` = 0). Tirar suena `drop` + `trash`.
 - (§10, −) `SeasoningType` y `Rejection` acumulan valores en desuso para no renumerar los `.tres`.
+- (§11, +) El verbo y su estado salen de la misma función que ejecuta la pulsación: lo que se ve es
+  lo que pasa, y las 72 combinaciones se prueban en `core/` sin escenas.
+- (§11, +) La UI de pantalla (botón táctil) solo escucha dos señales de primitivos; el icono del
+  mundo es local al jugador.
+- (§11, −) El detector hace una llamada dinámica más por candidato (`get_action_hint`) en cada tick
+  (≤ ~6 cuerpos en el radio); los receptores no deben tener efectos en `_resolve`.
+- (§11, −) Sin pulsaciones «protegidas»: con la mano llena y sin objetivo con verbo, pulsar suelta
+  delante si el punto está libre (prompt SOLTAR visible) o da un rechazo `busy` contra barra o pared
+  (decisión del producer autorizada por el responsable, P1 de PUL-120).
+- (§11, −) `delivery_rejected` y la penalización de caja errónea (D8) quedan sin uso en el juego; se
+  conservan por no cambiar firmas.
 - El árbol concreto de M0 está en `docs/arch/scene-tree.md`. Cambiarlo en algo que afecte a otra
   ficha (nombres de escena, `@export` públicos, grupos, capas) requiere enmienda.

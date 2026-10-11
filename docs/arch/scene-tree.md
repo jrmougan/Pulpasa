@@ -23,6 +23,12 @@
   `trash_bin.tscn` y sus 2 instancias en `level_01` (§2, §3), ticket sin talla (§4), datos de caja,
   aliños, cubo y comandas por fase (§5), bajas (§7.2). Lo marcado **D25** lo implementan las fichas
   de código que siguen a PUL-111.
+- **Enmienda D26** (PUL-120, 2026-10-11, ADR-003 §11, ADR-004 §6, ADR-005 Enmienda D26, ADR-006
+  §4.1), **pendiente del gate humano**: `%ActionPrompt` y aro activo/inactivo en `player.tscn`,
+  `%CutCounter` en `box.tscn`, puesto fuera de `interactable` (§3); `CameraRig` con script y perfiles,
+  `TouchControls` en la `UI` del nivel (§2); escenas táctiles y `SafeAreaMargin` (§4); datos D26 (§5);
+  equivalencias 2D (§6); bajas (§7.3). Resumen y árboles completos en §9. Lo marcado **D26** lo
+  implementan las fichas de la partición de PUL-120.
 
 Árbol que debe existir al cerrar M0 (fase 8). Rutas relativas a `godot/` (estructura de ADR-001).
 `%Nombre` = nodo con nombre único de escena. Entre corchetes, la fase de M0 en que se crea la
@@ -149,12 +155,17 @@ Level01 (Node3D)                         scenes/levels/level.gd  (común, extend
 ├── Items (Node3D)       destino de los objetos soltados (ADR-003 §6)
 ├── LevelAudio           entities/environment/level_audio.tscn  (común) BG, FOL y cue de fase; process_mode ALWAYS  [M3]
 ├── CameraRig            entities/camera/camera_rig.tscn  Camera3D ortográfica fija (size 12,74, D14) [4]
+│                        D26: camera_rig.gd (CameraRig); characters = [Player1, Player2] (override de referencia);
+│                        perfil de escritorio = fija como hoy; perfil móvil = size 7,0 y seguimiento (ADR-005 E5)
 └── UI (CanvasLayer)
     ├── HUD              ui/hud/hud.tscn                          [7]
     ├── OrderTicketsPanel ui/tickets/order_tickets_panel.tscn     [7]
+    ├── TouchControls    ui/touch/touch_controls.tscn  [D26] solo SINGLE y con pantalla táctil (ADR-004 §6)
     ├── PauseMenu        ui/menus/pause_menu.tscn   process_mode ALWAYS  [7]
     └── GameOver         ui/menus/game_over.tscn    oculto hasta round_finished  [7]
 ```
+`TouchControls` va **después** de HUD y tickets (se pinta encima) y **antes** de pausa y game over
+(que lo tapan). Sin overrides.
 No hay `SpiceShelf` ni ningún `SeasoningItem` (AC18 de la feature): los únicos puntos donde cambia
 el condimento de una caja son los 4 dispensadores (D25: **2 dispensadores de aliño**) y el cuenco de
 `SeasoningStation`. El nivel no
@@ -176,9 +187,14 @@ Player (CharacterBody3D, capa player)     player.gd  class_name Player
 ├── %InteractionDetector (Area3D)          components/interaction_detector.gd  máscara interactable
 │   └── CollisionShape3D (Sphere, radio de PlayerConfig)
 ├── %InteractionComponent (Node)           components/interaction_component.gd  (común) @export control, holder, detector
-├── %ActiveIndicator (MeshInstance3D)      aro bajo el personaje [M2]
+├── %ActiveIndicator (MeshInstance3D)      aro bajo el personaje [M2]; D26: activo e inactivo distintos (inactive_material)
+├── %ActiveMarker (Sprite3D)               ▼ sobre la cabeza del activo [D26]
+├── %ActionPrompt                          entities/player/action_prompt.tscn [D26] (ADR-003 §11.5)
+│                                          detector = %InteractionDetector, actor = %InteractionComponent
 └── %Feedback (FeedbackPlayer)             cues pick_up / drop desde item_picked_up / item_dropped de %HoldComponent [M3]
+                                           D26: switch (character_switched), rejected (interaction_resolved)
 ```
+D26: `%InteractionDetector` gana `actor = %InteractionComponent` (referencia dentro de la escena).
 Un único detector (B7). Movimiento 5 m/s y giro en `PlayerConfig.tres`.
 
 ### `entities/items/`
@@ -594,9 +610,160 @@ enum. `Slot.accepted_group` y el grupo `box` se conservan.
 `SeasoningType.SALT/PAPRIKA/HOT_PAPRIKA/OIL` y `Rejection.EXCLUSIVE_TAKEN` quedan en desuso sin
 quitarse de los enums.
 
+### 7.3 Bajas por D26 (ADR-003 §11, ADR-005 Enmienda D26, ADR-006 §4.1) — *Enmienda D26 (PUL-120, 2026-10-11)*
+
+| Qué | Dónde | Nota |
+|---|---|---|
+| Puesto como objetivo | `OrderStand` en el grupo `interactable` y la capa `interactable`; `can_interact`, `interact`, rama B12 de `order_stand.gd` | Entrega solo por `%DeliveryZone`; el cuerpo pasa a la capa `world` |
+| Cue de entrega errónea | `order_stand.gd::_on_delivery_rejected` → `play_cue(&"deliver_error")`; clave `deliver_error` del mapa | `delivery_rejected` sin emisión en el juego |
+| Cue de error de la estación | `seasoning_station.gd` → `play_cue(&"season_error")`; clave `season_error` | El rechazo suena en el jugador (`rejected`) |
+| `cook_done` | clave del mapa y `cooking_station.gd` | Renombrada `cook_ready` |
+| Toggle del cuenco | `cachelos_bowl.gd` (`_toggle`, `clock`, `_game_time`, `_last_change`); `SeasoningStationData.toggle_guard` y su valor en `seasoning_station.tres`; `SeasoningRules.toggle()`; `Box.toggle_seasoning()` | El cuenco solo pone (`Box.apply_seasoning`) |
+| `can_interact` que consume sin hacer nada | `box.gd`, `cooking_station.gd`, `slot.gd`, `item_spawner.gd` | `can_interact` = `get_action_hint(actor).is_target()` |
+| Penalización de caja errónea | `data/config/round_config.tres` (`wrong_delivery_penalty` 2) | Pasa a 0 (D8 modificada); el campo y `delivery_rejected` se conservan en el núcleo |
+| Barra de cocción | `%CookBar` de cada plaza en `kitchen.tscn` | La sustituye `%CookRing` (`world_progress_ring.tscn`) |
+| Escala casera | `UiScale.factor()`, `UiScale.REFERENCE_HEIGHT_PX`, `MAX_FACTOR`; la línea de `scale` de `hud.gd` y `order_tickets_panel.gd` | La sustituye `window/stretch` + `UiProfile` (ADR-005 E2–E3) |
+| «Cajas / minuto» en el HUD | `hud.tscn` / `hud.gd` | D26.7 (texto vigente con D25); el dato sigue en `RoundResult` |
+| Letras S/M/L | `box_shelf.glb` (huecos rotulados), textura `box_box_size_signs.png` de `box.glb`, `assets/textures/ui/box_sizes/` | Arte sin talla (D25 ya quitó el dato) |
+| Tests | `test_ui_scale` / casos de `factor()` en `test_hud.gd` y `test_order_tickets.gd`; casos de `test_order_stand.gd`, `test_delivery_e2e.gd` y `test_m1_flow.gd` que entregan con `interact` o esperan `deliver_error`; casos de `test_cachelos.gd` / `test_seasoning_station.gd` de quitar cachelos y antirrebote; `test_seasoning_rules.gd` (`toggle`) | Los reescribe la ficha dueña de cada fichero en la partición de PUL-120 |
+
 ## 8. Buses de audio (M3, ADR-006 §1)
 
 `godot/default_bus_layout.tres` (lo carga Godot sin tocar `project.godot`):
 `Master` ← `Music`, `Ambience`, `SFX`. Todo `AudioStreamPlayer*` de las escenas declara bus
 (`SFX` salvo `%Music`/`%Ambience` de `LevelAudio`); ninguno en `Master`. Solo `AudioDirector`
 escribe `AudioServer.set_bus_volume_db`.
+
+## 9. D26: lenguaje de acciones, táctil, escala y cámara móvil — *Enmienda D26 (PUL-120, 2026-10-11), pendiente del gate humano*
+
+Contrato en ADR-003 §11 (verbo, prompt, histéresis, suelo, entrega por zona, cuenco), ADR-004 §6
+(táctil), ADR-005 Enmienda D26 (escala, plataforma, safe area, cámara) y ADR-006 §4.1 (cues). Diseño en
+`features/lenguaje-acciones.md` y `features/controles-tactiles.md`. Aquí, los nodos y ficheros.
+
+### 9.1 Jugador y prompt (específico)
+```
+entities/player/action_prompt.tscn   [D26]
+ActionPrompt (Node3D, top_level = true)   components/action_prompt.gd  class_name ActionPrompt
+│   @export detector: InteractionDetector, actor: InteractionComponent, hold: HoldComponent
+│   @export icons: ActionIconSet = data/config/action_icons.tres
+│   escucha detector.hint_changed(target, hint) y actor.interaction_resolved(target, hint) (locales)
+│   posición: %PromptAnchor del objetivo, o parte alta de su Highlightable + icons.prompt_offset (0,9 m);
+│             sin objetivo (hint de suelo): hold.get_drop_position()
+│   tamaño: icono 64 px y placa 80 px a 1080 (mín. 48 px); visible solo OK/BLOCKED y personaje controlado
+├── %Plate        (Sprite3D billboard, no_depth_test)   placa circular #1B1B1F 85 %
+├── %VerbIcon     (Sprite3D billboard, no_depth_test)   verb_icons[verb]; ok_color / blocked_color
+├── %ReasonIcon   (Sprite3D billboard, no_depth_test)   reason_icons[reason]; solo BLOCKED (32 px)
+├── %Cross        (Sprite3D billboard, no_depth_test)   cross; solo BLOCKED (24 px)
+├── %ReplaceBadge (Sprite3D billboard, no_depth_test)   replace; solo hint.replaces
+└── %PlayerMarker (Sprite3D billboard, no_depth_test)   player_markers[j − 1]; solo COOP_2P
+```
+`player.tscn`: `%ActionPrompt` (instancia), `%InteractionDetector.actor = %InteractionComponent`,
+`%ActiveIndicator` con `inactive_material` (anillo sólido ≥ 8 px activo / discontinuo gris ≤ 3 px
+inactivo) y `%ActiveMarker` (`Sprite3D` ▼ ≥ 24 px sobre la cabeza, solo activo). `HoldComponent` gana
+`get_drop_position() -> Vector3`. `%PromptAnchor` es opcional en cualquier escena del grupo
+`interactable`; si una ficha lo añade, va como hijo directo de la raíz.
+
+### 9.2 Entidades con cambios D26
+```
+box.tscn        + %CutCounter (Node3D billboard, no_depth_test: 6 segmentos + Label3D "N/6")
+                  Box: + get_presses() -> int, + get_action_hint(actor); − toggle_seasoning() (montaje)
+                  %Feedback: box_full en el corte que llena (en lugar de cut)
+kitchen.tscn    %CookBar de cada plaza → %CookRing (ui/widgets/world_progress_ring.tscn): blanco, verde ✓,
+                  parpadeo ámbar/rojo tras burn_warned, rojo fijo; %Feedback: cook_ready (antes cook_done),
+                  burn_warning repetido; CookingStation: + get_action_hint(actor)
+octopus.tscn / cachelos.tscn   Ingredient: + get_action_hint(actor)
+slot.tscn       Slot: + get_action_hint(actor)   (vacío: SOLTAR; ocupado: lo sustituye su objeto, como hoy)
+octopus_storage.tscn / cachelos_storage.tscn / box_shelf.tscn (BoxSpawner)   ItemSpawner: + get_action_hint(actor)
+trash_bin.tscn  TrashBin: + get_action_hint(actor)   (TIRAR)
+seasoning_dispenser.tscn   SeasoningDispenser: + get_action_hint(actor); verbo = seasoning.verb
+cachelos_bowl.tscn         CachelosBowl: + get_action_hint(actor); solo pone; − antirrebote; + %StockMeter
+                           (4 muescas ≥ 24 px); is_reachable_from: cualquier caja desde el lado de aliñar
+seasoning_station.tscn     SeasoningStation: sin cue season_error al oír rejected (montaje)
+order_stand.tscn           OrderStand: fuera del grupo interactable; collision_layer world (antes interactable);
+                           − can_interact / interact; entrega por %DeliveryZone al entrar o al pasar a coincidir;
+                           sin deliver_error (montaje)
+components/highlightable.gd   + set_blocked(blocked); contorno #FFF4D6, ámbar si BLOCKED, visible a través del
+                           personaje (shaders/highlight_outline*)
+ui/widgets/world_progress_bar.{gd,tscn}   grosor ≥ 8 px a 1080
+ui/widgets/world_progress_ring.{gd,tscn}  [D26] anillo ≥ 64 px, grosor ≥ 8 px (específico, como la barra)
+```
+
+### 9.3 UI de pantalla (común)
+```
+ui/touch/touch_controls.tscn   [D26] (ADR-004 §6.2); se libera en el perfil DESKTOP
+TouchControls (Control, pantalla completa, mouse_filter IGNORE)   touch_controls.gd  class_name TouchControls
+└── %SafeArea (SafeAreaMargin)
+    ├── %MoveStick    (Control)  ui/touch/virtual_stick.gd  class_name VirtualStick   base 300 px, recorrido 150 px
+    ├── %ActionButton (Control)  ui/touch/action_button.gd  class_name ActionButton   180 px (72 dp), abajo a la derecha
+    ├── %SwitchButton (Control)  ui/touch/touch_button.gd   class_name TouchButton    120 px (48 dp), action &"p1_switch"
+    └── %PauseButton  (Control)  ui/touch/touch_button.gd                             120 px (48 dp), action &"pause"
+ui/widgets/safe_area_margin.gd   SafeAreaMargin (MarginContainer)  márgenes de DisplayServer.get_display_safe_area()
+ui/widgets/ui_scale.gd           UiScale (RefCounted): px_to_units(), dp_to_units(), safe_margins(); − factor()
+```
+`hud.tscn`, `order_tickets_panel.tscn`, `pause_menu.tscn`, `game_over.tscn` y `main_menu.tscn`
+envuelven su contenido en un `SafeAreaMargin`. HUD sin «Cajas / minuto»; en `MOBILE`, banda superior
+(HUD 240 px + 4 tickets de 330–380 px) fuera de las zonas del stick y de los botones (ADR-005 E4).
+`main_menu.tscn`: en `MOBILE` solo «Individual».
+
+### 9.4 Cámara (específica)
+```
+entities/camera/camera_rig.tscn
+CameraRig (Camera3D, ortográfica)   camera_rig.gd  class_name CameraRig   [D26: script nuevo]
+│   @export desktop_profile: CameraProfile = data/config/camera_desktop.tres   (size 12,74, fija)
+│   @export mobile_profile: CameraProfile  = data/config/camera_mobile.tres    (size 7,0 ≈ 121 px/m, sigue)
+│   @export characters: Array[Node3D]   (nivel: [Player1, Player2])
+│   escucha EventBus.character_switched(1, c) → paneo y seguimiento de characters[c − 1] (perfil móvil)
+└── %OffscreenArrow (CanvasLayer + TextureRect icon_mark_offscreen)   solo perfil móvil
+```
+Los sandboxes que instancian `camera_rig.tscn` sin `characters` funcionan igual (perfil de escritorio,
+fija).
+
+### 9.5 Datos y núcleos D26
+```
+core/action_verb.gd            ActionVerb: pick_up, drop, cook, cut, season_sweet, season_hot, cachelos, trash
+                               + NONE, ALL, REPEATABLE = [cut]
+core/action_reason.gd          ActionReason: box_not_full, busy, empty, full, already_applied, not_cooked + NONE, ALL
+core/action_hint.gd            ActionHint (RefCounted): verb, state (NONE/OK/BLOCKED = 0/1/2), reason, replaces, progress
+core/action_rules.gd           ActionRules: enum Held + for_loose_item / for_box / for_pot / for_pass_slot /
+                               for_spawner / for_dispenser / for_bowl / for_trash / for_floor
+core/hold_repeat.gd            HoldRepeat: temporizador del corte al mantener
+core/touch_input.gd            TouchInput: Source, source_of(), controls_visible(), stick_vector(), follow_center()
+core/platform_profile.gd       PlatformProfile: Kind { DESKTOP, MOBILE }, detect(features, user_args)
+core/camera_follow.gd          CameraFollow: follow(), pan_to(), clamp_focus()
+entities/items/held_kind.gd    HeldKind (específica): of(item) -> ActionRules.Held
+resources/action_icon_set.gd   ActionIconSet: verb_icons, reason_icons, plate, cross, replace, player_markers,
+                               colores (ok, blocked, plate, idle) + idle_alpha, prompt_icon_px_1080 64,
+                               prompt_plate_px_1080 80, prompt_min_px 48, reason_icon_px_1080 32, cross_px_1080 24,
+                               prompt_offset 0.9, response_duration 0.35, reject_shake_px 6
+resources/touch_config.gd      TouchConfig (ADR-004 §6.2)
+resources/ui_profile.gd        UiProfile (ADR-005 E3)
+resources/camera_profile.gd    CameraProfile (ADR-005 E5)
+resources/player_config.gd     + hysteresis_margin (0.2)
+resources/input_config.gd      + cut_repeat_interval (0.2)
+resources/kitchen_data.gd      + warn_blink_hz (3), warn_repeat_interval (1.0), warn_repeat_count (3),
+                               ring_thickness_px (8), ring_diameter_px (64)
+resources/seasoning_data.gd    + verb: StringName
+resources/seasoning_station_data.gd   − toggle_guard
+data/config/action_icons.tres  ActionIconSet → assets/textures/ui/actions/icon_verb_<id>.svg, icon_reason_<id>.svg,
+                               icon_mark_<nombre>.svg
+data/config/touch_config.tres  TouchConfig
+data/config/ui_profile_desktop.tres / ui_profile_mobile.tres   UiProfile (móvil: text_min_px 36, tickets 330–380…)
+data/config/camera_desktop.tres / camera_mobile.tres           CameraProfile (12,74 fija / 7,0 sigue)
+data/config/player_config.tres hysteresis_margin 0.2
+data/config/input_config.tres  cut_repeat_interval 0.2
+data/config/kitchen.tres       aviso de quemado y anillo
+data/config/round_config.tres  wrong_delivery_penalty 0 (D8 modificada por D26)
+data/seasonings/{sweet_dressing,hot_dressing,cachelos}.tres    verb season_sweet / season_hot / cachelos;
+                               icon = icon_verb_season_sweet / icon_verb_season_hot / (cachelos sin cambio)
+data/audio/feedback_map.tres   + cook_ready, box_full, switch, rejected; trash, discard y burn_warning con sample
+                               propio; − cook_done, season_error, deliver_error (en la oleada de montaje)
+project.godot                  display/window/stretch/mode canvas_items, aspect expand, handheld/orientation 4
+tests/fixtures/action_matrix.csv   tabla A–F del diseño (≥ 250 filas); la leen test_action_rules y test_action_matrix
+```
+
+### 9.6 Equivalencias 2D (complementa §6)
+| 3D | 2D |
+|---|---|
+| `ActionPrompt` (`Node3D` + `Sprite3D` billboard sin test de profundidad) | `Node2D` con `z_index` alto + `Sprite2D`; misma API y mismas señales |
+| `CameraRig` (`Camera3D`, `size`) | `Camera2D` (`zoom` según px/m del perfil); `CameraProfile` y `CameraFollow` iguales |
+| `%CutCounter`, `%StockMeter`, `%CookRing` | `Node2D` + `Sprite2D`/`Label` |
