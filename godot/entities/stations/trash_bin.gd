@@ -28,16 +28,18 @@ func is_reachable_from(_floor_position: Vector2, holder: Holder) -> bool:
 	return holder != null and TrashRules.can_trash(holder.get_held_item())
 
 
+## A6: tirar lo que se lleva (`ActionRules.for_trash`); con la mano vacía no es objetivo.
+func get_action_hint(actor: InteractionComponent) -> ActionHint:
+	return _resolve(actor.holder if actor != null else null)
+
+
 func can_interact(actor: InteractionComponent) -> bool:
-	return (
-		actor != null
-		and actor.holder != null
-		and TrashRules.can_trash(actor.holder.get_held_item())
-	)
+	return get_action_hint(actor).is_target()
 
 
 func interact(actor: InteractionComponent) -> bool:
-	if not can_interact(actor):
+	var hint: ActionHint = get_action_hint(actor)
+	if hint.state != ActionHint.State.OK:
 		return false
 	var item: Node = actor.holder.drop()
 	if item == null:
@@ -45,6 +47,14 @@ func interact(actor: InteractionComponent) -> bool:
 	trashed.emit(item)
 	item.queue_free()
 	return true
+
+
+## Única resolución de rama de `get_action_hint` e `interact` (ADR-003 §11.2).
+func _resolve(holder: Holder) -> ActionHint:
+	if holder == null:
+		return ActionHint.none()
+	var item: Node = holder.get_held_item()
+	return ActionRules.for_trash(HeldKind.of(item), TrashRules.can_trash(item))
 
 
 func _on_trashed(_item: Node) -> void:

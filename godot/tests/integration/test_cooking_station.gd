@@ -1,7 +1,7 @@
 # gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-017 AC2: la olla (`kitchen.tscn`, `cooking_station.gd`) acepta un pulpo crudo de la mano,
-## lo cuece en `IngredientData.cook_time` (5 s) con barra y hervor, y lo devuelve cocido a una
+## lo cuece en `IngredientData.cook_time` (5 s) con su anillo y hervor, y lo devuelve cocido a una
 ## mano vacía. La pausa del árbol congela la cocción. El quemado (M3) se prueba en `test_burn.gd`.
 ## PUL-029: varias plazas según `KitchenData.capacity` (2 en `data/config/kitchen.tres`),
 ## progreso independiente por plaza y devolución FIFO por orden de finalización.
@@ -62,8 +62,8 @@ func _material_names(mesh: MeshInstance3D) -> Array[String]:
 	return names
 
 
-func _bar() -> WorldProgressBar:
-	return _kitchen.get_node("%CookBar") as WorldProgressBar
+func _bar() -> WorldProgressRing:
+	return _kitchen.get_node("%CookRing") as WorldProgressRing
 
 
 func test_ac2_cook_time_comes_from_ingredient_data() -> void:
@@ -82,7 +82,8 @@ func test_ac2_accepts_raw_octopus_from_hand() -> void:
 	assert_true(octopus.freeze, "quieto en la olla")
 	assert_eq(octopus.collision_layer & INTERACTABLE_LAYER, 0, "el detector ve la olla")
 	assert_signal_emitted_with_parameters(_kitchen, "cooking_started", [octopus])
-	assert_true(_bar().visible, "barra visible al cocer")
+	assert_true(_bar().visible, "anillo visible al cocer")
+	assert_eq(_bar().get_state(), WorldProgressRing.State.COOKING)
 	assert_true((_kitchen.get_node("%BoilAudio") as AudioStreamPlayer3D).playing, "hervor")
 
 
@@ -99,7 +100,7 @@ func test_ac2_cooked_after_five_seconds_of_game() -> void:
 	assert_false(_kitchen.is_cooking())
 	assert_signal_emit_count(_kitchen, "cooking_finished", 1)
 	assert_signal_emitted_with_parameters(_kitchen, "cooking_finished", [octopus])
-	assert_false(_bar().visible, "barra oculta al terminar")
+	assert_eq(_bar().get_state(), WorldProgressRing.State.READY, "anillo verde al terminar")
 	assert_false((_kitchen.get_node("%BoilAudio") as AudioStreamPlayer3D).playing)
 	_cook_for(2.0)
 	assert_signal_emit_count(_kitchen, "cooking_finished", 1, "sin quemado ni doble aviso")
@@ -213,19 +214,19 @@ func test_ac1_pause_freezes_two_slots() -> void:
 	_kitchen.interact(_actor)
 
 	await wait_physics_frames(2)
-	var prog1: float = _kitchen._slots[0].bar.get_progress()
-	var prog2: float = _kitchen._slots[1].bar.get_progress()
+	var prog1: float = _kitchen._slots[0].ring.get_progress()
+	var prog2: float = _kitchen._slots[1].ring.get_progress()
 
 	get_tree().paused = true
 	for i: int in 30:
 		await get_tree().physics_frame
-	assert_eq(_kitchen._slots[0].bar.get_progress(), prog1, "pausa congela barra 1")
-	assert_eq(_kitchen._slots[1].bar.get_progress(), prog2, "pausa congela barra 2")
+	assert_eq(_kitchen._slots[0].ring.get_progress(), prog1, "pausa congela anillo 1")
+	assert_eq(_kitchen._slots[1].ring.get_progress(), prog2, "pausa congela anillo 2")
 	get_tree().paused = false
 
 	await wait_physics_frames(3)
-	assert_gt(_kitchen._slots[0].bar.get_progress(), prog1, "sigue la barra 1 al reanudar")
-	assert_gt(_kitchen._slots[1].bar.get_progress(), prog2, "sigue la barra 2 al reanudar")
+	assert_gt(_kitchen._slots[0].ring.get_progress(), prog1, "sigue el anillo 1 al reanudar")
+	assert_gt(_kitchen._slots[1].ring.get_progress(), prog2, "sigue el anillo 2 al reanudar")
 
 
 func test_ac1_mix_octopus_and_cachelos_compete_for_slots() -> void:
@@ -261,11 +262,17 @@ func test_ac2_full_hand_cannot_take_cooked_item() -> void:
 	assert_not_null(_kitchen._slots[0].get_ingredient(), "el cocido sigue en la olla")
 
 
-func test_ac2_rejected_item_is_not_dropped_on_press() -> void:
+## D26: con lo que no cuece (un cocido) la olla no es objetivo y no se traga la pulsación: cae al
+## suelo como con cualquier otro sitio.
+func test_ac2_rejected_item_is_not_a_target_and_press_drops_it() -> void:
 	var octopus: Ingredient = _octopus_in_hand(true)
 	await wait_physics_frames(3)
-	assert_true(_actor.interact_pressed(), "la olla consume la pulsación (paridad Unity)")
-	assert_eq(_hold.get_held_item(), octopus)
+	assert_false(_kitchen.can_interact(_actor))
+	assert_ne(_actor.detector.get_target(), _kitchen)
+	assert_true(_actor.interact_pressed(), "suelta al suelo")
+	assert_null(_hold.get_held_item())
+	assert_false(octopus.is_held)
+	assert_false(_kitchen.is_cooking(), "no entra en la olla")
 
 
 func test_ac2_full_cycle_via_detector() -> void:
@@ -297,7 +304,7 @@ func test_ac2_kitchen_scene_contract() -> void:
 	assert_true(_kitchen.collision_layer & INTERACTABLE_LAYER != 0)
 	assert_true(_kitchen.get_node("%Highlightable") is Highlightable)
 	assert_true(_kitchen.get_node("%AnchorPoint") is Marker3D)
-	assert_false(_bar().visible, "barra oculta en reposo")
+	assert_false(_bar().visible, "anillo oculto en reposo")
 	var audio: AudioStreamPlayer3D = _kitchen.get_node("%BoilAudio")
 	assert_eq(audio.stream, preload("res://assets/audio/boiling_water_loop.ogg"))
 

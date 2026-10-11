@@ -96,6 +96,29 @@ libraries/ = SubResource("AnimationLibrary_1bfvp")
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 
+[node name="CutCounter" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62, 0)
+visible = false
+
+[node name="CutBar" parent="CutCounter" instance=ExtResource("6_rn5qa")]
+unique_name_in_owner = true
+bar_size = Vector2i(180, 22)
+segments = 6
+
+[node name="CutNumeral" type="Label3D" parent="CutCounter"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36, 0)
+pixel_size = 0.0062
+billboard = 1
+no_depth_test = true
+render_priority = 11
+modulate = Color(1, 1, 1, 1)
+outline_modulate = Color(0.08, 0.08, 0.1, 1)
+text = "0/6"
+font_size = 72
+outline_size = 14
+
 [node name="BadgeRow" type="Node3D" parent="." unique_id=1590211477]
 unique_name_in_owner = true
 script = ExtResource("9_badge")

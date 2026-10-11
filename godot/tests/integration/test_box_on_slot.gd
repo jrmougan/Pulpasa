@@ -90,15 +90,15 @@ func test_pul113_box_on_table_fills_in_6_presses() -> void:
 	await _assert_fills_on_table(BOX, 6)
 
 
-## Paridad Unity: con algo incompatible en la mano (pulpo crudo) la caja de la mesa sigue siendo el
-## objetivo; la pulsación la consume la caja sin efecto, así que no se suelta lo que se lleva
-## (en Unity, Box.Interact → TryToggleHold con la mano llena no hace nada). M1: filtrar.
+## D26: con pulpo crudo en la mano la caja de la mesa sigue siendo el objetivo, bloqueado
+## (`cut` / `not_cooked`): la pulsación se rechaza sin efecto y no se suelta lo que se lleva.
 func test_review_incompatible_hand_still_targets_box_on_table_and_press_does_nothing() -> void:
 	var box: Box = await _box_on_table(BOX)
 	var raw: Ingredient = _in_hand(OCTOPUS_SCENE.instantiate()) as Ingredient
 	await _settle()
 	assert_eq(_detector.get_target(), box)
-	assert_true(_actor.interact_pressed(), "la caja consume la pulsación")
+	assert_eq(_detector.get_hint().state, ActionHint.State.BLOCKED)
+	assert_true(_actor.interact_pressed(), "la pulsación se rechaza con motivo")
 	await _settle()
 	assert_eq(box.fill, 0.0)
 	assert_eq(raw.remaining, 100.0)
@@ -120,13 +120,13 @@ func test_review_season_box_on_table_then_pick_up_and_drop() -> void:
 	_in_hand(cachelos)
 	cachelos.set_cooked()
 	await _settle()
-	assert_eq(_detector.get_target(), box)
+	assert_null(_detector.get_target(), "D26: la caja llena no es objetivo de unos cachelos")
 	watch_signals(box)
-	assert_true(_actor.interact_pressed(), "consume la pulsación")
+	assert_true(_actor.interact_pressed(), "cae al suelo, no condimenta")
 	await _settle()
 	assert_signal_emit_count(box, "seasoned", 0)
-	assert_eq(_hold.get_held_item(), cachelos, "los cachelos no se consumen")
-	_discard_held()
+	assert_null(_hold.get_held_item(), "los cachelos se sueltan al suelo")
+	cachelos.free()
 	assert_eq(box.apply_seasoning(SWEET), SeasoningRules.Rejection.NONE, "aliño (API estación)")
 	await _settle()
 	assert_eq(_detector.get_target(), box, "mano vacía: el objetivo es la caja, para cogerla")

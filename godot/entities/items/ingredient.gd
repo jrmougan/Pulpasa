@@ -2,7 +2,7 @@ class_name Ingredient
 extends RigidBody3D
 ## Pulpo (porta Ingredient.cs): crudo, cocido o quemado (M3, lo quema la olla), con una cantidad
 ## que se gasta al cortarlo sobre una caja. Contrato `pickable` e `interactable` (ADR-003 §4): con
-## la mano vacía, interactuar lo coge.
+## la mano vacía, interactuar lo coge; con la mano llena no es objetivo (D26).
 ## Al agotarse se libera solo, tenga o no barra (B9).
 
 ## Cada corte, con la cantidad que queda.
@@ -63,12 +63,21 @@ func take(amount: float) -> float:
 	return taken
 
 
+## Qué haría la pulsación (ADR-003 §11.2): coger con la mano vacía (`A4`); con la mano llena no es
+## objetivo.
+func get_action_hint(actor: InteractionComponent) -> ActionHint:
+	return _resolve(actor.holder if actor != null else null)
+
+
 func can_interact(actor: InteractionComponent) -> bool:
-	return not is_held and actor != null and actor.holder != null and actor.holder.can_hold(self)
+	return get_action_hint(actor).is_target()
 
 
 func interact(actor: InteractionComponent) -> bool:
-	return can_interact(actor) and Slot.pick_up_item(actor, self)
+	var hint: ActionHint = get_action_hint(actor)
+	if hint.state != ActionHint.State.OK:
+		return false
+	return Slot.pick_up_item(actor, self)
 
 
 func on_picked_up(_holder: Holder) -> void:
@@ -77,6 +86,14 @@ func on_picked_up(_holder: Holder) -> void:
 
 func on_dropped() -> void:
 	is_held = false
+
+
+## Única resolución de rama de `get_action_hint` e `interact` (ADR-003 §11.2).
+func _resolve(holder: Holder) -> ActionHint:
+	if holder == null or is_held:
+		return ActionHint.none()
+	var can_hold: bool = holder.get_held_item() == null and holder.can_hold(self)
+	return ActionRules.for_loose_item(HeldKind.of(holder.get_held_item()), can_hold)
 
 
 func _update_bar() -> void:

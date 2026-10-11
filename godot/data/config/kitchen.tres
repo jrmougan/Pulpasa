@@ -5,3 +5,8 @@
 [resource]
 script = ExtResource("1_kdata")
 capacity = 2
+warn_blink_hz = 3.0
+warn_repeat_interval = 1.0
+warn_repeat_count = 3
+ring_thickness_px = 8.0
+ring_diameter_px = 64.0
