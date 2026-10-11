@@ -21,24 +21,6 @@ anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(0.0627451, 0.11764706, 0.1254902, 1)
 
-[node name="HUD" type="Control" parent="." unique_id=1410909336 instance=ExtResource("1_jnb24")]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 32.0
-offset_top = 28.0
-offset_right = -32.0
-offset_bottom = 132.0
-grow_horizontal = 2
-mouse_filter = 2
+[node name="HUD" parent="." unique_id=1410909336 instance=ExtResource("1_jnb24")]
 
-[node name="OrderTicketsPanel" type="Control" parent="." unique_id=513847647 instance=ExtResource("3_df3jg")]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 32.0
-offset_top = 160.0
-offset_right = -32.0
-offset_bottom = 440.0
-grow_horizontal = 2
-mouse_filter = 2
+[node name="OrderTicketsPanel" parent="." unique_id=513847647 instance=ExtResource("3_df3jg")]

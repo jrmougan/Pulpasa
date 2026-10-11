@@ -19,6 +19,8 @@ var _state: StateSpy
 class StateSpy:
 	extends Node
 	var mode: GameMode.Mode = GameMode.Mode.SINGLE
+	var platform: PlatformProfile.Kind = PlatformProfile.Kind.DESKTOP
+	var ui_profile: UiProfile = preload("res://data/config/ui_profile_desktop.tres")
 
 
 func before_each() -> void:
@@ -85,20 +87,6 @@ func test_ac1_pause_freezes_actual_round_and_hud() -> void:
 	assert_lt(_manager.round_state.get_time_left(), before)
 
 
-func test_ac1_productivity_uses_reported_boxes_and_elapsed_time() -> void:
-	_start()
-	_bus.score_changed.emit(2, 0)
-	assert_eq(_text("BoxesPerMinute"), "0.00", "no divide por cero")
-	_manager.round_state.advance(60.0)
-	assert_eq(_text("BoxesPerMinute"), "2.00")
-	_bus.score_changed.emit(3, 0)
-	assert_eq(_text("BoxesPerMinute"), "3.00")
-	_manager.round_state.advance(60.0)
-	assert_eq(_text("BoxesPerMinute"), "1.50")
-	_start()
-	assert_eq(_text("BoxesPerMinute"), "0.00", "reinicio sin score_changed inicial")
-
-
 func test_ac9_revenue_starts_at_zero_euros() -> void:
 	assert_eq(_text("Revenue"), "0 €", "recién montado")
 	_start()
@@ -129,22 +117,6 @@ func test_pause_changed_dims_and_restores_hud() -> void:
 	assert_lt(_hud.modulate.a, 1.0)
 	_bus.pause_changed.emit(false)
 	assert_eq(_hud.modulate, Color.WHITE)
-
-
-func test_ratio_is_green_above_one_and_red_otherwise() -> void:
-	var rate: Label = _hud.get_node("%BoxesPerMinute")
-	var good: Color = _hud.get_theme_color(&"ratio_good_color", &"RoundHUD")
-	var bad: Color = _hud.get_theme_color(&"ratio_bad_color", &"RoundHUD")
-	assert_ne(good, bad)
-	_start()
-	assert_eq(rate.get_theme_color(&"font_color"), bad, "0.00 en rojo")
-	_bus.score_changed.emit(2, 0)
-	_manager.round_state.advance(60.0)
-	assert_eq(_text("BoxesPerMinute"), "2.00")
-	assert_eq(rate.get_theme_color(&"font_color"), good)
-	_manager.round_state.advance(60.0)
-	assert_eq(_text("BoxesPerMinute"), "1.00")
-	assert_eq(rate.get_theme_color(&"font_color"), bad, "1.00 no es mayor que 1")
 
 
 func test_ac5_character_switched_updates_indicator() -> void:
@@ -189,8 +161,7 @@ func test_pul086_figures_use_brand_digits_on_brand_panel() -> void:
 		var label: Label = _hud.get_node("%" + name)
 		assert_eq(label.theme_type_variation, &"FigureLabel", name)
 		assert_eq(label.get_theme_color(&"font_color"), Color("5b8db8"), "%s: ui_digits" % name)
-	assert_eq((_hud.get_node("%BoxesPerMinute") as Label).theme_type_variation, &"FigureLabel")
-	var background: PanelContainer = _hud.get_node("Background")
+	var background: PanelContainer = _hud.get_node("%Background")
 	assert_eq(background.theme_type_variation, &"UiPanel")
 	assert_eq(_text("Shift"), "Turno")
 
@@ -198,7 +169,7 @@ func test_pul086_figures_use_brand_digits_on_brand_panel() -> void:
 func test_pul122_ac8_hud_keeps_size_at_720p_and_1080p_without_double_scale() -> void:
 	## ADR-005 E2: la escala la da `stretch` del proyecto; el HUD ya no se escala a sí mismo.
 	assert_eq(_hud.scale, Vector2.ONE, "sin escala propia")
-	var background: Control = _hud.get_node("Background")
+	var background: Control = _hud.get_node("%Background")
 	var original: Vector2i = get_window().size
 	var units: Array[Vector2] = []
 	var fractions: Array[float] = []
@@ -215,10 +186,33 @@ func test_pul122_ac8_hud_keeps_size_at_720p_and_1080p_without_double_scale() -> 
 
 
 func test_pul086_hud_fits_compact_corner_at_720p() -> void:
-	var background: Control = _hud.get_node("Background")
+	var background: Control = _hud.get_node("%Background")
 	_start()
 	_bus.score_changed.emit(12, 1234)
 	await wait_process_frames(2)
 	var size: Vector2 = background.get_combined_minimum_size()
 	assert_lt(size.x, 230.0, "compacto: ancho")
 	assert_lt(size.y, 300.0, "compacto: alto")
+
+
+func test_d26_hud_shows_no_boxes_per_minute_in_desktop() -> void:
+	_start()
+	_bus.score_changed.emit(2, 24)
+	await wait_process_frames(2)
+	for node: Node in _hud.find_children("*", "Label", true, false):
+		var label: Label = node as Label
+		if label.is_visible_in_tree():
+			assert_false(label.text.containsn("minuto"), label.name)
+	assert_null(_hud.find_child("RateTitle", true, false), "sin título de la métrica")
+	assert_false((_hud.get_node("%BoxesPerMinute") as Label).is_visible_in_tree())
+
+
+func test_pul129_desktop_hud_keeps_the_bottom_left_corner_and_scene_sizes() -> void:
+	await wait_process_frames(2)
+	var viewport: Vector2 = get_viewport().get_visible_rect().size
+	var background: Control = _hud.get_node("%Background")
+	assert_almost_eq(background.global_position.x, 8.0, 0.5, "8 unidades del borde izquierdo")
+	assert_almost_eq(
+		background.get_global_rect().end.y, viewport.y - 8.0, 0.5, "y del borde inferior"
+	)
+	assert_eq(_hud.get_node("%Shift").get_parent().get_parent().visible, true, "cabecera de marca")

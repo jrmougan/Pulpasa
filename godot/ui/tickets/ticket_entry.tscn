@@ -28,8 +28,21 @@ theme_override_font_sizes/font_size = 19
 clip_text = true
 text_overrun_behavior = 3
 
-[node name="SeasoningIcons" type="HBoxContainer" parent="Details" unique_id=869064649]
+[node name="IconRow" type="HBoxContainer" parent="Details"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="SeasoningIcons" type="HBoxContainer" parent="Details/IconRow" unique_id=869064649]
 unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="Extras" type="HBoxContainer" parent="Details/IconRow"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 6
