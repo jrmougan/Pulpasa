@@ -4,8 +4,14 @@
 
 [resource]
 script = ExtResource("1_data")
-toggle_guard = 0.25
 cachelos_stock_max = 4
 cachelos_initial_stock = 0
 cachelos_portions_per_item = 2
 operator_side_only = true
+stock_notch_px = 24
+stock_notch_gap_px = 6
+stock_notch_outline_px = 3
+stock_fill_color = Color(0.9490196, 0.8352941, 0.4196078, 1)
+stock_empty_color = Color(0.10588235, 0.10588235, 0.12156863, 1)
+stock_outline_color = Color(1, 0.95686275, 0.8392157, 1)
+stock_plate_alpha = 0.85

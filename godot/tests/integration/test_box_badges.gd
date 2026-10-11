@@ -40,10 +40,7 @@ func test_no_seasonings_hides_the_row() -> void:
 
 
 func _apply(seasoning: SeasoningData) -> void:
-	if seasoning.same_as(CACHELOS):
-		assert_eq(_box.toggle_seasoning(seasoning), SeasoningRules.Rejection.NONE)
-	else:
-		assert_eq(_box.apply_seasoning(seasoning), SeasoningRules.Rejection.NONE)
+	assert_eq(_box.apply_seasoning(seasoning), SeasoningRules.Rejection.NONE)
 
 
 func test_ac14_canonical_order_and_hot_mark_in_either_application_order() -> void:
@@ -70,11 +67,11 @@ func test_sweet_dressing_has_no_hot_mark() -> void:
 	assert_eq(_hot_marks(), 0)
 
 
-func test_cachelos_toggle_off_removes_badge_and_compacts() -> void:
+func test_removing_cachelos_removes_badge_and_compacts() -> void:
 	_apply(SWEET)
 	_apply(CACHELOS)
 	assert_eq(_row.get_child_count(), 2)
-	_apply(CACHELOS)
+	assert_true(_box.remove_seasoning(CACHELOS), "D26: el cuenco no quita; la caja sí puede")
 	assert_eq(_types(_row.get_shown()), [SeasoningData.SeasoningType.SWEET_DRESSING] as Array[int])
 	_box.remove_seasoning(SWEET)
 	assert_eq(_row.get_shown().size(), 0)
@@ -133,3 +130,24 @@ func test_row_rebuilds_when_camera_size_changes() -> void:
 
 func _box_top_y() -> float:
 	return _row.get_box_top_screen_y()
+
+
+## PUL-126 AC5 (D26.7): la pegatina lleva el icono propio de cada aliño y la marca del picante sigue
+## siendo la llama (acento).
+func test_pul126_badges_use_each_dressings_own_icon_and_the_hot_mark_is_the_flame() -> void:
+	var style: BoxBadgeStyle = load("res://data/config/box_badges.tres") as BoxBadgeStyle
+	var dir: String = "res://assets/textures/ui/actions/"
+	assert_eq(SWEET.icon.resource_path, dir + "icon_verb_season_sweet.svg")
+	assert_eq(HOT.icon.resource_path, dir + "icon_verb_season_hot.svg")
+	assert_eq(style.hot_mark.resource_path, "res://assets/textures/icons/small-fire.svg")
+	_apply(HOT)
+	var badge: Node = _row.get_child(0)
+	var icon: Sprite3D = badge.get_child(1) as Sprite3D
+	var mark: Sprite3D = badge.get_child(2) as Sprite3D
+	assert_eq(icon.texture, HOT.icon, "la pegatina pinta el icono del aliño")
+	assert_eq(mark.texture, style.hot_mark, "y el picante, su marca")
+	_box.remove_seasoning(HOT)
+	_apply(SWEET)
+	assert_eq(_row.get_child(0).get_child(1).texture, SWEET.icon)
+	assert_ne(_row.get_child(0).get_child(1).texture, HOT.icon, "dulce y picante distinguibles")
+	assert_eq(_hot_marks(), 0)
