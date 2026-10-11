@@ -83,3 +83,5 @@ Desviaciones / decisiones:
 - Los dos anillos de la olla van en fila (separacion 1,05 diametros), no apilados: apilados a 0,35 m se tapaban.
 - Cue `cook_done` sigue en `feedback_map.tres` (lo retira PUL-131); la olla ya reproduce `cook_ready`.
 - Las capturas no usan el MCP `run_script` (no disponible en esta sesion): las hace `capture_pul125.gd` con `godot -s` y ventana real.
+
+*Actualización:* tras ampliar owns, `test_cachelos.gd:64` usa `assert_false(can_interact)` y `assert_false(interact)`; merge de la rama de integración hecho; `verify.sh` en verde (1051 tests, 0 fallos).
