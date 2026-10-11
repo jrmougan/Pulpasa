@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shaders/highlight_outline_xray.gdshader" id="1_shader"]
+
+[resource]
+render_priority = 3
+shader = ExtResource("1_shader")
+shader_parameter/outline_color = Color(1, 0.690196, 0.12549, 1)
+shader_parameter/opacity = 0.4
+shader_parameter/grow = 0.05
+shader_parameter/width = 0.04

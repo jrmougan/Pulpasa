@@ -154,18 +154,18 @@ func test_hide_removes_whichever_overlay_is_on() -> void:
 	assert_null(_overlay(target))
 
 
-func test_blocked_material_defaults_to_amber_copy_of_the_outline() -> void:
+func test_blocked_material_defaults_to_the_amber_tres_without_copies() -> void:
 	var target: Target = Target.new()
 	_level.add_child(target)
 	var blocked: ShaderMaterial = target.highlight.blocked_material as ShaderMaterial
-	assert_not_null(blocked)
-	assert_ne(blocked, target.highlight.material, "copia: no toca el contorno normal")
+	assert_eq(blocked, Highlightable.DEFAULT_BLOCKED_MATERIAL, "el .tres, no un duplicado")
+	assert_ne(blocked, target.highlight.material)
 	var color: Color = blocked.get_shader_parameter(&"outline_color")
-	assert_eq(color, Highlightable.BLOCKED_COLOR)
+	assert_almost_eq(color.to_html(false).hex_to_int() * 1.0, float(0xFFB020), 1.0)
 	var normal: Color = (target.highlight.material as ShaderMaterial).get_shader_parameter(
 		&"outline_color"
 	)
-	assert_ne(normal, Highlightable.BLOCKED_COLOR)
+	assert_ne(normal.to_html(false), color.to_html(false))
 
 
 func test_assigned_blocked_material_is_kept() -> void:
