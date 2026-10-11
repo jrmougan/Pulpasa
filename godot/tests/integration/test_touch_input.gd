@@ -268,8 +268,9 @@ func test_ac20_mouse_and_injected_actions_do_not_change_the_source() -> void:
 	assert_eq(_controls.get_last_source(), TouchInput.Source.JOYPAD)
 
 
-func test_ac20_hidden_controls_ignore_touches_on_their_buttons() -> void:
-	_deliver(_joypad_button())
+func test_ac21_controls_hidden_by_the_mode_ignore_touches_on_their_buttons() -> void:
+	GameState.mode = GameMode.Mode.COOP_2P
+	_controls.set_last_source(TouchInput.Source.TOUCH)
 	var probe: Probe = add_child_autofree(Probe.new())
 	_touch(0, ACTION_PX, true)
 	assert_eq(probe.seen, [] as Array[StringName])
