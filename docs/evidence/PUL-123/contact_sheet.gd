@@ -39,7 +39,8 @@ const ROWS: Array = [
 			"mark_active",
 			"mark_offscreen",
 			"mark_player_1",
-			"mark_player_2"
+			"mark_player_2",
+			"mark_plate"
 		]
 	],
 ]
@@ -48,7 +49,7 @@ const ROWS: Array = [
 func _init() -> void:
 	var out_path: String = OS.get_cmdline_user_args()[0]
 	var cell: int = 88
-	var sheet: Image = Image.create(cell * 8, cell * 3, false, Image.FORMAT_RGBA8)
+	var sheet: Image = Image.create(cell * 9, cell * 3, false, Image.FORMAT_RGBA8)
 	sheet.fill(Color(0.12, 0.12, 0.14))
 	for r: int in ROWS.size():
 		var px: int = ROWS[r][0]

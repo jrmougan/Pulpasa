@@ -14,7 +14,7 @@ func _init() -> void:
 	var shelf: Node3D = level.get_node("Stations/BoxShelf")
 	var box: Node3D = (load("res://entities/items/box.tscn") as PackedScene).instantiate()
 	level.add_child(box)
-	box.global_position = shelf.global_position + Vector3(2.4, 0.0, 0.0)
+	box.global_position = shelf.global_position + Vector3(-3.0, 0.0, 6.0)
 	var base_size: float = cam.size
 	var base_xform: Transform3D = cam.global_transform
 	var forward: Vector3 = -base_xform.basis.z

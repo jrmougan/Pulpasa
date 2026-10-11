@@ -32,7 +32,7 @@ SVG propios, monocromos, 128×128, trazo ≥ 8 % del lado, según «Iconografía
 - Nombres exactos del contrato (manda sobre el diseño; equivalencias en PUL-120).
 
 ## Acceptance
-- [x] AC1 (diseño AC4) Verbos a 64 px y motivos a 32 px, en gris y binarizados al 50 %: IoU de cualquier par <= 0,6; dulce y picante incluidos. IoU máximo medido: verbos 0,519; motivos 0,486 -> `test_icons_silhouettes.gd`
+- [x] AC1 (diseño AC4) Verbos a 64 px y motivos a 32 px, en gris y binarizados al 50 %: IoU de cualquier par <= 0,6; dulce y picante incluidos. IoU máximo medido: verbos 0,521; motivos 0,486 -> `test_icons_silhouettes.gd`
 - [x] AC2 `action_icons.tres` tiene exactamente las claves de verbos y motivos del contrato, todas con textura que importa, y los valores del diseño -> `test_action_icon_set.gd`
 - [x] AC3 (diseño AC19, parte de arte) `box_shelf.glb` y `box.glb` sin S, M ni L; capturas y hoja de contacto en `docs/evidence/PUL-123/`
 
@@ -47,7 +47,9 @@ SVG propios, monocromos, 128×128, trazo ≥ 8 % del lado, según «Iconografía
 6. Evidencia y verify.
 
 ## Evidence
-- `docs/evidence/PUL-123/contact_sheet_64px_gray.png`: verbos y marcas a 64 px, motivos a 32 px, en gris (`contact_sheet.gd`).
+- `docs/evidence/PUL-123/contact_sheet_64px_gray.png`: verbos y marcas (incluida `plate`) a 64 px, motivos a 32 px, en gris (`contact_sheet.gd`).
 - `docs/evidence/PUL-123/rack_in_game.png`, `box_in_game.png`: rack y caja en `level_01` (`capture.gd`), sin letras.
 - Presupuestos: `box.glb` 1034 tris; `box_shelf.glb` 5912 tris (< 6000).
 - Pendiente fuera de owns: el icono del aliño picante en `data/seasonings/hot_dressing.tres`/ticket (ver informe), `docs/assets/licenses.md` (fila de PUL-095 cita las letras).
+- Revisión (CHANGES): trazos subidos a >= 11 px (`already_applied`, `busy`, `not_cooked`, `cook`); el test comprueba trazo con una apertura circular de radio 5 que conserva >= 85 % de la máscara, marcas incluidas; `.svg.import` con `mipmaps/generate=true`; caja de `box_in_game.png` recolocada en suelo despejado.
+- Las listas literales de verbos y motivos de `test_action_icon_set.gd` y `test_icons_silhouettes.gd` se sustituyen por `ActionVerb.ALL`/`ActionReason.ALL` en PUL-131.

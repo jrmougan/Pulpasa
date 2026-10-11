@@ -5,6 +5,8 @@ extends GutTest
 
 const ICON_DIR: String = "res://assets/textures/ui/actions/"
 const MAX_IOU: float = 0.6
+## Fracción mínima de la máscara que debe sobrevivir a la apertura.
+const MIN_KEPT: float = 0.85
 const VERBS: Array[String] = [
 	"pick_up",
 	"drop",
@@ -18,6 +20,17 @@ const VERBS: Array[String] = [
 const REASONS: Array[String] = [
 	"box_not_full", "busy", "empty", "full", "already_applied", "not_cooked"
 ]
+const MARKS: Array[String] = [
+	"cross",
+	"replace",
+	"ready",
+	"burn_warning",
+	"active",
+	"offscreen",
+	"player_1",
+	"player_2",
+	"plate",
+]
 
 
 func test_verb_silhouettes_are_distinct_at_64px() -> void:
@@ -28,12 +41,16 @@ func test_reason_silhouettes_are_distinct_at_32px() -> void:
 	_check_group("reason", REASONS, 32)
 
 
-func test_solid_areas_are_thick() -> void:
-	## Trazo grueso: tras erosionar la máscara de 128 px con un radio de 4 px (trazo >= 9 px, el
-	## 7 % del lado) queda algo en pie; una silueta hecha solo de líneas finas desaparecería.
+func test_strokes_survive_an_opening_of_radius_5() -> void:
+	## Trazo >= 8 % del lado (11 px a 128): una apertura (erosión y dilatación) de radio 5 conserva
+	## al menos el 85 % de la máscara; las líneas más finas desaparecen.
 	for icon_name: String in _all_names():
 		var mask: PackedByteArray = mask_of(icon_name, 128)
-		assert_gt(_count(_erode(mask, 128, 4)), 0, "%s tiene trazo grueso" % icon_name)
+		var opened: PackedByteArray = _dilate(_erode(mask, 128, 5), 128, 5)
+		var kept: float = float(_count(opened)) / float(maxi(_count(mask), 1))
+		assert_gte(
+			kept, MIN_KEPT, "%s conserva %.1f %% tras la apertura" % [icon_name, kept * 100.0]
+		)
 
 
 ## IoU de dos máscaras binarias del mismo tamaño.
@@ -87,6 +104,8 @@ func _all_names() -> Array[String]:
 		names.append("icon_verb_" + id)
 	for id: String in REASONS:
 		names.append("icon_reason_" + id)
+	for id: String in MARKS:
+		names.append("icon_mark_" + id)
 	return names
 
 
@@ -97,19 +116,39 @@ func _count(mask: PackedByteArray) -> int:
 	return total
 
 
-## Erosión cuadrada de radio `r`: un píxel sobrevive si todo su entorno (2r+1)² está dentro.
+## Erosión con elemento circular de radio `r`: un píxel sobrevive si todo el disco está dentro.
 func _erode(mask: PackedByteArray, side: int, r: int) -> PackedByteArray:
+	return _sweep(mask, side, r, true)
+
+
+## Dilatación con elemento circular de radio `r`.
+func _dilate(mask: PackedByteArray, side: int, r: int) -> PackedByteArray:
+	return _sweep(mask, side, r, false)
+
+
+func _sweep(mask: PackedByteArray, side: int, r: int, erode: bool) -> PackedByteArray:
+	var offsets: Array[Vector2i] = []
+	for dy: int in range(-r, r + 1):
+		for dx: int in range(-r, r + 1):
+			if dx * dx + dy * dy <= r * r:
+				offsets.append(Vector2i(dx, dy))
 	var out: PackedByteArray = PackedByteArray()
 	out.resize(mask.size())
-	for y: int in range(r, side - r):
-		for x: int in range(r, side - r):
-			var keep: bool = true
-			for dy: int in range(-r, r + 1):
-				for dx: int in range(-r, r + 1):
-					if mask[(y + dy) * side + x + dx] == 0:
-						keep = false
-						break
-				if not keep:
+	for y: int in side:
+		for x: int in side:
+			var result: bool = erode
+			for off: Vector2i in offsets:
+				var xx: int = x + off.x
+				var yy: int = y + off.y
+				# Fuera de la imagen cuenta como vacío.
+				var value: bool = (
+					xx >= 0 and xx < side and yy >= 0 and yy < side and mask[yy * side + xx] != 0
+				)
+				if erode and not value:
+					result = false
 					break
-			out[y * side + x] = 1 if keep else 0
+				if not erode and value:
+					result = true
+					break
+			out[y * side + x] = 1 if result else 0
 	return out
