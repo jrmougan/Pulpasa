@@ -133,6 +133,38 @@ func test_ac1_exposes_speed_and_is_holding() -> void:
 	assert_almost_eq(_player.speed, 5.0, 0.001)
 
 
+## PUL-131 (revisión de PUL-128): la velocidad sigue la magnitud del stick, con la zona muerta
+## de `InputConfig` (0,2) remapeada: el stick virtual y el mando a medias andan más despacio.
+func test_pul128_speed_follows_the_stick_magnitude() -> void:
+	_bus.round_started.emit(180.0)
+	var deadzone: float = _control_of(_player).config.deadzone
+	assert_almost_eq(deadzone, 0.2, 0.0001, "zona muerta de InputConfig")
+	var cases: Dictionary[float, float] = {
+		0.1: 0.0,
+		0.2: 0.0,
+		0.5: (0.5 - deadzone) / (1.0 - deadzone),
+		0.75: (0.75 - deadzone) / (1.0 - deadzone),
+		1.0: 1.0,
+	}
+	for strength: float in cases:
+		Input.action_press(&"p1_move_right", strength)
+		await _simulate(TICK * 2.0)
+		var expected: float = cases[strength] * _player.config.speed
+		assert_almost_eq(_player.speed, expected, 0.02, "stick a %s" % strength)
+		Input.action_release(&"p1_move_right")
+
+
+func test_pul128_half_stick_is_slower_than_full_stick() -> void:
+	_bus.round_started.emit(180.0)
+	Input.action_press(&"p1_move_right", 0.5)
+	await _simulate(TICK * 2.0)
+	var half: float = _player.speed
+	Input.action_press(&"p1_move_right", 1.0)
+	await _simulate(TICK * 2.0)
+	assert_lt(half, _player.speed)
+	assert_almost_eq(_player.speed, 5.0, 0.001, "el teclado y el stick a fondo siguen a 5 m/s")
+
+
 func test_ac2_no_movement_before_round_started() -> void:
 	var moved: Vector3 = await _move_right_for_one_second()
 	assert_eq(moved, Vector3.ZERO)

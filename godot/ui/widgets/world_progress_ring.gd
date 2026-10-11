@@ -5,7 +5,11 @@ extends Sprite3D
 ## propio. Estados: cociendo (arco blanco 0 a 100 %), listo (verde con ✓), aviso de quemado
 ## (parpadeo ámbar y rojo con la llama, el arco muestra el tiempo que queda) y quemado (rojo fijo).
 ## Mide `diameter_px` y su trazo `thickness_px` a `screen_height` de alto con la cámara ortográfica
-## de `camera_size` m (los de juego); el tamaño en el mundo sale de ahí (`configure`).
+## activa del viewport (perfil de escritorio o móvil, ADR-005 E5); el tamaño en el mundo sale de ahí
+## (`configure`) y se rehace si la cámara cambia de tamaño. Sin cámara ortográfica, `camera_size`.
+
+## El tamaño en el mundo cambió porque la cámara activa cambió de tamaño.
+signal metrics_changed
 
 enum State { HIDDEN, COOKING, READY, WARNING, BURNT }
 
@@ -30,7 +34,7 @@ static var _texture_cache: Dictionary[float, Texture2D] = {}
 ## Diámetro y trazo del anillo en px de pantalla a `screen_height` (diseño: >= 64 y >= 8).
 @export var diameter_px: float = 64.0
 @export var thickness_px: float = 8.0
-## Alto de ventana de referencia y alto (m) de la cámara ortográfica de juego (`camera_rig.tscn`).
+## Alto de ventana de referencia y alto (m) de reserva si no hay cámara ortográfica activa.
 @export var screen_height: float = 1080.0
 @export var camera_size: float = 12.74
 ## Frecuencia del parpadeo ámbar y rojo del aviso (Hz).
@@ -39,6 +43,8 @@ static var _texture_cache: Dictionary[float, Texture2D] = {}
 var _state: State = State.HIDDEN
 var _progress: float = 0.0
 var _warn_time: float = 0.0
+## Tamaño (m) de la cámara con el que se calculó `pixel_size`.
+var _applied_camera_size: float = 0.0
 
 @onready var _viewport: SubViewport = %Viewport
 @onready var _ring: TextureProgressBar = %Ring
@@ -66,8 +72,29 @@ func configure(new_diameter_px: float, new_thickness_px: float, new_blink_hz: fl
 	_ring.texture_under = ring_texture
 	_ring.texture_progress = ring_texture
 	# El círculo dibujado mide `diameter_px` en pantalla: el sprite entero, un poco más.
-	var meters_per_px: float = camera_size / screen_height
-	pixel_size = diameter_px * meters_per_px / drawn_px
+	_applied_camera_size = get_camera_size()
+	pixel_size = diameter_px * get_meters_per_px() / drawn_px
+
+
+func _process(_delta: float) -> void:
+	if not is_equal_approx(get_camera_size(), _applied_camera_size):
+		configure(diameter_px, thickness_px, blink_hz)
+		metrics_changed.emit()
+
+
+## Alto (m) de la cámara ortográfica activa del viewport, o `camera_size` si no hay.
+func get_camera_size() -> float:
+	var viewport: Viewport = get_viewport() if is_inside_tree() else null
+	var camera: Camera3D = viewport.get_camera_3d() if viewport != null else null
+	if camera != null and camera.projection == Camera3D.PROJECTION_ORTHOGONAL:
+		return camera.size
+	return camera_size
+
+
+## Metros del mundo por píxel de pantalla a `screen_height` con la cámara con que se dimensionó.
+func get_meters_per_px() -> float:
+	var size_m: float = _applied_camera_size if _applied_camera_size > 0.0 else camera_size
+	return size_m / screen_height
 
 
 func get_state() -> State:

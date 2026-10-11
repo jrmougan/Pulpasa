@@ -55,6 +55,24 @@ func _advance(seconds: float) -> void:
 	simulate(_kitchen, roundi(seconds / STEP), STEP)
 
 
+## PUL-131 (revisión de PUL-125): el anillo mide 64 px a 1080 con la cámara activa, sea la de
+## escritorio (12,74 m) o la móvil (7,0 m), y las plazas se separan en consecuencia.
+func test_pul131_ring_follows_the_active_camera_size() -> void:
+	var camera: Camera3D = Camera3D.new()
+	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	camera.size = 12.74
+	_level.add_child(camera)
+	camera.current = true
+	await wait_process_frames(2)
+	assert_almost_eq(_ring(0).get_diameter_px(12.74, SCREEN_HEIGHT), 64.0, 0.1, "escritorio")
+	camera.size = 7.0
+	await wait_process_frames(2)
+	assert_almost_eq(_ring(0).get_diameter_px(7.0, SCREEN_HEIGHT), 64.0, 0.1, "móvil")
+	assert_gte(_ring(0).get_thickness_px(7.0, SCREEN_HEIGHT) + EPSILON, 8.0, "trazo móvil")
+	var spacing: float = _ring(1).position.x - _ring(0).position.x
+	assert_almost_eq(spacing, 64.0 * CookingStation.RING_SPACING_RATIO * 7.0 / 1080.0, 0.001)
+
+
 func test_ac4_there_is_one_ring_per_slot_and_none_is_visible_at_rest() -> void:
 	var rings: Array[WorldProgressRing] = _kitchen.get_rings()
 	assert_eq(rings.size(), KITCHEN_DATA.capacity)

@@ -29,6 +29,8 @@ var is_holding: bool = false
 
 var _bus: Node
 var _round_active: bool = false
+## Acciones de movimiento del jugador que controla, en el orden de `Input.get_vector`.
+var _axis_actions: Array[StringName] = []
 ## `switch` no suena en la asignación del arranque de ronda: se arma al acabar ese frame.
 var _switch_armed: bool = false
 
@@ -97,7 +99,19 @@ func _move_direction() -> Vector3:
 	if view != null:
 		right = _flat(view.global_basis.x, Vector3.RIGHT)
 		back = right.cross(Vector3.UP)
-	return (right * stick.x + back * stick.y).normalized()
+	return (right * stick.x + back * stick.y).normalized() * _move_strength()
+
+
+## Magnitud del stick (0-1, con la zona muerta de `InputConfig`): el stick virtual, el del mando y
+## el teclado (siempre 1) mueven proporcionalmente. La direccion es la de `get_move_vector()`.
+func _move_strength() -> float:
+	if _axis_actions.size() != 4:
+		return 1.0
+	var config: InputConfig = _control.config if _control.config != null else InputConfig.new()
+	var raw: Vector2 = Input.get_vector(
+		_axis_actions[0], _axis_actions[1], _axis_actions[2], _axis_actions[3], config.deadzone
+	)
+	return clampf(raw.length(), 0.0, 1.0)
 
 
 func _flat(v: Vector3, fallback: Vector3) -> Vector3:
@@ -107,6 +121,10 @@ func _flat(v: Vector3, fallback: Vector3) -> Vector3:
 
 func _on_control_changed(controlled_by: int) -> void:
 	var slot: int = controlled_by - 1
+	_axis_actions = []
+	if controlled_by > 0:
+		for axis: String in ["move_left", "move_right", "move_up", "move_down"]:
+			_axis_actions.append(StringName("p%d_%s" % [controlled_by, axis]))
 	_indicator.visible = slot >= 0
 	_inactive_indicator.visible = slot < 0
 	_marker.visible = slot >= 0
