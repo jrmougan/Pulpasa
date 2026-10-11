@@ -34,6 +34,11 @@ func is_interact_just_pressed() -> bool:
 	return Input.is_action_just_pressed(_interact)
 
 
+## Mantener pulsado (corte al mantener, ADR-003 §11.4): `true` mientras la acción esté pulsada.
+func is_interact_pressed() -> bool:
+	return Input.is_action_pressed(_interact, true)
+
+
 ## Para `_unhandled_input`: la pausa y la UI consumen el evento antes.
 func is_interact_event(event: InputEvent) -> bool:
 	return event.is_action_pressed(_interact, false, true)

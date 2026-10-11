@@ -6,3 +6,4 @@
 script = ExtResource("1_cfg")
 deadzone = 0.2
 switch_cooldown = 0.2
+cut_repeat_interval = 0.2

@@ -13,9 +13,19 @@ extends Area3D
 ## `is_reachable_from` que devuelve `false` (dispensador desde el lado de pase) no son candidatas:
 ## ni objetivo ni resaltado (ADR-003 §8.1). Enciende el `Highlightable` del
 ## objetivo y apaga el anterior: nunca hay dos.
+##
+## D26 (ADR-003 §11.3): solo son candidatas las entidades cuya pulsación haría algo o tiene un
+## motivo útil (`get_action_hint` ≠ `NONE`; las que no lo implementan valen `can_interact` →
+## `ok(&"")`). Elige con histéresis (`PlayerConfig.hysteresis_margin`), no publica objetivo si su
+## personaje no está controlado, y con la mano llena y sin candidatos publica el hint de suelo
+## (`drop` o `busy`). Publica el hint con `hint_changed` / `get_hint()` y marca el contorno ámbar
+## si está bloqueado.
 
 ## Objetivo nuevo; ambos pueden ser `null` (signals.md).
 signal target_changed(previous: Node, current: Node)
+## Objetivo (o `null` en el suelo) y su hint; solo cuando cambia el objetivo o el hint sin contar
+## `progress` (`ActionHint.same_as`). Se emite después de `target_changed`.
+signal hint_changed(target: Node, hint: ActionHint)
 
 ## Capa de física `interactable` (ADR-003 §5).
 const INTERACTABLE_LAYER: int = 1 << 2
@@ -28,8 +38,12 @@ const KITCHEN_GROUP: StringName = &"kitchen"
 @export var holder: Holder
 ## Cuerpo que mira; por defecto, el padre.
 @export var carrier: Node3D
+## Componente de interacción del mismo personaje: la consulta de acción lo recibe como actor y su
+## `control` decide si hay objetivo.
+@export var actor: InteractionComponent
 
 var _target: Node
+var _hint: ActionHint = ActionHint.none()
 ## Si hay un objetivo publicado: sobrevive a que se libere, para publicar la transición a `null`.
 var _has_target: bool = false
 var _lit: Highlightable
@@ -66,10 +80,20 @@ func get_target() -> Node:
 	return _target
 
 
+## Hint vigente (nunca `null`): el del objetivo, o el de suelo si no lo hay.
+func get_hint() -> ActionHint:
+	return _hint
+
+
 ## Reevalúa el objetivo y el resaltado con los cuerpos que solapan ahora.
 func refresh() -> void:
-	var holding: bool = holder != null and holder.get_held_item() != null
+	if not _is_controlled():
+		_publish(null, ActionHint.none())
+		return
+	var held: Node = holder.get_held_item() if holder != null else null
+	var holding: bool = held != null
 	var entities: Array[Node3D] = []
+	var hints: Array[ActionHint] = []
 	var candidates: Array[InteractionScoring.Candidate] = []
 	var eye: Vector3 = carrier.global_position + Vector3.UP * config.detector_origin_height
 	for body: Node3D in get_overlapping_bodies():
@@ -82,6 +106,9 @@ func refresh() -> void:
 			entity = (entity as Slot).get_item()
 		if not _is_reachable(entity):
 			continue
+		var hint: ActionHint = InteractionContract.hint_of(entity, actor)
+		if not hint.is_target():
+			continue
 		candidates.append(
 			InteractionScoring.Candidate.new(
 				Vector2(pos.x, pos.z),
@@ -93,6 +120,7 @@ func refresh() -> void:
 			)
 		)
 		entities.append(entity)
+		hints.append(hint)
 	var forward: Vector3 = -carrier.global_basis.z
 	var best: int = InteractionScoring.pick_best(
 		Vector2(carrier.global_position.x, carrier.global_position.z),
@@ -101,10 +129,33 @@ func refresh() -> void:
 		holding,
 		config.detector_cone_half_angle,
 		config.detector_near_distance,
-		config.detector_kitchen_bonus
+		config.detector_kitchen_bonus,
+		entities.find(get_target()),
+		config.hysteresis_margin
 	)
-	_set_target(entities[best] if best >= 0 else null)
+	if best >= 0:
+		_publish(entities[best], hints[best])
+	elif holding:
+		_publish(null, ActionRules.for_floor(HeldKind.of(held), holder.can_drop_freely()))
+	else:
+		_publish(null, ActionHint.none())
+
+
+## Sin jugador que lo controle no hay objetivo, ni contorno ni prompt.
+func _is_controlled() -> bool:
+	return actor != null and actor.control != null and actor.control.controlled_by > 0
+
+
+## Publica objetivo y hint: `target_changed`, contorno (ámbar si bloqueado) y `hint_changed`.
+func _publish(current: Node, hint: ActionHint) -> void:
+	var retargeted: bool = _set_target(current)
 	_set_lit(_highlightable_of(_target))
+	if _lit != null:
+		_lit.set_blocked(hint.state == ActionHint.State.BLOCKED)
+	var previous: ActionHint = _hint
+	_hint = hint
+	if retargeted or not hint.same_as(previous):
+		hint_changed.emit(_target, hint)
 
 
 ## Método opcional del contrato (ADR-003 §8.1): sin él, la entidad es alcanzable desde cualquier
@@ -133,15 +184,17 @@ func _in_contract(node: Node) -> bool:
 	)
 
 
-## Publica el objetivo nuevo. Si el anterior se liberó (o va a liberarse), `previous` es `null`:
-## nunca se emite un objeto liberado, pero la transición se publica igual (una vez).
-func _set_target(current: Node) -> void:
+## Publica el objetivo nuevo; `true` si cambió. Si el anterior se liberó (o va a liberarse),
+## `previous` es `null`: nunca se emite un objeto liberado, pero la transición se publica igual
+## (una vez).
+func _set_target(current: Node) -> bool:
 	var previous: Node = get_target()
 	if current == previous and _has_target == (current != null):
-		return
+		return false
 	_target = current
 	_has_target = current != null
 	target_changed.emit(previous, current)
+	return true
 
 
 ## Válido y no en cola de borrado. `Variant`: un parámetro `Node` rechaza objetos liberados.

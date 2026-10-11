@@ -6,3 +6,5 @@ extends Resource
 @export var deadzone: float = 0.2
 ## Segundos mínimos entre dos cambios de personaje (M2).
 @export var switch_cooldown: float = 0.2
+## Segundos de juego entre cortes al mantener pulsada la acción sobre una caja (D26.5).
+@export var cut_repeat_interval: float = 0.2

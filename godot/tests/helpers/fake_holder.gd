@@ -4,6 +4,8 @@ extends Holder
 ## `on_picked_up` / `on_dropped`. Registra el orden de las operaciones en `log`.
 
 var log: Array[String] = []
+## Lo que responde `can_drop_freely()` (soltar contra la barra o la pared: `false`).
+var can_drop: bool = true
 var _held: Node
 
 
@@ -16,6 +18,10 @@ func can_hold(item: Node) -> bool:
 		return false
 	# Contrato `pickable` completo (ADR-003 §4), antes de mutar nada.
 	return item.has_method("on_picked_up") and item.has_method("on_dropped") and "is_held" in item
+
+
+func can_drop_freely() -> bool:
+	return can_drop
 
 
 func pick_up(item: Node) -> bool:

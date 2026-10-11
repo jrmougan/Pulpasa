@@ -109,3 +109,71 @@ func test_freed_detector_releases_its_outline() -> void:
 	p1.free()
 	await wait_physics_frames(1)
 	assert_false(target.highlight.is_highlighted(), "un jugador liberado no deja el contorno")
+
+
+# --- PUL-121 (D26.6): contorno ámbar si el objetivo está bloqueado -------------------------------
+
+
+func _overlay(target: Target) -> Material:
+	return (target.get_child(1) as MeshInstance3D).material_overlay
+
+
+func test_set_blocked_swaps_the_overlay_while_lit() -> void:
+	var target: Target = Target.new()
+	_level.add_child(target)
+	var owner_node: Node = autofree(Node.new())
+	target.highlight.acquire(owner_node)
+	assert_eq(_overlay(target), target.highlight.material)
+	target.highlight.set_blocked(true)
+	assert_true(target.highlight.is_blocked())
+	assert_eq(_overlay(target), target.highlight.blocked_material)
+	assert_ne(_overlay(target), target.highlight.material)
+	target.highlight.set_blocked(false)
+	assert_eq(_overlay(target), target.highlight.material)
+
+
+func test_set_blocked_before_lighting_applies_on_show() -> void:
+	var target: Target = Target.new()
+	_level.add_child(target)
+	target.highlight.set_blocked(true)
+	assert_null(_overlay(target), "apagado no pinta nada")
+	target.highlight.show()
+	assert_eq(_overlay(target), target.highlight.blocked_material)
+
+
+func test_hide_removes_whichever_overlay_is_on() -> void:
+	var target: Target = Target.new()
+	_level.add_child(target)
+	target.highlight.show()
+	target.highlight.set_blocked(true)
+	target.highlight.hide()
+	assert_null(_overlay(target))
+	target.highlight.show()
+	target.highlight.set_blocked(false)
+	target.highlight.hide()
+	assert_null(_overlay(target))
+
+
+func test_blocked_material_defaults_to_amber_copy_of_the_outline() -> void:
+	var target: Target = Target.new()
+	_level.add_child(target)
+	var blocked: ShaderMaterial = target.highlight.blocked_material as ShaderMaterial
+	assert_not_null(blocked)
+	assert_ne(blocked, target.highlight.material, "copia: no toca el contorno normal")
+	var color: Color = blocked.get_shader_parameter(&"outline_color")
+	assert_eq(color, Highlightable.BLOCKED_COLOR)
+	var normal: Color = (target.highlight.material as ShaderMaterial).get_shader_parameter(
+		&"outline_color"
+	)
+	assert_ne(normal, Highlightable.BLOCKED_COLOR)
+
+
+func test_assigned_blocked_material_is_kept() -> void:
+	var custom: StandardMaterial3D = StandardMaterial3D.new()
+	var target: Target = Target.new()
+	target.highlight.blocked_material = custom
+	_level.add_child(target)
+	assert_eq(target.highlight.blocked_material, custom)
+	target.highlight.show()
+	target.highlight.set_blocked(true)
+	assert_eq(_overlay(target), custom)

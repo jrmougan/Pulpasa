@@ -343,3 +343,31 @@ func test_ac4_helper_rejects_outside_group_incomplete_or_null() -> void:
 	incomplete.add_to_group(&"pickable")
 	assert_false(PickableContract.is_valid_pickable(incomplete))
 	assert_false(PickableContract.is_valid_pickable(null))
+
+
+# --- PUL-121 (ADR-003 §11.5): punto de soltar público para el prompt de SOLTAR -------------------
+
+
+func test_get_drop_position_is_where_the_item_lands() -> void:
+	var item: CountingPickable = _make_pickable()
+	_hold.pick_up(item)
+	var expected: Vector3 = _player.global_position + Vector3(0.0, 0.6, -0.6)
+	assert_almost_eq(_hold.get_drop_position(), expected, Vector3.ONE * 0.001)
+	_hold.drop()
+	assert_almost_eq(item.global_position, expected, Vector3.ONE * 0.001)
+
+
+func test_get_drop_position_follows_the_facing() -> void:
+	_player.rotation.y = PI
+	var expected: Vector3 = _player.global_position + Vector3(0.0, 0.6, 0.6)
+	assert_almost_eq(_hold.get_drop_position(), expected, Vector3.ONE * 0.001)
+
+
+func test_get_drop_position_is_the_point_can_drop_freely_checks() -> void:
+	_add_bar_in_front()
+	await wait_physics_frames(2)
+	var item: CountingPickable = _make_pickable()
+	_hold.pick_up(item)
+	var point: Vector3 = _hold.get_drop_position()
+	assert_almost_eq(point, _player.global_position + Vector3(0.0, 0.6, -0.6), Vector3.ONE * 0.001)
+	assert_false(_hold.can_drop_freely(), "la barra cae en ese punto")

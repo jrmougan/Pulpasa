@@ -12,6 +12,10 @@ const EYE_HEIGHT: float = 0.8
 
 # Mirando a +x desde el origen.
 const FWD: Vector2 = Vector2.RIGHT
+# PUL-121: margen de la histéresis y dos puntos rectos al frente (dot = 1: puntuación `2 + 1/dist`).
+const MARGIN: float = 0.2
+const AHEAD_A: Vector2 = Vector2(1.0, 0.0)
+const AHEAD_B: Vector2 = Vector2(2.0, 0.0)
 
 
 func _cand(
@@ -272,3 +276,136 @@ func test_pul063_kitchen_bonus_counts_against_stored_item() -> void:
 		_cand(Vector2(1.0, 0.0), false, true, true),
 	]
 	assert_eq(_pick(cands, false), 1)
+
+
+# --- PUL-121 AC3: histéresis (D26.4, lenguaje-acciones AC9) -------------------------------------
+
+
+## Candidato recto al frente con una distancia que da exactamente `target_score`.
+func _scored(
+	pos: Vector2, target_score: float, kitchen: bool = false
+) -> InteractionScoring.Candidate:
+	var dist: float = 1.0 / (target_score - 2.0)
+	return _cand(pos, false, true, kitchen, dist)
+
+
+func _pick_h(
+	cands: Array[InteractionScoring.Candidate],
+	current: int,
+	margin: float = MARGIN,
+	holding: bool = false
+) -> int:
+	return InteractionScoring.pick_best(
+		Vector2.ZERO, FWD, cands, holding, CONE, NEAR, BONUS, current, margin
+	)
+
+
+func test_ac3_candidate_at_119_percent_does_not_replace_current() -> void:
+	var cands: Array[InteractionScoring.Candidate] = [
+		_scored(AHEAD_A, 3.0),
+		_scored(AHEAD_B, 3.0 * 1.19),
+	]
+	assert_eq(_pick_h(cands, 0), 0, "sigue el actual")
+
+
+func test_ac3_candidate_at_121_percent_replaces_current() -> void:
+	var cands: Array[InteractionScoring.Candidate] = [
+		_scored(AHEAD_A, 3.0),
+		_scored(AHEAD_B, 3.0 * 1.21),
+	]
+	assert_eq(_pick_h(cands, 0), 1)
+
+
+func test_ac3_current_can_be_any_index() -> void:
+	var cands: Array[InteractionScoring.Candidate] = [
+		_scored(AHEAD_B, 3.0 * 1.19),
+		_scored(AHEAD_A, 3.0),
+	]
+	assert_eq(_pick_h(cands, 1), 1)
+	assert_eq(_pick_h(cands, -1), 0, "sin actual, gana el mejor")
+
+
+func test_ac3_invalid_current_changes_even_below_the_margin() -> void:
+	# El actual salió del cono (a la espalda y lejos): el mejor lo sustituye aunque puntúe poco más.
+	var behind: InteractionScoring.Candidate = _cand(Vector2(-1.0, 0.0), false, true, false, 1.0)
+	var cands: Array[InteractionScoring.Candidate] = [behind, _scored(AHEAD_B, 2.4)]
+	assert_eq(_pick_h(cands, 0), 1)
+
+
+func test_ac3_current_that_is_not_interactable_is_invalid() -> void:
+	var inert: InteractionScoring.Candidate = _cand(AHEAD_A, false, false, false, 1.0)
+	var cands: Array[InteractionScoring.Candidate] = [inert, _scored(AHEAD_B, 2.5)]
+	assert_eq(_pick_h(cands, 0), 1)
+
+
+func test_ac3_current_index_out_of_range_is_ignored() -> void:
+	var cands: Array[InteractionScoring.Candidate] = [_scored(AHEAD_A, 3.0)]
+	assert_eq(_pick_h(cands, 5), 0)
+
+
+func test_ac3_zero_margin_is_the_previous_behaviour() -> void:
+	var cands: Array[InteractionScoring.Candidate] = [
+		_scored(AHEAD_A, 3.0),
+		_scored(AHEAD_B, 3.0 * 1.01),
+	]
+	assert_eq(_pick_h(cands, 0, 0.0), 1)
+	assert_eq(_pick(cands), 1, "la firma antigua no cambia")
+	var tie: Array[InteractionScoring.Candidate] = [_scored(AHEAD_A, 3.0), _scored(AHEAD_B, 3.0)]
+	assert_eq(
+		_pick_h(tie, 1, 0.0),
+		InteractionScoring.pick_best(Vector2.ZERO, FWD, tie, false, CONE, NEAR, BONUS)
+	)
+
+
+func test_ac3_kitchen_bonus_counts_in_both_scores() -> void:
+	# Actual de cocina: 3 + 1 de bonus = 4. El otro necesita más de 4 × 1,2 = 4,8.
+	var stays: Array[InteractionScoring.Candidate] = [
+		_scored(AHEAD_A, 3.0, true),
+		_scored(AHEAD_B, 4.7),
+	]
+	assert_eq(_pick_h(stays, 0), 0)
+	var changes: Array[InteractionScoring.Candidate] = [
+		_scored(AHEAD_A, 3.0, true),
+		_scored(AHEAD_B, 4.9),
+	]
+	assert_eq(_pick_h(changes, 0), 1)
+
+
+func test_ac3_negative_score_uses_the_absolute_value() -> void:
+	# Cerca y a la espalda (dentro de la distancia mínima): dot = -1, puntuación negativa.
+	var behind: Vector2 = Vector2(-0.5, 0.0)
+	var current: InteractionScoring.Candidate = _cand(behind, false, true, false, 0.6)
+	assert_almost_eq(InteractionScoring.score(-1.0, 0.6), -0.3333, 0.001)
+	# Umbral: -0,3333 + 0,2 × 0,3333 = -0,2667.
+	var below: InteractionScoring.Candidate = _cand(behind, false, true, false, 1.0 / 1.70)
+	var above: InteractionScoring.Candidate = _cand(behind, false, true, false, 1.0 / 1.80)
+	assert_eq(_pick_h([current, below], 0), 0, "-0,30 no supera el umbral")
+	assert_eq(_pick_h([current, above], 0), 1, "-0,20 sí")
+
+
+func test_ac3_pickable_priority_beats_hysteresis_with_empty_hand() -> void:
+	# Regla categórica de PUL-063: un cogible suelto gana aunque no supere el margen.
+	var pickable: InteractionScoring.Candidate = _cand(AHEAD_B, true, true, false, 1.0 / 0.95)
+	var cands: Array[InteractionScoring.Candidate] = [_scored(AHEAD_A, 3.0), pickable]
+	assert_lt(InteractionScoring.score(1.0, 1.0 / 0.95), 3.0 * 1.2)
+	assert_eq(_pick_h(cands, 0), 1)
+
+
+func test_ac3_pickable_current_is_kept_against_a_slightly_better_interactable() -> void:
+	var pickable: InteractionScoring.Candidate = _cand(AHEAD_A, true, true, false, 1.0)
+	var cands: Array[InteractionScoring.Candidate] = [pickable, _scored(AHEAD_B, 3.5)]
+	assert_eq(_pick_h(cands, 0), 0, "el cogible sigue siendo el mejor por prioridad")
+
+
+func test_ac3_two_pickables_use_the_margin() -> void:
+	var first: InteractionScoring.Candidate = _cand(AHEAD_A, true, true, false, 1.0)
+	var near_tie: InteractionScoring.Candidate = _cand(AHEAD_B, true, true, false, 1.0 / 1.1)
+	assert_eq(_pick_h([first, near_tie], 0), 0, "3,0 contra 3,1: sigue el actual")
+	var clear_win: InteractionScoring.Candidate = _cand(AHEAD_B, true, true, false, 1.0 / 1.7)
+	assert_eq(_pick_h([first, clear_win], 0), 1, "3,0 contra 3,7: cambia")
+
+
+func test_ac3_holding_ignores_pickable_priority() -> void:
+	var pickable: InteractionScoring.Candidate = _cand(AHEAD_B, true, true, false, 1.0 / 0.95)
+	var cands: Array[InteractionScoring.Candidate] = [_scored(AHEAD_A, 3.0), pickable]
+	assert_eq(_pick_h(cands, 0, MARGIN, true), 0)

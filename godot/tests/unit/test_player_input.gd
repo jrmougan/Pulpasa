@@ -12,6 +12,7 @@ func after_each() -> void:
 	Input.action_release(&"p1_move_right")
 	Input.action_release(&"p1_move_down")
 	Input.action_release(&"p1_interact")
+	Input.action_release(&"p2_interact")
 	Input.action_release(&"p2_move_right")
 
 
@@ -84,3 +85,29 @@ func test_ac1_interact_event() -> void:
 	assert_true(_input.is_interact_event(event))
 	event.action = &"p2_interact"
 	assert_false(_input.is_interact_event(event))
+
+
+func test_ac6_interact_pressed_follows_the_held_action() -> void:
+	assert_false(_input.is_interact_pressed())
+	Input.action_press(&"p1_interact")
+	assert_true(_input.is_interact_pressed())
+	Input.action_release(&"p1_interact")
+	assert_false(_input.is_interact_pressed())
+
+
+func test_ac6_interact_pressed_reads_only_its_own_player() -> void:
+	Input.action_press(&"p2_interact")
+	assert_false(_input.is_interact_pressed())
+	assert_true(PlayerInput.new(2, 0.2).is_interact_pressed())
+
+
+func test_ac7_cut_repeat_interval_is_0_2_in_the_data_and_the_script() -> void:
+	var config: InputConfig = load("res://data/config/input_config.tres") as InputConfig
+	assert_almost_eq(config.cut_repeat_interval, 0.2, 0.0001)
+	assert_almost_eq(InputConfig.new().cut_repeat_interval, 0.2, 0.0001)
+
+
+func test_ac7_hysteresis_margin_is_0_2_in_the_data_and_the_script() -> void:
+	var config: PlayerConfig = load("res://data/config/player_config.tres") as PlayerConfig
+	assert_almost_eq(config.hysteresis_margin, 0.2, 0.0001)
+	assert_almost_eq(PlayerConfig.new().hysteresis_margin, 0.2, 0.0001)
