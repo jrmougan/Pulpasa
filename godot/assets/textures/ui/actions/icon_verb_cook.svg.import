@@ -2,24 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://82ta2cv4n7ix"
-path.s3tc="res://.godot/imported/box_shelf_rack_size_signs.png-91141d43c36ef4bdf2751a746e73f857.s3tc.ctex"
+uid="uid://c5kgekw7mf706"
+path="res://.godot/imported/icon_verb_cook.svg-c0bfb4c21c0050c22b1ad891e8e77ada.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
-}
-generator_parameters={
-"md5": "2b244ab92f28809fd4b5c3151f1cfadd"
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/models/stations/box_shelf/box_shelf_rack_size_signs.png"
-dest_files=["res://.godot/imported/box_shelf_rack_size_signs.png-91141d43c36ef4bdf2751a746e73f857.s3tc.ctex"]
+source_file="res://assets/textures/ui/actions/icon_verb_cook.svg"
+dest_files=["res://.godot/imported/icon_verb_cook.svg-c0bfb4c21c0050c22b1ad891e8e77ada.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -41,4 +37,7 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1
+svg/scale=1.0
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false
