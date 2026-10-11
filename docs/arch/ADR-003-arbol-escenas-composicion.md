@@ -915,6 +915,12 @@ suelo). Detalle en `signals.md`.
 9. *Un cue de rechazo distinto para «ya aplicado».* El diseño pide un único cue de rechazo (AC7); el
    motivo ya lo dice el icono.
 
+**Estado tras el montaje (PUL-131).** Quedan superados en §8–§10 el cue `season_error` (§8, tabla de
+§9 y rechazo `BOX_NOT_FULL` de §10: ahora suena `rejected` en el jugador), `Box.toggle_seasoning()` y
+`SeasoningRules.toggle()` (§8.3, §10.2: el cuenco solo pone con `apply_seasoning`); se conservan como
+historia. El puesto ya no es objetivo y entrega al entrar en `%DeliveryZone` o estando dentro cuando la
+caja pasa a encajar (§11.7).
+
 ## Alternativas consideradas
 1. **Nivel monolítico como `Level_01.unity`.** Un solo dueño para casi todo, conflictos de merge en
    un `.tscn` grande y overrides opacos. Descartada.

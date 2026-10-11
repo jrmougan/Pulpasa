@@ -187,7 +187,8 @@ Player (CharacterBody3D, capa player)     player.gd  class_name Player
 ├── %InteractionDetector (Area3D)          components/interaction_detector.gd  máscara interactable
 │   └── CollisionShape3D (Sphere, radio de PlayerConfig)
 ├── %InteractionComponent (Node)           components/interaction_component.gd  (común) @export control, holder, detector
-├── %ActiveIndicator (MeshInstance3D)      aro bajo el personaje [M2]; D26: activo e inactivo distintos (inactive_material)
+├── %ActiveIndicator (MeshInstance3D)      aro sólido bajo el personaje, visible solo si es el activo [M2; D26]
+├── %InactiveIndicator (MeshInstance3D)    aro gris discontinuo, visible solo si es el inactivo [D26, PUL-127/131]
 ├── %ActiveMarker (Sprite3D)               ▼ sobre la cabeza del activo [D26]
 ├── %ActionPrompt                          entities/player/action_prompt.tscn [D26] (ADR-003 §11.5)
 │                                          detector = %InteractionDetector, actor = %InteractionComponent
@@ -205,7 +206,7 @@ octopus.tscn [6]   Octopus (RigidBody3D, capa interactable; grupos pickable, int
                    └── %AmountBar                                           ui/widgets/world_progress_bar.tscn
 box.tscn [6]       Box (RigidBody3D; grupos pickable, interactable, box [M2b])  box.gd  class_name Box  @export data: BoxData
                    ├── CollisionShape3D, Model, %AnchorPoint, %AnimationPlayer (box_open / box_close), Lid
-                   ├── %Highlightable, %FillBar (world_progress_bar.tscn)
+                   ├── %Highlightable, %CutCounter (%CutBar, %CutNumeral) [D26; %FillBar de baja, PUL-131]
                    ├── %CutAudio, %SeasonAudio (AudioStreamPlayer3D)  → M3: un %Feedback (FeedbackPlayer): cut, season, unseason
                    └── %BadgeRow (Node3D)  badge_row.gd  class_name BadgeRow  [M2b, PUL-059]
                        @export box: Box (el padre), @export style: BoxBadgeStyle = data/config/box_badges.tres
@@ -228,7 +229,7 @@ la caja y el ticket; ya no hay un objeto de mundo por condimento.
 los cachelos.
 
 Caja (API del contrato con la estación, M2b, PUL-057; ADR-003 §8.3):
-`toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection`,
+`toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection` *(baja D26, PUL-131)*,
 `remove_seasoning(seasoning: SeasoningData) -> bool`, `has_seasoning()`, `is_full()`,
 `get_contents()`. `interact()` corta (D1) o se coge; con cualquier otra cosa en la mano consume la
 pulsación sin efecto (ya no condimenta, AC12). D23 no cambia esta API: el dispensador y el cuenco la
@@ -236,6 +237,7 @@ llaman sobre la caja **de la mano** del actor en vez de la de la bandeja.
 **D25:** se añade `apply_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection` (la llama
 el dispensador de aliño: sustituye al otro aliño, `ALREADY_APPLIED` si ya lo lleva) y
 `toggle_seasoning(seasoning: SeasoningData)` pierde `swap_exclusive` (solo la llama el cuenco).
+**D26 (PUL-131):** `toggle_seasoning` de baja; el cuenco solo pone con `apply_seasoning` (§7.3).
 
 ### `entities/stations/`
 ```
@@ -246,7 +248,7 @@ kitchen.tscn          Kitchen (StaticBody3D; grupos interactable, kitchen)  cook
                       ├── CollisionShape3D, Model (olla + fogón), %AnchorPoint, %Highlightable
                       ├── %CookBar (world_progress_bar.tscn), %BoilAudio (AudioStreamPlayer3D, bus SFX)
                       ├── Model/Fire, Model/Steam (GPUParticles3D)  [M3] vapor solo con plazas cociendo; fuego bajo en reposo, vivo al cocer
-                      ├── %Feedback (FeedbackPlayer)  [M3] cook_start, cook_done, burn_warning, burnt, discard
+                      ├── %Feedback (FeedbackPlayer)  [M3] cook_start, cook_ready (D26; antes cook_done), burn_warning, burnt, discard
                       └── (reloj interno en _physics_process, sin nodo Timer; cook_time desde IngredientData; se congela con la pausa)
                           [M3] tras cooking_finished la plaza sigue contando: warn_time → burn_warned (barra visible y
                           parpadeando), burn_time → Ingredient.set_burnt() + burnt; mano vacía: desecha el BURNT más
@@ -296,7 +298,7 @@ order_stand.tscn      OrderStand (StaticBody3D; grupo interactable)  order_stand
                       │   └── CollisionShape3D (cilindro, radio 2,0 m, centrado en la zona; R12). Se mide al borde
                       │       de la cápsula del jugador (radio 0,21): enciende con su centro a ≲ 2,21 m (PUL-100)
                       └── %Feedback (AudioStreamPlayer3D, FeedbackPlayer) [M3; sustituye a %OkAudio/%ErrorAudio], pulse_target = el puesto:
-                          deliver_ok (POP), deliver_error (SHAKE), order_new (POP de %OrderLabel, delay), order_expired (SHAKE de %OrderLabel)
+                          deliver_ok (POP), order_new (POP de %OrderLabel, delay), order_expired (SHAKE de %OrderLabel)
 ```
 **Indicador de entrega (M3c, D23, ADR-003 §9.4; PUL-100).** `order_stand.gd` gana
 `@export var palette: StandPalette = data/config/stand_palette.tres`, `@export var material_off` /
@@ -658,8 +660,8 @@ ActionPrompt (Node3D, top_level = true)   components/action_prompt.gd  class_nam
 └── %PlayerMarker (Sprite3D billboard, no_depth_test)   player_markers[j − 1]; solo COOP_2P
 ```
 `player.tscn`: `%ActionPrompt` (instancia), `%InteractionDetector.actor = %InteractionComponent`,
-`%ActiveIndicator` con `inactive_material` (anillo sólido ≥ 8 px activo / discontinuo gris ≤ 3 px
-inactivo) y `%ActiveMarker` (`Sprite3D` ▼ ≥ 24 px sobre la cabeza, solo activo). `HoldComponent` gana
+`%ActiveIndicator` (anillo sólido ≥ 8 px, solo activo) y su hermano `%InactiveIndicator` (discontinuo gris ≤ 3 px,
+solo inactivo; así quedó en PUL-127/PUL-131 en vez de un `inactive_material` en el mismo nodo) y `%ActiveMarker` (`Sprite3D` ▼ ≥ 24 px sobre la cabeza, solo activo). `HoldComponent` gana
 `get_drop_position() -> Vector3`. `%PromptAnchor` es opcional en cualquier escena del grupo
 `interactable`; si una ficha lo añade, va como hijo directo de la raíz.
 
@@ -693,10 +695,14 @@ ui/widgets/world_progress_ring.{gd,tscn}  [D26] anillo ≥ 64 px, grosor ≥ 8 p
 ui/touch/touch_controls.tscn   [D26] (ADR-004 §6.2); se libera en el perfil DESKTOP
 TouchControls (Control, pantalla completa, mouse_filter IGNORE)   touch_controls.gd  class_name TouchControls
 └── %SafeArea (SafeAreaMargin)
-    ├── %MoveStick    (Control)  ui/touch/virtual_stick.gd  class_name VirtualStick   base 300 px, recorrido 150 px
-    ├── %ActionButton (Control)  ui/touch/action_button.gd  class_name ActionButton   180 px (72 dp), abajo a la derecha
-    ├── %SwitchButton (Control)  ui/touch/touch_button.gd   class_name TouchButton    120 px (48 dp), action &"p1_switch"
-    └── %PauseButton  (Control)  ui/touch/touch_button.gd                             120 px (48 dp), action &"pause"
+    └── Content (Control, top_level)   lienzo de los controles dentro de la safe area (PUL-128)
+        ├── %MoveStick    (Control)  ui/touch/virtual_stick.gd  class_name VirtualStick   base 300 px, recorrido 150 px
+        ├── %ActionButton (Control)  ui/touch/action_button.gd  class_name ActionButton   180 px (72 dp), abajo a la derecha
+        ├── %SwitchButton (Control)  ui/touch/touch_button.gd   class_name TouchButton    120 px (48 dp), action &"p1_switch"
+        └── %PauseButton  (Control)  ui/touch/touch_button.gd                             120 px (48 dp), action &"pause"
+En `level_01` va en `UI` entre `OrderTicketsPanel` y `PauseMenu`; el game over lo suelta (`release_all`), lo oculta
+y lo desactiva, y `round_started` lo reactiva (PUL-131). Pictogramas de cambiar y pausa dibujados por código
+(pendiente de assets).
 ui/widgets/safe_area_margin.gd   SafeAreaMargin (MarginContainer)  márgenes de DisplayServer.get_display_safe_area()
 ui/widgets/ui_scale.gd           UiScale (RefCounted): px_to_units(), dp_to_units(), safe_margins(); − factor()
 ```

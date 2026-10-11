@@ -336,8 +336,9 @@ estación: suenan los dos (`drop` es suave por datos); no se suprime para no rom
 - (−) `FeedbackPlayer` es de la capa específica: con 2D habría que duplicarlo (`AudioStreamPlayer2D`).
 - (§4.1, +) El rechazo suena igual en toda la cocina y lo da quien pulsa; las estaciones solo suenan
   cuando cambian algo.
-- (§4.1, −) Durante la transición el mapa tiene claves de baja (`cook_done`, `season_error`,
-  `deliver_error`) hasta la ficha de montaje.
+- (§4.1, −) Durante la transición el mapa tuvo claves de baja (`cook_done`, `season_error`,
+  `deliver_error`) hasta la ficha de montaje; PUL-131 las retiró (las filas `cook_done`, `season_error` y
+  `deliver_error` de la tabla de cues son históricas).
 - Owns de PUL-071 a ajustar: `core/audio_mix.gd(.uid)`, `tests/unit/test_audio_mix.gd(.uid)`,
   `components/feedback_player.gd(.uid)` (ya en `components/**`), `entities/**/*.gd` de las escenas
   que conecta, `scenes/levels/level_01.tscn` (instancia `LevelAudio`), `resources/audio_*.gd`.
