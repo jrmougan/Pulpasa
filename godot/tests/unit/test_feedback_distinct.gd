@@ -39,6 +39,7 @@ func test_rejected_shakes() -> void:
 	var data: AudioCue = MAP.get_cue(&"rejected")
 	assert_eq(data.visual, AudioCue.Visual.SHAKE)
 	assert_almost_eq(data.visual_time, 0.35, 0.001)
+	assert_almost_eq(data.shake_amplitude, 0.06, 0.001)
 
 
 func test_legacy_keys_remain_until_pul_131() -> void:
