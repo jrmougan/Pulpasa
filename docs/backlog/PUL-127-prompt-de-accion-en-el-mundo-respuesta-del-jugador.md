@@ -56,7 +56,7 @@ visibilidad, ancla, suelo, respuesta OK/BLOQUEADO, 2 pulsaciones, pausa, Local 2
 `test_player_ring.gd` (8: grosor del aro, discontinuo gris, marcador, colores, contraste en gris) y
 `test_player_feedback.gd` (12: un `rejected` por pulsacion bloqueada y motivo, `switch` solo en el entrante y no al arrancar).
 `tools/verify.sh`: 1002 tests, 1001 en verde; el unico fallo es `test_player_animation.gd::test_indicator_colours_match_variant_palette`
-(fuera de `owns`): fija J1 `#2f6fb5` / J2 ambar `#e0a02e`, y D26 (AC5' del diseño) exige un aro no amarillo y contraste >= 3:1
+(owns ampliado por el coordinador): fija J1 `#2f6fb5` / J2 ambar `#e0a02e`, y D26 (AC5' del diseño) exige un aro no amarillo y contraste >= 3:1
 con el gris del inactivo. Esas dos aserciones (lineas 175-176) deben pasar a los colores nuevos (J1 `#1f5fbf`, J2 `#b8325e`):
 lo decide el producer (la ficha no puede tocarlo).
 
@@ -71,10 +71,8 @@ contorno con `Highlightable.acquire`, como haria el detector). Mediciones en `me
   53,5 % (1080) y 42,2 % (720) de los pixeles del contorno visibles (`cube_from_south_outline_mask_*`: rojo = contorno, verde = visible con el personaje delante).
 
 ### Desviaciones y pendientes
-- `components/highlightable.gd` no esta en `owns`: no se ha cambiado. Queda listo `shaders/highlight_outline_blocked.tres`
-  (ambar en las tres pasadas); falta que `Highlightable` lo asigne por defecto (`blocked_material`) en lugar de duplicar y
-  retocar `BLOCKED_COLOR` en `_ready` (con el duplicado actual la pasada sin profundidad del bloqueado sale en blanco calido).
+- (Cerrado) `Highlightable` usa `shaders/highlight_outline_blocked.tres` como `blocked_material` por defecto, sin duplicar; `BLOCKED_COLOR` retirado. `test_player_animation.gd` actualizado a los colores D26 AC5' (J1 `#1f5fbf`, J2 `#b8325e`).
 - El aro inactivo es un nodo hermano `%InactiveIndicator` (con `inactive_material`) y no el mismo `%ActiveIndicator`:
-  `test_m2_flow.gd` exige `%ActiveIndicator.visible == false` en el inactivo (fuera de `owns`). Unificarlos es trivial cuando se actualice ese test.
+  `test_m2_flow.gd` exige `%ActiveIndicator.visible == false` en el inactivo (owns ampliado por el coordinador). Unificarlos es trivial cuando se actualice ese test.
 - Los materiales de aro nuevos (`shaders/ring_active_p1/p2.tres`, `ring_inactive.tres`) viven en `shaders/` (unica ruta de materiales en `owns`) y sustituyen a `assets/materials/active_indicator_p*.tres`.
 
