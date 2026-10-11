@@ -1,7 +1,7 @@
 ---
 id: PUL-127
 title: Prompt de acción en el mundo, respuesta del jugador, aro activo y contorno
-status: review
+status: done
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-121, PUL-123, PUL-124]
