@@ -1,7 +1,7 @@
 ---
 id: PUL-126
 title: Verbo en la estación de condimentos y cuenco que solo pone
-status: review
+status: done
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-121, PUL-123, PUL-125]
