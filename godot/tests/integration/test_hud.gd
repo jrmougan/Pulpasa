@@ -195,13 +195,23 @@ func test_pul086_figures_use_brand_digits_on_brand_panel() -> void:
 	assert_eq(_text("Shift"), "Turno")
 
 
-func test_pul086_ui_scale_keeps_proportion_from_720p_to_1080p() -> void:
-	assert_eq(UiScale.factor(720.0), 1.0)
-	assert_eq(UiScale.factor(1080.0), 1.5)
-	assert_eq(UiScale.factor(600.0), 1.0, "nunca encoge")
-	assert_eq(UiScale.factor(4320.0), 2.0, "tope")
-	var expected: float = UiScale.factor(_hud.get_viewport_rect().size.y)
-	assert_eq(_hud.scale, Vector2.ONE * expected)
+func test_pul122_ac8_hud_keeps_size_at_720p_and_1080p_without_double_scale() -> void:
+	## ADR-005 E2: la escala la da `stretch` del proyecto; el HUD ya no se escala a sí mismo.
+	assert_eq(_hud.scale, Vector2.ONE, "sin escala propia")
+	var background: Control = _hud.get_node("Background")
+	var original: Vector2i = get_window().size
+	var units: Array[Vector2] = []
+	var fractions: Array[float] = []
+	for resolution: Vector2i in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = resolution
+		await wait_process_frames(3)
+		var stretch: float = get_viewport().get_final_transform().get_scale().x
+		units.append(background.size)
+		fractions.append(background.size.y * stretch / float(resolution.y))
+	get_window().size = original
+	assert_eq(units[0], units[1], "mismas unidades de interfaz")
+	assert_almost_eq(fractions[0], fractions[1], 0.0001, "misma proporción de pantalla")
+	assert_almost_eq(fractions[0], background.size.y / 720.0, 0.0001, "tamaño de 720p intacto")
 
 
 func test_pul086_hud_fits_compact_corner_at_720p() -> void:

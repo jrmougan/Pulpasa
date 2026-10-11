@@ -134,14 +134,14 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-119 | M3e | game-designer | done | Registrar D26 (lenguaje de acciones y móvil) y poner el diseño al día |
 | PUL-120 | M3e | godot-architect | done | Enmendar los contratos para D26 (verbo de acción, prompt, táctil, cámara móvil) |
 | PUL-121 | M3e | gameplay-engineer | done | Núcleo del lenguaje de acciones, histéresis y bus |
-| PUL-122 | M3e | ui-engineer | in_progress | Escala de UI, safe area, perfil de plataforma y menús móviles |
+| PUL-122 | M3e | ui-engineer | done | Escala de UI, safe area, perfil de plataforma y menús móviles |
 | PUL-123 | M3e | asset-pipeline | done | Iconos de verbos, motivos y marcas; aliño picante propio; rack y caja sin S/M/L |
 | PUL-124 | M3e | asset-pipeline | done | Cues de D26 |
 | PUL-125 | M3e | gameplay-engineer | in_progress | Verbo en cocina y objetos; anillo de cocción, contador de corte y aviso de quemado |
 | PUL-126 | M3e | gameplay-engineer | in_progress | Verbo en la estación de condimentos y cuenco que solo pone |
 | PUL-127 | M3e | gameplay-engineer | in_progress | Prompt de acción en el mundo, respuesta del jugador, aro activo y contorno |
-| PUL-128 | M3e | ui-engineer | todo | Controles táctiles |
-| PUL-129 | M3e | ui-engineer | todo | HUD y tickets para móvil |
-| PUL-130 | M3e | gameplay-engineer | todo | Cámara con perfiles, seguimiento móvil y flecha de borde |
+| PUL-128 | M3e | ui-engineer | in_progress | Controles táctiles |
+| PUL-129 | M3e | ui-engineer | in_progress | HUD y tickets para móvil |
+| PUL-130 | M3e | gameplay-engineer | in_progress | Cámara con perfiles, seguimiento móvil y flecha de borde |
 | PUL-131 | M3e | gameplay-engineer | todo | Entrega solo por zona, montaje D26 en `level_01` y limpieza de contrato |
 | PUL-132 | M3e | qa-tester | todo | QA de D26 |

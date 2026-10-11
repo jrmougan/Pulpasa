@@ -34,8 +34,6 @@ func _ready() -> void:
 	%TimeTitle.text = _text("HUD_TIME_LEFT", "Tiempo restante")
 	%RateTitle.text = _text("HUD_BOXES_PER_MINUTE", "Cajas / minuto")
 	%RevenueTitle.text = _text("HUD_REVENUE", "Recaudación")
-	get_viewport().size_changed.connect(_apply_ui_scale)
-	_apply_ui_scale()
 	_render()
 
 
@@ -46,10 +44,6 @@ func set_bus(bus: Node) -> void:
 ## Inyección para pruebas (solo se lee `mode`); por defecto se usa el autoload.
 func set_game_state(state: Node) -> void:
 	_game_state = state
-
-
-func _apply_ui_scale() -> void:
-	scale = Vector2.ONE * UiScale.factor(get_viewport_rect().size.y)
 
 
 func _on_round_started(duration: float) -> void:

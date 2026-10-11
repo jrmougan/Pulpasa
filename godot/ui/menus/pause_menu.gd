@@ -19,6 +19,10 @@ func _ready() -> void:
 	# El aviso vive en la tarjeta (centrada), no en el borde superior donde van los tickets.
 	_warning.reparent(panel.description.get_parent(), false)
 	_warning.get_parent().move_child(_warning, panel.description.get_index() + 1)
+	panel.apply_profile()
+	if GameState.platform == PlatformProfile.Kind.MOBILE:
+		panel.show_restart("Reiniciar")
+		panel.restart_button.pressed.connect(_restart)
 	panel.primary_button.pressed.connect(_resume)
 	panel.exit_button.pressed.connect(_exit)
 	EventBus.pause_changed.connect(_on_pause_changed)
@@ -47,6 +51,10 @@ func set_game_state(state: Node) -> void:
 
 func _resume() -> void:
 	_game_state.set_paused(false)
+
+
+func _restart() -> void:
+	_game_state.restart_level()
 
 
 func _exit() -> void:

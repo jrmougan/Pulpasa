@@ -4,6 +4,8 @@ extends Node
 ## Emisor en el bus de pause_changed, device_assigned y device_disconnected.
 ## Aplica al InputMap la asignación de mandos de DeviceAssignment (ADR-004 §2): solo reescribe
 ## los eventos de mando de las acciones `p<n>_*`; los de teclado no se tocan nunca.
+## Perfil de plataforma (ADR-005 E1): lo calcula PlatformProfile; aquí solo se aplica (escala de
+## UI, pausa al perder el foco, pantalla encendida).
 
 ## Rutas previstas por ADR-001 / scene-tree.md. Aún no existen: crearlas es de fases posteriores.
 const MAIN_MENU_SCENE: String = "res://ui/menus/main_menu.tscn"
@@ -11,8 +13,14 @@ const LEVEL_SCENE: String = "res://scenes/levels/level_01.tscn"
 
 const INPUT_CONFIG: InputConfig = preload("res://data/config/input_config.tres")
 const MOVE_SUFFIXES: Array[String] = ["move_left", "move_right", "move_up", "move_down"]
+const UI_PROFILE_DESKTOP: UiProfile = preload("res://data/config/ui_profile_desktop.tres")
+const UI_PROFILE_MOBILE: UiProfile = preload("res://data/config/ui_profile_mobile.tres")
 
 var mode: GameMode.Mode = GameMode.Mode.SINGLE
+## Perfil de plataforma de la sesión (no cambia en juego; set_platform es para tests).
+var platform: PlatformProfile.Kind = PlatformProfile.Kind.DESKTOP
+## Escala y mínimos de UI del perfil (ADR-005 E3).
+var ui_profile: UiProfile = UI_PROFILE_DESKTOP
 
 var _bus: Node
 ## Valor de mando por jugador (índice 0 = J1); vacío hasta el primer reparto.
@@ -20,6 +28,8 @@ var _devices: Array[int] = []
 ## Mando desconectado -> jugador que lo tenía, para devolvérselo al reconectar.
 var _lost_by: Dictionary = {}
 var _round_active: bool = false
+var _keep_on_set: bool = false
+var _keep_on_call: Callable = DisplayServer.screen_set_keep_on
 ## Acción `p<n>_*` -> eventos de mando de la plantilla de project.godot.
 var _pad_template: Dictionary = {}
 
@@ -33,6 +43,11 @@ func _ready() -> void:
 		_bus = EventBus
 	_copy_pad_template()
 	_apply_deadzone()
+	set_platform(
+		PlatformProfile.detect(
+			PlatformProfile.features_of(OS.has_feature), OS.get_cmdline_user_args()
+		)
+	)
 	_bus.round_started.connect(_on_round_started)
 	_bus.round_finished.connect(_on_round_finished)
 	Input.joy_connection_changed.connect(handle_joy_connection)
@@ -41,6 +56,28 @@ func _ready() -> void:
 ## Inyecta el bus (tests). Llamar antes de añadir el nodo al árbol; por defecto, el autoload.
 func set_bus(bus: Node) -> void:
 	_bus = bus
+
+
+## Fija el perfil de plataforma y aplica su UiProfile (content_scale_factor de la ventana raíz).
+func set_platform(kind: PlatformProfile.Kind) -> void:
+	platform = kind
+	ui_profile = UI_PROFILE_MOBILE if kind == PlatformProfile.Kind.MOBILE else UI_PROFILE_DESKTOP
+	if is_inside_tree():
+		get_tree().root.content_scale_factor = ui_profile.content_scale
+		if kind != PlatformProfile.Kind.MOBILE:
+			_set_keep_screen_on(false)
+
+
+## Ciclo de vida (ADR-004 §6.5): solo en MOBILE y con la ronda en marcha, perder el foco o la
+## tecla Atrás pausan. Al volver no se reanuda sola.
+func _notification(what: int) -> void:
+	if platform != PlatformProfile.Kind.MOBILE or not _round_active:
+		return
+	match what:
+		NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED:
+			set_paused(true)
+		NOTIFICATION_WM_GO_BACK_REQUEST:
+			set_paused(true)
 
 
 ## Pausa o reanuda el árbol. Emite pause_changed solo si el estado cambia.
@@ -60,6 +97,7 @@ func start_level(new_mode: GameMode.Mode) -> Error:
 ## Vuelve al menú principal. Devuelve ERR_FILE_NOT_FOUND si la escena aún no existe.
 func go_to_main_menu() -> Error:
 	_round_active = false
+	_set_keep_screen_on(false)
 	return _change_scene(MAIN_MENU_SCENE)
 
 
@@ -158,10 +196,25 @@ func _forget_losses_of(player: int) -> void:
 
 func _on_round_started(_duration: float) -> void:
 	_round_active = true
+	_set_keep_screen_on(platform == PlatformProfile.Kind.MOBILE)
 
 
 func _on_round_finished(_result: RoundResult) -> void:
 	_round_active = false
+	_set_keep_screen_on(false)
+
+
+## Solo toca la pantalla encendida en MOBILE (o para devolverla a su estado si ya la tocó).
+func _set_keep_screen_on(keep_on: bool) -> void:
+	if platform != PlatformProfile.Kind.MOBILE and not _keep_on_set:
+		return
+	_keep_on_set = keep_on
+	_keep_on_call.call(keep_on)
+
+
+## Inyecta la llamada de pantalla encendida (tests); por defecto, DisplayServer.
+func set_keep_on_call(keep_on_call: Callable) -> void:
+	_keep_on_call = keep_on_call
 
 
 ## La plantilla sale de ProjectSettings, no del InputMap vivo, por si ya se reescribió.

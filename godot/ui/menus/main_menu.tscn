@@ -2,6 +2,7 @@
 
 [ext_resource type="Theme" path="res://ui/theme/default_theme.tres" id="1_qc8qn"]
 [ext_resource type="Script" path="res://ui/menus/main_menu.gd" id="2_5ssi0"]
+[ext_resource type="Script" path="res://ui/widgets/safe_area_margin.gd" id="3_safe"]
 
 [node name="MainMenu" type="Control" unique_id=1249809611]
 layout_mode = 3
@@ -11,25 +12,33 @@ anchor_bottom = 1.0
 theme = ExtResource("1_qc8qn")
 script = ExtResource("2_5ssi0")
 
-[node name="Center" type="CenterContainer" parent="." unique_id=1336592412]
-unique_name_in_owner = true
-layout_mode = 0
+[node name="SafeArea" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_safe")
 
-[node name="Column" type="VBoxContainer" parent="Center" unique_id=967804433]
+[node name="Center" type="CenterContainer" parent="SafeArea" unique_id=1336592412]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Column" type="VBoxContainer" parent="SafeArea/Center" unique_id=967804433]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(480, 0)
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Logo" type="Control" parent="Center/Column" unique_id=1871033860]
+[node name="Logo" type="Control" parent="SafeArea/Center/Column" unique_id=1871033860]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 168)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Title" type="Label" parent="Center/Column" unique_id=391633087]
+[node name="Title" type="Label" parent="SafeArea/Center/Column" unique_id=391633087]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -37,18 +46,18 @@ theme_type_variation = &"TitleLabel"
 text = "PULPASA"
 horizontal_alignment = 1
 
-[node name="Tagline" type="Label" parent="Center/Column" unique_id=607091382]
+[node name="Tagline" type="Label" parent="SafeArea/Center/Column" unique_id=607091382]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.7529412, 0.7764706, 0.8, 1)
 horizontal_alignment = 1
 
-[node name="Spacer" type="Control" parent="Center/Column" unique_id=474855341]
+[node name="Spacer" type="Control" parent="SafeArea/Center/Column" unique_id=474855341]
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 
-[node name="Play" type="Button" parent="Center/Column" unique_id=258324274]
+[node name="Play" type="Button" parent="SafeArea/Center/Column" unique_id=258324274]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
@@ -58,7 +67,7 @@ focus_next = NodePath("../Local2P")
 focus_previous = NodePath("../Exit")
 theme_type_variation = &"MenuPrimaryButton"
 
-[node name="Local2P" type="Button" parent="Center/Column" unique_id=258324275]
+[node name="Local2P" type="Button" parent="SafeArea/Center/Column" unique_id=258324275]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
@@ -68,7 +77,7 @@ focus_next = NodePath("../Exit")
 focus_previous = NodePath("../Play")
 theme_type_variation = &"MenuSecondaryButton"
 
-[node name="Exit" type="Button" parent="Center/Column" unique_id=1959124435]
+[node name="Exit" type="Button" parent="SafeArea/Center/Column" unique_id=1959124435]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
@@ -78,14 +87,14 @@ focus_next = NodePath("../Play")
 focus_previous = NodePath("../Local2P")
 theme_type_variation = &"MenuSecondaryButton"
 
-[node name="Mode" type="Label" parent="Center/Column" unique_id=1007240839]
+[node name="Mode" type="Label" parent="SafeArea/Center/Column" unique_id=1007240839]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.7529412, 0.7764706, 0.8, 1)
 horizontal_alignment = 1
 
-[node name="Status" type="Label" parent="Center/Column" unique_id=330158050]
+[node name="Status" type="Label" parent="SafeArea/Center/Column" unique_id=330158050]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(460, 48)
