@@ -12,6 +12,7 @@ Propuesta completa (privada): https://claude.ai/artifact/PstRxmwwgejjsphmEXCkJe
 | M3 | **Técnico cerrado 2026-10-06** (PUL-043..071): arte propio en Blender (D20), audio completo, feedback, olla que se pasa, dificultad por fases | — |
 | M3b | **Técnico cerrado 2026-10-07** · Estética v2 según la referencia elegida (`docs/art/style-refs/referencia-elegida-2026-10-06.png`): biblia v2, luz, materiales, todos los assets, HUD y QA (PUL-072..087) | Revisión del responsable (biblia v2 y D21; resultado final) |
 | M3c | **Planificado 2026-10-07** · Rediseño jugable y artístico de estaciones (D23): diagnóstico y propuestas (PUL-090, PUL-091, hechas), features y contratos (PUL-092, 093), arte con Codex (PUL-094..096), implementación (PUL-097..101) y QA/playtest (PUL-102) | Playtest humano con `m3c-gate.md` |
+| M3e | **Planificado 2026-10-11** · Lenguaje de acciones y móvil (D26) tras el playtest de M3d: estudio de UX (`docs/evidence/PUL-119/README.md`), diseño (PUL-119) y contratos (PUL-120, en paralelo); después verbo + prompt + respuesta de cada pulsación, histéresis, cuenco que solo pone, entrega solo por zona, corte con mantener, cues, iconos, HUD/escala y controles táctiles con cámara móvil (fichas por crear). Export Android: ficha futura | Playtest humano del lenguaje de acciones en PC y, cuando haya export, en teléfono |
 | M4 | Balanceo, opciones, gallego, builds Win/Linux, playtests | Publicar alpha |
 
 ## Fases de M0
@@ -42,10 +43,12 @@ Coop, audio completo y pulido no son M0.
 7. Menú principal: Individual, Local 2P y Salir llevan al nivel en el modo correcto.
 8. Comanda reducida (D4): pimentón dulce/picante, sal sí/no, aceite sí/no, cachelos opcionales; iconos en el ticket. *Superado por D25: aliño dulce o picante (sal gorda y aceite incluidos) + cachelos sí/no; 4 recetas; sin tamaños de caja.*
 9. Feedback mínimo: sonido y respuesta visual en coger, cocer, condimentar, entrega correcta y errónea; música y ambiente.
+10. *(D26, 2026-10-11)* Lenguaje de acciones: verbo visible antes de pulsar, prompt, ninguna pulsación muda y objetivo estable (`features/lenguaje-acciones.md`).
+11. *(D26, 2026-10-11)* Móvil, **solo Individual** con cambio de personaje, apaisado: controles táctiles, cámara móvil y UI escalada (`features/controles-tactiles.md`). El **export Android y el renderizador móvil** quedan fuera de M3e: ficha aparte cuando haya toolchain y dispositivo. Local 2P sigue siendo de PC/mando.
 
 **Should**: olla que se pasa, dificultad por fases, opciones de volumen, textos en gallego, tutorial breve.
 **Could**: barro, gaiteros, 2 personajes con habilidad, lavado de platos.
-**Won't**: mapa de niveles, online, 4 personajes, NPC animados, móvil.
+**Won't**: mapa de niveles, online, 4 personajes, NPC animados. ~~móvil~~ *(superado por D26: móvil entra en el alcance, solo Individual; Must 11)*. Siguen fuera: Local 2P en móvil, online, tiendas de aplicaciones.
 
 ## Flujo de cocina (prototipo, se mantiene por D1)
 Nevera → pulpo crudo → olla (cocción) → el jugador lleva el pulpo **cocido** y lo corta sobre una

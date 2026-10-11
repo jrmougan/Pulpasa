@@ -13,6 +13,7 @@ Menú principal → partida de `match_duration` = 300 s (dato) → pantalla de r
 - **AC4** Given la pausa, When se pulsa «Reanudar», Then todo continúa desde donde estaba (±0,05 s).
 - **AC5** Given la pantalla de resultados, When se pulsa «Reintentar», Then la partida empieza con recaudación 0, 0 comandas activas, olla libre y reloj en 300 s.
 - **AC6** Given `match_duration` = 60 en datos, When se juega, Then la partida dura 60 s sin cambiar código.
+- **AC7 (D26, móvil)** Given el perfil táctil, When la aplicación pierde el foco o llega la tecla Atrás, Then la partida pasa a pausa en ≤ 1 frame y no se reanuda sola; el menú de pausa y la pantalla de resultados usan botones ≥ 120 px de alto y texto ≥ 36 px a 1080 de alto (`controles-tactiles.md`). *Test:* `test_app_lifecycle.gd` + `test_touch_menus.gd`.
 
 ## Datos (`.tres`)
 `match_duration` (300 s).

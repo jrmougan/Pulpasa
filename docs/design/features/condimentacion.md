@@ -12,9 +12,11 @@ Sobre la caja llena de pulpo (cortado) se decide un **aliño** y, opcionalmente,
 - **Cachelos** (opcionales, cocidos en la olla, D10): sí/no, con el cuenco de D23.
 
 El aliño es **exclusivo** (la caja lleva a lo sumo uno): aplicar el otro lo **sustituye**; aplicar el
-mismo **no hace nada**. No hay quitar el aliño: una caja mal aliñada se tira al cubo
-(`cubo-basura.md`). Los cachelos sí se alternan (poner/quitar, con la caja llena, devolviendo la
-ración al cuenco, D23). No hay niveles de cantidad. Interacción, lados y pegatinas en
+mismo **no hace nada** en la caja (desde D26 la pulsación da un rechazo visible `ya aplicado`, sin
+penalizar). No hay quitar el aliño: una caja mal aliñada se tira al cubo (`cubo-basura.md`).
+~~Los cachelos sí se alternan (poner/quitar, con la caja llena, devolviendo la ración al cuenco, D23).~~
+*(Superado por D26: los cachelos solo se **ponen**; si ya los lleva, rechazo `ya aplicado`; lo mal hecho
+va al cubo.)* No hay niveles de cantidad. Interacción, lados y pegatinas en
 `estacion-condimentos.md`. Esta feature fija las reglas de datos, que viven en el núcleo
 `RefCounted` `core/seasoning_rules.gd`, y no dependen de dónde esté la caja.
 
@@ -31,6 +33,7 @@ ración al cuenco, D23). No hay niveles de cantidad. Interacción, lados y pegat
 - **AC6** *(reescrito)* Given el nivel, Then el aliño solo se aplica en la estación: 2 dispensadores (aliño dulce, aliño picante) y un cuenco de cachelos; no hay botes (`SeasoningItem`), `SpiceShelf`, bandeja (`Tray`) ni dispensadores sueltos de sal, aceite o pimentón. El pulpo sale de la nevera, no de la estación. *Test:* `test_level_01.gd`.
 - **AC7** *(reescrito)* Given una caja con aliño y cachelos aplicados en cualquier orden, When se piden en orden canónico, Then salen como aliño → cachelos (`SeasoningData.sort_order`). *Test:* `test_seasoning_rules.gd`.
 - **AC8 (R6, núcleo)** Given el cuenco con 0 raciones, When se repone con 1 cachelo cocido, Then tiene 2 raciones (`cachelos_portions_per_item` = 2); When se repone hasta superar `cachelos_stock_max` (4), Then la reposición que no cabe entera se rechaza y el cuenco no pasa de 4. *Test:* `test_cachelos.gd`. (Sin cambios.)
+- **AC10 (D26, cachelos solo se ponen)** Given una caja llena que ya lleva cachelos, When el núcleo recibe «poner cachelos» otra vez, Then el resultado es `ALREADY_APPLIED` (sin quitar, sin señales, el cuenco no recupera la ración); `SeasoningRules.toggle` ya no se usa para cachelos (se retira o queda solo para tests heredados). *Test:* `test_seasoning_rules.gd` + `test_cachelos.gd`.
 - **AC9 (D25)** Given el catálogo `data/seasonings/`, Then hay exactamente 3 `SeasoningData` (aliño dulce, aliño picante, cachelos); los dos aliños (`sweet_dressing.tres`, `hot_dressing.tres`, tipos `SWEET_DRESSING` y `HOT_DRESSING`) comparten el grupo de exclusividad `dressing`; y no quedan `.tres` de sal, aceite ni pimentón sueltos. *Test:* test de datos de `data/seasonings/`.
 
 ## Datos (`.tres`)
@@ -46,5 +49,7 @@ GUT para AC1–AC5, AC7, AC8 y AC9 (núcleo y datos); AC6 por inspección de esc
 1. **Reposición que no cabe entera** (cuenco en 3 con `cachelos_portions_per_item` = 2): se propone
    rechazar (AC8) para no perder media ración en silencio; alternativa, aceptar y topar en 4. Lo
    confirma la ficha de estación «al paso» (PUL-090 §4.4, ficha 2).
-2. **Aplicar el mismo aliño sin respuesta.** D25 dice «no hace nada»; si el playtest muestra
-   confusión se añade un cue suave, sin penalizar (decisión de gate).
+2. ~~**Aplicar el mismo aliño sin respuesta.** D25 dice «no hace nada»; si el playtest muestra
+   confusión se añade un cue suave, sin penalizar (decisión de gate).~~ **Cerrada por D26**: el
+   núcleo sigue devolviendo `ALREADY_APPLIED` sin cambiar la caja ni emitir señales de condimento, pero
+   la estación lo traduce en un rechazo visible y sonoro (BLOQUEADO `ya aplicado`, `lenguaje-acciones.md`).

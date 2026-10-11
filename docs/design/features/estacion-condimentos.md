@@ -18,6 +18,16 @@ dirección A · Señalética de pase).
 > (D10, D23). Siguen de D18/D23: la estación en la barra que separa cocina y servicio, los dos
 > lados, el antirrebote (ahora solo para cachelos) y las pegatinas en el orden del ticket.
 
+>
+> **Modificado por D26 (2026-10-11).** (1) El **cuenco solo pone** cachelos en la caja: se va el
+> alternar (poner/quitar) y su antirrebote `toggle_guard`; si la caja ya los lleva, el cuenco muestra
+> BLOQUEADO «ya lleva» y lo mal hecho va al cubo, como el aliño. Reponer el cuenco no cambia.
+> (2) Aliñar con el **mismo** aliño ya no es «no hace nada» silencioso: es BLOQUEADO `ya aplicado`
+> con rechazo visible y sonoro. (3) Un dispensador o el cuenco con una caja **sin llenar** muestra
+> BLOQUEADO `caja a medias` en vez de consumir la pulsación. (4) El **aliño picante** tiene icono
+> propio (guindilla con llama); el dulce, la pimentonera. (5) Las **raciones del cuenco** se ven
+> (4 muescas). Tabla completa mano × objetivo y prompts: `lenguaje-acciones.md`.
+
 ## Descripción
 Los botes sueltos no existen (D18). Toda la condimentación se hace en **una línea fija** en la
 barra: dos **dispensadores de aliño** (dulce, picante) y un **cuenco de cachelos**, en ese orden de
@@ -29,7 +39,8 @@ cuenco. La caja nunca se deja en la estación. Lleva encima una fila de **pegati
 tiene: **1 de aliño** y, si los lleva, la de cachelos. Si la fila es igual a la del ticket, la caja es correcta.
 
 Cada pieza tiene **un único verbo** con la caja en la mano: pasaplatos = soltar, dispensador de
-aliño = aliñar, cuenco = poner/quitar cachelos, cubo = tirar, puesto = entregar. Por eso basta una
+aliño = aliñar, cuenco = poner cachelos (D26; antes «poner/quitar»), cubo = tirar, puesto = ~~entregar~~
+(D26: la entrega es automática por zona; el puesto no es objetivo). Por eso basta una
 tecla (`pN_interact`, D3/InputMap intactos) y no compiten objetivos: en el tramo de la estación no
 hay pasaplatos.
 
@@ -57,20 +68,29 @@ cajas en la mano (rompe «un objeto en la mano», `movimiento-e-interaccion.md`)
   - Caja **llena** sin aliño: aplica el aliño (la caja sigue en la mano), 1 `seasoned`, gesto visual.
   - Caja llena con **el otro aliño**: lo **sustituye** (`seasoning_removed` del anterior y `seasoned` del
     nuevo, mismo frame). Es el único «quitar» que existe.
-  - Caja llena con **el mismo aliño**: no hace nada (sin señal, sin sonido de error, sin penalización).
-  - Caja **sin llenar**: se rechaza (`BOX_NOT_FULL`), suena `season_error` y se sacude el dispensador.
+  - Caja llena con **el mismo aliño**: ~~no hace nada (sin señal, sin sonido de error, sin penalización)~~
+    *(superado por D26)* → el dispensador es **BLOQUEADO `ya aplicado`**: 1 rechazo con aspa, sacudida y
+    cue `action_rejected`; la caja no cambia y no hay penalización.
+  - Caja **sin llenar** (vacía o a medias): ~~se rechaza (`BOX_NOT_FULL`), suena `season_error`~~ → BLOQUEADO
+    `caja a medias` (prompt ámbar antes de pulsar) y, al pulsar, el rechazo estándar de D26.
   - Con la mano vacía, con pulpo o con cachelos, **no es objetivo** ni se resalta.
-- **Cuenco de cachelos** (sin cambios respecto a D23). Es objetivo solo en dos casos:
+- **Cuenco de cachelos** (modificado por D26: solo pone). Casos (tabla E de `lenguaje-acciones.md`):
   - **(a) reponer:** con cachelos **cocidos** en la mano, desde **cualquier lado**: +2 raciones
-    (`cachelos_portions_per_item`), hasta `cachelos_stock_max` (4); lleno, se rechaza.
-  - **(b) alternar:** con una caja **llena** en la mano, solo desde el **lado de aliñar**:
-    ponerlos gasta 1 ración; quitarlos la devuelve al cuenco (D10). Con 0 raciones, ponerlos se rechaza.
-  - Con cualquier otra cosa en la mano, con la mano vacía o con una caja desde el lado de pase, **no
-    es objetivo**.
-- **Rechazos** (sonido `season_error` y sacudida del objetivo, sin cambiar nada): caja sin llenar en
-  un dispensador, cuenco vacío al poner cachelos, cuenco lleno al reponer.
-- **Antirrebote**: el cuenco ignora una segunda pulsación durante `toggle_guard` s (0,25 s) medidos
-  con el **reloj de juego**. Los aliños no lo necesitan (repetir no hace nada).
+    (`cachelos_portions_per_item`), hasta `cachelos_stock_max` (4); con 3 o 4 raciones, BLOQUEADO `lleno`.
+  - **(b) poner:** con una caja **llena sin cachelos** en la mano, solo desde el **lado de aliñar**:
+    gasta 1 ración; con 0 raciones, BLOQUEADO `vacío`; si la caja ya lleva cachelos, BLOQUEADO
+    `ya aplicado` («ya lleva»). Con una caja sin llenar, BLOQUEADO `caja a medias` (lado de aliñar).
+  - ~~**(b) alternar:** quitarlos la devuelve al cuenco (D10)~~ *(superado por D26: no se quitan; los
+    cachelos mal puestos se tiran con la caja al cubo. La ración puesta no vuelve al cuenco.)*
+  - Con cualquier otra cosa en la mano, con la mano vacía o con una caja llena desde el lado de pase,
+    **no es objetivo**.
+- **Rechazos** (D26: un único cue `action_rejected`, aspa con motivo y sacudida ±6 px del prompt y del
+  objetivo, sin cambiar nada): caja sin llenar en un dispensador o en el cuenco, mismo aliño, cuenco
+  vacío al poner cachelos, cuenco lleno al reponer, cachelos ya puestos.
+- ~~**Antirrebote**: el cuenco ignora una segunda pulsación durante `toggle_guard` s (0,25 s)~~
+  *(superado por D26: sin toggle no hace falta; una segunda pulsación sobre la caja que ya lleva cachelos
+  es BLOQUEADO `ya aplicado`).*
+- **Raciones visibles** (D26 §6): el cuenco muestra 4 muescas de cachelo (llenas = `stock`).
 - Fuera de la estación **no se aliña**: la caja no acepta aliño ni cachelos en ninguna otra parte.
 
 ### Boceto de la línea (vista cenital, cámara ortográfica)
@@ -116,15 +136,15 @@ escena de la estación instanciada y el detector real (`level_walker.gd`), sin `
 real (reloj de juego inyectado). **R*n*** = criterio de `rediseno-estaciones.md` §4.3.
 
 - **AC1 (R1, reescrito)** Given un jugador en el lado de aliñar con una caja llena sin aliño en la mano, When pulsa interactuar frente al dispensador de aliño dulce, Then la caja sigue en la mano, lleva `SWEET_DRESSING`, se emite `seasoned(sweet_dressing)` 1 vez y su fila de pegatinas muestra 1 icono. *Test:* `test_seasoning_station.gd` (integración).
-- **AC2 (reescrito, sustituye al alternar)** Given la caja de AC1, When pulsa otra vez el mismo dispensador (a 0,1 s o a 5 s), Then el resultado es `ALREADY_APPLIED` (silencioso: sin `rejected` ni cue), la caja sigue con `SWEET_DRESSING`, no se emite ninguna señal y la fila sigue con 1 icono. *Test:* `test_seasoning_station.gd`.
-- **AC3** *(superado por D25: el antirrebote ya no afecta al aliño)* Given el juego en pausa durante 1 s entre dos pulsaciones del cuenco separadas 0,1 s de juego, Then la segunda se ignora (el antirrebote del cuenco usa el reloj de juego, no el de pared). *Test:* `test_seasoning_station.gd`.
+- **AC2 (reescrito, sustituye al alternar)** *(el «silencioso» queda superado por D26, ver AC22)* Given la caja de AC1, When pulsa otra vez el mismo dispensador (a 0,1 s o a 5 s), Then el resultado es `ALREADY_APPLIED`, la caja sigue con `SWEET_DRESSING`, no se emite `seasoned` ni `seasoning_removed` y la fila sigue con 1 icono. ~~sin `rejected` ni cue~~ → desde D26 se emite el rechazo y suena `action_rejected` (AC22). *Test:* `test_seasoning_station.gd`.
+- **AC3** *(superado por D25: el antirrebote ya no afecta al aliño; **superado del todo por D26**: el cuenco ya no tiene antirrebote)* Given el juego en pausa durante 1 s entre dos pulsaciones del cuenco separadas 0,1 s de juego, Then la segunda se ignora (el antirrebote del cuenco usa el reloj de juego, no el de pared). *Test:* `test_seasoning_station.gd`.
 - **AC4 (reescrito, sustituye a `paprika_swap`)** Given una caja llena con aliño dulce en la mano, When se pulsa el dispensador de aliño picante, Then la caja lleva `HOT_DRESSING` y no `SWEET_DRESSING` y se emiten `seasoning_removed(sweet_dressing)` y, después, `seasoned(hot_dressing)`, 1 vez cada una, en la misma llamada. *Test:* `test_seasoning_rules.gd` + `test_seasoning_station.gd`.
-- **AC5 (R3)** Given una caja a medio cortar (fill 0,6) en la mano, en el lado de aliñar, When pulsa un dispensador, Then se rechaza (`BOX_NOT_FULL`), la caja no cambia, no se emite `seasoned` y suena `season_error`. *Test:* `test_seasoning_station.gd`.
+- **AC5 (R3)** Given una caja a medio cortar (fill 0,6) en la mano, en el lado de aliñar, When pulsa un dispensador, Then se rechaza (`BOX_NOT_FULL`), la caja no cambia, no se emite `seasoned` y suena el cue de rechazo (hoy `season_error`; con D26 `action_rejected`, AC22); antes de pulsar el dispensador ya muestra BLOQUEADO `caja a medias`. *Test:* `test_seasoning_station.gd`.
 - **AC6 (R4)** Given un jugador con la mano vacía, con pulpo o con cachelos en el lado de aliñar, frente a cualquier dispensador, Then ningún dispensador es objetivo ni se resalta y pulsar no cambia nada. *Test:* `test_seasoning_station.gd` (candidatos del detector).
 - **AC7** Given un jugador en el lado de pase con una caja llena en la mano frente a un dispensador, Then el dispensador no es objetivo ni se resalta (`operator_side_only` = true). *Test:* `test_seasoning_station.gd`.
-- **AC8 (R5)** Given un jugador con pulpo, con una caja sin llenar o con cachelos crudos o quemados en la mano, en cualquier punto a ≤ 1,5 m del cuenco (los dos lados), Then el cuenco no es objetivo; Given cachelos cocidos en la mano, Then sí lo es desde los dos lados; Given una caja llena en la mano, Then lo es solo desde el lado de aliñar. *Test:* `test_seasoning_station.gd` + mapa de objetivos.
+- **AC8 (R5, modificado por D26)** Given un jugador con pulpo o con cachelos crudos en la mano (o quemados: no llegan a la mano), en cualquier punto a ≤ 1,5 m del cuenco (los dos lados), Then el cuenco no es objetivo; Given cachelos cocidos en la mano, Then sí lo es desde los dos lados (OK si caben, BLOQUEADO `lleno` si no); Given una caja llena en la mano, Then lo es solo desde el lado de aliñar (OK si no lleva cachelos y hay raciones; si no, BLOQUEADO); Given una caja **sin llenar** en el lado de aliñar, Then es objetivo BLOQUEADO `caja a medias` (~~no es objetivo~~, superado por D26). *Test:* `test_seasoning_station.gd` + mapa de objetivos.
 - **AC9 (R6)** Given el cuenco con 0 raciones y un jugador con cachelos cocidos en la mano (cualquier lado), When interactúa con el cuenco, Then el cuenco tiene **2** raciones y la mano queda vacía; Given el cuenco con 2 raciones, When se repone, Then queda en 4; Given 3 o 4 raciones, Then reponer se rechaza y los cachelos siguen en la mano. *Test:* `test_cachelos.gd`. (Sin cambios.)
-- **AC10** Given el cuenco con 2 raciones y una caja llena en la mano en el lado de aliñar, When pulsa el cuenco, Then la caja lleva cachelos (sigue en la mano) y el cuenco queda en 1; When pulsa otra vez a ≥ 0,25 s, Then la caja no lleva cachelos y el cuenco vuelve a 2. Con 0 raciones y la caja sin cachelos, poner se rechaza con `season_error`. *Test:* `test_cachelos.gd`. (Sin cambios.)
+- **AC10 (reescrito por D26, sustituye al alternar)** Given el cuenco con 2 raciones y una caja llena sin cachelos en la mano en el lado de aliñar, When pulsa el cuenco, Then la caja lleva cachelos (sigue en la mano) y el cuenco queda en 1; When pulsa otra vez (a 0,1 s o a 5 s), Then la caja sigue con cachelos, el cuenco sigue en 1, no se emite `seasoning_removed` y hay 1 rechazo `ALREADY_APPLIED` (BLOQUEADO «ya lleva»). Con 0 raciones y la caja sin cachelos, poner se rechaza (`BOWL_EMPTY`, BLOQUEADO `vacío`). ~~Pulsar otra vez quita los cachelos y el cuenco vuelve a 2.~~ *Test:* `test_cachelos.gd`.
 - **AC11 (R7, reescrito)** Given `seasoning_station.tscn`, Then no tiene nodo `Tray` ni ningún `Slot`, tiene exactamente 2 dispensadores de aliño y 1 cuenco, y con una caja en la mano los únicos objetivos del tramo de la estación (los ≈ 2 m centrales del mostrador de 5,2 m, x local −1…1) son esos 3: el barrido de `target_map.gd` da 0 `_` (pasaplatos) y 0 `T` en el tramo. *Test:* `test_station_level.gd` + `target_map.txt` en evidencia.
 - **AC12 (R8, reescrito)** Given el mapa de objetivos con una caja llena en la mano, a 1,0 m del eje en el lado de aliñar, Then cada dispensador de aliño y el cuenco son objetivo en una franja continua ≥ 0,6 m y no hay ningún punto sin objetivo (`.`) entre el primero y el último. *Test:* `test_station_level.gd` (barrido de 0,25 m).
 - **AC13** Given una caja llena fuera de la estación (en un pasaplatos o en la mano lejos de la línea), When un jugador interactúa con ella llevando cachelos cocidos, Then no se condimenta (la caja no cambia y los cachelos siguen en la mano). *Test:* `test_box.gd`.
@@ -134,15 +154,19 @@ real (reloj de juego inyectado). **R*n*** = criterio de `rediseno-estaciones.md`
 - **AC17** Given Individual con un solo personaje, When hace una comanda «Á feira» rodeando la barra por el hueco, Then también se completa (la estación nunca exige dos personajes a la vez). *Test:* `test_station_level.gd`.
 - **AC18** Given el nivel, Then no existe `SpiceShelf`, `SeasoningItem` ni `Tray`, y los únicos puntos donde cambia el contenido de una caja son los 2 dispensadores de aliño y el cuenco (y el cubo, que la destruye entera). *Test:* `test_level_01.gd`.
 - **AC19 (D25)** Given una caja llena y un jugador frente al dispensador de aliño dulce, When pulsa interactuar, Then se lanza el gesto visual (≥ 0,3 s, partículas de sal gorda, aceite y pimentón del color del aliño) y suena 1 cue de condimentar; con el aliño picante el gesto usa el pimentón picante. *Test:* `test_seasoning_station.gd` (estado del efecto) + captura.
-- **AC20 (D25)** Given una comanda «Á feira» y una caja con aliño picante, When se entrega, Then se rechaza como caja errónea (D8) y la caja sigue en la mano; When el jugador pulsa el aliño dulce, Then la caja pasa a dulce y la entrega se acepta sin pasar por el cubo. *Test:* `test_seasoning_station.gd` + `test_order_stand.gd`.
+- **AC20 (D25, reescrito por D26)** Given una comanda «Á feira» y una caja con aliño picante, When el portador entra en la zona del puesto, Then la zona **no se enciende**, no se entrega y no se penaliza (~~se rechaza como caja errónea (D8)~~: superado por D26); When el jugador pulsa el aliño dulce, Then la caja pasa a dulce, la zona se enciende y entra a entregar sin pasar por el cubo. *Test:* `test_seasoning_station.gd` + `test_order_stand.gd`.
+- **AC21 (D26, cuenco solo pone)** Given el cuenco y una caja llena con cachelos en la mano (lado de aliñar), When pulsa el cuenco 1 vez, Then el cuenco muestra BLOQUEADO `ya aplicado` antes de pulsar; la pulsación da 1 rechazo y no cambia la caja, el `stock` ni emite `seasoning_removed`. El dato `toggle_guard` ya no existe en `SeasoningStationData`. *Test:* `test_cachelos.gd` + test de datos.
+- **AC22 (D26, aliño repetido)** Given una caja con aliño dulce y el dispensador dulce, Then el dispensador muestra BLOQUEADO `ya aplicado`; When pulsa, Then hay 1 rechazo (aspa + sacudida ±6 px ≥ 0,3 s + 1 `action_rejected`) y la caja no cambia. *Test:* `test_seasoning_station.gd` + `test_action_prompt.gd`.
+- **AC23 (D26, raciones visibles)** Given el cuenco con `stock` 0 / 2 / 4, Then se ven 0 / 2 / 4 muescas llenas de 4, cada una ≥ 24 px a 1080 de alto y con contraste ≥ 3:1 frente a las huecas (`lenguaje-acciones.md` AC17). Cierra la pregunta abierta nº 2. *Test:* `test_cachelos_bowl_view.gd` + captura.
+- **AC24 (D26, icono del picante)** Given los dos dispensadores, Then el picante muestra la guindilla con llama y el dulce la pimentonera (IoU ≤ 0,6 entre sus siluetas), y los mismos iconos en el ticket y la pegatina de la caja. *Test:* `test_icons_silhouettes.gd`.
 
 *Retirados por D25:* el alternar de sal/aceite/pimentón (AC2/AC3 originales), los 4 dispensadores y
 sus pegatinas (AC14/AC15 originales), `paprika_swap` y el S/M/L de la caja. *Retirados por D23:* el
 AC9 de D18 (coger/dejar en la bandeja), el AC6 (bandeja vacía) y el AC8 de PUL-064.
 
 ## Datos (`.tres`)
-- **`SeasoningStationData`** (`data/config/seasoning_station.tres`): `toggle_guard` (0,25 s, reloj
-  de juego, solo cuenco), `cachelos_stock_max` (4), `cachelos_initial_stock` (0),
+- **`SeasoningStationData`** (`data/config/seasoning_station.tres`): ~~`toggle_guard` (0,25 s, reloj
+  de juego, solo cuenco)~~ *(retirado por D26)*, `cachelos_stock_max` (4), `cachelos_initial_stock` (0),
   `cachelos_portions_per_item` (2), `operator_side_only` (true; válvula de balance). Se retira
   `paprika_swap`. El gesto visual del aliño (≥ 0,3 s) es un nodo de la escena del dispensador, no un dato.
 - **`BoxBadgeStyle`** (`data/config/box_badges.tres`): sin cambios (`badge_icon_px` 24,
@@ -165,7 +189,7 @@ dispensadores de aliño en vez de cuatro, sin `Tray`) y semántica de `seasoned`
 con aliños exclusivos. Esta feature no cambia el InputMap ni añade señales por sí misma.
 
 ## Verificación
-GUT para AC1–AC14 y AC16–AC20 (reglas en unit; estación y nivel en integración con el detector
+GUT para AC1–AC14 y AC16–AC24 (reglas en unit; estación y nivel en integración con el detector
 real y reloj de juego inyectado). Mapa de objetivos (`docs/evidence/PUL-090/target_map.gd`
 adaptado) para AC8, AC11 y AC12. Captura para AC15 y AC19.
 
@@ -175,5 +199,8 @@ adaptado) para AC8, AC11 y AC12. Captura para AC15 y AC19.
    mostrador en una ficha de nivel posterior? Decisión para el gate.
 1. **Lado de los dispensadores** (`operator_side_only`): se mantiene en true. Si el playtest de
    Individual pide aliñar desde la cocina, se libera en datos sin tocar código.
-2. **Raciones visibles en el cuenco.** PUL-090 §5 pedía ver 0–4 raciones; lo decide el playtest
-   posterior a D25.
+2. ~~**Raciones visibles en el cuenco.**~~ Cerrada por D26 §6 (AC23): 4 muescas visibles.
+3. **Dispensador desde el lado de pase (D26).** Sigue sin ser objetivo; ver `lenguaje-acciones.md`,
+   pregunta 2 (motivo «otro lado»).
+4. **Cachelos mal puestos (D26).** Sin quitar, hay que tirar la caja entera (aliño incluido). Si el
+   playtest lo ve caro, se estudia un «quitar» barato; no se hace en M3e.

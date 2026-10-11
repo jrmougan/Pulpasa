@@ -9,6 +9,15 @@ ortográfica fija), D18/D23 (estación de condimentos), D1 (corte sobre la caja)
 con cambio de personaje), D9 (olla de 2 plazas), D10 (cachelos en la olla), D12 (cada comanda en su
 puesto), `rediseno-estaciones.md` (PUL-090).
 
+> **Nota D26 (2026-10-11).** La planta no cambia. Tres efectos para el nivel: (1) el **puesto deja de ser
+> objetivo** de la pulsación (la entrega es solo por `DeliveryZone`), así que ya no compite con cubos y
+> pasaplatos al llevar una caja; (2) en el perfil **táctil** la cámara ve ≤ 9 m de fondo a 1080 de alto
+> (≥ 120 px/m), casi todo el fondo de la planta (z −4,5…+4,5), y sigue al personaje activo sobre todo
+> en x; hace falta un **límite jugable por nivel** en datos (`controles-tactiles.md`, `camera_margin_m`);
+> (3) con el prompt de verbo, los objetivos próximos deben seguir separados ≥ 1,0 m entre centros
+> (cubo/pasaplatos/dispensadores/cuenco; ya lo exigen `estacion-condimentos.md` AC11–AC12 y
+> `cubo-basura.md` T6). Cualquier cambio de planta para móvil se decide aparte.
+
 ## Planta B vigente (D23)
 
 > **Sustituido por D23:** el hueco de 1 m en la columna 14 (x 7,7), los 9 pasaplatos invisibles
