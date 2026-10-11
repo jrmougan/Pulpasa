@@ -21,6 +21,9 @@ ADR-006 §4.1, `signals.md`, `scene-tree.md` §9). Partición original y notas d
 ADR-003 §11.5 y §11.8 (aro, `%ActiveMarker`, contorno `#FFF4D6` / ámbar visible a través
   del personaje); rechazo en el `%Feedback` del jugador (`rejected`) y cue `switch` (ADR-006 §4.1).
 
+### Pendientes heredados (producer)
+- Revisión de PUL-121 (hallazgo 4): `components/highlightable.gd:42` duplica el `ShaderMaterial` bloqueado en `_ready` aunque nunca se bloquee y `BLOCKED_COLOR` está en código. Asigna el `blocked_material` `.tres` propio (contorno ámbar) y deriva solo cuando haga falta (si `highlightable.gd` no está en tus owns, pídelo).
+
 ## Constraints
 - Solo las rutas de `owns`/`touches_scenes`. Si un cambio rompe un test fuera de tus owns, para y avisa al producer.
 - Tipado estático, datos en `.tres`, lógica en `core/` RefCounted; no inventes `uid://`.

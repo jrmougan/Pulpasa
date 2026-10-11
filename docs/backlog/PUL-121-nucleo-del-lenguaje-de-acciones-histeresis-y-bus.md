@@ -1,7 +1,7 @@
 ---
 id: PUL-121
 title: Núcleo del lenguaje de acciones, histéresis y bus
-status: review
+status: done
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-119, PUL-120]
