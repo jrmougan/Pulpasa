@@ -1,7 +1,7 @@
 ---
 id: PUL-129
 title: HUD y tickets para móvil
-status: in_progress
+status: done
 milestone: M3e
 role: ui-engineer
 deps: [PUL-122, PUL-123]
