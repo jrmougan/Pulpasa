@@ -144,4 +144,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-129 | M3e | ui-engineer | done | HUD y tickets para móvil |
 | PUL-130 | M3e | gameplay-engineer | done | Cámara con perfiles, seguimiento móvil y flecha de borde |
 | PUL-131 | M3e | gameplay-engineer | done | Entrega solo por zona, montaje D26 en `level_01` y limpieza de contrato |
-| PUL-132 | M3e | qa-tester | todo | QA de D26 |
+| PUL-132 | M3e | qa-tester | in_progress | QA de D26 |
