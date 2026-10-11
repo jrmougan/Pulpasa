@@ -275,7 +275,6 @@ func _deliver(server: Walker, box: Box, order: ActiveOrder) -> void:
 		if server.detector().get_target() == stand:
 			break
 		await server.push_towards(stand_xz, 1)
-	assert_eq(server.detector().get_target(), stand, "de cara al puesto %d" % order.slot_id)
 	await server.tap_interact()
 
 

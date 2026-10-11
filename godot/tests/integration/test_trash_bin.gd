@@ -214,6 +214,10 @@ func test_t8_only_closest_of_bin_and_free_slot_is_target() -> void:
 	_level.remove_child(_bin)
 	await _face_bin()
 	assert_eq(_detector().get_target(), slot, "sin el cubo, el slot es el objetivo")
+	# D26.4: con el slot ya de objetivo la histéresis lo mantendría; se aparta al jugador antes.
+	_player.global_position = Vector3(30.0, 0.0, 30.0)
+	await _settle()
+	assert_null(_detector().get_target())
 	_level.add_child(_bin)
 	await _face_bin()
 	assert_eq(_detector().get_target(), _bin, "con el cubo, el más cercano al frente")

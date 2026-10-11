@@ -1,7 +1,7 @@
 ---
 id: PUL-121
 title: Núcleo del lenguaje de acciones, histéresis y bus
-status: in_progress
+status: review
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-119, PUL-120]
@@ -39,7 +39,7 @@ ADR-003 §11.1–§11.4: tipos, `ActionRules` con la tabla completa (§11.6, fix
 - [x] AC5 (diseño AC2, AC11) `interact_pressed`: `NONE` → nada; con objetivo → 1 `interaction_resolved` local y 1 de bus con primitivos; suelo libre → suelta + OK; suelo bloqueado → `BLOCKED` `busy` y la mano no cambia; sin control no emite; cambio de personaje: `NONE` del saliente antes que el hint del entrante → `test_interaction_component.gd`
 - [x] AC6 (diseño AC13, parte de núcleo) Mantener con `cut` OK repite cada 0,2 s de juego (1,05 s → 6 pulsaciones), para sin emitir al pasar a `BLOCKED` o cambiar de objetivo, no repite otros verbos y se congela en pausa → `test_hold_repeat.gd`, `test_interaction_component.gd`
 - [x] AC7 `EventBus` declara `action_hint_changed` e `interaction_resolved` con 4 argumentos; `hysteresis_margin` = 0,2 y `cut_repeat_interval` = 0,2 en los `.tres` → `test_event_bus.gd`, `test_player_input.gd`
-- [ ] AC8 Sin entidades migradas, el juego se comporta como antes (flujos y `test_level_01_r16` en verde)
+- [x] AC8 Sin entidades migradas, el juego se comporta como antes (flujos y `test_level_01_r16` en verde)
 
 ## Plan
 Ficheros (todos en `owns`):
@@ -63,3 +63,6 @@ Causa única: dejan de ser ciertas dos suposiciones de esos tests (no es un fall
 1. `test_m2b_flow.gd` (`test_ac1_single_three_deliveries_through_the_pass_switching_characters`, `test_ac1_coop_three_deliveries_cook_and_server_each_on_their_side`) y `test_station_level.gd` (`test_ac16_…`, `test_ac17_…`): `assert_eq(…get_target(), stand, "de cara al puesto N")` tras `walk_to` delante del puesto. El portador ya entregó al entrar en `%DeliveryZone` (mano vacía), así que `OrderStand.can_interact` es falso y el puesto, antes objetivo aunque no hiciera nada, ya no es candidato. Arreglo comprobado: quitar esa aserción (y el bucle `push_towards` previo es inofensivo); con ello pasan 2/2 y 6/6. Dueños: PUL-126 (`test_m2b_flow`, `test_station_level`) y PUL-131.
 2. `test_trash_bin.gd::test_t8_only_closest_of_bin_and_free_slot_is_target`: añade el cubo al nivel con el slot ya como objetivo y espera que el cubo gane; con la histéresis (D26.4) el actual se mantiene salvo +20 %. Arreglo: apartar y volver (`_face_bin()` con el slot fuera) o instanciar el cubo antes de que el slot sea objetivo. Dueño: PUL-125.
 - Fixture CSV: Godot importa los `.csv` como traducciones y genera `action_matrix.csv.import` y 9 `action_matrix.*.translation` junto al fichero; no están en `owns` y no se versionan. Solución propuesta al producer: un `godot/tests/fixtures/.gdignore` o un `action_matrix.csv.import` con `importer="keep"` en `owns`.
+
+### Resuelto (owns ampliado en 17c23a4)
+`verify.sh` completo en verde: 943/943. Quitada la aserción de puesto como objetivo en `test_m2b_flow` y `test_station_level`; `test_trash_bin` t8 aparta al jugador antes de añadir el cubo (mide lo mismo). `tests/fixtures/.gdignore` evita el import del CSV (el test lo lee con `FileAccess`).

@@ -141,7 +141,6 @@ func _season_and_deliver(walker: Walker, box: Box) -> void:
 		if walker.detector().get_target() == stand:
 			break
 		await walker.push_towards(stand_xz, 1)
-	assert_eq(walker.detector().get_target(), stand, "de cara al puesto 1")
 	await walker.tap_interact()
 
 
