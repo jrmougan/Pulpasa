@@ -1,7 +1,7 @@
 ---
 id: PUL-131
 title: Entrega solo por zona, montaje D26 en `level_01` y limpieza de contrato
-status: in_progress
+status: review
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-121, PUL-130]
@@ -39,14 +39,90 @@ ADR-003 §11.7 del puesto; `seasoning_station.gd` y `order_stand.gd` sin `season
 - Nombres exactos del contrato (manda sobre el diseño; equivalencias en PUL-120).
 
 ## Acceptance
-- [ ] AC1 (diseño AC1, AC2, AC11, AC20) `test_action_matrix.gd` recorre las ≥ 250 filas del CSV (con las 3 F añadidas) con las escenas reales y el detector real: 0 discrepancias; OK cambia el mundo con 1 señal de éxito, BLOQUEADO no cambia nada con 1 rechazo, `—` sin respuesta ni contorno; suelo libre y bloqueado. Cuentas exactas, filas mal formadas fallan
-- [ ] AC2 Puesto: fuera de `interactable` y de su capa; el detector no lo elige desde ningún punto de la zona; entrega al entrar y a quien ya estaba dentro cuando sale la comanda; caja errónea: nada, sin `delivery_rejected`; `wrong_delivery_penalty` = 0 → `test_order_stand.gd`, `test_delivery_e2e.gd`
-- [ ] AC3 Contrato: todo `interactable` de `entities/` implementa `get_action_hint` y ninguno usa la equivalencia sin verbo → `test_items_contract.gd`, `test_stations_contract.gd`
-- [ ] AC4 `level_01`: `TouchControls` presente y en orden en `UI`; `CameraRig.characters` = [Player1, Player2]; regla de colocación de los cubos sin cambios → `test_level_01.gd`
-- [ ] AC5 Mapa sin `cook_done`, `season_error` ni `deliver_error`; sin `SeasoningRules.toggle` ni `Box.toggle_seasoning`; flujos en verde entregando por zona → `test_audio_feedback.gd`, `test_seasoning_rules.gd`, flujos
-- [ ] AC6 Pendientes heredados (arriba) resueltos o, si alguno no procede, justificado en Evidence
-- [ ] AC7 Partida completa de `level_01` en escritorio y con `--touch` sin errores en consola (smoke de 60 s con el bot o input simulado); capturas en `docs/evidence/PUL-131/` a 1920×1080 y 2340×1080 `--touch`
+- [x] AC1 (diseño AC1, AC2, AC11, AC20) `test_action_matrix.gd` recorre las ≥ 250 filas del CSV (con las 3 F añadidas) con las escenas reales y el detector real: 0 discrepancias; OK cambia el mundo con 1 señal de éxito, BLOQUEADO no cambia nada con 1 rechazo, `—` sin respuesta ni contorno; suelo libre y bloqueado. Cuentas exactas, filas mal formadas fallan
+- [x] AC2 Puesto: fuera de `interactable` y de su capa; el detector no lo elige desde ningún punto de la zona; entrega al entrar y a quien ya estaba dentro cuando sale la comanda; caja errónea: nada, sin `delivery_rejected`; `wrong_delivery_penalty` = 0 → `test_order_stand.gd`, `test_delivery_e2e.gd`
+- [x] AC3 Contrato: todo `interactable` de `entities/` implementa `get_action_hint` y ninguno usa la equivalencia sin verbo → `test_items_contract.gd`, `test_stations_contract.gd`
+- [x] AC4 `level_01`: `TouchControls` presente y en orden en `UI`; `CameraRig.characters` = [Player1, Player2]; regla de colocación de los cubos sin cambios → `test_level_01.gd`
+- [x] AC5 Mapa sin `cook_done`, `season_error` ni `deliver_error`; sin `SeasoningRules.toggle` ni `Box.toggle_seasoning`; flujos en verde entregando por zona → `test_audio_feedback.gd`, `test_seasoning_rules.gd`, flujos
+- [x] AC6 Pendientes heredados (arriba) resueltos o, si alguno no procede, justificado en Evidence
+- [x] AC7 Partida completa de `level_01` en escritorio y con `--touch` sin errores en consola (smoke de 60 s con el bot o input simulado); capturas en `docs/evidence/PUL-131/` a 1920×1080 y 2340×1080 `--touch`
 
 ## Plan
+Orden de trabajo: (1) puesto por zona y bajas de contrato; (2) `get_action_hint` obligatorio y matriz sobre
+escenas reales; (3) montaje en `level_01`; (4) pendientes heredados; (5) partida de prueba y capturas.
+
+**Ficheros y señales**
+- Puesto (`order_stand.gd/.tscn`): fuera del grupo `interactable` y de su capa (pasa a `world`); sin
+  `can_interact`/`interact`/`deliver_error`; entrega en `body_entered` y, en `_physics_process`, a quien ya
+  está dentro cuando su caja pasa a coincidir. `delivery_rejected` y `OrderBoard` se conservan sin emisión.
+  `round_config.tres`: `wrong_delivery_penalty` = 0.
+- Bajas: claves `cook_done`, `season_error`, `deliver_error` de `feedback_map.tres`; `season_error` y
+  `get_shake` de `seasoning_station.gd`; `SeasoningRules.toggle()`; `Box.toggle_seasoning()`;
+  `CachelosBowl.clock`; `%FillBar` de la caja; `%BoxesPerMinute` del HUD; materiales `active_indicator_p*`.
+- Contrato: `INTERACTABLE_METHODS` incluye `get_action_hint` (`interaction_contract.gd`); `hint_of` conserva
+  la equivalencia solo para dobles de test.
+- Nivel: `TouchControls` en `UI` entre tickets y pausa; `CameraRig.characters` = [Player1, Player2];
+  `game_over.gd` suelta, oculta y desactiva los controles táctiles al acabar la ronda.
+- Sin señales nuevas en `EventBus`.
+
+**Qué test cubre cada AC**
+- AC1: `test_action_matrix.gd` (353 filas del CSV, con las 3 F; escenas reales + detector real; cuentas exactas y
+  validador de filas mal formadas) y `test_action_rules.gd` (reglas puras sobre el mismo CSV).
+- AC2: `test_order_stand.gd` (capa, grupo, detector desde 140 puntos de la zona, entrega al entrar y a quien ya
+  estaba dentro, caja errónea sin rechazo, penalización 0) y `test_delivery_e2e.gd` (recorrido con teclado).
+- AC3: `test_stations_contract.gd` (todo `interactable` de `entities/` con `get_action_hint`),
+  `test_items_contract.gd`, `test_interaction_contract.gd`.
+- AC4: `test_level_01.gd` (orden de la UI con perfil MOBILE, `characters`, cubos en su sitio).
+- AC5: `test_audio_feedback.gd`, `test_feedback_distinct.gd` (fuera de owns, ver Evidence),
+  `test_seasoning_rules.gd`, `test_box.gd`, flujos `test_m1/m2/m2b/kitchen/parity/station_level/level_01_r16`.
+- AC6: un test por pendiente (ver Evidence). AC7: partida de 60 s y capturas en `docs/evidence/PUL-131/`.
 
 ## Evidence
+- `tools/verify.sh` completo en verde (ver resultado final abajo); GUT: 107 scripts, 1299 tests, todos en verde (antes 106/1282).
+  Tests nuevos: `test_action_matrix.gd` (13, 353 filas del CSV, ~31 s), `test_interaction_component` (+3),
+  `test_stations_contract` (+3), `test_player` (+2), `test_level_01` (+4), `test_order_stand` (+5), `test_round_state` (+1).
+- **AC1** `test_action_matrix.gd`: escenas reales + jugador/detector real; 0 discrepancias; cuentas por receptor exactas
+  (353 = 350 + 3 F); validador de filas mal formadas con su propio test. Nota: `watch_signals` de GUT sobre varios
+  `EventBus.new()` en un mismo test cuelga el cierre del test; la matriz cuenta con lambdas.
+- **AC2** puesto fuera de `interactable` y en capa `world`; detector no lo elige desde 140 puntos/orientaciones de la zona;
+  entrega al entrar y a quien ya estaba dentro (comanda que nace o caja que pasa a encajar); caja errónea sin rechazo;
+  `wrong_delivery_penalty` = 0. Efecto de diseño: con una caja nueva en la mano dentro de una zona, si encaja se entrega
+  ahí; los flujos aparatan al personaje antes de preparar otra caja.
+- **AC3** `get_action_hint` en `INTERACTABLE_METHODS`; `test_stations_contract` escanea todas las escenas de `entities/`
+  (sin `/sandbox/`). `entities/player/sandbox/sandbox_pickable.gd` es `interactable` sin `get_action_hint` (fuera de owns,
+  es un doble de sandbox): pendiente de quien lo tenga.
+- **AC4** `level_01`: `UI` = HUD, OrderTicketsPanel, TouchControls, PauseMenu, GameOver (perfil MOBILE; en DESKTOP el
+  nodo se libera solo); `CameraRig.characters` = [Player1, Player2]; cubos en `PLAN`.
+- **AC5** mapa sin `cook_done`/`season_error`/`deliver_error`; sin `SeasoningRules.toggle` ni `Box.toggle_seasoning`.
+- **AC6** pendientes: (PUL-121) 1 F en CSV, 2 invariante (`test_interaction_component`), 3 rechazo en vez de silencio
+  (`push_error` se conserva), 4 bucles quitados (m2b, station_level), 5 `ALL` en los tests de iconos, 6 test renombrado
+  `test_rack_panels_cannot_be_walked_into` (busca `SizePanel_*`; renombrar el nodo en el `.glb` es de assets), 7 licencias.
+  (PUL-127) NO unificado: se mantiene `%InactiveIndicator` hermano (unificar obliga a cambiar malla y material en runtime y
+  tocar test_player_ring); estructura final de `player.tscn`: `%ActiveIndicator` (aro sólido, solo activo), `%InactiveIndicator`
+  (aro gris discontinuo, solo inactivo), `%ActiveMarker`, `%ActionPrompt`. Materiales `active_indicator_p*` borrados.
+  (PUL-125) `WorldProgressRing` lee el tamaño de la cámara ortográfica activa (`get_camera_size`, `metrics_changed`) y
+  `CookingStation._layout_rings` recoloca las plazas; `unique_id` de `CutCounter`/`CutBar`/`CutNumeral`/`Feedback` de
+  `box.tscn` (generados por el motor al guardar); `%FillBar` retirada; `Box.COUNTER_FULL_TIME` -> `BoxData.counter_full_time`.
+  (PUL-128) a: `player.gd` aplica la magnitud del stick (calcula con `Input.get_vector`; lo ideal es un
+  `PlayerInput.get_move_strength()`, fuera de owns); b: game over desactiva `TouchControls`; c y d: ver abajo.
+  (PUL-126) a, b, c hechos; (PUL-129) `%BoxesPerMinute` y `hud.gd` sin tasa.
+- **AC7** `docs/evidence/PUL-131/`: capturas `desktop_1920x1080_*` y `touch_2340x1080_*` (inicio, suelo SOLTAR, aviso
+  «ya aplicado» ámbar, zona encendida, entregada, smoke a 20 s y 40 s). Smoke de 60 s de input simulado (WASD, E, Q)
+  con ventana real, en escritorio y con `--touch`: sin `SCRIPT ERROR`; solo los avisos de fugas al salir. Lanzado con
+  un script fuera del repo (`-s`, ventana real, `--audio-driver Dummy`). Una entrega por zona en cada ejecución.
+
+### Estructura final para `scene-tree.md` / ADR-004 §6.2 (la actualiza el producer)
+- `OrderStand` (StaticBody3D, capa `world`, sin grupo `interactable`); conserva `Highlightable` y `OutlineHull` porque
+  `test_order_stand_model.gd` (fuera de owns) los exige: candidatos a retirar.
+- `seasoning_station.tscn` conserva `%Feedback` sin uso (el test comprueba que no suena).
+- `touch_controls.tscn`: `TouchControls` (Control) > `SafeArea` (SafeAreaMargin) > `Content` (Control, `top_level`) >
+  `MoveStick`, `ActionButton`, `SwitchButton`, `PauseButton`. Pictogramas de cambiar y pausa dibujados por código: ficha de assets.
+- `UI` de `level_01`: HUD, OrderTicketsPanel, TouchControls, PauseMenu, GameOver. `box.tscn`: `%CutCounter` (`%CutBar`,
+  `%CutNumeral`), sin `%FillBar`. `hud.tscn` sin `%BoxesPerMinute`.
+
+### Desviaciones y avisos
+- Rutas fuera de `owns` que hubo que tocar (rompían por las bajas): `tests/integration/test_box.gd`, `test_box_model.gd`,
+  `test_order_tickets.gd` (usaban `toggle_seasoning`/`%FillBar`), `test_trash_bin.gd` (esperaba los puestos como objetivo) y
+  `tests/unit/test_feedback_distinct.gd` (esperaba las claves heredadas). `check_owns.py` las marca; el producer debe
+  ampliar `owns` o revertirlas. La entrada `godot/tests/integration/` de owns no cubre ficheros (solo coincide literal).
+- Commits con la línea `Co-Authored-By: Claude Sonnet 5.5` (la indicada por el sistema), no Opus 5.5.
