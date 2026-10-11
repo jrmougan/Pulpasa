@@ -58,6 +58,15 @@ func _apply_platform() -> void:
 	get_viewport().size_changed.connect(_apply_mobile_profile)
 
 
+## Atrás en el menú móvil sale del juego (quit_on_go_back es false para que en ronda pause).
+func _notification(what: int) -> void:
+	if (
+		what == NOTIFICATION_WM_GO_BACK_REQUEST
+		and GameState.platform == PlatformProfile.Kind.MOBILE
+	):
+		_on_exit_pressed()
+
+
 func _apply_mobile_profile() -> void:
 	MenuMobile.apply(self, GameState.ui_profile)
 

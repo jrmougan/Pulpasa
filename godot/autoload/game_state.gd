@@ -28,6 +28,8 @@ var _devices: Array[int] = []
 ## Mando desconectado -> jugador que lo tenía, para devolvérselo al reconectar.
 var _lost_by: Dictionary = {}
 var _round_active: bool = false
+var _keep_on_set: bool = false
+var _keep_on_call: Callable = DisplayServer.screen_set_keep_on
 ## Acción `p<n>_*` -> eventos de mando de la plantilla de project.godot.
 var _pad_template: Dictionary = {}
 
@@ -202,8 +204,17 @@ func _on_round_finished(_result: RoundResult) -> void:
 	_set_keep_screen_on(false)
 
 
+## Solo toca la pantalla encendida en MOBILE (o para devolverla a su estado si ya la tocó).
 func _set_keep_screen_on(keep_on: bool) -> void:
-	DisplayServer.screen_set_keep_on(keep_on)
+	if platform != PlatformProfile.Kind.MOBILE and not _keep_on_set:
+		return
+	_keep_on_set = keep_on
+	_keep_on_call.call(keep_on)
+
+
+## Inyecta la llamada de pantalla encendida (tests); por defecto, DisplayServer.
+func set_keep_on_call(keep_on_call: Callable) -> void:
+	_keep_on_call = keep_on_call
 
 
 ## La plantilla sale de ProjectSettings, no del InputMap vivo, por si ya se reescribió.

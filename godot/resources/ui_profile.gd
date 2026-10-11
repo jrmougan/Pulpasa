@@ -9,6 +9,8 @@ extends Resource
 @export var text_min_px: float = 0.0
 @export var menu_button_min_px: float = 90.0
 @export var menu_button_gap_px: float = 24.0
+## Ancho mínimo de la tarjeta de pausa y game over, en unidades de lienzo (0 = el de la escena).
+@export var menu_card_width: float = 0.0
 @export var ticket_width_min: float = 318.0
 @export var ticket_width_max: float = 318.0
 @export var ticket_height: float = 150.0

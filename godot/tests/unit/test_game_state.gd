@@ -268,3 +268,22 @@ func test_pul122_ui_profiles_load_with_design_values() -> void:
 	var desktop: UiProfile = load("res://data/config/ui_profile_desktop.tres")
 	assert_eq(desktop.content_scale, 1.0)
 	assert_eq(desktop.text_min_px, 0.0)
+
+
+func test_pul122_desktop_never_touches_keep_screen_on() -> void:
+	var calls: Array[bool] = []
+	_state.set_keep_on_call(func(keep_on: bool) -> void: calls.append(keep_on))
+	_state.set_platform(PlatformProfile.Kind.DESKTOP)
+	_bus.round_started.emit(60.0)
+	_bus.round_finished.emit(RoundResult.new())
+	_state.go_to_main_menu()
+	assert_eq(calls, [] as Array[bool])
+
+
+func test_pul122_mobile_keeps_screen_on_during_round_and_releases_it() -> void:
+	var calls: Array[bool] = []
+	_state.set_keep_on_call(func(keep_on: bool) -> void: calls.append(keep_on))
+	_state.set_platform(PlatformProfile.Kind.MOBILE)
+	_bus.round_started.emit(60.0)
+	_bus.round_finished.emit(RoundResult.new())
+	assert_eq(calls, [true, false] as Array[bool])

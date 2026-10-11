@@ -3,9 +3,6 @@ extends Control
 ## Presentación compartida. Los textos fuente actúan como claves gettext para tr().
 ## En el perfil MOBILE aplica los mínimos de texto y de botón del UiProfile (ADR-005 E3).
 
-## Ancho mínimo de la tarjeta en MOBILE (unidades de lienzo): evita saltos de línea con texto de 24.
-const MOBILE_CARD_WIDTH: float = 720.0
-
 @onready var title: Label = %Title
 @onready var description: Label = %Description
 @onready var ratio: Label = %Ratio
@@ -43,7 +40,7 @@ func apply_profile() -> void:
 	if _is_mobile():
 		# El lienzo mide 720 de alto: la insignia decorativa cede su sitio a los botones de 120 px.
 		%Badge.hide()
-		(%Card as Control).custom_minimum_size.x = MOBILE_CARD_WIDTH
+		(%Card as Control).custom_minimum_size.x = GameState.ui_profile.menu_card_width
 		MenuMobile.apply(self, GameState.ui_profile)
 
 

@@ -8,6 +8,7 @@ content_scale = 1.0
 text_min_px = 0.0
 menu_button_min_px = 90.0
 menu_button_gap_px = 24.0
+menu_card_width = 0.0
 ticket_width_min = 318.0
 ticket_width_max = 318.0
 ticket_height = 150.0

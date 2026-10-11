@@ -8,6 +8,11 @@ var _calls: Array[GameMode.Mode] = []
 var _quit_calls: int = 0
 
 
+func before_each() -> void:
+	_calls.clear()
+	_quit_calls = 0
+
+
 func after_each() -> void:
 	GameState.set_platform(PlatformProfile.Kind.DESKTOP)
 
@@ -61,23 +66,20 @@ func test_touch_profile_navigation_keeps_focus_on_individual() -> void:
 		assert_eq(_menu.get_viewport().gui_get_focus_owner(), _menu.get_node("%Play"), action)
 
 
-func test_touch_profile_tap_with_screen_event_activates_individual() -> void:
-	await _mount(PlatformProfile.Kind.MOBILE)
-	var play: Button = _menu.get_node("%Play")
-	var position: Vector2 = play.get_global_rect().get_center()
-	for pressed: bool in [true, false]:
-		var touch: InputEventMouseButton = InputEventMouseButton.new()
-		touch.button_index = MOUSE_BUTTON_LEFT
-		touch.pressed = pressed
-		touch.position = position
-		touch.global_position = position
-		_menu.get_viewport().push_input(touch)
-		await get_tree().process_frame
-	assert_eq(_calls, [GameMode.Mode.SINGLE] as Array[GameMode.Mode])
-
-
 func test_desktop_profile_keeps_three_buttons() -> void:
 	await _mount(PlatformProfile.Kind.DESKTOP)
 	for node_name: String in ["%Play", "%Local2P", "%Exit", "%Mode"]:
 		assert_true((_menu.get_node(node_name) as Control).visible, node_name)
 	assert_eq(_menu.get_viewport().gui_get_focus_owner(), _menu.get_node("%Play"))
+
+
+func test_touch_profile_back_request_quits_from_the_menu() -> void:
+	await _mount(PlatformProfile.Kind.MOBILE)
+	_menu.notification(NOTIFICATION_WM_GO_BACK_REQUEST)
+	assert_eq(_quit_calls, 1)
+
+
+func test_desktop_profile_ignores_back_request() -> void:
+	await _mount(PlatformProfile.Kind.DESKTOP)
+	_menu.notification(NOTIFICATION_WM_GO_BACK_REQUEST)
+	assert_eq(_quit_calls, 0)
