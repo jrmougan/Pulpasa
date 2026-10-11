@@ -2,6 +2,8 @@
 extends GutTest
 ## PUL-015 AC1: el detector del jugador elige el objetivo que dicta `InteractionScoring`, lo
 ## resalta y, al girar, cambia el resaltado sin dejar dos objetos resaltados.
+## PUL-121 AC4 (D26): solo son objetivo las entidades con hint, con histéresis, sin control no hay
+## objetivo, y con la mano llena sin candidatos se publica SOLTAR / ocupado.
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const SLOT_SCENE: PackedScene = preload("res://entities/stations/slot.tscn")
@@ -70,6 +72,14 @@ class Item:
 
 	func on_dropped() -> void:
 		is_held = false
+
+
+class BoxLikeItem:
+	extends Item
+	## Como la caja: con la mano llena su consulta sigue en `true` (consume la pulsación).
+
+	func can_interact(actor: InteractionComponent) -> bool:
+		return not is_held and (actor.holder.get_held_item() != null or actor.holder.can_hold(self))
 
 
 func before_each() -> void:
@@ -207,13 +217,13 @@ func test_ac1_occupied_slot_resolves_to_its_item_and_highlights_it() -> void:
 
 
 ## Paridad Unity (InteractionDetector.cs:57/:80): con la mano llena el objeto guardado sigue
-## compitiendo aunque no acepte lo que se lleva; el rechazo es suyo (`can_interact`/`interact`).
+## compitiendo si su consulta lo admite (la caja, hasta migrar a `get_action_hint`, D26).
 func test_ac1_occupied_slot_resolves_to_its_item_with_full_hand() -> void:
 	var slot: Slot = SLOT_SCENE.instantiate()
 	# Colocado antes de entrar al árbol: nunca existe en el origen, dentro del jugador.
 	slot.position = Vector3(0.0, 0.0, -1.0)
 	_level.add_child(slot)
-	var stored: Item = Item.new()
+	var stored: Item = BoxLikeItem.new()
 	_level.add_child(stored)
 	stored.global_position = AWAY
 	_hold.pick_up(stored)
@@ -408,3 +418,307 @@ func test_pul058_entity_without_method_is_reachable() -> void:
 	_player.global_position = Vector3(0.0, 0.0, -0.1)
 	await _settle()
 	assert_eq(_detector.get_target(), target)
+
+
+# --- PUL-121 AC4 (D26): filtro honesto, histéresis, sin control, suelo y hint --------------------
+
+
+class HintedTarget:
+	extends Target
+	## Interactuable con `get_action_hint` (ADR-003 §11.2): publica el `hint` que se le ponga.
+
+	var hint: ActionHint = ActionHint.ok(ActionVerb.PICK_UP)
+
+	func get_action_hint(_actor: InteractionComponent) -> ActionHint:
+		return hint
+
+
+class LegacyTarget:
+	extends Target
+	## Interactuable sin `get_action_hint`: la equivalencia transitoria usa `can_interact`.
+
+	var accepts: bool = true
+
+	func can_interact(_actor: InteractionComponent) -> bool:
+		return accepts
+
+
+class WallBody:
+	extends StaticBody3D
+	## Cuerpo de la capa `world` (barra, pared): bloquea el punto de soltar.
+
+	func _init() -> void:
+		collision_layer = 1
+		collision_mask = 0
+		var shape: CollisionShape3D = CollisionShape3D.new()
+		var box: BoxShape3D = BoxShape3D.new()
+		box.size = Vector3(2.0, 2.0, 0.1)
+		shape.shape = box
+		add_child(shape)
+
+
+func _add_hinted(pos: Vector3, hint: ActionHint) -> HintedTarget:
+	var target: HintedTarget = HintedTarget.new()
+	target.hint = hint
+	_level.add_child(target)
+	target.global_position = pos
+	return target
+
+
+func _carry() -> Item:
+	var carried: Item = Item.new()
+	_level.add_child(carried)
+	carried.global_position = AWAY
+	assert_true(_hold.pick_up(carried))
+	return carried
+
+
+func test_ac4_detector_is_wired_to_its_interaction_component() -> void:
+	assert_eq(_detector.actor, _player.get_node("%InteractionComponent"))
+
+
+func test_ac4_none_candidate_is_neither_target_nor_highlighted() -> void:
+	var none: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.none())
+	await _settle()
+	assert_null(_detector.get_target())
+	assert_false(none.highlight.is_highlighted())
+	assert_false(_detector.get_hint().is_target())
+
+
+func test_ac4_none_candidate_does_not_hide_a_worse_valid_one() -> void:
+	var none: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.none())
+	var valid: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.8), ActionHint.ok(ActionVerb.COOK))
+	await _settle()
+	assert_eq(_detector.get_target(), valid)
+	assert_false(none.highlight.is_highlighted())
+	assert_true(valid.highlight.is_highlighted())
+
+
+func test_ac4_legacy_entity_follows_can_interact() -> void:
+	var closed: LegacyTarget = LegacyTarget.new()
+	closed.accepts = false
+	_level.add_child(closed)
+	closed.global_position = Vector3(0.0, 0.8, -1.0)
+	var open: LegacyTarget = LegacyTarget.new()
+	_level.add_child(open)
+	open.global_position = Vector3(0.0, 0.8, -1.8)
+	await _settle()
+	assert_eq(_detector.get_target(), open, "el heredado que no puede interactuar no es candidato")
+	assert_false(closed.highlight.is_highlighted())
+	assert_eq(_detector.get_hint().state, ActionHint.State.OK)
+	assert_eq(_detector.get_hint().verb, ActionVerb.NONE, "objetivo heredado sin verbo")
+
+
+func test_ac4_blocked_candidate_is_a_target_with_amber_outline() -> void:
+	var blocked: HintedTarget = _add_hinted(
+		Vector3(0.0, 0.8, -1.0), ActionHint.blocked(ActionVerb.COOK, ActionReason.BUSY)
+	)
+	await _settle()
+	assert_eq(_detector.get_target(), blocked)
+	assert_true(blocked.highlight.is_highlighted())
+	assert_true(blocked.highlight.is_blocked())
+	var mesh: MeshInstance3D = blocked.get_child(1) as MeshInstance3D
+	assert_eq(mesh.material_overlay, blocked.highlight.blocked_material)
+	assert_eq(_detector.get_hint().reason, ActionReason.BUSY)
+	blocked.hint = ActionHint.ok(ActionVerb.COOK)
+	await _settle()
+	assert_false(blocked.highlight.is_blocked(), "OK <-> BLOQUEADO no invalida al actual")
+	assert_eq(_detector.get_target(), blocked)
+	assert_eq(mesh.material_overlay, blocked.highlight.material)
+
+
+func test_ac4_hint_changed_only_when_target_or_hint_change() -> void:
+	var target: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.CUT))
+	watch_signals(_detector)
+	await _settle()
+	assert_signal_emit_count(_detector, "hint_changed", 1, "al aparecer el objetivo")
+	var params: Array = get_signal_parameters(_detector, "hint_changed", 0)
+	assert_eq(params[0], target)
+	assert_eq((params[1] as ActionHint).verb, ActionVerb.CUT)
+	await _settle()
+	assert_signal_emit_count(_detector, "hint_changed", 1, "sin cambios no emite")
+	target.hint = ActionHint.ok(ActionVerb.CUT, 0.5)
+	await _settle()
+	assert_signal_emit_count(_detector, "hint_changed", 1, "solo cambia el progreso")
+	assert_almost_eq(_detector.get_hint().progress, 0.5, 0.001, "pero get_hint() lo lee")
+	target.hint = ActionHint.blocked(ActionVerb.CUT, ActionReason.FULL)
+	await _settle()
+	assert_signal_emit_count(_detector, "hint_changed", 2, "cambia el estado")
+	var replacing: ActionHint = ActionHint.blocked(ActionVerb.CUT, ActionReason.FULL)
+	replacing.replaces = true
+	target.hint = replacing
+	await _settle()
+	assert_signal_emit_count(_detector, "hint_changed", 3, "cambia replaces")
+
+
+func test_ac4_hint_changed_follows_target_changed_in_the_same_refresh() -> void:
+	var order: Array[String] = []
+	_detector.target_changed.connect(func(_p: Node, _c: Node) -> void: order.append("target"))
+	_detector.hint_changed.connect(func(_t: Node, _h: ActionHint) -> void: order.append("hint"))
+	_add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.CUT))
+	await _settle()
+	assert_eq(order, ["target", "hint"] as Array[String])
+
+
+func test_ac4_hint_changed_when_the_target_changes_even_with_the_same_hint() -> void:
+	var first: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.CUT))
+	var second: HintedTarget = _add_hinted(Vector3(0.0, 0.8, 1.0), ActionHint.ok(ActionVerb.CUT))
+	await _settle()
+	assert_eq(_detector.get_target(), first)
+	watch_signals(_detector)
+	_player.rotation.y = PI
+	await _settle()
+	assert_eq(_detector.get_target(), second)
+	assert_signal_emit_count(_detector, "hint_changed", 1)
+	assert_eq(get_signal_parameters(_detector, "hint_changed", 0)[0], second)
+
+
+func test_ac4_losing_the_target_publishes_none() -> void:
+	var target: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.CUT))
+	await _settle()
+	watch_signals(_detector)
+	target.hint = ActionHint.none()
+	await _settle()
+	assert_null(_detector.get_target())
+	assert_signal_emit_count(_detector, "hint_changed", 1)
+	assert_null(get_signal_parameters(_detector, "hint_changed", 0)[0])
+	assert_false(_detector.get_hint().is_target())
+
+
+func test_ac4_without_control_there_is_no_target_nor_outline() -> void:
+	var target: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.CUT))
+	await _settle()
+	assert_true(target.highlight.is_highlighted())
+	watch_signals(_detector)
+	var control: ControlComponent = _player.get_node("%Control")
+	control.controlled_by = 0
+	await _settle()
+	assert_null(_detector.get_target())
+	assert_false(target.highlight.is_highlighted())
+	assert_false(_detector.get_hint().is_target())
+	assert_signal_emitted_with_parameters(_detector, "target_changed", [target, null])
+	control.controlled_by = 1
+	await _settle()
+	assert_eq(_detector.get_target(), target, "al recuperar el control vuelve el objetivo")
+
+
+func test_ac4_without_control_and_with_a_full_hand_there_is_no_floor_hint() -> void:
+	_carry()
+	(_player.get_node("%Control") as ControlComponent).controlled_by = 0
+	await _settle()
+	assert_false(_detector.get_hint().is_target())
+
+
+func test_ac4_detector_without_actor_publishes_nothing() -> void:
+	_add_target(Vector3(0.0, 0.8, -1.0))
+	_detector.actor = null
+	await _settle()
+	assert_null(_detector.get_target())
+
+
+func test_ac4_full_hand_without_candidates_publishes_the_drop_hint() -> void:
+	_carry()
+	watch_signals(_detector)
+	await _settle()
+	assert_null(_detector.get_target())
+	var hint: ActionHint = _detector.get_hint()
+	assert_eq(hint.verb, ActionVerb.DROP)
+	assert_eq(hint.state, ActionHint.State.OK)
+	assert_signal_emit_count(_detector, "hint_changed", 1)
+	assert_null(get_signal_parameters(_detector, "hint_changed", 0)[0])
+
+
+func test_ac4_full_hand_facing_a_wall_publishes_blocked_busy() -> void:
+	# El jugador se queda quieto: una pared junto a su cápsula lo empujaría fuera de su sitio.
+	_player.set_physics_process(false)
+	_carry()
+	var wall: WallBody = WallBody.new()
+	_level.add_child(wall)
+	wall.global_position = _hold.get_drop_position()
+	await _settle()
+	assert_false(_hold.can_drop_freely())
+	var hint: ActionHint = _detector.get_hint()
+	assert_eq(hint.verb, ActionVerb.DROP)
+	assert_eq(hint.state, ActionHint.State.BLOCKED)
+	assert_eq(hint.reason, ActionReason.BUSY)
+	wall.global_position = Vector3(10.0, 0.0, 10.0)
+	await _settle()
+	assert_eq(_detector.get_hint().state, ActionHint.State.OK, "al apartarse la pared, SOLTAR")
+
+
+func test_ac4_empty_hand_without_candidates_publishes_none() -> void:
+	await _settle()
+	assert_false(_detector.get_hint().is_target())
+	assert_not_null(_detector.get_hint(), "nunca null")
+
+
+func test_ac4_a_candidate_replaces_the_floor_hint() -> void:
+	_carry()
+	var target: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.DROP))
+	await _settle()
+	assert_eq(_detector.get_target(), target)
+
+
+# --- Histéresis (D26.4, lenguaje-acciones AC10) --------------------------------------------------
+
+
+## Dos objetivos rectos al frente: `a` fijo a 1 m (puntuación 3,0) y `b` a la distancia que da la
+## puntuación `ratio × 3,0`.
+func _place_b(b: HintedTarget, ratio: float) -> void:
+	b.global_position = Vector3(0.0, 0.8, -1.0 / (3.0 * ratio - 2.0))
+
+
+func test_ac4_scores_oscillating_ten_percent_for_five_seconds_never_change_target() -> void:
+	var a: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.CUT))
+	var b: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.4), ActionHint.ok(ActionVerb.COOK))
+	_place_b(b, 0.9)
+	await _settle()
+	assert_eq(_detector.get_target(), a)
+	watch_signals(_detector)
+	for frame: int in 300:
+		_place_b(b, 1.0 + 0.1 * (1.0 if frame % 2 == 0 else -1.0))
+		await wait_physics_frames(1)
+	assert_signal_emit_count(_detector, "target_changed", 0)
+	assert_eq(_detector.get_target(), a)
+
+
+func test_ac4_without_hysteresis_the_same_oscillation_does_flap() -> void:
+	_detector.config = _detector.config.duplicate() as PlayerConfig
+	_detector.config.hysteresis_margin = 0.0
+	var a: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.CUT))
+	var b: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.4), ActionHint.ok(ActionVerb.COOK))
+	_place_b(b, 0.9)
+	await _settle()
+	assert_eq(_detector.get_target(), a)
+	watch_signals(_detector)
+	for frame: int in 60:
+		_place_b(b, 1.0 + 0.1 * (1.0 if frame % 2 == 0 else -1.0))
+		await wait_physics_frames(1)
+	assert_gt(get_signal_emit_count(_detector, "target_changed"), 10)
+
+
+func test_ac4_approaching_the_other_target_changes_exactly_once() -> void:
+	var a: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.CUT))
+	var b: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.4), ActionHint.ok(ActionVerb.COOK))
+	_place_b(b, 0.9)
+	await _settle()
+	watch_signals(_detector)
+	for step: int in 61:
+		_place_b(b, 0.9 + 0.6 * float(step) / 60.0)
+		await wait_physics_frames(1)
+	assert_signal_emit_count(_detector, "target_changed", 1)
+	assert_eq(_detector.get_target(), b)
+	assert_signal_emitted_with_parameters(_detector, "target_changed", [a, b])
+
+
+func test_ac4_invalid_current_is_replaced_in_the_same_tick() -> void:
+	var a: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.0), ActionHint.ok(ActionVerb.CUT))
+	var b: HintedTarget = _add_hinted(Vector3(0.0, 0.8, -1.4), ActionHint.ok(ActionVerb.COOK))
+	_place_b(b, 0.9)
+	await _settle()
+	assert_eq(_detector.get_target(), a)
+	a.hint = ActionHint.none()
+	await wait_physics_frames(2)
+	assert_eq(
+		_detector.get_target(), b, "el actual deja de ser válido: cambia aunque no supere 1,2"
+	)

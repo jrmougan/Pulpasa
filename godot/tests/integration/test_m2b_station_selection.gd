@@ -156,3 +156,27 @@ func test_ac8_cooked_cachelos_in_hand_only_the_bowl_is_target_from_both_sides() 
 					if part == bowl:
 						assert_eq(got, bowl, where)
 						assert_true(_is_lit(bowl), "%s: cuenco resaltado" % where)
+
+
+# --- PUL-121 (D26): sin control no hay objetivo ni contorno -------------------------------------
+
+
+func test_d26_without_control_the_character_has_no_target_nor_outline() -> void:
+	_box_in_hand()
+	var part: Node3D = _parts()[0]
+	assert_eq(await _target_from(part, 1.0, 1.0, 0.0), part, "controlado: el dispensador")
+	assert_true(_is_lit(part))
+	(_player.get_node("%Control") as ControlComponent).controlled_by = 0
+	await wait_physics_frames(SETTLE_FRAMES)
+	assert_null(_detector.get_target())
+	assert_false(_is_lit(part), "el personaje no controlado no muestra contorno")
+	assert_false(_detector.get_hint().is_target())
+
+
+## La histéresis no impide elegir al llegar a otra pieza: el actual deja de estar en el cono.
+func test_d26_hysteresis_still_follows_the_player_along_the_counter() -> void:
+	_box_in_hand()
+	for part: Node3D in _parts():
+		assert_eq(
+			await _target_from(part, 1.0, 1.0, 0.0), part, "tras caminar hasta %s" % part.name
+		)

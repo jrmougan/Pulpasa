@@ -1,5 +1,6 @@
 extends GutTest
 ## PUL-004 AC1: EventBus declara exactamente las señales de bus de docs/arch/signals.md §2.
+## PUL-121 AC7 (D26): `action_hint_changed` e `interaction_resolved`, con 4 argumentos.
 
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 
@@ -21,6 +22,20 @@ const CATALOG: Dictionary = {
 	"order_patience_changed":
 	[["order_id", TYPE_INT, []], ["time_left", TYPE_FLOAT, []], ["max_time", TYPE_FLOAT, []]],
 	"order_expired": [["order", TYPE_OBJECT, ORDER_CLASSES], ["penalty", TYPE_INT, []]],
+	"action_hint_changed":
+	[
+		["player_index", TYPE_INT, []],
+		["verb", TYPE_STRING_NAME, []],
+		["state", TYPE_INT, []],
+		["reason", TYPE_STRING_NAME, []],
+	],
+	"interaction_resolved":
+	[
+		["player_index", TYPE_INT, []],
+		["verb", TYPE_STRING_NAME, []],
+		["state", TYPE_INT, []],
+		["reason", TYPE_STRING_NAME, []],
+	],
 	"pause_changed": [["is_paused", TYPE_BOOL, []]],
 	"character_switched": [["player_index", TYPE_INT, []], ["character_index", TYPE_INT, []]],
 	"device_assigned": [["player_index", TYPE_INT, []], ["device", TYPE_INT, []]],
@@ -75,3 +90,15 @@ func test_ac1_bus_is_not_3d() -> void:
 	var bus: Node = EventBusScript.new()
 	assert_false(bus is Node3D)
 	bus.free()
+
+
+func test_ac7_d26_signals_have_four_arguments_with_primitives() -> void:
+	var declared: Dictionary = _declared_signals()
+	for sig_name: String in ["action_hint_changed", "interaction_resolved"]:
+		assert_true(declared.has(sig_name), sig_name)
+		var args: Array = declared[sig_name]
+		assert_eq(args.size(), 4, "%s: 4 argumentos" % sig_name)
+		var types: Array[int] = []
+		for arg: Dictionary in args:
+			types.append(arg["type"])
+		assert_eq(types, [TYPE_INT, TYPE_STRING_NAME, TYPE_INT, TYPE_STRING_NAME] as Array[int])
