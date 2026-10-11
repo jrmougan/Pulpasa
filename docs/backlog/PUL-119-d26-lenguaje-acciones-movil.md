@@ -73,12 +73,41 @@ Fecha: 2026-10-11.
 - Sin código ni contratos (`docs/arch/` es de PUL-120, en paralelo).
 
 ## Acceptance
-- [ ] AC1 D26 en `decisions.md` con notas cruzadas en D8, D13, D23, D25; `roadmap.md` con móvil en alcance
-- [ ] AC2 Tabla mano × objetivo → verbo/estado/motivo completa y sin huecos
-- [ ] AC3 Feature de controles táctiles, cámara móvil y escala de UI con ACs medibles
-- [ ] AC4 Features afectadas al día (cuenco solo pone, entrega solo por zona, corte con mantener + contador, cues)
-- [ ] AC5 Iconos: lista de verbos y motivos con descripción de silueta para el asset-pipeline
+- [x] AC1 D26 en `decisions.md` con notas cruzadas en D8, D13, D23, D25; `roadmap.md` con móvil en alcance
+- [x] AC2 Tabla mano × objetivo → verbo/estado/motivo completa y sin huecos
+- [x] AC3 Feature de controles táctiles, cámara móvil y escala de UI con ACs medibles
+- [x] AC4 Features afectadas al día (cuenco solo pone, entrega solo por zona, corte con mantener + contador, cues)
+- [x] AC5 Iconos: lista de verbos y motivos con descripción de silueta para el asset-pipeline
 
 ## Plan
+1. Leer ficha, estudio (`docs/evidence/PUL-119/README.md`), decisiones, GDD, features y el código de las
+   estaciones (`can_interact`/`interact`, `InteractionComponent`) para que la tabla refleje lo que
+   hacen hoy las pulsaciones y no invente casos.
+2. `decisions.md`: fila D26 + notas cruzadas en D8, D13, D23 y D25. `roadmap.md`: fila M3e, Must 10 y 11,
+   móvil fuera de Won't.
+3. Feature nueva `features/lenguaje-acciones.md`: vocabulario (8 verbos, estados, 6 motivos), prompt,
+   respuesta, histéresis, SOLTAR sin objetivo, tabla mano (M0…M9) × objetivo (A–F), estado en el mundo,
+   lista de iconos, 21 AC, datos.
+4. Feature nueva `features/controles-tactiles.md`: stick, botones, multitáctil, cámara móvil, escala de
+   UI y maquetación a 2340×1080 y 1920×1080, 21 AC medibles en px.
+5. Actualizar features afectadas (marcando lo superado sin borrar): movimiento-e-interaccion,
+   estacion-condimentos, condimentacion, corte-pulpo, entrega-y-puntuacion (incluye HUD), coccion-pulpo,
+   olla-que-se-pasa, audio-y-fx, jugadores-y-cambio, tutorial-breve, mando-y-reasignacion,
+   menu-principal, partida-5-min, comandas, cubo-basura, textos-gallego; y `gdd.md`, `level-layouts.md`,
+   `m3d-gate.md`.
 
 ## Evidence
+Solo diseño; sin código ni capturas nuevas. Entregables:
+- `docs/design/decisions.md` (D26; notas en D8, D13, D23, D25) y `docs/design/roadmap.md`.
+- `docs/design/features/lenguaje-acciones.md`: tabla mano × objetivo (10 manos × 9 familias de objetos;
+  >250 combinaciones con las variantes de estado), 8 verbos, 6 motivos y la lista de iconos con silueta
+  (AC2, AC5).
+- `docs/design/features/controles-tactiles.md` (AC3).
+- Features y documentos al día (AC4) enumerados en el Plan.
+- Decisiones de concreción tomadas por el diseñador (no cambian el contenido de D26): motivo extra
+  `sin cocer` (cortar con pulpo crudo), BLOQUEADO `caja a medias` también en el cuenco, prompt SOLTAR en
+  el punto de soltar, contorno blanco cálido en vez de amarillo, `wrong_delivery_penalty` = 0, mantener
+  repite solo si el verbo inicial es CORTAR. Nombres de cues y recursos marcados *(propuesta)*, a decidir
+  por PUL-120.
+- Preguntas abiertas en `lenguaje-acciones.md` (soltar al suelo por accidente, dispensador desde el lado
+  de pase, háptica) y `controles-tactiles.md` (zurdos, tamaño ajustable, 36 px a 420 ppi).

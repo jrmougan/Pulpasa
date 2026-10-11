@@ -39,6 +39,14 @@ vuelven al cuenco, D23). Lo que haya en un pasaplatos se recoge primero.
 - **T8** Given un jugador con algo en la mano a ≤ 1,5 m de un cubo y de un pasaplatos libre a la vez, Then solo uno es objetivo (el más cercano al frente del jugador) y no se resaltan los dos. *Test:* `test_trash_bin.gd` con el detector real.
 - **T9** Given Local 2P, When J1 y J2 tiran a la vez en el mismo cubo, Then ambos objetos se destruyen, se emiten 2 `trashed` y suenan 2 cues `trash` (uno por tirada). *Test:* `test_trash_bin.gd`.
 
+### Verbo TIRAR y respuesta (D26)
+El cubo es el verbo **TIRAR** (también el de desechar el quemado en la olla). Con algo en la mano, el
+cubo muestra el prompt TIRAR (OK, blanco) y, al pulsar, la tapa basculante **salta** ≥ 0,3 s con el cue
+`trash`, que desde D26 tiene **sample propio** (hoy suena igual que `drop`, `cook_done` y `discard`;
+AC8 de `audio-y-fx.md`). El jugador no tapa el cubo: el prompt va sin test de profundidad y el contorno
+se ve detrás del personaje (`lenguaje-acciones.md`, AC12). Con la mano vacía sigue sin ser objetivo (T3).
+- **T10 (D26)** Given un jugador con cualquier objeto en la mano (M1…M9 de `lenguaje-acciones.md`) a ≤ 1,5 m de un cubo y sin una estación más prioritaria, Then el cubo muestra TIRAR OK ≥ 64 px a 1080 de alto; When pulsa, Then se emite `trashed` 1 vez, suena 1 `trash` con sample propio y el icono salta ≥ 0,3 s. *Test:* `test_trash_bin.gd` + `test_action_prompt.gd`.
+
 ## Datos (`.tres`)
 `TrashBinData` (`data/config/trash_bin.tres`): `trash_penalty` (0; ver T5). Posiciones de los cubos
 en `level_01.tscn` (`TrashBinKitchen`, `TrashBinService`). Qué se puede tirar (todo lo que se

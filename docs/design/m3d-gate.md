@@ -24,6 +24,16 @@ Cosas que sabes antes de entrar y no tienes que descubrir:
 - El HUD aún dice «Cajas / minuto».
 - Con 4 tickets (fase 3) el panel tapa parte del cartel «Pulpa SA» a 1080p.
 
+> **Actualización D26 (2026-10-11).** El playtest de esta puerta destapó el problema de fondo («no se
+> distinguen muy bien las acciones») y D26 (`decisions.md`) resuelve varias de las preguntas de abajo
+> sin esperar la respuesta: **iconos de aliño** (icono propio para el picante: guindilla con llama;
+> pimentonera para el dulce), **aliño con caja a medias** (ahora muestra el motivo `caja a medias`),
+> **HUD «Cajas / minuto»** (se retira), **etiquetas S/M/L del rack** (se retiran) y **cuenco de
+> cachelos** (solo pone; raciones visibles). Siguen abiertas para el responsable: mostrador de 5,2 m,
+> R15/R17, T7, umbrales de estrellas, cortes de la caja y fases. Detalle en
+> `features/lenguaje-acciones.md` y `features/controles-tactiles.md`. Esta puerta se conserva como
+> registro de la sesión; no se rehace.
+
 ## Antes de empezar
 1. Abre `docs/evidence/PUL-116/ac3-local2p-1080p-fase3-4-tickets-bravo-cachelos.png`,
    `ac3-estacion-mostrador-5-2m-x3-recorte.png` y `ac3-rack-modelo-S-M-L-recorte.png` para saber qué se

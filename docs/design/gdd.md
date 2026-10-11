@@ -1,12 +1,12 @@
 # GDD de trabajo — PulpaSA (alpha)
 
 Resumen operativo en castellano del GDD original (`pulpasa_docs/main.tex`, gallego, solo lectura).
-Aplica las decisiones cerradas de `decisions.md` (D1–D25), que mandan sobre el original y sobre este
+Aplica las decisiones cerradas de `decisions.md` (D1–D26), que mandan sobre el original y sobre este
 documento si discrepan. Las erratas
 del original se corrigen **solo aquí** (D7); `main.tex` no se toca.
 
 ## 1. Visión
-Cooperativo de cocina para PC, inspirado en Overcooked pero con recetas más simples. Los jugadores
+Cooperativo de cocina para PC (y, desde D26, móvil en modo Individual), inspirado en Overcooked pero con recetas más simples. Los jugadores
 trabajan en un puesto ambulante («carro del pulpo») de una franquía norteamericana de comida rápida
 que quiere conquistar las romerías gallegas. Cámara cenital, 3D cartoon low-poly.
 
@@ -25,9 +25,9 @@ Flujo del prototipo, que se mantiene por D1 (ver `roadmap.md`):
 7. A los 5 minutos (D5) acaba la partida: recaudación y 0–3 estrellas.
 
 ## 3. Decisiones de diseño aplicadas
-Fuente de verdad: `decisions.md` (D1–D25). La tabla recoge solo las siete primeras, que fijaron el
-diseño base; de D8 en adelante (caja errónea, olla, estaciones, entrega, simplificación D25…) rige
-`decisions.md` y la §9.
+Fuente de verdad: `decisions.md` (D1–D26). La tabla recoge solo las siete primeras, que fijaron el
+diseño base; de D8 en adelante (caja errónea, olla, estaciones, entrega, simplificación D25, lenguaje
+de acciones y móvil D26…) rige `decisions.md` y la §9.
 
 | # | Decisión | Cómo queda en el GDD de trabajo |
 |---|----------|----------------------------------|
@@ -46,9 +46,9 @@ diseño base; de D8 en adelante (caja errónea, olla, estaciones, entrega, simpl
 | Atender comandas | Primaria | Máx. 4 comandas activas; cada una con límite de tiempo (paciencia) |
 | Coordinación cooperativa | Primaria | 2 jugadores locales comparten el puesto; sin combate (ver §8) |
 | Cocción | Secundaria | El pulpo **crudo** se cuece en la olla; temporizador visible; solo el cocido se puede cortar; si no se retira se quema (`burn_time`, ADR-006 §5, `features/olla-que-se-pasa.md`) |
-| Corte | Secundaria | El pulpo **cocido** se corta sobre la caja única (D1, D25): 6 pulsaciones la llenan y gastan medio pulpo |
+| Corte | Secundaria | El pulpo **cocido** se corta sobre la caja única (D1, D25): 6 pulsaciones la llenan y gastan medio pulpo; mantener pulsado repite el corte cada 0,2 s como atajo, con contador `N/6` (D13 aclarada por D26) |
 | Aliño | Secundaria | Con la caja llena en la mano, una pulsación en un dispensador de aliño (dulce o picante) lo aplica; el otro lo sustituye (D4, D25) |
-| Cachelos | Secundaria | Cocidos en la olla, se reponen en el cuenco y se ponen en la caja llena (D10, D23) |
+| Cachelos | Secundaria | Cocidos en la olla, se reponen en el cuenco y se **ponen** en la caja llena (D10, D23; D26: ya no se quitan, lo mal hecho va al cubo) |
 | Cubo de basura | Secundaria | Tira lo que lleva en la mano sin penalizar (D25) |
 | Dificultad | Sistema | Escala puestos, paciencia **y mecánicas por fases** (dulce → picante → cachelos, D25) |
 | Valoración | Sistema | Recaudación + estrellas (D2) |
@@ -61,6 +61,16 @@ cachelos si se piden, sin extras). Desde D25 no hay tamaños de caja.
 
 ### Controles
 Teclado + mando Xbox (Must): teclado y mando, o dos mandos. El flujo menú → game over es completable sin teclado. Jugador 1 y 2 con esquemas separados en `InputMap`.
+
+**Móvil (D26, solo Individual, apaisado):** stick flotante en la mitad izquierda, botón de acción
+(≥ 72 dp) que muestra el icono del verbo del objetivo, botones de cambiar de personaje y de pausa
+(≥ 48 dp), multitáctil; cámara con más zoom (≥ 120 px/m a 1080 de alto) y UI escalada. Local 2P sigue
+siendo de PC/mando. Ver `features/controles-tactiles.md`.
+
+**Lenguaje de acciones (D26):** cada pulsación con objetivo tiene un **verbo visible antes de pulsar**
+(COGER, SOLTAR, COCER, CORTAR, ALIÑAR DULCE, ALIÑAR PICANTE, CACHELOS, TIRAR) sobre el objetivo activo, en
+estado OK (blanco) o BLOQUEADO (ámbar con ×, y el motivo); ninguna pulsación queda muda y el objetivo es
+estable (histéresis del 20 %). Ver `features/lenguaje-acciones.md`.
 
 ## 5. Nivel de la alpha (un nivel)
 Una romería con un puesto semiabierto sobre terreno de tierra y césped. Zonas:
@@ -86,6 +96,9 @@ Alineado con «Alcance aprobado de la alpha» de `roadmap.md`.
 8. Aliño y cachelos D4/D25 → `features/condimentacion.md` y `features/estacion-condimentos.md`; cubo de basura D25 → `features/cubo-basura.md`
 9. Feedback mínimo (efectos, música, ambiente) → `features/audio-y-fx.md`
 
+10. Lenguaje de acciones (D26) → `features/lenguaje-acciones.md`; 11. Móvil, solo Individual (D26) →
+`features/controles-tactiles.md`.
+
 Soporte del flujo Must (también Must): `features/movimiento-e-interaccion.md`,
 `features/coccion-pulpo.md`, `features/corte-pulpo.md`, `features/partida-5-min.md`.
 
@@ -96,7 +109,8 @@ textos en gallego (`features/textos-gallego.md`), tutorial breve (`features/tuto
 **Could**: barro, gaiteros (`features/eventos-de-entorno.md`), 2 personajes con
 habilidad, lavado de platos.
 
-**Won't (alpha)**: mapa de niveles, online, 4 personajes, NPC animados, móvil; además cinemáticas,
+**Won't (alpha)**: mapa de niveles, online, 4 personajes, NPC animados; ~~móvil~~ (superado por D26: móvil
+entra en el alcance, solo Individual; `roadmap.md` Must 11; Local 2P en móvil sigue fuera); además cinemáticas,
 niveles de sal/aceite «poco/mucho», sal y aceite como decisiones sueltas (D25), tamaños de caja (D25), combate entre jugadores, bebidas (`DrinkSO`), tienda/DLC.
 
 ## 7. Presentación y tono
@@ -120,12 +134,14 @@ globalización (franquía vs. pulpeiros tradicionales). Textos de la alpha en ca
 ## 9. Reglas vigentes de las comandas, la olla y el corte
 Reglas en vigor de la alpha. Desde M1 el diseño manda sobre el prototipo (D17): lo que sigue igual que en
 Unity se indica como tal y lo que cambió cita su decisión. Cualquier cambio va a la sección 10.
-- **Caja errónea** (D8 concretada por D25, `wrong_delivery_penalty` en `round_config.tres`, hoy 2 €): sin
-  tamaños, errónea es solo de **contenido** (aliño o cachelos). Al entregar una caja que
-  no coincide se resta la penalización de la recaudación (mínimo 0) y la caja se conserva en la mano
-  (`OrderBoard.try_deliver`, `OrderStand`). Entregar en un puesto sin comanda, con la comanda ya caducada o
-  que caduca en ese mismo tick rechaza sin penalizar (0; D24). La comanda caducada penaliza aparte (`expire_penalty`, hoy 3 €). Solo penaliza la
-  entrega por interacción: la zona de entrega (`%DeliveryZone`) solo entrega si la caja coincide (PUL-039).
+- **Caja errónea** (D8 concretada por D25 y **modificada por D26**): sin tamaños, errónea es solo de
+  **contenido** (aliño o cachelos). ~~Al entregar una caja que no coincide se resta `wrong_delivery_penalty`
+  (2 €) y la caja se conserva en la mano.~~ *(Superado por D26: la entrega es solo automática por zona
+  iluminada; una caja que no coincide no enciende la zona, no entrega y no penaliza; `wrong_delivery_penalty`
+  = 0.)* La caja errónea se tira al cubo o se rehace. Entregar en un puesto sin comanda, con la comanda ya
+  caducada o que caduca en ese mismo tick rechaza sin penalizar (0; D24). La comanda caducada penaliza
+  aparte (`expire_penalty`, hoy 3 €). La zona de entrega (`%DeliveryZone`) solo entrega si la caja
+  coincide (PUL-039); el puesto ya no es objetivo de la pulsación.
 - **Olla** (D9, D10, `KitchenData.capacity` en `data/config/kitchen.tres`, hoy 2): admite varias cocciones a la
   vez, una por plaza; pulpo y cachelos crudos compiten por las plazas y se devuelven cocidos por orden de
   finalización (`CookingStation`). Con la olla llena, el crudo no entra.
@@ -135,13 +151,16 @@ Unity se indica como tal y lo que cambió cita su decisión. Cualquier cambio va
   (`OrderBoard.request_order`), hasta `max_active_orders` = 4 (`OrderCatalog`). Con las fases de dificultad
   (ADR-006 §6, `PhaseData.active_slots`, hoy 2/3/4) solo se reponen los puestos activos de la fase; la comanda
   de un puesto que se desactiva sigue hasta entregarse o caducar y no se repone.
-- **Corte**: por pulsación (D13), con una **caja única** y `presses_to_fill` = **6** (D25, provisional; antes S/M/L:
+- **Corte**: por pulsación (D13; D26: mantener pulsado repite cada `cut_repeat_interval` = 0,2 s, atajo, con
+  contador `N/6`), con una **caja única** y `presses_to_fill` = **6** (D25, provisional; antes S/M/L:
   5 / 10 / 20 en el prototipo, 4 / 6 / 10 con D23). Es un `int` y la caja llena `BoxData.fill_after(cortes)`
   (PUL-104); 1 pulpo = 2 cajas (`amount_per_full_box`). El pulpo se agota con un resto ≤ `Ingredient.EMPTY_EPSILON`.
 - **Aliño** (D25, sustituye a los 4 dispensadores de D18/D23): dos dispensadores de aliño completo, *dulce*
   (sal gorda + aceite + pimentón dulce) y *picante* (sal gorda + aceite + pimentón picante). Con una caja
   **llena** en la mano, una pulsación aplica el aliño; el otro lo sustituye; el mismo no hace nada. No hay
-  quitar: se tira al cubo. Cachelos como en D23 (cuenco, 2 raciones por cachelo, máx. 4, se alternan con la caja llena).
+  quitar: se tira al cubo. Cachelos como en D23 (cuenco, 2 raciones por cachelo, máx. 4), **modificados por
+  D26**: con la caja llena el cuenco solo **pone** (si ya lleva, BLOQUEADO «ya lleva»; ~~se alternan~~).
+  Repetir el mismo aliño es un rechazo visible (`ya aplicado`), no una pulsación muda.
 - **Cubo de basura** (D25, `features/cubo-basura.md`): 2 cubos; con algo en la mano, una pulsación lo destruye
   sin penalizar (`trash_penalty` = 0).
 - **Cocción** (ADR-006 §5, `olla-que-se-pasa`): un cocido que sigue en la olla avisa a `warn_time` (barra
@@ -154,7 +173,8 @@ Cambios sobre las reglas de arriba que NO rigen hasta aprobarse:
 *(Vacía.)* La propuesta «Devolver la caja errónea a su origen» queda sustituida por el cubo de basura
 (D25, §9).
 
-Rechazadas: asignar la comanda a cualquier puesto (D12); corte por «mantener pulsado» (D13).
+Rechazadas: asignar la comanda a cualquier puesto (D12); corte por «mantener pulsado» **como mecánica**
+(D13; D26 lo admite solo como atajo de la pulsación repetida).
 
 ## 11. Preguntas abiertas
 1. **Estrellas**: umbrales exactos de recaudación para 1/2/3 estrellas (provisional en
@@ -165,3 +185,6 @@ Rechazadas: asignar la comanda a cualquier puesto (D12); corte por «mantener pu
 5. **Fases de dificultad**: valores provisionales de `dificultad-progresiva.md` (límites de fase, puestos activos, `max_time`, recetas por fase de D25) a validar en playtest.
 6. **Número de puestos de entrega** del nivel: 4 asumidos por `max_active_orders`; confirmar con el inventario (PUL-001).
 7. **D25**: `presses_to_fill` = 6 y los precios de las 4 recetas son provisionales; se re-miden en QA tras implementar D25.
+8. **D26**: valores de `lenguaje-acciones.md` (histéresis 20 %, anillos de 8 px, aviso a 3 Hz) y de
+   `controles-tactiles.md` (zoom 120 px/m, texto 36 px, botones 72/48 dp) son de diseño y se validan en
+   un playtest en PC con el perfil táctil forzado y, más adelante, en un teléfono (ficha de export Android).
