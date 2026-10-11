@@ -1,7 +1,7 @@
 ---
 id: PUL-124
 title: Cues de D26
-status: in_progress
+status: done
 milestone: M3e
 role: asset-pipeline
 deps: [PUL-119, PUL-120]
