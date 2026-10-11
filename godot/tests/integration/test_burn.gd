@@ -1,7 +1,7 @@
 # gdlint: disable=max-public-methods
 extends GutTest
 ## PUL-069: olla que se pasa (`features/olla-que-se-pasa.md`, ADR-006 §5). Un cocido que sigue en
-## la olla avisa a `warn_time` (barra parpadeando) y se quema a `burn_time`; quemado no se corta y
+## la olla avisa a `warn_time` (anillo parpadeando) y se quema a `burn_time`; quemado no se corta y
 ## la mano vacía lo desecha liberando la plaza; la pausa congela el reloj (AC1–AC4).
 ## AC5: vapor solo con plazas cociendo y fuego vivo al cocer, congelados en pausa.
 
@@ -19,6 +19,8 @@ var _level: Node3D
 var _hold: HoldComponent
 var _actor: InteractionComponent
 var _kitchen: CookingStation
+## Cues que suenan en `%Feedback` de la olla (`_listen`).
+var _heard: Array[StringName] = []
 
 
 func before_each() -> void:
@@ -56,8 +58,8 @@ func _advance(seconds: float) -> void:
 	simulate(_kitchen, roundi(seconds / STEP), STEP)
 
 
-func _bar() -> WorldProgressBar:
-	return _kitchen.get_node("%CookBar") as WorldProgressBar
+func _bar() -> WorldProgressRing:
+	return _kitchen.get_node("%CookRing") as WorldProgressRing
 
 
 func _steam() -> GPUParticles3D:
@@ -124,33 +126,37 @@ func test_ac1_zero_burn_time_never_burns() -> void:
 	assert_true(octopus.is_cooked(), "variante de paridad: no se quema")
 	assert_signal_not_emitted(_kitchen, "burn_warned")
 	assert_signal_not_emitted(_kitchen, "burnt")
-	assert_false(_bar().visible)
+	assert_eq(_bar().get_state(), WorldProgressRing.State.READY, "listo, sin aviso")
 
 
-func test_ac2_warns_at_warn_time_with_blinking_bar() -> void:
+func test_ac2_warns_at_warn_time_with_blinking_ring() -> void:
 	var octopus: Ingredient = _put_in_pot()
 	watch_signals(_kitchen)
 	_advance(OCTOPUS.cook_time)
-	assert_false(_bar().visible, "sin barra tras cocer")
+	assert_eq(_bar().get_state(), WorldProgressRing.State.READY, "listo tras cocer")
 	_advance(6.9)
 	assert_signal_not_emitted(_kitchen, "burn_warned")
-	assert_false(_bar().visible)
+	assert_eq(_bar().get_state(), WorldProgressRing.State.READY)
 	_advance(0.1)
 	assert_signal_emit_count(_kitchen, "burn_warned", 1)
 	assert_signal_emitted_with_parameters(_kitchen, "burn_warned", [octopus])
-	assert_true(_bar().visible, "la barra avisa")
-	# Parpadea: el color alterna con el reloj de la plaza.
+	assert_eq(_bar().get_state(), WorldProgressRing.State.WARNING, "el anillo avisa")
+	# Parpadea: el color alterna ámbar y rojo con el reloj de la plaza.
 	var colors: Array[Color] = []
 	for i: int in 8:
-		colors.append(_bar().modulate)
+		colors.append(_bar().get_ring_color())
 		_advance(STEP)
-	assert_true(colors.has(Color.WHITE) and colors.has(CookingStation.BLINK_COLOR), "parpadea")
-	assert_lt(_bar().get_progress(), 1.0, "la barra se vacía hacia el quemado")
+	assert_true(
+		colors.has(WorldProgressRing.COLOR_AMBER) and colors.has(WorldProgressRing.COLOR_RED),
+		"parpadea"
+	)
+	assert_lt(_bar().get_progress(), 1.0, "el arco se vacía hacia el quemado")
 	assert_false(octopus.state == IngredientData.CookingState.BURNT, "aviso antes de quemar")
 	_advance(OCTOPUS.burn_time - OCTOPUS.warn_time)
 	assert_signal_emit_count(_kitchen, "burn_warned", 1, "una vez por plaza")
 	assert_eq(octopus.state, IngredientData.CookingState.BURNT)
-	assert_false(_bar().visible, "sin barra una vez quemado")
+	assert_eq(_bar().get_state(), WorldProgressRing.State.BURNT, "rojo fijo una vez quemado")
+	assert_eq(_bar().get_ring_color(), WorldProgressRing.COLOR_RED)
 
 
 func test_ac3_burnt_octopus_is_rejected_when_cutting() -> void:
@@ -159,7 +165,8 @@ func test_ac3_burnt_octopus_is_rejected_when_cutting() -> void:
 	_level.add_child(box)
 	var octopus: Ingredient = _in_hand()
 	octopus.set_burnt()
-	assert_true(box.interact(_actor), "consume la pulsación")
+	assert_false(box.can_interact(_actor), "D26: un quemado no es objetivo de la caja")
+	assert_false(box.interact(_actor), "no consume la pulsación")
 	assert_false(box.is_full())
 	assert_eq(box.get_contents().fill, 0.0, "no se corta")
 	assert_eq(octopus.remaining, OCTOPUS.total_capacity, "no se gasta")
@@ -201,11 +208,12 @@ func test_ac3_discards_oldest_burnt_before_giving_a_cooked() -> void:
 func test_ac3_picking_up_in_time_stops_the_clock() -> void:
 	var octopus: Ingredient = _put_in_pot()
 	_advance(OCTOPUS.cook_time + 8.0)
-	assert_true(_bar().visible, "en aviso")
+	assert_eq(_bar().get_state(), WorldProgressRing.State.WARNING, "en aviso")
 	watch_signals(_kitchen)
 	assert_true(_kitchen.interact(_actor))
 	assert_eq(_hold.get_held_item(), octopus)
 	assert_false(_bar().visible, "al recogerlo se apaga el aviso")
+	assert_eq(_bar().get_state(), WorldProgressRing.State.HIDDEN)
 	_advance(30.0)
 	assert_true(octopus.is_cooked(), "en la mano no se quema")
 	assert_signal_not_emitted(_kitchen, "burnt")
@@ -254,3 +262,112 @@ func test_ac5_effects_freeze_in_pause() -> void:
 func test_feedback_node_ready_for_pul071() -> void:
 	var feedback: Node = _kitchen.get_node("%Feedback")
 	assert_true(feedback is AudioStreamPlayer3D)
+
+
+# --- PUL-125 AC5 (diseño AC16): aviso con parpadeo a 3 Hz y cue repetido -------------------------
+
+
+func _listen() -> void:
+	_heard.clear()
+	(_kitchen.get_node("%Feedback") as FeedbackPlayer).played.connect(_heard.append)
+
+
+func test_ac5_data_comes_from_kitchen_tres() -> void:
+	var data: KitchenData = load("res://data/config/kitchen.tres")
+	assert_eq(data.warn_blink_hz, 3.0)
+	assert_eq(data.warn_repeat_interval, 1.0)
+	assert_eq(data.warn_repeat_count, 3)
+	assert_eq(_kitchen.data, data)
+
+
+func test_ac5_warns_at_7_s_after_ready_within_a_tenth() -> void:
+	_put_in_pot()
+	watch_signals(_kitchen)
+	_advance(OCTOPUS.cook_time + 6.9)
+	assert_signal_not_emitted(_kitchen, "burn_warned", "a 6,9 s todavía no")
+	assert_eq(_bar().get_state(), WorldProgressRing.State.READY)
+	_advance(0.2)
+	assert_signal_emit_count(_kitchen, "burn_warned", 1, "a 7,1 s ya avisó")
+	assert_eq(_bar().get_state(), WorldProgressRing.State.WARNING)
+
+
+func test_ac5_ring_blinks_amber_and_red_at_3_hz() -> void:
+	_put_in_pot()
+	_advance(OCTOPUS.cook_time + OCTOPUS.warn_time)
+	var changes: int = 0
+	var previous: Color = _bar().get_ring_color()
+	assert_eq(previous, WorldProgressRing.COLOR_AMBER, "empieza en ámbar")
+	var seconds: float = 2.0
+	for _i: int in roundi(seconds / 0.05):
+		simulate(_kitchen, 1, 0.05)
+		if _bar().get_state() != WorldProgressRing.State.WARNING:
+			break
+		var color: Color = _bar().get_ring_color()
+		assert_true(color == WorldProgressRing.COLOR_AMBER or color == WorldProgressRing.COLOR_RED)
+		if color != previous:
+			changes += 1
+		previous = color
+	# Cada ciclo ámbar-rojo son dos cambios: la frecuencia es cambios / 2 por segundo.
+	assert_almost_eq(float(changes) / 2.0 / seconds, 3.0, 0.5, "parpadeo a 3 Hz (±0,5)")
+
+
+func test_ac5_warning_ring_carries_the_flame_mark() -> void:
+	_put_in_pot()
+	_advance(OCTOPUS.cook_time + OCTOPUS.warn_time + 0.1)
+	assert_eq(
+		_bar().get_mark(), load("res://assets/textures/ui/actions/icon_mark_burn_warning.svg")
+	)
+
+
+func test_ac5_burn_warning_repeats_every_second_three_times() -> void:
+	_put_in_pot()
+	_listen()
+	_advance(OCTOPUS.cook_time + 6.9)
+	assert_eq(_heard.count(&"burn_warning"), 0)
+	_advance(0.2)
+	assert_eq(_heard.count(&"burn_warning"), 1, "a los 7,0 s")
+	_advance(0.8)
+	assert_eq(_heard.count(&"burn_warning"), 1, "a 7,9 s todavía una")
+	_advance(0.2)
+	assert_eq(_heard.count(&"burn_warning"), 2, "a los 8,0 s")
+	_advance(1.0)
+	assert_eq(_heard.count(&"burn_warning"), 3, "a los 9,0 s")
+	_advance(0.8)
+	assert_eq(_heard.count(&"burn_warning"), 3, "no pasa de tres")
+	_advance(0.2)
+	assert_eq(_heard.count(&"burnt"), 1, "a los 10 s se quema")
+	assert_eq(_heard.count(&"burn_warning"), 3)
+
+
+func test_ac5_taking_it_out_at_8_s_stops_blink_and_warnings() -> void:
+	var octopus: Ingredient = _put_in_pot()
+	_listen()
+	_advance(OCTOPUS.cook_time + 8.0)
+	assert_eq(_heard.count(&"burn_warning"), 2, "a los 7 y 8 s")
+	assert_true(_kitchen.interact(_actor))
+	assert_eq(_hold.get_held_item(), octopus)
+	assert_eq(_bar().get_state(), WorldProgressRing.State.HIDDEN, "el parpadeo cesa")
+	_advance(5.0)
+	assert_eq(_heard.count(&"burn_warning"), 2, "sin más avisos")
+	assert_eq(_heard.count(&"burnt"), 0)
+
+
+func test_ac5_at_10_s_the_ring_is_solid_red() -> void:
+	_put_in_pot()
+	_advance(OCTOPUS.cook_time + OCTOPUS.burn_time)
+	assert_eq(_bar().get_state(), WorldProgressRing.State.BURNT)
+	var first: Color = _bar().get_ring_color()
+	assert_eq(first, WorldProgressRing.COLOR_RED)
+	for _i: int in 6:
+		_advance(0.1)
+		assert_eq(_bar().get_ring_color(), first, "rojo fijo, sin parpadeo")
+
+
+func test_ac5_a_second_warning_after_discarding_starts_its_own_count() -> void:
+	_put_in_pot()
+	_listen()
+	_advance(OCTOPUS.cook_time + OCTOPUS.burn_time)
+	assert_true(_kitchen.interact(_actor), "desecha el quemado")
+	_put_in_pot()
+	_advance(OCTOPUS.cook_time + OCTOPUS.warn_time + 2.1)
+	assert_eq(_heard.count(&"burn_warning"), 6, "tres avisos por cada pulpo")

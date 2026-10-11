@@ -4,6 +4,21 @@ extends GutTest
 
 const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 
+const CACHELOS_SCENE: PackedScene = preload("res://entities/items/cachelos.tscn")
+const CAMERA_SCENE: PackedScene = preload("res://entities/camera/camera_rig.tscn")
+
+
+## PUL-125 (D26.6): la barra de lo que queda mide al menos 8 px de relleno a 1080 de alto.
+func test_pul125_amount_bar_is_at_least_8_px_at_1080() -> void:
+	var camera: Camera3D = CAMERA_SCENE.instantiate()
+	var camera_size: float = camera.size
+	camera.free()
+	for scene: PackedScene in [OCTOPUS_SCENE, CACHELOS_SCENE]:
+		var item: Ingredient = scene.instantiate()
+		add_child_autofree(item)
+		var bar: WorldProgressBar = item.get_node("%AmountBar")
+		assert_gte(bar.get_thickness_px(camera_size, 1080.0), 8.0, item.name)
+
 
 func _octopus() -> Ingredient:
 	var octopus: Ingredient = OCTOPUS_SCENE.instantiate()

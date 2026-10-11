@@ -61,7 +61,8 @@ func test_ac2_cachelo_cooked_no_longer_seasons_a_full_box() -> void:
 	box.data = SMALL_BOX
 	box.fill = 1.0  # full
 
-	assert_true(box.interact(_actor))
+	assert_false(box.can_interact(_actor))
+	assert_false(box.interact(_actor))
 
 	assert_eq(box.get_contents().seasonings.size(), 0)
 	assert_eq(_hold.get_held_item(), cachelo)

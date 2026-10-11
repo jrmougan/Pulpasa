@@ -2,12 +2,14 @@ class_name CookingStation
 extends StaticBody3D
 ## Olla (porta KitchenStation + KitchenProgress). Contrato `interactable` y marca `kitchen`
 ## (ADR-003 §4). Acepta ingredientes crudos cocinables (pulpo, cachelos) de la mano, los deja en
-## sus `AnchorPoint`, los cuece en `IngredientData.cook_time` con su `CookBar` y `%BoilAudio`,
+## sus `AnchorPoint`, los cuece en `IngredientData.cook_time` con su `%CookRing` y `%BoilAudio`,
 ## y los devuelve cocidos a una mano vacía por orden de finalización (FIFO: el primero
 ## que terminó sale primero, según `_finish_counter`).
 ## M3 (ADR-006 §5): un cocido que sigue en la plaza se quema. Tras `cooking_finished` el reloj de la
 ## plaza sigue: a `warn_time` avisa (`burn_warned`, barra visible vaciándose y parpadeando) y a
 ## `burn_time` lo quema (`Ingredient.set_burnt()` + `burnt`). Recogerlo a tiempo para el reloj.
+## D26.6: el `%CookRing` de cada plaza muestra el estado (cociendo, listo, aviso, quemado) y el cue
+## `burn_warning` se repite cada `warn_repeat_interval` hasta `warn_repeat_count` veces en total.
 ## Con la mano vacía se desecha primero el quemado más antiguo (`discarded`, `queue_free`) y, si no
 ## hay, se da el cocido FIFO; un quemado nunca llega a la mano. `burn_time` = 0: no se quema.
 ## Vapor (`Model/Steam`) solo con alguna plaza cociendo y fuego (`Model/Fire`) bajo en reposo y
@@ -16,7 +18,8 @@ extends StaticBody3D
 ##
 ## Un solo reloj general o uno por plaza: se acumulan en `_physics_process`, así que la pausa
 ## del árbol los congela (sin el doble temporizador del prototipo). El aspecto cocido lo pone
-## `Ingredient.set_cooked()`. Con cualquier otra cosa en la mano consume la pulsación sin efecto.
+## `Ingredient.set_cooked()`. D26 (ADR-003 §11.2): `get_action_hint` y `interact` comparten
+## `_resolve` (`ActionRules.for_pot`); con lo que no cuece la olla no es objetivo.
 
 ## Al aceptar un ingrediente crudo.
 signal cooking_started(ingredient: Ingredient)
@@ -35,10 +38,8 @@ const TIME_EPSILON: float = 0.0001
 ## Separación horizontal entre plazas ocupadas.
 const SLOT_SPACING: float = 0.3
 
-## Parpadeo de la barra en el aviso de quemado: semiperiodo (s de juego) y tinte alterno (casi
-## transparente: la barra se enciende y se apaga sin cambiar su color de relleno).
-const BLINK_HALF_PERIOD: float = 0.2
-const BLINK_COLOR: Color = Color(1.0, 1.0, 1.0, 0.15)
+## Separación de los anillos, en diámetros (para que no se tapen entre plazas).
+const RING_SPACING_RATIO: float = 1.05
 
 ## Fuego del fogón: fracción de partículas en reposo y al cocer.
 const FIRE_IDLE_RATIO: float = 0.3
@@ -62,8 +63,11 @@ class SlotData:
 	var warn_time: float = 0.0
 	var warned: bool = false
 	var burnt: bool = false
+	## Veces que aún debe repetirse `burn_warning` y el `since_finished` de la próxima.
+	var repeats_left: int = 0
+	var next_repeat_at: float = 0.0
 	var anchor: Node3D
-	var bar: WorldProgressBar
+	var ring: WorldProgressRing
 
 	func get_ingredient() -> Ingredient:
 		if not is_instance_valid(ingredient) or ingredient.is_queued_for_deletion():
@@ -87,7 +91,7 @@ var _elapsed: float:
 			_slots[0].elapsed = value
 
 @onready var _anchor_base: Node3D = %AnchorPoint
-@onready var _bar_base: WorldProgressBar = %CookBar
+@onready var _ring_base: WorldProgressRing = %CookRing
 @onready var _boil_audio: AudioStreamPlayer3D = %BoilAudio
 @onready var _steam: GPUParticles3D = $Model/Steam
 @onready var _fire: GPUParticles3D = $Model/Fire
@@ -95,8 +99,14 @@ var _elapsed: float:
 
 
 func _ready() -> void:
-	_bar_base.visible = false
-	var slot_count: int = data.capacity if data != null else 1
+	if data == null:
+		data = KitchenData.new()
+		data.capacity = 1
+	_ring_base.visible = false
+	var slot_count: int = data.capacity
+	_ring_base.configure(data.ring_diameter_px, data.ring_thickness_px, data.warn_blink_hz)
+	var ring_spacing: float = _ring_base.diameter_px * RING_SPACING_RATIO
+	ring_spacing *= _ring_base.camera_size / _ring_base.screen_height
 	var total_width := float(slot_count - 1) * SLOT_SPACING
 	var start_x := -total_width / 2.0
 	for i: int in slot_count:
@@ -104,17 +114,17 @@ func _ready() -> void:
 		var curr_x := start_x + float(i) * SLOT_SPACING
 		if i == 0:
 			slot_data.anchor = _anchor_base
-			slot_data.bar = _bar_base
+			slot_data.ring = _ring_base
 		else:
 			slot_data.anchor = _anchor_base.duplicate() as Node3D
 			add_child(slot_data.anchor)
-			slot_data.bar = _bar_base.duplicate() as WorldProgressBar
-			add_child(slot_data.bar)
-			slot_data.bar.visible = false
+			slot_data.ring = _ring_base.duplicate() as WorldProgressRing
+			add_child(slot_data.ring)
+			slot_data.ring.set_state(WorldProgressRing.State.HIDDEN)
 
-		# Anclas simétricas y barras apiladas en Y (una por plaza).
+		# Anclas simétricas y anillos en fila sobre la olla (uno por plaza).
 		slot_data.anchor.position.x = curr_x
-		slot_data.bar.position.y += float(i) * 0.35
+		slot_data.ring.position.x = (float(i) - float(slot_count - 1) / 2.0) * ring_spacing
 		_slots.append(slot_data)
 	_update_effects()
 	_connect_feedback()
@@ -130,7 +140,7 @@ func _physics_process(delta: float) -> void:
 			_reposition_anchors()
 			continue
 		slot.elapsed += delta
-		slot.bar.set_progress(slot.elapsed / slot.cook_time if slot.cook_time > 0.0 else 1.0)
+		slot.ring.set_progress(slot.elapsed / slot.cook_time if slot.cook_time > 0.0 else 1.0)
 		if slot.elapsed >= slot.cook_time - TIME_EPSILON:
 			_finish(slot)
 
@@ -155,6 +165,14 @@ func has_burnt() -> bool:
 	return _get_burnt_slot() != null
 
 
+## Anillo de cada plaza (`%CookRing` y sus copias), en el orden de las plazas.
+func get_rings() -> Array[WorldProgressRing]:
+	var rings: Array[WorldProgressRing] = []
+	for slot: SlotData in _slots:
+		rings.append(slot.ring)
+	return rings
+
+
 ## Devuelve el primer ingrediente que encuentre (para tests y compatibilidad).
 func get_ingredient() -> Ingredient:
 	for slot: SlotData in _slots:
@@ -164,34 +182,54 @@ func get_ingredient() -> Ingredient:
 	return null
 
 
-func can_interact(actor: InteractionComponent) -> bool:
-	var holder: Holder = actor.holder if actor != null else null
-	if holder == null:
-		return false
-	var held: Node = holder.get_held_item()
-	if held != null:
-		return true
+## Qué haría la pulsación (ADR-003 §11.2, fila C): retirar el quemado (`TIRAR`) o el cocido
+## (`COGER`) con la mano vacía; cocer un crudo si hay plaza (`COCER`) o `BUSY` si no.
+func get_action_hint(actor: InteractionComponent) -> ActionHint:
+	return _resolve(actor.holder if actor != null else null)
 
-	if _get_burnt_slot() != null:
-		return true
-	var finished_slot := _get_finished_slot()
-	if finished_slot != null and holder.can_hold(finished_slot.get_ingredient()):
-		return true
-	return false
+
+func can_interact(actor: InteractionComponent) -> bool:
+	return get_action_hint(actor).is_target()
 
 
 func interact(actor: InteractionComponent) -> bool:
-	if not can_interact(actor):
-		return false
+	var hint: ActionHint = get_action_hint(actor)
+	if hint.state != ActionHint.State.OK:
+		return hint.state == ActionHint.State.BLOCKED
 	var holder: Holder = actor.holder
-	var held: Node = holder.get_held_item()
-	if held == null:
-		return _discard() or _give(holder)
-	if held is Ingredient and _accepts(held as Ingredient):
-		var slot := _get_empty_slot()
-		if slot != null:
+	match hint.verb:
+		ActionVerb.TRASH:
+			return _discard()
+		ActionVerb.PICK_UP:
+			return _give(holder)
+		ActionVerb.COOK:
+			var slot: SlotData = _get_empty_slot()
+			if slot == null:
+				return false
 			_start(holder, slot)
-	return true
+			return true
+	return false
+
+
+## Única resolución de rama de `get_action_hint` e `interact` (ADR-003 §11.2).
+func _resolve(holder: Holder) -> ActionHint:
+	if holder == null:
+		return ActionHint.none()
+	var item: Node = holder.get_held_item()
+	var held: ActionRules.Held = HeldKind.of(item)
+	if item is Ingredient and not _accepts(item as Ingredient):
+		held = ActionRules.Held.OTHER
+	var finished: SlotData = _get_finished_slot()
+	var has_ready: bool = finished != null and holder.can_hold(finished.get_ingredient())
+	return ActionRules.for_pot(held, _free_places(), has_burnt(), has_ready)
+
+
+func _free_places() -> int:
+	var free: int = 0
+	for slot: SlotData in _slots:
+		if slot.get_ingredient() == null and not slot.cooking:
+			free += 1
+	return free
 
 
 func _accepts(ingredient: Ingredient) -> bool:
@@ -247,8 +285,8 @@ func _start(holder: Holder, slot: SlotData) -> void:
 	slot.warned = false
 	slot.burnt = false
 	slot.cooking = true
-	slot.bar.set_progress(0.0)
-	slot.bar.visible = true
+	slot.ring.set_progress(0.0)
+	slot.ring.set_state(WorldProgressRing.State.COOKING)
 	_reposition_anchors()
 	if not _boil_audio.playing:
 		_boil_audio.play()
@@ -261,12 +299,14 @@ func _finish(slot: SlotData) -> void:
 	_finish_counter += 1
 	slot.finished_at = _finish_counter
 	ingredient.set_cooked()
+	slot.ring.set_progress(1.0)
+	slot.ring.set_state(WorldProgressRing.State.READY)
 	cooking_finished.emit(ingredient)
 
 
 func _stop_cooking(slot: SlotData) -> void:
 	slot.cooking = false
-	slot.bar.visible = false
+	slot.ring.set_state(WorldProgressRing.State.HIDDEN)
 
 
 ## Reloj de quemado de una plaza con un cocido (ADR-006 §5). Si el ingrediente ya no está (lo
@@ -284,19 +324,30 @@ func _tick_burn(slot: SlotData, delta: float) -> void:
 		return
 	if not slot.warned and slot.since_finished >= slot.warn_time - TIME_EPSILON:
 		slot.warned = true
-		slot.bar.visible = true
+		slot.repeats_left = maxi(data.warn_repeat_count - 1, 0)
+		slot.next_repeat_at = slot.warn_time + data.warn_repeat_interval
+		slot.ring.set_state(WorldProgressRing.State.WARNING)
 		burn_warned.emit(ingredient)
 	if slot.warned:
 		var window: float = maxf(slot.burn_time - slot.warn_time, TIME_EPSILON)
-		slot.bar.set_progress((slot.burn_time - slot.since_finished) / window)
-		var phase: int = int((slot.since_finished - slot.warn_time) / BLINK_HALF_PERIOD)
-		slot.bar.modulate = BLINK_COLOR if phase % 2 == 0 else Color.WHITE
+		slot.ring.set_progress((slot.burn_time - slot.since_finished) / window)
+		slot.ring.set_warning_time(slot.since_finished - slot.warn_time)
+		_repeat_warning(slot)
+
+
+## Repite `burn_warning` cada `warn_repeat_interval` mientras dure el aviso (un aviso sostenido:
+## única excepción a «un cue por señal», ADR-006 §4.1).
+func _repeat_warning(slot: SlotData) -> void:
+	while slot.repeats_left > 0 and slot.since_finished >= slot.next_repeat_at - TIME_EPSILON:
+		slot.repeats_left -= 1
+		slot.next_repeat_at += data.warn_repeat_interval
+		if _feedback != null:
+			_feedback.play_cue(&"burn_warning")
 
 
 func _burn(slot: SlotData, ingredient: Ingredient) -> void:
 	slot.burnt = true
-	slot.bar.visible = false
-	slot.bar.modulate = Color.WHITE
+	slot.ring.set_state(WorldProgressRing.State.BURNT)
 	ingredient.set_burnt()
 	burnt.emit(ingredient)
 
@@ -305,8 +356,8 @@ func _reset_burn(slot: SlotData) -> void:
 	slot.since_finished = 0.0
 	slot.warned = false
 	slot.burnt = false
-	slot.bar.visible = false
-	slot.bar.modulate = Color.WHITE
+	slot.repeats_left = 0
+	slot.ring.set_state(WorldProgressRing.State.HIDDEN)
 
 
 ## Desecha el quemado más antiguo: emite `discarded`, lo libera y deja la plaza libre.
@@ -325,12 +376,12 @@ func _discard() -> bool:
 
 ## Sonido y respuesta visual de cada hecho de la olla en `%Feedback` (ADR-006 §4): `POP` de la
 ## olla al empezar y desechar, del ingrediente al terminar, `SHAKE` de la olla al quemarse; el
-## aviso ya lo muestra la barra parpadeando.
+## aviso ya lo muestra el anillo parpadeando.
 func _connect_feedback() -> void:
 	if _feedback == null:
 		return
 	cooking_started.connect(_on_feedback.bind(&"cook_start", false))
-	cooking_finished.connect(_on_feedback.bind(&"cook_done", true))
+	cooking_finished.connect(_on_feedback.bind(&"cook_ready", true))
 	burn_warned.connect(_on_feedback.bind(&"burn_warning", false))
 	burnt.connect(_on_feedback.bind(&"burnt", false))
 	discarded.connect(_on_feedback.bind(&"discard", false))

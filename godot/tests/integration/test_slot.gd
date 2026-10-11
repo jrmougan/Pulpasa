@@ -243,13 +243,14 @@ func test_pul101_slot_carries_the_visible_pass_mark_without_a_table() -> void:
 	assert_almost_eq(model.position.y, 1.1, 0.001, "sobre la superficie de la barra")
 
 
-## PUL-058 (ADR-003 §8.2): con `accepted_group`, lo que no está en el grupo se rechaza consumiendo
-## la pulsación; ni se guarda ni se suelta.
-func test_pul058_accepted_group_rejects_other_items_consuming_press() -> void:
+## PUL-058 (ADR-003 §8.2) y D26 (PUL-125): con `accepted_group`, lo que no está en el grupo no
+## hace al slot objetivo (`can_interact` honesto); ni se guarda ni se suelta.
+func test_pul058_accepted_group_rejects_other_items_without_being_a_target() -> void:
 	_slot.accepted_group = &"box"
 	var item: Item = _held_item()
-	assert_true(_slot.can_interact(_actor))
-	assert_true(_slot.interact(_actor), "consume la pulsación")
+	assert_false(_slot.can_interact(_actor))
+	assert_eq(_slot.get_action_hint(_actor).state, ActionHint.State.NONE)
+	assert_false(_slot.interact(_actor), "no consume la pulsación")
 	assert_false(_slot.has_item())
 	assert_eq(_hold.get_held_item(), item, "sigue en la mano")
 	assert_false(_slot.accepts(item))

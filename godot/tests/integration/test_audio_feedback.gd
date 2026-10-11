@@ -54,7 +54,7 @@ const CUES: Array[StringName] = [
 ]
 ## Acciones de AC5: cue con sonido y respuesta visual.
 const AC5_CUES: Array[StringName] = [
-	&"pick_up", &"cook_start", &"cook_done", &"season", &"deliver_ok", &"deliver_error"
+	&"pick_up", &"cook_start", &"cook_ready", &"season", &"deliver_ok", &"deliver_error"
 ]
 ## Carpetas cuyas escenas no pueden dejar un reproductor en `Master`.
 const SCENE_DIRS: Array[String] = ["res://entities", "res://scenes", "res://ui"]
@@ -405,9 +405,9 @@ func test_ac5_cooking_pops_pot_and_cooked_ingredient() -> void:
 	assert_eq(_assert_visual(feedback, kitchen, &"cook_start"), "pop")
 	simulate(kitchen, roundi(item.data.cook_time / STEP) + 1, STEP)
 	assert_true(item.is_cooked())
-	assert_eq(_cues("kitchen"), [&"cook_start", &"cook_done"])
-	assert_eq(feedback.stream, MAP.get_cue(&"cook_done").stream)
-	assert_eq(_assert_visual(feedback, item, &"cook_done"), "pop")
+	assert_eq(_cues("kitchen"), [&"cook_start", &"cook_ready"])
+	assert_eq(feedback.stream, MAP.get_cue(&"cook_ready").stream)
+	assert_eq(_assert_visual(feedback, item, &"cook_ready"), "pop")
 
 
 func test_ac5_seasoning_pops_the_box() -> void:
