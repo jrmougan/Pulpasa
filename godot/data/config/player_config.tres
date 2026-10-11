@@ -13,3 +13,4 @@ detector_cone_half_angle = 30.0
 detector_near_distance = 0.7
 detector_kitchen_bonus = 1.0
 detector_origin_height = 0.8
+hysteresis_margin = 0.2

@@ -61,6 +61,12 @@ static func score(dot: float, dist: float) -> float:
 ## (`bestPickable as IInteractable`); si no, se usa el mejor interactuable (con `kitchen_bonus`
 ## a la cocina) o -1. Un cogible `in_slot` compite como interactuable. Con la mano llena solo
 ## cuentan los interactuables, sin bonus.
+##
+## Histéresis (D26.4, ADR-003 §11.3): `current` es el índice del objetivo publicado si sigue siendo
+## candidato (si no, -1). Si sigue dentro del cono y otro candidato lo supera, se mantiene salvo que
+## (a) el nuevo tenga prioridad de cogible y `current` no, o (b) su puntuación (con
+## `kitchen_bonus`) supere `score(current) + hysteresis_margin × |score(current)|`. Con margen 0
+## no hay histéresis. Pasar de OK a BLOQUEADO no invalida al actual: eso no se mira aquí.
 static func pick_best(
 	origin: Vector2,
 	forward: Vector2,
@@ -68,7 +74,9 @@ static func pick_best(
 	holding: bool,
 	cone_half_angle_deg: float,
 	near_distance: float,
-	kitchen_bonus: float
+	kitchen_bonus: float,
+	current: int = -1,
+	hysteresis_margin: float = 0.0
 ) -> int:
 	var cos_limit: float = cos(deg_to_rad(cone_half_angle_deg))
 	var fwd: Vector2 = forward.normalized()
@@ -76,8 +84,13 @@ static func pick_best(
 	var best_pickable_score: float = -INF
 	var best_interactable: int = -1
 	var best_interactable_score: float = -INF
+	# Puntuación final y si compite por la prioridad de cogible; NAN = fuera del cono.
+	var scores: Array[float] = []
+	var priority: Array[bool] = []
 
 	for i: int in candidates.size():
+		scores.append(NAN)
+		priority.append(false)
 		var cand: Candidate = candidates[i]
 		if not cand.is_pickable and not cand.is_interactable:
 			continue
@@ -88,16 +101,31 @@ static func pick_best(
 			continue
 		var cand_score: float = score(dot, dist)
 		if cand.is_pickable and not holding and not cand.in_slot:
+			scores[i] = cand_score
+			priority[i] = cand.is_interactable
 			if cand_score > best_pickable_score:
 				best_pickable = i
 				best_pickable_score = cand_score
 		elif cand.is_interactable:
 			if not holding and cand.is_kitchen:
 				cand_score += kitchen_bonus
+			scores[i] = cand_score
 			if cand_score > best_interactable_score:
 				best_interactable = i
 				best_interactable_score = cand_score
 
+	var best: int = best_interactable
 	if best_pickable != -1 and candidates[best_pickable].is_interactable:
-		return best_pickable
-	return best_interactable
+		best = best_pickable
+	if hysteresis_margin <= 0.0 or best == current or current < 0 or current >= scores.size():
+		return best
+	var current_score: float = scores[current]
+	if is_nan(current_score) or not candidates[current].is_interactable:
+		return best  # el actual dejó de ser válido: se cambia en este tick
+	if best < 0:
+		return best
+	if priority[best] and not priority[current]:
+		return best  # regla categórica de PUL-063
+	if scores[best] > current_score + hysteresis_margin * absf(current_score):
+		return best
+	return current

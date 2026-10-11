@@ -18,5 +18,8 @@ extends Resource
 @export var detector_near_distance: float = 0.7
 ## Detector: bonus de puntuación de la cocina con la mano vacía.
 @export var detector_kitchen_bonus: float = 1.0
+## Detector: histéresis del objetivo (D26.4). Un candidato sustituye al activo solo si su
+## puntuación lo supera en este margen relativo (0,2 = +20 %). 0 = sin histéresis.
+@export var hysteresis_margin: float = 0.2
 ## Detector: altura sobre el jugador desde la que se mide la distancia 3D.
 @export var detector_origin_height: float = 0.8

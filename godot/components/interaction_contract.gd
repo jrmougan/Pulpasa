@@ -6,6 +6,9 @@ extends RefCounted
 const GROUP_INTERACTABLE: StringName = &"interactable"
 const GROUP_PICKABLE: StringName = &"pickable"
 
+## Consulta de acción (ADR-003 §11.2): `get_action_hint(actor: InteractionComponent) ->
+## ActionHint`. Opcional hasta la oleada de montaje de D26: el detector tolera su ausencia.
+const HINT_METHOD: StringName = &"get_action_hint"
 const INTERACTABLE_METHODS: PackedStringArray = ["can_interact", "interact"]
 ## Métodos opcionales de `interactable` (ADR-003 §8.1): si existen, el detector los consulta.
 ## `is_reachable_from(floor_position: Vector2, holder: Holder) -> bool`.
@@ -24,6 +27,19 @@ static func violations(node: Node) -> Array[String]:
 	if node.is_in_group(GROUP_PICKABLE):
 		found.append_array(pickable_violations(node))
 	return found
+
+
+## Qué haría la pulsación de `actor` sobre `entity` (ADR-003 §11.2-§11.3). Con
+## `get_action_hint`, lo que devuelva (`null` cuenta como `NONE`). Equivalencia transitoria para
+## entidades sin migrar: `ok(&"")` (objetivo heredado, sin verbo) si `can_interact` es `true`, y
+## `none()` si no. No mira el lado (`is_reachable_from` se evalúa antes, por quien llama).
+static func hint_of(entity: Node, actor: InteractionComponent) -> ActionHint:
+	if entity.has_method(HINT_METHOD):
+		var hint: ActionHint = entity.call(HINT_METHOD, actor) as ActionHint
+		return hint if hint != null else ActionHint.none()
+	if entity.has_method(&"can_interact") and bool(entity.call(&"can_interact", actor)):
+		return ActionHint.ok(ActionVerb.NONE)
+	return ActionHint.none()
 
 
 ## Incumplimientos de los métodos y propiedades `pickable` de `node`, esté o no en el grupo.

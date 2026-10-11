@@ -29,6 +29,13 @@ signal order_patience_changed(order_id: int, time_left: float, max_time: float)
 @warning_ignore("unused_signal")
 signal order_expired(order: ActiveOrder, penalty: int)
 
+# --- Interacción (D26): emisor InteractionComponent del personaje que controla `player_index` ---
+## `state` es `ActionHint.State` como `int` (0 NONE, 1 OK, 2 BLOCKED).
+@warning_ignore("unused_signal")
+signal action_hint_changed(player_index: int, verb: StringName, state: int, reason: StringName)
+@warning_ignore("unused_signal")
+signal interaction_resolved(player_index: int, verb: StringName, state: int, reason: StringName)
+
 # --- Sesión y jugadores: emisores GameState y CharacterSwitcher ---
 @warning_ignore("unused_signal")
 signal pause_changed(is_paused: bool)

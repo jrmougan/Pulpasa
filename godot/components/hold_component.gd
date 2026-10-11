@@ -86,6 +86,12 @@ func can_drop_freely() -> bool:
 	return not _is_blocked(_drop_position())
 
 
+## Punto donde caería lo que se suelta (el mismo que usa `can_drop_freely`): el prompt de SOLTAR
+## sin objetivo se coloca aquí (ADR-003 §11.5).
+func get_drop_position() -> Vector3:
+	return _drop_position()
+
+
 ## 0,6 m delante y 0,6 m arriba del portador (PlayerConfig), con "delante" en el suelo.
 func _drop_position() -> Vector3:
 	var cfg: PlayerConfig = config if config != null else PlayerConfig.new()

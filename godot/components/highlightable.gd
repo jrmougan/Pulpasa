@@ -13,14 +13,21 @@ extends Node
 
 const DEFAULT_MATERIAL: Material = preload("res://shaders/highlight_outline.tres")
 
+## Ámbar (D26.6) del contorno BLOQUEADO si no se asigna `blocked_material`.
+const BLOCKED_COLOR: Color = Color("FFB020")
+
 ## Material del contorno.
 @export var material: Material = DEFAULT_MATERIAL
+## Material del contorno de un objetivo BLOQUEADO (D26.6). Sin asignar, se deriva de `material`
+## con el color ámbar.
+@export var blocked_material: Material
 ## Raíz de las mallas a contornear; por defecto, el padre.
 @export var root: Node3D
 ## Visual opcional que solo se ve resaltado (retícula del slot).
 @export var reticle: Node3D
 
 var _highlighted: bool = false
+var _blocked: bool = false
 var _meshes: Array[GeometryInstance3D] = []
 ## Propietarios que lo tienen encendido (instance id → true).
 var _owners: Dictionary = {}
@@ -31,6 +38,8 @@ func _ready() -> void:
 		root = get_parent() as Node3D
 	if reticle != null:
 		reticle.visible = false
+	if blocked_material == null:
+		blocked_material = _derive_blocked_material()
 
 
 func show() -> void:
@@ -41,7 +50,7 @@ func show() -> void:
 	if root != null:
 		_collect(root, true)
 	for mesh: GeometryInstance3D in _meshes:
-		mesh.material_overlay = material
+		mesh.material_overlay = _current_material()
 	if reticle != null:
 		reticle.visible = true
 
@@ -51,11 +60,28 @@ func hide() -> void:
 		return
 	_highlighted = false
 	for mesh: GeometryInstance3D in _meshes:
-		if is_instance_valid(mesh) and mesh.material_overlay == material:
+		if is_instance_valid(mesh) and _is_ours(mesh.material_overlay):
 			mesh.material_overlay = null
 	_meshes.clear()
 	if reticle != null:
 		reticle.visible = false
+
+
+## Contorno ámbar (`true`) o normal (`false`) para un objetivo BLOQUEADO (D26.6). Si el contorno
+## está encendido, cambia el material en el acto.
+func set_blocked(blocked: bool) -> void:
+	if blocked == _blocked:
+		return
+	_blocked = blocked
+	if not _highlighted:
+		return
+	for mesh: GeometryInstance3D in _meshes:
+		if is_instance_valid(mesh):
+			mesh.material_overlay = _current_material()
+
+
+func is_blocked() -> bool:
+	return _blocked
 
 
 ## Enciende el contorno a nombre de `requester` (idempotente por propietario).
@@ -73,6 +99,29 @@ func release(requester: Object) -> void:
 
 func is_highlighted() -> bool:
 	return _highlighted
+
+
+func _current_material() -> Material:
+	if _blocked:
+		if blocked_material == null:
+			blocked_material = _derive_blocked_material()
+		return blocked_material
+	return material
+
+
+func _is_ours(overlay: Material) -> bool:
+	return overlay != null and (overlay == material or overlay == blocked_material)
+
+
+## Copia de `material` con el color ámbar; si no es un `ShaderMaterial` con `outline_color`,
+## el propio `material`.
+func _derive_blocked_material() -> Material:
+	var shader_material: ShaderMaterial = material as ShaderMaterial
+	if shader_material == null:
+		return material
+	var amber: ShaderMaterial = shader_material.duplicate() as ShaderMaterial
+	amber.set_shader_parameter(&"outline_color", BLOCKED_COLOR)
+	return amber
 
 
 func _collect(node: Node, is_root: bool) -> void:
