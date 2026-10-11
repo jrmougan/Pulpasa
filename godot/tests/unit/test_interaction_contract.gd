@@ -11,15 +11,16 @@ func _in_group(node: Node, group: StringName) -> Node:
 
 
 func test_ac3_complete_interactable_has_no_violations() -> void:
-	var node: Node = _in_group(FakeInteractable.new(), &"interactable")
+	var node: Node = _in_group(FakeHintedInteractable.new(), &"interactable")
 	assert_eq(InteractionContract.violations(node), [])
 
 
 func test_ac3_interactable_missing_interact_is_reported() -> void:
 	var node: Node = _in_group(IncompleteInteractable.new(), &"interactable")
 	var found: Array[String] = InteractionContract.violations(node)
-	assert_eq(found.size(), 1)
-	assert_string_contains(found[0], "interact(")
+	assert_eq(found.size(), 2, "falta interact() y get_action_hint()")
+	assert_true(found.any(func(s: String) -> bool: return s.contains("interact()")))
+	assert_true(found.any(func(s: String) -> bool: return s.contains("get_action_hint()")))
 
 
 func test_ac3_complete_pickable_has_no_violations() -> void:
@@ -40,7 +41,7 @@ func test_ac3_node_in_both_groups_accumulates_violations() -> void:
 	node.add_to_group(&"interactable")
 	node.add_to_group(&"pickable")
 	add_child_autofree(node)
-	assert_eq(InteractionContract.violations(node).size(), 5)
+	assert_eq(InteractionContract.violations(node).size(), 6)
 
 
 func test_ac3_node_outside_groups_has_no_violations() -> void:
@@ -58,8 +59,9 @@ func test_ac3_scan_tree_collects_all_violations_with_node_names() -> void:
 	good.add_to_group(&"pickable")
 	root.add_child(good)
 	var found: Array[String] = InteractionContract.scan_tree(root)
-	assert_eq(found.size(), 1)
-	assert_string_contains(found[0], "Roto")
+	assert_eq(found.size(), 2)
+	for violation: String in found:
+		assert_string_contains(violation, "Roto")
 
 
 func test_ac3_pickable_violations_checks_contract_without_group() -> void:
@@ -73,7 +75,7 @@ func test_ac3_pickable_violations_checks_contract_without_group() -> void:
 func test_pul058_is_reachable_from_is_optional() -> void:
 	assert_true("is_reachable_from" in InteractionContract.INTERACTABLE_OPTIONAL_METHODS)
 	assert_false("is_reachable_from" in InteractionContract.INTERACTABLE_METHODS)
-	var node: Node = _in_group(FakeInteractable.new(), &"interactable")
+	var node: Node = _in_group(FakeHintedInteractable.new(), &"interactable")
 	assert_false(node.has_method(&"is_reachable_from"))
 	assert_eq(InteractionContract.violations(node), [])
 
@@ -93,10 +95,13 @@ func test_d26_hint_method_name_is_the_contract_one() -> void:
 	assert_eq(InteractionContract.HINT_METHOD, &"get_action_hint")
 
 
-func test_d26_hint_method_is_not_mandatory_yet() -> void:
-	assert_false(InteractionContract.INTERACTABLE_METHODS.has("get_action_hint"))
+## PUL-131: desde el montaje, `get_action_hint` es obligatorio en todo `interactable`.
+func test_d26_hint_method_is_mandatory() -> void:
+	assert_true(InteractionContract.INTERACTABLE_METHODS.has("get_action_hint"))
 	var node: Node = _in_group(FakeInteractable.new(), &"interactable")
-	assert_eq(InteractionContract.violations(node), [])
+	var found: Array[String] = InteractionContract.violations(node)
+	assert_eq(found.size(), 1)
+	assert_string_contains(found[0], "get_action_hint()")
 
 
 func test_d26_hint_of_uses_get_action_hint_when_present() -> void:

@@ -4,20 +4,9 @@ extends GutTest
 
 const SET_PATH: String = "res://data/config/action_icons.tres"
 const ICON_DIR: String = "res://assets/textures/ui/actions/"
-## Verbos y motivos del contrato (equivalen a `ActionVerb.ALL` y `ActionReason.ALL`).
-const VERBS: Array[StringName] = [
-	&"pick_up",
-	&"drop",
-	&"cook",
-	&"cut",
-	&"season_sweet",
-	&"season_hot",
-	&"cachelos",
-	&"trash",
-]
-const REASONS: Array[StringName] = [
-	&"box_not_full", &"busy", &"empty", &"full", &"already_applied", &"not_cooked"
-]
+## Verbos y motivos del contrato: los conjuntos cerrados de `core/`.
+const VERBS: Array[StringName] = ActionVerb.ALL
+const REASONS: Array[StringName] = ActionReason.ALL
 const MARKS: Array[String] = [
 	"cross",
 	"replace",

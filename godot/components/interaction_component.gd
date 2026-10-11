@@ -79,7 +79,9 @@ func _press(from_repeat: bool) -> bool:
 		if not bool(target.call(&"interact", self)):
 			if hint.verb != ActionVerb.NONE:
 				push_error("%s: get_action_hint no es NONE pero interact() devolvió false" % target)
-				return false
+				# La pulsación no hizo nada: se responde con un rechazo (no queda muda).
+				_resolve(target, ActionHint.blocked(hint.verb, ActionReason.BUSY))
+				return true
 			# Objetivo heredado (sin verbo): como antes, si no consume cae al suelo.
 			target = null
 			hint = _floor_hint()

@@ -36,4 +36,6 @@ func test_ac4_items_are_bodies_on_interactable_layer_with_highlight() -> void:
 
 func test_ac4_box_and_octopus_have_world_progress_bars() -> void:
 	assert_true(_instance(SCENES[0]).get_node("%AmountBar") is WorldProgressBar)
-	assert_true(_instance(SCENES[1]).get_node("%FillBar") is WorldProgressBar)
+	var box: Node = _instance(SCENES[1])
+	assert_true(box.get_node("%CutBar") is WorldProgressBar, "contador de cortes (D26.6)")
+	assert_null(box.get_node_or_null("%FillBar"), "sin la barra de llenado oculta")

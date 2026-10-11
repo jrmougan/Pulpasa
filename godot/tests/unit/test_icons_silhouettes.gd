@@ -7,19 +7,6 @@ const ICON_DIR: String = "res://assets/textures/ui/actions/"
 const MAX_IOU: float = 0.6
 ## Fracción mínima de la máscara que debe sobrevivir a la apertura.
 const MIN_KEPT: float = 0.85
-const VERBS: Array[String] = [
-	"pick_up",
-	"drop",
-	"cook",
-	"cut",
-	"season_sweet",
-	"season_hot",
-	"cachelos",
-	"trash",
-]
-const REASONS: Array[String] = [
-	"box_not_full", "busy", "empty", "full", "already_applied", "not_cooked"
-]
 const MARKS: Array[String] = [
 	"cross",
 	"replace",
@@ -33,12 +20,20 @@ const MARKS: Array[String] = [
 ]
 
 
+## Los ids del contrato (`ActionVerb.ALL`, `ActionReason.ALL`) como nombres de fichero.
+func _ids(values: Array[StringName]) -> Array[String]:
+	var ids: Array[String] = []
+	for value: StringName in values:
+		ids.append(String(value))
+	return ids
+
+
 func test_verb_silhouettes_are_distinct_at_64px() -> void:
-	_check_group("verb", VERBS, 64)
+	_check_group("verb", _ids(ActionVerb.ALL), 64)
 
 
 func test_reason_silhouettes_are_distinct_at_32px() -> void:
-	_check_group("reason", REASONS, 32)
+	_check_group("reason", _ids(ActionReason.ALL), 32)
 
 
 func test_strokes_survive_an_opening_of_radius_5() -> void:
@@ -100,9 +95,9 @@ func _check_group(kind: String, ids: Array[String], px: int) -> void:
 
 func _all_names() -> Array[String]:
 	var names: Array[String] = []
-	for id: String in VERBS:
+	for id: String in _ids(ActionVerb.ALL):
 		names.append("icon_verb_" + id)
-	for id: String in REASONS:
+	for id: String in _ids(ActionReason.ALL):
 		names.append("icon_reason_" + id)
 	for id: String in MARKS:
 		names.append("icon_mark_" + id)

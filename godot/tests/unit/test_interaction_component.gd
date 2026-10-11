@@ -299,6 +299,74 @@ func test_ac5_character_switch_leaves_the_incoming_hint_as_the_last_fact() -> vo
 	assert_eq(_bus("action_hint_changed", 1), [1, &"cut", 2, &"full"], "hint del entrante")
 
 
+## PUL-131 (revisión de PUL-121): un receptor con verbo real cuyo `interact` devuelve `false`
+## incumple §11.2 (`push_error`), pero la pulsación no queda muda: se responde con un rechazo.
+func test_pul131_receiver_that_lies_gives_an_error_and_a_rejection_not_silence() -> void:
+	var target: LyingTarget = add_child_autofree(LyingTarget.new())
+	target.hint = ActionHint.ok(ActionVerb.COOK)
+	_detector.target_changed.emit(null, target)
+	var item: FakePickable = _hold()
+	watch_signals(_component)
+	assert_true(_component.interact_pressed())
+	assert_push_error("interact() devolvió false")
+	assert_signal_emit_count(_component, "interaction_resolved", 1)
+	assert_signal_emit_count(EventBus, "interaction_resolved", 1)
+	assert_eq(_bus("interaction_resolved"), [1, &"cook", 2, &"busy"])
+	assert_eq(_holder.get_held_item(), item, "la mano no cambia")
+
+
+## ADR-002 Enmienda 2: en cada instante hay como mucho un `InteractionComponent` controlado por
+## cada jugador (es el emisor único del bus para ese `player_index`).
+func _controlled_count(components: Array[InteractionComponent], player: int) -> int:
+	var count: int = 0
+	for component: InteractionComponent in components:
+		if component.control.controlled_by == player:
+			count += 1
+	return count
+
+
+func _team(mode: GameMode.Mode) -> Dictionary:
+	var components: Array[InteractionComponent] = []
+	var controls: Array[ControlComponent] = []
+	for i: int in 2:
+		var control: ControlComponent = ControlComponent.new()
+		control.player_index = i + 1
+		control.controlled_by = 0
+		add_child_autofree(control)
+		controls.append(control)
+		var component: InteractionComponent = InteractionComponent.new()
+		component.control = control
+		component.holder = add_child_autofree(FakeHolder.new())
+		component.detector = add_child_autofree(FakeDetector.new())
+		add_child_autofree(component)
+		components.append(component)
+	var switcher: CharacterSwitcher = CharacterSwitcher.new()
+	switcher.characters = controls
+	switcher.set_mode(mode)
+	add_child_autofree(switcher)
+	EventBus.round_started.emit(60.0)
+	return {"components": components, "switcher": switcher}
+
+
+func test_pul131_single_after_several_switches_one_component_per_player() -> void:
+	var team: Dictionary = _team(GameMode.Mode.SINGLE)
+	var components: Array[InteractionComponent] = team["components"]
+	var switcher: CharacterSwitcher = team["switcher"]
+	for round_index: int in 7:
+		assert_eq(_controlled_count(components, 1), 1, "tras %d cambios, J1" % round_index)
+		assert_eq(_controlled_count(components, 2), 0, "tras %d cambios, J2" % round_index)
+		switcher.advance(10.0)
+		assert_true(switcher.switch_pressed())
+
+
+func test_pul131_coop_each_player_has_exactly_one_component() -> void:
+	var team: Dictionary = _team(GameMode.Mode.COOP_2P)
+	var components: Array[InteractionComponent] = team["components"]
+	assert_eq(_controlled_count(components, 1), 1)
+	assert_eq(_controlled_count(components, 2), 1)
+	assert_ne(components[0].control.controlled_by, components[1].control.controlled_by)
+
+
 # --- PUL-121 AC6: mantener para cortar (ADR-003 §11.4) ------------------------------------------
 
 
@@ -424,3 +492,11 @@ func test_ac6_interval_comes_from_the_input_config() -> void:
 	assert_eq(target.effect_count, 1)
 	component._physics_process(0.05)
 	assert_eq(target.effect_count, 2)
+
+
+## Doble de un receptor que miente: publica un verbo real pero `interact` no hace nada.
+class LyingTarget:
+	extends FakeHintedInteractable
+
+	func interact(_actor: InteractionComponent) -> bool:
+		return false
