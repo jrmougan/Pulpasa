@@ -16,7 +16,7 @@
         "--python",
         "3.13",
         "--from",
-        "git+https://projects.blender.org/lab/blender_mcp.git@dbbf836ad4b1025f14a2b3b504c43903f39e0b04#subdirectory=mcp",
+        "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.3#subdirectory=mcp",
         "blender-mcp"
       ],
       "env": {
