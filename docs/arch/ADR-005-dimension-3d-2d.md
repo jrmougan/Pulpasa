@@ -211,14 +211,18 @@ window/handheld/orientation=4            (sensor_landscape: apaisado, gira con e
     en `characters[0]`). En `_process`: el foco (punto del suelo al que mira) se mueve con
     `CameraFollow` (amortiguación crítica, `follow_time`); al cambiar de personaje, paneo ease-out de
     `switch_pan_time` hasta el nuevo activo y después sigue (el control no espera a la cámara, D3). El
-    foco se recorta para que la vista no salga más de `camera_margin_m` de `play_area_min/max`.
+    foco se recorta para que la vista no salga más de `camera_margin_m` de `play_area_min/max` (con
+    `respect_top_band`, excepciones norte y este: notas «Banda superior tapada» y «Zonas tapadas de la
+    flecha y de los botones»).
     `position = posición_de_reposo + Vector3(foco.x − foco_reposo.x, 0, foco.y − foco_reposo.y)`;
     `foco_reposo` = corte del eje de la cámara de reposo con el suelo (y = 0). Se congela en pausa.
   - **Flecha de borde** (diseño): nodo `%OffscreenArrow` dentro de `camera_rig.tscn` (`CanvasLayer` +
     `TextureRect` con `icon_mark_offscreen`, como `Vignette` en `environment.tscn`): con el perfil
     móvil, si el personaje inactivo proyecta fuera de pantalla, la flecha (`offscreen_arrow_px` 48 a
     1080) señala su dirección dentro del safe area y a ≥ 16 px de la zona de botones (la lee de
-    `GameState.ui_profile`, sin conocer `TouchControls`). Solo lectura de posiciones.
+    `GameState.ui_profile`, sin conocer `TouchControls`). Solo lectura de posiciones. Con
+    `respect_top_band` respeta también la banda superior (nota «Zonas tapadas de la flecha y de los
+    botones»).
   - Sin `follow` (escritorio): no se mueve; idéntico a hoy.
 - `resources/camera_profile.gd` (`class_name CameraProfile extends Resource`, común; el diseño lo llama
   `MobileCameraData`): `ortho_size: float = 12.74`, `follow: bool = false`, `follow_time: float = 0.2`,
@@ -239,8 +243,46 @@ window/handheld/orientation=4            (sensor_landscape: apaisado, gira con e
   (`top_cover_m`, fracción del alto) no cuenta: el foco es el centro de la parte visible
   (`CameraFollow.covered_focus`, `visible_top`) y el recorte (`CameraFollow.clamp_focus_covered`) deja
   que la vista salga por el norte hasta `camera_margin_m + top_reach + top_cover` para que lo alcanzable
-  (ollas, su anillo y su prompt) quede bajo la banda. Escritorio sin cambios. Pendiente (PUL-134): la
-  flecha de borde y la zona de botones como rectángulo tapado.
+  (ollas, su anillo y su prompt) quede bajo la banda. Si la vista es mayor que el área, se centra la
+  parte visible (`y` = centro del área − `top_cover_m` / 2), no la vista entera. Escritorio sin cambios.
+  Flecha de borde y zona de botones: nota siguiente.
+- **Zonas tapadas de la flecha y de los botones** (PUL-134, revisión de PUL-133). Van con
+  `respect_top_band` (solo móvil; sin interruptor propio): **sin campos nuevos en `CameraProfile`** ni
+  señales nuevas; `signals.md` y `scene-tree.md` no cambian.
+  - *Flecha de borde.* El alto tapado arriba (safe area superior + `UiProfile.top_band_max_px`, en
+    unidades de lienzo; 0 sin `respect_top_band`) es uno solo para el foco, la detección y la flecha. Un
+    inactivo cuyo centro (0,8 m sobre los pies) proyecta bajo la banda cuenta como fuera de cuadro. El
+    rectángulo donde se coloca la flecha (safe area menos media flecha) empieza bajo la banda (arriba =
+    máx(safe superior, alto tapado)); la flecha sigue a ≥ 16 px de la zona de botones
+    (`CameraFollow.edge_point` la desliza hacia arriba o a la izquierda).
+  - *Zona de botones como rectángulo tapado.* Es la zona reservada de E4 en unidades de lienzo:
+    x ≥ ancho − `UiProfile.button_zone_width_px`, y ≥ `UiProfile.button_zone_top_px` (390 y 600 a 1080),
+    leída de `GameState.ui_profile` (`CameraRig.ui_profile` la sustituye en tests). La cámara no lee
+    `TouchConfig` ni conoce `TouchControls`: que los botones quepan en la zona es contrato de E4 (con la
+    safe area derecha de diseño, 132 px, los de `touch_config.tres` llegan a ancho − 372 px). Se activa
+    cuando los pies del activo, con el foco ya recortado por la banda, proyectan por debajo de
+    `button_zone_top_px` (franja inferior). Entonces `CameraFollow.clear_east_cover(focus, target_x,
+    half_x, area_max_x, margin, east_cover_m, pad) -> Vector2` (puro) mueve el foco al este lo justo
+    para que el activo más `pad` (0,5 m de media anchura + 16 px) quede a la izquierda de la zona;
+    `east_cover_m` es el ancho de la zona en metros de suelo. Solo mueve hacia el este y no toca `y`;
+    fuera de la franja el encuadre es el de la nota anterior.
+  - *Excepción este del recorte.* Con la zona activa la vista puede salir por el este hasta
+    `camera_margin_m + east_cover_m` de `play_area_max.x` (lo tapado por los botones no cuenta como
+    visible, como la banda al norte). La excepción vale para todo el alto de la vista: con el activo
+    pegado al este en la franja, la esquina superior derecha enseña el exterior del nivel; se acepta. El
+    oeste y el sur siguen en `camera_margin_m`; el norte, con su excepción.
+  - *Garantía (opción C, decisión del responsable).* Con el activo en reposo en la plaza de una estación
+    con widget (contador N/6 de cada pasaplatos, anillos de cada olla, medidor del cuenco), ni el activo
+    ni los widgets de esa estación quedan bajo la zona de botones a 2340×1080, 1920×1080 y 800×370. No se
+    garantiza para widgets de estaciones alejadas del activo.
+  - *Limitación conocida* (caso 09 de PUL-133): con el activo en las ollas, la banda empuja la vista al
+    norte, la fila de pasaplatos cae en la franja de botones y el recorte este no actúa (el activo está
+    fuera de la franja). El contador de una caja en los pasaplatos 04-06 queda bajo los botones (04-06 a
+    2340×1080 y 800×370; 04 a 1920×1080). Un sesgo de cámara al este no lo resuelve a 1920×1080 sin sacar
+    al activo de la safe area en la nevera: queda para una ficha de diseño (mover widgets o cambiar la
+    disposición, opción B).
+  - Escritorio sin cambios: `camera_desktop.tres` no tiene `follow` ni `respect_top_band`; sin flecha ni
+    recorte este.
 - `core/camera_follow.gd` (`class_name CameraFollow extends RefCounted`, puro, plano del suelo): estado
   `position: Vector2`, `velocity: Vector2`; `func follow(target: Vector2, smooth_time: float, delta:
   float) -> Vector2` (amortiguación crítica, sin oscilación); `func pan_to(target: Vector2, duration:
