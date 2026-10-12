@@ -177,16 +177,20 @@ func test_ac15_hud_tickets_and_pause_do_not_overlap_and_band_is_at_most_200_px()
 
 func test_ac16_hud_and_tickets_stay_out_of_the_reserved_zones() -> void:
 	for resolution: Vector2i in RESOLUTIONS:
-		var stretch: float = await _mount(resolution, resolution.x == 2340)
+		var with_safe: bool = resolution.x == 2340
+		var stretch: float = await _mount(resolution, with_safe)
 		var profile: UiProfile = GameState.ui_profile
 		var factor: float = resolution.y / 1080.0
 		var size: Vector2 = Vector2(resolution)
 		var stick: Rect2 = Rect2(
 			0.0, profile.stick_zone_top_px * factor, size.x * profile.stick_zone_fraction, size.y
 		)
+		# Zona de botones anclada a la esquina inferior derecha de la safe area (D27.2).
+		var safe_right: float = SAFE_LEFT if with_safe else 0.0
+		var safe_bottom: float = SAFE_BOTTOM if with_safe else 0.0
 		var buttons: Rect2 = Rect2(
-			size.x - profile.button_zone_width_px * factor,
-			profile.button_zone_top_px * factor,
+			size.x - safe_right - profile.button_zone_width_px * factor,
+			size.y - safe_bottom - profile.button_zone_height_px * factor,
 			size.x,
 			size.y
 		)

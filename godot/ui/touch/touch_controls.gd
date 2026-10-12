@@ -133,7 +133,10 @@ func refresh_layout() -> void:
 	var action_center: Vector2 = Vector2(
 		safe.end.x - margin - big / 2.0, safe.end.y - margin - big / 2.0
 	)
-	var switch_center: Vector2 = action_center - Vector2(0.0, big / 2.0 + gap + small / 2.0)
+	# Cambiar a la izquierda de acción, con los bordes inferiores alineados (ADR-005 E4, D27.1).
+	var switch_center: Vector2 = (
+		action_center + Vector2(-(big / 2.0 + gap + small / 2.0), big / 2.0 - small / 2.0)
+	)
 	var pause_center: Vector2 = Vector2(
 		safe.end.x - margin - small / 2.0, safe.position.y + margin + small / 2.0
 	)

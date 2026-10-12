@@ -44,17 +44,23 @@ func _draw_zones() -> void:
 		size.x * profile.stick_zone_fraction,
 		size.y
 	)
-	var buttons_left: float = size.x - UiScale.px_to_units(profile.button_zone_width_px, height)
-	var buttons: Rect2 = Rect2(
-		buttons_left, UiScale.px_to_units(profile.button_zone_top_px, height), size.x, size.y
+	var safe: SafeAreaMargin = $OrderTicketsPanel as SafeAreaMargin
+	var buttons_left: float = (
+		size.x
+		- safe.get_theme_constant(&"margin_right")
+		- UiScale.px_to_units(profile.button_zone_width_px, height)
 	)
+	var buttons_top: float = (
+		size.y
+		- safe.get_theme_constant(&"margin_bottom")
+		- UiScale.px_to_units(profile.button_zone_height_px, height)
+	)
+	var buttons: Rect2 = Rect2(buttons_left, buttons_top, size.x, size.y)
 	_overlay.draw_rect(stick, ZONE_COLOR)
 	_overlay.draw_rect(buttons, ZONE_COLOR)
 	var pause_side: float = UiScale.px_to_units(TouchHudLayout.pause_button_px(), height)
 	var edge: float = UiScale.px_to_units(TouchHudLayout.edge_margin_px(), height)
-	var right_margin: float = ($OrderTicketsPanel as SafeAreaMargin).get_theme_constant(
-		&"margin_right"
-	)
+	var right_margin: float = safe.get_theme_constant(&"margin_right")
 	var pause_center: Vector2 = Vector2(
 		size.x - right_margin - edge - pause_side / 2.0, edge + pause_side / 2.0
 	)
