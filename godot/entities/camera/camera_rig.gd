@@ -8,6 +8,8 @@ extends Camera3D
 const MIN_AXIS: float = 0.0001
 ## Separación mínima entre la flecha y la zona de botones, px a 1080 de alto.
 const ARROW_GAP_PX: float = 16.0
+## Media anchura (m) del personaje que debe quedar fuera de la zona de botones.
+const CHARACTER_HALF_WIDTH_M: float = 0.5
 ## Altura (m) a la que se proyecta un personaje para saber si está en cuadro.
 const CHARACTER_CENTER_HEIGHT: float = 0.8
 
@@ -118,7 +120,7 @@ func _target_focus() -> Vector2:
 			ground, half, profile.play_area_min, profile.play_area_max, profile.camera_margin_m
 		)
 	var cover: float = top_cover_m()
-	return CameraFollow.clamp_focus_covered(
+	var focus: Vector2 = CameraFollow.clamp_focus_covered(
 		CameraFollow.covered_focus(ground, cover),
 		half,
 		profile.play_area_min,
@@ -127,16 +129,50 @@ func _target_focus() -> Vector2:
 		cover,
 		top_reach_m()
 	)
+	if not _in_button_strip(ground.y, focus.y, half.y):
+		return focus
+	var canvas: Vector2 = get_viewport().get_visible_rect().size
+	var pad: float = (
+		CHARACTER_HALF_WIDTH_M + _canvas_to_ground_x(UiScale.px_to_units(ARROW_GAP_PX, canvas.y))
+	)
+	return CameraFollow.clear_east_cover(
+		focus,
+		ground.x,
+		half.x,
+		profile.play_area_max.x,
+		profile.camera_margin_m,
+		_canvas_to_ground_x(_button_zone(canvas).size.x),
+		pad
+	)
+
+
+## Si los pies (`ground_z`) quedan, con el foco en `focus_z`, en la franja de la zona de botones.
+func _in_button_strip(ground_z: float, focus_z: float, half_z: float) -> bool:
+	var canvas: Vector2 = get_viewport().get_visible_rect().size
+	var feet_y: float = canvas.y * (0.5 + (ground_z - focus_z) / maxf(half_z * 2.0, MIN_AXIS))
+	return feet_y > _button_zone(canvas).position.y
+
+
+## Ancho en unidades de lienzo → metros de suelo en x.
+func _canvas_to_ground_x(units: float) -> float:
+	var canvas: Vector2 = get_viewport().get_visible_rect().size
+	return units / maxf(canvas.x, 1.0) * view_half_extents().x * 2.0
 
 
 ## Alto (m sobre el suelo) de la zona tapada arriba: safe area superior + banda de HUD y tickets
 ## (`UiProfile.top_band_max_px`), de unidades de lienzo a metros por la fracción del alto de vista.
 func top_cover_m() -> float:
 	var canvas: Vector2 = get_viewport().get_visible_rect().size
+	return _top_cover_units(canvas) / maxf(canvas.y, 1.0) * view_half_extents().y * 2.0
+
+
+## Alto (unidades de lienzo) tapado arriba: safe area superior + `UiProfile.top_band_max_px`; 0 sin
+## `respect_top_band`.
+func _top_cover_units(canvas: Vector2) -> float:
+	if profile == null or not profile.respect_top_band:
+		return 0.0
 	var ui: UiProfile = ui_profile if ui_profile != null else GameState.ui_profile
-	var margins: Vector4 = _safe_override if _has_safe_override else _current_safe_margins(canvas)
-	var units: float = margins.y + UiScale.px_to_units(ui.top_band_max_px, canvas.y)
-	return units / maxf(canvas.y, 1.0) * view_half_extents().y * 2.0
+	return _safe_margins(canvas).y + UiScale.px_to_units(ui.top_band_max_px, canvas.y)
 
 
 ## `top_reach_height_m` (altura sobre el suelo) como metros equivalentes hacia el norte del suelo.
@@ -168,7 +204,9 @@ func _update_arrow() -> void:
 	if _arrow_layer == null or _arrow == null:
 		return
 	var canvas: Vector2 = get_viewport().get_visible_rect().size
-	var screen: Rect2 = Rect2(Vector2.ZERO, canvas)
+	# Bajo la banda superior tapada el inactivo no se ve: cuenta como fuera de cuadro.
+	var top: float = _top_cover_units(canvas)
+	var screen: Rect2 = Rect2(Vector2(0.0, top), Vector2(canvas.x, canvas.y - top))
 	for i: int in characters.size():
 		if i == _active or characters[i] == null:
 			continue
@@ -183,10 +221,11 @@ func _update_arrow() -> void:
 
 func _place_arrow(projected: Vector2, canvas: Vector2) -> void:
 	var side: float = UiScale.px_to_units(profile.offscreen_arrow_px, canvas.y)
-	var margins: Vector4 = _safe_override if _has_safe_override else _current_safe_margins(canvas)
+	var margins: Vector4 = _safe_margins(canvas)
+	var top: float = maxf(margins.y, _top_cover_units(canvas))
 	var inner: Rect2 = Rect2(
-		Vector2(margins.x, margins.y),
-		Vector2(canvas.x - margins.x - margins.z, canvas.y - margins.y - margins.w)
+		Vector2(margins.x, top),
+		Vector2(canvas.x - margins.x - margins.z, canvas.y - top - margins.w)
 	)
 	var bounds: Rect2 = inner.grow(-side * 0.5)
 	var avoid: Rect2 = _button_zone(canvas)
@@ -204,6 +243,10 @@ func _button_zone(canvas: Vector2) -> Rect2:
 	var width: float = UiScale.px_to_units(ui.button_zone_width_px, canvas.y)
 	var top: float = UiScale.px_to_units(ui.button_zone_top_px, canvas.y)
 	return Rect2(Vector2(canvas.x - width, top), Vector2(width, canvas.y - top))
+
+
+func _safe_margins(canvas: Vector2) -> Vector4:
+	return _safe_override if _has_safe_override else _current_safe_margins(canvas)
 
 
 func _current_safe_margins(canvas: Vector2) -> Vector4:
