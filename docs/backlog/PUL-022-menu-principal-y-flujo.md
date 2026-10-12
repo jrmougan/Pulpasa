@@ -1,7 +1,7 @@
 ---
 id: PUL-022
 title: Crear el menú principal y el flujo de escenas
-status: review
+status: done
 milestone: M0
 role: ui-engineer
 deps: []
