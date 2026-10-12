@@ -698,7 +698,9 @@ TouchControls (Control, pantalla completa, mouse_filter IGNORE)   touch_controls
     └── Content (Control, top_level)   lienzo de los controles dentro de la safe area (PUL-128)
         ├── %MoveStick    (Control)  ui/touch/virtual_stick.gd  class_name VirtualStick   base 300 px, recorrido 150 px
         ├── %ActionButton (Control)  ui/touch/action_button.gd  class_name ActionButton   180 px (72 dp), abajo a la derecha
-        ├── %SwitchButton (Control)  ui/touch/touch_button.gd   class_name TouchButton    120 px (48 dp), action &"p1_switch"
+        ├── %SwitchButton (Control)  ui/touch/touch_button.gd   class_name TouchButton    120 px (48 dp), a la izquierda
+        │                                                                                 del de acción, alineado abajo, hueco 24 px
+        │                                                                                 (ADR-005 D27.1); action &"p1_switch"
         └── %PauseButton  (Control)  ui/touch/touch_button.gd                             120 px (48 dp), action &"pause"
 En `level_01` va en `UI` entre `OrderTicketsPanel` y `PauseMenu`; el game over lo suelta (`release_all`), lo oculta
 y lo desactiva, y `round_started` lo reactiva (PUL-131). Pictogramas de cambiar y pausa dibujados por código
@@ -708,7 +710,8 @@ ui/widgets/ui_scale.gd           UiScale (RefCounted): px_to_units(), dp_to_unit
 ```
 `hud.tscn`, `order_tickets_panel.tscn`, `pause_menu.tscn`, `game_over.tscn` y `main_menu.tscn`
 envuelven su contenido en un `SafeAreaMargin`. HUD sin «Cajas / minuto»; en `MOBILE`, banda superior
-(HUD 240 px + 4 tickets de 330–380 px) fuera de las zonas del stick y de los botones (ADR-005 E4).
+(HUD 240 px + 4 tickets de 330–380 px) fuera de las zonas del stick y de los botones (ADR-005 E4;
+zona de botones anclada a la safe area, Enmienda D27).
 `main_menu.tscn`: en `MOBILE` solo «Individual».
 
 ### 9.4 Cámara (específica)
@@ -753,7 +756,7 @@ resources/seasoning_station_data.gd   − toggle_guard
 data/config/action_icons.tres  ActionIconSet → assets/textures/ui/actions/icon_verb_<id>.svg, icon_reason_<id>.svg,
                                icon_mark_<nombre>.svg
 data/config/touch_config.tres  TouchConfig
-data/config/ui_profile_desktop.tres / ui_profile_mobile.tres   UiProfile (móvil: text_min_px 36, tickets 330–380…)
+data/config/ui_profile_desktop.tres / ui_profile_mobile.tres   UiProfile (móvil: text_min_px 36, tickets 330–380…, zona de botones 390 × 240 desde la safe area, ADR-005 D27.2)
 data/config/camera_desktop.tres / camera_mobile.tres           CameraProfile (12,74 fija / 7,0 sigue)
 data/config/player_config.tres hysteresis_margin 0.2
 data/config/input_config.tres  cut_repeat_interval 0.2

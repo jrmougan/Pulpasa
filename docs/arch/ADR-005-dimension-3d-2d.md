@@ -2,9 +2,10 @@
 
 - **Estado:** aceptado (2026-10-03): opción A, 3D con cámara ortográfica fija (D14); Enmienda D26
   (escala de UI, perfil de plataforma, safe area y cámara móvil) **propuesta**, pendiente del gate
-  humano (PUL-120)
-- **Fecha:** 2026-10-03; enmienda 2026-10-11
-- **Ficha:** PUL-003; enmienda PUL-120 (D26)
+  humano (PUL-120); Enmienda D27 (botones en fila y zona de botones con safe area, E4) **propuesta**,
+  pendiente del gate humano (PUL-137)
+- **Fecha:** 2026-10-03; enmiendas 2026-10-11 (D26) y 2026-10-12 (D27)
+- **Ficha:** PUL-003; enmiendas PUL-120 (D26) y PUL-137 (D27)
 - **Relacionado:** D6 y D14 (`docs/design/decisions.md`), roadmap (fases y gate de M0), ADR-003 §0
   (capa común / específica), ADR-004 §0, `scene-tree.md` §6, inventario §3 y §5
 
@@ -168,7 +169,8 @@ window/handheld/orientation=4            (sensor_landscape: apaisado, gira con e
   `ticket_height: float` (150), `ticket_gap: float` (16), `hud_block_width: float` (240),
   `top_band_max_px: float` (200), `ticket_icon_px: float` (48), `patience_bar_px: float` (12) y las
   zonas reservadas `stick_zone_fraction: float` (0,5), `stick_zone_top_px: float` (200),
-  `button_zone_width_px: float` (390), `button_zone_top_px: float` (600).
+  `button_zone_width_px: float` (390), `button_zone_height_px: float` (240; sustituye a
+  `button_zone_top_px` 600, Enmienda D27).
   Instancias `data/config/ui_profile_desktop.tres` (`content_scale` 1,0; mínimos actuales) y
   `data/config/ui_profile_mobile.tres` (valores del diseño). El rango `[0,67, 1,5]` del diseño se cumple
   con el estiramiento de E2 entre 720 y 1080 de alto.
@@ -195,8 +197,11 @@ window/handheld/orientation=4            (sensor_landscape: apaisado, gira con e
   `pause_menu.tscn`, `game_over.tscn` y `main_menu.tscn`.
 - Disposición en `MOBILE` (`controles-tactiles.md`, «Maquetación de la banda superior»): HUD y 4
   tickets en una banda superior ≤ `top_band_max_px`; **zonas reservadas** que ni HUD ni tickets tocan:
-  stick (x < 50 % del ancho, y ≥ 200 px) y botones (x ≥ ancho − 390 px, y ≥ 600 px), en `UiProfile`. En `DESKTOP` la
-  disposición actual no cambia.
+  stick (x < 50 % del ancho, y ≥ 200 px) y botones (rectángulo anclado a la esquina inferior derecha
+  de la safe area: x ≥ ancho − safe der. − 390 px, y ≥ alto − safe inf. − 240 px; Enmienda D27), en
+  `UiProfile`. En `DESKTOP` la disposición actual no cambia.
+- Colocación de los botones y zona de botones: **Enmienda D27** (sustituye «cambiar sobre el de
+  acción» y la zona y ≥ 600 px).
 
 ### E5. Cámara: perfiles por datos (específica + núcleo común)
 - `entities/camera/camera_rig.tscn` gana script `entities/camera/camera_rig.gd` (`class_name CameraRig
@@ -255,13 +260,14 @@ window/handheld/orientation=4            (sensor_landscape: apaisado, gira con e
     rectángulo donde se coloca la flecha (safe area menos media flecha) empieza bajo la banda (arriba =
     máx(safe superior, alto tapado)); la flecha sigue a ≥ 16 px de la zona de botones
     (`CameraFollow.edge_point` la desliza hacia arriba o a la izquierda).
-  - *Zona de botones como rectángulo tapado.* Es la zona reservada de E4 en unidades de lienzo:
-    x ≥ ancho − `UiProfile.button_zone_width_px`, y ≥ `UiProfile.button_zone_top_px` (390 y 600 a 1080),
-    leída de `GameState.ui_profile` (`CameraRig.ui_profile` la sustituye en tests). La cámara no lee
-    `TouchConfig` ni conoce `TouchControls`: que los botones quepan en la zona es contrato de E4 (con la
-    safe area derecha de diseño, 132 px, los de `touch_config.tres` llegan a ancho − 372 px). Se activa
-    cuando los pies del activo, con el foco ya recortado por la banda, proyectan por debajo de
-    `button_zone_top_px` (franja inferior). Entonces `CameraFollow.clear_east_cover(focus, target_x,
+  - *Zona de botones como rectángulo tapado.* Es la zona reservada de E4 en unidades de lienzo, anclada
+    a la safe area (Enmienda D27): x ≥ ancho − safe der. − `UiProfile.button_zone_width_px`,
+    y ≥ alto − safe inf. − `UiProfile.button_zone_height_px` (390 y 240 a 1080), con el ancho y el alto
+    leídos de `GameState.ui_profile` (`CameraRig.ui_profile` la sustituye en tests) y la safe area de
+    los mismos márgenes que la banda y la flecha (`_safe_margins`, `set_safe_margins` en tests). La
+    cámara no lee `TouchConfig` ni conoce `TouchControls`: que los botones quepan en la zona es contrato
+    de E4 (Enmienda D27, «Invariante»). Se activa cuando los pies del activo, con el foco ya recortado
+    por la banda, proyectan por debajo del borde superior de la zona (franja inferior). Entonces `CameraFollow.clear_east_cover(focus, target_x,
     half_x, area_max_x, margin, east_cover_m, pad) -> Vector2` (puro) mueve el foco al este lo justo
     para que el activo más `pad` (0,5 m de media anchura + 16 px) quede a la izquierda de la zona;
     `east_cover_m` es el ancho de la zona en metros de suelo. Solo mueve hacia el este y no toca `y`;
@@ -275,12 +281,10 @@ window/handheld/orientation=4            (sensor_landscape: apaisado, gira con e
     con widget (contador N/6 de cada pasaplatos, anillos de cada olla, medidor del cuenco), ni el activo
     ni los widgets de esa estación quedan bajo la zona de botones a 2340×1080, 1920×1080 y 800×370. No se
     garantiza para widgets de estaciones alejadas del activo.
-  - *Limitación conocida* (caso 09 de PUL-133): con el activo en las ollas, la banda empuja la vista al
-    norte, la fila de pasaplatos cae en la franja de botones y el recorte este no actúa (el activo está
-    fuera de la franja). El contador de una caja en los pasaplatos 04-06 queda bajo los botones (04-06 a
-    2340×1080 y 800×370; 04 a 1920×1080). Un sesgo de cámara al este no lo resuelve a 1920×1080 sin sacar
-    al activo de la safe area en la nevera: queda para una ficha de diseño (mover widgets o cambiar la
-    disposición, opción B).
+  - *Caso 09 de PUL-133* (contador de los pasaplatos 04-06 bajo los botones con el activo en las ollas):
+    era una limitación conocida; **resuelto por la Enmienda D27** (botones en fila, zona más baja) con
+    safe area inferior nula, con el residuo aceptado por D27 (≤ 8 px a 800×370 con el activo en z −3,4)
+    y el residuo con safe area inferior que se detalla allí («Caso 09»).
   - Escritorio sin cambios: `camera_desktop.tres` no tiene `follow` ni `respect_top_band`; sin flecha ni
     recorte este.
 - `core/camera_follow.gd` (`class_name CameraFollow extends RefCounted`, puro, plano del suelo): estado
@@ -316,3 +320,116 @@ común sigue sin tipos de mundo: `PlatformProfile`, `UiProfile`, `UiScale`, `Saf
   posiciones fijas (lo comprueban los tests de disposición de la ficha de UI).
 - (−) Con el perfil móvil la cámara no enseña toda la cocina: el jugador depende del seguimiento, la
   flecha de borde y los avisos (tickets, sonidos) para lo que queda fuera.
+
+## Enmienda D27 (2026-10-12, PUL-137) — Botones en fila y zona de botones con safe area
+
+*Propuesta, pendiente del gate humano.* D27 (gate de PUL-136) elige los **botones en fila** para sacar
+el contador de los pasaplatos de debajo de los botones (caso 09 de PUL-133). Diseño y medidas:
+`docs/design/features/controles-tactiles.md` «Contadores del pasaplatos bajo los botones» y
+`docs/evidence/PUL-136/README.md`; recálculo con safe area en `docs/evidence/PUL-137/README.md`. Cambia
+E4 (colocación y zona reservada de botones) y la nota «Zonas tapadas de la flecha y de los botones» de
+E5. Solo perfil `MOBILE`: escritorio y Local 2P no cambian (no hay `TouchControls` y la cámara de
+escritorio no usa la zona). Sin señales nuevas: `signals.md` no cambia.
+
+Medidas en px de pantalla a 1080 de alto; a otra altura se multiplican por alto / 1080
+(`UiScale.px_to_units`). «safe der.» y «safe inf.» son los márgenes derecho e inferior de la safe area
+en las mismas unidades (`UiScale.safe_margins`).
+
+### D27.1 Colocación (sustituye «cambiar sobre el de acción» de ADR-004 §6.2 y del diseño AC3)
+- **Acción** sin cambios: 180 px (72 dp), centro a 48 + 90 px de los bordes derecho e inferior de la
+  safe area; zona táctil radio 90 + 12 (`hit_slop_px_1080`).
+- **Cambiar** (120 px, 48 dp) a la **izquierda** del de acción, **borde inferior alineado** y **hueco
+  horizontal de 24 px** entre los bordes visibles (`button_gap_px_1080`, el mismo dato que el hueco
+  vertical de hoy): centro = centro de acción + (−(90 + 24 + 60), 90 − 60) = (−174, +30). Entre centros
+  174 px = 102 + 72: las zonas táctiles siguen sin solaparse aunque el de cambiar ganara 12 px de margen.
+- **Pausa** sin cambios (esquina superior derecha, en la banda superior, fuera de la zona).
+
+| Resolución | Safe area (izq/arr/der/inf a 1080) | Acción (centro) | Cambiar (centro) |
+|---|---|---|---|
+| 2340×1080 | nula | 2202, 942 | 2028, 972 |
+| 2340×1080 | 132/0/132/63 | 2070, 879 | 1896, 909 |
+| 1920×1080 | nula | 1782, 942 | 1608, 972 |
+| 800×370 | nula | 752,7, 322,7 | 692,7, 333,0 |
+
+### D27.2 Zona de botones anclada a la safe area (resuelve la duda de PUL-135)
+- **Forma.** Rectángulo anclado a la **esquina inferior derecha de la safe area** que se extiende hasta
+  los bordes del lienzo (incluye las franjas de safe area de su derecha y de abajo):
+  `x ≥ ancho − safe der. − button_zone_width_px`, `y ≥ alto − safe inf. − button_zone_height_px`, con
+  **390 × 240 px** a 1080. Con safe area nula: x ≥ ancho − 390, **y ≥ 840** a 1080 (287,8 a 370), el
+  valor de D27. Con la de diseño (132/0/132/63) a 2340×1080: x ≥ 1818, y ≥ 777.
+- **Por qué anclada y no ensanchada.** Los botones se colocan desde los bordes de la safe area: con la
+  derecha de diseño (132 px) el de cambiar en fila llega a ancho − 504 px (ancho − 516 si ganara margen
+  de toque), y con la inferior (63 px) el borde superior del toque de acción sube a alto − 303. Una zona
+  fija desde el borde del lienzo tendría que ensancharse a ≥ 516 y subir a ≥ 303 px para la peor safe
+  area concebible, y taparía mundo sin botones en los dispositivos sin muesca. Anclada, mide lo mismo
+  respecto a los botones en cualquier dispositivo.
+- **Dato** (`UiProfile`, E3): `button_zone_width_px` = 390 (sin cambios, ahora medido desde la safe
+  area) y `button_zone_height_px` = 240, **que sustituye a `button_zone_top_px`** (600, medido desde
+  arriba). Se expresa desde abajo porque desde arriba no puede seguir a la safe area inferior y porque
+  240 es directamente el alto de la pila de botones (48 + 180 + 12). En `ui_profile_desktop.tres` el
+  campo se renombra igual (240); escritorio no lo usa.
+- **Invariante** (contrato de E4; lo comprueban los tests de PUL-135 y de maquetación): con cualquier
+  safe area, el rectángulo de toque de cada botón de la zona (centro ± radio de toque) cae dentro de la
+  zona. Con los datos actuales: ancho necesario 48 + 180 + 24 + 120 = 372 px (384 si el de cambiar ganara
+  12 px de margen) ≤ 390; alto necesario 48 + 180 + 12 = 240 = 240 (holgura 0: los tests usan 1 px de
+  tolerancia por el redondeo de `SafeAreaMargin`). Si `TouchConfig` cambia tamaños, margen o hueco, la
+  ficha que lo cambie actualiza `button_zone_*` en el mismo cambio.
+- **Qué lee la cámara.** `CameraRig._button_zone(canvas)` = rectángulo de arriba con `button_zone_width_px`
+  y `button_zone_height_px` de `GameState.ui_profile` (o `CameraRig.ui_profile` en tests) y los márgenes
+  de `_safe_margins(canvas)` (los mismos de la banda y la flecha; `set_safe_margins` en tests). No lee
+  `TouchConfig` ni conoce `TouchControls`; `TouchControls` y la cámara leen la misma safe area de
+  `DisplayServer` (por `SafeAreaMargin` y por `UiScale.safe_margins`). Sin campos nuevos en
+  `CameraProfile`.
+- **Efecto en la cámara.** La franja de botones empieza más abajo (840 frente a 600 con safe nula): el
+  recorte este (`clear_east_cover`) se activa con el activo más al sur, y `east_cover_m` pasa a ser el
+  ancho de la zona incluida la safe der. (390 + 132 px con la de diseño), así que con esa safe area la
+  excepción este del recorte llega más lejos. La flecha de borde evita la zona nueva con la misma regla
+  (≥ 16 px). La garantía de la opción C (activo en la plaza de cada estación con widget) se vuelve a
+  medir en PUL-138 con las dos safe areas.
+
+### D27.3 Caso 09 (limitación de E5) — resuelto, con residuos
+Recalculado con los rectángulos de contador medidos en PUL-136 (`<res>-medidas.json`, variante
+`actual`; el encuadre no depende de la safe area derecha ni de la inferior) frente a la zona de D27.2.
+Solape = borde inferior del contador más bajo − borde superior de la zona (px reales).
+
+| Resolución | Safe area | Plaza z −3,1 (olla O · E) | z −3,4 (olla O · E) |
+|---|---|---|---|
+| 2340×1080 | nula | 0 · 0 | 0 · 0 |
+| 1920×1080 | nula | 0 · 0 | 0 · 0 |
+| 800×370 | nula | 0 · 0 | **6,4** (04-06) · **6,4** (05-06) |
+| 2340×1080 | 132/0/132/63 | **20,8 · 22,6** (04-06) | **51,0 · 51,0** (04-06) |
+| 1920×1080 | 132/0/132/63 | **20,8 · 22,6** (04-06) | **51,0 · 51,0** (04-06) |
+| 800×370 | 132/0/132/63 | **17,7 · 18,3** (04-06) | **28,0 · 28,0** (04-06) |
+
+- **Safe area inferior nula** (Android sin barra de gestos, la mayoría de pantallas en apaisado): caso
+  09 resuelto; residuo aceptado por D27, ≤ 8 px a 800×370 con el activo en z −3,4 (6,4 px con el margen
+  de toque, 2,3 px con el botón visible). Se descarta B+A2.
+- **Safe area inferior > 0** (p. ej. la de diseño, 63 px: indicador de inicio de iOS): los botones suben
+  con la safe area y la vista no (la cámara solo descuenta la superior), así que el contador de 04-06
+  vuelve a quedar en la zona y bajo los discos visibles (04-05 o 05-06 según la olla): 21-23 px en la
+  plaza y 51 px en z −3,4 a 1080 (18 y 28 px a 800×370). **Limitación conocida**, aceptada por el
+  responsable al redactar esta enmienda (opción A, consulta de PUL-137): la cámara sigue sin descontar
+  la safe area inferior.
+
+### D27.4 Qué no cambia
+`TouchConfig` y `touch_config.tres` (se reutiliza `button_gap_px_1080` para el hueco horizontal),
+`CameraProfile` y sus `.tres`, `signals.md`, el árbol de `touch_controls.tscn` (la colocación es código
+de `refresh_layout`), la zona del stick, la pausa, el perfil de escritorio y Local 2P. La lista de
+ficheros y campos de la implementación (PUL-138) está en la Evidence de PUL-137.
+
+**Alternativas descartadas (Enmienda D27).**
+1. *Zona fija desde el borde del lienzo y ensanchada* (x ≥ ancho − 516, y ≥ alto − 303): cubre la peor
+   safe area de diseño pero tapa 126 px de ancho y 63 de alto de mundo sin botones en los dispositivos
+   sin muesca, y deja de ser cierta con una safe area mayor.
+2. *Mantener `button_zone_top_px` y restarle la safe area inferior en código*: el dato seguiría
+   diciendo «600/840 desde arriba» y significaría otra cosa; desde abajo el dato es el alto real de la
+   pila de botones.
+3. *Que la cámara lea `TouchControls` o `TouchConfig`* para la zona exacta: acopla la cámara (específica)
+   a la UI táctil; el invariante de D27.2 lo sustituye con un test.
+
+**Consecuencias (Enmienda D27).**
+- (+) El caso 09 se resuelve sin tocar la caja ni el nivel, solo en el perfil móvil.
+- (+) La zona se mide desde la safe area y deja de depender de que la safe area derecha sea < 150 px.
+- (−) Holgura 0 por arriba entre el toque de acción y la zona: cualquier cambio de tamaños táctiles
+  obliga a revisar `button_zone_*` (lo atrapa el test de PUL-135).
+- (−) Con safe area inferior el caso 09 queda como limitación conocida (D27.3).
