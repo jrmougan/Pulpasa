@@ -1,11 +1,11 @@
 ---
 id: PUL-138
 title: Colocar los botones táctiles en fila y bajar la zona de botones
-status: in_progress
+status: done
 milestone: M3e
 role: ui-engineer
 deps: [PUL-137]
-orca_task: null
+orca_task: task_082861f85b51
 unity_sources: []
 owns: [godot/ui/touch/touch_controls.gd*, godot/resources/ui_profile.gd*, godot/data/config/ui_profile_mobile.tres, godot/data/config/ui_profile_desktop.tres, godot/entities/camera/camera_rig.gd*, godot/ui/hud/hud_sandbox.gd*, godot/tests/unit/test_game_state.gd*, godot/tests/integration/test_touch_layout.gd*, godot/tests/integration/test_touch_button_zone.gd*, godot/tests/integration/test_camera_button_zone.gd*, godot/tests/integration/test_touch_hud_layout.gd*, godot/tests/integration/test_camera_follow.gd*, godot/tests/integration/test_touch_input.gd*, godot/tests/integration/test_touch_multitouch.gd*, godot/tests/integration/test_d26_touch_flow.gd*, docs/evidence/PUL-138/**, docs/backlog/PUL-138-botones-tactiles-en-fila.md]
 touches_scenes: []

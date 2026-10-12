@@ -150,4 +150,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-135 | M3e | gameplay-engineer | done | Comprobar la zona de botones de la cámara con safe area derecha |
 | PUL-136 | M3e | game-designer | done | Decidir cómo evitar que los botones táctiles tapen los contadores del pasaplatos este |
 | PUL-137 | M3e | godot-architect | done | Enmendar ADR-005 E4 para los botones en fila y la zona de botones con safe area |
-| PUL-138 | M3e | ui-engineer | in_progress | Colocar los botones táctiles en fila y bajar la zona de botones |
+| PUL-138 | M3e | ui-engineer | done | Colocar los botones táctiles en fila y bajar la zona de botones |
