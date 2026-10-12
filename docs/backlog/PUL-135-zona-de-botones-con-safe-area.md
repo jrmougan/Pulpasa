@@ -1,11 +1,11 @@
 ---
 id: PUL-135
 title: Comprobar la zona de botones de la cámara con safe area derecha
-status: in_progress
+status: done
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-134]
-orca_task: null
+orca_task: task_672799d839e2
 unity_sources: []
 owns: [godot/tests/integration/test_camera_button_zone*, godot/tests/integration/test_touch_button_zone*, docs/evidence/PUL-135/**, docs/backlog/PUL-135-zona-de-botones-con-safe-area.md]
 touches_scenes: []

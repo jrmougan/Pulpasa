@@ -23,7 +23,8 @@ abajo). Los `TouchControls` reales (`touch_controls.tscn`, `touch_config.tres`) 
 
 Rectángulo de toque = centro ± `get_hit_radius()` (radio visible + margen de toque: 90 + 12 px la
 acción, 60 + 0 px el cambio, a 1080). Holgura = borde del toque − borde de la zona (≥ 0 = dentro). Por
-la derecha y por abajo los botones quedan dentro del lienzo (margen de 48 px), así que la zona los
+la derecha y por abajo los botones quedan dentro del lienzo (48 px es el margen visible; con los 12 px
+de margen de toque, la zona táctil de la acción queda a 36 px del borde seguro), así que la zona los
 encierra entera si las holguras izquierda y superior son ≥ 0.
 
 | Resolución | Safe area (izq/arr/der/abajo a 1080) | Zona (x ≥, y ≥) | Acción: toque x, y | holgura izq / arriba | Cambio: toque x, y | holgura izq / arriba |
