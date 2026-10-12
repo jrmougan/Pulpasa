@@ -1,7 +1,7 @@
 ---
 id: PUL-134
 title: Flecha de borde y zona de botones como zonas tapadas en la cámara móvil
-status: todo
+status: in_progress
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-133]
