@@ -1,0 +1,1613 @@
+{
+	"discs_b_px": [
+		[
+			752.3,
+			322.7,
+			34.9
+		],
+		[
+			692.7,
+			333.0,
+			24.7
+		]
+	],
+	"discs_now_px": [
+		[
+			752.3,
+			322.7,
+			34.9
+		],
+		[
+			752.3,
+			263.1,
+			24.7
+		]
+	],
+	"stands": {
+		"-1.29999995231628,-3.09999990463257": {
+			"A1_oeste": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						68.7,
+						234.8,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						121.6,
+						234.8,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						174.5,
+						234.8,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						597.3,
+						234.8,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						650.2,
+						234.8,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						703.0,
+						234.8,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"A2_arriba_0_6": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						113.7,
+						197.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						166.5,
+						197.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						219.4,
+						197.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						642.2,
+						197.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						695.1,
+						197.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						748.0,
+						197.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"A3_arriba_1_2": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						113.7,
+						172.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						166.5,
+						172.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						219.4,
+						172.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						642.2,
+						172.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						695.1,
+						172.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						748.0,
+						172.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"actual": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						113.7,
+						222.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						166.5,
+						222.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						219.4,
+						222.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						642.2,
+						222.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						695.1,
+						222.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						748.0,
+						222.3,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"box_body": {
+				"PassSlot01": {
+					"rect_px": [
+						131.1,
+						283.5,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"rect_px": [
+						184.0,
+						283.5,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"rect_px": [
+						236.8,
+						283.5,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"rect_px": [
+						659.7,
+						283.5,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot05": {
+					"rect_px": [
+						712.5,
+						283.5,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"rect_px": [
+						765.4,
+						283.5,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"focus": [
+				-0.43,
+				-4.63
+			],
+			"player_at": [
+				-1.3,
+				-3.1
+			]
+		},
+		"-1.29999995231628,-3.40000009536743": {
+			"A1_oeste": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						69.2,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						122.1,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						175.0,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						597.8,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						650.7,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						703.5,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"A2_arriba_0_6": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						114.2,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						167.0,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						219.9,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						642.7,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						695.6,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						748.5,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"A3_arriba_1_2": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						114.2,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						167.0,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						219.9,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						642.7,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						695.6,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						748.5,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"actual": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						114.2,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						167.0,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						219.9,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						642.7,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						695.6,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						748.5,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"box_body": {
+				"PassSlot01": {
+					"rect_px": [
+						131.6,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"rect_px": [
+						184.5,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"rect_px": [
+						237.3,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"rect_px": [
+						660.2,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot05": {
+					"rect_px": [
+						713.0,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"rect_px": [
+						765.9,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"focus": [
+				-0.44,
+				-4.94
+			],
+			"player_at": [
+				-1.3,
+				-3.4
+			]
+		},
+		"0.69999998807907,-3.09999990463257": {
+			"A1_oeste": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						9.4,
+						235.4,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						62.2,
+						235.4,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						115.1,
+						235.4,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						537.9,
+						235.4,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						590.8,
+						235.4,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						643.6,
+						235.4,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"A2_arriba_0_6": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						54.3,
+						197.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						107.1,
+						197.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						160.0,
+						197.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						582.9,
+						197.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						635.7,
+						197.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						688.6,
+						197.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"A3_arriba_1_2": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						54.3,
+						172.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						107.1,
+						172.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						160.0,
+						172.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						582.9,
+						172.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						635.7,
+						172.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						688.6,
+						172.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"actual": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						54.3,
+						222.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						107.1,
+						222.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						160.0,
+						222.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						582.9,
+						222.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						635.7,
+						222.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						688.6,
+						222.9,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"box_body": {
+				"PassSlot01": {
+					"rect_px": [
+						71.7,
+						284.1,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"rect_px": [
+						124.6,
+						284.1,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"rect_px": [
+						177.4,
+						284.1,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"rect_px": [
+						600.3,
+						284.1,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"rect_px": [
+						653.2,
+						284.1,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"rect_px": [
+						706.0,
+						284.1,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"focus": [
+				0.7,
+				-4.65
+			],
+			"player_at": [
+				0.7,
+				-3.1
+			]
+		},
+		"0.69999998807907,-3.40000009536743": {
+			"A1_oeste": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						9.2,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						62.0,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						114.9,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						537.8,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						590.6,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						643.5,
+						245.1,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"A2_arriba_0_6": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						54.1,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						107.0,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						159.8,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						582.7,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						635.5,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						688.4,
+						207.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"A3_arriba_1_2": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						54.1,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						107.0,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						159.8,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						582.7,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						635.5,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						688.4,
+						182.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": true
+				}
+			},
+			"actual": {
+				"PassSlot01": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						54.1,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						107.0,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						159.8,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						582.7,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"band": false,
+					"discs_now": false,
+					"on_screen": true,
+					"rect_px": [
+						635.5,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"band": false,
+					"discs_now": true,
+					"on_screen": true,
+					"rect_px": [
+						688.4,
+						232.6,
+						57.1,
+						61.6
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"box_body": {
+				"PassSlot01": {
+					"rect_px": [
+						71.6,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot02": {
+					"rect_px": [
+						124.4,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot03": {
+					"rect_px": [
+						177.3,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot04": {
+					"rect_px": [
+						600.1,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": false,
+					"zone_now": false
+				},
+				"PassSlot05": {
+					"rect_px": [
+						653.0,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				},
+				"PassSlot06": {
+					"rect_px": [
+						705.8,
+						293.8,
+						22.2,
+						5.2
+					],
+					"zone_b": true,
+					"zone_now": true
+				}
+			},
+			"focus": [
+				0.7,
+				-4.94
+			],
+			"player_at": [
+				0.7,
+				-3.4
+			]
+		}
+	},
+	"tag": "800x370",
+	"window_px": [
+		800,
+		370
+	],
+	"zone_b_px": [
+		666.0,
+		287.8,
+		133.6,
+		82.2
+	],
+	"zone_now_px": [
+		666.0,
+		205.6,
+		133.6,
+		164.4
+	]
+}

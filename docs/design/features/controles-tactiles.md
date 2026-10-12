@@ -163,6 +163,70 @@ Los mínimos son de **1080** y escalan con `ui_scale`.
 - **Game over:** recaudación y estrellas con texto ≥ 36 px; Reintentar y Menú ≥ 120 px.
 - **Tutorial** (`tutorial-breve.md`): el paso 1 señala el stick y el botón de acción.
 
+## Contadores del pasaplatos bajo los botones (caso 09, PUL-136)
+*Propuesta pendiente de gate humano.* Medidas y capturas: `docs/evidence/PUL-136/README.md`.
+
+**Problema.** Con el activo en las ollas, la banda superior empuja la vista al norte y la fila de
+pasaplatos (z = 0) cae en la franja de botones. El contador N/6 de una caja en los pasaplatos 04-06
+queda bajo los botones aunque el activo no la esté usando: el recorte este de PUL-134 no actúa porque
+el activo está arriba, fuera de la franja (ADR-005 E5, «Limitación conocida»). Se mide con el activo en
+reposo en las dos ollas: en su plaza (z −3,1) y en el punto más al norte al que llega caminando
+(z −3,4; el centro de la olla no es alcanzable). Safe area nula, como en PUL-134.
+
+| Medida (activo en las ollas) | 2340×1080 | 1920×1080 | 800×370 |
+|---|---|---|---|
+| Zona de botones de E4 (x ≥ …, y ≥ …) | 1950, 600 | 1530, 600 | 666, 205,6 |
+| Borde inferior del contador, plaza z −3,1 / z −3,4 | 798 / 828 | 798–800 / 828 | 284 / 294 |
+| Pasaplatos con el contador en la zona de E4 (olla oeste · olla este) | 04-06 · 05-06 | 04 · 04-06 | 04-06 · 05-06 |
+| Pasaplatos con el contador bajo un botón visible o su margen de toque | 05-06 · 06 | 04 · 05-06 | 05-06 · 06 |
+
+En la captura el solape real es el botón de cambiar sobre la barra del contador del pasaplatos 06 (y
+del 05 a 2340×1080): el número se sigue leyendo, la barra no entera.
+
+### Alternativas
+| | **A. Mover el contador** | **B. Botones en fila** | **C. Aceptar la limitación** |
+|---|---|---|---|
+| Qué | Desplazar `CutCounter` de la caja: al oeste (A1, −0,85 m) o más alto (A2 +0,6 m, A3 +1,2 m) | El botón de cambiar pasa a la **izquierda** del de acción, alineado por abajo (24 px entre ellos); la zona de botones baja a `y ≥ alto − 240 px` (840 a 1080) | Dejar el caso 09 como está y anotarlo en el roadmap |
+| Resultado (plaza z −3,1) | A1 sigue bajo los botones (2340: 06; 1920: 04-06; 800: 06). A3 sale de los botones visibles pero no de la zona de E4 (borde inferior 652 > 600) | **0 contadores en la zona** en las 3 resoluciones (borde inferior 798 frente a 840; 284 frente a 287,8) | 2-3 contadores tapados en parte |
+| Resultado (z −3,4, extremo) | A3 a 800×370: 05-06 bajo los botones | 0 a 2340 y 1920 (828 frente a 840). **800×370: 6,4 px** de solape (294,2 frente a 287,8; 2,3 px con el botón visible) | Igual que arriba |
+| Coste | `box.tscn` (escena con dueño); un contador flotando a 1,2 m pierde su caja; al oeste se monta con el de la caja vecina (1 m entre pasaplatos, contador de 1,08 m) | `touch_controls.gd` (colocación del botón de cambiar), `ui_profile_mobile.tres` (`button_zone_top_px` 600 → 840), tests de maquetación y de cámara. **Contrato**: la zona de E4 cambia de valor y, con safe area derecha, los botones en fila llegan a ancho − 516 px (132 + 384): la zona tiene que medirse desde el borde derecho de la safe area (la duda abierta de PUL-135) o ensancharse. ADR del arquitecto | 0 |
+| Riesgo escritorio / Local 2P | **Sí**: la caja es la misma en todos los perfiles | **Ninguno**: `TouchControls` no existe en escritorio y `ui_profile_mobile.tres` solo se usa en móvil | Ninguno |
+| Riesgo móvil | — | El pulgar recorre los botones en horizontal (patrón habitual); las zonas táctiles siguen tangentes (174 px entre centros = 102 + 72), como hoy en vertical. La franja de botones tapa menos mundo, así que el recorte este actúa menos | El jugador no ve el progreso de una caja ajena mientras cuece |
+| Cómo se mide | Sonda o test: rectángulo del contador frente a la zona | Test con el nivel real: rectángulo del contador frente a la zona nueva y a los discos de los botones | — |
+
+Descartadas sin medir: reordenar los pasaplatos o hacer un mapa móvil (`level_01.tscn`, rediseño de
+estaciones, afecta a escritorio y Local 2P) y sesgar la cámara al este (PUL-134: a 1920×1080 saca al
+activo de la safe area en la nevera).
+
+### Recomendación: B (botones en fila)
+Es la única que deja los contadores fuera de la zona sin tocar la caja ni el nivel, y el cambio queda
+dentro del perfil móvil. Como se toca el contrato de E4 (valor de la zona y su referencia con safe
+area), se puede resolver en la misma ADR la duda de PUL-135. Residuo: a 800×370 con el activo pegado al
+norte de las ollas (z −3,4), la barra del contador solapa 6,4 px con el margen de toque del botón de
+acción (2,3 px con el botón visible). **Variante B+A2** si el responsable quiere 0 también ahí: subir el
+contador 0,6 m (bordes inferiores 755 y 269,2, sin solape en ningún caso); cuesta tocar `box.tscn` y
+cambia la caja en escritorio y Local 2P.
+
+### Criterios de aceptación para la ficha de implementación (si se elige B)
+Se verifican como el resto, en PC con perfil táctil, a 2340×1080, 1920×1080 y 800×370, con safe area
+nula y con la de diseño (132 / 0 / 132 / 63).
+- **B-AC1 (botones en fila)** Given 2340×1080 con safe area nula, Then el botón de acción sigue en
+  (2202 ± 2, 942 ± 2) y 180 ± 2 px; el de cambiar mide 120 ± 2 px, su centro está en (2028 ± 2,
+  972 ± 2) (a su izquierda, borde inferior alineado ± 2 px, 24 ± 2 px de hueco horizontal) y las zonas
+  táctiles no se solapan. Sustituye la colocación de AC3 («sobre el de acción»). *Test:*
+  `test_touch_layout.gd`.
+- **B-AC2 (zona de botones)** Given las 3 resoluciones y ambas safe areas, Then cada botón con su margen
+  de toque queda dentro de la zona de botones que usa la cámara, y la zona empieza en y = alto − 240 px
+  × alto / 1080 (840 a 1080, 287,8 a 370). *Test:* el de PUL-135.
+- **B-AC3 (caso 09)** Given una caja con contador en cada pasaplatos 01-06 y el activo en reposo en cada
+  olla, en su plaza (z −3,1), Then ningún contador interseca la zona de botones ni los discos táctiles en
+  las 3 resoluciones; Given el activo en z −3,4, Then 0 a 2340×1080 y 1920×1080, y a 800×370 el solape
+  es ≤ 8 px (0 si se elige B+A2). *Test:* `test_camera_button_zone.gd`.
+- **B-AC4 (sin regresión)** Given el activo en la plaza de cada estación con widget, Then AC2 de PUL-134
+  sigue en 0 cruces; Given el perfil de escritorio, Then no hay `TouchControls` y la caja no cambia.
+  *Test:* `test_camera_button_zone.gd` y suite existente.
+- **B-AC5 (captura)** Capturas del caso 09 a las 3 resoluciones en `docs/evidence/<ficha>/`.
+
 ## Criterios de aceptación
 Se verifican en PC con el perfil táctil forzado, `emulate_touch_from_mouse` desactivado y eventos de
 pantalla de GUT/MCP; resoluciones 2340×1080 (con la safe area simulada 132 / 0 / 132 / 63),
