@@ -147,3 +147,5 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-132 | M3e | qa-tester | done | QA de D26 |
 | PUL-133 | M3e | gameplay-engineer | done | Cámara móvil bajo la banda superior, aro inactivo fino y game over sin cajas/minuto |
 | PUL-134 | M3e | gameplay-engineer | done | Flecha de borde y zona de botones como zonas tapadas en la cámara móvil |
+| PUL-135 | M3e | gameplay-engineer | in_progress | Comprobar la zona de botones de la cámara con safe area derecha |
+| PUL-136 | M3e | game-designer | in_progress | Decidir cómo evitar que los botones táctiles tapen los contadores del pasaplatos este |
