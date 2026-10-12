@@ -1,11 +1,11 @@
 ---
 id: PUL-136
 title: Decidir cómo evitar que los botones táctiles tapen los contadores del pasaplatos este
-status: in_progress
+status: done
 milestone: M3e
 role: game-designer
 deps: [PUL-134]
-orca_task: null
+orca_task: task_860a015dd118
 unity_sources: []
 owns: [docs/design/features/controles-tactiles.md, docs/evidence/PUL-136/**, docs/backlog/PUL-136-widgets-del-pasaplatos-bajo-los-botones.md]
 touches_scenes: []
@@ -33,7 +33,7 @@ Recomendación y criterios de aceptación verificables para la ficha de implemen
 ## Acceptance
 - [x] AC1 `features/controles-tactiles.md` recoge el problema, las alternativas y la recomendación, con
   medidas en px de las 3 resoluciones.
-- [ ] AC2 Gate humano resuelto y ficha de implementación creada (o limitación aceptada y anotada en el
+- [x] AC2 Gate humano resuelto y ficha de implementación creada (o limitación aceptada y anotada en el
   roadmap).
 
 ## Plan
@@ -55,3 +55,6 @@ Recomendación y criterios de aceptación verificables para la ficha de implemen
   (cambia el contrato de E4, necesita ADR; sin riesgo para escritorio ni Local 2P).
 - AC1 cumplido en `features/controles-tactiles.md` («Contadores del pasaplatos bajo los botones»).
   AC2 pendiente del gate humano.
+
+Gate humano (2026-10-12): el responsable elige **B (botones en fila)**, sin la variante A2 → D27.
+Fichas de implementación: PUL-137 (ADR-005 E4) y PUL-138 (botones en fila).

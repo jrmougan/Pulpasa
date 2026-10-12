@@ -148,4 +148,6 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-133 | M3e | gameplay-engineer | done | Cámara móvil bajo la banda superior, aro inactivo fino y game over sin cajas/minuto |
 | PUL-134 | M3e | gameplay-engineer | done | Flecha de borde y zona de botones como zonas tapadas en la cámara móvil |
 | PUL-135 | M3e | gameplay-engineer | done | Comprobar la zona de botones de la cámara con safe area derecha |
-| PUL-136 | M3e | game-designer | in_progress | Decidir cómo evitar que los botones táctiles tapen los contadores del pasaplatos este |
+| PUL-136 | M3e | game-designer | done | Decidir cómo evitar que los botones táctiles tapen los contadores del pasaplatos este |
+| PUL-137 | M3e | godot-architect | in_progress | Enmendar ADR-005 E4 para los botones en fila y la zona de botones con safe area |
+| PUL-138 | M3e | ui-engineer | draft | Colocar los botones táctiles en fila y bajar la zona de botones |
