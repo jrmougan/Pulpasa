@@ -117,7 +117,8 @@ func test_view_never_leaves_level_margin() -> void:
 	# PUL-133: por el norte la banda tapa el borde de la vista y hay que ver lo que hay sobre el suelo.
 	lo.y -= _rig.top_cover_m() + _rig.top_reach_m()
 	var hi: Vector2 = MOBILE.play_area_max + Vector2.ONE * MOBILE.camera_margin_m
-	# PUL-134: con el activo en la franja de botones, el este puede salir el ancho de la zona.
+	# PUL-134: con el activo en la franja de botones, el este puede salir el ancho de la zona,
+	# que incluye la safe area derecha (D27.2; aquí nula).
 	var buttons: float = UiScale.px_to_units(UI_MOBILE.button_zone_width_px, float(CANVAS.y))
 	hi.x += buttons / float(CANVAS.x) * _rig.view_half_extents().x * 2.0
 	for at: Vector3 in [

@@ -238,11 +238,14 @@ func _place_arrow(projected: Vector2, canvas: Vector2) -> void:
 	_set_arrow_visible(true)
 
 
+## Zona de botones anclada a la esquina inferior derecha de la safe area (ADR-005 E4, D27.2),
+## hasta el borde del lienzo (incluye las safe areas derecha e inferior).
 func _button_zone(canvas: Vector2) -> Rect2:
 	var ui: UiProfile = ui_profile if ui_profile != null else GameState.ui_profile
-	var width: float = UiScale.px_to_units(ui.button_zone_width_px, canvas.y)
-	var top: float = UiScale.px_to_units(ui.button_zone_top_px, canvas.y)
-	return Rect2(Vector2(canvas.x - width, top), Vector2(width, canvas.y - top))
+	var m: Vector4 = _safe_margins(canvas)
+	var left: float = canvas.x - m.z - UiScale.px_to_units(ui.button_zone_width_px, canvas.y)
+	var top: float = canvas.y - m.w - UiScale.px_to_units(ui.button_zone_height_px, canvas.y)
+	return Rect2(left, top, canvas.x - left, canvas.y - top)
 
 
 func _safe_margins(canvas: Vector2) -> Vector4:

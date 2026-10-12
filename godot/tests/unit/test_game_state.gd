@@ -264,7 +264,7 @@ func test_pul122_ui_profiles_load_with_design_values() -> void:
 	assert_eq(mobile.stick_zone_fraction, 0.5)
 	assert_eq(mobile.stick_zone_top_px, 200.0)
 	assert_eq(mobile.button_zone_width_px, 390.0)
-	assert_eq(mobile.button_zone_top_px, 600.0)
+	assert_eq(mobile.button_zone_height_px, 240.0)
 	var desktop: UiProfile = load("res://data/config/ui_profile_desktop.tres")
 	assert_eq(desktop.content_scale, 1.0)
 	assert_eq(desktop.text_min_px, 0.0)

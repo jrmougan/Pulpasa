@@ -1,0 +1,145 @@
+{
+	"ActionButton": {
+		"center_px": [
+			1782.0,
+			942.0
+		],
+		"hit_radius_px": 102.0
+	},
+	"SwitchButton": {
+		"center_px": [
+			1608.0,
+			972.0
+		],
+		"hit_radius_px": 60.0
+	},
+	"tag": "1920x1080",
+	"window_px": [
+		1920,
+		1080
+	],
+	"z -3.1": {
+		"counters": {
+			"PassSlot01": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					257.0,
+					618.1,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot02": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					411.3,
+					618.1,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot03": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					565.6,
+					618.1,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot04": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					1799.8,
+					618.1,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot05": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					1954.1,
+					618.1,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot06": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					2108.4,
+					618.1,
+					166.6,
+					179.7
+				]
+			}
+		},
+		"max_overlap_px": 0.0
+	},
+	"z -3.4": {
+		"counters": {
+			"PassSlot01": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					259.5,
+					648.3,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot02": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					413.8,
+					648.3,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot03": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					568.1,
+					648.3,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot04": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					1802.4,
+					648.3,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot05": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					1956.7,
+					648.3,
+					166.6,
+					179.7
+				]
+			},
+			"PassSlot06": {
+				"overlap_px": 0.0,
+				"rect_px": [
+					2111.0,
+					648.3,
+					166.6,
+					179.7
+				]
+			}
+		},
+		"max_overlap_px": 0.0
+	},
+	"zone_px": [
+		1530.0,
+		840.0,
+		390.0,
+		240.0
+	]
+}

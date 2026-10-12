@@ -1,6 +1,6 @@
 extends GutTest
-## PUL-128 AC2/AC3 (controles-tactiles AC2, AC3, AC17, AC21): maquetación de los controles
-## táctiles con la safe area simulada, sin safe area y en el perfil de escritorio.
+## PUL-128 AC2/AC3 (controles-tactiles AC2, AC3, AC17, AC21) y PUL-138 B-AC1 (D27.1): maquetación
+## de los controles táctiles con la safe area simulada, sin safe area y en el perfil de escritorio.
 ## Las medidas son px de pantalla: unidades de lienzo por la escala final del viewport.
 
 const SCENE: PackedScene = preload("res://ui/touch/touch_controls.tscn")
@@ -81,13 +81,24 @@ func test_ac2_action_button_without_safe_area_at_1920() -> void:
 	assert_almost_eq(center.y, 942.0, 2.0)
 
 
-func test_ac3_switch_button_is_120_px_and_24_px_above_the_action_button() -> void:
-	await _open(Vector2i(2340, 1080), SAFE_2340)
+## B-AC1 (D27.1): cambiar a la izquierda de acción, bordes inferiores alineados, 24 px de hueco.
+func test_bac1_switch_button_sits_left_of_the_action_button_in_a_row() -> void:
+	await _open(Vector2i(2340, 1080))
 	assert_almost_eq(_diameter(_switch()), 120.0, 2.0)
-	var switch_bottom: float = _center(_switch()).y + 60.0
-	var action_top: float = _center(_action()).y - 90.0
-	assert_almost_eq(action_top - switch_bottom, 24.0, 2.0)
-	assert_almost_eq(_center(_switch()).x, _center(_action()).x, 2.0)
+	var center: Vector2 = _center(_switch())
+	assert_almost_eq(center.x, 2028.0, 2.0)
+	assert_almost_eq(center.y, 972.0, 2.0)
+	assert_almost_eq(center.y + 60.0, _center(_action()).y + 90.0, 2.0, "bordes inferiores")
+	var switch_right: float = center.x + 60.0
+	var action_left: float = _center(_action()).x - 90.0
+	assert_almost_eq(action_left - switch_right, 24.0, 2.0)
+
+
+func test_bac1_switch_button_row_with_the_design_safe_area() -> void:
+	await _open(Vector2i(2340, 1080), SAFE_2340)
+	var center: Vector2 = _center(_switch())
+	assert_almost_eq(center.x, 1896.0, 2.0)
+	assert_almost_eq(center.y, 909.0, 2.0)
 
 
 func test_ac3_pause_button_is_120_px_in_the_top_right_corner() -> void:
@@ -130,6 +141,9 @@ func test_layout_scales_with_the_height_at_720() -> void:
 	await _open(Vector2i(1600, 720))
 	assert_almost_eq(_diameter(_action()), 120.0, 2.0)
 	assert_almost_eq(_diameter(_switch()), 80.0, 2.0)
+	var switch_right: float = _center(_switch()).x + 40.0
+	assert_almost_eq(_center(_action()).x - 60.0 - switch_right, 16.0, 2.0)
+	assert_almost_eq(_center(_switch()).y + 40.0, _center(_action()).y + 60.0, 2.0)
 
 
 func test_stick_zone_is_the_left_half_below_the_top_band() -> void:
@@ -165,24 +179,36 @@ func test_ac21_desktop_profile_leaves_no_touch_nodes_in_the_tree() -> void:
 	assert_eq(get_tree().root.find_children("*", "TouchControls", true, false).size(), 0)
 
 
-func _assert_touch_rects_in_button_zone(width: float) -> void:
+## Zona de botones anclada a la esquina inferior derecha de la safe area (D27.2), en px a 1080.
+func _assert_touch_rects_in_button_zone(screen: Vector2, safe: Rect2) -> void:
 	var profile: UiProfile = GameState.ui_profile
 	var scale: float = _scale()
+	var right: float = 0.0 if safe.size == Vector2.ZERO else screen.x - safe.end.x
+	var bottom: float = 0.0 if safe.size == Vector2.ZERO else screen.y - safe.end.y
+	var left: float = screen.x - right - profile.button_zone_width_px
+	var top: float = screen.y - bottom - profile.button_zone_height_px
 	for button: TouchButton in [_action(), _switch()]:
 		var center: Vector2 = _center(button)
 		var reach: float = button.get_hit_radius() * scale
-		assert_gte(center.x - reach, width - profile.button_zone_width_px - 1.0, button.name)
-		assert_gte(center.y - reach, profile.button_zone_top_px - 1.0, button.name)
+		assert_gte(center.x - reach, left - 1.0, button.name)
+		assert_gte(center.y - reach, top - 1.0, button.name)
+		assert_lte(center.x + reach, screen.x + 1.0, button.name)
+		assert_lte(center.y + reach, screen.y + 1.0, button.name)
 
 
 func test_touch_rects_stay_inside_the_ui_profile_button_zone_at_2340() -> void:
 	await _open(Vector2i(2340, 1080), SAFE_2340)
-	_assert_touch_rects_in_button_zone(2340.0)
+	_assert_touch_rects_in_button_zone(Vector2(2340.0, 1080.0), SAFE_2340)
+
+
+func test_touch_rects_stay_inside_the_ui_profile_button_zone_at_2340_null_safe() -> void:
+	await _open(Vector2i(2340, 1080))
+	_assert_touch_rects_in_button_zone(Vector2(2340.0, 1080.0), Rect2())
 
 
 func test_touch_rects_stay_inside_the_ui_profile_button_zone_at_1920() -> void:
 	await _open(Vector2i(1920, 1080))
-	_assert_touch_rects_in_button_zone(1920.0)
+	_assert_touch_rects_in_button_zone(Vector2(1920.0, 1080.0), Rect2())
 
 
 func test_content_node_is_top_level_in_the_scene() -> void:

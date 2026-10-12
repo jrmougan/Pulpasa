@@ -11,7 +11,8 @@ const SWITCHER_SCENE: PackedScene = preload("res://entities/player/character_swi
 const EventBusScript: GDScript = preload("res://autoload/event_bus.gd")
 const SAFE: Rect2 = Rect2(132.0, 0.0, 2076.0, 1017.0)
 const ACTION_PX: Vector2 = Vector2(2070.0, 879.0)
-const SWITCH_PX: Vector2 = Vector2(2070.0, 705.0)
+## Cambiar en fila a la izquierda de acción (D27.1): acción + (−(90 + 24 + 60), 90 − 60).
+const SWITCH_PX: Vector2 = Vector2(1896.0, 909.0)
 const PAUSE_PX: Vector2 = Vector2(2100.0, 108.0)
 const STICK_PX: Vector2 = Vector2(300.0, 700.0)
 const TICK: float = 1.0 / 60.0

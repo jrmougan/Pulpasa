@@ -4,8 +4,13 @@ extends GutTest
 ## perfil móvil, a 2340x1080, 1920x1080 y 800x370, con el activo en reposo en la plaza de cada
 ## estación con widget (contador N/6 de la caja en cada pasaplatos, anillos de cada olla, medidor
 ## del cuenco): ningún widget de esa estación ni el propio activo quedan bajo la zona de botones.
-## Medidas en px reales (un `SubViewport` no se estira). PUL-135 AC2: lo mismo con la safe area
-## derecha de diseño (132 px a 1080), que la zona de botones no descuenta.
+## Medidas en px reales (un `SubViewport` no se estira). PUL-138 B-AC4: lo mismo con la safe area
+## nula y la de diseño (132 / 0 / 132 / 63); la zona de botones se ancla a la esquina inferior
+## derecha de la safe area (ADR-005 E4, D27.2).
+## PUL-138 B-AC3 (caso 09, D27): con una caja en cada pasaplatos 01-06 y el activo en reposo en
+## cada olla (plaza z −3,1 y extremo norte z −3,4), ningún contador entra en la zona de botones,
+## salvo el residuo de ≤ 8 px a 800x370 en z −3,4. Con safe area inferior el solape vuelve
+## (limitación D27.3): se registra, no se exige.
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
@@ -16,16 +21,27 @@ const SIZES: Array[Vector2i] = [Vector2i(2340, 1080), Vector2i(1920, 1080), Vect
 ## Cuerpo del personaje para la comprobación del activo (m).
 const BODY_HALF_WIDTH_M: float = 0.35
 const BODY_HEIGHT_M: float = 1.6
-## Safe areas (izq, arriba, der, abajo) en px a 1080 de alto: nula y derecha de diseño.
-const SAFES: Array[Vector4] = [Vector4.ZERO, Vector4(0.0, 0.0, 132.0, 0.0)]
+## Safe areas (izq, arriba, der, abajo) en px a 1080 de alto: nula y la de diseño.
+const SAFE_DESIGN: Vector4 = Vector4(132.0, 0.0, 132.0, 63.0)
+const SAFES: Array[Vector4] = [Vector4.ZERO, SAFE_DESIGN]
+## Safe areas sin margen inferior para el caso 09 (D27.3): nula y solo la derecha de diseño.
+const SAFES_NO_BOTTOM: Array[Vector4] = [Vector4.ZERO, Vector4(0.0, 0.0, 132.0, 0.0)]
+## Plazas del activo en cada olla (z): la de uso y el punto más al norte al que llega caminando.
+const POT_STAND_Z: float = -3.1
+const POT_NORTH_Z: float = -3.4
+## Residuo aceptado por D27 a 800x370 con el activo en z −3,4 (px).
+const CASE09_RESIDUE_PX: float = 8.0
 
 var _viewport: SubViewport
 var _level: Node3D
 var _rig: CameraRig
 var _player: Node3D
 
+var _safe_1080: Vector4 = Vector4.ZERO
+
 
 func _build(size: Vector2i, safe_1080: Vector4 = Vector4.ZERO) -> void:
+	_safe_1080 = safe_1080
 	_viewport = SubViewport.new()
 	_viewport.size = size
 	add_child_autofree(_viewport)
@@ -46,11 +62,12 @@ func _put(at: Vector2) -> void:
 		_rig.step(DT)
 
 
+## Zona de botones de D27.2 en px: anclada a la esquina inferior derecha de la safe area.
 func _zone() -> Rect2:
 	var s: Vector2 = Vector2(_viewport.size)
 	var k: float = s.y / 1080.0
-	var left: float = s.x - UI_MOBILE.button_zone_width_px * k
-	var top: float = UI_MOBILE.button_zone_top_px * k
+	var left: float = s.x - (_safe_1080.z + UI_MOBILE.button_zone_width_px) * k
+	var top: float = s.y - (_safe_1080.w + UI_MOBILE.button_zone_height_px) * k
 	return Rect2(left, top, s.x - left, s.y - top)
 
 
@@ -129,7 +146,7 @@ func _cases() -> Array[Dictionary]:
 	return cases
 
 
-func test_ac2_station_widgets_clear_the_button_zone_from_their_stands() -> void:
+func test_bac4_ac2_station_widgets_clear_the_button_zone_from_their_stands() -> void:
 	for safe: Vector4 in SAFES:
 		for size: Vector2i in SIZES:
 			await _check_stands(size, safe)
@@ -165,7 +182,7 @@ func _check_stands(size: Vector2i, safe: Vector4) -> void:
 				)
 
 
-func test_ac2_active_character_clears_the_button_zone_at_the_east_edge() -> void:
+func test_bac4_ac2_active_character_clears_the_button_zone_at_the_east_edge() -> void:
 	for safe: Vector4 in SAFES:
 		for size: Vector2i in SIZES:
 			await _check_east_edge(size, safe)
@@ -191,7 +208,7 @@ func _check_east_edge(size: Vector2i, safe: Vector4) -> void:
 	assert_gt(checked, 0, "%s safe %s: algún caso en la franja de botones" % [size, safe])
 
 
-func test_ac2_frame_above_the_button_strip_is_unchanged() -> void:
+func test_bac4_ac2_frame_above_the_button_strip_is_unchanged() -> void:
 	_build(SIZES[0])
 	await wait_process_frames(2)
 	# Activo arriba (fila de ollas): la franja de botones no cuenta y el foco es el de PUL-133.
@@ -209,3 +226,64 @@ func test_ac2_frame_above_the_button_strip_is_unchanged() -> void:
 		_rig.top_reach_m()
 	)
 	assert_lt(_rig.get_focus().distance_to(expected), 0.01)
+
+
+## Mayor solape vertical (px) de los contadores de los pasaplatos con la zona de botones, con el
+## activo en reposo en `z` delante de cada olla. Imprime la tabla del caso 09.
+func _case09_overlap(size: Vector2i, safe: Vector4, z: float) -> float:
+	_build(size, safe)
+	await wait_process_frames(2)
+	var counters: Dictionary = {}
+	var pots: Array[CookingStation] = []
+	for entry: Dictionary in _cases():
+		if String(entry["name"]).begins_with("PassSlot"):
+			counters[entry["name"]] = entry["widgets"][0]
+	for child: Node in _level.get_node(^"Stations").get_children():
+		if child is CookingStation:
+			pots.append(child as CookingStation)
+	assert_eq(counters.size(), 6, "una caja en cada pasaplatos 01-06")
+	assert_eq(pots.size(), 2, "dos ollas")
+	await wait_process_frames(1)
+	var zone: Rect2 = _zone()
+	var worst: float = 0.0
+	for pot: CookingStation in pots:
+		_put(Vector2(pot.global_position.x, z))
+		var hits: Array[String] = []
+		for slot_name: StringName in counters:
+			var rect: Rect2 = _widget_px(counters[slot_name] as Node3D)
+			assert_gt(rect.size.x, 0.0, "el contador se mide")
+			if not rect.intersects(zone):
+				continue
+			var over: float = rect.intersection(zone).size.y
+			worst = maxf(worst, over)
+			hits.append("%s %.1f" % [slot_name, over])
+		gut.p("caso 09 %s safe %s %s z %.1f zona %s: %s" % [size, safe, pot.name, z, zone, hits])
+	return worst
+
+
+func test_bac3_case09_counters_clear_the_button_zone_from_the_pot_stand() -> void:
+	for safe: Vector4 in SAFES_NO_BOTTOM:
+		for size: Vector2i in SIZES:
+			var over: float = await _case09_overlap(size, safe, POT_STAND_Z)
+			assert_eq(
+				over, 0.0, "%s safe %s z %.1f: contadores en la zona" % [size, safe, POT_STAND_Z]
+			)
+
+
+func test_bac3_case09_counters_from_the_north_end_of_the_pots() -> void:
+	for safe: Vector4 in SAFES_NO_BOTTOM:
+		for size: Vector2i in SIZES:
+			var over: float = await _case09_overlap(size, safe, POT_NORTH_Z)
+			var limit: float = CASE09_RESIDUE_PX if size.y < 1080 else 0.0
+			assert_lte(over, limit, "%s safe %s z %.1f: solape" % [size, safe, POT_NORTH_Z])
+
+
+## Limitación conocida D27.3: con la safe area inferior de diseño el solape vuelve. Se registra.
+func test_bac3_case09_overlap_with_the_design_safe_area_is_logged() -> void:
+	var rows: Array[String] = []
+	for size: Vector2i in SIZES:
+		for z: float in [POT_STAND_Z, POT_NORTH_Z]:
+			var over: float = await _case09_overlap(size, SAFE_DESIGN, z)
+			rows.append("%s z %.1f: %.1f px" % [size, z, over])
+	gut.p("caso 09 con safe area de diseño (D27.3, no se exige): %s" % [rows])
+	pass_test("solape registrado")
