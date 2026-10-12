@@ -1,11 +1,11 @@
 ---
 id: PUL-137
 title: Enmendar ADR-005 E4 para los botones en fila y la zona de botones con safe area
-status: in_progress
+status: done
 milestone: M3e
 role: godot-architect
 deps: [PUL-136]
-orca_task: null
+orca_task: task_24e20d3e9a28
 unity_sources: []
 owns: [docs/arch/ADR-005-dimension-3d-2d.md, docs/arch/scene-tree.md, docs/evidence/PUL-137/**, docs/backlog/PUL-137-adr-005-e4-botones-en-fila.md]
 touches_scenes: []

@@ -187,7 +187,7 @@ TouchControls (Control, anclas a pantalla completa, mouse_filter IGNORE)   touch
     └── Content (Control, top_level)   [PUL-128] lienzo de los controles dentro de la safe area
         ├── %MoveStick     (Control)  virtual_stick.gd  class_name VirtualStick   zona: mitad izquierda bajo la banda superior
         ├── %ActionButton  (Control)  action_button.gd  class_name ActionButton   abajo a la derecha
-        ├── %SwitchButton  (Control)  touch_button.gd   class_name TouchButton    encima del de acción; action = &"p1_switch"
+        ├── %SwitchButton  (Control)  touch_button.gd   class_name TouchButton    a la izquierda del de acción (ADR-005 D27.1); action = &"p1_switch"
         └── %PauseButton   (Control)  touch_button.gd                             arriba a la derecha; action = &"pause"
 ```
 - **Multitáctil** (≥ 3 contactos): cada control procesa `InputEventScreenTouch` / `InputEventScreenDrag`
