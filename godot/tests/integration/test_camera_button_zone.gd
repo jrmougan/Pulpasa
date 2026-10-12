@@ -4,7 +4,8 @@ extends GutTest
 ## perfil móvil, a 2340x1080, 1920x1080 y 800x370, con el activo en reposo en la plaza de cada
 ## estación con widget (contador N/6 de la caja en cada pasaplatos, anillos de cada olla, medidor
 ## del cuenco): ningún widget de esa estación ni el propio activo quedan bajo la zona de botones.
-## Medidas en px reales (un `SubViewport` no se estira).
+## Medidas en px reales (un `SubViewport` no se estira). PUL-135 AC2: lo mismo con la safe area
+## derecha de diseño (132 px a 1080), que la zona de botones no descuenta.
 
 const LEVEL: PackedScene = preload("res://scenes/levels/level_01.tscn")
 const BOX_SCENE: PackedScene = preload("res://entities/items/box.tscn")
@@ -15,6 +16,8 @@ const SIZES: Array[Vector2i] = [Vector2i(2340, 1080), Vector2i(1920, 1080), Vect
 ## Cuerpo del personaje para la comprobación del activo (m).
 const BODY_HALF_WIDTH_M: float = 0.35
 const BODY_HEIGHT_M: float = 1.6
+## Safe areas (izq, arriba, der, abajo) en px a 1080 de alto: nula y derecha de diseño.
+const SAFES: Array[Vector4] = [Vector4.ZERO, Vector4(0.0, 0.0, 132.0, 0.0)]
 
 var _viewport: SubViewport
 var _level: Node3D
@@ -22,7 +25,7 @@ var _rig: CameraRig
 var _player: Node3D
 
 
-func _build(size: Vector2i) -> void:
+func _build(size: Vector2i, safe_1080: Vector4 = Vector4.ZERO) -> void:
 	_viewport = SubViewport.new()
 	_viewport.size = size
 	add_child_autofree(_viewport)
@@ -30,7 +33,7 @@ func _build(size: Vector2i) -> void:
 	_viewport.add_child(_level)
 	_rig = _level.get_node(^"CameraRig") as CameraRig
 	_rig.ui_profile = UI_MOBILE
-	_rig.set_safe_margins(Vector4.ZERO)
+	_rig.set_safe_margins(safe_1080 * (float(size.y) / 1080.0))
 	_rig.set_profile(MOBILE)
 	_rig.current = true
 	_player = _level.get_node(^"Characters/Player1") as Node3D
@@ -127,54 +130,65 @@ func _cases() -> Array[Dictionary]:
 
 
 func test_ac2_station_widgets_clear_the_button_zone_from_their_stands() -> void:
-	for size: Vector2i in SIZES:
-		_build(size)
-		await wait_process_frames(2)
-		var cases: Array[Dictionary] = _cases()
-		assert_eq(cases.size(), 9, "6 pasaplatos, 2 ollas y el cuenco")
-		await wait_process_frames(1)
-		var zone: Rect2 = _zone()
-		for entry: Dictionary in cases:
-			for stand: Vector2 in entry["stands"]:
-				_put(stand)
-				var body: Rect2 = _body_px()
+	for safe: Vector4 in SAFES:
+		for size: Vector2i in SIZES:
+			await _check_stands(size, safe)
+
+
+func _check_stands(size: Vector2i, safe: Vector4) -> void:
+	_build(size, safe)
+	await wait_process_frames(2)
+	var cases: Array[Dictionary] = _cases()
+	assert_eq(cases.size(), 9, "6 pasaplatos, 2 ollas y el cuenco")
+	await wait_process_frames(1)
+	var zone: Rect2 = _zone()
+	for entry: Dictionary in cases:
+		for stand: Vector2 in entry["stands"]:
+			_put(stand)
+			var body: Rect2 = _body_px()
+			assert_false(
+				body.intersects(zone),
+				(
+					"%s safe %s %s plaza %s: activo %s fuera de los botones %s"
+					% [size, safe, entry["name"], stand, body, zone]
+				)
+			)
+			for widget: Node3D in entry["widgets"]:
+				var rect: Rect2 = _widget_px(widget)
+				assert_gt(rect.size.x, 0.0, "%s: el widget se mide" % entry["name"])
 				assert_false(
-					body.intersects(zone),
+					rect.intersects(zone),
 					(
-						"%s %s plaza %s: activo %s fuera de los botones %s"
-						% [size, entry["name"], stand, body, zone]
+						"%s safe %s %s plaza %s: %s %s fuera de los botones %s"
+						% [size, safe, entry["name"], stand, widget.name, rect, zone]
 					)
 				)
-				for widget: Node3D in entry["widgets"]:
-					var rect: Rect2 = _widget_px(widget)
-					assert_gt(rect.size.x, 0.0, "%s: el widget se mide" % entry["name"])
-					assert_false(
-						rect.intersects(zone),
-						(
-							"%s %s plaza %s: %s %s fuera de los botones %s"
-							% [size, entry["name"], stand, widget.name, rect, zone]
-						)
-					)
 
 
 func test_ac2_active_character_clears_the_button_zone_at_the_east_edge() -> void:
-	for size: Vector2i in SIZES:
-		_build(size)
-		await wait_process_frames(2)
-		var zone: Rect2 = _zone()
-		var hi: Vector2 = MOBILE.play_area_max
-		var checked: int = 0
-		for at: Vector2 in [Vector2(hi.x, hi.y), Vector2(hi.x, 3.0), Vector2(hi.x, 0.0)]:
-			_put(at)
-			var body: Rect2 = _body_px()
-			if body.end.y <= zone.position.y:
-				continue
-			checked += 1
-			assert_false(
-				body.intersects(zone), "%s activo en %s: %s fuera de %s" % [size, at, body, zone]
-			)
-			assert_lte(body.end.x, float(size.x), "%s activo en %s en pantalla" % [size, at])
-		assert_gt(checked, 0, "%s: algún caso en la franja de botones" % size)
+	for safe: Vector4 in SAFES:
+		for size: Vector2i in SIZES:
+			await _check_east_edge(size, safe)
+
+
+func _check_east_edge(size: Vector2i, safe: Vector4) -> void:
+	_build(size, safe)
+	await wait_process_frames(2)
+	var zone: Rect2 = _zone()
+	var hi: Vector2 = MOBILE.play_area_max
+	var checked: int = 0
+	for at: Vector2 in [Vector2(hi.x, hi.y), Vector2(hi.x, 3.0), Vector2(hi.x, 0.0)]:
+		_put(at)
+		var body: Rect2 = _body_px()
+		if body.end.y <= zone.position.y:
+			continue
+		checked += 1
+		assert_false(
+			body.intersects(zone),
+			"%s safe %s activo en %s: %s fuera de %s" % [size, safe, at, body, zone]
+		)
+		assert_lte(body.end.x, float(size.x), "%s safe %s activo en %s" % [size, safe, at])
+	assert_gt(checked, 0, "%s safe %s: algún caso en la franja de botones" % [size, safe])
 
 
 func test_ac2_frame_above_the_button_strip_is_unchanged() -> void:
