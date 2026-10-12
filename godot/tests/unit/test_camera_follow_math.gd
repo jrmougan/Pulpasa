@@ -186,4 +186,31 @@ func test_covered_clamp_centers_when_view_is_larger_than_area() -> void:
 	var focus: Vector2 = CameraFollow.clamp_focus_covered(
 		Vector2(3.0, 3.0), Vector2(40.0, 40.0), AREA_MIN, AREA_MAX, 1.0, 1.0, 1.0
 	)
-	assert_eq(focus.y, (AREA_MIN.y + AREA_MAX.y) * 0.5)
+	var mid: float = (AREA_MIN.y + AREA_MAX.y) * 0.5
+	assert_almost_eq(focus.y, mid - 0.5, 0.0001, "descuenta media banda")
+	var visible_center: float = (
+		(CameraFollow.visible_top(focus.y, 40.0, 1.0) + focus.y + 40.0) * 0.5
+	)
+	assert_almost_eq(visible_center, mid, 0.0001, "PUL-134 B-3: la parte visible queda centrada")
+
+
+func test_clear_east_cover_keeps_focus_when_target_is_clear() -> void:
+	var focus: Vector2 = Vector2(1.0, 2.0)
+	assert_eq(CameraFollow.clear_east_cover(focus, 2.0, 7.0, 9.4, 1.0, 2.5, 0.5), focus)
+	assert_eq(CameraFollow.clear_east_cover(focus, 9.4, 7.0, 9.4, 1.0, 0.0, 0.5), focus, "sin zona")
+
+
+func test_clear_east_cover_moves_just_enough_east() -> void:
+	var focus: Vector2 = CameraFollow.clear_east_cover(
+		Vector2(1.0, 2.0), 6.0, 7.0, 9.4, 1.0, 2.5, 0.5
+	)
+	assert_almost_eq(focus.x, 2.0, 0.0001, "avanza de x = 1 a x = 2")
+	assert_almost_eq(focus.x, 6.0 + 0.5 + 2.5 - 7.0, 0.0001, "el objetivo queda junto a la zona")
+	assert_eq(focus.y, 2.0, "no toca el eje norte-sur")
+
+
+func test_clear_east_cover_lets_view_leave_margin_by_the_cover_only() -> void:
+	var focus: Vector2 = CameraFollow.clear_east_cover(
+		Vector2(3.4, 0.0), 20.0, 7.0, 9.4, 1.0, 2.5, 0.5
+	)
+	assert_almost_eq(focus.x + 7.0, 9.4 + 1.0 + 2.5, 0.0001, "hasta margen + zona")

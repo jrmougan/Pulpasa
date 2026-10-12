@@ -1,0 +1,58 @@
+{
+	"button_zone_px": [
+		1530.0,
+		600.0,
+		390.0,
+		480.0
+	],
+	"case_09_pass_slot_05_from_pots": {
+		"rect_px": [
+			1954.3,
+			618.8,
+			166.6,
+			179.7
+		],
+		"under_buttons": false
+	},
+	"east_edge": {
+		"body_px": [
+			1715.2,
+			461.5,
+			108.0,
+			194.5
+		],
+		"under_buttons": true
+	},
+	"m2": {
+		"active_z": 2.75,
+		"arrow_below_band": false,
+		"arrow_rect_px": [
+			1033.1,
+			32.0,
+			48.0,
+			48.0
+		],
+		"arrow_visible": false,
+		"inactive_center_px": [
+			1068.0,
+			2.0
+		],
+		"inactive_under_band": true
+	},
+	"pass_slot_06_from_its_stand": {
+		"rect_px": [
+			1265.8,
+			229.8,
+			166.6,
+			179.7
+		],
+		"under_buttons": false
+	},
+	"px_per_canvas_unit": 1.5,
+	"tag": "1920x1080-antes",
+	"top_cover_px": 200.0,
+	"window_px": [
+		1920,
+		1080
+	]
+}

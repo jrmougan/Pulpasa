@@ -94,7 +94,8 @@ static func covered_focus(target: Vector2, top_cover_m: float) -> Vector2:
 ## Como `clamp_focus`, pero con una banda de `top_cover_m` m que tapa el borde superior de la vista
 ## (HUD, tickets y safe area) y un alcance `top_reach_m` m: lo que mide de alto lo que
 ## debe verse sobre un punto del borde norte (anillo, prompt, cabeza). La parte visible puede salir
-## `margin + top_reach_m` m del límite norte; el resto de bordes, solo `margin`.
+## `margin + top_reach_m` m del límite norte; el resto de bordes, solo `margin`. Si la vista es
+## mayor que el área, centra la parte visible (sin la banda) en el área.
 static func clamp_focus_covered(
 	focus: Vector2,
 	half_extents: Vector2,
@@ -106,8 +107,28 @@ static func clamp_focus_covered(
 ) -> Vector2:
 	var low: float = area_min.y - margin - top_reach_m + half_extents.y - top_cover_m
 	var high: float = area_max.y + margin - half_extents.y
-	var y: float = (area_min.y + area_max.y) * 0.5 if low > high else clampf(focus.y, low, high)
+	var mid: float = (area_min.y + area_max.y) * 0.5 - top_cover_m * 0.5
+	var y: float = mid if low > high else clampf(focus.y, low, high)
 	return Vector2(_clamp_axis(focus.x, half_extents.x, area_min.x, area_max.x, margin), y)
+
+
+## Recorte este con una zona de `east_cover_m` m que tapa el borde este de la vista (botones
+## táctiles) a la altura del objetivo: si `target_x` (más `pad` m) quedaría bajo ella, mueve el foco
+## al este lo justo para dejarlo a su izquierda, con la vista hasta `margin + east_cover_m` m fuera
+## del límite este. Si no hace falta, devuelve `focus` tal cual (el resto del encuadre no cambia).
+static func clear_east_cover(
+	focus: Vector2,
+	target_x: float,
+	half_x: float,
+	area_max_x: float,
+	margin: float,
+	east_cover_m: float,
+	pad: float
+) -> Vector2:
+	var needed: float = target_x + pad + east_cover_m - half_x
+	if east_cover_m <= 0.0 or needed <= focus.x:
+		return focus
+	return Vector2(minf(needed, area_max_x + margin - half_x + east_cover_m), focus.y)
 
 
 ## Y del suelo (m) del borde superior de la parte visible: bajo la banda que tapa `top_cover_m`.
