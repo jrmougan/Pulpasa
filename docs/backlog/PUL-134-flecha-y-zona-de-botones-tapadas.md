@@ -1,11 +1,11 @@
 ---
 id: PUL-134
 title: Flecha de borde y zona de botones como zonas tapadas en la cámara móvil
-status: in_progress
+status: done
 milestone: M3e
 role: gameplay-engineer
 deps: [PUL-133]
-orca_task: null
+orca_task: task_0d757b40ea48
 unity_sources: []
 owns: [godot/entities/camera/camera_rig.gd*, godot/core/camera_follow.gd*, godot/resources/camera_profile.gd*, godot/data/config/camera_mobile.tres, godot/tests/unit/test_camera*, godot/tests/integration/test_camera*, docs/evidence/PUL-134/**, docs/backlog/PUL-134-flecha-y-zona-de-botones-tapadas.md]
 touches_scenes: []
