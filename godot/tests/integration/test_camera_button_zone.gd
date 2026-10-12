@@ -137,6 +137,14 @@ func test_ac2_station_widgets_clear_the_button_zone_from_their_stands() -> void:
 		for entry: Dictionary in cases:
 			for stand: Vector2 in entry["stands"]:
 				_put(stand)
+				var body: Rect2 = _body_px()
+				assert_false(
+					body.intersects(zone),
+					(
+						"%s %s plaza %s: activo %s fuera de los botones %s"
+						% [size, entry["name"], stand, body, zone]
+					)
+				)
 				for widget: Node3D in entry["widgets"]:
 					var rect: Rect2 = _widget_px(widget)
 					assert_gt(rect.size.x, 0.0, "%s: el widget se mide" % entry["name"])

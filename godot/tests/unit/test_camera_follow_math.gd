@@ -202,8 +202,9 @@ func test_clear_east_cover_keeps_focus_when_target_is_clear() -> void:
 
 func test_clear_east_cover_moves_just_enough_east() -> void:
 	var focus: Vector2 = CameraFollow.clear_east_cover(
-		Vector2(2.0, 2.0), 6.0, 7.0, 9.4, 1.0, 2.5, 0.5
+		Vector2(1.0, 2.0), 6.0, 7.0, 9.4, 1.0, 2.5, 0.5
 	)
+	assert_almost_eq(focus.x, 2.0, 0.0001, "avanza de x = 1 a x = 2")
 	assert_almost_eq(focus.x, 6.0 + 0.5 + 2.5 - 7.0, 0.0001, "el objetivo queda junto a la zona")
 	assert_eq(focus.y, 2.0, "no toca el eje norte-sur")
 
