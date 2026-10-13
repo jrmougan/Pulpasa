@@ -1,11 +1,11 @@
 ---
 id: PUL-141
 title: Planificar M4 (alpha) en fichas
-status: review
+status: done
 milestone: M4
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_46ffdef2ade9
 unity_sources: []
 owns: [docs/backlog/PUL-1[67][0-9]-*.md, docs/evidence/PUL-141/**, docs/backlog/PUL-141-plan-de-m4.md]
 touches_scenes: []
