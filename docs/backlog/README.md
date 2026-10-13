@@ -151,3 +151,6 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-136 | M3e | game-designer | done | Decidir cómo evitar que los botones táctiles tapen los contadores del pasaplatos este |
 | PUL-137 | M3e | godot-architect | done | Enmendar ADR-005 E4 para los botones en fila y la zona de botones con safe area |
 | PUL-138 | M3e | ui-engineer | done | Colocar los botones táctiles en fila y bajar la zona de botones |
+| PUL-139 | M4 | qa-tester | in_progress | Triar los pendientes sueltos del roadmap y crear sus fichas |
+| PUL-140 | M3e | game-designer | in_progress | Crear las fichas de cierre de M3e (guía de playtest y export Android) |
+| PUL-141 | M4 | game-designer | in_progress | Planificar M4 (alpha) en fichas |
