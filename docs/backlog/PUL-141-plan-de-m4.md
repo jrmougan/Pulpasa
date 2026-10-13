@@ -1,7 +1,7 @@
 ---
 id: PUL-141
 title: Planificar M4 (alpha) en fichas
-status: in_progress
+status: review
 milestone: M4
 role: game-designer
 deps: []
@@ -36,12 +36,27 @@ con puerta «Publicar alpha». Alcance aprobado (MoSCoW) en el roadmap; decision
   «alpha publicada») va como pregunta explícita en el plan, no como supuesto.
 
 ## Acceptance
-- [ ] AC1 Fichas PUL-160.. que cubren todo lo pendiente del alcance de la alpha para M4.
-- [ ] AC2 `docs/evidence/PUL-141/README.md` con oleadas, deps, gates y preguntas abiertas.
-- [ ] AC3 `tools/verify.sh --quick` en verde; `check_owns` limpio.
+- [x] AC1 Fichas PUL-160.. que cubren todo lo pendiente del alcance de la alpha para M4.
+- [x] AC2 `docs/evidence/PUL-141/README.md` con oleadas, deps, gates y preguntas abiertas.
+- [x] AC3 `tools/verify.sh --quick` en verde; `check_owns` limpio.
 
 ## Plan
-(Lo escribe el worker antes de empezar.)
+1. Cruzar el alcance MoSCoW de la alpha con el código (`godot/`), las features y `export.md`.
+2. Partir lo pendiente en 20 fichas `draft` (PUL-160..179): diseño → ADR-007 → núcleos → UI → integración
+   en `level_01` (una ficha) → QA/smoke → publicación, con el balance y los builds en paralelo.
+3. Escribir el plan (oleadas, grafo, gates, preguntas) en `docs/evidence/PUL-141/README.md`.
 
 ## Evidence
-(Lo rellena el worker.)
+- Plan: `docs/evidence/PUL-141/README.md` (tabla alcance → estado → ficha, 8 oleadas sin solapes, grafo
+  mermaid, gates G0–G5 y preguntas P1–P10 para el responsable).
+- Fichas: PUL-160..179 (5 de diseño/ADR, 1 de medida y 1 de registro de balance, 9 de implementación, 1 de
+  builds, 2 de QA/smoke, 1 de guía de playtest y 1 de publicación del producer).
+- Hallazgos: opciones con núcleo de volumen pero sin UI ni persistencia; sin localización; tutorial sin
+  implementar; sin pantalla de créditos pese a 9 entradas CC BY en `licenses.md`; build Windows nunca ejecutado.
+- Ronda 2 (revisión con CHANGES): PUL-170 pasa a solo preparar (presets, versión de G0 fijada antes de exportar,
+  `MANIFEST.txt` con commit y SHA-256, export release bloqueado con árbol sucio) y depende de PUL-160 (O2);
+  PUL-176 exporta los builds finales tras PUL-177 y pasa el smoke sobre ellos (O8); PUL-179 publica esos mismos
+  `.zip` sin cambiar versión ni reexportar (comprueba `git log` vacío y hashes). PUL-171 y PUL-175 implementan solo
+  lo aprobado en G0 (P2, P5) y el botón «Tutorial», si se elige, es de PUL-171. Todos los AC de PUL-160..179 en
+  Given/When/Then con números y test, captura o comprobación concreta. Oleadas O1–O9 y grafo actualizados.
+- `tools/verify.sh --quick` en verde y `python3 tools/check_owns.py jrmougan/pul-141 HEAD~1` limpio en ambas rondas.
