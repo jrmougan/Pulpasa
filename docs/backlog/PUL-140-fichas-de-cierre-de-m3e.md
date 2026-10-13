@@ -1,11 +1,11 @@
 ---
 id: PUL-140
 title: Crear las fichas de cierre de M3e (guía de playtest y export Android)
-status: in_progress
+status: done
 milestone: M3e
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_4bf363c3e528
 unity_sources: []
 owns: [docs/backlog/PUL-15[0-4]-*.md, docs/evidence/PUL-140/**, docs/backlog/PUL-140-fichas-de-cierre-de-m3e.md]
 touches_scenes: []
@@ -36,12 +36,37 @@ Resumen en `docs/evidence/PUL-140/README.md`: qué fichas creas y por qué.
 - Cada AC con números y su test o captura; `owns` mínimos sin solaparse entre fichas.
 
 ## Acceptance
-- [ ] AC1 Ficha de la guía `m3e-gate.md` y ficha `blocked` del export Android con D27.3 incluida.
-- [ ] AC2 `docs/evidence/PUL-140/README.md` lista las fichas y lo revisado de D26/D27.
-- [ ] AC3 `tools/verify.sh --quick` en verde; `check_owns` limpio.
+- [x] AC1 Ficha de la guía `m3e-gate.md` y ficha `blocked` del export Android con D27.3 incluida.
+- [x] AC2 `docs/evidence/PUL-140/README.md` lista las fichas y lo revisado de D26/D27.
+- [x] AC3 `tools/verify.sh --quick` en verde; `check_owns` limpio.
 
 ## Plan
-(Lo escribe el worker antes de empezar.)
+1. Repasar D26, D27, `roadmap.md` (M3e, Must 11), `controles-tactiles.md`, `lenguaje-acciones.md`
+   (preguntas abiertas), ADR-005 (Enmiendas D26 y D27, D27.3), `docs/arch/export.md`, los modelos
+   `m3c-gate.md`/`m3d-gate.md` y las fichas PUL-119..138 (sobre todo hallazgos y guía de PUL-132 y su
+   seguimiento en PUL-133..138).
+2. Crear en `draft` (o `blocked`) PUL-150 guía `m3e-gate.md`, PUL-151 export Android y renderizador móvil
+   (D27.3 incluida), y con lo que quede sin ficha: PUL-152 recaptura de medidas tras PUL-133..138 (la
+   guía las necesita), PUL-153 teléfono vía build web (pregunta al responsable) y PUL-154 panel de GUT que
+   tapa el puntero (H-04 de PUL-132). `owns` mínimos y disjuntos.
+3. `docs/evidence/PUL-140/README.md`: fichas, motivo, lo revisado de D26/D27 y preguntas.
+4. `tools/verify.sh --quick` y `tools/check_owns.py`; Evidence, `review`, commit.
 
 ## Evidence
-(Lo rellena el worker.)
+Resumen y lo revisado de D26/D27: `docs/evidence/PUL-140/README.md`.
+
+| AC | Resultado |
+|---|---|
+| AC1 | `PUL-150-guia-playtest-m3e.md` (draft, guía `m3e-gate.md`, deps PUL-152) y `PUL-151-export-android-y-renderizador-movil.md` (**blocked**: sin Android SDK, sin plantillas 4.7.2 y sin teléfono; AC4 con D27.3 y la safe area real). Además PUL-152 (recaptura de D26 con el estado final y caso 09 con safe de diseño), PUL-153 (teléfono vía build web, pregunta al responsable) y PUL-154 (H-04 de PUL-132, panel de GUT; M4). `owns` disjuntos, sin escenas |
+| AC2 | README con la tabla de fichas, la tabla punto de D26/D27 → estado → ficha y 4 preguntas (perfil táctil en PC sin pantalla táctil, teléfono por web, toolchain Android, estado «propuesta» de las enmiendas de ADR) |
+| AC3 | `tools/verify.sh --quick`: `✓ verify OK`. `tools/check_owns.py jrmougan/pul-140 ac249d1`: 7 rutas, todas dentro de owns (rc 0) |
+
+### Ronda 2 (revisión con CHANGES)
+- PUL-152 AC4: el caso 09 con safe de diseño ya no tiene que coincidir ± 2 px con la estimación de ADR-005
+  D27.3: se mide sin umbral y se explica cada diferencia con esa estimación y con el registro de PUL-138
+  (6,6 / 35,1 px a 1080; 2,2 / 12,0 a 370). 24 vistas en JSON (3 resoluciones × 2 safe × 2 ollas × 2
+  posiciones) y 16 JPG con la olla en el nombre, solo a 2340×1080 y 800×370 (1920×1080 táctil solo JSON,
+  coherente con Constraints).
+- PUL-153: AC4 con 5 filas exactas, estado, prueba y AC de PUL-151 que lo conserva; AC5 con plantilla
+  propia (`respuestas-telefono.md`, 8 preguntas, 8 de 8) sin depender de PUL-150.
+- `tools/verify.sh --quick` en verde; `tools/check_owns.py jrmougan/pul-140 ac249d1` limpio.
