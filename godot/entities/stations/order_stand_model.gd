@@ -5,12 +5,18 @@ extends Node3D
 ## (`awning_1..4` de `order_stand.glb`, puestos 1–4; del 5 en adelante se repiten) y escribe el
 ## número del puesto en `number_label`, sobre la placa del mostrador. Quien cambie `slot_id`
 ## después de `_ready` llama a `refresh()`.
+## `number_label` es hermano de `Model` (scene-tree.md §3) pero sigue su transform: el `POP` de
+## `deliver_ok` escala `Model` y, si el número se quedara quieto, la placa crecería por delante y lo
+## taparía (PUL-142).
 
 ## Variantes de toldillo del `.glb`.
 const AWNING_COUNT: int = 4
 
 ## `Label3D` del número de puesto (sobre `Anchor_Number`).
 @export var number_label: Label3D
+
+## Transform de `number_label` relativo a `Model` en reposo.
+var _number_offset: Transform3D = Transform3D.IDENTITY
 
 
 ## Variante de toldillo (1–4) de un puesto.
@@ -19,7 +25,15 @@ static func awning_index(slot_id: int) -> int:
 
 
 func _ready() -> void:
+	if number_label != null:
+		_number_offset = transform.affine_inverse() * number_label.transform
+		set_notify_local_transform(true)
 	refresh()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_LOCAL_TRANSFORM_CHANGED and number_label != null:
+		number_label.transform = transform * _number_offset
 
 
 ## Puesto mostrado (para tests): `slot_id` de la `OrderStand` padre, o 1 sin ella.
