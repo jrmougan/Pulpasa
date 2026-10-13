@@ -67,10 +67,20 @@ Salida pegada abajo, ejecutada sobre el commit de la ficha.
 
 ### `tools/verify.sh --quick`
 ```
-VERIFY_OUTPUT
+== gdformat --check
+235 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+✓ verify OK
+# código de salida: 0
 ```
 
 ### `python3 tools/check_owns.py jrmougan/pul-162 main`
 ```
-OWNS_OUTPUT
+check_owns: 3 rutas dentro de owns de PUL-162.
+# código de salida: 0
 ```
