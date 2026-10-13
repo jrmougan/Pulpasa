@@ -1,0 +1,39 @@
+Godot Engine v4.7.2.stable.fedora.ed1daf0bf - https://godotengine.org
+
+---  GUT  ---
+[INFO]:  using [/home/jeromo/.local/share/godot/app_userdata/Pulpasa] for temporary output.
+Godot version:  4.7.2
+GUT version:  9.7.1
+
+
+res://tests/integration/test_gut_pointer.gd
+* test_ac1_real_click_reaches_full_screen_button_under_gut_output
+1/1 passed.
+
+
+res://tests/integration/test_d26_touch_flow.gd
+* test_ac2_single_player_cooks_cuts_seasons_and_delivers_with_touch_only
+    --- Awaiting callable to return TRUE or 8.0s.   ---
+    3 Orphans
+        * [Sticker:<Control#421292675992>] + 2
+3 orphans
+1/1 passed.
+
+
+
+
+==============================================
+= Run Summary
+==============================================
+
+Totals
+------
+Scripts               2
+Tests                 2
+Passing Tests         2
+Asserts              45
+Time              18.977s
+
+
+---- All tests passed! ----
+

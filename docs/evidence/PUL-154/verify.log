@@ -1,0 +1,40 @@
+
+== gdformat --check
+237 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== tests (GUT)
+* test_safe_margins_zero_when_safe_area_is_null
+* test_safe_margins_zero_when_safe_area_covers_window
+7/7 passed.
+
+
+
+
+==============================================
+= Run Summary
+==============================================
+
+Totals
+------
+Warnings              1
+
+Scripts             113
+Tests              1337
+Passing Tests      1337
+Asserts           27308
+Time              487.149s
+
+
+---- All tests passed! ----
+
+Results saved to res://.gut_reports/junit.xml
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✓ verify OK

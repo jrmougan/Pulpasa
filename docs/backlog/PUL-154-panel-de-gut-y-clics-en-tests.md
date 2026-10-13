@@ -1,13 +1,13 @@
 ---
 id: PUL-154
 title: Que el panel de salida de GUT no se quede con el puntero en los tests de UI
-status: in_progress
+status: review
 milestone: M4
 role: qa-tester
 deps: []
 orca_task: null
 unity_sources: []
-owns: [godot/.gutconfig.json, godot/tests/integration/test_d26_touch_flow.gd*, godot/tests/integration/test_gut_pointer.gd*, docs/evidence/PUL-154/**, docs/backlog/PUL-154-panel-de-gut-y-clics-en-tests.md]
+owns: [godot/.gutconfig.json, godot/tests/helpers/gut_pre_run.gd*, godot/tests/integration/test_d26_touch_flow.gd*, godot/tests/integration/test_gut_pointer.gd*, docs/evidence/PUL-154/**, docs/backlog/PUL-154-panel-de-gut-y-clics-en-tests.md]
 touches_scenes: []
 ---
 
@@ -31,16 +31,42 @@ opción, con un ayudante de test compartido en `godot/tests/`; quitar el apaño 
 - `tools/verify.sh` sigue verde en Linux; la salida de GUT en consola y el `junit.xml` no cambian.
 
 ## Acceptance
-- [ ] AC1 Given un `Button` a pantalla completa bajo GUT (headless), When `test_gut_pointer.gd` envía un
+- [x] AC1 Given un `Button` a pantalla completa bajo GUT (headless), When `test_gut_pointer.gd` envía un
   clic (`InputEventMouseButton` pulsar y soltar en su centro) sin tocar `TestOutput`, Then `pressed` se
   emite exactamente 1 vez. → `test_gut_pointer.gd`.
-- [ ] AC2 Given `test_d26_touch_flow.gd` sin el apaño del `mouse_filter`, Then pasa y toca «Reanudar» con
+- [x] AC2 Given `test_d26_touch_flow.gd` sin el apaño del `mouse_filter`, Then pasa y toca «Reanudar» con
   un `InputEventScreenTouch` real. → `test_d26_touch_flow.gd`.
-- [ ] AC3 `tools/verify.sh` completo en verde (mismo número de tests + 1) y `tools/check_owns.py` limpio;
+- [x] AC3 `tools/verify.sh` completo en verde (mismo número de tests + 1) y `tools/check_owns.py` limpio;
   `.gut_reports/junit.xml` se sigue generando.
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+GUT 9.7.1 no tiene opción de GUI que suelte el puntero: `opacity` no afecta a la entrada y
+`compact_mode` deja un `MinGui` de 280×145 abajo a la derecha que sigue comiéndose clics (justo donde
+van los botones táctiles). Se usa la opción `pre_run_script` de `.gutconfig.json` con un hook
+(`GutHookScript`) que pone `MOUSE_FILTER_IGNORE` a todos los `Control` de la capa de GUT (padre de la
+instancia `gut`). Solo cambia la entrada; no imprime nada (consola y `junit.xml` iguales) y solo
+afecta a `gut_cmdln` (el panel GUT del editor usa su propia config). Ampliar `owns` con
+`godot/tests/helpers/gut_pre_run.gd*` (aprobado por el coordinador, opción A). Test nuevo con un
+`Button` a pantalla completa y clics reales en el centro y en la esquina inferior derecha; quitar
+`_let_pointer_through_gut_output()` de `test_d26_touch_flow.gd`.
 
 ## Evidence
-(Lo rellena el worker.)
+- Cambio de `owns`: se añadió `godot/tests/helpers/gut_pre_run.gd*` (aprobado por el coordinador:
+  «opción A»; nadie más de la oleada toca `tests/helpers`).
+- Cambios: `godot/.gutconfig.json` (`pre_run_script`), `godot/tests/helpers/gut_pre_run.gd` (hook),
+  `godot/tests/integration/test_gut_pointer.gd` (nuevo, 1 test), `test_d26_touch_flow.gd` sin el apaño.
+- AC1: `test_ac1_real_click_reaches_full_screen_button_under_gut_output` pasa: comprueba que
+  `TestOutput` está en el árbol, que el `Button` cubre la vista, y que un clic
+  (`InputEventMouseButton` pulsar+soltar por `Input.parse_input_event`) en el centro emite `pressed`
+  1 vez y otro en la esquina inferior derecha lo lleva a 2 (pedido del coordinador). El test muerde:
+  sin el hook falla la esquina (`[1] expected to equal [2]`). → `docs/evidence/PUL-154/con-hook.log`,
+  `sin-hook.log` (config temporal con solo estos dos scripts, con y sin `pre_run_script`).
+- AC2: `test_d26_touch_flow.gd` sin el apaño pasa con el hook; sin él falla «tocar «Reanudar»
+  reanuda» (y lo que va detrás). Mismos logs.
+- AC3: `tools/verify.sh` completo en verde: 1337 tests / 1337 pasan (antes 1336: +1 test), smoke OK;
+  `.gut_reports/junit.xml` se genera (1337 `<testcase>`). `tools/check_owns.py jrmougan/pul-154 main`:
+  9 rutas dentro de owns. → `docs/evidence/PUL-154/verify.log`.
+- No verificado: la salida en una ejecución con ventana (no headless) desde `gut_cmdln`; ahí los
+  botones de la GUI de GUT (p. ej. continuar tras `pause_before_teardown`) dejan de responder al ratón.
+  Ningún test del proyecto usa esa pausa. Pregunta para el responsable: ¿se acepta, o se limita el
+  hook a `DisplayServer.get_name() == "headless"`?
