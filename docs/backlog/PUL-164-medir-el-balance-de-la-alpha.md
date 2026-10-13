@@ -1,11 +1,11 @@
 ---
 id: PUL-164
 title: Medir el balance de la alpha con el bot y proponer valores
-status: review
+status: done
 milestone: M4
 role: qa-tester
 deps: []
-orca_task: null
+orca_task: task_1480f3ba7b2a
 unity_sources: []
 owns: [godot/tests/tools/balance_*.gd*, docs/evidence/PUL-164/**, docs/backlog/PUL-164-medir-el-balance-de-la-alpha.md]
 touches_scenes: []

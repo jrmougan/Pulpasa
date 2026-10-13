@@ -168,7 +168,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-161 | M4 | game-designer | done | Poner al día los textos en gallego y escribir el glosario |
 | PUL-162 | M4 | game-designer | done | Cerrar el diseño del tutorial breve para la alpha |
 | PUL-163 | M4 | godot-architect | draft | ADR-007 de ajustes persistentes, localización y tutorial |
-| PUL-164 | M4 | qa-tester | in_progress | Medir el balance de la alpha con el bot y proponer valores |
+| PUL-164 | M4 | qa-tester | done | Medir el balance de la alpha con el bot y proponer valores |
 | PUL-165 | M4 | game-designer | draft | Registrar los valores de balance aprobados en el diseño |
 | PUL-166 | M4 | gameplay-engineer | draft | Aplicar el balance aprobado en los datos |
 | PUL-167 | M4 | gameplay-engineer | draft | Núcleo de ajustes persistentes y volumen guardado |
