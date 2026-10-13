@@ -6,7 +6,7 @@ D27; P2 y P4 del plan de M4 siguen abiertas), así que todo lo que no está en e
 
 ## AC1 — `opciones-de-volumen.md`: ≥ 6 AC con números y prueba
 
-10 AC del núcleo aprobado + 7 condicionados a G0 (ACp1–ACp7). Todos Given/When/Then.
+11 AC del núcleo aprobado + 7 condicionados a G0 (ACp1–ACp7). Todos Given/When/Then.
 
 | AC | Números | Prueba |
 |---|---|---|
@@ -19,6 +19,7 @@ D27; P2 y P4 del plan de M4 siguen abiertas), así que todo lo que no está en e
 | AC7 fichero dañado | 1,7 → 1,0; −0,2 → 0,0; 0,75 → 0,8; 0 errores; ≤ 1 guardado | `test_settings_store.gd` |
 | AC8 teclado y mando | N − 1 pulsaciones, 0 frames sin foco, 0 eventos de teclado | `test_options_menu.gd` |
 | AC9 táctil | 2340×1080, filas ≥ 120 px, 24 ± 2 px, texto ≥ 36 px, tirador ≥ 72 px, toque al 43 % → 40 % | `test_options_menu.gd` + captura |
+| AC11 cambio continuo y suspensión | arrastre 3,0 s cada 0,1 s → escrituras en 2,0 y 3,5 ± 0,05 s; `APPLICATION_PAUSED`/`FOCUS_OUT` a 0,2 s → `music = 0.4` en el mismo frame; 0 escrituras sin cambios | `test_settings_persistence.gd` |
 | AC10 muestra y capturas | 1 sonido por paso, 5 pulsaciones en 0,2 s → ≤ 3; 4 capturas | `test_options_menu.gd` + capturas |
 | ACp1–ACp7 | ≤ 0,5 s / ≤ 1 frame / ≤ 3 s / 300 px; condicionados | `test_options_menu.gd` (ACp4: GUT del dueño del nivel + capturas) |
 
@@ -98,6 +99,7 @@ Valores configurables y su tabla:
 | Opciones | Música 70 %, Ambiente 70 %, Efectos 100 % | `music_volume`, `ambience_volume`, `sfx_volume` |
 | Opciones | Paso del slider 10 % | `volume_step` |
 | Opciones | Guardado 0,5 s tras el último cambio | `save_debounce` |
+| Opciones | Escritura como mucho 2,0 s tras el primer cambio sin guardar | `save_max_interval` |
 | Opciones | Muestra de Efectos cada ≥ 0,1 s | `preview_min_interval` |
 | Opciones | Esquema 1 | `schema_version` |
 | Opciones | Idioma, pantalla completa, VSync y tilt-shift por defecto (si se aprueban) | `language`, `fullscreen`, `vsync`, `tilt_shift` |
@@ -140,3 +142,13 @@ check_owns: 4 rutas dentro de owns de PUL-160.
 
 Rutas: `docs/backlog/PUL-160-…md`, `docs/design/features/creditos-y-version.md`,
 `docs/design/features/opciones-de-volumen.md`, `docs/evidence/PUL-160/README.md`.
+
+## Ronda 2 (revisión con CHANGES)
+
+- [media] Guardado y suspensión: `opciones-de-volumen.md` «Cuándo se guarda» añade `save_max_interval` (2,0 s desde el
+  primer cambio sin guardar, en datos) y el guardado inmediato con `NOTIFICATION_APPLICATION_PAUSED`,
+  `NOTIFICATION_APPLICATION_FOCUS_OUT` y `NOTIFICATION_WM_CLOSE_REQUEST` (vía el adaptador de ADR-007). La garantía queda
+  en 0 cambios perdidos si llega la notificación y ≤ 2,0 s si el proceso muere sin ella. Nuevo **AC11** (arrastre continuo
+  de 3,0 s y suspensión a 0,2 s, antes del debounce) con `test_settings_persistence.gd`.
+- Ronda 2: `tools/verify.sh --quick` → `✓ verify OK` (exit 0); `python3 tools/check_owns.py jrmougan/pul-160 main` →
+  `check_owns: 4 rutas dentro de owns de PUL-160.` (exit 0).

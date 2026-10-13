@@ -59,7 +59,7 @@ las atribuciones de `docs/assets/licenses.md` (hay assets CC BY, que exigen atri
 - `docs/evidence/PUL-160/README.md`: tabla AC → prueba (AC1), revisión de candidatos (AC2), conteos `grep -c` y cruce
   fila a fila con `licenses.md` (AC3), lista de valores → tabla «Datos» (AC4), salida de `verify.sh --quick` y
   `check_owns.py` (AC5).
-- `opciones-de-volumen.md`: pantalla de opciones con 10 AC del núcleo aprobado (volumen ×3) y 7 ACp condicionados a G0;
+- `opciones-de-volumen.md`: pantalla de opciones con 11 AC del núcleo aprobado (volumen ×3; AC11 = guardado con arrastre continuo y suspensión, ronda 2) y 7 ACp condicionados a G0;
   candidatos C1–C9 con coste; preguntas P2, O1–O4 (incluye que «Opciones» en el menú táctil cambia `menu-principal.md` AC6).
 - `creditos-y-version.md`: `credits.tres` como fuente única, 17 filas de `licenses.md` → 11 entradas + Godot,
   formato de `LICENSES.txt` y `licenses/` para PUL-170, versión `v` + `config/version` en menú y resultados; 8 AC;

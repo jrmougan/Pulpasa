@@ -6,7 +6,7 @@ ajustes), PUL-171 (pantalla) · **Prototipo:** no tiene (Unity no guardaba ajust
 
 ## Estado de las decisiones
 - **Aprobado** (alcance de la alpha, `roadmap.md`, Should «opciones de volumen»): volumen de **Música, Ambiente y
-  Efectos** con persistencia. Es el núcleo de esta feature (AC1–AC10).
+  Efectos** con persistencia. Es el núcleo de esta feature (AC1–AC11).
 - **Propuesta, sin aprobar** (pregunta **P2** del plan de M4, `docs/evidence/PUL-141/README.md`, gate **G0**):
   cualquier otro ajuste. Están en «Ajustes candidatos» con su coste; ninguno se implementa sin la elección del
   responsable. PUL-171 implementa solo la lista aprobada en G0.
@@ -75,8 +75,19 @@ pantalla en los dos sitios: solo cambia a dónde vuelve.
   vsync=true
   tilt_shift=false
   ```
-- **Cuándo se guarda:** `save_debounce` (0,5 s) después del último cambio y siempre al cerrar la pantalla.
-  Así arrastrar un slider no escribe en cada frame y un cierre brusco (Android en segundo plano) pierde ≤ 0,5 s.
+- **Cuándo se guarda** (solo si hay cambios sin guardar; si no, nunca se escribe):
+  1. `save_debounce` (0,5 s) después del último cambio, para no escribir en cada frame de un arrastre;
+  2. como mucho `save_max_interval` (2,0 s) después del **primer** cambio sin guardar, aunque el arrastre siga: un
+     cambio continuo reinicia el debounce, pero no puede aplazar la escritura más de 2,0 s;
+  3. al momento, en el mismo frame, al cerrar la pantalla de opciones;
+  4. al momento al **suspender o salir**: `NOTIFICATION_APPLICATION_PAUSED` (Android en segundo plano),
+     `NOTIFICATION_APPLICATION_FOCUS_OUT` y `NOTIFICATION_WM_CLOSE_REQUEST`. Cerrar la pantalla no es suspender la
+     aplicación: el juego puede ir a segundo plano con la pantalla abierta y en mitad de un arrastre.
+  Las notificaciones solo llegan a nodos: las recibe el adaptador del núcleo de ajustes (cuál, lo fija ADR-007) y
+  llama a su `flush()`; el núcleo `RefCounted` no sabe de notificaciones.
+- **Garantía:** si el sistema entrega la notificación de suspensión o cierre, se pierden **0 cambios**. Si el proceso
+  muere sin notificación (cuelgue, el sistema lo mata sin avisar), se pierden como mucho los cambios de los últimos
+  `save_max_interval` (2,0 s).
 - **Al cargar:** fichero ausente → valores por defecto (sin crear el fichero hasta el primer cambio); fichero
   ilegible o con claves desconocidas → valores por defecto para lo que falte, 0 errores en consola; valores
   fuera de rango → se recortan a [0, 1] y se ajustan al paso más cercano (1,7 → 1,0; −0,2 → 0,0; 0,75 → 0,8).
@@ -97,7 +108,7 @@ Filas = filas que suma a la pantalla.
 
 | Id | Ajuste | Plataforma | Filas | AC extra | Ficheros extra | Dependencias y riesgo | Recomendación del diseño |
 |---|---|---|---|---|---|---|---|
-| C1 | Volumen Música, Ambiente, Efectos | Todas | 3 | — (AC1–AC10) | `autoload/audio_director.gd` | Ninguna: `AudioMix.set_volume` ya existe | **Aprobado** (Should del alcance) |
+| C1 | Volumen Música, Ambiente, Efectos | Todas | 3 | — (AC1–AC11) | `autoload/audio_director.gd` | Ninguna: `AudioMix.set_volume` ya existe | **Aprobado** (Should del alcance) |
 | C2 | Idioma (castellano / gallego) | Todas | 1 | 1 (ACp1) | `data/i18n/options.*` | P1 (qué idiomas); claves de PUL-168, textos de PUL-173; cambio en caliente de ADR-007 | Incluir si P1 aprueba gallego (propuesta de PUL-171) |
 | C3 | Pantalla completa / ventana | Escritorio | 1 | 1 (ACp2) | 1 adaptador que aplique `DisplayServer.window_set_mode` al arrancar (ADR-007) | Oculto en táctil (Android siempre a pantalla completa) | Incluir: barato y esperado en PC |
 | C4 | Sincronización vertical (VSync) | Escritorio | 1 | 1 (ACp3) | El mismo adaptador que C3 | Oculto en táctil; objetivo de 60 fps de D22 | Opcional |
@@ -135,6 +146,13 @@ Núcleo aprobado (C1). Los tests citados son los de `owns` de PUL-167 (`test_set
 - **AC6 (persistencia)** Given Música cambiada de 70 % a 40 %, When pasan `save_debounce` (0,5 s) o se cierra la
   pantalla, y se recrea el núcleo, Then Música = 0,40 ± 0,001 leído de `[audio] music` de `user://settings.cfg`;
   Given 10 cambios de slider en 1,0 s, Then el fichero se escribe ≤ 3 veces. *Test:* `test_settings_persistence.gd`.
+- **AC11 (cambio continuo y suspensión)** Given un reloj inyectado y Música cambiada cada 0,1 s durante 3,0 s
+  seguidos (arrastre), When pasa el tiempo, Then el fichero se escribe en t = 2,0 ± 0,05 s (`save_max_interval`, con el
+  valor de ese instante) y en t = 3,5 ± 0,05 s (debounce tras el último cambio): 2 escrituras, ninguna más tarde de
+  2,0 s tras un cambio sin guardar; Given un cambio de Música a 40 % en t = 0 y la notificación
+  `NOTIFICATION_APPLICATION_PAUSED` en t = 0,2 s (antes de que venza el debounce), Then en ese mismo frame el fichero
+  tiene `music = 0.4` (± 0,001); lo mismo con `NOTIFICATION_APPLICATION_FOCUS_OUT`; y Given 0 cambios pendientes, When
+  llega la notificación, Then 0 escrituras. *Test:* `test_settings_persistence.gd`.
 - **AC7 (fichero dañado)** Given un `settings.cfg` ilegible, o con claves desconocidas, o con `music=1.7`,
   `ambience=-0.2`, `sfx=0.75`, When se carga, Then hay 0 errores en consola, lo ilegible o ausente toma el valor por
   defecto y los valores quedan en 1,0, 0,0 y 0,8; el fichero se reescribe válido en ≤ 1 guardado.
@@ -183,7 +201,8 @@ Núcleo aprobado (C1). Los tests citados son los de `owns` de PUL-167 (`test_set
 | `ambience_volume` | 0,7 | lineal 0–1 | Defecto de Ambiente (AC5) |
 | `sfx_volume` | 1,0 | lineal 0–1 | Defecto de Efectos (AC5) |
 | `volume_step` | 0,1 | lineal | Paso del slider (AC3, AC7) |
-| `save_debounce` | 0,5 | s | Espera tras el último cambio antes de guardar (AC6) |
+| `save_debounce` | 0,5 | s | Espera tras el último cambio antes de guardar (AC6, AC11) |
+| `save_max_interval` | 2,0 | s | Máximo desde el primer cambio sin guardar hasta escribirlo (AC11) |
 | `preview_min_interval` | 0,1 | s | Mínimo entre muestras de Efectos (AC10) |
 | `schema_version` | 1 | — | `[meta] schema` del fichero (AC7) |
 | `language` *(si C2)* | P1 (`"es"` hoy, `textos-gallego.md` AC3) | código | Idioma por defecto (ACp1) |
@@ -206,7 +225,7 @@ Ya existen y no se duplican: `pause_duck_db` (−12 dB, `audio_mix.tres`) y el t
 `user://settings.cfg`. Los límites de los AC (≤ 1 frame, ≤ 0,5 s, tolerancias) son criterios de prueba, no datos.
 
 ## Verificación
-GUT: AC1–AC10 y los ACp aprobados (`test_settings_store.gd`, `test_settings_persistence.gd` de PUL-167;
+GUT: AC1–AC11 y los ACp aprobados (`test_settings_store.gd`, `test_settings_persistence.gd` de PUL-167;
 `test_options_menu.gd` de PUL-171). Capturas en `docs/evidence/PUL-171/`: AC9, AC10 y ACp4.
 
 ## Preguntas abiertas (para G0)
