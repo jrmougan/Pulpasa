@@ -1,7 +1,7 @@
 ---
 id: PUL-162
 title: Cerrar el diseño del tutorial breve para la alpha
-status: in_progress
+status: review
 milestone: M4
 role: game-designer
 deps: []
@@ -28,17 +28,25 @@ sale de él y cómo se comporta en Local 2P y en el perfil táctil con D27 (boto
 - Si el responsable deja el tutorial fuera de la alpha (pregunta P5), la ficha se cierra registrándolo.
 
 ## Acceptance
-- [ ] AC1 Given `tutorial-breve.md`, When se lee la tabla de pasos, Then hay 6 filas con texto, verbo, objetivo resaltado, señal de
+- [x] AC1 Given `tutorial-breve.md`, When se lee la tabla de pasos, Then hay 6 filas con texto, verbo, objetivo resaltado, señal de
   `signals.md` (o propuesta para ADR-007) que lo completa y avance ≤ 0,5 s → tabla en la feature, enlazada desde la evidencia.
-- [ ] AC2 Given P5 (cómo se entra al tutorial), When G0 no la ha respondido, Then la feature describe las 3 opciones (a: automático en la
+- [x] AC2 Given P5 (cómo se entra al tutorial), When G0 no la ha respondido, Then la feature describe las 3 opciones (a: automático en la
   primera partida, b: botón «Tutorial» en el menú, c: ambas) con sus AC y su coste, marcadas como **propuesta**; si G0 la ha respondido, solo
   la elegida → sección «Entrada y salida» revisada en la evidencia.
-- [ ] AC3 Given los perfiles Individual, Local 2P y táctil, When se cruzan con `controles-tactiles.md` (D26, D27), Then hay ≥ 1 AC numérico por
+- [x] AC3 Given los perfiles Individual, Local 2P y táctil, When se cruzan con `controles-tactiles.md` (D26, D27), Then hay ≥ 1 AC numérico por
   perfil y 0 contradicciones (lista de los AC cruzados) → `docs/evidence/PUL-162/README.md`.
-- [ ] AC4 Given la rama de la ficha, When se ejecutan `tools/verify.sh --quick` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-162/README.md`.
+- [x] AC4 Given la rama de la ficha, When se ejecutan `tools/verify.sh --quick` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-162/README.md`.
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Leer D25–D27, `signals.md` §2, `controles-tactiles.md`, `dificultad-progresiva.md`, P5 de PUL-141 y las
+   fichas consumidoras (163, 169, 174, 175).
+2. Reescribir `tutorial-breve.md`: estado inicial, tabla de 6 pasos con señal y objetivo, señal nueva
+   propuesta (S1), «Entrada y salida» con las 3 opciones como propuesta (G0 no ha respondido P5),
+   perfiles, AC por perfil y datos `.tres`.
+3. Cruzar con `controles-tactiles.md` y dejar la tabla en la evidencia; `verify.sh --quick` y `check_owns.py`.
 
 ## Evidence
-(Lo rellena el worker.)
+`docs/evidence/PUL-162/README.md`: tabla de pasos y señales (AC1), opciones de entrada como propuesta y
+coste (AC2), AC por perfil y cruce con `controles-tactiles.md` sin contradicciones (AC3), salida de
+`verify.sh --quick` y `check_owns.py` (AC4). Para el producer: (b)/(c) exigen enmendar `menu-principal.md`
+AC6 y `controles-tactiles.md` AC1; PUL-175 AC1 limita (a) a Individual y la feature propone también Local 2P.
