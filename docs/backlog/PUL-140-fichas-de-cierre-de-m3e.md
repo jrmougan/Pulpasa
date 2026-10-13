@@ -1,11 +1,11 @@
 ---
 id: PUL-140
 title: Crear las fichas de cierre de M3e (guía de playtest y export Android)
-status: review
+status: done
 milestone: M3e
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_4bf363c3e528
 unity_sources: []
 owns: [docs/backlog/PUL-15[0-4]-*.md, docs/evidence/PUL-140/**, docs/backlog/PUL-140-fichas-de-cierre-de-m3e.md]
 touches_scenes: []

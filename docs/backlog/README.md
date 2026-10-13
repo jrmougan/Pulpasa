@@ -152,5 +152,10 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-137 | M3e | godot-architect | done | Enmendar ADR-005 E4 para los botones en fila y la zona de botones con safe area |
 | PUL-138 | M3e | ui-engineer | done | Colocar los botones táctiles en fila y bajar la zona de botones |
 | PUL-139 | M4 | qa-tester | in_progress | Triar los pendientes sueltos del roadmap y crear sus fichas |
-| PUL-140 | M3e | game-designer | in_progress | Crear las fichas de cierre de M3e (guía de playtest y export Android) |
+| PUL-140 | M3e | game-designer | done | Crear las fichas de cierre de M3e (guía de playtest y export Android) |
 | PUL-141 | M4 | game-designer | in_progress | Planificar M4 (alpha) en fichas |
+| PUL-150 | M3e | game-designer | draft | Escribir la guía del playtest humano de M3e (m3e-gate.md) |
+| PUL-151 | M3e | godot-architect | blocked | Exportar a Android, elegir renderizador móvil y verificar en un teléfono real |
+| PUL-152 | M3e | qa-tester | draft | Recapturar medidas y capturas de D26 con el estado final de M3e |
+| PUL-153 | M3e | qa-tester | draft | Probar el perfil táctil en un teléfono con el build web (antes del APK) |
+| PUL-154 | M4 | qa-tester | draft | Que el panel de salida de GUT no se quede con el puntero en los tests de UI |
