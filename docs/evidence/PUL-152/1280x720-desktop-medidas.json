@@ -1,0 +1,293 @@
+{
+	"active_marker_px": 24.0,
+	"active_marker_px_at_1080": 36.0,
+	"bowl": {
+		"meter_visible": true,
+		"notch_px": 16.0,
+		"notch_px_at_1080": 24.0,
+		"stock": 2
+	},
+	"box_counter": {
+		"bar_thickness_px": 6.1,
+		"bar_thickness_px_at_1080": 9.2,
+		"numeral_px": 25.2,
+		"numeral_px_at_1080": 37.8,
+		"segment_width_px": 10.2,
+		"segment_width_px_at_1080": 15.3,
+		"text": "3/6",
+		"visible": true
+	},
+	"camera_size_m": 12.7399997711182,
+	"character_px": 71.3,
+	"character_px_at_1080": 106.9,
+	"cook_rings": [
+		{
+			"below_band_200_at_1080": true,
+			"diameter_px": 42.7,
+			"diameter_px_at_1080": 64.0,
+			"on_screen": true,
+			"screen_px": [
+				549.4,
+				257.0
+			],
+			"state": 3,
+			"thickness_px": 5.3,
+			"thickness_px_at_1080": 8.0,
+			"top_edge_px": 235.6,
+			"top_edge_px_at_1080": 353.5,
+			"under_top_band": true
+		},
+		{
+			"below_band_200_at_1080": true,
+			"diameter_px": 42.7,
+			"diameter_px_at_1080": 64.0,
+			"on_screen": true,
+			"screen_px": [
+				504.6,
+				257.0
+			],
+			"state": 0,
+			"thickness_px": 5.3,
+			"thickness_px_at_1080": 8.0,
+			"top_edge_px": 235.6,
+			"top_edge_px_at_1080": 353.5,
+			"under_top_band": true
+		}
+	],
+	"cook_rings_player_xz": [
+		-1.3,
+		-3.1
+	],
+	"game_over_buttons": [
+		{
+			"height_px": 52.0,
+			"height_px_at_1080": 78.0,
+			"text": "Reintentar",
+			"y_px": 460.0
+		},
+		{
+			"height_px": 52.0,
+			"height_px_at_1080": 78.0,
+			"text": "Salir",
+			"y_px": 528.0
+		}
+	],
+	"game_over_has_boxes_per_minute": false,
+	"game_over_texts": [
+		"FRANQUICIA GALEGA DE POLBO",
+		"Turno terminado",
+		"Pulpeiro ineficiente",
+		"Recaudación: 0 €",
+		"Reintentar",
+		"Salir"
+	],
+	"game_over_touch_controls_visible": false,
+	"host_display_safe_area": [
+		0.0,
+		32.0,
+		2560.0,
+		1408.0
+	],
+	"inactive_marker_visible": false,
+	"menu_buttons": [
+		{
+			"height_px": 60.0,
+			"height_px_at_1080": 90.0,
+			"text": "Individual",
+			"y_px": 362.0
+		},
+		{
+			"height_px": 60.0,
+			"height_px_at_1080": 90.0,
+			"text": "Local 2P",
+			"y_px": 438.0
+		},
+		{
+			"height_px": 60.0,
+			"height_px_at_1080": 90.0,
+			"text": "Salir",
+			"y_px": 514.0
+		}
+	],
+	"min_text_game_over": {
+		"count": 6,
+		"min_px": 15.0,
+		"min_px_at_1080": 22.5,
+		"node": "/root/Level01/UI/GameOver/MenuPanel/SafeArea/Center/Card/Content/Brand",
+		"text": "FRANQUICIA GALEGA DE POLBO"
+	},
+	"min_text_menu_principal": {
+		"count": 5,
+		"min_px": 16.0,
+		"min_px_at_1080": 24.0,
+		"node": "/root/MainMenu/SafeArea/Center/Column/Mode",
+		"text": "Individual: un personaje · Local 2P: dos jugadores"
+	},
+	"min_text_partida": {
+		"count": 26,
+		"min_px": 13.0,
+		"min_px_at_1080": 19.5,
+		"node": "/root/Level01/UI/HUD/Background/Stats/Time/TimeTitle",
+		"text": "Tiempo restante"
+	},
+	"min_text_pausa": {
+		"count": 5,
+		"min_px": 15.0,
+		"min_px_at_1080": 22.5,
+		"node": "/root/Level01/UI/PauseMenu/MenuPanel/SafeArea/Center/Card/Content/Brand",
+		"text": "FRANQUICIA GALEGA DE POLBO"
+	},
+	"pause_buttons": [
+		{
+			"height_px": 52.0,
+			"height_px_at_1080": 78.0,
+			"text": "Reanudar",
+			"y_px": 409.0
+		},
+		{
+			"height_px": 52.0,
+			"height_px_at_1080": 78.0,
+			"text": "Salir",
+			"y_px": 477.0
+		}
+	],
+	"platform": "DESKTOP",
+	"player_ring_active": {
+		"thickness_px": 6.7,
+		"thickness_px_at_1080": 10.0,
+		"visible": true
+	},
+	"player_ring_inactive": {
+		"thickness_px": 1.7,
+		"thickness_px_at_1080": 2.5,
+		"visible": true
+	},
+	"prompt_bloqueado_caja_a_medias": {
+		"cross_px": 18.0,
+		"icon_px": 48.0,
+		"icon_px_at_1080": 72.0,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "box_not_full",
+		"reason_icon_px": 24.0,
+		"shown": true,
+		"state": 2,
+		"verb": "season_sweet"
+	},
+	"prompt_ok_cachelos_cuenco": {
+		"icon_px": 48.0,
+		"icon_px_at_1080": 72.0,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "cachelos"
+	},
+	"prompt_ok_coger": {
+		"icon_px": 48.0,
+		"icon_px_at_1080": 72.0,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "pick_up"
+	},
+	"prompt_ok_cortar": {
+		"icon_px": 48.0,
+		"icon_px_at_1080": 72.0,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "cut"
+	},
+	"prompt_zona": {
+		"icon_px": 48.0,
+		"icon_px_at_1080": 72.0,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "drop"
+	},
+	"px_per_meter": 44.5,
+	"px_per_meter_at_1080": 66.8,
+	"safe_rect_px": [
+		0.0,
+		0.0,
+		1280.0,
+		720.0
+	],
+	"stretch_scale": 1.0,
+	"tag": "1280x720-desktop",
+	"top_band": {
+		"band_fraction": 0.989,
+		"band_height_px": 712.0,
+		"button_zone_px": [
+			1020.0,
+			400.0,
+			260.0,
+			320.0
+		],
+		"hud_rect_px": [
+			8.0,
+			499.0,
+			176.0,
+			213.0
+		],
+		"overlaps": [
+			"bloque 0 con zona del stick",
+			"bloque 1 con zona del stick",
+			"bloque 2 con zona del stick",
+			"bloque 3 con zona del stick"
+		],
+		"stick_zone_px": [
+			0.0,
+			133.3,
+			640.0,
+			586.7
+		],
+		"ticket_gap_px": 12.0,
+		"ticket_width_px": 212.0,
+		"tickets_px": [
+			[
+				8.0,
+				8.0,
+				212.0,
+				216.0
+			],
+			[
+				232.0,
+				8.0,
+				212.0,
+				216.0
+			],
+			[
+				456.0,
+				8.0,
+				212.0,
+				216.0
+			],
+			[
+				680.0,
+				8.0,
+				212.0,
+				216.0
+			]
+		]
+	},
+	"touch_controls": "no instanciados (perfil escritorio)",
+	"user_args": [
+		"--out=/home/jeromo/orca/workspaces/Pulpasa/pul-152/docs/evidence/PUL-152",
+		"--tag=1280x720-desktop"
+	],
+	"window_px": [
+		1280,
+		720
+	],
+	"zone_lit": true
+}
