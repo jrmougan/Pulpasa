@@ -1,7 +1,7 @@
 ---
 id: PUL-161
 title: Poner al día los textos en gallego y escribir el glosario
-status: in_progress
+status: review
 milestone: M4
 role: game-designer
 deps: []
@@ -40,7 +40,20 @@ Should «textos en gallego» (`features/textos-gallego.md`, AC1–AC5). Desde qu
 - [ ] AC4 Given la rama de la ficha, When se ejecutan `tools/verify.sh --quick` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-161/README.md`.
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Inventariar las cadenas visibles: `text =` de los `.tscn`, `tr()`/`_text()`/`.text =` de los `.gd`, `display_name` y
+   `performance_texts` de los `.tres`; descartar lo que no llega a pantalla; añadir verbos, motivos (D26) y pasos del
+   tutorial desde sus features. Estimar ancho con un script reproducible (factor calibrado con `controles-tactiles.md`).
+2. Escribir `glosario-gl.md`: 22 términos obligatorios con fuente y vocabulario general; preguntas abiertas.
+3. Reescribir `textos-gallego.md`: estado de partida, convención de claves, P1 como pregunta abierta con propuesta,
+   selector en opciones (PUL-160/171) y 7 AC con números y test.
+4. Evidencia con tablas de AC1–AC3, `verify.sh --quick` y `check_owns.py`.
 
 ## Evidence
-(Lo rellena el worker.)
+`docs/evidence/PUL-161/README.md`:
+- AC1: 67 filas en 8 pantallas (Menú 9, Pausa 6, Resultados 7, HUD 7, Tickets 9, Táctil 2, Prompts 17, Tutorial 10),
+  con origen, longitud y ancho estimado a 1280×720 y 2340×1080; 1 riesgo (`MENU_MODE` en gallego, escritorio).
+  Script: `docs/evidence/PUL-161/inventario.py`.
+- AC2: 22/22 términos con fuente (2 `main.tex`, 20 propuesta), 0 faltantes. `main.tex` no estaba accesible en esta
+  máquina: solo cuenta como `main.tex` lo que cita `gdd.md` §8 (pregunta G-1).
+- AC3: 7 AC Given/When/Then con números y test; P1 y P9 abiertas (G0 sin acta).
+- AC4: `tools/verify.sh --quick` → `✓ verify OK` (código 0); `check_owns.py` → 0 rutas fuera de `owns`.
