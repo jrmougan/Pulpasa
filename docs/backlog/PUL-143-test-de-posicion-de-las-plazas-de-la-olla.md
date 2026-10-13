@@ -44,14 +44,14 @@ y con una capacidad forzada de 3, sin tocar código de juego.
   `capacity = 3` antes de `add_child` (antes de `_ready`), sin tocar `kitchen.tres`.
 - «Ancla base» = posición local de `AnchorPoint` en la escena, leída de una instancia que no entra en el árbol.
 - Anclas de cada plaza: `_kitchen._slots[i].anchor` (mismo acceso que `test_ac1_pause_freezes_two_slots`).
-- AC1 → `test_ac1_kitchen_data_capacity_is_spread_and_centered`, `test_ac1_forced_capacity_three_is_spread_and_centered`.
+- AC1 → `test_ac1_slot_spacing_constant_is_0_3_m`, `test_ac1_kitchen_data_capacity_is_spread_and_centered`, `test_ac1_forced_capacity_three_is_spread_and_centered`.
 - AC2 → `test_ac2_two_octopuses_sit_on_their_slot_anchors` (+ variante con capacidad 3).
 - AC3 → `tools/verify.sh` completo y `tools/check_owns.py`.
 
 ## Evidence
-- `tools/verify.sh` completo en verde: 1340/1340 tests, smoke OK (`docs/evidence/PUL-143/gut.txt`).
+- `tools/verify.sh` completo en verde: 1341/1341 tests, smoke OK (`docs/evidence/PUL-143/gut.txt`).
   El único warning del run es ajeno (`FeedbackPlayer: cue desconocida no_existe`, test de feedback).
-- Los 4 tests nuevos pasan; ninguno reveló fallo en `cooking_station.gd`.
+- Los 5 tests nuevos pasan; ninguno reveló fallo en `cooking_station.gd`.
 - Notas para el responsable (no son fallos, no se cambia nada):
   - `_ready` sobrescribe la X del `%AnchorPoint` con `start_x + i·SLOT_SPACING` (centrado en 0, no en la X
     de la escena). Hoy coincide porque la X de la escena es 0; si alguien moviera el ancla en X en
@@ -59,3 +59,5 @@ y con una capacidad forzada de 3, sin tocar código de juego.
   - `_reposition_anchors` solo recoloca las plazas ocupadas: con una sola pieza su ancla va al centro y
     las libres conservan su X anterior (pueden coincidir con la ocupada). Es el diseño documentado
     («con una sola pieza queda en el centro de la olla»); AC2 se comprueba con dos piezas.
+- Revisión (Codex, P2): el esperado ya no reutiliza `CookingStation.SLOT_SPACING`; el test fija
+  `EXPECTED_SPACING = 0.3` y comprueba la constante contra ese valor (`test_ac1_slot_spacing_constant_is_0_3_m`).

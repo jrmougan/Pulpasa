@@ -1,10 +1,11 @@
-
 res://tests/integration/test_cooking_slots_layout.gd
+* test_ac1_slot_spacing_constant_is_0_3_m
 * test_ac1_kitchen_data_capacity_is_spread_and_centered
 * test_ac1_forced_capacity_three_is_spread_and_centered
 * test_ac2_two_octopuses_sit_on_their_slot_anchors
 * test_ac2_two_octopuses_sit_on_their_slot_anchors_with_capacity_three
-4/4 passed.
+5/5 passed.
+
 
 = Run Summary
 ==============================================
@@ -14,10 +15,11 @@ Totals
 Warnings              1
 
 Scripts             113
-Tests              1340
-Passing Tests      1340
-Asserts           27349
-Time              494.296s
+Tests              1341
+Passing Tests      1341
+Asserts           27316
+Time              478.659s
+
 
 == smoke run (escena principal, 120 frames)
 OK

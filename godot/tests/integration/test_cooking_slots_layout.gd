@@ -1,8 +1,9 @@
 extends GutTest
 ## PUL-143: colocación de las plazas de la olla (`cooking_station.gd`). Las anclas se reparten a lo
-## ancho a `CookingStation.SLOT_SPACING` entre sí, centradas en el `%AnchorPoint` de la escena, con
-## la capacidad de `data/config/kitchen.tres` y con una forzada de 3; cada pulpo metido queda sobre
-## el ancla de su plaza. La separación de los anillos la cubre `test_level_01.gd` (PUL-131).
+## ancho a 0,3 m entre sí (`EXPECTED_SPACING`, independiente de `SLOT_SPACING`), centradas en el
+## `%AnchorPoint` de la escena, con la capacidad de `data/config/kitchen.tres` y con una forzada de
+## 3; cada pulpo metido queda sobre el ancla de su plaza. La separación de los anillos la cubre
+## `test_level_01.gd` (PUL-131).
 
 const PLAYER_SCENE: PackedScene = preload("res://entities/player/player.tscn")
 const KITCHEN_SCENE: PackedScene = preload("res://entities/stations/kitchen.tscn")
@@ -10,6 +11,8 @@ const OCTOPUS_SCENE: PackedScene = preload("res://entities/items/octopus.tscn")
 const KITCHEN_DATA: KitchenData = preload("res://data/config/kitchen.tres")
 const FORCED_CAPACITY: int = 3
 const TOLERANCE: float = 0.001
+## Separación que exige AC1, fijada aquí para no validar la constante contra sí misma.
+const EXPECTED_SPACING: float = 0.3
 
 var _level: Node3D
 var _hold: HoldComponent
@@ -73,9 +76,9 @@ func _assert_layout(capacity: int) -> void:
 		if i > 0:
 			assert_almost_eq(
 				anchor.position.x - anchors[i - 1].position.x,
-				CookingStation.SLOT_SPACING,
+				EXPECTED_SPACING,
 				TOLERANCE,
-				"plazas %d y %d a SLOT_SPACING" % [i - 1, i]
+				"plazas %d y %d a 0,3 m" % [i - 1, i]
 			)
 	assert_almost_eq(sum_x / float(capacity), base.x, TOLERANCE, "centradas en el ancla base")
 
@@ -96,10 +99,14 @@ func _assert_two_octopuses_on_their_anchors() -> void:
 		)
 	assert_almost_eq(
 		anchors[1].position.x - anchors[0].position.x,
-		CookingStation.SLOT_SPACING,
+		EXPECTED_SPACING,
 		TOLERANCE,
-		"los dos pulpos a SLOT_SPACING"
+		"los dos pulpos a 0,3 m"
 	)
+
+
+func test_ac1_slot_spacing_constant_is_0_3_m() -> void:
+	assert_almost_eq(CookingStation.SLOT_SPACING, EXPECTED_SPACING, TOLERANCE)
 
 
 func test_ac1_kitchen_data_capacity_is_spread_and_centered() -> void:
