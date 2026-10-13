@@ -7,7 +7,7 @@ propuesta del § AC3 va al gate G2 del responsable y la aplica PUL-166. Medidas 
 | Fichero | Qué es |
 |---|---|
 | `godot/tests/tools/balance_measure.gd` + `balance_run.gd` | Bot de medida. Base: `PUL-116/measure_flow.gd` (teclado simulado y detector real de `tests/integration/level_walker.gd`, nunca `interact()`). No es un test (no empieza por `test_`): `verify.sh` solo le pasa el formato y el lint |
-| `run_all.sh` | Lanza las 14 medidas en paralelo sin ventana (≈ 15 s en total con `--fixed-fps 60`) y regenera las tablas |
+| `run_all.sh` | Lanza las 14 medidas en paralelo sin ventana (≈ 15 s en total con `--fixed-fps 60`) y regenera las tablas. Borra antes las salidas versionadas y espera cada proceso: si alguno falla o vence el timeout, hay errores de script o falta alguna de las 14 salidas, sale con 1 sin generar tablas |
 | `balance_tables.py` | Lee los JSON y los valores actuales de los `.tres` (no los copia a mano), escribe `tables.md` y `summary.json` |
 | `tables.md` | Todas las tablas (AC1, AC2, colas, propuesta medida). **Las del README son extractos** |
 | `summary.json` | Lo mismo en JSON: valores actuales, propuesta, holguras con marca `flag` (< 5 s), partidas, proyecciones |
@@ -100,9 +100,10 @@ de 10,9 s y no caduca nada.
 («objetivo no alcanzado», recupera solo). `balance_tables.py` recalcula cada recaudación desde el registro de
 comandas (precio + bonus − caducadas) y coincide al euro con la del juego.
 
-- **Individual: 184–195 € (media 189), 3★ con 2× el umbral.** Las caducadas son de la fase 3 y casi todas con
-  cachelos (5 de 9 comandas con cachelos caducan): tienen más paciencia (56 s), así que el bot, que sirve
-  la más urgente, las deja para el final.
+- **Individual: 184–195 € (media 189), 3★ con 2× el umbral.** De las 8 caducadas (3 semillas; fase =
+  la de la comanda al aparecer), 1 es de la fase 2 («Picante») y 7 de la fase 3, 5 de ellas con cachelos
+  (5 de 9 comandas con cachelos caducan): tienen más paciencia (56 s), así que el bot, que sirve la más
+  urgente, las deja para el final.
 - **Local 2P: 641–692 € (media 666), 3,5× el Individual y 7× el umbral de 3★.** Con dos bots el cuello de
   botella desaparece (≈ 5 s por entrega) y la paciencia no muerde: 0 caducadas. **Con un único
   `revenue_thresholds` para los dos modos no se pueden calibrar las estrellas.**
