@@ -11,7 +11,13 @@ bash docs/evidence/PUL-152/run_all.sh   # ~4 min; abre ventanas
 |---|---|---|
 | `capture_boot.gd`, `capture_d26.gd` | PUL-132 | Safe area inyectada siempre (la de diseño con `--safe`; si no, **nula**) en la UI, en `TouchControls` y también en `CameraRig` (`set_safe_margins`). Botones en fila (hueco horizontal y bordes inferiores, D27.1) y zona de botones de la cámara. Borde superior real del anillo de la olla (H-01). Textos del game over (H-03). Mismas 14 escenas. |
 | `capture_caso09_boot.gd`, `capture_caso09.gd` | PUL-138 `capture_pul138.gd` | 2 safe areas × 2 ollas × 2 posiciones, el activo en reposo con física real, solape con la zona y con las cajas de los discos. `--host-safe` deja la safe area del sistema (para comparar con PUL-136/138). |
-| `run_all.sh` | PUL-132 | Resoluciones de AC1 y caso 09. `--disable-vsync`: con la ventana sin foco u ocultada (Wayland), el V-Sync deja el juego a 1 FPS. |
+| `run_all.sh` | PUL-132 | Resoluciones de AC1 y caso 09. `--disable-vsync`: con la ventana sin foco u ocultada (Wayland), el V-Sync deja el juego a 1 FPS. `--audio-driver Dummy` (sin sonido, regla de `godot-verify`). Aborta si Godot sale con código ≠ 0, si su salida trae `ERROR` o si falta la línea `MEDIDAS` (`set -euo pipefail` y log por ejecución; `GODOT=<ruta>` permite probarlo con un binario simulado). |
+
+Errores de limpieza: la primera versión de `capture_caso09.gd` salía con el nivel aún en el árbol y Godot imprimía
+`ERROR: 4 resources still in use at exit` (los `AudioStreamOggVorbis` del ambiente de `level_audio.tscn` en
+reproducción). Ahora libera el nivel y espera 0,2 s antes de `quit()`; la recaptura con el runner endurecido sale
+con código 0 y sin ningún `ERROR`, y los 10 JSON salen idénticos byte a byte a los de la primera captura (los JPG
+committeados se conservan: solo cambiaría su codificación).
 
 Ficheros: `<res>-<perfil>-<NN>-<escena>.jpg` (54: 13 en cada escritorio y 14 en cada táctil),
 `<res>-<perfil>-medidas.json` (5), `<res>-caso09-<nula|diseno>-<oeste|este>-<z3_1|z3_4>.jpg` (16),

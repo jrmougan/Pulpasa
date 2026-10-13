@@ -260,5 +260,9 @@ func _run() -> void:
 	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(m, "\t"))
 	file.close()
+	# Libera el nivel antes de salir: si no, el audio ambiente de `level_audio.tscn` sigue sonando y
+	# Godot avisa al salir de recursos en uso (ERROR que `run_all.sh` trata como fallo).
+	_level.queue_free()
+	await _wait(0.2)
 	print("MEDIDAS ", _tag, " caso09 ok")
 	get_tree().quit()

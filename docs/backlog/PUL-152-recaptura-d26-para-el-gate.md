@@ -87,6 +87,11 @@ Detalle, tabla de medidas, caso 09 y hallazgos: `docs/evidence/PUL-152/README.md
 | AC4 | **PASA** | 24 vistas en `<res>-caso09-medidas.json`. Safe nula: 0 px en todas (también a 800×370). Safe de diseño: 6,6 / 35,0 px a 1080 y 2,2 / 12,0 a 800×370, = test de PUL-138 (≤ 0,1 px); ~16 px menos que la estimación de D27.3, por H-05. 16 JPG a 2340×1080 y 800×370. |
 | AC5 | **PASA** | `tools/verify.sh` completo en verde y `tools/check_owns.py` limpio (informe de entrega). |
 
+Correcciones de revisión: `run_all.sh` con `--audio-driver Dummy` y abortando ante código ≠ 0, `ERROR` en la salida
+o falta de `MEDIDAS` (probado con un Godot simulado que devuelve 42 → 42, que imprime ERROR → 1 y sin MEDIDAS → 1);
+`capture_caso09.gd` libera el nivel antes de salir (el ERROR de recursos en uso era el audio ambiente). Recaptura
+completa: código 0, sin ERROR, JSON idénticos.
+
 Hallazgos nuevos (no corregidos, fuera de owns):
 - **H-05 (media)**: en un escritorio Linux con panel, `DisplayServer.get_display_safe_area()` devuelve el área de
   trabajo (top 32 px) y `UiScale.safe_margins` la aplica a la ventana: la UI y `CameraRig` meten 32 px arriba. Las
