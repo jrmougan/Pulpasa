@@ -1,11 +1,11 @@
 ---
 id: PUL-162
 title: Cerrar el diseño del tutorial breve para la alpha
-status: review
+status: done
 milestone: M4
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_9d0d38e3c103
 unity_sources: []
 owns: [docs/design/features/tutorial-breve.md, docs/evidence/PUL-162/**, docs/backlog/PUL-162-cerrar-el-diseno-del-tutorial.md]
 touches_scenes: []

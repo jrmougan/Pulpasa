@@ -166,7 +166,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-154 | M4 | qa-tester | in_progress | Que el panel de salida de GUT no se quede con el puntero en los tests de UI |
 | PUL-160 | M4 | game-designer | done | Especificar la pantalla de opciones, los créditos y la versión visible |
 | PUL-161 | M4 | game-designer | in_progress | Poner al día los textos en gallego y escribir el glosario |
-| PUL-162 | M4 | game-designer | in_progress | Cerrar el diseño del tutorial breve para la alpha |
+| PUL-162 | M4 | game-designer | done | Cerrar el diseño del tutorial breve para la alpha |
 | PUL-163 | M4 | godot-architect | draft | ADR-007 de ajustes persistentes, localización y tutorial |
 | PUL-164 | M4 | qa-tester | in_progress | Medir el balance de la alpha con el bot y proponer valores |
 | PUL-165 | M4 | game-designer | draft | Registrar los valores de balance aprobados en el diseño |
