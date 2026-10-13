@@ -63,6 +63,10 @@ pueden estar ya resueltos por fichas posteriores (PUL-088..138, en especial M3c:
   nueva y reproducible (`despues/00` de PUL-087 solo como referencia) y dejan explícito el orden
   PUL-146 → PUL-145 si se ajusta `mat_steel_brushed_top` (los `.glb` embeben ese material); PUL-143
   reconoce que `test_level_01` ya cubre la separación de anillos y se queda con la de anclas (3 AC).
+- Ronda 3: PUL-145 y PUL-146 ya no remiten a `docs/art/style-refs/capture_style_refs.gd` (usa tallas y
+  condimentos retirados y `toggle_seasoning`): piden copiarlo en su `docs/evidence/<id>/`, adaptarlo a la
+  caja única y a los aliños actuales (`apply_seasoning`) y usar esa copia y ese estado para el antes y el
+  después, con cero errores. El script histórico no se toca y los `owns` no cambian.
 - `tools/verify.sh --quick` (rama con `main` mergeado, `d899778`):
   ```
   == gdformat --check

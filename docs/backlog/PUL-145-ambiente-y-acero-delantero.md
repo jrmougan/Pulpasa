@@ -38,10 +38,18 @@ Desajustes D4 y D7 del QA de la estética v2 (`docs/evidence/PUL-087/README.md`)
   `docs/evidence/PUL-073/check_luminance.py`). Saturación sin bajar de 0,31.
 - Si se ajusta `mat_steel_brushed_top.tres`, comprobar antes que algún `.glb` del nivel lo enlaza
   (tras PUL-146); si no, el cambio no tiene efecto y la ficha se para.
+- **Script de captura**: `docs/art/style-refs/capture_style_refs.gd` está desfasado (usa
+  `data/boxes/large.tres`/`medium.tres` y `hot_paprika`/`salt`/`oil`, retirados por D25, líneas 7–12, y
+  llama a `toggle_seasoning`, línea 103, que la `Box` actual no tiene: la API es `apply_seasoning`). No se
+  edita: el worker lo copia en `docs/evidence/PUL-145/capture_style_refs.gd`, lo adapta a la caja única
+  (`data/boxes/box.tres`) y a los aliños actuales (`data/seasonings/sweet_dressing.tres`,
+  `hot_dressing.tres`, `cachelos.tres`, con `apply_seasoning`) y usa **exactamente esa copia y ese
+  estado de partida** para el antes y el después. Las dos ejecuciones deben salir con **cero errores**
+  de script o de carga (salida anotada en Evidence).
 - No cambiar el árbol de `environment.tscn` (`Bulbs`, `Vignette`, `scene-tree.md` §8). Datos en `.tres`.
 
 ## Acceptance
-- [ ] AC1 Captura nueva y reproducible del plano 00 de `docs/art/style-refs/capture_style_refs.gd`
+- [ ] AC1 Captura nueva y reproducible del plano 00 de la copia adaptada `docs/evidence/PUL-145/capture_style_refs.gd` (ver Constraints)
   (1920×1080, comando y commit anotados en Evidence), antes y después del ajuste sobre el mismo commit:
   la de después con luma media entre 0,40 y 0,46 y contraste ≥ 0,16 →
   `docs/evidence/PUL-145/ac1_color_global.txt` (script `color_stats.py` de PUL-087). `despues/00` de

@@ -35,6 +35,14 @@ en PUL-139:
   AC3 mide assets o total; la ficha queda en `draft` hasta la respuesta.
 - Mismo aspecto: ningún cambio visible. No tocar `mat_steel_brushed_top.tres` ni `render_config.tres`
   (PUL-145), ni `stations/pot/` (PUL-144), ni ningún `.tscn`. No inventar `uid://`: reimportar con Godot.
+- **Script de captura**: `docs/art/style-refs/capture_style_refs.gd` está desfasado (usa
+  `data/boxes/large.tres`/`medium.tres` y `hot_paprika`/`salt`/`oil`, retirados por D25, líneas 7–12, y
+  llama a `toggle_seasoning`, línea 103, que la `Box` actual no tiene: la API es `apply_seasoning`). No se
+  edita: el worker lo copia en `docs/evidence/PUL-146/capture_style_refs.gd`, lo adapta a la caja única
+  (`data/boxes/box.tres`) y a los aliños actuales (`data/seasonings/sweet_dressing.tres`,
+  `hot_dressing.tres`, `cachelos.tres`, con `apply_seasoning`) y usa **exactamente esa copia y ese
+  estado de partida** para el antes y el después. Las dos ejecuciones deben salir con **cero errores**
+  de script o de carga (salida anotada en Evidence).
 - Si un `.tscn` necesita cambios para enlazar materiales, parar y pedir ampliación al coordinador.
 
 ## Acceptance
@@ -46,7 +54,7 @@ en PUL-139:
   `docs/evidence/PUL-087/perf/base_mem.gd` → `docs/evidence/PUL-146/ac3_memoria.txt`.
 - [ ] AC4 Sin cambio visible, por revisión humana: capturas antes y después del reimport tomadas
   sobre el mismo commit base de la rama (antes = ese commit sin el cambio; después = con el cambio), con
-  el mismo script (`docs/art/style-refs/capture_style_refs.gd`), la misma cámara, resolución y estado
+  la misma copia adaptada `docs/evidence/PUL-146/capture_style_refs.gd` (ver Constraints), la misma cámara, resolución y estado
   de partida, en lámina lado a lado por plano → `docs/evidence/PUL-146/ac4-antes-despues.png`. No se
   usa umbral de píxeles (skill `godot-verify`) ni las capturas de PUL-087, anteriores a
   PUL-101/113/114/125/131. `art/blender/romeria.blend` borrado.
