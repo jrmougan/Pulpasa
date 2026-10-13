@@ -60,45 +60,50 @@ Lo verifica con medida real `test_ui_scale.gd` (AC4 de la feature). Script repro
 | 29 | HUD | `ui/hud/hud.gd:103` | `HUD_REVENUE_FORMAT` | `— (no se traduce)` | %d € | 5 | %d € | 5 | 72/152 u · cabe | 72/131 u · cabe |
 | 30 | Tickets | `ui/tickets/order_ticket.gd:30` | `TICKET_TITLE` | `TICKET_TITLE` | Comanda | 7 | Comanda | 7 | 67/180 u · cabe | 101/224 u · cabe |
 | 31 | Tickets | `ui/tickets/order_ticket.gd:43` | `TICKET_ID_FORMAT` | `— (no se traduce)` | #%d | 3 | #%d | 3 | 36/180 u · cabe | 43/224 u · cabe |
-| 32 | Tickets | `data/recipes/a_feira.tres:8` | `RECIPE_A_FEIRA` | `RECIPE_A_FEIRA` | Á feira | 7 | Á feira | 7 | 80/180 u · cabe | 101/224 u · cabe |
-| 33 | Tickets | `data/recipes/picante.tres:8` | `RECIPE_PICANTE` | `RECIPE_PICANTE` | Picante | 7 | Picante | 7 | 80/180 u · cabe | 101/224 u · cabe |
-| 34 | Tickets | `data/recipes/con_cachelos.tres:8` | `RECIPE_CON_CACHELOS` | `RECIPE_CON_CACHELOS` | Con cachelos | 12 | Con cachelos | 12 | 137/180 u · cabe | 173/224 u · cabe |
-| 35 | Tickets | `data/recipes/bravo_cachelos.tres:8` | `RECIPE_BRAVO_CACHELOS` | `RECIPE_BRAVO_CACHELOS` | Bravo cachelos | 14 | Bravo cachelos | 14 | 160/180 u · cabe | 202/224 u · cabe |
-| 36 | Tickets | `data/seasonings/sweet_dressing.tres:8 (solo si falta el icono)` | `SEASONING_SWEET_DRESSING` | `SEASONING_SWEET_DRESSING` | Aliño dulce | 11 | Aliño doce | 10 | 119/180 u · cabe | 158/224 u · cabe |
-| 37 | Tickets | `data/seasonings/hot_dressing.tres:8 (solo si falta el icono)` | `SEASONING_HOT_DRESSING` | `SEASONING_HOT_DRESSING` | Aliño picante | 13 | Aliño picante | 13 | 140/180 u · cabe | 187/224 u · cabe |
-| 38 | Tickets | `data/seasonings/cachelos.tres:8 (solo si falta el icono)` | `SEASONING_CACHELOS` | `SEASONING_CACHELOS` | Cachelos | 8 | Cachelos | 8 | 86/180 u · cabe | 115/224 u · cabe |
-| 39 | Táctil | `ui/menus/menu_panel.gd:22` | `tr("Menú") (perfil MOBILE)` | `MENU_BACK` | Menú | 4 | Menú | 4 | 53/456 u · cabe | 58/456 u · cabe |
-| 40 | Táctil | `ui/menus/main_menu.gd:5 (único botón en MOBILE)` | `MENU_PLAY` | `MENU_PLAY` | Individual | 10 | Individual | 10 | 132/440 u · cabe | 144/440 u · cabe |
-| 41 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_PICK_UP` | `VERB_PICK_UP` | COGER | 5 | COLLER | 6 | 101/456 u · cabe | 101/456 u · cabe |
-| 42 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_DROP` | `VERB_DROP` | SOLTAR | 6 | DEIXAR | 6 | 101/456 u · cabe | 101/456 u · cabe |
-| 43 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_COOK` | `VERB_COOK` | COCER | 5 | COCER | 5 | 84/456 u · cabe | 84/456 u · cabe |
-| 44 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_CUT` | `VERB_CUT` | CORTAR | 6 | CORTAR | 6 | 101/456 u · cabe | 101/456 u · cabe |
-| 45 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_SEASON_SWEET` | `VERB_SEASON_SWEET` | ALIÑAR DULCE | 12 | ALIÑAR DOCE | 11 | 202/456 u · cabe | 202/456 u · cabe |
-| 46 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_SEASON_HOT` | `VERB_SEASON_HOT` | ALIÑAR PICANTE | 14 | ALIÑAR PICANTE | 14 | 235/456 u · cabe | 235/456 u · cabe |
-| 47 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_CACHELOS` | `VERB_CACHELOS` | CACHELOS | 8 | CACHELOS | 8 | 134/456 u · cabe | 134/456 u · cabe |
-| 48 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_TRASH` | `VERB_TRASH` | TIRAR | 5 | BOTAR | 5 | 84/456 u · cabe | 84/456 u · cabe |
-| 49 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_BOX_NOT_FULL` | `REASON_BOX_NOT_FULL` | caja a medias | 13 | caixa a medias | 14 | 202/456 u · cabe | 202/456 u · cabe |
-| 50 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_BUSY` | `REASON_BUSY` | ocupado | 7 | ocupado | 7 | 101/456 u · cabe | 101/456 u · cabe |
-| 51 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_EMPTY` | `REASON_EMPTY` | vacío | 5 | baleiro | 7 | 101/456 u · cabe | 101/456 u · cabe |
-| 52 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_FULL` | `REASON_FULL` | lleno | 5 | cheo | 4 | 72/456 u · cabe | 72/456 u · cabe |
-| 53 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_ALREADY` | `REASON_ALREADY` | ya aplicado | 11 | xa aplicado | 11 | 158/456 u · cabe | 158/456 u · cabe |
-| 54 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_ALREADY_HAS` | `REASON_ALREADY_HAS` | ya lleva | 8 | xa leva | 7 | 115/456 u · cabe | 115/456 u · cabe |
-| 55 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_RAW` | `REASON_RAW` | sin cocer | 9 | sen cocer | 9 | 130/456 u · cabe | 130/456 u · cabe |
-| 56 | Prompts | `entities/items/box.gd:191 (Label3D)` | `— (formato)` | `— (no se traduce)` | %d/%d | 3 | %d/%d | 3 | 43/456 u · cabe | 43/456 u · cabe |
-| 57 | Prompts | `entities/stations/order_stand.gd:173 (Label3D)` | `— (formato)` | `— (no se traduce)` | #%d | 2 | #%d | 2 | 29/456 u · cabe | 29/456 u · cabe |
-| 58 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_PICK_UP` | `TUTORIAL_STEP_PICK_UP` | Coge un pulpo de la nevera. | 27 | Colle un polbo da neveira. | 26 | 389/456 u · cabe | 389/456 u · cabe |
-| 59 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_COOK` | `TUTORIAL_STEP_COOK` | Mételo en la olla para cocerlo. | 31 | Méteo na pota para cocelo. | 26 | 446/456 u · cabe | 446/456 u · cabe |
-| 60 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_CUT` | `TUTORIAL_STEP_CUT` | Córtalo sobre una caja: 6 pulsaciones (o mantén pulsado). | 57 | Córtao sobre unha caixa: 6 pulsacións (ou mantén premido). | 58 | 835/456 u · 2 líneas | 835/456 u · 2 líneas |
-| 61 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_SEASON` | `TUTORIAL_STEP_SEASON` | Aliña la caja llena con el aliño dulce. | 39 | Aliña a caixa chea co aliño doce. | 33 | 562/456 u · 2 líneas | 562/456 u · 2 líneas |
-| 62 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_SEASON_REPLACE` | `TUTORIAL_SEASON_REPLACE` | ¿Picante? Pulsa el dulce y lo sustituye. | 40 | Picante? Preme o doce e substitúeo. | 35 | 576/456 u · 2 líneas | 576/456 u · 2 líneas |
-| 63 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_TRASH_HINT` | `TUTORIAL_TRASH_HINT` | Lo que salga mal, al cubo. | 26 | O que saia mal, ao lixo. | 24 | 374/456 u · cabe | 374/456 u · cabe |
-| 64 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_DELIVER` | `TUTORIAL_STEP_DELIVER` | Entra con la caja correcta en la zona del puesto. | 49 | Entra coa caixa correcta na zona do posto. | 42 | 706/456 u · 2 líneas | 706/456 u · 2 líneas |
-| 65 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_COOPERATE` | `TUTORIAL_STEP_COOPERATE` | Cooperad: uno cuece y el otro corta. | 36 | Cooperade: un coce e o outro corta. | 35 | 518/456 u · 2 líneas | 518/456 u · 2 líneas |
-| 66 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_SWITCH` | `TUTORIAL_STEP_SWITCH` | Cambia de personaje con el botón. | 33 | Cambia de personaxe co botón. | 29 | 475/456 u · 2 líneas | 475/456 u · 2 líneas |
-| 67 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_SKIP` | `TUTORIAL_SKIP` | Saltar | 6 | Omitir | 6 | 86/456 u · cabe | 86/456 u · cabe |
+| 32 | Tickets | `ui/tickets/order_ticket.gd:76 y :92 (format_clock)` | `— (formato)` | `— (no se traduce)` | %02d:%02d | 5 | %02d:%02d | 5 | 90/180 u · cabe | 90/224 u · cabe |
+| 33 | Tickets | `ui/tickets/order_ticket.tscn:105 (Ghost, fondo del reloj)` | `— (decorado)` | `— (no se traduce)` | 88:88 | 5 | 88:88 | 5 | 90/180 u · cabe | 90/224 u · cabe |
+| 34 | Tickets | `data/recipes/a_feira.tres:8` | `RECIPE_A_FEIRA` | `RECIPE_A_FEIRA` | Á feira | 7 | Á feira | 7 | 80/180 u · cabe | 101/224 u · cabe |
+| 35 | Tickets | `data/recipes/picante.tres:8` | `RECIPE_PICANTE` | `RECIPE_PICANTE` | Picante | 7 | Picante | 7 | 80/180 u · cabe | 101/224 u · cabe |
+| 36 | Tickets | `data/recipes/con_cachelos.tres:8` | `RECIPE_CON_CACHELOS` | `RECIPE_CON_CACHELOS` | Con cachelos | 12 | Con cachelos | 12 | 137/180 u · cabe | 173/224 u · cabe |
+| 37 | Tickets | `data/recipes/bravo_cachelos.tres:8` | `RECIPE_BRAVO_CACHELOS` | `RECIPE_BRAVO_CACHELOS` | Bravo cachelos | 14 | Bravo cachelos | 14 | 160/180 u · cabe | 202/224 u · cabe |
+| 38 | Tickets | `data/seasonings/sweet_dressing.tres:8 (solo si falta el icono)` | `SEASONING_SWEET_DRESSING` | `SEASONING_SWEET_DRESSING` | Aliño dulce | 11 | Aliño doce | 10 | 119/180 u · cabe | 158/224 u · cabe |
+| 39 | Tickets | `data/seasonings/hot_dressing.tres:8 (solo si falta el icono)` | `SEASONING_HOT_DRESSING` | `SEASONING_HOT_DRESSING` | Aliño picante | 13 | Aliño picante | 13 | 140/180 u · cabe | 187/224 u · cabe |
+| 40 | Tickets | `data/seasonings/cachelos.tres:8 (solo si falta el icono)` | `SEASONING_CACHELOS` | `SEASONING_CACHELOS` | Cachelos | 8 | Cachelos | 8 | 86/180 u · cabe | 115/224 u · cabe |
+| 41 | Táctil | `ui/menus/menu_panel.gd:22` | `tr("Menú") (perfil MOBILE)` | `MENU_BACK` | Menú | 4 | Menú | 4 | 53/456 u · cabe | 58/456 u · cabe |
+| 42 | Táctil | `ui/menus/main_menu.gd:5 (único botón en MOBILE)` | `MENU_PLAY` | `MENU_PLAY` | Individual | 10 | Individual | 10 | 132/440 u · cabe | 144/440 u · cabe |
+| 43 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_PICK_UP` | `VERB_PICK_UP` | COGER | 5 | COLLER | 6 | 101/456 u · cabe | 101/456 u · cabe |
+| 44 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_DROP` | `VERB_DROP` | SOLTAR | 6 | DEIXAR | 6 | 101/456 u · cabe | 101/456 u · cabe |
+| 45 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_COOK` | `VERB_COOK` | COCER | 5 | COCER | 5 | 84/456 u · cabe | 84/456 u · cabe |
+| 46 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_CUT` | `VERB_CUT` | CORTAR | 6 | CORTAR | 6 | 101/456 u · cabe | 101/456 u · cabe |
+| 47 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_SEASON_SWEET` | `VERB_SEASON_SWEET` | ALIÑAR DULCE | 12 | ALIÑAR DOCE | 11 | 202/456 u · cabe | 202/456 u · cabe |
+| 48 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_SEASON_HOT` | `VERB_SEASON_HOT` | ALIÑAR PICANTE | 14 | ALIÑAR PICANTE | 14 | 235/456 u · cabe | 235/456 u · cabe |
+| 49 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_CACHELOS` | `VERB_CACHELOS` | CACHELOS | 8 | CACHELOS | 8 | 134/456 u · cabe | 134/456 u · cabe |
+| 50 | Prompts | `features/lenguaje-acciones.md §Verbos (sin implementar)` | `VERB_TRASH` | `VERB_TRASH` | TIRAR | 5 | BOTAR | 5 | 84/456 u · cabe | 84/456 u · cabe |
+| 51 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_BOX_NOT_FULL` | `REASON_BOX_NOT_FULL` | caja a medias | 13 | caixa a medias | 14 | 202/456 u · cabe | 202/456 u · cabe |
+| 52 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_BUSY` | `REASON_BUSY` | ocupado | 7 | ocupado | 7 | 101/456 u · cabe | 101/456 u · cabe |
+| 53 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_EMPTY` | `REASON_EMPTY` | vacío | 5 | baleiro | 7 | 101/456 u · cabe | 101/456 u · cabe |
+| 54 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_FULL` | `REASON_FULL` | lleno | 5 | cheo | 4 | 72/456 u · cabe | 72/456 u · cabe |
+| 55 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_ALREADY` | `REASON_ALREADY` | ya aplicado | 11 | xa aplicado | 11 | 158/456 u · cabe | 158/456 u · cabe |
+| 56 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_ALREADY_HAS` | `REASON_ALREADY_HAS` | ya lleva | 8 | xa leva | 7 | 115/456 u · cabe | 115/456 u · cabe |
+| 57 | Prompts | `features/lenguaje-acciones.md §Motivos (sin implementar)` | `REASON_RAW` | `REASON_RAW` | sin cocer | 9 | sen cocer | 9 | 130/456 u · cabe | 130/456 u · cabe |
+| 58 | Prompts | `entities/items/box.gd:191 (Label3D)` | `— (formato)` | `— (no se traduce)` | %d/%d | 3 | %d/%d | 3 | 43/456 u · cabe | 43/456 u · cabe |
+| 59 | Prompts | `entities/stations/order_stand.gd:173 (Label3D)` | `— (formato)` | `— (no se traduce)` | #%d | 2 | #%d | 2 | 29/456 u · cabe | 29/456 u · cabe |
+| 60 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_PICK_UP` | `TUTORIAL_STEP_PICK_UP` | Coge un pulpo de la nevera. | 27 | Colle un polbo da neveira. | 26 | 389/456 u · cabe | 389/456 u · cabe |
+| 61 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_COOK` | `TUTORIAL_STEP_COOK` | Mételo en la olla para cocerlo. | 31 | Méteo na pota para cocelo. | 26 | 446/456 u · cabe | 446/456 u · cabe |
+| 62 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_CUT` | `TUTORIAL_STEP_CUT` | Córtalo sobre una caja: 6 pulsaciones (o mantén pulsado). | 57 | Córtao sobre unha caixa: 6 pulsacións (ou mantén premido). | 58 | 835/456 u · 2 líneas | 835/456 u · 2 líneas |
+| 63 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_SEASON` | `TUTORIAL_STEP_SEASON` | Aliña la caja llena con el aliño dulce. | 39 | Aliña a caixa chea co aliño doce. | 33 | 562/456 u · 2 líneas | 562/456 u · 2 líneas |
+| 64 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_SEASON_REPLACE` | `TUTORIAL_SEASON_REPLACE` | ¿Picante? Pulsa el dulce y lo sustituye. | 40 | Picante? Preme o doce e substitúeo. | 35 | 576/456 u · 2 líneas | 576/456 u · 2 líneas |
+| 65 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_TRASH_HINT` | `TUTORIAL_TRASH_HINT` | Lo que salga mal, al cubo. | 26 | O que saia mal, ao lixo. | 24 | 374/456 u · cabe | 374/456 u · cabe |
+| 66 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_DELIVER` | `TUTORIAL_STEP_DELIVER` | Entra con la caja correcta en la zona del puesto. | 49 | Entra coa caixa correcta na zona do posto. | 42 | 706/456 u · 2 líneas | 706/456 u · 2 líneas |
+| 67 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_COOPERATE` | `TUTORIAL_STEP_COOPERATE` | Cooperad: uno cuece y el otro corta. | 36 | Cooperade: un coce e o outro corta. | 35 | 518/456 u · 2 líneas | 518/456 u · 2 líneas |
+| 68 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_STEP_SWITCH` | `TUTORIAL_STEP_SWITCH` | Cambia de personaje con el botón. | 33 | Cambia de personaxe co botón. | 29 | 475/456 u · 2 líneas | 475/456 u · 2 líneas |
+| 69 | Tutorial | `features/tutorial-breve.md (sin implementar; PUL-162)` | `TUTORIAL_SKIP` | `TUTORIAL_SKIP` | Saltar | 6 | Omitir | 6 | 86/456 u · cabe | 86/456 u · cabe |
 
-**Filas por pantalla** (≥ 1 en las 8): Menú 9 · Pausa 6 · Resultados 7 · HUD 7 · Tickets 9 · Táctil 2 ·
-Prompts 17 · Tutorial 10 = **67 filas**. 6 no se traducen (marca, lema y 4 formatos).
+**Filas por pantalla** (≥ 1 en las 8): Menú 9 · Pausa 6 · Resultados 7 · HUD 7 · Tickets 11 · Táctil 2 ·
+Prompts 17 · Tutorial 10 = **69 filas**. 8 no se traducen (marca, lema, 5 formatos y el «88:88» de fondo del
+reloj); quedan **61 filas traducibles con 59 claves únicas**: `MENU_PLAY` (menú y táctil) y `MENU_EXIT` (menú y
+pausa) salen en dos pantallas cada una. El reloj del ticket (`%02d:%02d`, `order_ticket.gd:76` y `:92`) y su
+fondo «88:88» se añadieron en la revisión (filas 32–33).
 
 **Hallazgos del inventario**
 1. **Riesgo de ancho, 1 fila**: `MENU_MODE` en gallego (≈ 490 u frente a 480 u de columna, sin `autowrap`) en
@@ -136,19 +141,21 @@ con fuente `main.tex`, `brand.md` (D22) o propuesta.
 
 | AC | Given/When/Then | Números | Prueba | Ficha que lo cumple |
 |---|---|---|---|---|
-| AC1 cobertura | Sí | 61 claves del inventario + las de PUL-160/162; 2 idiomas; 0 sin traducir; 0 `tr()` literales | `test_translations.gd` + informe | PUL-168, 173 |
+| AC1 cobertura | Sí | 59 claves únicas del inventario (61 filas traducibles) + las de PUL-160/162; 2 idiomas; 0 sin traducir; 0 `tr()` literales | `test_translations.gd` + informe | PUL-168, 173 |
 | AC2 cambio en caliente | Sí | ≤ 0,5 s (≤ 30 frames), misma instancia, reloj ±0,5 s | `test_locale_switch.gd` | PUL-173 |
 | AC3 idioma por defecto | Sí | 2 casos (sin `settings.cfg` / con gallego) | `test_translations.gd` | PUL-168, 171 |
 | AC4 caben | Sí | 2 idiomas × 2 resoluciones, 4 tickets, 0 «…», ≤ 3 líneas, ≥ 36 px | `test_ui_scale.gd` + 4 capturas | PUL-173 |
-| AC5 verbos y motivos | Sí | 8 verbos, 7 rótulos de 6 motivos = 15 claves; ≥ 36 px; 0 nodos de texto en 2 escenas | `test_translations.gd` + `test_ui_scale.gd` | PUL-168, 173 |
+| AC5 verbos y motivos | Sí (When: el test recorre las claves y las 2 escenas) | 8 verbos, 7 rótulos de 6 motivos = 15 claves; ≥ 36 px; 0 nodos de texto en 2 escenas | `test_translations.gd` + `test_ui_scale.gd` | PUL-168, 173 |
 | AC6 textos de datos | Sí | 4 recetas + 4 tramos = 8 casos | `test_translations.gd` | PUL-168, 173 |
-| AC7 marca | Sí | 2 textos idénticos en 2 idiomas | `test_translations.gd` | PUL-173 |
+| AC7 marca | Sí (When: se cambia de idioma con el menú y la pausa abiertos) | 2 textos idénticos en 2 idiomas | `test_translations.gd` | PUL-173 |
 
 **P1** (idiomas e idioma por defecto) sigue sin respuesta de G0 (`docs/evidence/PUL-141/README.md`: no hay
 acta de G0): aparece como pregunta abierta en la feature, con propuesta (castellano + gallego, sin inglés,
 castellano por defecto) y AC3 escrito con el valor por defecto como dato. P9 también queda abierta.
 
 ## AC4 · Verificación
+
+Tras las correcciones de revisión (commit «PUL-161: correcciones de revisión»):
 
 ```text
 $ tools/verify.sh --quick
@@ -165,4 +172,5 @@ check_owns: 5 rutas dentro de owns de PUL-161.
 exit=0
 ```
 
-(`exit` de `verify.sh --quick` medido también sin tubería: `EXIT=0`. `check_owns.py` se pasó sobre el commit de la ficha; este apartado se añadió con `--amend` y toca solo `docs/evidence/PUL-161/README.md`.)
+(`check_owns.py` se pasó sobre el commit de la ronda; este apartado se añadió con `--amend` y solo toca
+`docs/evidence/PUL-161/README.md`, dentro de `owns`.)

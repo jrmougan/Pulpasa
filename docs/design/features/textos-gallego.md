@@ -5,7 +5,7 @@
 ## Descripción
 La alpha se puede jugar entera en castellano y en gallego, y el idioma se cambia en la pantalla de opciones
 sin reiniciar. Vocabulario: `docs/design/glosario-gl.md`. Inventario de las cadenas visibles hoy, con
-fichero de origen, longitud y si caben: `docs/evidence/PUL-161/README.md` (67 filas en 8 pantallas).
+fichero de origen, longitud y si caben: `docs/evidence/PUL-161/README.md` (69 filas en 8 pantallas, 59 claves únicas que se traducen).
 
 Puesta al día (PUL-161) con lo que entró después de escribir la primera versión:
 - **D25**: 4 recetas por contenido (*Á feira*, *Picante*, *Con cachelos*, *Bravo cachelos*, ≤ 14 caracteres)
@@ -63,7 +63,8 @@ Las comprobaciones son de PUL-168 (claves), PUL-173 (traducción y cambio en cal
 opciones). Los nombres de test son propuestas; PUL-163 puede fijar otros.
 
 - **AC1 (cobertura)** Given los ficheros de traducción de castellano y gallego, When `test_translations.gd`
-  recorre las claves del inventario (las 67 filas menos las 6 que no se traducen: marca, lema y 4 formatos)
+  recorre las 59 claves únicas del inventario (69 filas menos 8 que no se traducen —marca, lema, 5 formatos y el
+  «88:88» del reloj— dan 61 filas; `MENU_PLAY` y `MENU_EXIT` salen en dos pantallas)
   más las de opciones, créditos y tutorial que añadan PUL-160/162, Then hay 0 claves sin traducción en
   cualquiera de los 2 idiomas y 0 llamadas `tr()` con texto castellano literal en `godot/ui/` y
   `godot/entities/` (búsqueda en el test). *Test:* `test_translations.gd` + informe de traducción.
@@ -83,14 +84,17 @@ opciones). Los nombres de test son propuestas; PUL-163 puede fijar otros.
   (2 idiomas × 2 resoluciones) del menú y la pausa en `docs/evidence/PUL-173/`.
 - **AC5 (D26: verbos y motivos)** Given los 8 verbos (COGER, SOLTAR, COCER, CORTAR, ALIÑAR DULCE, ALIÑAR
   PICANTE, CACHELOS, TIRAR) y los 7 rótulos de los 6 motivos (caja a medias, ocupado, vacío, lleno, ya
-  aplicado / ya lleva, sin cocer), Then existen 15 claves `VERB_*`/`REASON_*` con texto en castellano y
+  aplicado / ya lleva, sin cocer), When `test_translations.gd` busca sus claves en los 2 idiomas y
+  `test_ui_scale.gd` los pinta en el panel del tutorial y en el tooltip de PC y recorre `action_prompt.tscn` y
+  `touch_controls.tscn`, Then existen 15 claves `VERB_*`/`REASON_*` con texto en castellano y
   gallego (`glosario-gl.md`) que caben sin recortarse a ≥ 36 px en 2340×1080 donde se muestren (tutorial,
   tooltip de PC); y `action_prompt.tscn` y `touch_controls.tscn` tienen 0 nodos de texto (los iconos no
   llevan texto). *Test:* `test_translations.gd` + `test_ui_scale.gd`.
 - **AC6 (textos de datos)** Given el idioma gallego, When sale un ticket de cada una de las 4 recetas y el
   resultado de cada uno de los 4 tramos de `performance_texts`, Then los 8 textos salen en gallego y los
   `.tres` conservan el castellano como fuente. *Test:* `test_translations.gd` (8 casos).
-- **AC7 (marca)** Given cualquiera de los 2 idiomas, Then «PULPASA» y «FRANQUICIA GALEGA DE POLBO» se ven
+- **AC7 (marca)** Given cualquiera de los 2 idiomas, When se abre el menú principal y la pausa y se cambia de
+  idioma en opciones, Then «PULPASA» y «FRANQUICIA GALEGA DE POLBO» se ven
   idénticos. *Test:* `test_translations.gd`.
 
 ## Datos

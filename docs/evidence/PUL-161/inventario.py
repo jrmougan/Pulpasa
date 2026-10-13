@@ -45,6 +45,8 @@ r("HUD",HUD+":103","HUD_REVENUE_FORMAT","%d €","%d €",24,152,False,"999 €|
 # Tickets
 r("Tickets",OT+":30","TICKET_TITLE","Comanda","Comanda",16,180)
 r("Tickets",OT+":43","TICKET_ID_FORMAT","#%d","#%d",20,180,False,"#99|#99")
+r("Tickets",OT+":76 y :92 (format_clock)","— (formato)","%02d:%02d","%02d:%02d",30,180,False,"01:30|01:30")
+r("Tickets","ui/tickets/order_ticket.tscn:105 (Ghost, fondo del reloj)","— (decorado)","88:88","88:88",30,180)
 for k,es,gl,f in [("RECIPE_A_FEIRA","Á feira","Á feira","a_feira"),("RECIPE_PICANTE","Picante","Picante","picante"),("RECIPE_CON_CACHELOS","Con cachelos","Con cachelos","con_cachelos"),("RECIPE_BRAVO_CACHELOS","Bravo cachelos","Bravo cachelos","bravo_cachelos")]:
     r("Tickets","data/recipes/%s.tres:8"%f,k,es,gl,19,180)
 for k,es,gl,f in [("SEASONING_SWEET_DRESSING","Aliño dulce","Aliño doce","sweet_dressing"),("SEASONING_HOT_DRESSING","Aliño picante","Aliño picante","hot_dressing"),("SEASONING_CACHELOS","Cachelos","Cachelos","cachelos")]:
@@ -80,10 +82,10 @@ def verdict(s,font,avail,wrap):
     if wrap: return "%d/%d u · %d líneas"%(round(w),avail,math.ceil(w/avail))
     return "%d/%d u · **riesgo**"%(round(w),avail)
 PROP={"Pausa":"PAUSE_TITLE","La romería puede esperar un momento.":"PAUSE_DESCRIPTION","Reanudar":"PAUSE_RESUME","Reiniciar":"PAUSE_RESTART","Salir":"MENU_EXIT","Turno terminado":"RESULTS_TITLE","Reintentar":"RESULTS_RETRY","Recaudación: %d €":"RESULTS_REVENUE","Menú":"MENU_BACK"}
-NOTR={"PULPASA","FRANQUICIA GALEGA DE POLBO","#%d","%d/%d","%d €"}
+NOTR={"PULPASA","FRANQUICIA GALEGA DE POLBO","#%d","%d/%d","%d €","%02d:%02d","88:88"}
 print("| # | Pantalla | Origen | Clave hoy | Clave propuesta | Castellano | Lon. es | Gallego (propuesta) | Lon. gl | 1280×720 (gl) | 2340×1080 (gl) |")
 print("|---|---|---|---|---|---|---|---|---|---|---|")
-from collections import Counter; C=Counter()
+from collections import Counter; C=Counter(); KEYS=[]
 for i,(scr,src,key,es,gl,font,avail,wrap,sample,mobav) in enumerate(R,1):
     se,sg=(sample.split("|") if sample else (es,gl))
     m=max(font,24)
@@ -96,4 +98,5 @@ for i,(scr,src,key,es,gl,font,avail,wrap,sample,mobav) in enumerate(R,1):
     elif key.startswith("—"): pk="— (no se traduce)"
     else: pk=key.split(" ")[0]
     print("| %d | %s | `%s` | `%s` | `%s` | %s | %d | %s | %d | %s | %s |"%(i,scr,src,key,pk,es,len(se),gl,len(sg),d,mob))
-print(); print(dict(C), sum(C.values()))
+    if not pk.startswith("—"): KEYS.append(pk)
+print(); print(dict(C), sum(C.values()), "traducibles:", len(KEYS), "claves únicas:", len(set(KEYS)), "repetidas:", sorted(k for k in set(KEYS) if KEYS.count(k)>1))

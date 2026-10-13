@@ -50,7 +50,8 @@ Should «textos en gallego» (`features/textos-gallego.md`, AC1–AC5). Desde qu
 
 ## Evidence
 `docs/evidence/PUL-161/README.md`:
-- AC1: 67 filas en 8 pantallas (Menú 9, Pausa 6, Resultados 7, HUD 7, Tickets 9, Táctil 2, Prompts 17, Tutorial 10),
+- AC1: 69 filas en 8 pantallas (Menú 9, Pausa 6, Resultados 7, HUD 7, Tickets 11, Táctil 2, Prompts 17, Tutorial 10);
+  61 traducibles con 59 claves únicas (`MENU_PLAY` y `MENU_EXIT` repetidas); incluye el reloj del ticket,
   con origen, longitud y ancho estimado a 1280×720 y 2340×1080; 1 riesgo (`MENU_MODE` en gallego, escritorio).
   Script: `docs/evidence/PUL-161/inventario.py`.
 - AC2: 22/22 términos con fuente (2 `main.tex`, 20 propuesta), 0 faltantes. `main.tex` no estaba accesible en esta
