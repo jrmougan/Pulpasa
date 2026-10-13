@@ -27,10 +27,13 @@ coordinador la registra en `decisions.md`).
 - No pasa a `ready` sin el gate de balance hecho.
 
 ## Acceptance
-- [ ] AC1 Cada valor aprobado aparece en su feature con la fecha y la referencia al gate.
-- [ ] AC2 GDD §11 al día; ningún valor contradictorio entre features y GDD (grep de cada valor).
-- [ ] AC3 Tabla «campo `.tres` → valor nuevo» en `docs/evidence/PUL-165/README.md`.
-- [ ] AC4 `tools/verify.sh --quick` en verde; `check_owns` limpio.
+- [ ] AC1 Given el acta del gate G2, When se trasladan los valores, Then cada valor aprobado aparece en su feature con la fecha del gate
+  (0 valores aprobados ausentes) → tabla valor → feature:línea en `docs/evidence/PUL-165/README.md`.
+- [ ] AC2 Given las features y `gdd.md`, When se busca cada valor nuevo y el antiguo con `grep -rn` en `docs/design/`, Then el antiguo
+  aparece 0 veces como vigente → salida de los `grep` en la evidencia.
+- [ ] AC3 Given los `.tres` afectados, When se lista el cambio, Then hay tabla «fichero `.tres` → campo → valor actual → valor nuevo» con
+  1 fila por campo → evidencia (entrada de PUL-166).
+- [ ] AC4 Given la rama de la ficha, When se ejecutan `tools/verify.sh --quick` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-165/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

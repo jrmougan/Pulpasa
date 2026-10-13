@@ -27,12 +27,11 @@ paralelo (`options`, `credits`, `tutorial`), para que PUL-171, 172 y 174 no comp
 - `level_01.tscn` no se toca (es de PUL-175). Si un texto vive en una escena del mundo, se anota para PUL-175.
 
 ## Acceptance
-- [ ] AC1 Given cada cadena del inventario de PUL-161, Then tiene clave y texto castellano en el fichero → `test_translation_keys.gd`.
-- [ ] AC2 Given las escenas y scripts de `ui/`, Then 0 textos visibles literales fuera de claves (test que
-  recorre los `Label`/`Button` de las escenas instanciadas) → `test_translation_keys.gd`.
-- [ ] AC3 Given el idioma castellano, Then menú, pausa, HUD con 4 tickets y resultados se ven igual que
-  antes → capturas antes/después a 1920×1080 en `docs/evidence/PUL-168/`.
-- [ ] AC4 `tools/verify.sh` en verde; `check_owns` limpio.
+- [ ] AC1 Given el inventario de PUL-161, When se carga el fichero de traducción, Then el 100 % de sus cadenas tiene clave y texto castellano en el fichero → `test_translation_keys.gd`.
+- [ ] AC2 Given las escenas de `ui/` instanciadas en castellano, When se recorren sus `Label`/`Button`, Then 0 textos visibles literales fuera de claves → `test_translation_keys.gd`.
+- [ ] AC3 Given el idioma castellano, When se capturan menú, pausa, HUD con 4 tickets y resultados a 1920×1080, Then la
+  diferencia con las capturas previas es 0 textos distintos o desplazados > 2 px → capturas antes/después a 1920×1080 en `docs/evidence/PUL-168/`.
+- [ ] AC4 Given la rama de la ficha, When se ejecutan `tools/verify.sh` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-168/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

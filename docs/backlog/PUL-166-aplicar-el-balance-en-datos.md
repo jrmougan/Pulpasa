@@ -22,11 +22,11 @@ Cambiar los valores en los `.tres` y fijarlos con un test de datos, sin tocar c�
 - Los tests existentes que fijen valores antiguos se actualizan, no se borran.
 
 ## Acceptance
-- [ ] AC1 Given `round_config.tres`, Then umbrales, fases y multiplicadores son los de PUL-165 → `test_data_balance.gd`.
-- [ ] AC2 Given las 4 recetas, Then precios (y `presses_to_fill` si cambia) son los de PUL-165 → `test_data_balance.gd`.
-- [ ] AC3 Given toda receta en su fase más dura, Then su paciencia supera el tiempo del bot de PUL-164 en
+- [ ] AC1 Given la tabla de PUL-165, When se carga `round_config.tres`, Then cada umbral, `start_fraction`, `active_slots` y `patience_multiplier` es igual al valor aprobado (±0,001) con 0 campos distintos → `test_data_balance.gd`.
+- [ ] AC2 Given la tabla de PUL-165, When se cargan los 4 `.tres` de `data/orders/` (y la caja), Then precio y `presses_to_fill` son los aprobados en los 4 casos → `test_data_balance.gd`.
+- [ ] AC3 Given toda receta en su fase más dura, When se calcula `max_time × patience_multiplier`, Then supera el tiempo del bot de PUL-164 en
   ≥ el margen aprobado → `test_data_balance.gd`.
-- [ ] AC4 `tools/verify.sh` en verde; `check_owns` limpio.
+- [ ] AC4 Given la rama de la ficha, When se ejecutan `tools/verify.sh` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-166/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

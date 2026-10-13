@@ -26,10 +26,13 @@ notas, (3) qué decide el responsable al final (publicar, otra vuelta de balance
 - Lo que siga sin respuesta de P4 (dónde y para quién se publica) queda como pregunta en la guía.
 
 ## Acceptance
-- [ ] AC1 Cada Must de la alpha tiene una fila con cómo se comprueba y dónde está la prueba.
-- [ ] AC2 Guion del playtest ≤ 45 min por sesión, con preguntas cerradas y métricas numéricas.
-- [ ] AC3 Sección de decisión con las salidas posibles y qué ficha dispara cada una.
-- [ ] AC4 `tools/verify.sh --quick` en verde; `check_owns` limpio.
+- [ ] AC1 Given los 11 Must de la alpha (`roadmap.md`), When se escribe la lista de publicación, Then hay 11 filas con cómo se comprueba y
+  dónde está la prueba (test, evidencia de PUL-176/177 o playtest), 0 filas sin prueba → tabla en `docs/design/m4-gate.md`.
+- [ ] AC2 Given el guion del playtest, When se cronometra sobre el papel, Then cada sesión dura ≤ 45 min, usa los `.zip` cuyo SHA-256 figura en
+  el manifiesto de PUL-176 y pide ≥ 5 métricas numéricas (estrellas, entregas, caducadas, tiempo del tutorial, nº de dudas) → guion y hoja de notas en `m4-gate.md`.
+- [ ] AC3 Given la sección de decisión, When se lee, Then lista ≥ 3 salidas (publicar, otra vuelta de balance, fichas nuevas) con la ficha que
+  dispara cada una, y P4 figura como pregunta si sigue abierta → sección en `m4-gate.md`, comprobación en `docs/evidence/PUL-178/README.md`.
+- [ ] AC4 Given la rama de la ficha, When se ejecutan `tools/verify.sh --quick` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-178/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

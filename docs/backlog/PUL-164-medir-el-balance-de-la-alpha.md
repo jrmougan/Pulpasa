@@ -30,10 +30,13 @@ Medidas previas en `docs/evidence/PUL-116/`.
 - Las herramientas de medida no entran en `verify.sh` (no son tests).
 
 ## Acceptance
-- [ ] AC1 Tabla receta × fase con tiempo del bot, paciencia y holgura (s); toda holgura < 5 s marcada.
-- [ ] AC2 Recaudación y estrellas en 300 s para ≥ 3 semillas por modo (Individual, Local 2P).
-- [ ] AC3 Propuesta de valores con antes/después y JSON de las medidas en `docs/evidence/PUL-164/`.
-- [ ] AC4 `tools/verify.sh --quick` en verde; `check_owns` limpio.
+- [ ] AC1 Given el bot de rutas sobre el estado actual (D26/D27), When se mide cada receta (4) en cada fase donde existe, Then hay tabla
+  con tiempo del bot (s), paciencia (s) y holgura (s), y toda holgura < 5 s aparece marcada → tabla + JSON en `docs/evidence/PUL-164/`.
+- [ ] AC2 Given 3 semillas por modo (Individual, Local 2P), When se juegan 300 s con el bot, Then se registran recaudación (€), entregas y
+  estrellas con los umbrales actuales 30/60/90 → JSON y tabla en la evidencia.
+- [ ] AC3 Given la propuesta de valores, When se presenta al gate G2, Then cada valor (umbrales, multiplicadores, límites de fase, precios,
+  `presses_to_fill`) tiene antes, después y efecto esperado numérico (holgura o € previstos) → tabla en la evidencia.
+- [ ] AC4 Given la rama de la ficha, When se ejecutan `tools/verify.sh --quick` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-164/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

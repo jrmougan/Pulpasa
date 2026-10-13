@@ -24,13 +24,13 @@ en `.tres`, y su adaptador según ADR-007. El volumen de los 3 buses se lee al a
 - Sin UI: la pantalla es PUL-171. Las señales, solo las de `signals.md`.
 
 ## Acceptance
-- [ ] AC1 Given sin `settings.cfg`, Then los valores son los de `settings_defaults.tres` (Música 70 %,
+- [ ] AC1 Given sin `settings.cfg`, When se crea el núcleo, Then los valores son los de `settings_defaults.tres` (Música 70 %,
   Ambiente 70 %, Efectos 100 % salvo cambio en PUL-160) → `test_settings_store.gd`.
 - [ ] AC2 Given un cambio de volumen guardado, When se recrea el núcleo, Then el valor se conserva (±0,001) → `test_settings_persistence.gd`.
-- [ ] AC3 Given un `settings.cfg` corrupto o con claves desconocidas, Then se usan los valores por defecto
-  sin error en consola y el fichero se reescribe → `test_settings_store.gd`.
-- [ ] AC4 Given un bus a 0 %, Then queda a −80 dB; a 100 %, a 0 dB (`opciones-de-volumen.md` AC2) → `test_settings_persistence.gd`.
-- [ ] AC5 `tools/verify.sh` en verde; `check_owns` limpio.
+- [ ] AC3 Given un `settings.cfg` corrupto o con claves desconocidas, When se carga, Then se usan los valores por defecto
+  con 0 errores en consola y el fichero se reescribe válido en ≤ 1 guardado → `test_settings_store.gd`.
+- [ ] AC4 Given el núcleo y `AudioDirector`, When un bus se fija a 0 % y luego a 100 %, Then queda a −80 dB y a 0 dB (±0,01) (`opciones-de-volumen.md` AC2) → `test_settings_persistence.gd`.
+- [ ] AC5 Given la rama de la ficha, When se ejecutan `tools/verify.sh` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-167/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

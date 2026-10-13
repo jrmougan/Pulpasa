@@ -32,10 +32,15 @@ Hoy `AudioMix`/`AudioDirector` (ADR-006 §2) guardan el volumen solo en memoria.
 - `autoload/`, `core/`, `resources/` y `ui/` sin tipos 3D/2D de mundo; nada de rutas absolutas de nodos.
 
 ## Acceptance
-- [ ] AC1 ADR-007 con contexto, decisión, alternativas descartadas y consecuencias para cada uno de los 3 temas.
-- [ ] AC2 `signals.md` y `scene-tree.md` enmendados; cada señal con emisor, oyentes y payload tipado.
-- [ ] AC3 Sección «Ficheros y campos para PUL-167..175» con rutas exactas para los `owns`.
-- [ ] AC4 `tools/verify.sh --quick` en verde; `check_owns` limpio.
+- [ ] AC1 Given ADR-007, When se revisa, Then cada uno de los 3 temas (ajustes, localización, tutorial) tiene contexto, decisión,
+  ≥ 1 alternativa descartada con motivo y consecuencias (12 apartados, 0 vacíos) → lista de comprobación en `docs/evidence/PUL-163/README.md`.
+- [ ] AC2 Given `signals.md`, When se añaden las señales nuevas, Then cada una tiene emisor, ≥ 1 oyente y payload tipado (0 campos `Variant`),
+  y `scene-tree.md` sitúa la pantalla de opciones, los créditos y el panel del tutorial → diff de ambos ficheros citado en la evidencia.
+- [ ] AC3 Given la sección «Ficheros y campos para PUL-167..175», When se cruza con los `owns` de esas 7 fichas, Then cada ruta propuesta
+  coincide o se indica el cambio para el producer; 0 solapes dentro de una oleada del plan de PUL-141 → tabla en la evidencia.
+- [ ] AC4 Given la ruta de menú del tutorial (si G0 elige b o c), When se fija el contrato, Then el ADR dice qué API llama el botón y que su
+  dueño es PUL-171 → apartado del ADR citado en la evidencia.
+- [ ] AC5 Given la rama de la ficha, When se ejecutan `tools/verify.sh --quick` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-163/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

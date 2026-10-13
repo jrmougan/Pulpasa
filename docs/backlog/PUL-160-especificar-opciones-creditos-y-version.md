@@ -31,12 +31,17 @@ las atribuciones de `docs/assets/licenses.md` (hay assets CC BY, que exigen atri
   con su coste y deja la elección en «Preguntas abiertas».
 
 ## Acceptance
-- [ ] AC1 `opciones-de-volumen.md` cubre ajustes, acceso, navegación en los 3 perfiles de entrada, valores por
-  defecto y persistencia, con ≥ 6 AC numéricos y su test.
-- [ ] AC2 `creditos-y-version.md` exige una entrada por cada asset con licencia de atribución de `licenses.md`
-  (test que cruza el registro con la pantalla) y la versión de `config/version` visible.
-- [ ] AC3 Datos que van a `.tres` listados en cada feature; preguntas abiertas explícitas.
-- [ ] AC4 `tools/verify.sh --quick` en verde; `check_owns` limpio.
+- [ ] AC1 Given `opciones-de-volumen.md` reescrita, When se cuentan sus AC, Then hay ≥ 6, todos Given/When/Then con números
+  (fila ≥ 120 px a 1080, paso de slider, valores por defecto) y cada uno nombra su test o captura → tabla AC → prueba en `docs/evidence/PUL-160/README.md`.
+- [ ] AC2 Given la lista de ajustes candidatos (volumen ×3, idioma, pantalla completa, vsync, tilt-shift, repetir tutorial…), When P2 sigue
+  abierta en G0, Then cada candidato figura como **propuesta** con su coste estimado (nº de AC y ficheros) y la elección queda en «Preguntas
+  abiertas»; 0 ajustes dados por aprobados sin gate → revisión de la sección en la evidencia.
+- [ ] AC3 Given `creditos-y-version.md`, When se cruza con `docs/assets/licenses.md`, Then exige 1 entrada por cada licencia de atribución
+  (hoy 9 CC BY + OFL), fija el formato del fichero de créditos/`LICENSES.txt` que consumirá PUL-170 y la versión visible en 2 pantallas
+  → conteo `grep -c` de `licenses.md` frente a la feature, en la evidencia.
+- [ ] AC4 Given ambas features, When se buscan valores numéricos, Then cada valor configurable figura en una tabla «Datos (`.tres`)»
+  (0 valores solo en prosa) → lista en la evidencia.
+- [ ] AC5 Given la rama de la ficha, When se ejecutan `tools/verify.sh --quick` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-160/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

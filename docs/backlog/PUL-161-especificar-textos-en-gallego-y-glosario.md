@@ -30,10 +30,14 @@ Should «textos en gallego» (`features/textos-gallego.md`, AC1–AC5). Desde qu
 - Los textos en gallego son propuesta: la revisión por un hablante nativo es pregunta P9 del plan de M4.
 
 ## Acceptance
-- [ ] AC1 Inventario en `docs/evidence/PUL-161/README.md` con ≥ 1 fila por pantalla y el origen de cada cadena.
-- [ ] AC2 Glosario con todos los verbos y motivos de D26, las 4 recetas y los 4 `performance_texts`.
-- [ ] AC3 `textos-gallego.md` con AC numéricos, cada uno con test o captura; preguntas abiertas explícitas.
-- [ ] AC4 `tools/verify.sh --quick` en verde; `check_owns` limpio.
+- [ ] AC1 Given las escenas de `godot/ui/` y los `.tres` con texto visible, When se hace el inventario, Then cada cadena tiene fila con
+  pantalla, fichero de origen (`.tscn`/`.gd`/`.tres`) y longitud en caracteres; ≥ 1 fila por cada una de 8 pantallas (menú, pausa,
+  resultados, HUD, tickets, táctil, prompts, tutorial) → `docs/evidence/PUL-161/README.md`.
+- [ ] AC2 Given `glosario-gl.md`, When se cruza con D26 y `round_config.tres`, Then contiene los 8 verbos, los 6 motivos, las 4 recetas y los
+  4 `performance_texts` (22 términos, 0 faltantes), cada uno con fuente (`main.tex` o propuesta) → conteo en la evidencia.
+- [ ] AC3 Given `textos-gallego.md`, When se revisan sus AC, Then todos son Given/When/Then con números y test o captura, y P1 (idiomas,
+  idioma por defecto) aparece como pregunta abierta si G0 no la ha respondido → tabla AC → prueba en la evidencia.
+- [ ] AC4 Given la rama de la ficha, When se ejecutan `tools/verify.sh --quick` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-161/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

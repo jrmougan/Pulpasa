@@ -24,13 +24,13 @@ Escena del panel del tutorial: texto del paso, icono del verbo igual que el prom
 - Textos con claves en `data/i18n/tutorial.*` (castellano; el gallego en PUL-173).
 
 ## Acceptance
-- [ ] AC1 Given cada paso, Then el panel muestra su texto y el icono del verbo de `action_icons.tres` (paso 5
+- [ ] AC1 Given el núcleo en cada uno de los 6 pasos, When se refresca el panel, Then muestra su texto y el icono del verbo de `action_icons.tres` (paso 5
   sin verbo, paso 6 el botón de cambiar) → `test_tutorial_panel.gd`.
-- [ ] AC2 Given el paso completado, Then el panel pasa al siguiente en ≤ 0,5 s → `test_tutorial_panel.gd`.
-- [ ] AC3 Given «Saltar» (teclado, mando o toque), Then el núcleo queda «hecho» y el panel se cierra → `test_tutorial_panel.gd`.
-- [ ] AC4 Given el perfil táctil, Then texto ≥ 36 px y «Saltar» ≥ 120 px de alto a 1080, fuera de la zona de
+- [ ] AC2 Given un paso en curso, When el núcleo lo da por completado, Then el panel pasa al siguiente en ≤ 0,5 s → `test_tutorial_panel.gd`.
+- [ ] AC3 Given el panel abierto, When se pulsa «Saltar» con teclado, mando o toque (3 casos), Then el núcleo queda «hecho» y el panel se cierra → `test_tutorial_panel.gd`.
+- [ ] AC4 Given el perfil táctil a 2340×1080, When se muestra el panel, Then texto ≥ 36 px y «Saltar» ≥ 120 px de alto a 1080, fuera de la zona de
   botones de D27 → `test_tutorial_panel.gd` + capturas 1920×1080 y 2340×1080.
-- [ ] AC5 `tools/verify.sh` en verde; `check_owns` limpio.
+- [ ] AC5 Given la rama de la ficha, When se ejecutan `tools/verify.sh` y `python3 tools/check_owns.py <rama>`, Then ambos salen con código 0 y 0 rutas fuera de `owns` → salida pegada en `docs/evidence/PUL-174/README.md`.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

@@ -53,4 +53,10 @@ con puerta «Publicar alpha». Alcance aprobado (MoSCoW) en el roadmap; decision
   builds, 2 de QA/smoke, 1 de guía de playtest y 1 de publicación del producer).
 - Hallazgos: opciones con núcleo de volumen pero sin UI ni persistencia; sin localización; tutorial sin
   implementar; sin pantalla de créditos pese a 9 entradas CC BY en `licenses.md`; build Windows nunca ejecutado.
-- `tools/verify.sh --quick` y `tools/check_owns.py`: ver salida en el commit (en verde).
+- Ronda 2 (revisión con CHANGES): PUL-170 pasa a solo preparar (presets, versión de G0 fijada antes de exportar,
+  `MANIFEST.txt` con commit y SHA-256, export release bloqueado con árbol sucio) y depende de PUL-160 (O2);
+  PUL-176 exporta los builds finales tras PUL-177 y pasa el smoke sobre ellos (O8); PUL-179 publica esos mismos
+  `.zip` sin cambiar versión ni reexportar (comprueba `git log` vacío y hashes). PUL-171 y PUL-175 implementan solo
+  lo aprobado en G0 (P2, P5) y el botón «Tutorial», si se elige, es de PUL-171. Todos los AC de PUL-160..179 en
+  Given/When/Then con números y test, captura o comprobación concreta. Oleadas O1–O9 y grafo actualizados.
+- `tools/verify.sh --quick` en verde y `python3 tools/check_owns.py jrmougan/pul-141 HEAD~1` limpio en ambas rondas.
