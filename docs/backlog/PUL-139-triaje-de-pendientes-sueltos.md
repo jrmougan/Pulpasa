@@ -57,4 +57,23 @@ pueden estar ya resueltos por fichas posteriores (PUL-088..138, en especial M3c:
   `romeria.blend`, D5/D6/D9b, pregunta sobre §4.2). PUL-147..149 sin usar.
 - Sin ficha, con nota: escucha humana del audio y balance (van a M4, PUL-141), D8 (aceptado por
   PUL-087) y la limitación `--audio-driver` del MCP (herramienta).
-- AC1 cumple, AC2 cumple, AC3: ver abajo.
+- AC1 cumple, AC2 cumple, AC3 cumple (salida real abajo).
+- Ronda 2 (revisión con CHANGES): PUL-146 AC4 pasa a comparación humana antes/después sobre el mismo
+  commit, cámara y estado (sin umbral de píxeles ni capturas de PUL-087); PUL-145 AC1/AC3 exigen captura
+  nueva y reproducible (`despues/00` de PUL-087 solo como referencia) y dejan explícito el orden
+  PUL-146 → PUL-145 si se ajusta `mat_steel_brushed_top` (los `.glb` embeben ese material); PUL-143
+  reconoce que `test_level_01` ya cubre la separación de anillos y se queda con la de anclas (3 AC).
+- `tools/verify.sh --quick` (rama con `main` mergeado, `d899778`):
+  ```
+  == gdformat --check
+  235 files would be left unchanged
+  == gdlint
+  Success: no problems found
+  == import
+  ✓ verify OK
+  ```
+- `python3 tools/check_owns.py jrmougan/pul-139 main` (tras el commit de la ronda 2):
+  ```
+  check_owns: 12 rutas dentro de owns de PUL-139.
+  ```
+  Sin la base como segundo argumento compara contra `HEAD` y da 0 rutas.

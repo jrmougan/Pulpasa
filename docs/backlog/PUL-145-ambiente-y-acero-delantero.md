@@ -24,7 +24,10 @@ Desajustes D4 y D7 del QA de la estética v2 (`docs/evidence/PUL-087/README.md`)
 1. Aplicar la propuesta de PUL-087 (o la que decida el responsable): `ambient_light_energy` 0,5 → 0,4,
    `adjustment_contrast` 1,1 → 1,15, sin tocar la saturación.
 2. Bajar el brillo del acero delantero (`specular`/`roughness` de `mat_steel_brushed_top` o energía
-   especular de las omni de `Bulbs`).
+   especular de las omni de `Bulbs`). **Orden**: hoy los `.glb` embeben su copia de
+   `mat_steel_brushed_top` y no enlazan el `.tres` (D5), así que editar el `.tres` no cambia el nivel.
+   Si se elige esa vía, PUL-145 va **después de PUL-146** (que enlaza los materiales v2 como externos)
+   y pasa a `deps: [PUL-146]`; la vía de las omni de `Bulbs` no depende de PUL-146.
 3. Volver a medir color global y luminancia con los scripts de PUL-087 y PUL-073.
 
 ## Constraints
@@ -33,14 +36,20 @@ Desajustes D4 y D7 del QA de la estética v2 (`docs/evidence/PUL-087/README.md`)
   donde viene lo amarillo? La ficha queda en `draft` hasta la respuesta.
 - Ninguna zona jugable fuera de 0,08–0,95 de luminancia por mediana (§6.1-6,
   `docs/evidence/PUL-073/check_luminance.py`). Saturación sin bajar de 0,31.
+- Si se ajusta `mat_steel_brushed_top.tres`, comprobar antes que algún `.glb` del nivel lo enlaza
+  (tras PUL-146); si no, el cambio no tiene efecto y la ficha se para.
 - No cambiar el árbol de `environment.tscn` (`Bulbs`, `Vignette`, `scene-tree.md` §8). Datos en `.tres`.
 
 ## Acceptance
-- [ ] AC1 Luma media de la captura de referencia (`despues/00` de PUL-087) entre 0,40 y 0,46 y
-  contraste ≥ 0,16 → `docs/evidence/PUL-145/ac1_color_global.txt` (script `color_stats.py` de PUL-087).
+- [ ] AC1 Captura nueva y reproducible del plano 00 de `docs/art/style-refs/capture_style_refs.gd`
+  (1920×1080, comando y commit anotados en Evidence), antes y después del ajuste sobre el mismo commit:
+  la de después con luma media entre 0,40 y 0,46 y contraste ≥ 0,16 →
+  `docs/evidence/PUL-145/ac1_color_global.txt` (script `color_stats.py` de PUL-087). `despues/00` de
+  PUL-087 (luma 0,51, anterior a M3c–M3e) queda solo como referencia, no como medida.
 - [ ] AC2 Luminancia por zona jugable dentro de 0,08–0,95 → `docs/evidence/PUL-145/ac2_luminancia.txt`.
-- [ ] AC3 Acero delantero: luma media del recorte de la encimera Z1 ≤ 0,75 (medir antes y después) y
-  comparativa antes/después → `docs/evidence/PUL-145/ac3-acero.png`.
+- [ ] AC3 Acero delantero: luma media del recorte de la encimera Z1 ≤ 0,75, medida sobre las
+  capturas nuevas de AC1 (antes y después), y comparativa para revisión humana →
+  `docs/evidence/PUL-145/ac3-acero.png`.
 - [ ] AC4 `test_render_config.gd` fija los valores nuevos; `tools/verify.sh` en verde; `check_owns` limpio.
 
 ## Plan

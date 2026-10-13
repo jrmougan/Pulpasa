@@ -44,8 +44,12 @@ en PUL-139:
   64 distintos) → `test_assets_shared.gd` o script en `docs/evidence/PUL-146/`.
 - [ ] AC3 Memoria de texturas de los assets del nivel ≤ 30 MB (hoy ~97 MB), método de
   `docs/evidence/PUL-087/perf/base_mem.gd` → `docs/evidence/PUL-146/ac3_memoria.txt`.
-- [ ] AC4 Sin cambio visible: diferencia de píxel media < 1 % entre la captura de PUL-087 `despues/00` y
-  la nueva → `docs/evidence/PUL-146/ac4_diff.png`; `art/blender/romeria.blend` borrado.
+- [ ] AC4 Sin cambio visible, por revisión humana: capturas antes y después del reimport tomadas
+  sobre el mismo commit base de la rama (antes = ese commit sin el cambio; después = con el cambio), con
+  el mismo script (`docs/art/style-refs/capture_style_refs.gd`), la misma cámara, resolución y estado
+  de partida, en lámina lado a lado por plano → `docs/evidence/PUL-146/ac4-antes-despues.png`. No se
+  usa umbral de píxeles (skill `godot-verify`) ni las capturas de PUL-087, anteriores a
+  PUL-101/113/114/125/131. `art/blender/romeria.blend` borrado.
 - [ ] AC5 `tools/verify.sh` en verde (incluye `test_assets_models.gd`); `check_owns` limpio.
 
 ## Plan

@@ -56,9 +56,9 @@ balance de la fase 3 es obsoleto en su forma y lo recoge el plan de M4 (PUL-141)
 | Ficha | Pendientes | Rol | Escenas | Pregunta abierta |
 |---|---|---|---|---|
 | PUL-142 | M3-3 POP del puesto | gameplay-engineer | `order_stand.tscn` | Si el arreglo cambia `pulse_target` o mueve `StandNumber`, es enmienda de `scene-tree.md` (arquitecto) |
-| PUL-143 | M1-3 test de plazas de la olla | gameplay-engineer | — | — |
+| PUL-143 | M1-3 test de plazas de la olla (anclas; los anillos ya los cubre `test_level_01`) | gameplay-engineer | — | — |
 | PUL-144 | D2 vapor, D3 tapa | asset-pipeline | `kitchen.tscn` | — |
-| PUL-145 | D4 ambiente, D7 acero | asset-pipeline | `environment.tscn` | Sí: ¿se aplica la propuesta de PUL-087? (gusto, la decide el responsable) |
+| PUL-145 | D4 ambiente, D7 acero | asset-pipeline | `environment.tscn` | Sí: ¿se aplica la propuesta de PUL-087? (gusto, la decide el responsable). Si D7 se arregla en `mat_steel_brushed_top`, va después de PUL-146 |
 | PUL-146 | D5, D6, D9b | asset-pipeline | — | Sí: ¿los 256 MB de §4.2 cuentan solo assets? |
 
 `owns` sin solapes: PUL-146 excluye `assets/models/stations/pot/` (lo lleva PUL-144, que depende de
@@ -73,4 +73,8 @@ un pendiente del roadmap; no se ha comprobado su uso. Se apunta para el coordina
 
 ## Verificación
 
-Ver la sección Evidence de la ficha (`tools/verify.sh --quick` y `check_owns`).
+- `tools/verify.sh --quick`: gdformat (235 ficheros sin cambios), gdlint («Success: no problems found»),
+  import → «✓ verify OK».
+- `python3 tools/check_owns.py jrmougan/pul-139 main`: «check_owns: 12 rutas dentro de owns de PUL-139.»
+
+Salida completa en la sección Evidence de la ficha.
