@@ -1,11 +1,11 @@
 ---
 id: PUL-154
 title: Que el panel de salida de GUT no se quede con el puntero en los tests de UI
-status: review
+status: done
 milestone: M4
 role: qa-tester
 deps: []
-orca_task: null
+orca_task: task_632e6f37f6cd
 unity_sources: []
 owns: [godot/.gutconfig.json, godot/tests/helpers/gut_pre_run.gd*, godot/tests/integration/test_d26_touch_flow.gd*, godot/tests/integration/test_gut_pointer.gd*, docs/evidence/PUL-154/**, docs/backlog/PUL-154-panel-de-gut-y-clics-en-tests.md]
 touches_scenes: []

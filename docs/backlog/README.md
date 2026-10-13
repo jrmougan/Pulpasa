@@ -163,7 +163,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-151 | M3e | godot-architect | blocked | Exportar a Android, elegir renderizador móvil y verificar en un teléfono real |
 | PUL-152 | M3e | qa-tester | in_progress | Recapturar medidas y capturas de D26 con el estado final de M3e |
 | PUL-153 | M3e | qa-tester | draft | Probar el perfil táctil en un teléfono con el build web (antes del APK) |
-| PUL-154 | M4 | qa-tester | in_progress | Que el panel de salida de GUT no se quede con el puntero en los tests de UI |
+| PUL-154 | M4 | qa-tester | done | Que el panel de salida de GUT no se quede con el puntero en los tests de UI |
 | PUL-160 | M4 | game-designer | done | Especificar la pantalla de opciones, los créditos y la versión visible |
 | PUL-161 | M4 | game-designer | done | Poner al día los textos en gallego y escribir el glosario |
 | PUL-162 | M4 | game-designer | done | Cerrar el diseño del tutorial breve para la alpha |
