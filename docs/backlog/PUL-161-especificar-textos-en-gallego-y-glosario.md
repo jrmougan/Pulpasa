@@ -1,11 +1,11 @@
 ---
 id: PUL-161
 title: Poner al día los textos en gallego y escribir el glosario
-status: review
+status: done
 milestone: M4
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_3c097f958542
 unity_sources: []
 owns: [docs/design/features/textos-gallego.md, docs/design/glosario-gl.md, docs/evidence/PUL-161/**, docs/backlog/PUL-161-especificar-textos-en-gallego-y-glosario.md]
 touches_scenes: []
