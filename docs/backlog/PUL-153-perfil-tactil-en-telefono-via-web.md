@@ -44,11 +44,20 @@ Diseño: `features/controles-tactiles.md`.
 - [ ] AC3 Given la fase 3 (4 tickets) en el teléfono, Then se anota el FPS medio de 60 s (Performance de
   `chrome://inspect` o el contador del navegador) y si baja de 30 FPS se registra como hallazgo para la
   elección de renderizador de PUL-151.
-- [ ] AC4 Given lo que el navegador no expone, Then una tabla lista para cada criterio de teléfono de
-  PUL-151 (safe area real y D27.3, botón Atrás, pantalla encendida, háptica, muesca) si el web lo
-  comprueba, no lo comprueba o lo comprueba a medias, con la prueba hecha. → `docs/evidence/PUL-153/README.md`.
-- [ ] AC5 Given la parte de teléfono de `docs/design/m3e-gate.md` (PUL-150, si ya existe), Then las
-  respuestas del responsable quedan anotadas en la evidencia con la plantilla de la guía.
+- [ ] AC4 Given lo que el navegador no expone, Then `docs/evidence/PUL-153/README.md` tiene una tabla de
+  **5 filas exactas**, una por criterio de teléfono de PUL-151: (1) safe area real y D27.3, (2) botón Atrás,
+  (3) pantalla encendida 5 min, (4) háptica 20 / 20 + 20 ms, (5) muesca superior. Cada fila trae estado
+  (`sí` / `no` / `a medias`), la prueba hecha en el teléfono (paso y resultado observado, o valor leído,
+  p. ej. `DisplayServer.get_display_safe_area()` en el log del navegador) y, si no es `sí`, el AC de
+  PUL-151 que lo conserva. 5 de 5 filas con prueba.
+- [ ] AC5 (respuestas del responsable, plantilla propia) Given la ronda de AC2, Then
+  `docs/evidence/PUL-153/respuestas-telefono.md` tiene las **8 preguntas** siguientes respondidas con
+  `ok` / `cambiar` / `dudas` y una línea si no es `ok` (8 de 8): (1) stick y acción a la vez, (2) el dedo
+  del stick que pasa sobre el botón de acción no lo pulsa, (3) la cámara sigue al activo sin marear,
+  (4) la flecha de borde encuentra al inactivo, (5) se leen tickets y HUD (texto de 36 px a 1080),
+  (6) el botón de acción no tapa demasiado mundo, (7) veces que se soltó algo al suelo sin querer (número),
+  (8) ¿hace falta el layout de zurdos? Si PUL-150 ya está mergeada, las preguntas de la parte de teléfono
+  de `m3e-gate.md` que no estén en esta lista se añaden al mismo fichero; no es requisito.
 
 ## Plan
 (Lo escribe el worker antes de implementar.)

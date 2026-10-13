@@ -60,3 +60,13 @@ Resumen y lo revisado de D26/D27: `docs/evidence/PUL-140/README.md`.
 | AC1 | `PUL-150-guia-playtest-m3e.md` (draft, guía `m3e-gate.md`, deps PUL-152) y `PUL-151-export-android-y-renderizador-movil.md` (**blocked**: sin Android SDK, sin plantillas 4.7.2 y sin teléfono; AC4 con D27.3 y la safe area real). Además PUL-152 (recaptura de D26 con el estado final y caso 09 con safe de diseño), PUL-153 (teléfono vía build web, pregunta al responsable) y PUL-154 (H-04 de PUL-132, panel de GUT; M4). `owns` disjuntos, sin escenas |
 | AC2 | README con la tabla de fichas, la tabla punto de D26/D27 → estado → ficha y 4 preguntas (perfil táctil en PC sin pantalla táctil, teléfono por web, toolchain Android, estado «propuesta» de las enmiendas de ADR) |
 | AC3 | `tools/verify.sh --quick`: `✓ verify OK`. `tools/check_owns.py jrmougan/pul-140 ac249d1`: 7 rutas, todas dentro de owns (rc 0) |
+
+### Ronda 2 (revisión con CHANGES)
+- PUL-152 AC4: el caso 09 con safe de diseño ya no tiene que coincidir ± 2 px con la estimación de ADR-005
+  D27.3: se mide sin umbral y se explica cada diferencia con esa estimación y con el registro de PUL-138
+  (6,6 / 35,1 px a 1080; 2,2 / 12,0 a 370). 24 vistas en JSON (3 resoluciones × 2 safe × 2 ollas × 2
+  posiciones) y 16 JPG con la olla en el nombre, solo a 2340×1080 y 800×370 (1920×1080 táctil solo JSON,
+  coherente con Constraints).
+- PUL-153: AC4 con 5 filas exactas, estado, prueba y AC de PUL-151 que lo conserva; AC5 con plantilla
+  propia (`respuestas-telefono.md`, 8 preguntas, 8 de 8) sin depender de PUL-150.
+- `tools/verify.sh --quick` en verde; `tools/check_owns.py jrmougan/pul-140 ac249d1` limpio.

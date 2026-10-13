@@ -28,7 +28,8 @@ D27.3) y no capturado.
 ## Constraints
 - Solo evidencia: no se toca código, escenas, datos, tests ni contratos. Un defecto nuevo se anota con
   gravedad y captura; no se arregla.
-- Repositorio ligero: JPG, y a 1920×1080 táctil solo el JSON de medidas (como PUL-132).
+- Repositorio ligero: JPG, y a 1920×1080 táctil solo el JSON de medidas (como PUL-132), también en el
+  caso 09 (AC4).
 - Las 800×370 sirven para composición y solapes, no para tamaños (fuera del rango soportado, nota de
   PUL-132).
 
@@ -44,11 +45,19 @@ D27.3) y no capturado.
 - [ ] AC3 Given los hallazgos H-01..H-03 de PUL-132, Then siguen corregidos: anillo de olla dentro de
   pantalla y bajo la banda superior (y ≥ 200 px a 1080) con el activo en la fila trasera; aro inactivo ≤ 3
   px a 1080 en móvil; game over sin «cajas/minuto». → filas en la tabla y capturas 07, 09, 10 y 13.
-- [ ] AC4 (caso 09 con safe de diseño) Given una caja con contador en los pasaplatos 01-06 y el activo en
-  cada olla (z −3,1 y z −3,4), a 2340×1080, 1920×1080 y 800×370 con safe 132 / 0 / 132 / 63, Then el solape
-  medido coincide con la tabla de ADR-005 D27.3 (20,8-22,6 y 51,0 px a 1080; 17,7-18,3 y 28,0 a 800×370)
-  ± 2 px, y con safe nula sigue en 0 (≤ 6,4 px a 800×370 en z −3,4). → 12 capturas
-  `<res>-caso09-safe-<nula|diseno>-<z>.jpg` y tabla en el README.
+- [ ] AC4 (caso 09, medida en juego real) Given una caja con contador en cada pasaplatos 01-06 y el activo
+  en reposo en cada olla (oeste y este) en su plaza (z −3,1) y en el extremo norte (z −3,4), con safe nula y
+  con la de diseño (132 / 0 / 132 / 63), a 2340×1080, 1920×1080 y 800×370, Then el JSON
+  `<res>-caso09-medidas.json` trae las **24 vistas** (3 resoluciones × 2 safe areas × 2 ollas × 2
+  posiciones) con el solape máximo en px reales por pasaplatos; con safe nula, 0 px a 2340×1080 y
+  1920×1080 y ≤ 8 px a 800×370 (residuo aceptado por D27). Con la safe de diseño **no hay umbral** (es la
+  limitación aceptada D27.3): el README pone, para cada vista, el valor medido junto a las dos referencias
+  previas, la estimación de ADR-005 D27.3 (20,8-22,6 / 51,0 px a 1080; 17,7-18,3 / 28,0 a 800×370) y el
+  registro de `test_camera_button_zone.gd` en PUL-138 (6,6 / 35,1 px a 1080; 2,2 / 12,0 a 370, con el
+  activo colocado sin física), y explica cada diferencia > 2 px con cualquiera de ellas (posición real del
+  activo, recorte este de la cámara, redondeo de `SafeAreaMargin`, rectángulo del contador usado).
+  Capturas: **16 JPG**, solo a 2340×1080 y 800×370 (1920×1080 táctil queda en JSON, como en Constraints),
+  con el nombre `<res>-caso09-<nula|diseno>-<oeste|este>-<z3_1|z3_4>.jpg`.
 - [ ] AC5 `tools/verify.sh` completo en verde y `tools/check_owns.py` limpio.
 
 ## Plan
