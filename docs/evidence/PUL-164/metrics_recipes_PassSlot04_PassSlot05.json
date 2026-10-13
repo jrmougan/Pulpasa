@@ -1,0 +1,458 @@
+[
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Á feira",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "from": "cero",
+        "legs": [
+          "BoxSpawner:9.4",
+          "PassSlot04:10.3",
+          "OctopusStorage:12.8",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "PassSlot04:7.0",
+          "PassSlot05:1.1",
+          "Box:6.2",
+          "SweetDressing:5.4",
+          "Zone:3.2"
+        ],
+        "meters_p1": 61.5,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 14,
+        "retargets": 0,
+        "seconds": 19.78
+      },
+      {
+        "completed": true,
+        "from": "flujo",
+        "legs": [
+          "BoxSpawner:1.7",
+          "PassSlot04:10.3",
+          "Octopus:6.2",
+          "PassSlot04:0.9",
+          "Box:5.4",
+          "SweetDressing:5.5",
+          "Zone:3.2"
+        ],
+        "meters_p1": 34.9,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 11,
+        "retargets": 0,
+        "seconds": 8.87
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  },
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Picante",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "from": "cero",
+        "legs": [
+          "BoxSpawner:9.4",
+          "PassSlot04:10.3",
+          "OctopusStorage:12.8",
+          "Kitchen:3.1",
+          "Kitchen:0.3",
+          "PassSlot04:7.0",
+          "PassSlot05:1.1",
+          "Box:6.2",
+          "HotDressing:4.4",
+          "Zone:4.2"
+        ],
+        "meters_p1": 61.5,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 14,
+        "retargets": 0,
+        "seconds": 19.78
+      },
+      {
+        "completed": true,
+        "from": "flujo",
+        "legs": [
+          "BoxSpawner:1.7",
+          "PassSlot04:10.3",
+          "Octopus:6.2",
+          "PassSlot04:0.9",
+          "Box:5.4",
+          "HotDressing:4.5",
+          "Zone:4.2"
+        ],
+        "meters_p1": 34.9,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 11,
+        "retargets": 0,
+        "seconds": 8.87
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  },
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Con cachelos",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "from": "cero",
+        "legs": [
+          "BoxSpawner:9.4",
+          "PassSlot04:10.3",
+          "OctopusStorage:12.8",
+          "Kitchen:3.1",
+          "CachelosStorage:1.9",
+          "Kitchen2:3.9",
+          "Kitchen2:0.3",
+          "CachelosBowl:2.5",
+          "Kitchen:3.3",
+          "PassSlot04:6.8",
+          "PassSlot05:1.1",
+          "Box:6.2",
+          "CachelosBowl:3.4",
+          "SweetDressing:2.1",
+          "Zone:3.2"
+        ],
+        "meters_p1": 74.5,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 23.65
+      },
+      {
+        "completed": true,
+        "from": "flujo",
+        "legs": [
+          "BoxSpawner:1.7",
+          "PassSlot04:10.3",
+          "Octopus:6.2",
+          "PassSlot04:0.9",
+          "Box:5.4",
+          "CachelosBowl:3.5",
+          "SweetDressing:2.1",
+          "Zone:3.2"
+        ],
+        "meters_p1": 35.2,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 9.17
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  },
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Bravo cachelos",
+    "mode": "solo",
+    "orders": [
+      {
+        "completed": true,
+        "from": "cero",
+        "legs": [
+          "BoxSpawner:9.4",
+          "PassSlot04:10.3",
+          "OctopusStorage:12.8",
+          "Kitchen:3.1",
+          "CachelosStorage:1.9",
+          "Kitchen2:3.9",
+          "Kitchen2:0.3",
+          "CachelosBowl:2.5",
+          "Kitchen:3.3",
+          "PassSlot04:6.8",
+          "PassSlot05:1.1",
+          "Box:6.2",
+          "CachelosBowl:3.4",
+          "HotDressing:1.1",
+          "Zone:4.2"
+        ],
+        "meters_p1": 74.5,
+        "meters_p2": 0.0,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 23.65
+      },
+      {
+        "completed": true,
+        "from": "flujo",
+        "legs": [
+          "BoxSpawner:1.7",
+          "PassSlot04:10.3",
+          "Octopus:6.2",
+          "PassSlot04:0.9",
+          "Box:5.4",
+          "CachelosBowl:3.5",
+          "HotDressing:1.1",
+          "Zone:4.2"
+        ],
+        "meters_p1": 35.2,
+        "meters_p2": 0.0,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 9.17
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  },
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Á feira",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "from": "cero",
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "BoxSpawner:9.4",
+          "PassSlot04:10.3",
+          "Kitchen:0.3",
+          "PassSlot04:6.9",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "SweetDressing:5.5",
+          "Zone:3.2"
+        ],
+        "meters_p1": 30.0,
+        "meters_p2": 13.8,
+        "order": 1,
+        "presses": 14,
+        "retargets": 0,
+        "seconds": 11.05
+      },
+      {
+        "completed": true,
+        "from": "flujo",
+        "legs": [
+          "Octopus:0.3",
+          "BoxSpawner:1.7",
+          "PassSlot04:10.3",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "SweetDressing:5.5",
+          "Zone:3.2"
+        ],
+        "meters_p1": 22.0,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 11,
+        "retargets": 0,
+        "seconds": 6.08
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  },
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Picante",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "from": "cero",
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "BoxSpawner:9.4",
+          "PassSlot04:10.3",
+          "Kitchen:0.3",
+          "PassSlot04:6.9",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "HotDressing:4.5",
+          "Zone:4.2"
+        ],
+        "meters_p1": 30.0,
+        "meters_p2": 13.8,
+        "order": 1,
+        "presses": 14,
+        "retargets": 0,
+        "seconds": 11.05
+      },
+      {
+        "completed": true,
+        "from": "flujo",
+        "legs": [
+          "Octopus:0.3",
+          "BoxSpawner:1.7",
+          "PassSlot04:10.3",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "HotDressing:4.5",
+          "Zone:4.2"
+        ],
+        "meters_p1": 22.0,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 11,
+        "retargets": 0,
+        "seconds": 6.08
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  },
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Con cachelos",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "from": "cero",
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "CachelosStorage:1.8",
+          "BoxSpawner:9.4",
+          "Kitchen2:3.9",
+          "PassSlot04:10.3",
+          "Kitchen2:0.3",
+          "CachelosBowl:2.6",
+          "Kitchen:3.3",
+          "PassSlot04:6.8",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "CachelosBowl:3.5",
+          "SweetDressing:2.1",
+          "Zone:3.2"
+        ],
+        "meters_p1": 30.2,
+        "meters_p2": 26.7,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 14.93
+      },
+      {
+        "completed": true,
+        "from": "flujo",
+        "legs": [
+          "Octopus:0.3",
+          "BoxSpawner:1.7",
+          "PassSlot04:10.3",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "CachelosBowl:3.5",
+          "SweetDressing:2.1",
+          "Zone:3.2"
+        ],
+        "meters_p1": 22.3,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 6.38
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  },
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivery_rejections": 0,
+    "kind": "Bravo cachelos",
+    "mode": "coop",
+    "orders": [
+      {
+        "completed": true,
+        "from": "cero",
+        "legs": [
+          "OctopusStorage:1.1",
+          "Kitchen:3.1",
+          "CachelosStorage:1.8",
+          "BoxSpawner:9.4",
+          "Kitchen2:3.9",
+          "PassSlot04:10.3",
+          "Kitchen2:0.3",
+          "CachelosBowl:2.6",
+          "Kitchen:3.3",
+          "PassSlot04:6.8",
+          "Box:0.3",
+          "PassSlot05:1.1",
+          "CachelosBowl:3.5",
+          "HotDressing:1.1",
+          "Zone:4.2"
+        ],
+        "meters_p1": 30.2,
+        "meters_p2": 26.7,
+        "order": 1,
+        "presses": 19,
+        "retargets": 0,
+        "seconds": 14.93
+      },
+      {
+        "completed": true,
+        "from": "flujo",
+        "legs": [
+          "Octopus:0.3",
+          "BoxSpawner:1.7",
+          "PassSlot04:10.3",
+          "PassSlot04:1.0",
+          "Box:0.3",
+          "CachelosBowl:3.5",
+          "HotDressing:1.1",
+          "Zone:4.2"
+        ],
+        "meters_p1": 22.3,
+        "meters_p2": 1.7,
+        "order": 2,
+        "presses": 12,
+        "retargets": 0,
+        "seconds": 6.38
+      }
+    ],
+    "slots": "PassSlot04/PassSlot05",
+    "station_rejections": 0,
+    "trashed": 0
+  }
+]

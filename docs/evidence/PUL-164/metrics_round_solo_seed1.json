@@ -1,0 +1,294 @@
+[
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivered": 20,
+    "delivery_rejections": 0,
+    "expired": 2,
+    "kind": "partida",
+    "meters_p1_total": 952.2,
+    "meters_p2_total": 0.0,
+    "mode": "round_solo",
+    "orders_log": [
+      {
+        "at": 4.98,
+        "done_at": 24.73,
+        "id": 1,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 40.25
+      },
+      {
+        "at": 4.98,
+        "done_at": 33.2,
+        "id": 2,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 31.78
+      },
+      {
+        "at": 24.73,
+        "done_at": 51.83,
+        "id": 3,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 33.2,
+        "done_at": 60.3,
+        "id": 4,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 32.9
+      },
+      {
+        "at": 51.83,
+        "done_at": 78.93,
+        "id": 5,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 60.3,
+        "done_at": 87.4,
+        "id": 6,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 32.9
+      },
+      {
+        "at": 78.93,
+        "done_at": 106.03,
+        "id": 7,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 87.4,
+        "done_at": 114.5,
+        "id": 8,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 32.9
+      },
+      {
+        "at": 99.97,
+        "done_at": 132.7,
+        "id": 9,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 3,
+        "time_left": 18.27
+      },
+      {
+        "at": 106.03,
+        "done_at": 142.53,
+        "id": 10,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 1,
+        "time_left": 14.5
+      },
+      {
+        "at": 114.5,
+        "done_at": 160.37,
+        "id": 11,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 2,
+        "time_left": 5.13
+      },
+      {
+        "at": 132.7,
+        "done_at": 169.6,
+        "id": 12,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 3,
+        "time_left": 14.1
+      },
+      {
+        "at": 142.53,
+        "done_at": 188.8,
+        "id": 13,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 1,
+        "time_left": 4.73
+      },
+      {
+        "at": 160.37,
+        "done_at": 197.27,
+        "id": 14,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 2,
+        "time_left": 14.1
+      },
+      {
+        "at": 169.6,
+        "done_at": 215.47,
+        "id": 15,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 3,
+        "time_left": 5.13
+      },
+      {
+        "at": 188.8,
+        "done_at": 225.3,
+        "id": 16,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 1,
+        "time_left": 14.5
+      },
+      {
+        "at": 197.27,
+        "done_at": 243.13,
+        "id": 17,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 2,
+        "time_left": 5.13
+      },
+      {
+        "at": 199.97,
+        "expired_at": 255.97,
+        "id": 18,
+        "kind": "Bravo cachelos",
+        "patience": 56.0,
+        "phase": 3,
+        "slot": 4
+      },
+      {
+        "at": 215.47,
+        "expired_at": 257.47,
+        "id": 19,
+        "kind": "Picante",
+        "patience": 42.0,
+        "phase": 3,
+        "slot": 3
+      },
+      {
+        "at": 225.3,
+        "done_at": 262.2,
+        "id": 20,
+        "kind": "Con cachelos",
+        "patience": 56.0,
+        "phase": 3,
+        "points": 12,
+        "slot": 1,
+        "time_left": 19.1
+      },
+      {
+        "at": 243.13,
+        "done_at": 280.33,
+        "id": 21,
+        "kind": "Con cachelos",
+        "patience": 56.0,
+        "phase": 3,
+        "points": 12,
+        "slot": 2,
+        "time_left": 18.8
+      },
+      {
+        "at": 255.97,
+        "id": 22,
+        "kind": "Bravo cachelos",
+        "patience": 56.0,
+        "phase": 3,
+        "slot": 4
+      },
+      {
+        "at": 257.47,
+        "done_at": 289.17,
+        "id": 23,
+        "kind": "Picante",
+        "patience": 42.0,
+        "phase": 3,
+        "points": 9,
+        "slot": 3,
+        "time_left": 10.3
+      },
+      {
+        "at": 262.2,
+        "id": 24,
+        "kind": "Picante",
+        "patience": 42.0,
+        "phase": 3,
+        "slot": 1
+      },
+      {
+        "at": 280.33,
+        "id": 25,
+        "kind": "Con cachelos",
+        "patience": 56.0,
+        "phase": 3,
+        "slot": 2
+      },
+      {
+        "at": 289.17,
+        "id": 26,
+        "kind": "Con cachelos",
+        "patience": 56.0,
+        "phase": 3,
+        "slot": 3
+      }
+    ],
+    "presses_total": 260,
+    "revenue": 195,
+    "seed": 1,
+    "slots": "PassSlot04/PassSlot05",
+    "stars": 3,
+    "station_rejections": 0,
+    "trashed": 0,
+    "variant": "current"
+  }
+]

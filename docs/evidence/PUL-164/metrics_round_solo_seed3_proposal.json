@@ -1,0 +1,294 @@
+[
+  {
+    "bot_warnings": 1,
+    "burnt": 0,
+    "cuts": 6,
+    "delivered": 20,
+    "delivery_rejections": 0,
+    "expired": 2,
+    "kind": "partida",
+    "meters_p1_total": 963.5,
+    "meters_p2_total": 0.0,
+    "mode": "round_solo",
+    "orders_log": [
+      {
+        "at": 4.98,
+        "done_at": 24.73,
+        "id": 1,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 40.25
+      },
+      {
+        "at": 4.98,
+        "done_at": 33.2,
+        "id": 2,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 31.78
+      },
+      {
+        "at": 24.73,
+        "done_at": 51.83,
+        "id": 3,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 33.2,
+        "done_at": 60.3,
+        "id": 4,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 32.9
+      },
+      {
+        "at": 51.83,
+        "done_at": 78.93,
+        "id": 5,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 60.3,
+        "done_at": 87.4,
+        "id": 6,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 32.9
+      },
+      {
+        "at": 78.93,
+        "done_at": 106.03,
+        "id": 7,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 87.4,
+        "done_at": 133.67,
+        "id": 8,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 13.73
+      },
+      {
+        "at": 89.97,
+        "done_at": 114.87,
+        "id": 9,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 3,
+        "time_left": 26.1
+      },
+      {
+        "at": 106.03,
+        "done_at": 142.93,
+        "id": 10,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 1,
+        "time_left": 14.1
+      },
+      {
+        "at": 114.87,
+        "done_at": 160.73,
+        "id": 11,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 3,
+        "time_left": 5.13
+      },
+      {
+        "at": 133.67,
+        "done_at": 170.17,
+        "id": 12,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 2,
+        "time_left": 14.5
+      },
+      {
+        "at": 142.93,
+        "done_at": 188.8,
+        "id": 13,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 1,
+        "time_left": 5.13
+      },
+      {
+        "at": 160.73,
+        "done_at": 197.23,
+        "id": 14,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 3,
+        "time_left": 14.5
+      },
+      {
+        "at": 170.17,
+        "done_at": 216.03,
+        "id": 15,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 2,
+        "time_left": 5.13
+      },
+      {
+        "at": 179.97,
+        "expired_at": 243.97,
+        "id": 16,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 4
+      },
+      {
+        "at": 188.8,
+        "done_at": 225.3,
+        "id": 17,
+        "kind": "Picante",
+        "patience": 48.0,
+        "phase": 3,
+        "points": 9,
+        "slot": 1,
+        "time_left": 11.5
+      },
+      {
+        "at": 197.23,
+        "expired_at": 245.23,
+        "id": 18,
+        "kind": "Á feira",
+        "patience": 48.0,
+        "phase": 3,
+        "slot": 3
+      },
+      {
+        "at": 216.03,
+        "done_at": 255.55,
+        "id": 19,
+        "kind": "Picante",
+        "patience": 48.0,
+        "phase": 3,
+        "points": 9,
+        "slot": 2,
+        "time_left": 8.48
+      },
+      {
+        "at": 225.3,
+        "done_at": 247.08,
+        "id": 20,
+        "kind": "Á feira",
+        "patience": 48.0,
+        "phase": 3,
+        "points": 8,
+        "slot": 1,
+        "time_left": 26.22
+      },
+      {
+        "at": 243.97,
+        "id": 21,
+        "kind": "Bravo cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 4
+      },
+      {
+        "at": 245.23,
+        "done_at": 273.75,
+        "id": 22,
+        "kind": "Picante",
+        "patience": 48.0,
+        "phase": 3,
+        "points": 9,
+        "slot": 3,
+        "time_left": 19.48
+      },
+      {
+        "at": 247.08,
+        "id": 23,
+        "kind": "Bravo cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 1
+      },
+      {
+        "at": 255.55,
+        "done_at": 283.18,
+        "id": 24,
+        "kind": "Picante",
+        "patience": 48.0,
+        "phase": 3,
+        "points": 9,
+        "slot": 2,
+        "time_left": 20.37
+      },
+      {
+        "at": 273.75,
+        "id": 25,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 3
+      },
+      {
+        "at": 283.18,
+        "id": 26,
+        "kind": "Á feira",
+        "patience": 48.0,
+        "phase": 3,
+        "slot": 2
+      }
+    ],
+    "presses_total": 268,
+    "revenue": 190,
+    "seed": 3,
+    "slots": "PassSlot04/PassSlot05",
+    "stars": 3,
+    "station_rejections": 0,
+    "trashed": 0,
+    "variant": "proposal"
+  }
+]

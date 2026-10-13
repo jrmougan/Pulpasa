@@ -1,0 +1,1301 @@
+{
+  "current": {
+    "duration": 300.0,
+    "time_bonus_max": 5,
+    "expire_penalty": 3,
+    "thresholds": [
+      30,
+      60,
+      90
+    ],
+    "phases": [
+      {
+        "phase": 1,
+        "start_s": 0,
+        "slots": 2,
+        "multiplier": 1.0,
+        "orders": [
+          "Á feira"
+        ]
+      },
+      {
+        "phase": 2,
+        "start_s": 100,
+        "slots": 3,
+        "multiplier": 0.85,
+        "orders": [
+          "Á feira",
+          "Picante"
+        ]
+      },
+      {
+        "phase": 3,
+        "start_s": 200,
+        "slots": 4,
+        "multiplier": 0.7,
+        "orders": [
+          "Á feira",
+          "Picante",
+          "Con cachelos",
+          "Bravo cachelos"
+        ]
+      }
+    ],
+    "orders": {
+      "Á feira": {
+        "max_time": 60.0,
+        "price": 8
+      },
+      "Picante": {
+        "max_time": 60.0,
+        "price": 9
+      },
+      "Con cachelos": {
+        "max_time": 80.0,
+        "price": 12
+      },
+      "Bravo cachelos": {
+        "max_time": 80.0,
+        "price": 13
+      }
+    },
+    "presses_to_fill": 6
+  },
+  "proposal": {
+    "thresholds": {
+      "Individual": [
+        40,
+        90,
+        140
+      ],
+      "Local 2P": [
+        130,
+        300,
+        490
+      ]
+    },
+    "multipliers": [
+      1.0,
+      0.85,
+      0.8
+    ],
+    "phase_starts_s": [
+      0,
+      90,
+      180
+    ],
+    "prices": {
+      "Á feira": 8,
+      "Picante": 9,
+      "Con cachelos": 12,
+      "Bravo cachelos": 13
+    },
+    "presses_to_fill": 6
+  },
+  "slack_flag_s": 5.0,
+  "recipes": [
+    {
+      "mode": "Individual",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Á feira",
+      "phase": 1,
+      "patience_s": 60.0,
+      "bot_cero_s": 21.6,
+      "slack_cero_s": 38.4,
+      "flag_cero": false,
+      "bot_flujo_s": 12.63,
+      "slack_flujo_s": 47.37,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Á feira",
+      "phase": 2,
+      "patience_s": 51.0,
+      "bot_cero_s": 21.6,
+      "slack_cero_s": 29.4,
+      "flag_cero": false,
+      "bot_flujo_s": 12.63,
+      "slack_flujo_s": 38.37,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Á feira",
+      "phase": 3,
+      "patience_s": 42.0,
+      "bot_cero_s": 21.6,
+      "slack_cero_s": 20.4,
+      "flag_cero": false,
+      "bot_flujo_s": 12.63,
+      "slack_flujo_s": 29.37,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Picante",
+      "phase": 2,
+      "patience_s": 51.0,
+      "bot_cero_s": 22.0,
+      "slack_cero_s": 29.0,
+      "flag_cero": false,
+      "bot_flujo_s": 13.03,
+      "slack_flujo_s": 37.97,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Picante",
+      "phase": 3,
+      "patience_s": 42.0,
+      "bot_cero_s": 22.0,
+      "slack_cero_s": 20.0,
+      "flag_cero": false,
+      "bot_flujo_s": 13.03,
+      "slack_flujo_s": 28.97,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Con cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "bot_cero_s": 26.27,
+      "slack_cero_s": 29.73,
+      "flag_cero": false,
+      "bot_flujo_s": 13.73,
+      "slack_flujo_s": 42.27,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Bravo cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "bot_cero_s": 26.27,
+      "slack_cero_s": 29.73,
+      "flag_cero": false,
+      "bot_flujo_s": 13.73,
+      "slack_flujo_s": 42.27,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Á feira",
+      "phase": 1,
+      "patience_s": 60.0,
+      "bot_cero_s": 10.4,
+      "slack_cero_s": 49.6,
+      "flag_cero": false,
+      "bot_flujo_s": 4.1,
+      "slack_flujo_s": 55.9,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Á feira",
+      "phase": 2,
+      "patience_s": 51.0,
+      "bot_cero_s": 10.4,
+      "slack_cero_s": 40.6,
+      "flag_cero": false,
+      "bot_flujo_s": 4.1,
+      "slack_flujo_s": 46.9,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Á feira",
+      "phase": 3,
+      "patience_s": 42.0,
+      "bot_cero_s": 10.4,
+      "slack_cero_s": 31.6,
+      "flag_cero": false,
+      "bot_flujo_s": 4.1,
+      "slack_flujo_s": 37.9,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Picante",
+      "phase": 2,
+      "patience_s": 51.0,
+      "bot_cero_s": 10.8,
+      "slack_cero_s": 40.2,
+      "flag_cero": false,
+      "bot_flujo_s": 4.5,
+      "slack_flujo_s": 46.5,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Picante",
+      "phase": 3,
+      "patience_s": 42.0,
+      "bot_cero_s": 10.8,
+      "slack_cero_s": 31.2,
+      "flag_cero": false,
+      "bot_flujo_s": 4.5,
+      "slack_flujo_s": 37.5,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Con cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "bot_cero_s": 15.13,
+      "slack_cero_s": 40.87,
+      "flag_cero": false,
+      "bot_flujo_s": 5.2,
+      "slack_flujo_s": 50.8,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot01/PassSlot02",
+      "recipe": "Bravo cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "bot_cero_s": 15.13,
+      "slack_cero_s": 40.87,
+      "flag_cero": false,
+      "bot_flujo_s": 5.2,
+      "slack_flujo_s": 50.8,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Á feira",
+      "phase": 1,
+      "patience_s": 60.0,
+      "bot_cero_s": 19.78,
+      "slack_cero_s": 40.22,
+      "flag_cero": false,
+      "bot_flujo_s": 8.87,
+      "slack_flujo_s": 51.13,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Á feira",
+      "phase": 2,
+      "patience_s": 51.0,
+      "bot_cero_s": 19.78,
+      "slack_cero_s": 31.22,
+      "flag_cero": false,
+      "bot_flujo_s": 8.87,
+      "slack_flujo_s": 42.13,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Á feira",
+      "phase": 3,
+      "patience_s": 42.0,
+      "bot_cero_s": 19.78,
+      "slack_cero_s": 22.22,
+      "flag_cero": false,
+      "bot_flujo_s": 8.87,
+      "slack_flujo_s": 33.13,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Picante",
+      "phase": 2,
+      "patience_s": 51.0,
+      "bot_cero_s": 19.78,
+      "slack_cero_s": 31.22,
+      "flag_cero": false,
+      "bot_flujo_s": 8.87,
+      "slack_flujo_s": 42.13,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Picante",
+      "phase": 3,
+      "patience_s": 42.0,
+      "bot_cero_s": 19.78,
+      "slack_cero_s": 22.22,
+      "flag_cero": false,
+      "bot_flujo_s": 8.87,
+      "slack_flujo_s": 33.13,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Con cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "bot_cero_s": 23.65,
+      "slack_cero_s": 32.35,
+      "flag_cero": false,
+      "bot_flujo_s": 9.17,
+      "slack_flujo_s": 46.83,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Individual",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Bravo cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "bot_cero_s": 23.65,
+      "slack_cero_s": 32.35,
+      "flag_cero": false,
+      "bot_flujo_s": 9.17,
+      "slack_flujo_s": 46.83,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Á feira",
+      "phase": 1,
+      "patience_s": 60.0,
+      "bot_cero_s": 11.05,
+      "slack_cero_s": 48.95,
+      "flag_cero": false,
+      "bot_flujo_s": 6.08,
+      "slack_flujo_s": 53.92,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Á feira",
+      "phase": 2,
+      "patience_s": 51.0,
+      "bot_cero_s": 11.05,
+      "slack_cero_s": 39.95,
+      "flag_cero": false,
+      "bot_flujo_s": 6.08,
+      "slack_flujo_s": 44.92,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Á feira",
+      "phase": 3,
+      "patience_s": 42.0,
+      "bot_cero_s": 11.05,
+      "slack_cero_s": 30.95,
+      "flag_cero": false,
+      "bot_flujo_s": 6.08,
+      "slack_flujo_s": 35.92,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Picante",
+      "phase": 2,
+      "patience_s": 51.0,
+      "bot_cero_s": 11.05,
+      "slack_cero_s": 39.95,
+      "flag_cero": false,
+      "bot_flujo_s": 6.08,
+      "slack_flujo_s": 44.92,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Picante",
+      "phase": 3,
+      "patience_s": 42.0,
+      "bot_cero_s": 11.05,
+      "slack_cero_s": 30.95,
+      "flag_cero": false,
+      "bot_flujo_s": 6.08,
+      "slack_flujo_s": 35.92,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Con cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "bot_cero_s": 14.93,
+      "slack_cero_s": 41.07,
+      "flag_cero": false,
+      "bot_flujo_s": 6.38,
+      "slack_flujo_s": 49.62,
+      "flag_flujo": false
+    },
+    {
+      "mode": "Local 2P",
+      "slots": "PassSlot04/PassSlot05",
+      "recipe": "Bravo cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "bot_cero_s": 14.93,
+      "slack_cero_s": 41.07,
+      "flag_cero": false,
+      "bot_flujo_s": 6.38,
+      "slack_flujo_s": 49.62,
+      "flag_flujo": false
+    }
+  ],
+  "rounds": [
+    {
+      "mode": "Local 2P",
+      "seed": 1,
+      "revenue": 692,
+      "delivered": 59,
+      "expired": 0,
+      "stars_game": 3,
+      "stars_current": 3,
+      "served": {
+        "Á feira": 36,
+        "Picante": 20,
+        "Bravo cachelos": 2,
+        "Con cachelos": 1
+      },
+      "trashed": 0,
+      "burnt": 0,
+      "bot_warnings": 1
+    },
+    {
+      "mode": "Local 2P",
+      "seed": 2,
+      "revenue": 641,
+      "delivered": 54,
+      "expired": 0,
+      "stars_game": 3,
+      "stars_current": 3,
+      "served": {
+        "Á feira": 41,
+        "Picante": 7,
+        "Con cachelos": 3,
+        "Bravo cachelos": 3
+      },
+      "trashed": 0,
+      "burnt": 0,
+      "bot_warnings": 1
+    },
+    {
+      "mode": "Local 2P",
+      "seed": 3,
+      "revenue": 665,
+      "delivered": 56,
+      "expired": 0,
+      "stars_game": 3,
+      "stars_current": 3,
+      "served": {
+        "Á feira": 36,
+        "Picante": 14,
+        "Bravo cachelos": 2,
+        "Con cachelos": 4
+      },
+      "trashed": 0,
+      "burnt": 0,
+      "bot_warnings": 0
+    },
+    {
+      "mode": "Individual",
+      "seed": 1,
+      "revenue": 195,
+      "delivered": 20,
+      "expired": 2,
+      "stars_game": 3,
+      "stars_current": 3,
+      "served": {
+        "Á feira": 10,
+        "Picante": 8,
+        "Con cachelos": 2
+      },
+      "trashed": 0,
+      "burnt": 0,
+      "bot_warnings": 0
+    },
+    {
+      "mode": "Individual",
+      "seed": 2,
+      "revenue": 188,
+      "delivered": 20,
+      "expired": 3,
+      "stars_game": 3,
+      "stars_current": 3,
+      "served": {
+        "Á feira": 16,
+        "Picante": 2,
+        "Con cachelos": 1,
+        "Bravo cachelos": 1
+      },
+      "trashed": 0,
+      "burnt": 0,
+      "bot_warnings": 0
+    },
+    {
+      "mode": "Individual",
+      "seed": 3,
+      "revenue": 184,
+      "delivered": 20,
+      "expired": 3,
+      "stars_game": 3,
+      "stars_current": 3,
+      "served": {
+        "Á feira": 13,
+        "Picante": 7
+      },
+      "trashed": 0,
+      "burnt": 0,
+      "bot_warnings": 1
+    }
+  ],
+  "round_slack": [
+    {
+      "mode": "Individual",
+      "recipe": "Á feira",
+      "phase": 1,
+      "patience_s": 60.0,
+      "delivered": 24,
+      "expired": 0,
+      "time_left_min": 31.78,
+      "time_left_median": 32.9,
+      "flag": false
+    },
+    {
+      "mode": "Individual",
+      "recipe": "Á feira",
+      "phase": 2,
+      "patience_s": 51.0,
+      "delivered": 13,
+      "expired": 0,
+      "time_left_min": 4.73,
+      "time_left_median": 14.1,
+      "flag": true
+    },
+    {
+      "mode": "Individual",
+      "recipe": "Á feira",
+      "phase": 3,
+      "patience_s": 42.0,
+      "delivered": 2,
+      "expired": 1,
+      "time_left_min": 6.28,
+      "time_left_median": 15.03,
+      "flag": false
+    },
+    {
+      "mode": "Individual",
+      "recipe": "Picante",
+      "phase": 2,
+      "patience_s": 51.0,
+      "delivered": 13,
+      "expired": 1,
+      "time_left_min": 4.73,
+      "time_left_median": 5.13,
+      "flag": true
+    },
+    {
+      "mode": "Individual",
+      "recipe": "Picante",
+      "phase": 3,
+      "patience_s": 42.0,
+      "delivered": 4,
+      "expired": 1,
+      "time_left_min": 5.5,
+      "time_left_median": 12.34,
+      "flag": false
+    },
+    {
+      "mode": "Individual",
+      "recipe": "Con cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "delivered": 3,
+      "expired": 2,
+      "time_left_min": 9.3,
+      "time_left_median": 18.8,
+      "flag": false
+    },
+    {
+      "mode": "Individual",
+      "recipe": "Bravo cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "delivered": 1,
+      "expired": 3,
+      "time_left_min": 55.65,
+      "time_left_median": 55.65,
+      "flag": false
+    },
+    {
+      "mode": "Local 2P",
+      "recipe": "Á feira",
+      "phase": 1,
+      "patience_s": 60.0,
+      "delivered": 63,
+      "expired": 0,
+      "time_left_min": 40.77,
+      "time_left_median": 50.38,
+      "flag": false
+    },
+    {
+      "mode": "Local 2P",
+      "recipe": "Á feira",
+      "phase": 2,
+      "patience_s": 51.0,
+      "delivered": 35,
+      "expired": 0,
+      "time_left_min": 23.12,
+      "time_left_median": 36.95,
+      "flag": false
+    },
+    {
+      "mode": "Local 2P",
+      "recipe": "Á feira",
+      "phase": 3,
+      "patience_s": 42.0,
+      "delivered": 15,
+      "expired": 0,
+      "time_left_min": 18.67,
+      "time_left_median": 22.93,
+      "flag": false
+    },
+    {
+      "mode": "Local 2P",
+      "recipe": "Picante",
+      "phase": 2,
+      "patience_s": 51.0,
+      "delivered": 31,
+      "expired": 0,
+      "time_left_min": 31.45,
+      "time_left_median": 36.53,
+      "flag": false
+    },
+    {
+      "mode": "Local 2P",
+      "recipe": "Picante",
+      "phase": 3,
+      "patience_s": 42.0,
+      "delivered": 10,
+      "expired": 0,
+      "time_left_min": 18.98,
+      "time_left_median": 29.18,
+      "flag": false
+    },
+    {
+      "mode": "Local 2P",
+      "recipe": "Con cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "delivered": 8,
+      "expired": 0,
+      "time_left_min": 10.87,
+      "time_left_median": 24.18,
+      "flag": false
+    },
+    {
+      "mode": "Local 2P",
+      "recipe": "Bravo cachelos",
+      "phase": 3,
+      "patience_s": 56.0,
+      "delivered": 7,
+      "expired": 0,
+      "time_left_min": 15.33,
+      "time_left_median": 21.72,
+      "flag": false
+    }
+  ],
+  "queue_slack_current": [
+    {
+      "mode": "Individual",
+      "phase": 1,
+      "slots": 2,
+      "recipe": "Á feira",
+      "patience_s": 60.0,
+      "t_flow_s": 8.87,
+      "t_cycle_s": 14.32,
+      "queue_slack_flow_s": 42.26,
+      "queue_slack_cycle_s": 31.35,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Individual",
+      "phase": 2,
+      "slots": 3,
+      "recipe": "Á feira",
+      "patience_s": 51.0,
+      "t_flow_s": 8.87,
+      "t_cycle_s": 14.32,
+      "queue_slack_flow_s": 24.39,
+      "queue_slack_cycle_s": 8.03,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Individual",
+      "phase": 2,
+      "slots": 3,
+      "recipe": "Picante",
+      "patience_s": 51.0,
+      "t_flow_s": 8.87,
+      "t_cycle_s": 14.32,
+      "queue_slack_flow_s": 24.39,
+      "queue_slack_cycle_s": 8.03,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Individual",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Á feira",
+      "patience_s": 42.0,
+      "t_flow_s": 9.02,
+      "t_cycle_s": 15.37,
+      "queue_slack_flow_s": 5.92,
+      "queue_slack_cycle_s": -19.47,
+      "flag_flow": false,
+      "flag_cycle": true
+    },
+    {
+      "mode": "Individual",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Picante",
+      "patience_s": 42.0,
+      "t_flow_s": 9.02,
+      "t_cycle_s": 15.37,
+      "queue_slack_flow_s": 5.92,
+      "queue_slack_cycle_s": -19.47,
+      "flag_flow": false,
+      "flag_cycle": true
+    },
+    {
+      "mode": "Individual",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Con cachelos",
+      "patience_s": 56.0,
+      "t_flow_s": 9.02,
+      "t_cycle_s": 15.37,
+      "queue_slack_flow_s": 19.92,
+      "queue_slack_cycle_s": -5.47,
+      "flag_flow": false,
+      "flag_cycle": true
+    },
+    {
+      "mode": "Individual",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Bravo cachelos",
+      "patience_s": 56.0,
+      "t_flow_s": 9.02,
+      "t_cycle_s": 15.37,
+      "queue_slack_flow_s": 19.92,
+      "queue_slack_cycle_s": -5.47,
+      "flag_flow": false,
+      "flag_cycle": true
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 1,
+      "slots": 2,
+      "recipe": "Á feira",
+      "patience_s": 60.0,
+      "t_flow_s": 4.1,
+      "t_cycle_s": 7.25,
+      "queue_slack_flow_s": 51.8,
+      "queue_slack_cycle_s": 45.5,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 2,
+      "slots": 3,
+      "recipe": "Á feira",
+      "patience_s": 51.0,
+      "t_flow_s": 4.3,
+      "t_cycle_s": 7.45,
+      "queue_slack_flow_s": 38.1,
+      "queue_slack_cycle_s": 28.65,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 2,
+      "slots": 3,
+      "recipe": "Picante",
+      "patience_s": 51.0,
+      "t_flow_s": 4.3,
+      "t_cycle_s": 7.45,
+      "queue_slack_flow_s": 38.1,
+      "queue_slack_cycle_s": 28.65,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Á feira",
+      "patience_s": 42.0,
+      "t_flow_s": 4.75,
+      "t_cycle_s": 8.81,
+      "queue_slack_flow_s": 23.0,
+      "queue_slack_cycle_s": 6.77,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Picante",
+      "patience_s": 42.0,
+      "t_flow_s": 4.75,
+      "t_cycle_s": 8.81,
+      "queue_slack_flow_s": 23.0,
+      "queue_slack_cycle_s": 6.77,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Con cachelos",
+      "patience_s": 56.0,
+      "t_flow_s": 4.75,
+      "t_cycle_s": 8.81,
+      "queue_slack_flow_s": 37.0,
+      "queue_slack_cycle_s": 20.77,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Bravo cachelos",
+      "patience_s": 56.0,
+      "t_flow_s": 4.75,
+      "t_cycle_s": 8.81,
+      "queue_slack_flow_s": 37.0,
+      "queue_slack_cycle_s": 20.77,
+      "flag_flow": false,
+      "flag_cycle": false
+    }
+  ],
+  "queue_slack_proposal": [
+    {
+      "mode": "Individual",
+      "phase": 1,
+      "slots": 2,
+      "recipe": "Á feira",
+      "patience_s": 60.0,
+      "t_flow_s": 8.87,
+      "t_cycle_s": 14.32,
+      "queue_slack_flow_s": 42.26,
+      "queue_slack_cycle_s": 31.35,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Individual",
+      "phase": 2,
+      "slots": 3,
+      "recipe": "Á feira",
+      "patience_s": 51.0,
+      "t_flow_s": 8.87,
+      "t_cycle_s": 14.32,
+      "queue_slack_flow_s": 24.39,
+      "queue_slack_cycle_s": 8.03,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Individual",
+      "phase": 2,
+      "slots": 3,
+      "recipe": "Picante",
+      "patience_s": 51.0,
+      "t_flow_s": 8.87,
+      "t_cycle_s": 14.32,
+      "queue_slack_flow_s": 24.39,
+      "queue_slack_cycle_s": 8.03,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Individual",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Á feira",
+      "patience_s": 48.0,
+      "t_flow_s": 9.02,
+      "t_cycle_s": 15.37,
+      "queue_slack_flow_s": 11.92,
+      "queue_slack_cycle_s": -13.47,
+      "flag_flow": false,
+      "flag_cycle": true
+    },
+    {
+      "mode": "Individual",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Picante",
+      "patience_s": 48.0,
+      "t_flow_s": 9.02,
+      "t_cycle_s": 15.37,
+      "queue_slack_flow_s": 11.92,
+      "queue_slack_cycle_s": -13.47,
+      "flag_flow": false,
+      "flag_cycle": true
+    },
+    {
+      "mode": "Individual",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Con cachelos",
+      "patience_s": 64.0,
+      "t_flow_s": 9.02,
+      "t_cycle_s": 15.37,
+      "queue_slack_flow_s": 27.92,
+      "queue_slack_cycle_s": 2.53,
+      "flag_flow": false,
+      "flag_cycle": true
+    },
+    {
+      "mode": "Individual",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Bravo cachelos",
+      "patience_s": 64.0,
+      "t_flow_s": 9.02,
+      "t_cycle_s": 15.37,
+      "queue_slack_flow_s": 27.92,
+      "queue_slack_cycle_s": 2.53,
+      "flag_flow": false,
+      "flag_cycle": true
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 1,
+      "slots": 2,
+      "recipe": "Á feira",
+      "patience_s": 60.0,
+      "t_flow_s": 4.1,
+      "t_cycle_s": 7.25,
+      "queue_slack_flow_s": 51.8,
+      "queue_slack_cycle_s": 45.5,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 2,
+      "slots": 3,
+      "recipe": "Á feira",
+      "patience_s": 51.0,
+      "t_flow_s": 4.3,
+      "t_cycle_s": 7.45,
+      "queue_slack_flow_s": 38.1,
+      "queue_slack_cycle_s": 28.65,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 2,
+      "slots": 3,
+      "recipe": "Picante",
+      "patience_s": 51.0,
+      "t_flow_s": 4.3,
+      "t_cycle_s": 7.45,
+      "queue_slack_flow_s": 38.1,
+      "queue_slack_cycle_s": 28.65,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Á feira",
+      "patience_s": 48.0,
+      "t_flow_s": 4.75,
+      "t_cycle_s": 8.81,
+      "queue_slack_flow_s": 29.0,
+      "queue_slack_cycle_s": 12.77,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Picante",
+      "patience_s": 48.0,
+      "t_flow_s": 4.75,
+      "t_cycle_s": 8.81,
+      "queue_slack_flow_s": 29.0,
+      "queue_slack_cycle_s": 12.77,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Con cachelos",
+      "patience_s": 64.0,
+      "t_flow_s": 4.75,
+      "t_cycle_s": 8.81,
+      "queue_slack_flow_s": 45.0,
+      "queue_slack_cycle_s": 28.77,
+      "flag_flow": false,
+      "flag_cycle": false
+    },
+    {
+      "mode": "Local 2P",
+      "phase": 3,
+      "slots": 4,
+      "recipe": "Bravo cachelos",
+      "patience_s": 64.0,
+      "t_flow_s": 4.75,
+      "t_cycle_s": 8.81,
+      "queue_slack_flow_s": 45.0,
+      "queue_slack_cycle_s": 28.77,
+      "flag_flow": false,
+      "flag_cycle": false
+    }
+  ],
+  "rescored": [
+    {
+      "mode": "Local 2P",
+      "seed": 1,
+      "revenue_bot": 692,
+      "revenue_check_current": 692,
+      "revenue_proposal": 696
+    },
+    {
+      "mode": "Local 2P",
+      "seed": 2,
+      "revenue_bot": 641,
+      "revenue_check_current": 641,
+      "revenue_proposal": 643
+    },
+    {
+      "mode": "Local 2P",
+      "seed": 3,
+      "revenue_bot": 665,
+      "revenue_check_current": 665,
+      "revenue_proposal": 668
+    },
+    {
+      "mode": "Individual",
+      "seed": 1,
+      "revenue_bot": 195,
+      "revenue_check_current": 195,
+      "revenue_proposal": 197
+    },
+    {
+      "mode": "Individual",
+      "seed": 2,
+      "revenue_bot": 188,
+      "revenue_check_current": 188,
+      "revenue_proposal": 190
+    },
+    {
+      "mode": "Individual",
+      "seed": 3,
+      "revenue_bot": 184,
+      "revenue_check_current": 184,
+      "revenue_proposal": 188
+    }
+  ],
+  "phase_projection": {
+    "Local 2P": {
+      "eur_per_s_by_phase": [
+        2.28,
+        2.423,
+        1.957
+      ],
+      "revenue_current_limits": 666.0,
+      "revenue_proposed_limits": 658.1
+    },
+    "Individual": {
+      "eur_per_s_by_phase": [
+        0.61,
+        0.753,
+        0.527
+      ],
+      "revenue_current_limits": 189.0,
+      "revenue_proposed_limits": 185.9
+    }
+  },
+  "stars_by_share": [
+    {
+      "mode": "Individual",
+      "share_of_bot": 1.0,
+      "revenue": 189,
+      "stars_current": 3,
+      "stars_proposal": 3
+    },
+    {
+      "mode": "Individual",
+      "share_of_bot": 0.3,
+      "revenue": 57,
+      "stars_current": 1,
+      "stars_proposal": 1
+    },
+    {
+      "mode": "Individual",
+      "share_of_bot": 0.5,
+      "revenue": 94,
+      "stars_current": 3,
+      "stars_proposal": 2
+    },
+    {
+      "mode": "Individual",
+      "share_of_bot": 0.75,
+      "revenue": 142,
+      "stars_current": 3,
+      "stars_proposal": 3
+    },
+    {
+      "mode": "Local 2P",
+      "share_of_bot": 1.0,
+      "revenue": 666,
+      "stars_current": 3,
+      "stars_proposal": 3
+    },
+    {
+      "mode": "Local 2P",
+      "share_of_bot": 0.3,
+      "revenue": 200,
+      "stars_current": 3,
+      "stars_proposal": 1
+    },
+    {
+      "mode": "Local 2P",
+      "share_of_bot": 0.5,
+      "revenue": 333,
+      "stars_current": 3,
+      "stars_proposal": 2
+    },
+    {
+      "mode": "Local 2P",
+      "share_of_bot": 0.75,
+      "revenue": 500,
+      "stars_current": 3,
+      "stars_proposal": 3
+    }
+  ],
+  "measured_proposal": [
+    {
+      "mode": "Local 2P",
+      "seed": 1,
+      "revenue_current": 692,
+      "revenue_proposal": 685,
+      "delivered_current": 59,
+      "delivered_proposal": 58,
+      "expired_current": 0,
+      "expired_proposal": 0,
+      "stars_current": 3,
+      "stars_proposal": 3,
+      "cachelos_served_current": 3,
+      "cachelos_served_proposal": 4
+    },
+    {
+      "mode": "Local 2P",
+      "seed": 2,
+      "revenue_current": 641,
+      "revenue_proposal": 653,
+      "delivered_current": 54,
+      "delivered_proposal": 55,
+      "expired_current": 0,
+      "expired_proposal": 0,
+      "stars_current": 3,
+      "stars_proposal": 3,
+      "cachelos_served_current": 6,
+      "cachelos_served_proposal": 8
+    },
+    {
+      "mode": "Local 2P",
+      "seed": 3,
+      "revenue_current": 665,
+      "revenue_proposal": 667,
+      "delivered_current": 56,
+      "delivered_proposal": 56,
+      "expired_current": 0,
+      "expired_proposal": 0,
+      "stars_current": 3,
+      "stars_proposal": 3,
+      "cachelos_served_current": 6,
+      "cachelos_served_proposal": 6
+    },
+    {
+      "mode": "Individual",
+      "seed": 1,
+      "revenue_current": 195,
+      "revenue_proposal": 200,
+      "delivered_current": 20,
+      "delivered_proposal": 20,
+      "expired_current": 2,
+      "expired_proposal": 2,
+      "stars_current": 3,
+      "stars_proposal": 3,
+      "cachelos_served_current": 2,
+      "cachelos_served_proposal": 3
+    },
+    {
+      "mode": "Individual",
+      "seed": 2,
+      "revenue_current": 188,
+      "revenue_proposal": 196,
+      "delivered_current": 20,
+      "delivered_proposal": 20,
+      "expired_current": 3,
+      "expired_proposal": 1,
+      "stars_current": 3,
+      "stars_proposal": 3,
+      "cachelos_served_current": 2,
+      "cachelos_served_proposal": 3
+    },
+    {
+      "mode": "Individual",
+      "seed": 3,
+      "revenue_current": 184,
+      "revenue_proposal": 190,
+      "delivered_current": 20,
+      "delivered_proposal": 20,
+      "expired_current": 3,
+      "expired_proposal": 2,
+      "stars_current": 3,
+      "stars_proposal": 3,
+      "cachelos_served_current": 0,
+      "cachelos_served_proposal": 0
+    }
+  ]
+}
