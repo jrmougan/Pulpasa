@@ -12,8 +12,8 @@ Propuesta completa (privada): https://claude.ai/artifact/PstRxmwwgejjsphmEXCkJe
 | M3 | **Técnico cerrado 2026-10-06** (PUL-043..071): arte propio en Blender (D20), audio completo, feedback, olla que se pasa, dificultad por fases | — |
 | M3b | **Técnico cerrado 2026-10-07** · Estética v2 según la referencia elegida (`docs/art/style-refs/referencia-elegida-2026-10-06.png`): biblia v2, luz, materiales, todos los assets, HUD y QA (PUL-072..087) | Revisión del responsable (biblia v2 y D21; resultado final) |
 | M3c | **Planificado 2026-10-07** · Rediseño jugable y artístico de estaciones (D23): diagnóstico y propuestas (PUL-090, PUL-091, hechas), features y contratos (PUL-092, 093), arte con Codex (PUL-094..096), implementación (PUL-097..101) y QA/playtest (PUL-102) | Playtest humano con `m3c-gate.md` |
-| M3e | **Planificado 2026-10-11** · Lenguaje de acciones y móvil (D26) tras el playtest de M3d: estudio de UX (`docs/evidence/PUL-119/README.md`), diseño (PUL-119) y contratos (PUL-120, en paralelo); después verbo + prompt + respuesta de cada pulsación, histéresis, cuenco que solo pone, entrega solo por zona, corte con mantener, cues, iconos, HUD/escala y controles táctiles con cámara móvil (fichas por crear). Export Android: ficha futura | Playtest humano del lenguaje de acciones en PC y, cuando haya export, en teléfono |
-| M4 | Balanceo, opciones, gallego, builds Win/Linux, playtests | Publicar alpha |
+| M3e | **Planificado 2026-10-11** · Lenguaje de acciones y móvil (D26) tras el playtest de M3d: estudio de UX (`docs/evidence/PUL-119/README.md`), diseño (PUL-119) y contratos (PUL-120, en paralelo); después verbo + prompt + respuesta de cada pulsación, histéresis, cuenco que solo pone, entrega solo por zona, corte con mantener, cues, iconos, HUD/escala y controles táctiles con cámara móvil (fichas por crear). Export Android: PUL-151 (bloqueada por toolchain y dispositivo). Cierre: PUL-150..154 (PUL-140) | Playtest humano del lenguaje de acciones en PC y, cuando haya export, en teléfono |
+| M4 | Balanceo, opciones, gallego, builds Win/Linux, playtests — **planificado 2026-10-13** (PUL-141: fichas PUL-160..179 en 9 oleadas, plan en `docs/evidence/PUL-141/README.md`; preguntas P1–P10 del gate G0 antes de pasar fichas a `ready`) | Publicar alpha |
 
 ## Fases de M0
 
@@ -53,6 +53,8 @@ Coop, audio completo y pulido no son M0.
 ## Flujo de cocina (prototipo, se mantiene por D1)
 Nevera → pulpo crudo → olla (cocción) → el jugador lleva el pulpo **cocido** y lo corta sobre una
 caja (cada pulsación llena la caja y gasta pulpo) → condimentos sobre la caja llena → entrega en el puesto.
+
+> **Triados el 2026-10-13 en PUL-139** (`docs/evidence/PUL-139/README.md`): 9 resueltos, 3 obsoletos y 12 vivos; los vivos van en PUL-142..146 o como nota. Las listas de abajo se conservan como historial.
 
 ## Pendientes detectados para la fase 8 (montaje del nivel)
 - La caja de colisión `interactable` de cada `slot.tscn` (1,37 m) detiene al jugador ~0,7 m delante de los muebles (PUL-017). Revisar tamaño de colisión vs. alcance al colocar el nivel.

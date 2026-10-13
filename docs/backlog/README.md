@@ -151,9 +151,14 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-136 | M3e | game-designer | done | Decidir cómo evitar que los botones táctiles tapen los contadores del pasaplatos este |
 | PUL-137 | M3e | godot-architect | done | Enmendar ADR-005 E4 para los botones en fila y la zona de botones con safe area |
 | PUL-138 | M3e | ui-engineer | done | Colocar los botones táctiles en fila y bajar la zona de botones |
-| PUL-139 | M4 | qa-tester | in_progress | Triar los pendientes sueltos del roadmap y crear sus fichas |
+| PUL-139 | M4 | qa-tester | done | Triar los pendientes sueltos del roadmap y crear sus fichas |
 | PUL-140 | M3e | game-designer | done | Crear las fichas de cierre de M3e (guía de playtest y export Android) |
 | PUL-141 | M4 | game-designer | done | Planificar M4 (alpha) en fichas |
+| PUL-142 | M4 | gameplay-engineer | draft | Hacer que el POP del puesto no tape su número |
+| PUL-143 | M4 | gameplay-engineer | draft | Cubrir con un test la posición de las plazas de la olla |
+| PUL-144 | M4 | asset-pipeline | draft | Hacer visible el vapor de la olla y apoyar su tapa abierta |
+| PUL-145 | M4 | asset-pipeline | draft | Ajustar el ambiente y el brillo del acero delantero a la referencia |
+| PUL-146 | M4 | asset-pipeline | draft | Compartir materiales y texturas entre los .glb y retirar la fuente v1 |
 | PUL-150 | M3e | game-designer | draft | Escribir la guía del playtest humano de M3e (m3e-gate.md) |
 | PUL-151 | M3e | godot-architect | blocked | Exportar a Android, elegir renderizador móvil y verificar en un teléfono real |
 | PUL-152 | M3e | qa-tester | draft | Recapturar medidas y capturas de D26 con el estado final de M3e |

@@ -1,11 +1,11 @@
 ---
 id: PUL-139
 title: Triar los pendientes sueltos del roadmap y crear sus fichas
-status: review
+status: done
 milestone: M4
 role: qa-tester
 deps: []
-orca_task: null
+orca_task: task_3a0136a24c1d
 unity_sources: []
 owns: [docs/backlog/PUL-14[2-9]-*.md, docs/evidence/PUL-139/**, docs/backlog/PUL-139-triaje-de-pendientes-sueltos.md]
 touches_scenes: []
