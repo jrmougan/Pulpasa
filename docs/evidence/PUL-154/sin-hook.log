@@ -1,0 +1,79 @@
+Godot Engine v4.7.2.stable.fedora.ed1daf0bf - https://godotengine.org
+
+---  GUT  ---
+[INFO]:  using [/home/jeromo/.local/share/godot/app_userdata/Pulpasa] for temporary output.
+Godot version:  4.7.2
+GUT version:  9.7.1
+
+
+res://tests/integration/test_gut_pointer.gd
+* test_ac1_real_click_reaches_full_screen_button_under_gut_output
+    [Failed]:  [1] expected to equal [2]:  un clic en la esquina inferior derecha también llega al botón
+      at line 49
+0/1 passed.
+
+
+res://tests/integration/test_d26_touch_flow.gd
+* test_ac2_single_player_cooks_cuts_seasons_and_delivers_with_touch_only
+    [Failed]:  tocar «Reanudar» reanuda
+      at line -1
+    [Failed]:  stick y acción a la vez (multitáctil)
+      at line 282
+    [Failed]:  Expected [<null>] to be anything but NULL:  el pulpo está en la mano (cogido con el botón de acción)
+      at line 284
+    [Failed]:  [OctopusStorage:<StaticBody3D#241172484001>(item_spawner.gd)] expected to equal [Kitchen:<StaticBody3D#241591914426>(cooking_station.gd)]:  olla
+      at line 285
+SCRIPT ERROR: Invalid access to property or key 'data' on a base object of type 'Nil'.
+          at: test_ac2_single_player_cooks_cuts_seasons_and_delivers_with_touch_only (res://tests/integration/test_d26_touch_flow.gd:288)
+          GDScript backtrace (most recent call first):
+              [0] test_ac2_single_player_cooks_cuts_seasons_and_delivers_with_touch_only (res://tests/integration/test_d26_touch_flow.gd:288)
+              [1] _use_back (res://tests/integration/test_d26_touch_flow.gd:216)
+              [2] use (res://tests/integration/level_walker.gd:91)
+              [3] tap_interact (res://tests/integration/test_d26_touch_flow.gd:108)
+              [4] _frames (res://tests/integration/level_walker.gd:176)
+    [Failed]:  Unexpected Errors:
+    [1] <engine-2>Invalid access to property or key 'data' on a base object of type 'Nil'.
+      at line 288
+    3 Orphans
+        * [Sticker:<Control#255265346269>] + 2
+3 orphans
+0/1 passed.
+
+
+
+
+==============================================
+= Run Summary
+==============================================
+
+res://tests/integration/test_gut_pointer.gd
+- test_ac1_real_click_reaches_full_screen_button_under_gut_output
+    [Failed]:  [1] expected to equal [2]:  un clic en la esquina inferior derecha también llega al botón
+          at line 49
+
+res://tests/integration/test_d26_touch_flow.gd
+- test_ac2_single_player_cooks_cuts_seasons_and_delivers_with_touch_only
+    [Failed]:  tocar «Reanudar» reanuda
+          at line -1
+    [Failed]:  stick y acción a la vez (multitáctil)
+          at line 282
+    [Failed]:  Expected [<null>] to be anything but NULL:  el pulpo está en la mano (cogido con el botón de acción)
+          at line 284
+    [Failed]:  [OctopusStorage:<StaticBody3D#241172484001>(item_spawner.gd)] expected to equal [Kitchen:<StaticBody3D#241591914426>(cooking_station.gd)]:  olla
+          at line 285
+    [Failed]:  Unexpected Errors:
+    [1] <engine-2>Invalid access to property or key 'data' on a base object of type 'Nil'.
+          at line 288
+
+Totals
+------
+Scripts               2
+Tests                 2
+Passing Tests      none
+Failing Tests         2
+Asserts           12/18
+Time              14.951s
+
+
+---- 2 failing tests ----
+

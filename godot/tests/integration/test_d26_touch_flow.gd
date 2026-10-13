@@ -146,18 +146,6 @@ func before_each() -> void:
 	await wait_process_frames(3)
 	watch_signals(EventBus)
 	_rejections.clear()
-	_let_pointer_through_gut_output()
-
-
-## El panel de salida de GUT (`TestOutput`) cubre la ventana y se queda con el puntero, también en
-## headless: sin esto el toque emulado como clic nunca llega a «Reanudar». Solo toca su filtro.
-func _let_pointer_through_gut_output() -> void:
-	for output: Node in get_tree().root.find_children("TestOutput", "", true, false):
-		var node: Node = output
-		while node != null and node != get_tree().root:
-			if node is Control:
-				(node as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
-			node = node.get_parent()
 
 
 func after_each() -> void:
