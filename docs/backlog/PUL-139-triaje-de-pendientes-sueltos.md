@@ -1,7 +1,7 @@
 ---
 id: PUL-139
 title: Triar los pendientes sueltos del roadmap y crear sus fichas
-status: in_progress
+status: review
 milestone: M4
 role: qa-tester
 deps: []
@@ -34,13 +34,27 @@ pueden estar ya resueltos por fichas posteriores (PUL-088..138, en especial M3c:
   en `draft` con la pregunta explícita.
 
 ## Acceptance
-- [ ] AC1 `docs/evidence/PUL-139/README.md` tiene una tabla con cada pendiente, su estado
+- [x] AC1 `docs/evidence/PUL-139/README.md` tiene una tabla con cada pendiente, su estado
   (resuelto/vivo/obsoleto) y la prueba (ficha, commit, fichero:línea o captura).
-- [ ] AC2 Cada pendiente vivo tiene ficha `draft` PUL-142..149 o una nota de por qué no la lleva.
-- [ ] AC3 `tools/verify.sh --quick` en verde; `check_owns` limpio.
+- [x] AC2 Cada pendiente vivo tiene ficha `draft` PUL-142..149 o una nota de por qué no la lleva.
+- [x] AC3 `tools/verify.sh --quick` en verde; `check_owns` limpio.
 
 ## Plan
-(Lo escribe el worker antes de empezar.)
+1. Listar los pendientes de las cuatro secciones del roadmap (24, separando D9 en sus dos partes).
+2. Para cada uno, buscar en código, escenas, tests, `docs/arch`, fichas posteriores y `git log -S` si
+   sigue vivo; capturar por MCP/Xvfb lo visual que no se pueda leer en el código (POP del puesto).
+3. Tabla en `docs/evidence/PUL-139/README.md`; fichas `draft` PUL-142.. agrupando por escena y rol para
+   que `owns` no se solapen; notas para lo que es escucha humana, balance o herramienta.
 
 ## Evidence
-(Lo rellena el worker.)
+- Tabla completa y pruebas: `docs/evidence/PUL-139/README.md`. Resultado: 24 pendientes → 9 resueltos
+  o superados, 3 obsoletos (botes de la estantería, color del `SmallSpawner`, `order_2`), 12 vivos.
+- Captura nueva: `docs/evidence/PUL-139/deliver_ok_strip.png` (`capture_stand_pop.gd`): el número del
+  puesto desaparece en el 15–55 % del POP de `deliver_ok`; `order_new` no lo tapa.
+- Fichas `draft` (M4): PUL-142 (POP del puesto, pregunta al arquitecto si cambia el árbol), PUL-143
+  (test de plazas de la olla), PUL-144 (vapor y tapa, D2/D3), PUL-145 (ambiente y acero, D4/D7,
+  pregunta de gusto al responsable), PUL-146 (materiales y texturas compartidos + borrar
+  `romeria.blend`, D5/D6/D9b, pregunta sobre §4.2). PUL-147..149 sin usar.
+- Sin ficha, con nota: escucha humana del audio y balance (van a M4, PUL-141), D8 (aceptado por
+  PUL-087) y la limitación `--audio-driver` del MCP (herramienta).
+- AC1 cumple, AC2 cumple, AC3: ver abajo.
