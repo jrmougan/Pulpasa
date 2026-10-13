@@ -1,11 +1,11 @@
 ---
 id: PUL-160
 title: Especificar la pantalla de opciones, los créditos y la versión visible
-status: review
+status: done
 milestone: M4
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_e22432b683a7
 unity_sources: []
 owns: [docs/design/features/opciones-de-volumen.md, docs/design/features/creditos-y-version.md, docs/evidence/PUL-160/**, docs/backlog/PUL-160-especificar-opciones-creditos-y-version.md]
 touches_scenes: []
