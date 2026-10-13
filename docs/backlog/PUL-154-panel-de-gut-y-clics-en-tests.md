@@ -50,6 +50,14 @@ afecta a `gut_cmdln` (el panel GUT del editor usa su propia config). Ampliar `ow
 `Button` a pantalla completa y clics reales en el centro y en la esquina inferior derecha; quitar
 `_let_pointer_through_gut_output()` de `test_d26_touch_flow.gd`.
 
+Revisión (CHANGES, ronda 2): el hook ponía `IGNORE` también a los botones de GUT (Continue cierra
+`pause_before_teardown`) y rompía el runner con ventana. Primero se probó conservar el filtro de los
+`BaseButton`, los tiradores de tamaño (`_gui_input` propio) y la barra de título (`gui_input`): no
+basta, porque en headless el panel de GUT se estira a toda la ventana y el tirador `ResizeHandle2`
+(1244,1244 de 25×25 en la vista de 1280×1280) se queda con el clic de la esquina; AC1 y AC2 fallaban.
+Por eso el hook se limita a headless (`DisplayServer.get_name() == "headless"`) y sigue ignorando
+toda la GUI ahí; `tools/verify.sh` ejecuta GUT con `--headless` (línea 28).
+
 ## Evidence
 - Cambio de `owns`: se añadió `godot/tests/helpers/gut_pre_run.gd*` (aprobado por el coordinador:
   «opción A»; nadie más de la oleada toca `tests/helpers`).
@@ -64,9 +72,14 @@ afecta a `gut_cmdln` (el panel GUT del editor usa su propia config). Ampliar `ow
 - AC2: `test_d26_touch_flow.gd` sin el apaño pasa con el hook; sin él falla «tocar «Reanudar»
   reanuda» (y lo que va detrás). Mismos logs.
 - AC3: `tools/verify.sh` completo en verde: 1337 tests / 1337 pasan (antes 1336: +1 test), smoke OK;
-  `.gut_reports/junit.xml` se genera (1337 `<testcase>`). `tools/check_owns.py jrmougan/pul-154 main`:
-  9 rutas dentro de owns. → `docs/evidence/PUL-154/verify.log`.
-- No verificado: la salida en una ejecución con ventana (no headless) desde `gut_cmdln`; ahí los
-  botones de la GUI de GUT (p. ej. continuar tras `pause_before_teardown`) dejan de responder al ratón.
-  Ningún test del proyecto usa esa pausa. Pregunta para el responsable: ¿se acepta, o se limita el
-  hook a `DisplayServer.get_name() == "headless"`?
+  `.gut_reports/junit.xml` se genera (1337 `<testcase>`); repetido tras la revisión con el mismo
+  resultado. `tools/check_owns.py jrmougan/pul-154 main`: 12 rutas dentro de owns. → `docs/evidence/PUL-154/verify.log`.
+- Runner con ventana (`xvfb-run -a godot -s addons/gut/gut_cmdln.gd`, mismos dos scripts): el hook no
+  hace nada y la GUI de GUT conserva el ratón (Continue, Compact, Word Wrap, tiradores y barra de
+  título funcionan como en GUT de serie). Ahí el clic de la esquina de `test_gut_pointer.gd` cae en el
+  tirador de GUT, así que el test queda `pending` fuera de headless; `test_d26_touch_flow.gd` pasa
+  (con ventana el panel no tapa «Reanudar»). → `docs/evidence/PUL-154/ventana.log` (1 pasa,
+  1 pendiente) y `ventana-antes-de-pending.log` (el mismo run antes del `pending`: falla solo la
+  esquina, lo que prueba que GUT conserva el ratón).
+- Repetidos tras la revisión, en headless: AC1 y AC2 pasan (`con-hook.log`, 2/2, 45 asserts);
+  `sin-hook.log` (sin `pre_run_script`) sigue valiendo como prueba de que los tests muerden.

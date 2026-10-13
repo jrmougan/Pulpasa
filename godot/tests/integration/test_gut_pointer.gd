@@ -3,7 +3,9 @@ extends GutTest
 ## (`tests/helpers/gut_pre_run.gd`) el panel de salida de GUT no se queda con el puntero, así que un
 ## clic real (`InputEventMouseButton` pulsar y soltar, entrado como evento del SO) llega al
 ## `Control` del juego que hay debajo, en el centro y en la esquina inferior derecha (donde va el
-## panel compacto de GUT y los botones táctiles), sin tocar `TestOutput` desde el test.
+## panel compacto de GUT y los botones táctiles), sin tocar `TestOutput` desde el test. El hook
+## solo actúa en headless (`tools/verify.sh`): con ventana la GUI de GUT conserva el ratón y el
+## test queda pendiente.
 
 var _button: Button
 var _presses: int = 0
@@ -39,6 +41,9 @@ func _click(at: Vector2) -> void:
 
 
 func test_ac1_real_click_reaches_full_screen_button_under_gut_output() -> void:
+	if DisplayServer.get_name() != "headless":
+		pending("solo headless: con ventana la GUI de GUT conserva el ratón (PUL-154)")
+		return
 	var outputs: Array[Node] = get_tree().root.find_children("TestOutput", "", true, false)
 	assert_gt(
 		outputs.size(), 0, "el panel de salida de GUT está en el árbol (el caso que se cubre)"

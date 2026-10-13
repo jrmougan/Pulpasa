@@ -26,8 +26,8 @@ Warnings              1
 Scripts             113
 Tests              1337
 Passing Tests      1337
-Asserts           27308
-Time              487.149s
+Asserts           27310
+Time              488.508s
 
 
 ---- All tests passed! ----
