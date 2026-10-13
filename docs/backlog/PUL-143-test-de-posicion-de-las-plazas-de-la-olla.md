@@ -1,7 +1,7 @@
 ---
 id: PUL-143
 title: Cubrir con un test la posición de las plazas de la olla
-status: draft
+status: in_progress
 milestone: M4
 role: gameplay-engineer
 deps: []

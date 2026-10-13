@@ -154,21 +154,21 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-139 | M4 | qa-tester | done | Triar los pendientes sueltos del roadmap y crear sus fichas |
 | PUL-140 | M3e | game-designer | done | Crear las fichas de cierre de M3e (guía de playtest y export Android) |
 | PUL-141 | M4 | game-designer | done | Planificar M4 (alpha) en fichas |
-| PUL-142 | M4 | gameplay-engineer | draft | Hacer que el POP del puesto no tape su número |
-| PUL-143 | M4 | gameplay-engineer | draft | Cubrir con un test la posición de las plazas de la olla |
+| PUL-142 | M4 | gameplay-engineer | in_progress | Hacer que el POP del puesto no tape su número |
+| PUL-143 | M4 | gameplay-engineer | in_progress | Cubrir con un test la posición de las plazas de la olla |
 | PUL-144 | M4 | asset-pipeline | draft | Hacer visible el vapor de la olla y apoyar su tapa abierta |
 | PUL-145 | M4 | asset-pipeline | draft | Ajustar el ambiente y el brillo del acero delantero a la referencia |
 | PUL-146 | M4 | asset-pipeline | draft | Compartir materiales y texturas entre los .glb y retirar la fuente v1 |
 | PUL-150 | M3e | game-designer | draft | Escribir la guía del playtest humano de M3e (m3e-gate.md) |
 | PUL-151 | M3e | godot-architect | blocked | Exportar a Android, elegir renderizador móvil y verificar en un teléfono real |
-| PUL-152 | M3e | qa-tester | draft | Recapturar medidas y capturas de D26 con el estado final de M3e |
+| PUL-152 | M3e | qa-tester | in_progress | Recapturar medidas y capturas de D26 con el estado final de M3e |
 | PUL-153 | M3e | qa-tester | draft | Probar el perfil táctil en un teléfono con el build web (antes del APK) |
-| PUL-154 | M4 | qa-tester | draft | Que el panel de salida de GUT no se quede con el puntero en los tests de UI |
-| PUL-160 | M4 | game-designer | draft | Especificar la pantalla de opciones, los créditos y la versión visible |
-| PUL-161 | M4 | game-designer | draft | Poner al día los textos en gallego y escribir el glosario |
-| PUL-162 | M4 | game-designer | draft | Cerrar el diseño del tutorial breve para la alpha |
+| PUL-154 | M4 | qa-tester | in_progress | Que el panel de salida de GUT no se quede con el puntero en los tests de UI |
+| PUL-160 | M4 | game-designer | in_progress | Especificar la pantalla de opciones, los créditos y la versión visible |
+| PUL-161 | M4 | game-designer | in_progress | Poner al día los textos en gallego y escribir el glosario |
+| PUL-162 | M4 | game-designer | in_progress | Cerrar el diseño del tutorial breve para la alpha |
 | PUL-163 | M4 | godot-architect | draft | ADR-007 de ajustes persistentes, localización y tutorial |
-| PUL-164 | M4 | qa-tester | draft | Medir el balance de la alpha con el bot y proponer valores |
+| PUL-164 | M4 | qa-tester | in_progress | Medir el balance de la alpha con el bot y proponer valores |
 | PUL-165 | M4 | game-designer | draft | Registrar los valores de balance aprobados en el diseño |
 | PUL-166 | M4 | gameplay-engineer | draft | Aplicar el balance aprobado en los datos |
 | PUL-167 | M4 | gameplay-engineer | draft | Núcleo de ajustes persistentes y volumen guardado |

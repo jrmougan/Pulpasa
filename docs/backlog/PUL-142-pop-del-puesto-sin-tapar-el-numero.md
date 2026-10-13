@@ -1,7 +1,7 @@
 ---
 id: PUL-142
 title: Hacer que el POP del puesto no tape su número
-status: draft
+status: in_progress
 milestone: M4
 role: gameplay-engineer
 deps: []

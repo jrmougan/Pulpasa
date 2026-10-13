@@ -1,7 +1,7 @@
 ---
 id: PUL-152
 title: Recapturar medidas y capturas de D26 con el estado final de M3e
-status: draft
+status: in_progress
 milestone: M3e
 role: qa-tester
 deps: []

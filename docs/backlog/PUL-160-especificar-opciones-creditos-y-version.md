@@ -1,7 +1,7 @@
 ---
 id: PUL-160
 title: Especificar la pantalla de opciones, los créditos y la versión visible
-status: draft
+status: in_progress
 milestone: M4
 role: game-designer
 deps: []

@@ -1,7 +1,7 @@
 ---
 id: PUL-154
 title: Que el panel de salida de GUT no se quede con el puntero en los tests de UI
-status: draft
+status: in_progress
 milestone: M4
 role: qa-tester
 deps: []

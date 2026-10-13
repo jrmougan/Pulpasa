@@ -1,7 +1,7 @@
 ---
 id: PUL-164
 title: Medir el balance de la alpha con el bot y proponer valores
-status: draft
+status: in_progress
 milestone: M4
 role: qa-tester
 deps: []

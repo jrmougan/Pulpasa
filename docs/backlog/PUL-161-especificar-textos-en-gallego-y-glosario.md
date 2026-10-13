@@ -1,7 +1,7 @@
 ---
 id: PUL-161
 title: Poner al día los textos en gallego y escribir el glosario
-status: draft
+status: in_progress
 milestone: M4
 role: game-designer
 deps: []

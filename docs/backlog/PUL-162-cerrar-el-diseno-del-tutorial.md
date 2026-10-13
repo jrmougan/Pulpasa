@@ -1,7 +1,7 @@
 ---
 id: PUL-162
 title: Cerrar el diseño del tutorial breve para la alpha
-status: draft
+status: in_progress
 milestone: M4
 role: game-designer
 deps: []
