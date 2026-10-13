@@ -154,7 +154,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-139 | M4 | qa-tester | done | Triar los pendientes sueltos del roadmap y crear sus fichas |
 | PUL-140 | M3e | game-designer | done | Crear las fichas de cierre de M3e (guía de playtest y export Android) |
 | PUL-141 | M4 | game-designer | done | Planificar M4 (alpha) en fichas |
-| PUL-142 | M4 | gameplay-engineer | in_progress | Hacer que el POP del puesto no tape su número |
+| PUL-142 | M4 | gameplay-engineer | done | Hacer que el POP del puesto no tape su número |
 | PUL-143 | M4 | gameplay-engineer | done | Cubrir con un test la posición de las plazas de la olla |
 | PUL-144 | M4 | asset-pipeline | draft | Hacer visible el vapor de la olla y apoyar su tapa abierta |
 | PUL-145 | M4 | asset-pipeline | draft | Ajustar el ambiente y el brillo del acero delantero a la referencia |

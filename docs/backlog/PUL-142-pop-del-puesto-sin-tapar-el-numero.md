@@ -1,11 +1,11 @@
 ---
 id: PUL-142
 title: Hacer que el POP del puesto no tape su número
-status: review
+status: done
 milestone: M4
 role: gameplay-engineer
 deps: []
-orca_task: null
+orca_task: task_7e91ff532229
 unity_sources: []
 owns: [godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand.gd, godot/entities/stations/order_stand_model.gd, godot/tests/integration/test_stand_pop_number.gd*, docs/evidence/PUL-142/**, docs/backlog/PUL-142-pop-del-puesto-sin-tapar-el-numero.md]
 touches_scenes: [godot/entities/stations/order_stand.tscn]
