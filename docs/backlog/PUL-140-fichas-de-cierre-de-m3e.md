@@ -59,4 +59,4 @@ Resumen y lo revisado de D26/D27: `docs/evidence/PUL-140/README.md`.
 |---|---|
 | AC1 | `PUL-150-guia-playtest-m3e.md` (draft, guía `m3e-gate.md`, deps PUL-152) y `PUL-151-export-android-y-renderizador-movil.md` (**blocked**: sin Android SDK, sin plantillas 4.7.2 y sin teléfono; AC4 con D27.3 y la safe area real). Además PUL-152 (recaptura de D26 con el estado final y caso 09 con safe de diseño), PUL-153 (teléfono vía build web, pregunta al responsable) y PUL-154 (H-04 de PUL-132, panel de GUT; M4). `owns` disjuntos, sin escenas |
 | AC2 | README con la tabla de fichas, la tabla punto de D26/D27 → estado → ficha y 4 preguntas (perfil táctil en PC sin pantalla táctil, teléfono por web, toolchain Android, estado «propuesta» de las enmiendas de ADR) |
-| AC3 | `tools/verify.sh --quick`: `✓ verify OK`. `tools/check_owns.py jrmougan/pul-140`: ver informe de entrega |
+| AC3 | `tools/verify.sh --quick`: `✓ verify OK`. `tools/check_owns.py jrmougan/pul-140 ac249d1`: 7 rutas, todas dentro de owns (rc 0) |
