@@ -1,0 +1,285 @@
+[
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivered": 20,
+    "delivery_rejections": 0,
+    "expired": 1,
+    "kind": "partida",
+    "meters_p1_total": 970.9,
+    "meters_p2_total": 0.0,
+    "mode": "round_solo",
+    "orders_log": [
+      {
+        "at": 4.98,
+        "done_at": 24.73,
+        "id": 1,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 40.25
+      },
+      {
+        "at": 4.98,
+        "done_at": 33.2,
+        "id": 2,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 31.78
+      },
+      {
+        "at": 24.73,
+        "done_at": 51.83,
+        "id": 3,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 33.2,
+        "done_at": 60.3,
+        "id": 4,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 32.9
+      },
+      {
+        "at": 51.83,
+        "done_at": 78.93,
+        "id": 5,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 60.3,
+        "done_at": 87.4,
+        "id": 6,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 32.9
+      },
+      {
+        "at": 78.93,
+        "done_at": 106.03,
+        "id": 7,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 87.4,
+        "done_at": 133.67,
+        "id": 8,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 13.73
+      },
+      {
+        "at": 89.97,
+        "done_at": 114.87,
+        "id": 9,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 3,
+        "time_left": 26.1
+      },
+      {
+        "at": 106.03,
+        "done_at": 142.93,
+        "id": 10,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 1,
+        "time_left": 14.1
+      },
+      {
+        "at": 114.87,
+        "done_at": 161.13,
+        "id": 11,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 3,
+        "time_left": 4.73
+      },
+      {
+        "at": 133.67,
+        "done_at": 170.57,
+        "id": 12,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 2,
+        "time_left": 14.1
+      },
+      {
+        "at": 142.93,
+        "done_at": 189.2,
+        "id": 13,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 1,
+        "time_left": 4.73
+      },
+      {
+        "at": 161.13,
+        "done_at": 198.03,
+        "id": 14,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 3,
+        "time_left": 14.1
+      },
+      {
+        "at": 170.57,
+        "done_at": 216.83,
+        "id": 15,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 2,
+        "time_left": 4.73
+      },
+      {
+        "at": 179.97,
+        "expired_at": 243.97,
+        "id": 16,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 4
+      },
+      {
+        "at": 189.2,
+        "done_at": 226.1,
+        "id": 17,
+        "kind": "Á feira",
+        "patience": 48.0,
+        "phase": 3,
+        "points": 8,
+        "slot": 1,
+        "time_left": 11.1
+      },
+      {
+        "at": 198.03,
+        "done_at": 248.15,
+        "id": 18,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "points": 12,
+        "slot": 3,
+        "time_left": 13.88
+      },
+      {
+        "at": 216.83,
+        "done_at": 257.88,
+        "id": 19,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "points": 12,
+        "slot": 2,
+        "time_left": 22.95
+      },
+      {
+        "at": 226.1,
+        "done_at": 280.37,
+        "id": 20,
+        "kind": "Bravo cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "points": 13,
+        "slot": 1,
+        "time_left": 9.73
+      },
+      {
+        "at": 243.97,
+        "id": 21,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 4
+      },
+      {
+        "at": 248.15,
+        "done_at": 289.2,
+        "id": 22,
+        "kind": "Á feira",
+        "patience": 48.0,
+        "phase": 3,
+        "points": 8,
+        "slot": 3,
+        "time_left": 6.95
+      },
+      {
+        "at": 257.88,
+        "id": 23,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 2
+      },
+      {
+        "at": 280.37,
+        "id": 24,
+        "kind": "Bravo cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 1
+      },
+      {
+        "at": 289.2,
+        "id": 25,
+        "kind": "Á feira",
+        "patience": 48.0,
+        "phase": 3,
+        "slot": 3
+      }
+    ],
+    "presses_total": 265,
+    "revenue": 196,
+    "seed": 2,
+    "slots": "PassSlot04/PassSlot05",
+    "stars": 3,
+    "station_rejections": 0,
+    "trashed": 0,
+    "variant": "proposal"
+  }
+]

@@ -1,0 +1,294 @@
+[
+  {
+    "bot_warnings": 0,
+    "burnt": 0,
+    "cuts": 6,
+    "delivered": 20,
+    "delivery_rejections": 0,
+    "expired": 2,
+    "kind": "partida",
+    "meters_p1_total": 963.6,
+    "meters_p2_total": 0.0,
+    "mode": "round_solo",
+    "orders_log": [
+      {
+        "at": 4.98,
+        "done_at": 24.73,
+        "id": 1,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 40.25
+      },
+      {
+        "at": 4.98,
+        "done_at": 33.2,
+        "id": 2,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 31.78
+      },
+      {
+        "at": 24.73,
+        "done_at": 51.83,
+        "id": 3,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 33.2,
+        "done_at": 60.3,
+        "id": 4,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 32.9
+      },
+      {
+        "at": 51.83,
+        "done_at": 78.93,
+        "id": 5,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 60.3,
+        "done_at": 87.4,
+        "id": 6,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 32.9
+      },
+      {
+        "at": 78.93,
+        "done_at": 106.03,
+        "id": 7,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 1,
+        "time_left": 32.9
+      },
+      {
+        "at": 87.4,
+        "done_at": 133.27,
+        "id": 8,
+        "kind": "Á feira",
+        "patience": 60.0,
+        "phase": 1,
+        "points": 8,
+        "slot": 2,
+        "time_left": 14.13
+      },
+      {
+        "at": 89.97,
+        "done_at": 114.47,
+        "id": 9,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 3,
+        "time_left": 26.5
+      },
+      {
+        "at": 106.03,
+        "done_at": 142.53,
+        "id": 10,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 1,
+        "time_left": 14.5
+      },
+      {
+        "at": 114.47,
+        "done_at": 160.33,
+        "id": 11,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 3,
+        "time_left": 5.13
+      },
+      {
+        "at": 133.27,
+        "done_at": 169.77,
+        "id": 12,
+        "kind": "Á feira",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 8,
+        "slot": 2,
+        "time_left": 14.5
+      },
+      {
+        "at": 142.53,
+        "done_at": 188.4,
+        "id": 13,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 1,
+        "time_left": 5.13
+      },
+      {
+        "at": 160.33,
+        "done_at": 196.83,
+        "id": 14,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 3,
+        "time_left": 14.5
+      },
+      {
+        "at": 169.77,
+        "done_at": 215.63,
+        "id": 15,
+        "kind": "Picante",
+        "patience": 51.0,
+        "phase": 2,
+        "points": 9,
+        "slot": 2,
+        "time_left": 5.13
+      },
+      {
+        "at": 179.97,
+        "done_at": 224.87,
+        "id": 16,
+        "kind": "Picante",
+        "patience": 48.0,
+        "phase": 3,
+        "points": 9,
+        "slot": 4,
+        "time_left": 3.1
+      },
+      {
+        "at": 188.4,
+        "done_at": 248.32,
+        "id": 17,
+        "kind": "Bravo cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "points": 13,
+        "slot": 1,
+        "time_left": 4.08
+      },
+      {
+        "at": 196.83,
+        "done_at": 257.05,
+        "id": 18,
+        "kind": "Bravo cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "points": 13,
+        "slot": 3,
+        "time_left": 3.78
+      },
+      {
+        "at": 215.63,
+        "expired_at": 263.63,
+        "id": 19,
+        "kind": "Picante",
+        "patience": 48.0,
+        "phase": 3,
+        "slot": 2
+      },
+      {
+        "at": 224.87,
+        "expired_at": 288.87,
+        "id": 20,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 4
+      },
+      {
+        "at": 248.32,
+        "done_at": 294.92,
+        "id": 21,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "points": 12,
+        "slot": 1,
+        "time_left": 17.4
+      },
+      {
+        "at": 257.05,
+        "id": 22,
+        "kind": "Bravo cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 3
+      },
+      {
+        "at": 263.63,
+        "done_at": 275.85,
+        "id": 23,
+        "kind": "Picante",
+        "patience": 48.0,
+        "phase": 3,
+        "points": 9,
+        "slot": 2,
+        "time_left": 35.78
+      },
+      {
+        "at": 275.85,
+        "id": 24,
+        "kind": "Picante",
+        "patience": 48.0,
+        "phase": 3,
+        "slot": 2
+      },
+      {
+        "at": 288.87,
+        "id": 25,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 4
+      },
+      {
+        "at": 294.92,
+        "id": 26,
+        "kind": "Con cachelos",
+        "patience": 64.0,
+        "phase": 3,
+        "slot": 1
+      }
+    ],
+    "presses_total": 264,
+    "revenue": 200,
+    "seed": 1,
+    "slots": "PassSlot04/PassSlot05",
+    "stars": 3,
+    "station_rejections": 0,
+    "trashed": 0,
+    "variant": "proposal"
+  }
+]
