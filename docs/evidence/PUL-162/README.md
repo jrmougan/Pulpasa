@@ -12,10 +12,10 @@ Sección [«Pasos»](../../design/features/tutorial-breve.md#pasos): 6 filas con
 |---|---|---|
 | 1 | `held_item_changed(p, &"octopus_raw")` | **Propuesta S1 para ADR-007**; alternativa con el catálogo actual: `interaction_resolved(p, &"pick_up", 1, &"")` (falso positivo documentado) |
 | 2 | `interaction_resolved(p, &"cook", 1, &"")` | `signals.md` §2 Interacción |
-| 3 | `interaction_resolved(p, &"cut", 1, &"")` × `presses_to_fill` | `signals.md` §2 Interacción |
+| 3 | `interaction_resolved(p, &"cut", 1, &"")` × `presses_to_fill`, y después `interaction_resolved(p, &"drop" \| &"trash", 1, &"")` para dejar las 50 u sobrantes (con S1: `held_item_changed(p, &"")`) | `signals.md` §2 Interacción |
 | 4 | `interaction_resolved(p, &"season_sweet", 1, &"")` | `signals.md` §2 Interacción |
 | 5 | `order_completed(order, points)` | `signals.md` §2 Comandas |
-| 6 | Individual: `character_switched(1, c)`; Local 2P: `interaction_resolved(a, &"drop", 1, &"")` → `interaction_resolved(b, &"pick_up", 1, &"")`, `b ≠ a` | `signals.md` §2 Sesión y jugadores / Interacción |
+| 6 | Individual: `character_switched(1, c)`; Local 2P: `item_handed_over(a, b, pass_slot_id, kind)`, `a ≠ b` | Individual: `signals.md` §2 Sesión y jugadores. Local 2P: **propuesta S2 para ADR-007** (hecho de transferencia emitido por el `PassSlot`); sin S2 no hay condición honesta y el sustituto («entregad otra caja entre los dos») arriesga AC4 |
 
 Avance: el núcleo cambia en el mismo frame; el panel en `step_transition_time` = 0,3 s (≤ 0,5 s).
 Otras propuestas para PUL-163: señales de paso del tutorial, acción `tutorial_skip`, sin quemado en el tutorial.
@@ -37,8 +37,8 @@ Coste que afecta a otras fichas (para el producer):
 ## AC3 · Perfiles cruzados con `controles-tactiles.md` (D26, D27)
 AC numéricos por perfil:
 - **Individual (escritorio):** AC9: paso 6 termina ≤ 0,5 s tras cambiar; el `character_switched` de inicio no cuenta; panel ≤ 900 × 220 px, texto ≥ 28 px a 1080.
-- **Local 2P:** AC10: J2 avanza los pasos 1–5 igual que J1 en ≤ 0,5 s; paso 6 con `b ≠ a`; el mismo jugador no lo completa.
-- **Táctil:** AC8: fantasma del stick de 300 px en (585, 756); texto ≥ 36 px; «Saltar» ≥ 120 px; panel en x ∈ [50 % + 24, safe area − 48], y ∈ [224, 576], ≤ 300 px de alto; aro en el botón de cambiar en (2028, 972).
+- **Local 2P:** AC10: J2 avanza los pasos 1–5 igual que J1 en ≤ 0,5 s; paso 6 solo con el mismo objeto pasado de J1 a J2 por un pasaplatos (S2); soltar al suelo y coger otra cosa, o dejar y recoger el mismo jugador, no lo completa.
+- **Táctil:** AC8: fantasma del stick de 300 px en (585, 756); texto ≥ 36 px; «Saltar» ≥ 120 px; panel en x ∈ [50 % + 24, safe area − 48], y ∈ [224, 576], ≤ 300 px de alto; aros anclados al botón real: cambiar en (2028, 972) sin safe area y (1896, 909) con la de diseño; acción en (2202, 942) y (2070, 879).
 
 AC cruzados (0 contradicciones):
 
@@ -48,8 +48,8 @@ AC cruzados (0 contradicciones):
 | Tabla de escala, «Botones del tutorial («Saltar»)» | 120 px de alto | AC8 (2): ≥ 120 px |
 | Menús, «Tutorial: el paso 1 señala el stick y el botón de acción» | — | AC8 (1): fantasma del stick + aro en el botón de acción |
 | AC1 (perfil: solo «Individual» en el menú táctil) | Menú táctil con 1 botón | (a) no toca el menú. (b)/(c) lo cambian: está declarado como **coste y enmienda**, no como contradicción |
-| AC3 (D27: cambiar a la izquierda del de acción, centro (2028, 972)) | Botones en fila | AC8 (4): el aro del paso 6 va en (2028, 972) |
-| D27 / ADR-005 E4: zona de botones y ≥ alto − 240 | 840 a 1080 | AC8 (3): panel con y ≤ 576 |
+| AC3 (D27: cambiar a la izquierda del de acción) + ADR-005 D27.1 (tabla de centros) | Cambiar en (2028, 972) con safe area nula y en (1896, 909) con la de diseño 132/0/132/63 a 2340×1080 | AC8 (4): el aro del paso 6 se ancla al centro real del botón (± 2 px), con los dos casos; ídem el aro del botón de acción del paso 1 ((2202, 942) / (2070, 879), = AC2 de `controles-tactiles.md`) |
+| D27 / ADR-005 D27.2: zona de botones anclada a la safe area | Safe area nula: x ≥ ancho − 390, y ≥ 840. Diseño: x ≥ 1818, y ≥ 777 | AC8 (3): panel con y ≤ 576 en los dos casos |
 | AC16 (zonas reservadas: stick x < 50 %, y ≥ 200; botones x ≥ ancho − 390, y ≥ 600) | Nada de UI encima | AC8 (3): panel en x ≥ 50 % + 24 e y ∈ [224, 576] (por debajo de 600, así vale con la zona antigua y la de D27) |
 | AC15 (banda superior ≤ 200 px) | Tickets y HUD arriba | AC8 (3): el panel empieza en y = 224 (24 px de hueco) |
 | AC17 (safe area, 48 px de margen) | Todo dentro | AC8 (3): borde derecho = safe area − 48 |

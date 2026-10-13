@@ -50,3 +50,8 @@ sale de él y cómo se comporta en Local 2P y en el perfil táctil con D27 (boto
 coste (AC2), AC por perfil y cruce con `controles-tactiles.md` sin contradicciones (AC3), salida de
 `verify.sh --quick` y `check_owns.py` (AC4). Para el producer: (b)/(c) exigen enmendar `menu-principal.md`
 AC6 y `controles-tactiles.md` AC1; PUL-175 AC1 limita (a) a Individual y la feature propone también Local 2P.
+
+**Ronda 2 (revisión Codex, CHANGES):** paso 3 enseña a soltar o tirar las 50 u sobrantes antes de coger
+la caja; paso 6 en Local 2P pasa a la señal propuesta S2 `item_handed_over` (hecho de transferencia del
+`PassSlot`); E-c conserva solo la condición automática de E-a y la entrada manual de E-b; los aros de
+AC8 se anclan al botón real con safe area nula y de diseño (ADR-005 D27.1), recogido en el cruce de AC3.

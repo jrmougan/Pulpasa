@@ -8,7 +8,8 @@ flujo), PUL-171 (botón del menú, solo si G0 lo elige).
 ## Descripción
 Con D25 el tutorial enseña **solo la fase 1** (`dificultad-progresiva.md`): una sola receta, «Á feira»
 (pulpo + aliño dulce, sin cachelos). El aliño picante y los cachelos se descubren en las fases 2 y 3
-de la partida, con su comanda en el ticket. El cubo de basura se menciona al paso en el paso 4.
+de la partida, con su comanda en el ticket. El cubo de basura se menciona al paso en el paso 3 (para
+el pulpo que sobra) y en el 4 (para lo que salga mal).
 
 El tutorial es **la misma escena de nivel** (`level_01`) con una configuración de ronda propia
 («Datos») y un panel de pasos encima. Cada paso enseña **un verbo** (D26) con su icono, resalta su
@@ -33,10 +34,10 @@ del paso en curso no hace nada (no hay pasos fuera de orden).
 |---|---|---|---|---|---|
 | 1 | «Coge un pulpo de la nevera.» (táctil: «Mueve con el dedo a la izquierda y pulsa el botón».) | COGER `&"pick_up"` | Nevera del pulpo (táctil: además, fantasma del stick y aro en el botón de acción, AC8) | **Propuesta S1** `held_item_changed(p, &"octopus_raw")`. *Sin S1:* `interaction_resolved(p, &"pick_up", 1, &"")` (no distingue qué se coge: ver «Señales») | ≤ 0,5 s |
 | 2 | «Échalo a la olla.» | COCER `&"cook"` | Plaza libre de la olla | `interaction_resolved(p, &"cook", 1, &"")` (`signals.md` §2 Interacción); con S1, además, que el último `held_item_changed(p, …)` fuera `&"octopus_raw"` (descarta los cachelos crudos) | ≤ 0,5 s |
-| 3 | «Cuando esté listo, cógelo y córtalo sobre la caja: pulsa 6 veces (o mantén pulsado).» | CORTAR `&"cut"` | Olla hasta que la cocción acaba; después, la caja del pasaplatos | Contar `interaction_resolved(p, &"cut", 1, &"")` hasta `BoxData.presses_to_fill` (hoy 6, se lee del dato, no se copia). Mantener pulsado emite una por repetición, así que cuenta igual | ≤ 0,5 s |
+| 3 | «Cuando esté listo, cógelo y córtalo sobre la caja: pulsa 6 veces (o mantén pulsado).» Tras el 6.º corte el texto cambia a: «Te sobra medio pulpo: déjalo en el pasaplatos de al lado (sirve para otra caja) o tíralo al cubo. Con la mano llena no puedes coger la caja.» | CORTAR `&"cut"`; tras el 6.º corte, SOLTAR `&"drop"` (o TIRAR `&"trash"`) | Olla hasta que la cocción acaba; después, la caja del pasaplatos; tras el 6.º corte, el pasaplatos libre contiguo a la caja (el cubo de la cocina solo se nombra en el texto) | Dos tramos: (a) contar `interaction_resolved(p, &"cut", 1, &"")` hasta `BoxData.presses_to_fill` (hoy 6, se lee del dato, no se copia; mantener pulsado emite una por repetición, así que cuenta igual); (b) después, el primer `interaction_resolved(p, &"drop", 1, &"")` o `interaction_resolved(p, &"trash", 1, &"")` del mismo `p` (con S1: `held_item_changed(p, &"")`). Motivo: tras 6 cortes quedan 50 u de pulpo en la mano (`corte-pulpo.md` AC2) y con la mano ocupada no se puede coger la caja (`HoldComponent.can_hold`) | ≤ 0,5 s tras (b) |
 | 4 | «Coge la caja llena y pulsa el aliño **dulce**. Si te equivocas, pulsa el otro: lo sustituye. Lo que salga mal, al cubo.» | ALIÑAR DULCE `&"season_sweet"` | Dispensador de aliño dulce | `interaction_resolved(p, &"season_sweet", 1, &"")`. Con `&"season_hot"` OK **no** avanza y cambia el texto (AC6). Con `BLOCKED` `&"box_not_full"`: no avanza y el texto dice «la caja aún no está llena» | ≤ 0,5 s |
 | 5 | «Llévala a la zona iluminada del puesto.» | — (sin verbo: la entrega es por zona, D26) | Zona de entrega del puesto activo (`DeliveryFrame` encendido) | `order_completed(order, points)` (`signals.md` §2 Comandas) | ≤ 0,5 s |
-| 6 | Individual: «Cambia de personaje: el otro te espera al otro lado de la barra.» Local 2P: «Pasaos algo por un pasaplatos: uno lo deja, el otro lo coge.» | Individual: icono del botón de cambiar. Local 2P: SOLTAR `&"drop"` y COGER `&"pick_up"` | Individual: anillo del personaje inactivo (táctil: además, aro en el botón de cambiar). Local 2P: los 6 pasaplatos | Individual: `character_switched(1, c)` con `c` distinto del personaje activo al empezar el paso (la emisión de inicio de ronda no cuenta). Local 2P: `interaction_resolved(a, &"drop", 1, &"")` y después, en el mismo paso, `interaction_resolved(b, &"pick_up", 1, &"")` con `b ≠ a` (con S1, `held_item_changed(b, k)` con `k ≠ &""`) | ≤ 0,5 s; al completar empieza la salida |
+| 6 | Individual: «Cambia de personaje: el otro te espera al otro lado de la barra.» Local 2P: «Pasaos algo por un pasaplatos: uno lo deja, el otro lo coge.» | Individual: icono del botón de cambiar. Local 2P: SOLTAR `&"drop"` y COGER `&"pick_up"` | Individual: anillo del personaje inactivo (táctil: además, aro en el botón de cambiar, anclado al botón real, AC8). Local 2P: los 6 pasaplatos | Individual: `character_switched(1, c)` con `c` distinto del personaje activo al empezar el paso (la emisión de inicio de ronda no cuenta). Local 2P: **propuesta S2** `item_handed_over(from_player, to_player, pass_slot_id, item_kind)` con `from_player ≠ to_player`, emitida por el `PassSlot` en el que se dejó el objeto (ver «Señales»). Un `drop` de un jugador seguido de un `pick_up` del otro **no** basta: puede ser soltar al suelo y coger otra cosa | ≤ 0,5 s; al completar empieza la salida |
 
 **Resaltado** *(propuesta para PUL-175)*: marcador de mundo propio del tutorial (flecha ▼ que pulsa a
 1 Hz, ≥ 64 px a 1080 de alto) sobre el objetivo del paso, **distinto** del `Highlightable` y del prompt
@@ -44,8 +45,9 @@ de acción, que siguen funcionando igual (D26: el prompt solo sale si la pulsaci
 un marcador a la vez y desaparece en ≤ 0,5 s al completar el paso.
 
 ### Señales
-Las del catálogo actual bastan para los pasos 2–6. El paso 1 (y el filtro del 2) necesita saber
-**qué** se ha cogido, y eso no viaja por el bus: `item_picked_up(item)` es local del `Holder` y
+Las del catálogo actual bastan para los pasos 2–5 y para el 6 en Individual. El paso 1 (y el filtro
+del 2) necesita saber **qué** se ha cogido, y el paso 6 en Local 2P necesita saber que **el mismo
+objeto** pasó de un jugador a otro **por un pasaplatos**, y eso no viaja por el bus: `item_picked_up(item)` es local del `Holder` y
 `cooking_started(ingredient)` es local de la olla.
 
 - **S1 (propuesta para ADR-007)** `held_item_changed(player_index: int, item_kind: StringName)`.
@@ -57,6 +59,18 @@ Las del catálogo actual bastan para los pasos 2–6. El paso 1 (y el filtro del
   coger otra cosa (cachelos crudos de su caja, o la caja del pasaplatos desde la cocina); el paso 2
   pediría entonces echar a la olla lo que se lleva y los cachelos crudos lo completarían. Coste: el
   tutorial puede «avanzar» sin haber hecho lo que dice. PUL-163 decide.
+- **S2 (propuesta para ADR-007)** `item_handed_over(from_player: int, to_player: int, pass_slot_id: int, item_kind: StringName)`.
+  Es un hecho explícito de transferencia: S1 no basta porque solo da la clase de objeto, no su
+  identidad ni dónde estaba. Emisor: el `PassSlot` (capa específica; `PassSlot01..06` de
+  `scene-tree.md`). Al recibir un objeto guarda el `player_index` de quien lo dejó; cuando un jugador
+  lo coge de **ese** `PassSlot` y su `player_index` es distinto, emite S2 una vez y olvida al dueño. El
+  objeto es el mismo porque nunca salió del pasaplatos; si lo recoge quien lo dejó, no se emite.
+  `pass_slot_id` 1–6; `item_kind` del conjunto de S1. En Individual no se emite nunca (los dos
+  personajes son del jugador 1). Oyente: el núcleo del tutorial.
+- **Sin S2 (alternativa):** con el catálogo actual no hay una condición honesta para el paso 6 en
+  Local 2P. El sustituto sería «entregad otra caja entre los dos» (`order_completed` con
+  `interaction_resolved` OK de J1 y de J2 desde que empezó el paso), que añade ~30–40 s y pone en
+  riesgo AC4 (≤ 90 s). PUL-163 decide.
 - **Paso de tutorial** (`tutorial_step_changed(step: int)`, `tutorial_finished(skipped: bool)` o
   similar) para que el panel y el montaje escuchen al núcleo: lo propone y decide PUL-163 (Change 4).
 
@@ -87,7 +101,12 @@ Si G0 elige una, esta sección se queda solo con ella y PUL-175 implementa solo 
   Individual en ≤ 3 s; When se pulsa «Individual» o «Local 2P», Then arranca la partida normal aunque el
   tutorial no se haya visto nunca. El botón mide lo mismo que los demás (táctil: ≥ 120 px de alto, 24 px
   de separación). *Test:* `test_tutorial.gd` + `test_main_menu_touch.gd`.
-- **E-c** = E-a + E-b, y Given `tutorial_done`, When se pulsa «Tutorial», Then el tutorial arranca igual.
+- **E-c** Se conservan la condición automática de E-a y la entrada manual de E-b (no la parte de E-b
+  «partida normal aunque no se haya visto»): Given el perfil sin `tutorial_done`, When se pulsa
+  «Individual» o «Local 2P», Then arranca el tutorial en ese modo en ≤ 3 s; Given `tutorial_done`, When
+  se pulsa «Individual» o «Local 2P», Then arranca la partida normal; Given cualquier perfil (con o sin
+  `tutorial_done`), When se pulsa «Tutorial», Then arranca el tutorial en Individual en ≤ 3 s. *Test:*
+  `test_tutorial.gd` + `test_main_menu_touch.gd`.
 
 **Salida (las tres opciones):**
 - **Recomendada (propuesta):** al completar el paso 6 sale «¡Listo! Empieza la feria» durante
@@ -111,7 +130,7 @@ Si G0 elige una, esta sección se queda solo con ella y PUL-175 implementa solo 
 
 ## Criterios de aceptación
 - **AC1** *(reescrito por D25; cerrado en PUL-162)* Given el tutorial, Then se muestran los 6 pasos de la
-  tabla «Pasos» en ese orden: coger pulpo, cocer, cortar sobre la caja única (6 pulsaciones), aliñar con
+  tabla «Pasos» en ese orden: coger pulpo, cocer, cortar sobre la caja única (6 pulsaciones) y dejar el pulpo que sobra, aliñar con
   el aliño dulce (una pulsación; si te equivocas de aliño, pulsa el otro), entregar, cooperar. No se
   mencionan cachelos, aliño picante (salvo el texto de AC6) ni tamaños de caja. *Test:* `test_tutorial_steps.gd`.
 - **AC2** Given cada paso, When llega su señal de la tabla, Then el núcleo pasa al siguiente en el mismo
@@ -142,17 +161,23 @@ Si G0 elige una, esta sección se queda solo con ella y PUL-175 implementa solo 
   (≤ 300 px de alto: icono, texto y «Saltar» en una fila), así que no interseca la banda superior
   (≤ 200 px), la zona del stick (x < 50 %), la zona de botones de D27 (y ≥ alto − 240) ni la de AC16 de
   `controles-tactiles.md` (x ≥ ancho − 390, y ≥ 600); (4) el paso 6 es «cambia de personaje» y pone el
-  aro en el botón de cambiar (centro (2028, 972), D27); no hay Local 2P en móvil. *Test:* `test_tutorial_panel.gd` + `test_ui_scale.gd` + capturas a 1920×1080 y 2340×1080.
+  aro en el botón de cambiar **anclado al botón real** (concéntrico con el centro que da la maquetación
+  táctil, no una coordenada fija): (2028 ± 2, 972 ± 2) con safe area nula y (1896 ± 2, 909 ± 2) con la
+  safe area de diseño (132/0/132/63), ADR-005 D27.1; lo mismo para el aro del botón de acción del paso 1:
+  (2202, 942) y (2070, 879). El fantasma del stick queda entero dentro de la safe area en ambos casos;
+  no hay Local 2P en móvil. *Test:* `test_tutorial_panel.gd` + `test_ui_scale.gd` + capturas a 1920×1080 y 2340×1080.
 - **AC9 (Individual, escritorio)** Given Individual en escritorio a 1920×1080, When se pulsa cambiar en el
   paso 6, Then el tutorial termina en ≤ 0,5 s; Given el paso 6 recién empezado, Then el
   `character_switched` de inicio de ronda no lo completa; el panel mide ≤ 900 × 220 px y su texto ≥ 28 px.
   *Test:* `test_tutorial_steps.gd` + `test_tutorial_panel.gd`.
 - **AC10 (Local 2P)** Given Local 2P, When J2 completa el paso 1 (o cualquier otro de los 1–5), Then avanza
-  igual que con J1 en ≤ 0,5 s; Given el paso 6, When J1 suelta algo en un pasaplatos y J2 lo coge, Then
-  el tutorial termina en ≤ 0,5 s; When el mismo jugador suelta y coge, Then no termina; «Saltar» de
+  igual que con J1 en ≤ 0,5 s; Given el paso 6, When J1 deja un objeto en un pasaplatos y J2 coge ese
+  objeto de ese pasaplatos, Then el tutorial termina en ≤ 0,5 s; When J1 lo suelta al suelo y J2 coge
+  otro objeto, o el mismo jugador lo deja y lo recoge, Then no termina; «Saltar» de
   cualquiera de los dos lo termina. *Test:* `test_tutorial_steps.gd`.
 - **AC11 (resaltado)** Given cada paso, Then hay exactamente 1 marcador de tutorial ≥ 64 px a 1080 sobre
-  el objetivo de la tabla (paso 3: sobre la olla hasta `cooking_finished` y luego sobre la caja) y
+  el objetivo de la tabla (paso 3: sobre la olla hasta `cooking_finished`, luego sobre la caja y, tras el 6.º corte, sobre el
+  pasaplatos libre contiguo) y
   desaparece en ≤ 0,5 s al completar el paso; el prompt de acción del jugador sigue igual. *Test:* `test_tutorial.gd` + captura.
 - **AC12 (salida, propuesta)** Given el paso 6 completado, Then a los 2,0 ± 0,1 s empieza la partida normal
   en el mismo modo con reloj a 300 s, fase 1, 2 puestos y recaudación 0; Given el tope de 180 s del
@@ -177,6 +202,7 @@ Si G0 elige una, esta sección se queda solo con ella y PUL-175 implementa solo 
 1. **P5 (G0):** ¿entra en la alpha? ¿a, b o c? Si no entra, se cierra registrándolo y se cierran 169, 174 y 175.
 2. **Salida (G0):** ¿partida normal desde 0 s (recomendada) o vuelta al menú?
 3. **Repetir (G0, solo con a):** ¿opción «Repetir tutorial» en Opciones?
-4. **S1 (PUL-163):** ¿se añade `held_item_changed` o se acepta el falso positivo del paso 1?
+4. **S1 y S2 (PUL-163):** ¿se añade `held_item_changed` o se acepta el falso positivo del paso 1? ¿Se
+   añade `item_handed_over` o el paso 6 en Local 2P pasa a «entregad otra caja entre los dos»?
 5. **Quemado (PUL-163/G0):** ¿sin quemado en el tutorial (recomendada) o vuelta al paso 1?
 6. **`tutorial_skip` (PUL-163):** ¿acción nueva del InputMap (ADR-004) o solo el botón del panel y la pausa?
