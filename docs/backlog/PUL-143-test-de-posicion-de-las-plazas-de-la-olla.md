@@ -1,11 +1,11 @@
 ---
 id: PUL-143
 title: Cubrir con un test la posición de las plazas de la olla
-status: review
+status: done
 milestone: M4
 role: gameplay-engineer
 deps: []
-orca_task: null
+orca_task: task_61fdcfe3d6f4
 unity_sources: []
 owns: [godot/tests/integration/test_cooking_slots_layout.gd*, docs/evidence/PUL-143/**, docs/backlog/PUL-143-test-de-posicion-de-las-plazas-de-la-olla.md]
 touches_scenes: []
