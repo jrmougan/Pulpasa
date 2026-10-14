@@ -62,8 +62,8 @@ Cosas que sabes antes de entrar y no tienes que descubrir:
    `docs/evidence/PUL-152/2340x1080-caso09-diseno-oeste-z3_4.jpg` (D27.3).
 2. **Escritorio**: `godot --path godot --fullscreen` desde la raíz del repositorio, con audio. Juega
    desde el menú una ronda en **Individual** (300 s, hasta la fase 3 para ver los cachelos) y otra en
-   **Local 2P**. Teclas: J1 WASD + `E` (interactuar) + `Q` (cambiar); J2 flechas + `Intro` + `Mayús`;
-   pausa `Esc`.
+   **Local 2P**. Teclas: J1 WASD + `E` (interactuar) + `Q` (cambiar de personaje, solo en Individual);
+   J2 flechas + `Intro` (interactuar; J2 no cambia de personaje); pausa `Esc`.
 3. **Perfil táctil en PC**: `godot --path godot --resolution 1920x1080 -- --touch` (los argumentos tras
    `--` son del juego). Unos minutos con teclado: menú solo con Individual, cámara que sigue al activo,
    botones en fila, icono del botón de acción. Si tienes portátil o monitor **táctil**, juega aquí la
@@ -105,7 +105,7 @@ Cada fila: **ok / cambiar / dudas** y una línea si no es ok. Entre corchetes, e
 |---|---|---|
 | Anillo de cocción: cociendo, listo (check) y aviso de quemado (ámbar/rojo, ≥ 3 s antes) | `docs/evidence/PUL-152/1920x1080-desktop-08-anillo-listo.jpg` | ¿Sabes cuándo sacar sin mirar fijamente la olla? ¿Te da tiempo con el aviso? |
 | Raciones del cuenco (muescas, 2 frente a 4) | `docs/evidence/PUL-126/bowl_stock_2.png` | ¿Distingues 2 de 4 raciones desde la cámara? (pendiente desde M3c) |
-| Aro del activo (sólido, ▼) frente al del inactivo | `docs/evidence/PUL-152/1920x1080-desktop-10-aros-activo-e-inactivo.jpg` | Tras pulsar `Q`, ¿sabes al instante a quién mueves? |
+| Aro del activo (sólido, ▼) frente al del inactivo | `docs/evidence/PUL-152/1920x1080-desktop-10-aros-activo-e-inactivo.jpg` | En Individual, tras pulsar `Q`, ¿sabes al instante a quién mueves? |
 
 ### F. Iconografía [D26.7] (~2 min)
 | Mira | Captura | Pregunta |
