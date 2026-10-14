@@ -159,7 +159,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-144 | M4 | asset-pipeline | draft | Hacer visible el vapor de la olla y apoyar su tapa abierta |
 | PUL-145 | M4 | asset-pipeline | draft | Ajustar el ambiente y el brillo del acero delantero a la referencia |
 | PUL-146 | M4 | asset-pipeline | draft | Compartir materiales y texturas entre los .glb y retirar la fuente v1 |
-| PUL-150 | M3e | game-designer | draft | Escribir la guía del playtest humano de M3e (m3e-gate.md) |
+| PUL-150 | M3e | game-designer | in_progress | Escribir la guía del playtest humano de M3e (m3e-gate.md) |
 | PUL-151 | M3e | godot-architect | blocked | Exportar a Android, elegir renderizador móvil y verificar en un teléfono real |
 | PUL-152 | M3e | qa-tester | done | Recapturar medidas y capturas de D26 con el estado final de M3e |
 | PUL-153 | M3e | qa-tester | draft | Probar el perfil táctil en un teléfono con el build web (antes del APK) |

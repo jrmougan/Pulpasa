@@ -1,7 +1,7 @@
 ---
 id: PUL-150
 title: Escribir la guía del playtest humano de M3e (m3e-gate.md)
-status: draft
+status: in_progress
 milestone: M3e
 role: game-designer
 deps: [PUL-152]
