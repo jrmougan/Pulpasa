@@ -1,11 +1,11 @@
 ---
 id: PUL-150
 title: Escribir la guía del playtest humano de M3e (m3e-gate.md)
-status: review
+status: done
 milestone: M3e
 role: game-designer
 deps: [PUL-152]
-orca_task: null
+orca_task: task_6a836048c002
 unity_sources: []
 owns: [docs/design/m3e-gate.md, docs/evidence/PUL-150/**, docs/backlog/PUL-150-guia-playtest-m3e.md]
 touches_scenes: []
