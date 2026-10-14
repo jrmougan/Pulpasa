@@ -1,0 +1,351 @@
+{
+	"active_marker_px": 24.0,
+	"active_marker_px_at_1080": 70.1,
+	"bowl": {
+		"meter_visible": true,
+		"notch_px": 8.2,
+		"notch_px_at_1080": 24.0,
+		"stock": 2
+	},
+	"box_counter": {
+		"bar_thickness_px": 5.7,
+		"bar_thickness_px_at_1080": 16.7,
+		"numeral_px": 23.6,
+		"numeral_px_at_1080": 68.9,
+		"segment_width_px": 9.5,
+		"segment_width_px_at_1080": 27.8,
+		"text": "3/6",
+		"visible": true
+	},
+	"camera_size_m": 7.0,
+	"character_px": 66.6,
+	"character_px_at_1080": 194.5,
+	"cook_rings": [
+		{
+			"below_band_200_at_1080": true,
+			"diameter_px": 21.9,
+			"diameter_px_at_1080": 64.0,
+			"on_screen": true,
+			"screen_px": [
+				365.7,
+				102.5
+			],
+			"state": 3,
+			"thickness_px": 2.7,
+			"thickness_px_at_1080": 8.0,
+			"top_edge_px": 91.5,
+			"top_edge_px_at_1080": 267.2,
+			"under_top_band": false
+		},
+		{
+			"below_band_200_at_1080": true,
+			"diameter_px": 21.9,
+			"diameter_px_at_1080": 64.0,
+			"on_screen": true,
+			"screen_px": [
+				342.6,
+				102.5
+			],
+			"state": 0,
+			"thickness_px": 2.7,
+			"thickness_px_at_1080": 8.0,
+			"top_edge_px": 91.5,
+			"top_edge_px_at_1080": 267.2,
+			"under_top_band": false
+		}
+	],
+	"cook_rings_player_xz": [
+		-1.3,
+		-3.1
+	],
+	"game_over_buttons": [
+		{
+			"height_px": 41.1,
+			"height_px_at_1080": 120.0,
+			"text": "Reintentar",
+			"y_px": 205.0
+		},
+		{
+			"height_px": 41.1,
+			"height_px_at_1080": 120.0,
+			"text": "Menú",
+			"y_px": 254.4
+		}
+	],
+	"game_over_has_boxes_per_minute": false,
+	"game_over_texts": [
+		"FRANQUICIA GALEGA DE POLBO",
+		"Turno terminado",
+		"Pulpeiro ineficiente",
+		"Recaudación: 0 €",
+		"Reintentar",
+		"Menú"
+	],
+	"game_over_touch_controls_visible": false,
+	"host_display_safe_area": [
+		0.0,
+		32.0,
+		2560.0,
+		1408.0
+	],
+	"inactive_marker_visible": false,
+	"menu_buttons": [
+		{
+			"height_px": 41.1,
+			"height_px_at_1080": 120.0,
+			"text": "Individual",
+			"y_px": 230.7
+		}
+	],
+	"min_text_game_over": {
+		"count": 6,
+		"min_px": 12.33,
+		"min_px_at_1080": 36.0,
+		"node": "/root/Level01/UI/GameOver/MenuPanel/SafeArea/Center/Card/Content/Brand",
+		"text": "FRANQUICIA GALEGA DE POLBO"
+	},
+	"min_text_menu_principal": {
+		"count": 2,
+		"min_px": 12.33,
+		"min_px_at_1080": 36.0,
+		"node": "/root/MainMenu/SafeArea/Center/Column/Tagline",
+		"text": "Pulpo á feira · Romerías gallegas"
+	},
+	"min_text_partida": {
+		"count": 18,
+		"min_px": 12.33,
+		"min_px_at_1080": 36.0,
+		"node": "/root/Level01/UI/HUD/Background/Stats/Revenue/RevenueWell/Revenue",
+		"text": "0 €"
+	},
+	"min_text_pausa": {
+		"count": 6,
+		"min_px": 12.33,
+		"min_px_at_1080": 36.0,
+		"node": "/root/Level01/UI/PauseMenu/MenuPanel/SafeArea/Center/Card/Content/Brand",
+		"text": "FRANQUICIA GALEGA DE POLBO"
+	},
+	"pause_buttons": [
+		{
+			"height_px": 41.1,
+			"height_px_at_1080": 120.0,
+			"text": "Reanudar",
+			"y_px": 153.1
+		},
+		{
+			"height_px": 41.1,
+			"height_px_at_1080": 120.0,
+			"text": "Reiniciar",
+			"y_px": 202.5
+		},
+		{
+			"height_px": 41.1,
+			"height_px_at_1080": 120.0,
+			"text": "Menú",
+			"y_px": 251.8
+		}
+	],
+	"platform": "MOBILE",
+	"player_ring_active": {
+		"thickness_px": 3.4,
+		"thickness_px_at_1080": 10.0,
+		"visible": true
+	},
+	"player_ring_inactive": {
+		"thickness_px": 0.9,
+		"thickness_px_at_1080": 2.5,
+		"visible": true
+	},
+	"prompt_bloqueado_caja_a_medias": {
+		"cross_px": 18.0,
+		"icon_px": 48.0,
+		"icon_px_at_1080": 140.1,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "box_not_full",
+		"reason_icon_px": 24.0,
+		"shown": true,
+		"state": 2,
+		"verb": "season_sweet"
+	},
+	"prompt_ok_cachelos_cuenco": {
+		"icon_px": 48.0,
+		"icon_px_at_1080": 140.1,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "cachelos"
+	},
+	"prompt_ok_coger": {
+		"icon_px": 48.0,
+		"icon_px_at_1080": 140.1,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "pick_up"
+	},
+	"prompt_ok_cortar": {
+		"icon_px": 48.0,
+		"icon_px_at_1080": 140.1,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "cut"
+	},
+	"prompt_zona": {
+		"icon_px": 48.0,
+		"icon_px_at_1080": 140.1,
+		"icon_px_formula": 48.0,
+		"plate_px": 60.0,
+		"reason": "",
+		"shown": true,
+		"state": 1,
+		"verb": "drop"
+	},
+	"px_per_meter": 41.7,
+	"px_per_meter_at_1080": 121.6,
+	"safe_rect_px": [
+		0.0,
+		0.0,
+		800.0,
+		370.0
+	],
+	"stretch_scale": 0.5139,
+	"tag": "800x370-touch",
+	"top_band": {
+		"band_fraction": 0.161,
+		"band_height_px": 59.6,
+		"button_zone_px": [
+			666.4,
+			205.6,
+			133.6,
+			164.4
+		],
+		"hud_rect_px": [
+			16.4,
+			8.2,
+			82.2,
+			51.4
+		],
+		"overlaps": [],
+		"stick_zone_px": [
+			0.0,
+			68.5,
+			400.0,
+			301.5
+		],
+		"ticket_gap_px": 5.5,
+		"ticket_width_px": 130.2,
+		"tickets_px": [
+			[
+				106.9,
+				8.2,
+				130.2,
+				51.4
+			],
+			[
+				242.6,
+				8.2,
+				130.2,
+				51.4
+			],
+			[
+				378.2,
+				8.2,
+				130.2,
+				51.4
+			],
+			[
+				513.9,
+				8.2,
+				130.2,
+				51.4
+			]
+		]
+	},
+	"touch_controls": {
+		"action": {
+			"center_px": [
+				752.3,
+				322.7
+			],
+			"diameter_px": 61.7,
+			"hit_px": 69.9,
+			"rect_px": [
+				721.5,
+				291.9,
+				61.7,
+				61.7
+			]
+		},
+		"action_margin_px": {
+			"bottom": 16.4,
+			"right": 16.4
+		},
+		"bottom_edge_delta_px": 0.0,
+		"camera_button_zone_px": [
+			666.0,
+			287.8,
+			133.6,
+			82.2
+		],
+		"pause": {
+			"center_px": [
+				762.6,
+				37.0
+			],
+			"diameter_px": 41.1,
+			"rect_px": [
+				742.1,
+				16.4,
+				41.1,
+				41.1
+			]
+		},
+		"safe_rect_px": [
+			0.0,
+			0.0,
+			799.6,
+			370.0
+		],
+		"stick_base_px": 102.8,
+		"stick_radius_px": 51.4,
+		"stick_zone_px": [
+			0.0,
+			68.5,
+			399.8,
+			301.5
+		],
+		"switch": {
+			"center_px": [
+				692.7,
+				333.0
+			],
+			"diameter_px": 41.1,
+			"rect_px": [
+				672.2,
+				312.4,
+				41.1,
+				41.1
+			]
+		},
+		"switch_to_action_gap_x_px": 8.2,
+		"visible": true
+	},
+	"user_args": [
+		"--touch",
+		"--out=/home/jeromo/orca/workspaces/Pulpasa/pul-152/docs/evidence/PUL-152",
+		"--tag=800x370-touch"
+	],
+	"window_px": [
+		800,
+		370
+	],
+	"zone_lit": true
+}

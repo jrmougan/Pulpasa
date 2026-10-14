@@ -1,0 +1,765 @@
+{
+	"host_display_safe_area": "[P: (0, 32), S: (2560, 1408)]",
+	"layout_diseno": {
+		"action": {
+			"center_px": [
+				2070.0,
+				879.0
+			],
+			"diameter_px": 180.0,
+			"hit_radius_px": 102.0
+		},
+		"bottom_delta_px": 0.0,
+		"gap_x_px": 24.0,
+		"safe_area_margin_px": [
+			132.0,
+			132.0,
+			63.0
+		],
+		"safe_margins_px": [
+			132.0,
+			0.0,
+			132.0,
+			63.0
+		],
+		"switch": {
+			"center_px": [
+				1896.0,
+				909.0
+			],
+			"diameter_px": 120.0,
+			"hit_radius_px": 60.0
+		},
+		"zone_px": [
+			1818.0,
+			777.0,
+			522.0,
+			303.0
+		]
+	},
+	"layout_nula": {
+		"action": {
+			"center_px": [
+				2202.0,
+				942.0
+			],
+			"diameter_px": 180.0,
+			"hit_radius_px": 102.0
+		},
+		"bottom_delta_px": 0.0,
+		"gap_x_px": 24.0,
+		"safe_area_margin_px": [
+			0.0,
+			0.0,
+			0.0
+		],
+		"safe_margins_px": [
+			0.0,
+			32.0000009536743,
+			0.0,
+			0.0
+		],
+		"switch": {
+			"center_px": [
+				2028.0,
+				972.0
+			],
+			"diameter_px": 120.0,
+			"hit_radius_px": 60.0
+		},
+		"zone_px": [
+			1950.0,
+			840.0,
+			390.0,
+			240.0
+		]
+	},
+	"stretch_scale": 1.5,
+	"tag": "2340x1080-host",
+	"views": {
+		"diseno-este-z3_1": {
+			"camera_focus": [
+				0.7,
+				-4.153
+			],
+			"counters": {
+				"PassSlot01": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						161.0,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot02": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						315.3,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot03": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						469.6,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot04": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 6.6,
+					"rect_px": [
+						1703.8,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot05": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 6.6,
+					"overlap_px": 6.6,
+					"rect_px": [
+						1858.1,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot06": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 6.6,
+					"overlap_px": 6.6,
+					"rect_px": [
+						2012.4,
+						603.9,
+						166.6,
+						179.7
+					]
+				}
+			},
+			"max_overlap_disc_box_px": 0.0,
+			"max_overlap_hit_box_px": 6.6,
+			"max_overlap_px": 6.6,
+			"player_xz": [
+				0.7,
+				-3.1
+			],
+			"requested_xz": [
+				0.699999988079071,
+				-3.1
+			]
+		},
+		"diseno-este-z3_4": {
+			"camera_focus": [
+				0.7,
+				-4.453
+			],
+			"counters": {
+				"PassSlot01": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						161.0,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot02": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						315.3,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot03": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						469.5,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot04": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 35.0,
+					"rect_px": [
+						1703.8,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot05": {
+					"overlap_disc_box_px": 23.0,
+					"overlap_hit_box_px": 35.0,
+					"overlap_px": 35.0,
+					"rect_px": [
+						1858.1,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot06": {
+					"overlap_disc_box_px": 23.0,
+					"overlap_hit_box_px": 35.0,
+					"overlap_px": 35.0,
+					"rect_px": [
+						2012.4,
+						632.4,
+						166.6,
+						179.7
+					]
+				}
+			},
+			"max_overlap_disc_box_px": 23.0,
+			"max_overlap_hit_box_px": 35.0,
+			"max_overlap_px": 35.0,
+			"player_xz": [
+				0.7,
+				-3.4
+			],
+			"requested_xz": [
+				0.699999988079071,
+				-3.4
+			]
+		},
+		"diseno-oeste-z3_1": {
+			"camera_focus": [
+				-0.417,
+				-4.153
+			],
+			"counters": {
+				"PassSlot01": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						333.2,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot02": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						487.5,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot03": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						641.8,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot04": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 6.6,
+					"overlap_px": 6.6,
+					"rect_px": [
+						1876.1,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot05": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 6.6,
+					"overlap_px": 6.6,
+					"rect_px": [
+						2030.4,
+						603.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot06": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 6.6,
+					"rect_px": [
+						2184.7,
+						603.9,
+						166.6,
+						179.7
+					]
+				}
+			},
+			"max_overlap_disc_box_px": 0.0,
+			"max_overlap_hit_box_px": 6.6,
+			"max_overlap_px": 6.6,
+			"player_xz": [
+				-1.3,
+				-3.1
+			],
+			"requested_xz": [
+				-1.29999995231628,
+				-3.1
+			]
+		},
+		"diseno-oeste-z3_4": {
+			"camera_focus": [
+				-0.417,
+				-4.453
+			],
+			"counters": {
+				"PassSlot01": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						333.3,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot02": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						487.5,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot03": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						641.8,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot04": {
+					"overlap_disc_box_px": 23.0,
+					"overlap_hit_box_px": 35.0,
+					"overlap_px": 35.0,
+					"rect_px": [
+						1876.1,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot05": {
+					"overlap_disc_box_px": 23.0,
+					"overlap_hit_box_px": 35.0,
+					"overlap_px": 35.0,
+					"rect_px": [
+						2030.4,
+						632.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot06": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 35.0,
+					"rect_px": [
+						2184.7,
+						632.4,
+						166.6,
+						179.7
+					]
+				}
+			},
+			"max_overlap_disc_box_px": 23.0,
+			"max_overlap_hit_box_px": 35.0,
+			"max_overlap_px": 35.0,
+			"player_xz": [
+				-1.3,
+				-3.4
+			],
+			"requested_xz": [
+				-1.29999995231628,
+				-3.4
+			]
+		},
+		"nula-este-z3_1": {
+			"camera_focus": [
+				0.7,
+				-4.321
+			],
+			"counters": {
+				"PassSlot01": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						161.0,
+						619.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot02": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						315.3,
+						619.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot03": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						469.6,
+						619.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot04": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						1703.8,
+						619.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot05": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						1858.1,
+						619.9,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot06": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						2012.4,
+						619.9,
+						166.6,
+						179.7
+					]
+				}
+			},
+			"max_overlap_disc_box_px": 0.0,
+			"max_overlap_hit_box_px": 0.0,
+			"max_overlap_px": 0.0,
+			"player_xz": [
+				0.7,
+				-3.1
+			],
+			"requested_xz": [
+				0.699999988079071,
+				-3.1
+			]
+		},
+		"nula-este-z3_4": {
+			"camera_focus": [
+				0.7,
+				-4.621
+			],
+			"counters": {
+				"PassSlot01": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						161.0,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot02": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						315.3,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot03": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						469.5,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot04": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						1703.8,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot05": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						1858.1,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot06": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						2012.4,
+						648.4,
+						166.6,
+						179.7
+					]
+				}
+			},
+			"max_overlap_disc_box_px": 0.0,
+			"max_overlap_hit_box_px": 0.0,
+			"max_overlap_px": 0.0,
+			"player_xz": [
+				0.7,
+				-3.4
+			],
+			"requested_xz": [
+				0.699999988079071,
+				-3.4
+			]
+		},
+		"nula-oeste-z3_1": {
+			"camera_focus": [
+				-0.416,
+				-4.321
+			],
+			"counters": {
+				"PassSlot01": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						333.2,
+						619.8,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot02": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						487.5,
+						619.8,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot03": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						641.8,
+						619.8,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot04": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						1876.1,
+						619.8,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot05": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						2030.4,
+						619.8,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot06": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						2184.6,
+						619.8,
+						166.6,
+						179.7
+					]
+				}
+			},
+			"max_overlap_disc_box_px": 0.0,
+			"max_overlap_hit_box_px": 0.0,
+			"max_overlap_px": 0.0,
+			"player_xz": [
+				-1.3,
+				-3.1
+			],
+			"requested_xz": [
+				-1.29999995231628,
+				-3.1
+			]
+		},
+		"nula-oeste-z3_4": {
+			"camera_focus": [
+				-0.417,
+				-4.621
+			],
+			"counters": {
+				"PassSlot01": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						333.3,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot02": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						487.5,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot03": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						641.8,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot04": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						1876.1,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot05": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						2030.4,
+						648.4,
+						166.6,
+						179.7
+					]
+				},
+				"PassSlot06": {
+					"overlap_disc_box_px": 0.0,
+					"overlap_hit_box_px": 0.0,
+					"overlap_px": 0.0,
+					"rect_px": [
+						2184.7,
+						648.4,
+						166.6,
+						179.7
+					]
+				}
+			},
+			"max_overlap_disc_box_px": 0.0,
+			"max_overlap_hit_box_px": 0.0,
+			"max_overlap_px": 0.0,
+			"player_xz": [
+				-1.3,
+				-3.4
+			],
+			"requested_xz": [
+				-1.29999995231628,
+				-3.4
+			]
+		}
+	},
+	"window_px": [
+		2340,
+		1080
+	]
+}
