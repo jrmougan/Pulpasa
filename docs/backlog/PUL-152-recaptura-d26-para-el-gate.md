@@ -1,11 +1,11 @@
 ---
 id: PUL-152
 title: Recapturar medidas y capturas de D26 con el estado final de M3e
-status: review
+status: done
 milestone: M3e
 role: qa-tester
 deps: []
-orca_task: null
+orca_task: task_5d61ecb37dfc
 unity_sources: []
 owns: [docs/evidence/PUL-152/**, docs/backlog/PUL-152-recaptura-d26-para-el-gate.md]
 touches_scenes: []
