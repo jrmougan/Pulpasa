@@ -184,3 +184,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-177 | M4 | qa-tester | draft | QA de M4 (opciones, gallego, tutorial y balance) y preparar el playtest |
 | PUL-178 | M4 | game-designer | draft | Escribir la guía del playtest y el criterio de publicación de la alpha |
 | PUL-179 | M4 | producer | draft | Publicar la alpha (notas y subida de los builds verificados) |
+| PUL-180 | M3f | game-designer | in_progress | Explorar una estética minimalista y proponer direcciones para elegir |
