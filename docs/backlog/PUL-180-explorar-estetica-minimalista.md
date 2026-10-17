@@ -93,24 +93,29 @@ D21 (marca **PulpaSA**), D26 (lenguaje de acciones, iconos y legibilidad, tambi�
 - **AC2 (3 direcciones minimalistas y tabla de contraste §3.4 ≥ 3:1):**
   - `docs/art/minimal/direccion-a-color-plano.md` («Feira Clara», paleta cerrada de **16 colores hex**, 6 apartados completos).
   - `docs/art/minimal/direccion-b-geometrica.md` («Bloques de Romería», paleta cerrada de **14 colores hex**, 6 apartados completos).
-  - `docs/art/minimal/direccion-c-maqueta-papel.md` («Maqueta de Papel», paleta cerrada de **15 colores hex**, 6 apartados completos).
-  - Cálculo reproducible de luminancia relativa y contraste WCAG 2.1 en `docs/evidence/PUL-180/contrastes_sec34.md` (generado por `docs/evidence/PUL-180/build_evidence.py`): los 5 colores de §3.4 superan ampliamente el umbral ≥ 3:1 frente a la superficie donde aparecen (mínimo **3.91:1** en Dir. A, **4.03:1** en Dir. B y **4.03:1** en Dir. C) y se distinguen entre sí por doble codificación color + forma D26.
+  - `docs/art/minimal/direccion-c-maqueta-papel.md` («Maqueta de Papel», paleta cerrada de **15 colores hex**, 6 apartados completos, alineada con `#E4DFD5` y cocineros `#2F6FB5`/`#F2C230` de `capture_minimal.gd`).
+  - Cálculo reproducible de luminancia relativa y contraste WCAG 2.1 en `docs/evidence/PUL-180/contrastes_sec34.md` (generado por `docs/evidence/PUL-180/build_evidence.py`): los 5 colores de §3.4 superan el umbral ≥ 3:1 frente a la superficie donde aparecen (`dulce/#EDE8DF = 3.9052:1`, `picante/#EDE8DF = 7.3993:1`, `sal/#1D3557 = 11.2449:1`, `aceite/#B8283D = 3.6770:1`, `cachelos/#B8283D = 4.2551:1`, `sal/#18222C = 14.6519:1`, `sal/#2A2320 = 14.0517:1`; mínimos en soportes primarios de estación/UI: **3.9052:1** en Dir. A, **4.0418:1** en Dir. B y **4.3358:1** en Dir. C; mínimo sobre cama de pulpo `#B8283D`: **3.6770:1** en las tres; mínimo incluyendo cuenco `#8E6B47` en Dir. A: **3.3390:1**) y se distinguen entre sí por doble codificación color + forma D26.
 - **AC3 (Imágenes de prototipo en el motor y comprobación visual anotada de posiciones):**
-  - Imágenes principales: `docs/art/minimal/direccion-a-color-plano.png`, `docs/art/minimal/direccion-b-geometrica.png` y `docs/art/minimal/direccion-c-maqueta-papel.png` (más sus variantes sin HUD y `800×370` en `docs/evidence/PUL-180/direccion_{a,b,c}/`). Todas obtenidas como **prototipo en el motor** en tiempo de ejecución sin tocar escenas ni recursos versionados.
-  - Coordenadas exportadas en `docs/evidence/PUL-180/posiciones_verificadas.json` y comprobación visual anotada en `docs/evidence/PUL-180/comprobacion_posiciones_anotada.png` (más mosaico móvil en `docs/evidence/PUL-180/comparativa_movil_800x370.png` e índice en `docs/evidence/PUL-180/README.md`), demostrando desviación **0.0 px** en los 4 puestos (`OrderStand1..4`), las 2 ollas (`Kitchen`, `Kitchen2`), la barra (`Bar_SeasoningStation`) y los 2 cocineros (`Player1`, `Player2`).
-- **AC4 (Comparativa de 4 columnas, recomendación y preguntas):**
-  - `docs/art/minimal/README.md` incluye la tabla comparativa de 4 columnas (`v2 actual` + 3 direcciones), la recomendación razonada (Dirección A · «Feira Clara» con guiños de C) y 5 preguntas abiertas para el gate humano del responsable.
+  - Imágenes principales: `docs/art/minimal/direccion-a-color-plano.png`, `docs/art/minimal/direccion-b-geometrica.png` y `docs/art/minimal/direccion-c-maqueta-papel.png` (más sus variantes con HUD y `800×370` en `docs/evidence/PUL-180/direccion_{a,b,c}/`). Todas obtenidas como **prototipo en el motor** en tiempo de ejecución sin tocar escenas ni recursos versionados.
+  - Coordenadas exportadas en `docs/evidence/PUL-180/posiciones_verificadas.json` y comprobación visual anotada en `docs/evidence/PUL-180/comprobacion_posiciones_anotada.png` (más mosaico móvil en `docs/evidence/PUL-180/comparativa_movil_800x370.png` e índice en `docs/evidence/PUL-180/README.md`), con desviación calculada en `build_evidence.py` de **0.0 px** a `1920×1080` y **0.1 px por eje (0.14 px euclídea)** en móvil a `800×370` para los 4 puestos (`OrderStand1..4`), las 2 ollas (`Kitchen`, `Kitchen2`), la barra (`Bar_SeasoningStation`) y los 2 cocineros (`Player1`, `Player2`).
+- **AC4 (Comparativa de 4 columnas, recomendación, preguntas y decisión del responsable):**
+  - `docs/art/minimal/README.md` incluye la tabla comparativa de 4 columnas (`v2 actual` + 3 direcciones, etiquetando los ahorros de rendimiento como hipótesis de producción y documentando `env_plate` y el SSAO activo en los prototipos A y C), las regresiones visuales del prototipo a resolver en la biblia v3 (números `#1..#4` delineados/degradados en móvil a `800×370` y cartel superior vacío en Dir. A), la recomendación razonada, las 5 preguntas y la **decisión del responsable en la sección 4 (Dirección A «Feira Clara» con alcance de materiales y escena)**.
 - **AC5 (`tools/verify.sh --quick` y `tools/check_owns.py`):**
   - `tools/verify.sh --quick`:
     ```text
-    ==> gdformat --check
+    == gdformat --check
     241 files would be left unchanged
-    ==> gdlint
-    ==> godot --import
-    verify.sh: OK
+
+    == gdlint
+    Success: no problems found
+
+    == import
+
+    ✓ verify OK
     ```
   - `python3 tools/check_owns.py jrmougan/pul-180 main`:
     ```text
-    check_owns: OK (PUL-180, 26 archivos dentro de owns/touches_scenes)
+    check_owns: 29 rutas dentro de owns de PUL-180.
     ```
+
 
