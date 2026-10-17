@@ -1,11 +1,11 @@
 ---
 id: PUL-181
 title: Escribir la biblia de arte v3 «Feira Clara» y partir su implementación en fichas
-status: review
+status: done
 milestone: M3f
 role: game-designer
 deps: [PUL-180]
-orca_task: null
+orca_task: task_5b09291bdec3
 unity_sources: []
 owns: [docs/art/art-bible.md, docs/art/art-bible-v2.md, docs/art/moodboard-v3*, docs/backlog/PUL-18[2-9]-*.md, docs/evidence/PUL-181/**, docs/backlog/PUL-181-biblia-de-arte-v3-feira-clara.md]
 touches_scenes: []
