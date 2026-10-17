@@ -186,10 +186,10 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-179 | M4 | producer | draft | Publicar la alpha (notas y subida de los builds verificados) |
 | PUL-180 | M3f | game-designer | done | Explorar una estética minimalista y proponer direcciones para elegir |
 | PUL-181 | M3f | game-designer | done | Escribir la biblia de arte v3 «Feira Clara» y partir su implementación en fichas |
-| PUL-182 | M3f | asset-pipeline | draft | Crear la biblioteca de materiales planos v3 |
-| PUL-183 | M3f | asset-pipeline | draft | Configurar la luz, el entorno y el post-proceso v3 en environment.tscn |
+| PUL-182 | M3f | asset-pipeline | in_progress | Crear la biblioteca de materiales planos v3 |
+| PUL-183 | M3f | asset-pipeline | in_progress | Configurar la luz, el entorno y el post-proceso v3 en environment.tscn |
 | PUL-184 | M3f | ui-engineer | draft | Aplicar la paleta v3 y números macizos legibles en móvil a los puestos de entrega |
-| PUL-185 | M3f | ui-engineer | draft | Actualizar el tema UI, el HUD, los tickets y la tinta de pegatinas a la paleta v3 |
+| PUL-185 | M3f | ui-engineer | in_progress | Actualizar el tema UI, el HUD, los tickets y la tinta de pegatinas a la paleta v3 |
 | PUL-186 | M3f | asset-pipeline | draft | Asignar materiales planos v3 y podar atrezo en encimeras y estaciones |
 | PUL-187 | M3f | asset-pipeline | draft | Asignar materiales planos v3 a entorno, comida, cajas y personajes |
 | PUL-188 | M3f | asset-pipeline | draft | Integrar Feira Clara en level_01 y limpiar materiales y texturas v2 sin uso |

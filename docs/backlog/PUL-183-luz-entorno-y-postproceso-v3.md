@@ -1,7 +1,7 @@
 ---
 id: PUL-183
 title: Configurar la luz, el entorno y el post-proceso v3 en environment.tscn
-status: draft
+status: in_progress
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-181]

@@ -1,7 +1,7 @@
 ---
 id: PUL-185
 title: Actualizar el tema UI, el HUD, los tickets y la tinta de pegatinas a la paleta v3
-status: draft
+status: in_progress
 milestone: M3f
 role: ui-engineer
 deps: [PUL-181]
