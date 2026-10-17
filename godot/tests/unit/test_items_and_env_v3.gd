@@ -97,8 +97,37 @@ func _state_colors(path: String, states: Array[Array]) -> Array[Color]:
 				assert_false(_mesh(ingredient, other[0]).visible, "%s oculto" % other[0])
 		var material: StandardMaterial3D = _slot(mesh, expected[1])
 		_assert_hex(material, expected[2], "%s.%s" % expected.slice(0, 2))
-		colors.append(material.albedo_color)
+		colors.append(material.albedo_color if material != null else Color.TRANSPARENT)
 	return colors
+
+
+## Cada superficie de la malla visible (cuerpo y `atlas_*`) lleva el color de su estado: el atlas
+## compartido no puede arrastrar el rojo/amarillo de cocido al crudo o al quemado (biblia §6.1).
+func _assert_state_surfaces(path: String, states: Array[Array], atlas: String) -> void:
+	var ingredient: Ingredient = _instance(path) as Ingredient
+	var atlas_colors: Array[Color] = []
+	for index: int in states.size():
+		if index == 1:
+			ingredient.set_cooked()
+		elif index == 2:
+			ingredient.set_burnt()
+		var expected: Array = states[index]
+		var mesh: MeshInstance3D = _mesh(ingredient, expected[0])
+		assert_eq(mesh.get_surface_override_material_count(), 2, "%s: cuerpo + atlas" % expected[0])
+		for surface: int in mesh.get_surface_override_material_count():
+			var material: StandardMaterial3D = (
+				mesh.get_active_material(surface) as StandardMaterial3D
+			)
+			var label: String = "%s/%s" % [expected[0], mesh.mesh.surface_get_name(surface)]
+			_assert_hex(material, expected[2], label)
+		var atlas_material: StandardMaterial3D = _slot(mesh, atlas)
+		assert_not_null(atlas_material, "%s.%s" % [expected[0], atlas])
+		if atlas_material != null:
+			atlas_colors.append(atlas_material.albedo_color)
+	if atlas_colors.size() == 3:
+		assert_gte(_contrast(atlas_colors[0], atlas_colors[1]), 3.0, "%s crudo/cocido" % atlas)
+		assert_ne(atlas_colors[1], atlas_colors[2], "%s cocido/quemado" % atlas)
+		assert_ne(atlas_colors[0], atlas_colors[2], "%s crudo/quemado" % atlas)
 
 
 # --- AC1 ---------------------------------------------------------------------------------------
@@ -144,6 +173,14 @@ func test_cachelos_states_are_flat_and_contrasted() -> void:
 	var colors: Array[Color] = _state_colors(CACHELOS_SCENE, CACHELOS_STATES)
 	assert_gte(_contrast(colors[0], colors[1]), 3.20, "crudo/cocido")
 	assert_gte(_contrast(colors[1], colors[2]), 3.0, "cocido/quemado")
+
+
+func test_octopus_atlas_follows_the_state() -> void:
+	_assert_state_surfaces(OCTOPUS_SCENE, OCTOPUS_STATES, "atlas_octopus")
+
+
+func test_cachelos_atlas_follows_the_state() -> void:
+	_assert_state_surfaces(CACHELOS_SCENE, CACHELOS_STATES, "atlas_cachelos")
 
 
 # --- AC3 ---------------------------------------------------------------------------------------
