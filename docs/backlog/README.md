@@ -191,6 +191,6 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-184 | M3f | ui-engineer | done | Aplicar la paleta v3 y números macizos legibles en móvil a los puestos de entrega |
 | PUL-185 | M3f | ui-engineer | done | Actualizar el tema UI, el HUD, los tickets y la tinta de pegatinas a la paleta v3 |
 | PUL-186 | M3f | asset-pipeline | done | Asignar materiales planos v3 y podar atrezo en encimeras y estaciones |
-| PUL-187 | M3f | asset-pipeline | in_progress | Asignar materiales planos v3 a entorno, comida, cajas y personajes |
+| PUL-187 | M3f | asset-pipeline | done | Asignar materiales planos v3 a entorno, comida, cajas y personajes |
 | PUL-188 | M3f | asset-pipeline | draft | Integrar Feira Clara en level_01 y limpiar materiales y texturas v2 sin uso |
 | PUL-189 | M3f | qa-tester | draft | Pasar el QA visual y de rendimiento antes y después de la estética v3 |

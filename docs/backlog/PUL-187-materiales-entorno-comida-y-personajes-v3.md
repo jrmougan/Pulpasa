@@ -1,11 +1,11 @@
 ---
 id: PUL-187
 title: Asignar materiales planos v3 a entorno, comida, cajas y personajes
-status: review
+status: done
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-182, PUL-183]
-orca_task: null
+orca_task: task_dab1cc9f34cd
 unity_sources: []
 owns: [godot/assets/models/environment/romeria_v2/*.glb.import, godot/assets/models/characters/cook/*.glb.import, godot/assets/models/food/**/*.glb.import, godot/assets/models/items/box/*.glb.import, godot/assets/models/_pipeline/**/*.glb.import, godot/entities/items/box.tscn, godot/entities/items/octopus.tscn, godot/entities/items/cachelos.tscn, godot/entities/player/player.tscn, godot/tests/unit/test_items_and_env_v3.gd*, godot/tests/integration/test_cachelos.gd*, godot/tests/integration/test_cooking_station.gd*, docs/evidence/PUL-187/**, docs/backlog/PUL-187-materiales-entorno-comida-y-personajes-v3.md]
 touches_scenes: [godot/entities/items/box.tscn, godot/entities/items/octopus.tscn, godot/entities/items/cachelos.tscn, godot/entities/player/player.tscn]
