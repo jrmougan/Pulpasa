@@ -82,8 +82,8 @@ nine_patch_stretch = true
 step = 0.01
 texture_under = SubResource("GradientTexture2D_oad86")
 texture_progress = SubResource("GradientTexture2D_oad86")
-tint_under = Color(0.043137256, 0.078431375, 0.11764706, 1)
-tint_progress = Color(0.78431374, 0.2509804, 0.18431373, 1)
+tint_under = Color(0.16470589, 0.13725491, 0.1254902, 1)
+tint_progress = Color(0.30980393, 0.627451, 0.3529412, 1)
 
 [node name="ClockWell" type="PanelContainer" parent="Content" unique_id=1043072236]
 unique_name_in_owner = true
