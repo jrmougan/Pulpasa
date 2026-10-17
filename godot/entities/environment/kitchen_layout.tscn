@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
-[ext_resource type="Material" path="res://assets/models/furniture/counters/kitchen_floor_dirt.tres" id="1_wgy1n"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_ground_sand.tres" id="1_wgy1n"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_brand_navy.tres" id="2_navy"]
 [ext_resource type="PackedScene" uid="uid://w4ngv2uuqxef" path="res://assets/models/furniture/counters/counter_1m.glb" id="m_counter_1m"]
 [ext_resource type="PackedScene" uid="uid://dos3qr44let5g" path="res://assets/models/furniture/counters/counter_2m.glb" id="m_counter_2m"]
 [ext_resource type="PackedScene" uid="uid://cougrvnuh0y0y" path="res://assets/models/furniture/counters/counter_3m.glb" id="m_counter_3m"]
@@ -159,6 +160,7 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
 
 [node name="props_crock" parent="BackCounter/BackBetweenStoragePot/Model" instance=ExtResource("m_props_crock")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.1, 1, -0.37)
+visible = false
 
 [node name="BackBetweenPots" type="StaticBody3D" parent="BackCounter"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, -4)
@@ -197,9 +199,11 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 3.5, 0, 0)
 
 [node name="props_board" parent="BackCounter/BackRight/Model" instance=ExtResource("m_props_board")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -2, 1, -0.37)
+visible = false
 
 [node name="props_crock" parent="BackCounter/BackRight/Model" instance=ExtResource("m_props_crock")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 2.6, 1, -0.37)
+visible = false
 
 [node name="Walls" type="Node3D" parent="."]
 
@@ -224,6 +228,7 @@ transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 2)
 
 [node name="props_crock" parent="Walls/WallLeftKitchen/Model" instance=ExtResource("m_props_crock")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -0.37, 1, 0.5)
+visible = false
 
 [node name="WallLeftFront" type="StaticBody3D" parent="Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.3, 0, 5)
@@ -271,6 +276,7 @@ transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0, 4.5)
 
 [node name="props_board" parent="Walls/WallRight/Model" instance=ExtResource("m_props_board")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.37, 1, 2)
+visible = false
 
 [node name="PublicRail" type="Node3D" parent="."]
 
@@ -338,3 +344,92 @@ shape = SubResource("BoxShape3D_seg12")
 
 [node name="rail_1m" parent="PublicRail/RailRight/Model" instance=ExtResource("m_rail_1m")]
 transform = Transform3D(3.76, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="pass_2m_body" parent="Bar/BarKitchenSide/Model/pass_2m/pass_2m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="pass_1m_body" parent="Bar/BarKitchenSide/Model/pass_1m/pass_1m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_1m_body" parent="Bar/BarKitchenSide/Model/counter_1m/counter_1m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="pass_end_body" parent="Bar/BarServiceSide/Model/pass_end/pass_end" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="pass_2m_body" parent="Bar/BarServiceSide/Model/pass_2m/pass_2m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_1m_body" parent="Bar/BarServiceSide/Model/counter_1m/counter_1m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_corner_body" parent="BackCounter/BackLeft/Model/counter_corner/counter_corner" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_half_body" parent="BackCounter/BackLeft/Model/counter_half/counter_half" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_1m_body" parent="BackCounter/BackBetweenStoragePot/Model/counter_1m/counter_1m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_1m_body" parent="BackCounter/BackBetweenPots/Model/counter_1m/counter_1m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_3m_body" parent="BackCounter/BackRight/Model/counter_3m/counter_3m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_2m_body" parent="BackCounter/BackRight/Model/counter_2m/counter_2m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_2m_body" parent="BackCounter/BackRight/Model/counter_2m_2/counter_2m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_corner_body" parent="BackCounter/BackRight/Model/counter_corner/counter_corner" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_3m_body" parent="Walls/WallLeftKitchen/Model/counter_3m/counter_3m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_1m_body" parent="Walls/WallLeftKitchen/Model/counter_1m/counter_1m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_end_body" parent="Walls/WallLeftKitchen/Model/counter_end/counter_end" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_3m_body" parent="Walls/WallRight/Model/counter_3m/counter_3m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_3m_body" parent="Walls/WallRight/Model/counter_3m_2/counter_3m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_2m_body" parent="Walls/WallRight/Model/counter_2m/counter_2m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_1m_body" parent="Walls/WallRight/Model/counter_1m/counter_1m" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[node name="counter_end_body" parent="Walls/WallRight/Model/counter_end/counter_end" index="1"]
+surface_material_override/2 = ExtResource("2_navy")
+
+[editable path="Bar/BarKitchenSide/Model/pass_2m"]
+[editable path="Bar/BarKitchenSide/Model/pass_1m"]
+[editable path="Bar/BarKitchenSide/Model/counter_1m"]
+[editable path="Bar/BarServiceSide/Model/pass_end"]
+[editable path="Bar/BarServiceSide/Model/pass_2m"]
+[editable path="Bar/BarServiceSide/Model/counter_1m"]
+[editable path="BackCounter/BackLeft/Model/counter_corner"]
+[editable path="BackCounter/BackLeft/Model/counter_half"]
+[editable path="BackCounter/BackBetweenStoragePot/Model/counter_1m"]
+[editable path="BackCounter/BackBetweenPots/Model/counter_1m"]
+[editable path="BackCounter/BackRight/Model/counter_3m"]
+[editable path="BackCounter/BackRight/Model/counter_2m"]
+[editable path="BackCounter/BackRight/Model/counter_2m_2"]
+[editable path="BackCounter/BackRight/Model/counter_corner"]
+[editable path="Walls/WallLeftKitchen/Model/counter_3m"]
+[editable path="Walls/WallLeftKitchen/Model/counter_1m"]
+[editable path="Walls/WallLeftKitchen/Model/counter_end"]
+[editable path="Walls/WallRight/Model/counter_3m"]
+[editable path="Walls/WallRight/Model/counter_3m_2"]
+[editable path="Walls/WallRight/Model/counter_2m"]
+[editable path="Walls/WallRight/Model/counter_1m"]
+[editable path="Walls/WallRight/Model/counter_end"]

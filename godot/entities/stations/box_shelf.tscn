@@ -36,3 +36,20 @@ shape = SubResource("BoxShape3D_front")
 [node name="Highlightable" type="Node" parent="BoxSpawner" unique_id=2101543581 node_paths=PackedStringArray("root")]
 script = ExtResource("6_sc6ef")
 root = NodePath("../../Model/box_shelf/OutlineHull")
+
+[node name="cartons" parent="Model/box_shelf" index="1"]
+visible = false
+
+[node name="labels" parent="Model/box_shelf" index="2"]
+visible = false
+
+[node name="SizePanel_large" parent="Model/box_shelf" index="5"]
+visible = false
+
+[node name="SizePanel_medium" parent="Model/box_shelf" index="6"]
+visible = false
+
+[node name="SizePanel_small" parent="Model/box_shelf" index="7"]
+visible = false
+
+[editable path="Model"]

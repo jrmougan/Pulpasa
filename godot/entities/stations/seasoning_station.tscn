@@ -8,6 +8,10 @@
 [ext_resource type="Resource" path="res://data/seasonings/hot_dressing.tres" id="7_hot"]
 [ext_resource type="PackedScene" path="res://assets/models/stations/seasoning_station/seasoning_station.glb" id="11_model"]
 [ext_resource type="Script" path="res://components/feedback_player.gd" id="12_fb"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_surface_top.tres" id="13_top"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_brand_navy.tres" id="14_navy"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_paprika_sweet.tres" id="15_sweet"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_paprika_hot.tres" id="16_hot"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_counter"]
 size = Vector3(5.2, 1.1, 1.12)
@@ -36,11 +40,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2)
 [node name="SweetDressing" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.1, -0.1)
 seasoning = ExtResource("6_sweet")
+body_material = ExtResource("15_sweet")
 station = NodePath("../..")
 
 [node name="HotDressing" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.1)
 seasoning = ExtResource("7_hot")
+body_material = ExtResource("16_hot")
 station = NodePath("../..")
 
 [node name="CachelosBowl" parent="." node_paths=PackedStringArray("station") instance=ExtResource("5_bowl")]
@@ -58,4 +64,56 @@ visible = false
 [node name="paprika_hot" parent="Dispensers/HotDressing/Model/seasoning_dispenser" index="2"]
 visible = true
 
+[node name="CounterArrow_hot" parent="Model/seasoning_station" index="9"]
+visible = false
+
+[node name="CounterArrow_oil" parent="Model/seasoning_station" index="10"]
+visible = false
+
+[node name="CounterArrow_potato" parent="Model/seasoning_station" index="11"]
+visible = false
+
+[node name="CounterArrow_salt" parent="Model/seasoning_station" index="12"]
+visible = false
+
+[node name="CounterArrow_sweet" parent="Model/seasoning_station" index="13"]
+visible = false
+
+[node name="Label_hot" parent="Model/seasoning_station" index="14"]
+visible = false
+
+[node name="Label_oil" parent="Model/seasoning_station" index="15"]
+visible = false
+
+[node name="Label_potato" parent="Model/seasoning_station" index="16"]
+visible = false
+
+[node name="Label_salt" parent="Model/seasoning_station" index="17"]
+visible = false
+
+[node name="Label_sweet" parent="Model/seasoning_station" index="18"]
+visible = false
+
+[node name="ServiceArrow_hot" parent="Model/seasoning_station" index="19"]
+visible = false
+
+[node name="ServiceArrow_oil" parent="Model/seasoning_station" index="20"]
+visible = false
+
+[node name="ServiceArrow_potato" parent="Model/seasoning_station" index="21"]
+visible = false
+
+[node name="ServiceArrow_salt" parent="Model/seasoning_station" index="22"]
+visible = false
+
+[node name="ServiceArrow_sweet" parent="Model/seasoning_station" index="23"]
+visible = false
+
+[node name="ServiceFascia" parent="Model/seasoning_station" index="24"]
+surface_material_override/0 = ExtResource("14_navy")
+
+[node name="ServiceMat" parent="Model/seasoning_station" index="25"]
+surface_material_override/0 = ExtResource("13_top")
+
+[editable path="Model"]
 [editable path="Dispensers/HotDressing"]

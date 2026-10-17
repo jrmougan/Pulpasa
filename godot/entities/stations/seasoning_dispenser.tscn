@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://entities/stations/seasoning_dispenser.gd" id="1_disp"]
 [ext_resource type="PackedScene" path="res://assets/models/stations/seasoning_station/seasoning_dispenser.glb" id="2_model"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="3_hl"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_surface_top.tres" id="4_top"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_disp"]
 size = Vector3(0.98, 0.5, 0.4)
@@ -58,6 +59,9 @@ shape = SubResource("BoxShape3D_disp")
 
 [node name="Model" parent="." instance=ExtResource("2_model")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.45)
+
+[node name="paprika_sweet" parent="Model/seasoning_dispenser" index="3"]
+surface_material_override/1 = ExtResource("4_top")
 
 [node name="paprika_hot" parent="Model/seasoning_dispenser" index="2"]
 visible = false

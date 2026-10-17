@@ -39,7 +39,45 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={}
+_subresources={
+"materials": {
+"atlas_box": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_surface_top.tres",
+"use_external/path": "res://assets/materials/v3/mat_surface_top.tres"
+},
+"mat_cardboard": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_ground_sand.tres",
+"use_external/path": "res://assets/materials/v3/mat_ground_sand.tres"
+},
+"mat_plastic_blue": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_p1_blue.tres",
+"use_external/path": "res://assets/materials/v3/mat_p1_blue.tres"
+},
+"mat_plastic_red": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_brand_red.tres",
+"use_external/path": "res://assets/materials/v3/mat_brand_red.tres"
+},
+"mat_steel_brushed_mid": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_wall_granite.tres",
+"use_external/path": "res://assets/materials/v3/mat_wall_granite.tres"
+},
+"mat_steel_brushed_top": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_surface_top.tres",
+"use_external/path": "res://assets/materials/v3/mat_surface_top.tres"
+},
+"mat_steel_dark": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_brand_navy.tres",
+"use_external/path": "res://assets/materials/v3/mat_brand_navy.tres"
+}
+}
+}
 gltf/naming_version=2
-gltf/embedded_image_handling=1
+gltf/embedded_image_handling=0
 gltf/texture_map_mode=0
