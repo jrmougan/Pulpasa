@@ -1,0 +1,14 @@
+=== tools/verify.sh --quick ===
+
+== gdformat --check
+241 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+✓ verify OK
+
+=== python3 tools/check_owns.py jrmougan/pul-181 main ===
+check_owns: 15 rutas dentro de owns de PUL-181.

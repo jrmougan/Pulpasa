@@ -27,11 +27,17 @@ Rigen **D14** (3D con cámara ortográfica fija), **D16** (solo licencias confir
 | **Números de puesto** | `Label3D` con contorno o tinte bajo contraste en el prototipo | **Glifos macizos sin contorno hueco (`outline_size = 0`)**: `#1..#4` en `#1D3557` sobre placa `#F7F4EC` (**11.24 : 1**) y `1..4` en `#F7F4EC` sobre frente `#1D3557` (**11.24 : 1**), nítidos a `800×370` (§6.3) |
 | **Legibilidad §3.4** | Dependía de texturas y sombras locales | Los **5 colores de §3.4** tienen soporte de polaridad opuesta garantizado con **contraste ≥ 3.24 : 1** (mínimo en soportes primarios **3.91 : 1**) (§6.2) |
 
-### 0.1 Qué se conserva por referencia (no se duplica)
+### 0.1 Refinamientos frente a la maqueta preliminar de Dirección A (PUL-180)
+Respecto al prototipo de exploración rápida de PUL-180 (`capture_minimal.gd` y `minimal/direccion-a-color-plano.md`), la biblia v3 formaliza dos refinamientos cromáticos directos:
+1. **`stone_steel #8C96A0` evoluciona a `wall_granite #9A948C` ($L = 0.3005$)**: tono ligeramente más cálido y pétreo para evocar el granito gallego en muros perimetrales, postes y carcasas metálicas, manteniendo `#8C96A0` como referencia histórica del prototipo.
+2. **Frentes de encimera (`counters_atlas`) pasan del gris `#8C96A0` a `brand_navy #1D3557` ($L = 0.0350$)**: refuerza la identidad visual corporativa de **PulpaSA** (D21) en la línea de trabajo y proporciona máximo contraste tonal ($23.16 : 1$) bajo los tableros claros `#EDE8DF`.
+3. **`env_atlas` se fija en `#9A948C` (`mat_wall_granite.tres`)**: siguiendo exactamente el prototipo aprobado (`capture_minimal.gd:558`), donde `env_atlas` está en suelos, fondos y atrezo exterior, evitando teñir de rojo elementos no deseados.
+
+### 0.2 Qué se conserva por referencia (no se duplica)
 Siguen vigentes sin cambios los siguientes apartados de las versiones archivadas:
 - **Unidades, escala y medidas de referencia de mundo y colisión**: [`art-bible-v1.md` §2.1](art-bible-v1.md) y [`art-bible-v2.md` §1.2](art-bible-v2.md) (1 u = 1 m; mostrador 1,10 m × 1,10 m × 0,90 m; estaciones, cajas y personajes en sus cajas actuales).
 - **Orientación (`-Z` frente), origen en el suelo (`Y = 0`) y nodos de contrato (`Marker3D`, `Anchor_*`, `Slot_*`)**: [`art-bible-v1.md` §2.3](art-bible-v1.md) y [`docs/arch/scene-tree.md`](../arch/scene-tree.md). **Regla dura**: ninguna ficha de arte modifica posiciones de estaciones, colisiones ni `Marker3D` (**0.0 px** de deriva en pantalla).
-- **Nombres de archivos, mallas y rutas de `.glb`**: [`art-bible-v1.md` §2.4](art-bible-v1.md) y [`art-bible-v2.md` §8](art-bible-v2.md).
+- **Nombres de archivos, mallas y rutas de `.glb`**: [`art-bible-v1.md` §2.4](art-bible-v1.md), [`art-bible-v2.md` §8](art-bible-v2.md) y el inventario real de slots en [`../evidence/PUL-181/slots_reales.md`](../evidence/PUL-181/slots_reales.md).
 - **Cámara ortográfica fija (`godot/entities/camera/camera_rig.tscn`)**: [`art-bible-v1.md` §3](art-bible-v1.md) (`size = 12.74` m, inclinación ≈ 38°, 1 m ≈ 85 px a `1920×1080` y ≈ 33 px a `800×370`).
 - **Identidad y manual de marca PulpaSA (D21)**: [`brand.md`](brand.md) (propuesta A · Mariña: `#C8402F`, `#1D3557`, `#F7F4EC`, `#F2C230`).
 
@@ -58,7 +64,7 @@ La paleta completa del juego (mundo 3D, comida, personajes, puestos y UI) queda 
 |---:|---|---|---:|---|---|
 | 1 | `ground_sand` | `#C4A882` | 0.4135 | Entorno y arquitectura | Suelo interior de la cocina (`Floor/Mesh`), arena exterior de la romería (`ground_e`, `ground_w`) y sacos de arpillera de la cachelera (`cachelos_storage`) |
 | 2 | `wall_granite` | `#9A948C` | 0.3005 | Entorno y arquitectura | Muro perimetral de granito (`Wall*`, `back_e/w_wall`), postes exteriores, cuerpo de acero de la olla (`pot`), del tanque (`octopus_storage`), de la estantería (`box_shelf`) y del cubo (`trash_bin`), más hojas de cuchillo/tijeras |
-| 3 | `meadow_green` | `#4FA05A` | 0.2738 | Entorno / Puesto 4 / UI | Prado exterior, color de fondo de cámara (`BG_COLOR`), vegetación lejana (`*_trees`, `*_foliage`), toldillo del **puesto 4**, zona de entrega activa (`delivery_zone_on`) y barra de paciencia alta (> 60 %) |
+| 3 | `meadow_green` | `#4FA05A` | 0.2754 | Entorno / Puesto 4 / UI | Prado exterior, color de fondo de cámara (`BG_COLOR`), vegetación lejana (`*_trees`, `*_foliage`), toldillo del **puesto 4**, zona de entrega activa (`delivery_zone_on`) y barra de paciencia alta (> 60 %) |
 | 4 | `surface_top` | `#EDE8DF` | 0.8105 | Mobiliario y soportes claros | Tableros superiores de todas las encimeras, tablas de corte, interior de las cajas de reparto (`box_inside`), alfombrilla de condimentos (`ServiceMat`), collar superior de dispensadores y borde de 2 px de los paneles UI |
 | 5 | `brand_navy` | `#1D3557` | 0.0350 | Marca PulpaSA y soportes oscuros | Faldones/frentes de encimeras y puestos de entrega, rayas pares del toldo, marco `OrderPlateFrame`, glifo `#1..#4` (`%OrderLabel`), zócalo `ServiceFascia`, cuenco de cachelos (`CachelosBowl`), pantalones de cocineros y fondo opaco de paneles HUD (`UiPanel`) |
 | 6 | `brand_red` | `#C8402F` | 0.1615 | Marca PulpaSA y cajas | Cuerpo exterior de las 3 cajas de reparto (`box_outside`), toldillo del **puesto 1**, rayas principales del toldo, acento corporativo PulpaSA y barra de paciencia crítica (< 30 %) |
@@ -87,41 +93,60 @@ Toda la escena 3D utiliza una biblioteca cerrada de **18 recursos `StandardMater
   - `mat_tent_plate.tres` (`#17`): único material 3D con textura gráfica permitida para el cartel de marca PulpaSA en el faldón del toldo (`tent_plate`, §3.2).
   - `mat_hidden_alpha.tres` (`#18`): material transparente (`transparency = TRANSPARENCY_ALPHA`, `albedo_color = Color(0, 0, 0, 0)`) para ocultar sub-superficies de malla importada (como `env_sign` y `env_board` dentro de `tent_structure` en `tent.glb`, §5.2) sin remodelar el `.glb`.
 
-| # | Recurso `.tres` (`res://assets/materials/v3/`) | Color hex | Roughness | Metallic | Specular | Superficies y slots de material (`.glb` / `.tscn`) a los que se aplica |
-|---:|---|---|---:|---:|---|---|
-| 1 | `mat_ground_sand.tres` | `#C4A882` | `0.95` | `0.0` | `DISABLED` | `KitchenLayout/Floor/Mesh` (sustituye a `kitchen_floor_dirt.tres`), `ground_e`/`ground_w` (`env_ground`), sacos de `cachelos_storage` (`mat_burlap`, `mat_ twine_rope`) |
-| 2 | `mat_wall_granite.tres` | `#9A948C` | `0.92` | `0.0` | `DISABLED` | Muros `Wall*` (`mat_granite_masonry`), `back_e/w_wall`, cuerpo metálico de `pot`, `octopus_storage`, `box_shelf`, `trash_bin` (`mat_steel_brushed`, `mat_alu_cast`, `mat_galvanized`, `mat_chrome`, `mat_paint_worn_grey`, `mat_brass`), hojas de cuchillo/tijeras |
-| 3 | `mat_meadow_green.tres` | `#4FA05A` | `0.95` | `0.0` | `DISABLED` | Vegetación exterior (`env_foliage`), toldillo del puesto 4 (`OrderStand4` en `stand_palette.tres`), base de zona de entrega activa (`delivery_zone_on`) |
-| 4 | `mat_surface_top.tres` | `#EDE8DF` | `0.85` | `0.0` | `DISABLED` | Encimeras superiores de `counter_*`, `corner`, `cutting_counter`, `pass_counter`, `sink`, `drawer` (`mat_wood_varnished`, `mat_wood_cut`), interior de `box_small/medium/large` (`box_inside`), alfombrilla `ServiceMat` de `seasoning_station`, collar superior de `seasoning_dispenser` |
-| 5 | `mat_brand_navy.tres` | `#1D3557` | `0.90` | `0.0` | `DISABLED` | Faldones de encimeras y mostradores, `ServiceFascia` de `seasoning_station`, cuenco exterior de `cachelos_bowl`, marco `OrderPlateFrame` y frente de `order_stand`, pantalones de `cook` (`cook_1_pants`, `cook_2_pants`), zócalos (`mat_rubber_black` en patas/faldones) |
-| 6 | `mat_brand_red.tres` | `#C8402F` | `0.80` | `0.0` | `DISABLED` | Exterior de las 3 cajas (`box_outside`, `mat_tray_plastic_red`), toldo principal (`env_atlas` en `tent_canopy`), toldillo del puesto 1 (`OrderStand1`), delantal corporativo secundario |
-| 7 | `mat_ui_cream.tres` | `#F7F4EC` | `0.90` | `0.0` | `DISABLED` | Placa `OrderPlatePaper` de `order_stand`, camisa y gorro de `cook` (`cook_1_cloth`, `cook_2_cloth`), espuma de agua (`water_foam`), partículas de sal gruesa y fondo de iconos claros |
-| 8 | `mat_octopus_raw.tres` | `#E0AFB2` | `0.88` | `0.0` | `DISABLED` | `octopus_raw.glb` (`octopus_raw`, `mat_octopus_raw`), tentáculos en `octopus_storage`, piel de personajes (`cook_1_skin`, `cook_2_skin`, `visitor_skin`) |
-| 9 | `mat_octopus_cooked.tres` | `#B8283D` | `0.65` | `0.0` | `DISABLED` | `octopus_cooked.glb` (`octopus_cooked`, `mat_octopus_cooked`) y rodajas de pulpo en caja (`FillHalf`, `FillFull`, `octopus_pieces`) |
-| 10 | `mat_potato_raw.tres` | `#8E6B47` | `0.92` | `0.0` | `DISABLED` | `cachelos_raw.glb` (`cachelos_raw`, `mat_potato_raw`), mesas/bancos exteriores (`props_e/w_tables`), mangos de madera (`mat_wood_raw`), interior del cuenco de barro |
-| 11 | `mat_cachelos_cooked.tres` | `#F2D56B` | `0.80` | `0.0` | `DISABLED` | `cachelos_cooked.glb` (`cachelos_cooked`, `mat_potato_cooked`), `CachelosLayer` en `box.tscn`, montones de cachelos en `cachelos_bowl.tscn`, disco de pegatina `cachelos` |
-| 12 | `mat_state_burnt.tres` | `#2A2320` | `0.95` | `0.0` | `DISABLED` | Estado `BURNT` de `octopus.tscn` y `cachelos.tscn`, interior de boca de `pot.glb` y `trash_bin.glb` (`mat_iron_cast`), carbón/quemador, tinta `StickerInk` (`#2A2320`) |
-| 13 | `mat_paprika_sweet.tres` | `#D6361F` | `0.75` | `0.0` | `DISABLED` | Cuerpo del bote `SweetDressing` (`paprika_sweet` en `seasoning_dispenser.glb`), pegatina `paprika_sweet` en `box.tscn` y partículas de `%Gesture` dulce |
-| 14 | `mat_paprika_hot.tres` | `#8F1A14` | `0.75` | `0.0` | `DISABLED` | Cuerpo del bote `HotDressing` (`paprika_hot` en `seasoning_dispenser.glb`), pegatina `paprika_hot` en `box.tscn` y partículas de `%Gesture` picante |
-| 15 | `mat_p1_blue.tres` | `#2F6FB5` | `0.75` | `0.0` | `DISABLED` | Delantal/gorro de J1 (`cook_1`), aro `ring_active_p1.tres`, toldillo del puesto 2 (`OrderStand2`), agua del tanque (`water_surface` en `octopus_storage.glb`) |
-| 16 | `mat_p2_amber.tres` | `#F2C230` | `0.75` | `0.0` | `DISABLED` | Delantal/gorro de J2 (`cook_2`), aro `ring_active_p2.tres`, toldillo del puesto 3 (`OrderStand3`), marcas de pasaplatos (`pass_mark`, `pass_threshold`), partículas de aceite |
-| 17 | `mat_tent_plate.tres` | `#F7F4EC` (base) | `0.90` | `0.0` | `DISABLED` | Superficie `env_plate` de `tent_plate` en `tent.glb` (placa frontal del toldo con logotipo **PulpaSA**, §3.2) |
-| 18 | `mat_hidden_alpha.tres` | `#00000000` | `1.00` | `0.0` | `DISABLED` | Superficies `env_sign` y `env_board` de `tent_structure` en `tent.glb` (`transparency = TRANSPARENCY_ALPHA`, `albedo_color.a = 0.0`) para eliminar el cartel superior vacío y las pizarras sin remodelar `.glb` (§5.2) |
+| # | Recurso `.tres` (`res://assets/materials/v3/`) | Color hex | Roughness | Metallic | Specular | Superficies y slots de material (`.glb` / `.tscn`) a los que se aplica (ver `slots_reales.md`) |
+|---:|---|---|---|---:|---:|---|---|
+| 1 | `mat_ground_sand.tres` | `#C4A882` | `0.95` | `0.0` | `DISABLED` | Suelo interior de cocina (`Floor/Mesh` en `kitchen_layout.tscn`), arena exterior (`mat_ground_dirt` y `mat_paint_worn_beige` en `ground_e/w`, `back_e/w`), sacos de patatas (`mat_burlap` en `cachelos_storage.glb`) y cajas de cartón (`mat_cardboard` en `box_shelf.glb`, encimeras) |
+| 2 | `wall_granite.tres` | `#9A948C` | `0.92` | `0.0` | `DISABLED` | Muro perimetral (`mat_granite` en `back_e/w`), postes y vallas (`env_fence`), atrezo/fondos (`env_atlas`, `mat_paint_worn_grey`), cuerpo metálico de olla (`pot.glb`), tanque (`octopus_storage.glb`), estantería (`box_shelf.glb`), cubo (`trash_bin.glb`) (`mat_steel_brushed`, `mat_steel_brushed_mid`) y hojas de cuchillo |
+| 3 | `mat_meadow_green.tres` | `#4FA05A` | `0.95` | `0.0` | `DISABLED` | Prado exterior y vegetación (`mat_grass`, `env_fern`, `env_foliage`), manguera de gas (`mat_rubber_hose_green` en `pot.glb`), toldillo del puesto 4 (`mat_canvas_stand_4` en `order_stand.glb`) y base activa de entrega (`delivery_zone_on`) |
+| 4 | `mat_surface_top.tres` | `#EDE8DF` | `0.85` | `0.0` | `DISABLED` | Tableros superiores de encimeras (`mat_steel_brushed_top` en `counter_*.glb`, `pass_*.glb`, `rail_1m.glb`), interior de cajas de reparto (`atlas_box` en `box.glb` y `box_shelf.glb`), etiqueta de cubo (`mat_food_tray_liner`), soporte `seasoning_station_atlas`, alfombrilla `ServiceMat` y collar de dispensadores |
+| 5 | `mat_brand_navy.tres` | `#1D3557` | `0.90` | `0.0` | `DISABLED` | Faldones frontales y zócalos (`mat_steel_dark`, `order_stand_atlas`, override en `counters_atlas`), soporte de cocineros (`mat_cook_atlas`), pantalones (`mat_cloth_pants` en `cook.glb`), cuenco exterior de `cachelos_bowl.glb`, marco `OrderPlateFrame` y frente de puesto en `order_stand.tscn` |
+| 6 | `mat_brand_red.tres` | `#C8402F` | `0.80` | `0.0` | `DISABLED` | Exterior de las cajas de reparto (`mat_plastic_red` en `box.glb`), tapa del cubo (`trash_bin.glb`), acentos de `pot.glb` y `octopus_storage.glb`, rayas rojas del toldo (`mat_canvas_red` en `tent.glb`), toldillo del puesto 1 (`mat_canvas_stand_1` en `order_stand.glb`) y manguera (`mat_rubber_hose_red`) |
+| 7 | `mat_ui_cream.tres` | `#F7F4EC` | `0.90` | `0.0` | `DISABLED` | Rayas claras del toldo (`mat_canvas_paper` en `tent.glb`, `awning_*` en `order_stand.glb`), camisa y gorro de cocinero (`mat_cloth_shirt` en `cook.glb`), placa `OrderPlatePaper` en `order_stand.tscn`, partículas de sal gruesa y papel de tickets |
+| 8 | `mat_octopus_raw.tres` | `#E0AFB2` | `0.88` | `0.0` | `DISABLED` | Pulpo crudo (`mat_food_octopus_raw` en `octopus.glb` y tentáculos de `octopus_storage.glb`), tono de piel estilizado claro (`mat_skin_light` en `cook.glb` y `props_e/w`) |
+| 9 | `mat_octopus_cooked.tres` | `#B8283D` | `0.65` | `0.0` | `DISABLED` | Pulpo cocido (`mat_food_octopus_cooked` y `mat_food_octopus_pieces` en `octopus.glb` y `octopus_pieces.glb`, `atlas_octopus` en pulpo cocido y almacén) |
+| 10 | `mat_potato_raw.tres` | `#8E6B47` | `0.92` | `0.0` | `DISABLED` | Patata cruda con piel (`mat_food_potato_raw` en `cachelos.glb`), saco de patatas (`atlas_cachelos_storage` en `cachelos_storage.glb`), madera cálida (`mat_wood_used`, `mat_wood_dark`), cuenco de barro (`mat_clay`), tono de piel oscuro (`mat_skin_dark` en `cook.glb`) |
+| 11 | `mat_cachelos_cooked.tres` | `#F2D56B` | `0.80` | `0.0` | `DISABLED` | Cachelos cocidos (`mat_food_potato_cooked` y `atlas_cachelos` en `cachelos.glb`, `cachelos_pieces.glb`, `cachelos_bowl.glb`), capa `CachelosLayer` en `box.tscn` y disco de pegatina `cachelos` |
+| 12 | `mat_state_burnt.tres` | `#2A2320` | `0.95` | `0.0` | `DISABLED` | Estado quemado (`mat_food_octopus_burnt` en `octopus.glb`, `mat_food_potato_burnt` en `cachelos.glb`), caucho/juntas/mangueras (`mat_rubber`), interior de boca de `pot.glb` y `trash_bin.glb`, y tinta delimitadora `StickerInk.INK` (`#2A2320`) |
+| 13 | `mat_paprika_sweet.tres` | `#D6361F` | `0.75` | `0.0` | `DISABLED` | Cuerpo del dispensador dulce en `seasoning_dispenser.tscn` / `seasoning_station.tscn` (`surface_material_override` en malla `paprika_sweet_v3` / cuerpo de escena), pegatina `paprika_sweet` en `box.tscn` y partículas de aliño dulce |
+| 14 | `mat_paprika_hot.tres` | `#8F1A14` | `0.75` | `0.0` | `DISABLED` | Cuerpo del dispensador picante en `seasoning_dispenser.tscn` / `seasoning_station.tscn` (`surface_material_override` en malla `paprika_hot_v3` / cuerpo de escena), pegatina `paprika_hot` en `box.tscn` y partículas de aliño picante |
+| 15 | `mat_p1_blue.tres` | `#2F6FB5` | `0.75` | `0.0` | `DISABLED` | Delantal y gorro de J1 (`mat_cloth_player_1` en `cook.glb`), aro activo `ring_active_p1.tres`, toldillo del puesto 2 (`mat_canvas_stand_2` en `order_stand.glb`), agua (`pot_water`, `mat_glass_water`), plástico azul (`mat_plastic_blue` en `trash_bin`, `pot`, `box_shelf`, `octopus_storage`) |
+| 16 | `mat_p2_amber.tres` | `#F2C230` | `0.75` | `0.0` | `DISABLED` | Delantal y gorro de J2 (`mat_cloth_player_2` en `cook.glb`), aro activo `ring_active_p2.tres`, toldillo del puesto 3 (`mat_canvas_stand_3` en `order_stand.glb`), marcas de pasaplatos (`counter_pass_signs`), bombillas `mat_emissive_bulb` y partículas de aceite |
+| 17 | `mat_tent_plate.tres` | `#F7F4EC` (base) | `0.90` | `0.0` | `DISABLED` | Superficie `env_plate` de `tent_plate` en `tent.glb` (placa frontal del toldo con logotipo **PulpaSA**, §3.2) usando textura única `tent_plate_albedo.png` |
+| 18 | `mat_hidden_alpha.tres` | `#00000000` | `1.00` | `0.0` | `DISABLED` | Superficies `env_sign` y `env_board` de `tent_structure` en `tent.glb` (`transparency = TRANSPARENCY_ALPHA`, `albedo_color.a = 0.0`) para ocultar el cartel superior vacío y las pizarras sin remodelar `.glb` (§5.2) |
 
 ### 3.2 Regla sobre el entorno con textura (`env_plate`) y texturas gráficas permitidas (punto débil 3 de PUL-180, AC3)
 En el prototipo de PUL-180 se dejaron activas las texturas `env_plate` del toldo y las texturas de señalética mientras el resto del mundo pasaba a color plano, sin una regla escrita que delimitase qué texturas son válidas en la v3. La regla queda fijada así:
 
 1. **Prohibición absoluta de texturas PBR de superficie en 3D**:
    - Ningún material 3D del juego puede usar texturas de albedo de ruido/desgaste, mapas ORM (`*_orm.png`) ni mapas de normales (`*_normal.png`).
-   - En todos los `.glb.import` (salvo `tent.glb`, o mapeando `tent.glb` a `mat_tent_plate.tres` con la textura de marca en `res://assets/textures/brand/`), los slots de material en `_subresources["materials"]` se redirigen a los `.tres` de `res://assets/materials/v3/` manteniendo `materials/extract = 0`, y se eliminan del repositorio las texturas PBR extraídas junto a los `.glb` (`godot/assets/models/**/*.png`) y la carpeta `godot/assets/textures/v2/`.
+   - En todos los `.glb.import`, los slots de material en `_subresources["materials"]` se redirigen a los `.tres` de `res://assets/materials/v3/` manteniendo `materials/extract = 0` y fijando obligatoriamente `gltf/embedded_image_handling = 0` (Discard All Textures). Se eliminan del repositorio las texturas PBR extraídas junto a los `.glb` (`godot/assets/models/**/*.png`) y la carpeta `godot/assets/textures/v2/`.
 2. **Únicas texturas gráficas permitidas en todo el proyecto**:
-   - **`env_plate` (`mat_tent_plate.tres` sobre `tent_plate` en `tent.glb`)**: se conserva como **único rótulo gráfico 3D de marca** en el faldón frontal del toldo, porque muestra el logotipo corporativo **PulpaSA** (D21, propuesta A · Mariña) con colores planos de la paleta (`#1D3557`, `#C8402F`, `#F7F4EC`). El material `mat_tent_plate.tres` lleva `metallic = 0.0`, `roughness = 0.90`, `specular_mode = SPECULAR_DISABLED` y 0 mapas de normales/ORM.
+   - **`env_plate` (`mat_tent_plate.tres` sobre `tent_plate` en `tent.glb`)**: se conserva como **único rótulo gráfico 3D de marca** en el faldón frontal del toldo, porque muestra el logotipo corporativo **PulpaSA** (D21, propuesta A · Mariña) con colores planos de la paleta (`#1D3557`, `#C8402F`, `#F7F4EC`). Para asegurar el alineamiento perfecto con el mapeo UV del modelo `tent_plate`, **se fija como única textura permitida `tent_plate_albedo.png`** (ubicada en `res://assets/textures/brand/tent_plate_albedo.png` o conservada en `res://assets/models/environment/romeria_v2/tent_plate_albedo.png`), prohibiendo expresamente sustituirla por `pulpasa_horizontal.png` u otros atlas de proporciones distintas que desplazan el logotipo. El material lleva `metallic = 0.0`, `roughness = 0.90`, `specular_mode = SPECULAR_DISABLED` y 0 mapas de normales/ORM.
    - **Iconos vectoriales/planos de señalética y UI (D26 y §3.4)**: los 5 iconos de condimentos (`godot/assets/ui/seasonings/*.png`), los 4 iconos de acción contextual D26 (`godot/assets/ui/actions/*.png`), los emblemas de marca en `godot/assets/textures/brand/*.png` y las marcas planas de suelo/pasaplatos si usan máscara alfa de silueta limpia.
 
 ### 3.3 Cómo se asignan los materiales a los `.glb` en Godot 4.7 (sin remodelar mallas)
 Para cumplir `test_assets_models.gd` (`materials/extract == 0` en todos los `.glb.import`) y evitar las 239 instancias duplicadas de materiales en memoria:
-1. Cada `.glb.import` mapea sus slots de material internos dentro de `_subresources["materials"]["<slot_name>"]` con `"use_external/enabled": true` y `"use_external/path": "res://assets/materials/v3/mat_<nombre>.tres"`, manteniendo `materials/extract=0` y `gltf/embedded_image_handling=0` (Discard All Textures).
-2. Cuando dos mallas dentro de un mismo `.glb` compartían un mismo slot de material en la v2 pero requieren colores distintos en la v3 (por ejemplo, en `seasoning_station.glb` o `order_stand.glb`), se aplica `surface_material_override/0` en la escena `.tscn` de la estación apuntando al `.tres` compartido de `res://assets/materials/v3/`.
+
+1. **Obligatoriedad de `embedded_image_handling = 0` en `.glb.import` (Finding 2)**:
+   Actualmente todos los archivos `.glb.import` tienen configurado `gltf/embedded_image_handling = 1` (extraer texturas), lo que provoca que al reimportar se generen de nuevo los archivos `.png` en disco. Las fichas `PUL-186` y `PUL-187` deben fijar explícitamente `gltf/embedded_image_handling = 0` (Discard All Textures) en cada `.glb.import` que modifiquen, habilitando a `PUL-188` para eliminar definitivamente los `.png` extraídos sin riesgo de regeneración.
+2. **Mapeo de slots en `_subresources`**:
+   Cada `.glb.import` mapea sus slots de material internos dentro de `_subresources["materials"]["<slot_name>"]` con `"use_external/enabled": true` y `"use_external/path": "res://assets/materials/v3/mat_<nombre>.tres"`, manteniendo `materials/extract = 0`.
+3. **Regla para atlas multicolor (Finding 1)**:
+   - **`env_atlas`**: se mapea a `#9A948C` (`mat_wall_granite.tres`) en `back_e/w`, `ground_e/w`, `props_e/w` y `tent.glb`, siguiendo el prototipo probado (`capture_minimal.gd:558`).
+   - **`counters_atlas`**: se mapea a `mat_wall_granite.tres` (`#9A948C`) en `furniture/counters/*.glb.import`. En los frentes donde se requiera faldón azul marino corporativo, se aplica `surface_material_override` a `mat_brand_navy.tres` en la escena dueña.
+   - **`atlas_box`**: se mapea a `mat_surface_top.tres` (`#EDE8DF`), aportando el fondo claro interior de las cajas de reparto.
+   - **`atlas_octopus`**: se mapea a `mat_octopus_cooked.tres` (`#B8283D`).
+   - **`atlas_cachelos`**: se mapea a `mat_cachelos_cooked.tres` (`#F2D56B`).
+   - **`atlas_cachelos_storage`**: se mapea a `mat_potato_raw.tres` (`#8E6B47`).
+   - **`order_stand_atlas`**: se mapea a `mat_brand_navy.tres` (`#1D3557`).
+   - **`seasoning_station_atlas`**: se mapea a `mat_surface_top.tres` (`#EDE8DF`).
+   - **`mat_cook_atlas`**: se mapea a `mat_brand_navy.tres` (`#1D3557`).
+4. **Regla para slots compartidos entre sub-mallas (Finding 1)**:
+   - En `seasoning_dispenser.glb` (cuyos slots reales son `seasoning_signs`, `mat_steel_dark` y `mat_steel_brushed`), el aliño dulce (`#D6361F`) y picante (`#8F1A14`) se asignan en la escena `seasoning_dispenser.tscn` / `seasoning_station.tscn` mediante `surface_material_override` en las mallas activas (`paprika_sweet_v3`, `paprika_hot_v3`) o geometrías de soporte, sin suponer slots inexistentes en el `.glb`.
+   - En `octopus.glb` y `cachelos.glb`, las mallas de los 3 estados (`raw`, `cooked`, `burnt`) comparten slots de atlas pero su visualización se controla mediante la visibilidad de nodos en `octopus.tscn` y `cachelos.tscn`.
+5. **Regla para slots funcionales y modelos de pipeline (Finding 5)**:
+   - Se preservan con su material técnico o shader: `mat_outline_hull` (shader de silueta de selección), `mat_sticker_atlas` (pegatinas 3D), `delivery_zone_off.tres` / `delivery_zone_on.tres` (señal luminosa interactiva de entrega), `seasoning_signs`, `counter_pass_signs`, `kiosk_delivery_signs` y `mat_emissive_screen`.
+   - Los modelos bajo `godot/assets/models/_pipeline/**` (`materials_v2_test.glb`, `test_cube.glb`) son bancos de prueba internos del pipeline de importación y quedan excluidos de la comprobación de materiales en la escena de juego.
 
 ---
 
@@ -155,7 +180,7 @@ En la revisión de PUL-180 se señaló que el prototipo mantenía `ssao_enabled 
 - **Materiales 3D activos en escena (`level_01.tscn`)**: **≤ 20 `.tres`** de la biblioteca v3 (frente a los 239 materiales instanciados en memoria en la v2).
 - **Texturas 3D cargadas por `level_01.tscn`**: **≤ 5 texturas gráficas** (`env_plate` + iconos de señalética), frente a las > 60 texturas PBR de la v2.
 - **Luminancia media de fotograma en `level_01`**: dentro del rango **`0.08–0.95`** (objetivo `0.30–0.45`, verificado en `test_level_01.gd` y en la ficha de QA visual `PUL-189`).
-- **Rendimiento**: ≥ 60 fps estables a `1920×1080` y reducción neta de VRAM y tiempo de carga de `level_01.tscn` frente a la línea base v2 (medido antes y después con el mismo protocolo en `PUL-189`).
+- **Rendimiento**: ≥ 60 fps estables a `1920×1080` y reducción neta de VRAM y tiempo de carga de `level_01.tscn` frente a la línea base v2. Para asegurar una comparación científica válida con idéntico método (Finding 3), la línea base («antes») se mide con el script fijado en `docs/evidence/PUL-189/measure_perf.gd` ejecutado sobre `main` antes de la oleada 1 (commit inmediatamente anterior a `PUL-182`), durabilizando `docs/evidence/PUL-189/antes/perf_v2.json`, y la medición v3 («después») se ejecuta con ese idéntico script tras `PUL-188` (`docs/evidence/PUL-189/despues/perf_v3.json`).
 
 ---
 
@@ -182,6 +207,7 @@ En el prototipo de PUL-180 (`capture_minimal.gd:556-557`), al sustituir los mate
 ### 5.3 Alineación y limpieza de la estación de condimentos (`seasoning_station.tscn`)
 En `seasoning_station.glb` (modelado antes de D25 para 5 condimentos en `x = -2, -1, 0, +1, +2`), las sub-mallas `CounterArrow_*`, `Label_*` y `ServiceArrow_*` estaban horneadas en 5 columnas que ya no coinciden con las 3 posiciones reales de D25 (`SweetDressing` en `x = -1`, `HotDressing` en `x = 0`, `CachelosBowl` en `x = +1`).
 - **Regla en la v3**: en `seasoning_station.tscn` se ocultan (`visible = false`) las 15 sub-mallas pre-D25 (`CounterArrow_*`, `Label_*`, `ServiceArrow_*` de los 5 sufijos `sweet`, `hot`, `salt`, `oil`, `potato`) para evitar flechas desplazadas o etiquetas de condimentos oscuros sobre zócalo oscuro. La lectura de los 3 puestos activos la dan directamente el cuerpo rojo vivo de `SweetDressing` (`#D6361F`, `x = -1`) y el cuerpo granate de `HotDressing` (`#8F1A14`, `x = 0`) con collar `#EDE8DF` sobre la alfombrilla clara `ServiceMat` (`#EDE8DF`), junto al cuenco `CachelosBowl` (`#1D3557` con cachelos `#F2D56B`, `x = +1`).
+- **Aclaración de nombres de slots vs. nodos (Finding 1)**: `SweetDressing` y `HotDressing` son nodos de escena / instancias de `seasoning_dispenser.tscn`, no nombres de slots en `seasoning_dispenser.glb` (cuyos slots reales son `seasoning_signs`, `mat_steel_dark` y `mat_steel_brushed`). Su color específico se asigna en escena mediante `surface_material_override` en las mallas de los dispensadores activos (`paprika_sweet_v3`, `paprika_hot_v3`) o geometrías añadidas.
 
 ---
 
@@ -233,6 +259,23 @@ Tabla completa verificada por [`docs/evidence/PUL-181/calc_contrasts_v3.py`](../
 - **Mínimo absoluto de toda la tabla**: **3.2409 : 1** (`3.24 : 1`, ≥ 3:1).
 - **Mínimo sobre superficies primarias de estación y caja**: **3.4290 : 1** (`3.43 : 1` sobre borde de caja `#C8402F`) y **3.9052 : 1** (`3.91 : 1` sobre tablero `#EDE8DF`).
 
+### 6.2.1 Pegatinas en soportes de juego reales y regla del anillo `StickerInk.INK` (Finding 4)
+En la partida real, las pegatinas de condimento se renderizan como billboards 3D sobre el exterior de la caja de reparto (`#C8402F`) y sobre el suelo de cocina/arena (`#C4A882`) cuando la caja reposa en el suelo o los cocineros se desplazan.
+- **Análisis de contraste directo sin anillo (demostración de insuficiencia)**:
+  - Dulce `#D6361F` ($L = 0.1703$) directo sobre caja roja `#C8402F` ($L = 0.1615$): contraste directo **1.0416 : 1** (**1.04 : 1**, imperceptible).
+  - Dulce `#D6361F` ($L = 0.1703$) directo sobre suelo `#C4A882` ($L = 0.4135$): contraste directo **2.1039 : 1** (**2.10 : 1**, insuficiente frente a 3:1).
+  - Cachelos `#F2D56B` ($L = 0.6753$) directo sobre suelo `#C4A882` ($L = 0.4135$): contraste directo **1.5648 : 1** (**1.56 : 1**, insuficiente frente a 3:1).
+- **Regla normativa del anillo delimitador (WCAG 2.1 boundary technique, implementada en `PUL-185`)**:
+  Para garantizar que **todas** las pegatinas cumplan ≥ 3:1 en cualquier superficie (caja, suelo, tickets o HUD) sin depender del fondo, **todos los discos de pegatina llevan obligatoriamente un anillo exterior oscuro `StickerInk.INK` (`#2A2320`, $L = 0.0180$)**:
+  - El anillo exterior `#2A2320` sobre la caja roja `#C8402F` da **3.1103 : 1** (**3.11 : 1**, ≥ 3:1).
+  - El anillo exterior `#2A2320` sobre el suelo `#C4A882` da **6.8162 : 1** (**6.82 : 1**, ≥ 3:1).
+  - En la frontera interior, el disco dulce `#D6361F` contra el anillo `#2A2320` da **3.2409 : 1** (**3.24 : 1**, ≥ 3:1).
+  - El disco cachelos `#F2D56B` contra el anillo `#2A2320` da **10.6680 : 1** (**10.67 : 1**, ≥ 3:1).
+  - El disco de sal `#F7F4EC` contra el anillo `#2A2320` da **14.0517 : 1** (**14.05 : 1**, ≥ 3:1).
+  - El disco de aceite `#F2C230` contra el anillo `#2A2320` da **9.2187 : 1** (**9.22 : 1**, ≥ 3:1).
+  - El disco picante `#8F1A14` lleva anillo claro `#F7F4EC` (**8.2150 : 1**, **8.21 : 1**) con icono/chispa interior crema, garantizando legibilidad total.
+  La ficha `PUL-185` extiende `owns` a `godot/entities/items/badge_row.gd` y `godot/ui/tickets/ticket_entry.gd` para aplicar este anillo delimitador a todos los discos del juego.
+
 ### 6.3 Regla de los números de los puestos de entrega en escritorio y móvil (punto débil 2 de PUL-180, AC3)
 En la revisión de PUL-180 se detectó que en el prototipo (`capture_minimal.gd:758-765`):
 1. `%OrderLabel` (`#1..#4`) se configuró con relleno blanco `#F7F4EC` y un contorno oscuro grueso (`outline_size = 14`, `#1D3557`) sobre una placa blanca `OrderPlatePaper` (`#F7F4EC`), haciendo que el interior del número se fundiera con el fondo (1.00 : 1) y que a resolución móvil `800×370` los números se vieran huecos, delineados y degradados.
@@ -281,28 +324,28 @@ La implementación de esta biblia v3 se divide en **8 fichas (`PUL-182` a `PUL-1
 
 | Oleada | Ficha | Rol | Alcance resumido | `touches_scenes` |
 |:---:|---|---|---|---|
-| **1** | [`PUL-182`](../backlog/PUL-182-biblioteca-materiales-planos-v3.md) | `asset-pipeline` | Crear la biblioteca de 18 `.tres` en `godot/assets/materials/v3/` y su test unitario `test_materials_v3.gd` | `[]` |
-| **1** | [`PUL-183`](../backlog/PUL-183-luz-entorno-y-postproceso-v3.md) | `asset-pipeline` | `render_config.tres` v3 (SSAO suave, sin glow/LUT), `environment.tscn` (1 `Sun` `1.18`, `Bulbs` y `Vignette` ocultos, poda de atrezo Z3 y cartel superior `env_sign`/`env_board`) | `[environment.tscn]` |
-| **1** | [`PUL-184`](../backlog/PUL-184-puestos-entrega-y-numeros-v3.md) | `ui-engineer` | `order_stand.tscn` y `stand_palette.tres`: números macizos sin contorno hueco (`#1..#4` en `#1D3557` sobre `#F7F4EC` y `1..4` en `#F7F4EC` sobre `#1D3557`), materiales planos del puesto y test | `[order_stand.tscn]` |
-| **1** | [`PUL-185`](../backlog/PUL-185-tema-ui-hud-y-pegatinas-v3.md) | `ui-engineer` | `default_theme.tres`, `sticker_ink.gd`, `hud.tscn` y `order_ticket.tscn` con paleta v3 opaca y contrastes ≥ 7.38:1 | `[hud.tscn, order_ticket.tscn]` |
-| **2** | [`PUL-186`](../backlog/PUL-186-encimeras-suelo-y-estaciones-v3.md) | `asset-pipeline` | Materiales planos en `.glb.import` y escenas de `furniture/counters/**` y `stations/**`; poda de atrezo en `kitchen_layout.tscn`, `kitchen.tscn` (con vapor visible), `octopus_storage.tscn`, `box_shelf.tscn` (`SizePanel_*` ocultos sin borrar) y `seasoning_station.tscn` | `[kitchen_layout.tscn, kitchen.tscn, octopus_storage.tscn, cachelos_storage.tscn, box_shelf.tscn, seasoning_station.tscn, seasoning_dispenser.tscn, cachelos_bowl.tscn, trash_bin.tscn, slot.tscn]` |
-| **2** | [`PUL-187`](../backlog/PUL-187-materiales-entorno-comida-y-personajes-v3.md) | `asset-pipeline` | Materiales planos en `.glb.import` y escenas de `environment/romeria_v2/**` (con `mat_hidden_alpha` en `env_sign`/`env_board` y `mat_tent_plate` en `env_plate`), `characters/cook/**`, `food/**`, `items/box/**` y aros de jugador | `[box.tscn, octopus.tscn, cachelos.tscn, player.tscn]` |
-| **3** | [`PUL-188`](../backlog/PUL-188-integracion-level01-y-limpieza-v2.md) | `asset-pipeline` | Integración en `level_01.tscn`, borrado de las texturas PBR extraídas (`assets/models/**/*.png`), limpieza de `assets/textures/v2/**`, `assets/materials/v2/**` sin uso y `art/blender/romeria.blend`, y ajuste de `test_assets_models.gd` / `test_level_01.gd` | `[level_01.tscn]` |
-| **4** | [`PUL-189`](../backlog/PUL-189-qa-visual-y-rendimiento-v3.md) | `qa-tester` | QA visual antes/después con la misma cámara y script a `1920×1080` y `800×370` (deriva 0.0 px, contrastes §3.4 ≥ 3:1) y medida de rendimiento/memoria antes y después | `[]` |
+| **1** | [`PUL-182`](../backlog/PUL-182-biblioteca-materiales-planos-v3.md) | `asset-pipeline` | Crear la biblioteca de 18 `.tres` en `godot/assets/materials/v3/` (con textura única `tent_plate_albedo.png` en `mat_tent_plate.tres`) y su test unitario `test_materials_v3.gd` | `[]` |
+| **1** | [`PUL-183`](../backlog/PUL-183-luz-entorno-y-postproceso-v3.md) | `asset-pipeline` | `render_config.tres` v3 (SSAO suave, sin glow/LUT), `environment.tscn` (1 `Sun` `1.18`, `Bulbs` y `Vignette` ocultos, poda de 11 sub-mallas Z1/Z3 y `test_render_config.gd`) | `[environment.tscn]` |
+| **1** | [`PUL-185`](../backlog/PUL-185-tema-ui-hud-y-pegatinas-v3.md) | `ui-engineer` | `default_theme.tres`, `sticker_ink.gd`, `badge_row.gd`, `ticket_entry.gd`, `hud.tscn` y `order_ticket.tscn`: paleta v3 opaca, contrastes ≥ 7.38:1 y anillo `INK` en todos los discos de pegatina | `[hud.tscn, order_ticket.tscn]` |
+| **2** | [`PUL-184`](../backlog/PUL-184-puestos-entrega-y-numeros-v3.md) | `ui-engineer` | `deps: [PUL-181, PUL-182]`. `order_stand.tscn` y `stand_palette.tres`: números macizos sin contorno hueco (`#1..#4` en `#1D3557` sobre `#F7F4EC` y `1..4` en `#F7F4EC` sobre `#1D3557`) usando `mat_brand_navy.tres` y `mat_ui_cream.tres` | `[order_stand.tscn]` |
+| **2** | [`PUL-186`](../backlog/PUL-186-encimeras-suelo-y-estaciones-v3.md) | `asset-pipeline` | `gltf/embedded_image_handling = 0` en `.glb.import` de `furniture/counters/**` y `stations/**`; asignación de slots reales (`mat_steel_brushed_top`, `counters_atlas`, etc.), poda de atrezo Z1/Z2 y vapor visible en `kitchen.tscn` | `[kitchen_layout.tscn, kitchen.tscn, octopus_storage.tscn, cachelos_storage.tscn, box_shelf.tscn, seasoning_station.tscn, seasoning_dispenser.tscn, cachelos_bowl.tscn, trash_bin.tscn, slot.tscn]` |
+| **2** | [`PUL-187`](../backlog/PUL-187-materiales-entorno-comida-y-personajes-v3.md) | `asset-pipeline` | `gltf/embedded_image_handling = 0` en `.glb.import` de `environment/romeria_v2/**` (`mat_hidden_alpha` en `env_sign`/`env_board`, `mat_tent_plate` en `env_plate`, `env_atlas` a `#9A948C`), `cook/**`, `food/**`, `box/**` y `_pipeline/**`; comida, cajas y cocineros | `[box.tscn, octopus.tscn, cachelos.tscn, player.tscn]` |
+| **3** | [`PUL-188`](../backlog/PUL-188-integracion-level01-y-limpieza-v2.md) | `asset-pipeline` | Integración en `level_01.tscn`, borrado definitivo de `.png` extraídos en `assets/models/**/*.png`, limpieza de `materials/v2/**`, `textures/v2/**` y `romeria.blend`, y ajuste de `test_assets_models.gd` contemplando slots funcionales | `[level_01.tscn]` |
+| **4** | [`PUL-189`](../backlog/PUL-189-qa-visual-y-rendimiento-v3.md) | `qa-tester` | QA visual antes/después con la misma cámara y script a `1920×1080` y `800×370` (deriva 0.0 px, contrastes §3.4 ≥ 3:1) y medida de rendimiento/memoria con idéntico método (línea base medida sobre `main` antes de oleada 1) | `[]` |
 
 ### 8.1 Relación con las fichas de arte v2 abiertas (`PUL-144`, `PUL-145`, `PUL-146`)
 - **`PUL-144` (vapor y tapa de la olla)**: **parcialmente absorbida en `PUL-186` y pospuesta en geometría**. El refuerzo del vapor `Steam` en `kitchen.tscn` al cocer (D2 de PUL-087) se incluye en `PUL-186`; el remodelado de la tapa en `art/blender/pot.blend` (D3) queda fuera de esta primera oleada porque D28 prohíbe remodelar `.glb`.
 - **`PUL-145` (ambiente y brillo del acero delantero)**: **obsoleta**, sustituida íntegramente por `PUL-183` y `PUL-186` (se apagan las `Bulbs` que creaban las manchas especulares sobre el frontal y se reemplaza el acero PBR por `mat_surface_top.tres` y `mat_brand_navy.tres` con `specular_mode = SPECULAR_DISABLED`).
-- **`PUL-146` (compartir materiales y texturas entre `.glb` y retirar fuente v1)**: **absorbida y superada por `PUL-186`, `PUL-187` y `PUL-188`**, que redirigen los `.glb.import` a la biblioteca compartida de 18 `.tres` en `assets/materials/v3/`, eliminan los cientos de `.png` PBR extraídos junto a los `.glb` y retiran `art/blender/romeria.blend`.
+- **`PUL-146` (compartir materiales y texturas entre `.glb` y retirar fuente v1)**: **absorbida y superada por `PUL-186`, `PUL-187` y `PUL-188`**, que redirigen los `.glb.import` a la biblioteca compartida de 18 `.tres` en `assets/materials/v3/`, fijan `embedded_image_handling = 0`, eliminan los cientos de `.png` PBR extraídos junto a los `.glb` y retiran `art/blender/romeria.blend`.
 
 ---
 
 ## 9. Checklist de verificación por ficha de implementación
 
 1. **Paleta y materiales**: el recurso `.tres` pertenece a los 18 de `godot/assets/materials/v3/` (§3.1), usa uno de los 16 hex de §2, tiene `metallic == 0.0`, `specular_mode == SPECULAR_DISABLED` y 0 texturas PBR de ruido/ORM/normal.
-2. **Importación `.glb`**: `materials/extract == 0` en todos los `.glb.import` (`test_assets_models.gd`).
+2. **Importación `.glb`**: `materials/extract == 0` y `gltf/embedded_image_handling == 0` en todos los `.glb.import` (`test_assets_models.gd`).
 3. **Geometría y contratos**: 0 `.glb` remodelados, 0 cambios de posición de estaciones o `Marker3D` (**0.0 px** de deriva en pantalla), y nodos requeridos por tests (`Bulbs`, `Vignette`, `SizePanel_*`) ocultos con `visible = false`, nunca eliminados del árbol.
-4. **Legibilidad y §3.4**: todo color de §3.4 mantiene contraste **≥ 3:1** frente a su superficie de soporte (§6.2) y los números de puesto usan glifos macizos con `outline_size = 0` y contraste **11.24 : 1** (§6.3).
+4. **Legibilidad y §3.4**: todo color de §3.4 mantiene contraste **≥ 3:1** frente a su superficie de soporte (§6.2), las pegatinas llevan anillo exterior `StickerInk.INK` (§6.2.1) y los números de puesto usan glifos macizos con `outline_size = 0` y contraste **11.24 : 1** (§6.3).
 5. **Verificación**: `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
 
 ---
@@ -311,6 +354,7 @@ La implementación de esta biblia v3 se divide en **8 fichas (`PUL-182` a `PUL-1
 
 ### 10.1 Decisiones ya cerradas e incorporadas
 - **D28 (2026-10-17)**: adopción de la **Dirección A · «Feira Clara»** de PUL-180 con una primera oleada solo de materiales y escena, sin remodelar `.glb`.
+- **Refinamientos de Dirección A (§0.1)**: evolución a `wall_granite #9A948C` (L=0.3005) para granito gallego, frentes de encimera en `brand_navy #1D3557` (L=0.0350) para identidad de marca y máximo contraste, y fijación de `env_atlas` en `#9A948C` siguiendo `capture_minimal.gd:558`.
 - **D25 / D26 / D27**: 3 condimentos activos en estación, iconos con doble codificación forma + color y soporte móvil a `800×370`.
 - **D14 / D16 / D20 / D21**: cámara ortográfica fija, licencias limpias, arte propio y marca **PulpaSA** (propuesta A · Mariña).
 

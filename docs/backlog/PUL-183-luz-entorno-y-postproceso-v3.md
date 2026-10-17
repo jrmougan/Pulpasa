@@ -26,7 +26,7 @@ Aplicar la configuración de luz diurna, `WorldEnvironment`, post-proceso (SSAO 
    - `Sun` (`DirectionalLight3D`): `light_color = Color("#FFF4E0")`, `light_energy = 1.18`, `shadow_enabled = true`, `shadow_opacity = 0.75`, `shadow_blur = 3.2`.
    - `Bulbs`: mantener el nodo `Bulbs` y sus 5 hijos `OmniLight3D` en el árbol (para cumplir `docs/arch/scene-tree.md` §3), pero poner `visible = false` en `Bulbs` y en cada `OmniLight3D`.
    - `Vignette`: mantener el nodo en el árbol con `visible = false`.
-   - Ocultar (`visible = false` mediante hijos editables o overrides en `environment.tscn`) las 10 sub-mallas ruidosas de Z1/Z3 (§5.1): `ground_w_decals`, `ground_e_decals`, `back_w_props`, `back_e_props`, `back_w_fence`, `back_e_fence`, `tent_bulbs`, `props_w_garlands`, `props_e_garlands`, `props_w_props` y `props_e_props`.
+   - Ocultar (`visible = false` mediante hijos editables o overrides en `environment.tscn`) las 11 sub-mallas ruidosas de Z1/Z3 (§5.1): `ground_w_decals`, `ground_e_decals`, `back_w_props`, `back_e_props`, `back_w_fence`, `back_e_fence`, `tent_bulbs`, `props_w_garlands`, `props_e_garlands`, `props_w_props` y `props_e_props`.
 3. Actualizar `godot/tests/unit/test_render_config.gd` y la aserción de `sun.light_energy` en `godot/tests/integration/test_level_01.gd` (`1.18` en lugar de `1.34`), añadiendo la comprobación de 0 `OmniLight3D` visibles y de las sub-mallas de atrezo ocultas.
 
 ## Constraints

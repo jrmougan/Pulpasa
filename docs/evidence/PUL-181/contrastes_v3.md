@@ -83,7 +83,23 @@ normativos de §3.4 frente a cada superficie donde aparecen.
 | J1 azul vs. suelo de arena | `p1_blue` (`#2F6FB5`, 0.1531) | `ground_sand` (`#C4A882`, 0.4135) | **2.2823 : 1** | 2.28 : 1 |
 | J2 ámbar vs. faldón azul marino | `p2_amber` (`#F2C230`, 0.5767) | `brand_navy` (`#1D3557`, 0.0350) | **7.3773 : 1** | 7.38 : 1 |
 
-## 5. Matriz par a par entre los 5 colores de §3.4 y doble codificación D26
+## 5. Pegatinas en soportes de juego reales y regla del anillo `StickerInk.INK` (Finding 4)
+
+En el juego las pegatinas se ven como billboards 3D sobre el exterior de la caja roja (`#C8402F`) y sobre el suelo de cocina/arena (`#C4A882`).
+Sin anillo delimitador, el dulce sobre la caja roja da 1.04:1 y sobre el suelo 2.10:1, y los cachelos sobre el suelo dan 1.56:1.
+Para garantizar WCAG 2.1 ≥ 3:1 en cualquier superficie, en la v3 (`PUL-185`) **todos los discos de pegatina llevan obligatoriamente el anillo exterior oscuro `StickerInk.INK` (`#2A2320`)**.
+
+| Caso evaluado | Color 1 (`hex`, $L_1$) | Color 2 (`hex`, $L_2$) | Contraste exacto | Contraste (2 dec.) | Evaluación WCAG 2.1 |
+|---|---|---|---:|---:|---|
+| Pegatina dulce directa sobre caja roja (sin anillo) | `paprika_sweet` (`#D6361F`, 0.1703) | `brand_red` (`#C8402F`, 0.1615) | **1.0417 : 1** | 1.04 : 1 | INSUFICIENTE (1.04:1) sin anillo delimitador |
+| Pegatina dulce directa sobre suelo de cocina (sin anillo) | `paprika_sweet` (`#D6361F`, 0.1703) | `ground_sand` (`#C4A882`, 0.4135) | **2.1037 : 1** | 2.10 : 1 | INSUFICIENTE (2.10:1) sin anillo delimitador |
+| Pegatina cachelos directa sobre suelo de cocina (sin anillo) | `cachelos` (`#F2D56B`, 0.6753) | `ground_sand` (`#C4A882`, 0.4135) | **1.5647 : 1** | 1.56 : 1 | INSUFICIENTE (1.56:1) sin anillo delimitador |
+| Anillo `StickerInk.INK` sobre caja roja (frontera exterior) | `state_burnt` (`#2A2320`, 0.0180) | `brand_red` (`#C8402F`, 0.1615) | **3.1111 : 1** | 3.11 : 1 | CUMPLE (≥ 3:1) — el anillo separa la pegatina de la caja |
+| Anillo `StickerInk.INK` sobre suelo de cocina (frontera exterior) | `state_burnt` (`#2A2320`, 0.0180) | `ground_sand` (`#C4A882`, 0.4135) | **6.8180 : 1** | 6.82 : 1 | CUMPLE (≥ 3:1) — el anillo separa la pegatina del suelo |
+| Disco dulce interior contra anillo `StickerInk.INK` | `paprika_sweet` (`#D6361F`, 0.1703) | `state_burnt` (`#2A2320`, 0.0180) | **3.2409 : 1** | 3.24 : 1 | CUMPLE (≥ 3:1) — contraste interno disco/anillo |
+| Disco cachelos interior contra anillo `StickerInk.INK` | `cachelos` (`#F2D56B`, 0.6753) | `state_burnt` (`#2A2320`, 0.0180) | **10.6680 : 1** | 10.67 : 1 | CUMPLE (≥ 3:1) — contraste interno disco/anillo |
+
+## 6. Matriz par a par entre los 5 colores de §3.4 y doble codificación D26
 
 | Par de condimentos | Contraste exacto | Contraste (2 dec.) | Mecanismo de distinción en v3 |
 |---|---:|---:|---|

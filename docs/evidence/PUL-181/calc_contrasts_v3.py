@@ -315,6 +315,66 @@ EXTRA_PAIRS: list[tuple[str, str, str, str, str]] = [
     ("J2 ámbar vs. faldón azul marino", "p2_amber", "#F2C230", "brand_navy", "#1D3557"),
 ]
 
+# Pegatinas de condimentos en soportes de juego reales (caja roja y suelo) y regla del anillo StickerInk (Finding 4)
+STICKER_BACKGROUND_PAIRS: list[tuple[str, str, str, str, str, str]] = [
+    (
+        "Pegatina dulce directa sobre caja roja (sin anillo)",
+        "paprika_sweet",
+        "#D6361F",
+        "brand_red",
+        "#C8402F",
+        "INSUFICIENTE (1.04:1) sin anillo delimitador",
+    ),
+    (
+        "Pegatina dulce directa sobre suelo de cocina (sin anillo)",
+        "paprika_sweet",
+        "#D6361F",
+        "ground_sand",
+        "#C4A882",
+        "INSUFICIENTE (2.10:1) sin anillo delimitador",
+    ),
+    (
+        "Pegatina cachelos directa sobre suelo de cocina (sin anillo)",
+        "cachelos",
+        "#F2D56B",
+        "ground_sand",
+        "#C4A882",
+        "INSUFICIENTE (1.56:1) sin anillo delimitador",
+    ),
+    (
+        "Anillo `StickerInk.INK` sobre caja roja (frontera exterior)",
+        "state_burnt",
+        "#2A2320",
+        "brand_red",
+        "#C8402F",
+        "CUMPLE (≥ 3:1) — el anillo separa la pegatina de la caja",
+    ),
+    (
+        "Anillo `StickerInk.INK` sobre suelo de cocina (frontera exterior)",
+        "state_burnt",
+        "#2A2320",
+        "ground_sand",
+        "#C4A882",
+        "CUMPLE (≥ 3:1) — el anillo separa la pegatina del suelo",
+    ),
+    (
+        "Disco dulce interior contra anillo `StickerInk.INK`",
+        "paprika_sweet",
+        "#D6361F",
+        "state_burnt",
+        "#2A2320",
+        "CUMPLE (≥ 3:1) — contraste interno disco/anillo",
+    ),
+    (
+        "Disco cachelos interior contra anillo `StickerInk.INK`",
+        "cachelos",
+        "#F2D56B",
+        "state_burnt",
+        "#2A2320",
+        "CUMPLE (≥ 3:1) — contraste interno disco/anillo",
+    ),
+]
+
 
 def srgb_to_linear(channel_hex: int) -> float:
     c = channel_hex / 255.0
@@ -419,7 +479,29 @@ def main() -> None:
     lines.extend(
         [
             "",
-            "## 5. Matriz par a par entre los 5 colores de §3.4 y doble codificación D26",
+            "## 5. Pegatinas en soportes de juego reales y regla del anillo `StickerInk.INK` (Finding 4)",
+            "",
+            "En el juego las pegatinas se ven como billboards 3D sobre el exterior de la caja roja (`#C8402F`) y sobre el suelo de cocina/arena (`#C4A882`).",
+            "Sin anillo delimitador, el dulce sobre la caja roja da 1.04:1 y sobre el suelo 2.10:1, y los cachelos sobre el suelo dan 1.56:1.",
+            "Para garantizar WCAG 2.1 ≥ 3:1 en cualquier superficie, en la v3 (`PUL-185`) **todos los discos de pegatina llevan obligatoriamente el anillo exterior oscuro `StickerInk.INK` (`#2A2320`)**.",
+            "",
+            "| Caso evaluado | Color 1 (`hex`, $L_1$) | Color 2 (`hex`, $L_2$) | Contraste exacto | Contraste (2 dec.) | Evaluación WCAG 2.1 |",
+            "|---|---|---|---:|---:|---|",
+        ]
+    )
+
+    for desc, t1, h1, t2, h2, note in STICKER_BACKGROUND_PAIRS:
+        l1 = relative_luminance(h1)
+        l2 = relative_luminance(h2)
+        cr = contrast_ratio(h1, h2)
+        lines.append(
+            f"| {desc} | `{t1}` (`{h1}`, {l1:.4f}) | `{t2}` (`{h2}`, {l2:.4f}) | **{cr:.4f} : 1** | {cr:.2f} : 1 | {note} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## 6. Matriz par a par entre los 5 colores de §3.4 y doble codificación D26",
             "",
             "| Par de condimentos | Contraste exacto | Contraste (2 dec.) | Mecanismo de distinción en v3 |",
             "|---|---:|---:|---|",

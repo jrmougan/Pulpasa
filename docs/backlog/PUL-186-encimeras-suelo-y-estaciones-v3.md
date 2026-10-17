@@ -4,7 +4,7 @@ title: Asignar materiales planos v3 y podar atrezo en encimeras y estaciones
 status: draft
 milestone: M3f
 role: asset-pipeline
-deps: [PUL-182, PUL-184]
+deps: [PUL-182]
 orca_task: null
 unity_sources: []
 owns: [godot/assets/models/furniture/counters/*.glb.import, godot/assets/models/stations/**/*.glb.import, godot/entities/environment/kitchen_layout.tscn, godot/entities/stations/kitchen.tscn, godot/entities/stations/octopus_storage.tscn, godot/entities/stations/cachelos_storage.tscn, godot/entities/stations/box_shelf.tscn, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn, godot/entities/stations/trash_bin.tscn, godot/entities/stations/slot.tscn, godot/tests/integration/test_stations_v3.gd*, docs/evidence/PUL-186/**, docs/backlog/PUL-186-encimeras-suelo-y-estaciones-v3.md]
@@ -16,14 +16,15 @@ Vincular los materiales planos de `godot/assets/materials/v3/` a los módulos de
 
 ## Change
 1. En los `.glb.import` de `godot/assets/models/furniture/counters/*.glb.import` y `godot/assets/models/stations/**/*.glb.import`:
-   - Mantener `materials/extract=0` y mapear cada slot de `_subresources["materials"]` a su recurso externo de `res://assets/materials/v3/mat_*.tres` (`use_external/enabled = true`, `use_external/path = "res://assets/materials/v3/..."`) según la tabla de `docs/art/art-bible.md` §3.1:
-     - Tableros superiores y tablas de corte (`mat_wood_varnished`, `mat_wood_cut`, `mat_steel_brushed_top`) → `mat_surface_top.tres` (`#EDE8DF`).
-     - Faldones/frentes de encimera, zócalos y marco de puestos → `mat_brand_navy.tres` (`#1D3557`).
-     - Cuerpos metálicos de olla, tanque, estantería y cubo (`mat_steel_brushed`, `mat_alu_cast`, `mat_galvanized`, `mat_chrome`, `mat_paint_worn_grey`, `mat_brass`) → `mat_wall_granite.tres` (`#9A948C`).
-     - Muros (`mat_granite_masonry`) → `mat_wall_granite.tres` (`#9A948C`).
-     - Sacos de arpillera (`mat_burlap`, `mat_twine_rope`) → `mat_ground_sand.tres` (`#C4A882`).
-     - Boca interior de olla y cubo (`mat_iron_cast`) → `mat_state_burnt.tres` (`#2A2320`).
-     - Agua del tanque (`water_surface`) → `mat_p1_blue.tres` (`#2F6FB5`) y espuma (`water_foam`) → `mat_ui_cream.tres` (`#F7F4EC`).
+   - Configurar explícitamente `gltf/embedded_image_handling = 0` (para evitar la re-extracción de texturas PNG) y `materials/extract = 0`.
+   - Mapear cada slot real de `_subresources["materials"]` a su recurso externo de `res://assets/materials/v3/mat_*.tres` (`use_external/enabled = true`, `use_external/path = "res://assets/materials/v3/..."`) según `docs/evidence/PUL-181/slots_reales.md` y `docs/art/art-bible.md` §3.1:
+     - Tableros superiores (`mat_steel_brushed_top`) → `mat_surface_top.tres` (`#EDE8DF`).
+     - Faldones y frentes de encimeras (`counters_atlas`) → `mat_brand_navy.tres` (`#1D3557`).
+     - Estructuras metálicas de encimeras y estaciones (`mat_steel_brushed`, `mat_steel_dark`) → `mat_wall_granite.tres` (`#9A948C`).
+     - Estructura de estación de sazonado (`seasoning_station_atlas`) → `mat_wall_granite.tres` (`#9A948C`).
+     - Sacos de arpillera (`mat_burlap`) y embalaje (`mat_cardboard`) → `mat_ground_sand.tres` (`#C4A882`).
+     - Gomas y protecciones (`mat_rubber`) → `mat_state_burnt.tres` (`#2A2320`).
+     - Señalética funcional (`seasoning_signs` en `seasoning_dispenser.glb`) → conservada como slot funcional exento del catálogo plano.
 2. En `godot/entities/environment/kitchen_layout.tscn`:
    - Sustituir `Floor/Mesh.material_override` (`kitchen_floor_dirt.tres`) por `res://assets/materials/v3/mat_ground_sand.tres` (`#C4A882`).
    - Ocultar (`visible = false`) los 5 nodos de atrezo sobre encimeras (§5.1): `BackCounter/BackBetweenStoragePot/Model/props_crock`, `BackCounter/BackRight/Model/props_board`, `BackCounter/BackRight/Model/props_crock`, `Walls/WallLeftKitchen/Model/props_crock` y `Walls/WallRight/Model/props_board`.
@@ -35,7 +36,7 @@ Vincular los materiales planos de `godot/assets/materials/v3/` a los módulos de
    - `seasoning_station.tscn`, `seasoning_dispenser.tscn` y `cachelos_bowl.tscn` (§5.3 y §6.2):
      - Ocultar (`visible = false`) las 15 sub-mallas pre-D25 `CounterArrow_*`, `Label_*` y `ServiceArrow_*` (`sweet`, `hot`, `salt`, `oil`, `potato`).
      - Asignar `ServiceMat` a `mat_surface_top.tres` (`#EDE8DF`) y `ServiceFascia` a `mat_brand_navy.tres` (`#1D3557`).
-     - Asignar el cuerpo de `SweetDressing` a `mat_paprika_sweet.tres` (`#D6361F`, contraste **3.91 : 1** sobre `#EDE8DF`), el de `HotDressing` a `mat_paprika_hot.tres` (`#8F1A14`, contraste **7.40 : 1** sobre `#EDE8DF`), su collar superior a `mat_surface_top.tres` (`#EDE8DF`) y el cuenco de `CachelosBowl` a `mat_brand_navy.tres` (`#1D3557`) con cachelos en `mat_cachelos_cooked.tres` (`#F2D56B`, contraste **8.54 : 1**).
+     - Asignar mediante `surface_material_override` en las instancias de los nodos de malla el cuerpo de `SweetDressing` a `mat_paprika_sweet.tres` (`#D6361F`, contraste **3.91 : 1** sobre `#EDE8DF`), el de `HotDressing` a `mat_paprika_hot.tres` (`#8F1A14`, contraste **7.40 : 1** sobre `#EDE8DF`), su collar superior a `mat_surface_top.tres` (`#EDE8DF`) y el cuenco de `CachelosBowl` a `mat_brand_navy.tres` (`#1D3557`) con cachelos en `mat_cachelos_cooked.tres` (`#F2D56B`, contraste **8.54 : 1**).
 4. Añadir `godot/tests/integration/test_stations_v3.gd` que verifique la poda de atrezo (`is_visible_in_tree() == false`), la permanencia de `SizePanel_*` en el árbol, los materiales planos v3 sin texturas PBR y la emisión visible de `Steam` al cocer.
 
 ## Constraints
@@ -43,7 +44,7 @@ Vincular los materiales planos de `godot/assets/materials/v3/` a los módulos de
 - No modificar posiciones de estaciones, colisiones ni `Marker3D`.
 
 ## Acceptance
-- [ ] AC1 Given los `.glb.import` de `furniture/counters/` y `stations/`, When se ejecutan `test_assets_models.gd` y `test_stations_v3.gd`, Then todos tienen `materials/extract == 0` y ningún `MeshInstance3D` visible de encimeras o estaciones usa recursos de `res://assets/materials/v2/` ni `kitchen_floor_dirt.tres`.
+- [ ] AC1 Given los `.glb.import` de `furniture/counters/` y `stations/`, When se ejecutan `test_assets_models.gd` y `test_stations_v3.gd`, Then todos tienen `gltf/embedded_image_handling == 0`, `materials/extract == 0` y ningún `MeshInstance3D` visible de encimeras o estaciones usa recursos de `res://assets/materials/v2/` ni `kitchen_floor_dirt.tres`.
 - [ ] AC2 Given `kitchen_layout.tscn`, `kitchen.tscn`, `octopus_storage.tscn` y `box_shelf.tscn`, When `test_stations_v3.gd` inspecciona sus sub-mallas de atrezo (`props_board`, `props_crock`, `gas_bottle`, `pump`, `cartons`, `SizePanel_*`, `labels`), Then todas tienen `is_visible_in_tree() == false` y `box_shelf.find_children("SizePanel_*", "MeshInstance3D", true, false).size() == 3`.
 - [ ] AC3 Given `seasoning_station.tscn`, When `test_stations_v3.gd` comprueba los soportes y dispensadores, Then las 15 sub-mallas `CounterArrow_*`/`Label_*`/`ServiceArrow_*` están ocultas, y los contrastes de `SweetDressing` (`#D6361F`) y `HotDressing` (`#8F1A14`) frente a `ServiceMat` (`#EDE8DF`) y de los cachelos (`#F2D56B`) frente al cuenco (`#1D3557`) son todos **≥ 3.90 : 1** (`3.91 : 1`, `7.40 : 1` y `8.54 : 1`).
 - [ ] AC4 Given `kitchen.tscn` cociendo un ingrediente, When `test_stations_v3.gd` inspecciona `Steam`, Then `Steam.emitting == true` con partículas visibles sobre la boca `#2A2320`.

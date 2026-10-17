@@ -94,23 +94,36 @@ materiales y post-proceso.
   3. **Entorno con textura (`env_plate`)**: en `docs/art/art-bible.md` §3.2 se prohíben todas las texturas PBR de superficie en 3D (0 albedo de ruido, 0 ORM, 0 normal maps) y se permite únicamente `env_plate` (`mat_tent_plate.tres` en `tent_plate` con logotipo plano PulpaSA) y los iconos planos de señalética/UI D26 y §3.4.
   4. **SSAO**: en `docs/art/art-bible.md` §4.2 se fija activo el SSAO suave de contacto (`ssao_enabled = true`, `ssao_radius = 0.45`, `ssao_intensity = 1.1`, `ssao_detail = 0.0`) para separar bloques planos contiguos, y se prohíben `Bulbs` (0 `OmniLight3D`), `glow`, LUT, `Vignette` y DoF.
 - **AC4 (Fichas `PUL-182` a `PUL-189`, oleadas sin solape, `level_01.tscn` único, QA visual y revisión de `PUL-144..146`)**:
-  - Plan completo en `docs/evidence/PUL-181/README.md`:
-    - **Oleada 1 (en paralelo, 0 solapes)**: `PUL-182` (`asset-pipeline`, biblioteca de 18 `.tres`), `PUL-183` (`asset-pipeline`, luz, `render_config.tres`, post-proceso y poda en `environment.tscn`), `PUL-184` (`ui-engineer`, `order_stand.tscn`, `stand_palette.tres` y números macizos), `PUL-185` (`ui-engineer`, `default_theme.tres`, `sticker_ink.gd`, `hud.tscn`, `order_ticket.tscn`).
-    - **Oleada 2 (en paralelo, 0 solapes)**: `PUL-186` (`asset-pipeline`, `.glb.import` y escenas de encimeras y estaciones, ocultando atrezo y reforzando el vapor `Steam`), `PUL-187` (`asset-pipeline`, `.glb.import` y escenas de entorno `romeria_v2` con `mat_hidden_alpha`/`mat_tent_plate`, comida, cajas y cocineros).
-    - **Oleada 3**: `PUL-188` (`asset-pipeline`, **única ficha que toca `level_01.tscn`**, limpieza de `materials/v2/**`, `textures/v2/**`, `models/**/*.png` y `art/blender/romeria.blend`).
-    - **Oleada 4**: `PUL-189` (`asset-pipeline` con protocolo `qa-tester`, QA visual antes/después con el mismo script y cámara a `1920×1080` y `800×370`, y rendimiento/VRAM antes y después con el mismo método).
+  - Plan completo en `docs/evidence/PUL-181/README.md` (actualizado tras Ronda 2):
+    - **Oleada 1 (3 workers en paralelo, 0 solapes)**: `PUL-182` (`asset-pipeline`, biblioteca de 18 `.tres`), `PUL-183` (`asset-pipeline`, luz, `render_config.tres`, post-proceso y poda en `environment.tscn`), `PUL-185` (`ui-engineer`, `default_theme.tres`, `sticker_ink.gd`, `badge_row.gd`, `ticket_entry.gd`, `hud.tscn`, `order_ticket.tscn`).
+    - **Oleada 2 (3 workers en paralelo, 0 solapes)**: `PUL-184` (`ui-engineer`, `deps: [PUL-181, PUL-182]`, `order_stand.tscn`, `stand_palette.tres` y números macizos), `PUL-186` (`asset-pipeline`, `deps: [PUL-182]`, `.glb.import` con `embedded_image_handling = 0` y escenas de encimeras y estaciones con slots reales de `slots_reales.md`), `PUL-187` (`asset-pipeline`, `deps: [PUL-182, PUL-183]`, `.glb.import` con `embedded_image_handling = 0`, entorno `romeria_v2` con `mat_hidden_alpha`/`mat_tent_plate`, comida, cajas y cocineros).
+    - **Oleada 3**: `PUL-188` (`asset-pipeline`, **única ficha que toca `level_01.tscn`**, limpieza de `materials/v2/**`, `textures/v2/**`, `models/**/*.png` y `art/blender/romeria.blend`, eximiendo slots funcionales y `_pipeline/**`).
+    - **Oleada 4**: `PUL-189` (`qa-tester`, QA visual antes/después con el mismo script y cámara a `1920×1080` y `800×370`, y rendimiento/VRAM antes y después con el mismo script `measure_perf.gd` con línea base medida sobre `main`).
   - **Estado de `PUL-144`, `PUL-145` y `PUL-146`** (sin editar esas fichas):
     - `PUL-144`: parcialmente absorbida en `PUL-186` (visibilidad del vapor `Steam` en `kitchen.tscn`); el remodelado de la tapa en `pot.blend` queda fuera por D28 (no remodelar `.glb`).
     - `PUL-145`: obsoleta, sustituida por `PUL-183` y `PUL-186` (se apagan las `Bulbs` y desaparece el acero especular).
     - `PUL-146`: absorbida y superada por `PUL-186`, `PUL-187` y `PUL-188` (materiales compartidos en `materials/v3/`, borrado de texturas PBR extraídas y retirada de `art/blender/romeria.blend`).
+- **Ronda 2 — Corrección de los 9 hallazgos de revisión**:
+  1. Catálogo real de 68 slots extraído en `docs/evidence/PUL-181/slots_reales.md`; reglas para atlas (`counters_atlas` a `#1D3557`, `env_atlas` a `#9A948C`), slots compartidos y `SweetDressing`/`HotDressing` como nodos de escena.
+  2. `gltf/embedded_image_handling = 0` explícito en `art-bible.md`, `PUL-186` y `PUL-187`.
+  3. Protocolo de benchmark unificado `docs/evidence/PUL-189/measure_perf.gd` (medición sobre `main` antes de la oleada 1) y rol `qa-tester` en `PUL-189`.
+  4. Evaluación de fondos de pegatinas sobre caja `#C8402F` y suelo `#C4A882` con anillo exterior `StickerInk.INK` (`#2A2320`) en todos los discos (`PUL-185`).
+  5. Exención explícita en `PUL-188` AC2 para slots funcionales y `_pipeline/**`; corrección de `owns` en `PUL-187` (`_pipeline/**/*.glb.import` y retirada de ruta inexistente de player).
+  6. `PUL-184` en Oleada 2 (`deps: [PUL-181, PUL-182]`); `PUL-186` con `deps: [PUL-182]`.
+  7. Textura de `mat_tent_plate.tres` fijada a opción única `res://assets/textures/brand/tent_plate_albedo.png`.
+  8. Refinamientos de Dirección A (§0.1) declarados en `art-bible.md`.
+  9. Erratas subsanadas ($L$ de `#4FA05A` a 0.2754, 11 sub-mallas en `PUL-183`, paréntesis cerrado en §3.2).
 - **AC5 (`tools/verify.sh --quick` y `tools/check_owns.py`)**:
   ```text
   $ tools/verify.sh --quick
   == gdformat --check
   241 files would be left unchanged
+
   == gdlint
   Success: no problems found
+
   == import
+
   ✓ verify OK
 
   $ python3 tools/check_owns.py jrmougan/pul-181 main
