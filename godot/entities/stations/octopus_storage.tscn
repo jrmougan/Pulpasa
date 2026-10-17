@@ -40,3 +40,8 @@ mesh = SubResource("BoxMesh_hull_body")
 unique_name_in_owner = true
 script = ExtResource("4_bxfsx")
 root = NodePath("../OutlineHull")
+
+[node name="pump" parent="Model/octopus_storage" index="4"]
+visible = false
+
+[editable path="Model"]

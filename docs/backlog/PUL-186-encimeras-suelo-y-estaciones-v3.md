@@ -1,13 +1,13 @@
 ---
 id: PUL-186
 title: Asignar materiales planos v3 y podar atrezo en encimeras y estaciones
-status: in_progress
+status: review
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-182]
 orca_task: null
 unity_sources: []
-owns: [godot/assets/models/furniture/counters/*.glb.import, godot/assets/models/stations/**/*.glb.import, godot/entities/environment/kitchen_layout.tscn, godot/entities/stations/kitchen.tscn, godot/entities/stations/octopus_storage.tscn, godot/entities/stations/cachelos_storage.tscn, godot/entities/stations/box_shelf.tscn, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn, godot/entities/stations/trash_bin.tscn, godot/entities/stations/slot.tscn, godot/tests/integration/test_stations_v3.gd*, docs/evidence/PUL-186/**, docs/backlog/PUL-186-encimeras-suelo-y-estaciones-v3.md]
+owns: [godot/assets/models/furniture/counters/*.glb.import, godot/assets/models/stations/**/*.glb.import, godot/entities/environment/kitchen_layout.tscn, godot/entities/stations/kitchen.tscn, godot/entities/stations/octopus_storage.tscn, godot/entities/stations/cachelos_storage.tscn, godot/entities/stations/box_shelf.tscn, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn, godot/entities/stations/trash_bin.tscn, godot/entities/stations/slot.tscn, godot/entities/stations/seasoning_dispenser.gd*, godot/tests/integration/test_stations_v3.gd*, docs/evidence/PUL-186/**, docs/backlog/PUL-186-encimeras-suelo-y-estaciones-v3.md]
 touches_scenes: [godot/entities/environment/kitchen_layout.tscn, godot/entities/stations/kitchen.tscn, godot/entities/stations/octopus_storage.tscn, godot/entities/stations/cachelos_storage.tscn, godot/entities/stations/box_shelf.tscn, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn, godot/entities/stations/trash_bin.tscn, godot/entities/stations/slot.tscn]
 ---
 
@@ -53,14 +53,27 @@ Vincular los materiales planos de `godot/assets/materials/v3/` a los módulos de
 - No modificar posiciones de estaciones, colisiones ni `Marker3D`.
 
 ## Acceptance
-- [ ] AC1 Given los `.glb.import` de `furniture/counters/` y `stations/`, When se ejecutan `test_assets_models.gd` y `test_stations_v3.gd`, Then todos tienen `gltf/embedded_image_handling == 0`, `materials/extract == 0` y ningún `MeshInstance3D` visible de encimeras o estaciones usa recursos de `res://assets/materials/v2/` ni `kitchen_floor_dirt.tres`.
-- [ ] AC2 Given `kitchen_layout.tscn`, `kitchen.tscn`, `octopus_storage.tscn` y `box_shelf.tscn`, When `test_stations_v3.gd` inspecciona sus sub-mallas de atrezo (`props_board`, `props_crock`, `gas_bottle`, `pump`, `cartons`, `SizePanel_*`, `labels`), Then todas tienen `is_visible_in_tree() == false` y `box_shelf.find_children("SizePanel_*", "MeshInstance3D", true, false).size() == 3`.
-- [ ] AC3 Given `seasoning_station.tscn`, When `test_stations_v3.gd` comprueba los soportes y dispensadores, Then las 15 sub-mallas `CounterArrow_*`/`Label_*`/`ServiceArrow_*` están ocultas, y los contrastes de `SweetDressing` (`#D6361F`) y `HotDressing` (`#8F1A14`) frente a `ServiceMat` (`#EDE8DF`) y de los cachelos (`#F2D56B`) frente al cuenco (`#1D3557`) son todos **≥ 3.90 : 1** (`3.91 : 1`, `7.40 : 1` y `8.54 : 1`).
-- [ ] AC4 Given `kitchen.tscn` cociendo un ingrediente, When `test_stations_v3.gd` inspecciona `Steam`, Then `Steam.emitting == true` con partículas visibles sobre la boca `#2A2320`.
-- [ ] AC5 `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
+- [x] AC1 Given los `.glb.import` de `furniture/counters/` y `stations/`, When se ejecutan `test_assets_models.gd` y `test_stations_v3.gd`, Then todos tienen `gltf/embedded_image_handling == 0`, `materials/extract == 0` y ningún `MeshInstance3D` visible de encimeras o estaciones usa recursos de `res://assets/materials/v2/` ni `kitchen_floor_dirt.tres`.
+- [x] AC2 Given `kitchen_layout.tscn`, `kitchen.tscn`, `octopus_storage.tscn` y `box_shelf.tscn`, When `test_stations_v3.gd` inspecciona sus sub-mallas de atrezo (`props_board`, `props_crock`, `gas_bottle`, `pump`, `cartons`, `SizePanel_*`, `labels`), Then todas tienen `is_visible_in_tree() == false` y `box_shelf.find_children("SizePanel_*", "MeshInstance3D", true, false).size() == 3`.
+- [x] AC3 Given `seasoning_station.tscn`, When `test_stations_v3.gd` comprueba los soportes y dispensadores, Then las 15 sub-mallas `CounterArrow_*`/`Label_*`/`ServiceArrow_*` están ocultas, y los contrastes de `SweetDressing` (`#D6361F`) y `HotDressing` (`#8F1A14`) frente a `ServiceMat` (`#EDE8DF`) y de los cachelos (`#F2D56B`) frente al cuenco (`#1D3557`) son todos **≥ 3.90 : 1** (`3.91 : 1`, `7.40 : 1` y `8.54 : 1`).
+- [x] AC4 Given `kitchen.tscn` cociendo un ingrediente, When `test_stations_v3.gd` inspecciona `Steam`, Then `Steam.emitting == true` con partículas visibles sobre la boca `#2A2320`.
+- [x] AC5 `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
 
 ## Plan
-(Lo escribe el worker antes de empezar.)
+1. Volcar el árbol real (nodos, superficies y slots) de los 25 `.glb` de `furniture/counters/` y `stations/` y de las escenas dueñas, contra `slots_reales.md` §1–§2.
+2. `.glb.import`: `gltf/embedded_image_handling = 0`, `materials/extract = 0` y `_subresources["materials"]` con `use_external` a `res://assets/materials/v3/` para cada slot real; los funcionales (`mat_outline_hull`, `delivery_zone_off`, `kiosk_delivery_signs`, `seasoning_signs`) quedan embebidos.
+3. Escenas: suelo `mat_ground_sand`, poda de atrezo con `visible = false` (sin borrar nodos), `counters_atlas` → navy por `surface_material_override`, estación de condimentos (15 señales ocultas, `ServiceMat`/`ServiceFascia`, cuerpos y collar de dispensadores, cuenco navy) y vapor `Steam` reforzado.
+4. `test_stations_v3.gd` (AC1–AC4), capturas con `xvfb-run` y `tools/verify.sh`.
 
 ## Evidence
-(Lo rellena el worker.)
+- **Owns ampliados** (decisión del coordinador, opción C): `godot/entities/stations/seasoning_dispenser.gd*`. El cuerpo entero de `paprika_sweet`/`paprika_hot` en `seasoning_dispenser.glb` *es* la superficie `seasoning_signs`, y `_show_own_icon` la volvía transparente para poner la placa D26.7. Ahora el dispensador exporta `body_material`: si lo tiene, pinta esa superficie con él (`mat_paprika_sweet`/`mat_paprika_hot`, asignados por instancia en `seasoning_station.tscn`) y saca la placa `FrontPlate`+`FrontIcon` fuera del cuerpo (lado × 0,55, desplazada a lo largo de la normal del cartel); sin `body_material` se comporta como antes.
+- **Imports** (25 `.glb.import`): `embedded_image_handling = 0`, `materials/extract = 0` y slots mapeados según `slots_reales.md` §2 y la tabla de la ficha. Tras `godot --import` ningún PNG se re-extrae ni cambia (`git status` limpio fuera de owns).
+- **Faldón de encimeras** (decisión del coordinador, opción A): `counters_atlas` → `mat_wall_granite` en el import y `surface_material_override/2` → `mat_brand_navy` en los 22 módulos `counter_*`/`pass_*` de `kitchen_layout.tscn`. En la geometría real `counters_atlas` son solo tiradores y listones del frente; el panel frontal es `mat_steel_brushed` (granito), como el prototipo A aprobado (`docs/art/minimal/direccion-a-color-plano.png`). **§0.1 y §5.1 del art-bible hablan de un faldón navy completo que no corresponde ni a la geometría ni al prototipo**: lo corregirá el coordinador.
+- **Collar del dispensador**: solo `paprika_sweet` tiene superficie de collar (s1, `mat_steel_dark`) → `mat_surface_top` en `seasoning_dispenser.tscn`. `paprika_hot` tiene una sola superficie (sin collar que pintar sin tocar el `.glb`, D28).
+- **Cuenco**: `bowl` y la base `mat_clay` de `Portions0..4` → `mat_brand_navy`; cachelos (`mat_food_potato_cooked`) → `mat_cachelos_cooked` desde el import.
+- **Vapor** (`kitchen.tscn`, D2 de PUL-144): 18 partículas (antes 8), radio 0,11 m (antes 0,07), escala 1,0–1,5, crema `#F7F4EC` con alfa pico 0,9 (antes 0,4). Contraste sobre la boca `#2A2320` ≥ 3,90 : 1 (comprobado en el test).
+- **`trash_bin.tscn` y `slot.tscn`**: sin cambios de escena; les basta el import (no usan v2).
+- **Tests**: `godot/tests/integration/test_stations_v3.gd`, 9 tests: imports (AC1), mallas visibles sin v2/`kitchen_floor_dirt` ni mapas PBR (AC1), suelo, atrezo oculto y `SizePanel_*` = 3 (AC2), 15 señales ocultas y contrastes 3,91 / 7,40 / 8,54 : 1 (AC3), cuerpo v3 + placa D26.7 visible fuera del cuerpo, y `Steam.emitting` al cocer con partículas visibles (AC4).
+- **`tools/verify.sh`**: verde — 118 scripts, 1366/1366 tests, smoke OK.
+- **Capturas** (1920×1080, `cd godot && xvfb-run -a godot --audio-driver Dummy --resolution 1920x1080 -s res://../docs/evidence/PUL-186/capture_boot.gd`): `level_01.png` (nivel completo), `seasoning_station.png` (dispensadores rojo/granate con placa e icono, cuenco navy, alfombrilla crema, zócalo navy), `kitchen_steam.png` (olla cociendo con vapor visible; sin bombona) y `box_shelf.png` (estantería sin cartones ni paneles).
+- **Fuera de alcance, visto en las capturas**: el suelo y el muro moteados son de `romeria_v2` (PUL-187); la tapa abierta de la olla es la geometría de D3 de PUL-144 (pospuesta).

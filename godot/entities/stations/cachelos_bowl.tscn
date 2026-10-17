@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://entities/stations/cachelos_bowl.gd" id="1_bowl"]
 [ext_resource type="PackedScene" path="res://assets/models/stations/seasoning_station/cachelos_bowl.glb" id="2_model"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="4_hl"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_brand_navy.tres" id="5_navy"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_bowl"]
 height = 0.3
@@ -53,16 +54,26 @@ no_depth_test = true
 render_priority = 20
 texture_filter = 1
 
+[node name="bowl" parent="Model/cachelos_bowl" index="2"]
+surface_material_override/0 = ExtResource("5_navy")
+
+[node name="Portions0" parent="Model/cachelos_bowl" index="3"]
+surface_material_override/0 = ExtResource("5_navy")
+
 [node name="Portions1" parent="Model/cachelos_bowl" index="4"]
+surface_material_override/0 = ExtResource("5_navy")
 visible = false
 
 [node name="Portions2" parent="Model/cachelos_bowl" index="5"]
+surface_material_override/0 = ExtResource("5_navy")
 visible = false
 
 [node name="Portions3" parent="Model/cachelos_bowl" index="6"]
+surface_material_override/0 = ExtResource("5_navy")
 visible = false
 
 [node name="Portions4" parent="Model/cachelos_bowl" index="7"]
+surface_material_override/0 = ExtResource("5_navy")
 visible = false
 
 [editable path="Model"]

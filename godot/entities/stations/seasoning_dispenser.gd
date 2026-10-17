@@ -18,9 +18,14 @@ const SIGN_MATERIAL: StringName = &"seasoning_signs"
 const PLATE_COLOR: Color = Color("F2EBDD")
 const ICON_COLOR: Color = Color("1B1B1F")
 const ICON_RATIO: float = 0.72
+## Lado de la placa frente al mayor lado del cartel cuando el cuerpo se pinta (`body_material`).
+const PAINTED_PLATE_RATIO: float = 0.55
 
 @export var seasoning: SeasoningData
 @export var station: SeasoningStation
+## Color plano v3 del cuerpo del bote (art-bible §5.3). El cartel del modelo se pinta con él y la
+## placa del icono queda encima, fuera del cuerpo. Sin él el cartel se oculta y solo se ve la placa.
+@export var body_material: Material
 
 ## Gesto visual de sal gorda, aceite y pimentón (>= 0,3 s); `%Gesture` es el pimentón y sus hijos
 ## `Salt` y `Oil` la sal gorda y el aceite. Opcional en escenas de prueba.
@@ -112,8 +117,9 @@ func _tint_paprika() -> void:
 	_gesture.material_override = paint
 
 
-## El modelo trae el mismo cartel (guindilla) en los dos dispensadores: se tapa y se coloca en su
-## sitio una placa con `seasoning.icon` (pimentonera o guindilla), la del ticket y la pegatina.
+## El modelo trae el mismo cartel (guindilla) en los dos dispensadores: se tapa (o se pinta con
+## `body_material`) y se coloca encima una placa con `seasoning.icon` (pimentonera o guindilla), la
+## del ticket y la pegatina (D26.7).
 func _show_own_icon() -> void:
 	if seasoning == null or seasoning.icon == null:
 		return
@@ -140,11 +146,17 @@ func _cover_sign(mesh: MeshInstance3D, surface: int) -> void:
 		bounds = bounds.expand(vertices[index])
 		if index < normals.size():
 			normal += normals[index]
-	var hidden: StandardMaterial3D = StandardMaterial3D.new()
-	hidden.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	hidden.albedo_color = Color(1.0, 1.0, 1.0, 0.0)
-	mesh.set_surface_override_material(surface, hidden)
 	var side: float = maxf(bounds.size.x, maxf(bounds.size.y, bounds.size.z))
+	var lift: float = 0.01
+	if body_material != null:
+		mesh.set_surface_override_material(surface, body_material)
+		side *= PAINTED_PLATE_RATIO
+		lift += _half_extent_along(bounds, normal.normalized())
+	else:
+		var hidden: StandardMaterial3D = StandardMaterial3D.new()
+		hidden.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		hidden.albedo_color = Color(1.0, 1.0, 1.0, 0.0)
+		mesh.set_surface_override_material(surface, hidden)
 	var plate: Sprite3D = _make_sprite(PLATE, side / PLATE.get_width(), 30)
 	plate.modulate = PLATE_COLOR
 	var icon: Sprite3D = _make_sprite(
@@ -155,8 +167,14 @@ func _cover_sign(mesh: MeshInstance3D, surface: int) -> void:
 	icon.name = "FrontIcon"
 	mesh.add_child(plate)
 	plate.add_child(icon)
-	plate.position = bounds.get_center() + normal.normalized() * 0.01
+	plate.position = bounds.get_center() + normal.normalized() * lift
 	plate.basis = Basis.looking_at(-normal.normalized()) if normal.length() > 0.001 else Basis()
+
+
+## Media anchura de [param bounds] según el eje unitario [param axis]: la placa sale del cuerpo.
+static func _half_extent_along(bounds: AABB, axis: Vector3) -> float:
+	var size: Vector3 = bounds.size
+	return 0.5 * (absf(size.x * axis.x) + absf(size.y * axis.y) + absf(size.z * axis.z))
 
 
 func _make_sprite(texture: Texture2D, pixel_size: float, priority: int) -> Sprite3D:
