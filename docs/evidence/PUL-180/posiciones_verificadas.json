@@ -1,0 +1,914 @@
+{
+	"dir_a_1080p": {
+		"camera_ortho_size": 12.74,
+		"camera_pos": [
+			0.7,
+			7.49,
+			5.86
+		],
+		"camera_rot_deg": [
+			-38.0,
+			0.0,
+			0.0
+		],
+		"elements": {
+			"Bar_SeasoningStation": {
+				"screen_xy_px": [
+					917.6,
+					734.5
+				],
+				"world_xyz": [
+					0.2,
+					0.0,
+					0.0
+				]
+			},
+			"Kitchen": {
+				"screen_xy_px": [
+					790.5,
+					525.7
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					-4.0
+				]
+			},
+			"Kitchen2": {
+				"screen_xy_px": [
+					960.0,
+					525.7
+				],
+				"world_xyz": [
+					0.7,
+					0.0,
+					-4.0
+				]
+			},
+			"OrderStand1": {
+				"screen_xy_px": [
+					620.9,
+					1034.6
+				],
+				"world_xyz": [
+					-3.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand2": {
+				"screen_xy_px": [
+					790.5,
+					1034.6
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand3": {
+				"screen_xy_px": [
+					1044.8,
+					1034.6
+				],
+				"world_xyz": [
+					1.7,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand4": {
+				"screen_xy_px": [
+					1214.3,
+					1034.6
+				],
+				"world_xyz": [
+					3.7,
+					0.0,
+					5.75
+				]
+			},
+			"Player1": {
+				"screen_xy_px": [
+					866.8,
+					812.5
+				],
+				"world_xyz": [
+					-0.4,
+					0.0,
+					1.5
+				]
+			},
+			"Player2": {
+				"screen_xy_px": [
+					688.7,
+					650.7
+				],
+				"world_xyz": [
+					-2.5,
+					0.0,
+					-1.6
+				]
+			}
+		}
+	},
+	"dir_a_800x370": {
+		"camera_ortho_size": 7.0,
+		"camera_pos": [
+			-0.39,
+			7.49,
+			10.04
+		],
+		"camera_rot_deg": [
+			-38.0,
+			0.0,
+			0.0
+		],
+		"elements": {
+			"Bar_SeasoningStation": {
+				"screen_xy_px": [
+					431.2,
+					170.3
+				],
+				"world_xyz": [
+					0.2,
+					0.0,
+					0.0
+				]
+			},
+			"Kitchen": {
+				"screen_xy_px": [
+					351.9,
+					40.2
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					-4.0
+				]
+			},
+			"Kitchen2": {
+				"screen_xy_px": [
+					457.6,
+					40.2
+				],
+				"world_xyz": [
+					0.7,
+					0.0,
+					-4.0
+				]
+			},
+			"OrderStand1": {
+				"screen_xy_px": [
+					246.2,
+					357.5
+				],
+				"world_xyz": [
+					-3.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand2": {
+				"screen_xy_px": [
+					351.9,
+					357.5
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand3": {
+				"screen_xy_px": [
+					510.5,
+					357.5
+				],
+				"world_xyz": [
+					1.7,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand4": {
+				"screen_xy_px": [
+					616.2,
+					357.5
+				],
+				"world_xyz": [
+					3.7,
+					0.0,
+					5.75
+				]
+			},
+			"Player1": {
+				"screen_xy_px": [
+					399.5,
+					219.0
+				],
+				"world_xyz": [
+					-0.4,
+					0.0,
+					1.5
+				]
+			},
+			"Player2": {
+				"screen_xy_px": [
+					288.5,
+					118.1
+				],
+				"world_xyz": [
+					-2.5,
+					0.0,
+					-1.6
+				]
+			}
+		}
+	},
+	"dir_b_1080p": {
+		"camera_ortho_size": 12.74,
+		"camera_pos": [
+			0.7,
+			7.49,
+			5.86
+		],
+		"camera_rot_deg": [
+			-38.0,
+			0.0,
+			0.0
+		],
+		"elements": {
+			"Bar_SeasoningStation": {
+				"screen_xy_px": [
+					917.6,
+					734.5
+				],
+				"world_xyz": [
+					0.2,
+					0.0,
+					0.0
+				]
+			},
+			"Kitchen": {
+				"screen_xy_px": [
+					790.5,
+					525.7
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					-4.0
+				]
+			},
+			"Kitchen2": {
+				"screen_xy_px": [
+					960.0,
+					525.7
+				],
+				"world_xyz": [
+					0.7,
+					0.0,
+					-4.0
+				]
+			},
+			"OrderStand1": {
+				"screen_xy_px": [
+					620.9,
+					1034.6
+				],
+				"world_xyz": [
+					-3.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand2": {
+				"screen_xy_px": [
+					790.5,
+					1034.6
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand3": {
+				"screen_xy_px": [
+					1044.8,
+					1034.6
+				],
+				"world_xyz": [
+					1.7,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand4": {
+				"screen_xy_px": [
+					1214.3,
+					1034.6
+				],
+				"world_xyz": [
+					3.7,
+					0.0,
+					5.75
+				]
+			},
+			"Player1": {
+				"screen_xy_px": [
+					866.8,
+					812.5
+				],
+				"world_xyz": [
+					-0.4,
+					0.0,
+					1.5
+				]
+			},
+			"Player2": {
+				"screen_xy_px": [
+					688.7,
+					650.7
+				],
+				"world_xyz": [
+					-2.5,
+					0.0,
+					-1.6
+				]
+			}
+		}
+	},
+	"dir_b_800x370": {
+		"camera_ortho_size": 7.0,
+		"camera_pos": [
+			-0.39,
+			7.49,
+			10.04
+		],
+		"camera_rot_deg": [
+			-38.0,
+			0.0,
+			0.0
+		],
+		"elements": {
+			"Bar_SeasoningStation": {
+				"screen_xy_px": [
+					431.2,
+					170.3
+				],
+				"world_xyz": [
+					0.2,
+					0.0,
+					0.0
+				]
+			},
+			"Kitchen": {
+				"screen_xy_px": [
+					351.9,
+					40.2
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					-4.0
+				]
+			},
+			"Kitchen2": {
+				"screen_xy_px": [
+					457.6,
+					40.2
+				],
+				"world_xyz": [
+					0.7,
+					0.0,
+					-4.0
+				]
+			},
+			"OrderStand1": {
+				"screen_xy_px": [
+					246.2,
+					357.5
+				],
+				"world_xyz": [
+					-3.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand2": {
+				"screen_xy_px": [
+					351.9,
+					357.5
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand3": {
+				"screen_xy_px": [
+					510.5,
+					357.5
+				],
+				"world_xyz": [
+					1.7,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand4": {
+				"screen_xy_px": [
+					616.2,
+					357.5
+				],
+				"world_xyz": [
+					3.7,
+					0.0,
+					5.75
+				]
+			},
+			"Player1": {
+				"screen_xy_px": [
+					399.5,
+					219.0
+				],
+				"world_xyz": [
+					-0.4,
+					0.0,
+					1.5
+				]
+			},
+			"Player2": {
+				"screen_xy_px": [
+					288.5,
+					118.1
+				],
+				"world_xyz": [
+					-2.5,
+					0.0,
+					-1.6
+				]
+			}
+		}
+	},
+	"dir_c_1080p": {
+		"camera_ortho_size": 12.74,
+		"camera_pos": [
+			0.7,
+			7.49,
+			5.86
+		],
+		"camera_rot_deg": [
+			-38.0,
+			0.0,
+			0.0
+		],
+		"elements": {
+			"Bar_SeasoningStation": {
+				"screen_xy_px": [
+					917.6,
+					734.5
+				],
+				"world_xyz": [
+					0.2,
+					0.0,
+					0.0
+				]
+			},
+			"Kitchen": {
+				"screen_xy_px": [
+					790.5,
+					525.7
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					-4.0
+				]
+			},
+			"Kitchen2": {
+				"screen_xy_px": [
+					960.0,
+					525.7
+				],
+				"world_xyz": [
+					0.7,
+					0.0,
+					-4.0
+				]
+			},
+			"OrderStand1": {
+				"screen_xy_px": [
+					620.9,
+					1034.6
+				],
+				"world_xyz": [
+					-3.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand2": {
+				"screen_xy_px": [
+					790.5,
+					1034.6
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand3": {
+				"screen_xy_px": [
+					1044.8,
+					1034.6
+				],
+				"world_xyz": [
+					1.7,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand4": {
+				"screen_xy_px": [
+					1214.3,
+					1034.6
+				],
+				"world_xyz": [
+					3.7,
+					0.0,
+					5.75
+				]
+			},
+			"Player1": {
+				"screen_xy_px": [
+					866.8,
+					812.5
+				],
+				"world_xyz": [
+					-0.4,
+					0.0,
+					1.5
+				]
+			},
+			"Player2": {
+				"screen_xy_px": [
+					688.7,
+					650.7
+				],
+				"world_xyz": [
+					-2.5,
+					0.0,
+					-1.6
+				]
+			}
+		}
+	},
+	"dir_c_800x370": {
+		"camera_ortho_size": 7.0,
+		"camera_pos": [
+			-0.39,
+			7.49,
+			10.04
+		],
+		"camera_rot_deg": [
+			-38.0,
+			0.0,
+			0.0
+		],
+		"elements": {
+			"Bar_SeasoningStation": {
+				"screen_xy_px": [
+					431.2,
+					170.3
+				],
+				"world_xyz": [
+					0.2,
+					0.0,
+					0.0
+				]
+			},
+			"Kitchen": {
+				"screen_xy_px": [
+					351.9,
+					40.2
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					-4.0
+				]
+			},
+			"Kitchen2": {
+				"screen_xy_px": [
+					457.6,
+					40.2
+				],
+				"world_xyz": [
+					0.7,
+					0.0,
+					-4.0
+				]
+			},
+			"OrderStand1": {
+				"screen_xy_px": [
+					246.2,
+					357.5
+				],
+				"world_xyz": [
+					-3.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand2": {
+				"screen_xy_px": [
+					351.9,
+					357.5
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand3": {
+				"screen_xy_px": [
+					510.5,
+					357.5
+				],
+				"world_xyz": [
+					1.7,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand4": {
+				"screen_xy_px": [
+					616.2,
+					357.5
+				],
+				"world_xyz": [
+					3.7,
+					0.0,
+					5.75
+				]
+			},
+			"Player1": {
+				"screen_xy_px": [
+					399.5,
+					219.0
+				],
+				"world_xyz": [
+					-0.4,
+					0.0,
+					1.5
+				]
+			},
+			"Player2": {
+				"screen_xy_px": [
+					288.5,
+					118.1
+				],
+				"world_xyz": [
+					-2.5,
+					0.0,
+					-1.6
+				]
+			}
+		}
+	},
+	"partida_1080p": {
+		"camera_ortho_size": 12.74,
+		"camera_pos": [
+			0.7,
+			7.49,
+			5.86
+		],
+		"camera_rot_deg": [
+			-38.0,
+			0.0,
+			0.0
+		],
+		"elements": {
+			"Bar_SeasoningStation": {
+				"screen_xy_px": [
+					917.6,
+					734.5
+				],
+				"world_xyz": [
+					0.2,
+					0.0,
+					0.0
+				]
+			},
+			"Kitchen": {
+				"screen_xy_px": [
+					790.5,
+					525.7
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					-4.0
+				]
+			},
+			"Kitchen2": {
+				"screen_xy_px": [
+					960.0,
+					525.7
+				],
+				"world_xyz": [
+					0.7,
+					0.0,
+					-4.0
+				]
+			},
+			"OrderStand1": {
+				"screen_xy_px": [
+					620.9,
+					1034.6
+				],
+				"world_xyz": [
+					-3.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand2": {
+				"screen_xy_px": [
+					790.5,
+					1034.6
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand3": {
+				"screen_xy_px": [
+					1044.8,
+					1034.6
+				],
+				"world_xyz": [
+					1.7,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand4": {
+				"screen_xy_px": [
+					1214.3,
+					1034.6
+				],
+				"world_xyz": [
+					3.7,
+					0.0,
+					5.75
+				]
+			},
+			"Player1": {
+				"screen_xy_px": [
+					866.8,
+					812.5
+				],
+				"world_xyz": [
+					-0.4,
+					0.0,
+					1.5
+				]
+			},
+			"Player2": {
+				"screen_xy_px": [
+					688.7,
+					650.7
+				],
+				"world_xyz": [
+					-2.5,
+					0.0,
+					-1.6
+				]
+			}
+		}
+	},
+	"partida_800x370": {
+		"camera_ortho_size": 7.0,
+		"camera_pos": [
+			-0.39,
+			7.49,
+			10.04
+		],
+		"camera_rot_deg": [
+			-38.0,
+			0.0,
+			0.0
+		],
+		"elements": {
+			"Bar_SeasoningStation": {
+				"screen_xy_px": [
+					431.1,
+					170.3
+				],
+				"world_xyz": [
+					0.2,
+					0.0,
+					0.0
+				]
+			},
+			"Kitchen": {
+				"screen_xy_px": [
+					351.8,
+					40.2
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					-4.0
+				]
+			},
+			"Kitchen2": {
+				"screen_xy_px": [
+					457.5,
+					40.2
+				],
+				"world_xyz": [
+					0.7,
+					0.0,
+					-4.0
+				]
+			},
+			"OrderStand1": {
+				"screen_xy_px": [
+					246.1,
+					357.4
+				],
+				"world_xyz": [
+					-3.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand2": {
+				"screen_xy_px": [
+					351.8,
+					357.4
+				],
+				"world_xyz": [
+					-1.3,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand3": {
+				"screen_xy_px": [
+					510.4,
+					357.4
+				],
+				"world_xyz": [
+					1.7,
+					0.0,
+					5.75
+				]
+			},
+			"OrderStand4": {
+				"screen_xy_px": [
+					616.1,
+					357.4
+				],
+				"world_xyz": [
+					3.7,
+					0.0,
+					5.75
+				]
+			},
+			"Player1": {
+				"screen_xy_px": [
+					399.4,
+					218.9
+				],
+				"world_xyz": [
+					-0.4,
+					0.0,
+					1.5
+				]
+			},
+			"Player2": {
+				"screen_xy_px": [
+					288.4,
+					118.1
+				],
+				"world_xyz": [
+					-2.5,
+					0.0,
+					-1.6
+				]
+			}
+		}
+	}
+}
