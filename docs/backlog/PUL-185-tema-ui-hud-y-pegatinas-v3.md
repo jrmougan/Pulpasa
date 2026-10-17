@@ -1,11 +1,11 @@
 ---
 id: PUL-185
 title: Actualizar el tema UI, el HUD, los tickets y la tinta de pegatinas a la paleta v3
-status: review
+status: done
 milestone: M3f
 role: ui-engineer
 deps: [PUL-181]
-orca_task: null
+orca_task: task_713cff7cb854
 unity_sources: []
 owns: [godot/ui/theme/default_theme.tres, godot/ui/widgets/sticker_ink.gd, godot/entities/items/badge_row.gd, godot/ui/tickets/ticket_entry.gd, godot/ui/hud/hud.tscn, godot/ui/tickets/order_ticket.tscn, godot/tests/unit/test_ui_theme_v3.gd*, godot/tests/integration/test_order_tickets.gd*, godot/tests/integration/test_hud.gd*, docs/evidence/PUL-185/**, docs/backlog/PUL-185-tema-ui-hud-y-pegatinas-v3.md]
 touches_scenes: [godot/ui/hud/hud.tscn, godot/ui/tickets/order_ticket.tscn]
