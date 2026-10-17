@@ -1,11 +1,11 @@
 ---
 id: PUL-186
 title: Asignar materiales planos v3 y podar atrezo en encimeras y estaciones
-status: review
+status: done
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-182]
-orca_task: null
+orca_task: task_bc9316a466ee
 unity_sources: []
 owns: [godot/assets/models/furniture/counters/*.glb.import, godot/assets/models/stations/**/*.glb.import, godot/entities/environment/kitchen_layout.tscn, godot/entities/stations/kitchen.tscn, godot/entities/stations/octopus_storage.tscn, godot/entities/stations/cachelos_storage.tscn, godot/entities/stations/box_shelf.tscn, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn, godot/entities/stations/trash_bin.tscn, godot/entities/stations/slot.tscn, godot/entities/stations/seasoning_dispenser.gd*, godot/tests/integration/test_stations_v3.gd*, docs/evidence/PUL-186/**, docs/backlog/PUL-186-encimeras-suelo-y-estaciones-v3.md]
 touches_scenes: [godot/entities/environment/kitchen_layout.tscn, godot/entities/stations/kitchen.tscn, godot/entities/stations/octopus_storage.tscn, godot/entities/stations/cachelos_storage.tscn, godot/entities/stations/box_shelf.tscn, godot/entities/stations/seasoning_station.tscn, godot/entities/stations/seasoning_dispenser.tscn, godot/entities/stations/cachelos_bowl.tscn, godot/entities/stations/trash_bin.tscn, godot/entities/stations/slot.tscn]
