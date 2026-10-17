@@ -1,0 +1,214 @@
+================================================================================
+PUL-181: Verificación estricta de nombres frente a slots_reales.md y godot/
+================================================================================
+Total de slots normativos en slots_reales.md §2: 68
+Total de modelos .glb inventariados en slots_reales.md §1: 40
+Total de nodos y mallas válidos conocidos: 786
+Archivos inspeccionados: 9
+  - docs/art/art-bible.md
+  - docs/backlog/PUL-182-biblioteca-materiales-planos-v3.md
+  - docs/backlog/PUL-183-luz-entorno-y-postproceso-v3.md
+  - docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md
+  - docs/backlog/PUL-185-tema-ui-hud-y-pegatinas-v3.md
+  - docs/backlog/PUL-186-encimeras-suelo-y-estaciones-v3.md
+  - docs/backlog/PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  - docs/backlog/PUL-188-integracion-level01-y-limpieza-v2.md
+  - docs/backlog/PUL-189-qa-visual-y-rendimiento-v3.md
+--------------------------------------------------------------------------------
+
+## 1. Slots de material encontrados y verificados:
+  [OK] `atlas_box` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `atlas_cachelos` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `atlas_cachelos_storage` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `atlas_octopus` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `counter_pass_signs` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `counters_atlas` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `delivery_zone_off` -> PUL-186-encimeras-suelo-y-estaciones-v3.md
+  [OK] `env_atlas` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `env_board` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, PUL-189-qa-visual-y-rendimiento-v3.md, art-bible.md
+  [OK] `env_fence` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `env_fern` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `env_foliage` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `env_plate` -> PUL-182-biblioteca-materiales-planos-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, PUL-189-qa-visual-y-rendimiento-v3.md, art-bible.md
+  [OK] `env_puddle` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `env_sign` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, PUL-189-qa-visual-y-rendimiento-v3.md, art-bible.md
+  [OK] `env_track` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `kiosk_delivery_signs` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_burlap` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_canvas_paper` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_canvas_red` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_canvas_stand_1` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_canvas_stand_2` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_canvas_stand_3` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_canvas_stand_4` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_canvas_stripe` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `mat_cardboard` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_clay` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_cloth_pants` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_cloth_player_1` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_cloth_player_2` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_cloth_shirt` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_cook_atlas` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_emissive_bulb` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_emissive_screen` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_food_octopus_burnt` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_food_octopus_cooked` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_food_octopus_pieces` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_food_octopus_raw` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_food_potato_burnt` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_food_potato_cooked` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_food_potato_raw` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_food_tray_liner` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_glass_water` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_granite` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_grass` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_ground_dirt` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_outline_hull` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, PUL-188-integracion-level01-y-limpieza-v2.md, art-bible.md
+  [OK] `mat_paint_worn_beige` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_paint_worn_grey` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_plastic_blue` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_plastic_red` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_rubber` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_rubber_hose_green` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_rubber_hose_red` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_skin_dark` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_skin_light` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_steel_brushed` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_steel_brushed_mid` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_steel_brushed_top` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `mat_steel_dark` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_sticker_atlas` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, PUL-188-integracion-level01-y-limpieza-v2.md, art-bible.md
+  [OK] `mat_wood_dark` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `mat_wood_light` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `mat_wood_used` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `order_stand_atlas` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `pot_water` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `seasoning_signs` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `seasoning_station_atlas` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+
+Total slots únicos citados y validados: 68
+
+## 2. Modelos .glb encontrados y verificados:
+  [OK] `back_e.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `back_w.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `box.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `box_shelf.glb` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `cachelos.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `cachelos_bowl.glb` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `cachelos_pieces.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `cachelos_storage.glb` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `cook.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `ground_e.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `ground_w.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `materials_v2_test.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `octopus.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `octopus_pieces.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `octopus_storage.glb` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `order_stand.glb` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `pot.glb` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `props_e.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `props_w.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `rail_1m.glb` -> art-bible.md
+  [OK] `seasoning_dispenser.glb` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `seasoning_station.glb` -> art-bible.md
+  [OK] `tent.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `test_cube.glb` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `trash_bin.glb` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+
+Total modelos .glb únicos citados y validados: 25
+
+## 3. Texturas verificadas:
+  [OK] `res://assets/models/environment/romeria_v2/tent_plate_albedo.png` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, PUL-188-integracion-level01-y-limpieza-v2.md, art-bible.md
+
+Total texturas únicas citadas y validadas: 1
+
+## 4. Nodos y mallas encontrados y verificados:
+  [OK] `%CookRing` -> art-bible.md
+  [OK] `%CutCounter` -> art-bible.md
+  [OK] `%DeliveryZone` -> PUL-184-puestos-entrega-y-numeros-v3.md
+  [OK] `%Gesture` -> art-bible.md
+  [OK] `%OrderLabel` -> PUL-184-puestos-entrega-y-numeros-v3.md, art-bible.md
+  [OK] `%Stripe` -> art-bible.md
+  [OK] `Anchor_Hold` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `BackBetweenStoragePot/Model/props_crock` -> art-bible.md
+  [OK] `BackCounter/BackBetweenStoragePot/Model/props_crock` -> PUL-186-encimeras-suelo-y-estaciones-v3.md
+  [OK] `BackCounter/BackRight/Model/props_board` -> PUL-186-encimeras-suelo-y-estaciones-v3.md
+  [OK] `BackCounter/BackRight/Model/props_crock` -> PUL-186-encimeras-suelo-y-estaciones-v3.md
+  [OK] `BackRight/Model/props_board` -> art-bible.md
+  [OK] `BackRight/Model/props_crock` -> art-bible.md
+  [OK] `Bulbs` -> PUL-183-luz-entorno-y-postproceso-v3.md, PUL-189-qa-visual-y-rendimiento-v3.md, art-bible.md
+  [OK] `CachelosBowl` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `CameraRig` -> PUL-188-integracion-level01-y-limpieza-v2.md, PUL-189-qa-visual-y-rendimiento-v3.md, art-bible.md
+  [OK] `Environment` -> PUL-183-luz-entorno-y-postproceso-v3.md
+  [OK] `Environment/Bulbs` -> art-bible.md
+  [OK] `Floor/Mesh` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `HUD` -> PUL-185-tema-ui-hud-y-pegatinas-v3.md
+  [OK] `HotDressing` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `Kitchen` -> PUL-189-qa-visual-y-rendimiento-v3.md
+  [OK] `Model/Cachelos` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `Model/Octopus` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `Model/Pot/pot/gas_bottle` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `Model/Tent/tent/tent_plate` -> art-bible.md
+  [OK] `Model/Tent/tent/tent_structure` -> art-bible.md
+  [OK] `Model/box_shelf/cartons` -> art-bible.md
+  [OK] `Model/octopus_storage/pump` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `Model/order_stand/OrderPlateFrame` -> art-bible.md
+  [OK] `Model/order_stand/OrderPlatePaper` -> art-bible.md
+  [OK] `OrderPlateFrame` -> PUL-184-puestos-entrega-y-numeros-v3.md, art-bible.md
+  [OK] `OrderPlatePaper` -> PUL-184-puestos-entrega-y-numeros-v3.md, art-bible.md
+  [OK] `OrderTicketsPanel` -> PUL-185-tema-ui-hud-y-pegatinas-v3.md
+  [OK] `ServiceFascia` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `ServiceMat` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `SizePanel_large` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `SizePanel_medium` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `SizePanel_small` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `StandNumber` -> PUL-184-puestos-entrega-y-numeros-v3.md, art-bible.md
+  [OK] `Steam` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `Sun` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `SweetDressing` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `Vignette` -> PUL-183-luz-entorno-y-postproceso-v3.md, PUL-189-qa-visual-y-rendimiento-v3.md, art-bible.md
+  [OK] `WallLeftKitchen/Model/props_crock` -> art-bible.md
+  [OK] `WallRight/Model/props_board` -> art-bible.md
+  [OK] `Walls/WallLeftKitchen/Model/props_crock` -> PUL-186-encimeras-suelo-y-estaciones-v3.md
+  [OK] `Walls/WallRight/Model/props_board` -> PUL-186-encimeras-suelo-y-estaciones-v3.md
+  [OK] `back_e_fence` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `back_e_props` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `back_w_fence` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `back_w_props` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `cachelos_burnt` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `cachelos_cooked` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `cachelos_pieces` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `cachelos_raw` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `cachelos_storage` -> art-bible.md
+  [OK] `cartons` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `gas_bottle` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `ground_e` -> art-bible.md
+  [OK] `ground_e_decals` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `ground_w` -> art-bible.md
+  [OK] `ground_w_decals` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `labels` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `octopus_burnt` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md
+  [OK] `octopus_cooked` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `octopus_pieces` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `octopus_raw` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+  [OK] `octopus_storage` -> art-bible.md
+  [OK] `paprika_hot` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `paprika_sweet` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `props_board` -> PUL-186-encimeras-suelo-y-estaciones-v3.md
+  [OK] `props_crock` -> PUL-186-encimeras-suelo-y-estaciones-v3.md
+  [OK] `props_e_garlands` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `props_e_props` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `props_e_tables` -> art-bible.md
+  [OK] `props_w_garlands` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `props_w_props` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `props_w_tables` -> art-bible.md
+  [OK] `pump` -> PUL-186-encimeras-suelo-y-estaciones-v3.md, art-bible.md
+  [OK] `tent_awning` -> PUL-183-luz-entorno-y-postproceso-v3.md
+  [OK] `tent_bulbs` -> PUL-183-luz-entorno-y-postproceso-v3.md, art-bible.md
+  [OK] `tent_plate` -> PUL-183-luz-entorno-y-postproceso-v3.md, PUL-187-materiales-entorno-comida-y-personajes-v3.md, PUL-189-qa-visual-y-rendimiento-v3.md, art-bible.md
+  [OK] `tent_structure` -> PUL-187-materiales-entorno-comida-y-personajes-v3.md, art-bible.md
+
+Total nodos y mallas únicos citados y validados: 84
+
+--------------------------------------------------------------------------------
+RESULTADO: TODOS LOS NOMBRES, SLOTS, .GLB, TEXTURAS, NODOS Y MALLAS COINCIDEN AL 100% (0 errores).
