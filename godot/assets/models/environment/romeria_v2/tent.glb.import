@@ -39,7 +39,60 @@ import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={}
+_subresources={
+"materials": {
+"env_atlas": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_wall_granite.tres",
+"use_external/path": "res://assets/materials/v3/mat_wall_granite.tres"
+},
+"env_board": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_hidden_alpha.tres",
+"use_external/path": "res://assets/materials/v3/mat_hidden_alpha.tres"
+},
+"env_plate": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_tent_plate.tres",
+"use_external/path": "res://assets/materials/v3/mat_tent_plate.tres"
+},
+"env_sign": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_hidden_alpha.tres",
+"use_external/path": "res://assets/materials/v3/mat_hidden_alpha.tres"
+},
+"mat_canvas_paper": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_ui_cream.tres",
+"use_external/path": "res://assets/materials/v3/mat_ui_cream.tres"
+},
+"mat_canvas_red": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_brand_red.tres",
+"use_external/path": "res://assets/materials/v3/mat_brand_red.tres"
+},
+"mat_cloth_pants": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_brand_navy.tres",
+"use_external/path": "res://assets/materials/v3/mat_brand_navy.tres"
+},
+"mat_emissive_bulb": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_p2_amber.tres",
+"use_external/path": "res://assets/materials/v3/mat_p2_amber.tres"
+},
+"mat_paint_worn_grey": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_wall_granite.tres",
+"use_external/path": "res://assets/materials/v3/mat_wall_granite.tres"
+},
+"mat_rubber": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://assets/materials/v3/mat_state_burnt.tres",
+"use_external/path": "res://assets/materials/v3/mat_state_burnt.tres"
+}
+}
+}
 gltf/naming_version=2
-gltf/embedded_image_handling=1
+gltf/embedded_image_handling=0
 gltf/texture_map_mode=0

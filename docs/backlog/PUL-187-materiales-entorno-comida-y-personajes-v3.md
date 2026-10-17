@@ -1,13 +1,13 @@
 ---
 id: PUL-187
 title: Asignar materiales planos v3 a entorno, comida, cajas y personajes
-status: in_progress
+status: review
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-182, PUL-183]
 orca_task: null
 unity_sources: []
-owns: [godot/assets/models/environment/romeria_v2/*.glb.import, godot/assets/models/characters/cook/*.glb.import, godot/assets/models/food/**/*.glb.import, godot/assets/models/items/box/*.glb.import, godot/assets/models/_pipeline/**/*.glb.import, godot/entities/items/box.tscn, godot/entities/items/octopus.tscn, godot/entities/items/cachelos.tscn, godot/entities/player/player.tscn, godot/tests/unit/test_items_and_env_v3.gd*, docs/evidence/PUL-187/**, docs/backlog/PUL-187-materiales-entorno-comida-y-personajes-v3.md]
+owns: [godot/assets/models/environment/romeria_v2/*.glb.import, godot/assets/models/characters/cook/*.glb.import, godot/assets/models/food/**/*.glb.import, godot/assets/models/items/box/*.glb.import, godot/assets/models/_pipeline/**/*.glb.import, godot/entities/items/box.tscn, godot/entities/items/octopus.tscn, godot/entities/items/cachelos.tscn, godot/entities/player/player.tscn, godot/tests/unit/test_items_and_env_v3.gd*, godot/tests/integration/test_cachelos.gd*, godot/tests/integration/test_cooking_station.gd*, docs/evidence/PUL-187/**, docs/backlog/PUL-187-materiales-entorno-comida-y-personajes-v3.md]
 touches_scenes: [godot/entities/items/box.tscn, godot/entities/items/octopus.tscn, godot/entities/items/cachelos.tscn, godot/entities/player/player.tscn]
 ---
 
@@ -47,14 +47,27 @@ Vincular los materiales planos de `godot/assets/materials/v3/` al entorno de la 
 - Configurar `gltf/embedded_image_handling = 0` y `materials/extract = 0` en todos los `.glb.import` modificados.
 
 ## Acceptance
-- [ ] AC1 Given `tent.glb` instanciado en `test_items_and_env_v3.gd`, When se inspeccionan los materiales de `tent_structure` y `tent_plate`, Then las superficies `env_sign` y `env_board` usan `mat_hidden_alpha.tres` (`albedo_color.a == 0.0`) y `tent_plate` usa `mat_tent_plate.tres` con textura albedo `res://assets/models/environment/romeria_v2/tent_plate_albedo.png`.
-- [ ] AC2 Given `octopus.tscn` y `cachelos.tscn` en sus 3 estados (`RAW`, `COOKED`, `BURNT`), When `test_items_and_env_v3.gd` mide sus albedos, Then coinciden con `#E0AFB2`/`#B8283D`/`#2A2320` (pulpo) y `#8E6B47`/`#F2D56B`/`#2A2320` (cachelos), con contraste crudo/cocido **≥ 3.20 : 1** (`3.21 : 1` y `3.34 : 1`).
-- [ ] AC3 Given `box.tscn`, When `test_items_and_env_v3.gd` inspecciona el exterior, el interior, `Model/Octopus` (`octopus_pieces`) y `Model/Cachelos` (`cachelos_pieces`), Then usan `#C8402F`, `#EDE8DF`, `#B8283D` y `#F2D56B`, todos con contraste **≥ 4.0 : 1** frente a la capa inmediatamente inferior.
-- [ ] AC4 Given `player.tscn` para J1 y J2, When `test_items_and_env_v3.gd` comprueba el delantal y el aro activo, Then J1 usa `#2F6FB5` y J2 usa `#F2C230` sin texturas PBR.
-- [ ] AC5 `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
+- [x] AC1 Given `tent.glb` instanciado en `test_items_and_env_v3.gd`, When se inspeccionan los materiales de `tent_structure` y `tent_plate`, Then las superficies `env_sign` y `env_board` usan `mat_hidden_alpha.tres` (`albedo_color.a == 0.0`) y `tent_plate` usa `mat_tent_plate.tres` con textura albedo `res://assets/models/environment/romeria_v2/tent_plate_albedo.png`.
+- [x] AC2 Given `octopus.tscn` y `cachelos.tscn` en sus 3 estados (`RAW`, `COOKED`, `BURNT`), When `test_items_and_env_v3.gd` mide sus albedos, Then coinciden con `#E0AFB2`/`#B8283D`/`#2A2320` (pulpo) y `#8E6B47`/`#F2D56B`/`#2A2320` (cachelos), con contraste crudo/cocido **≥ 3.20 : 1** (`3.21 : 1` y `3.34 : 1`).
+- [x] AC3 Given `box.tscn`, When `test_items_and_env_v3.gd` inspecciona el exterior, el interior, `Model/Octopus` (`octopus_pieces`) y `Model/Cachelos` (`cachelos_pieces`), Then usan `#C8402F`, `#EDE8DF`, `#B8283D` y `#F2D56B`, todos con contraste **≥ 4.0 : 1** frente a la capa inmediatamente inferior.
+- [x] AC4 Given `player.tscn` para J1 y J2, When `test_items_and_env_v3.gd` comprueba delantal/gorro, camisa, pantalón y piel de `cook.glb`, Then J1 usa `#2F6FB5` y J2 usa `#F2C230` (camisa `#F7F4EC`, pantalón `#1D3557`, piel de J1 `#E0AFB2`) sin texturas PBR. Los aros activos `ring_active_p1/p2` **no cambian** (`#1F5FBF`/`#B8325E`): D26 veta el aro ámbar/amarillo (decisión del coordinador, opción A, 2026-10-17).
+- [x] AC5 `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
 
 ## Plan
-(Lo escribe el worker antes de empezar.)
+1. Inspeccionar el glTF JSON de cada `.glb` (slots y nodos reales) y contrastarlo con `slots_reales.md` §1-§2.
+2. Reescribir `_subresources["materials"]` de los 13 `.glb.import` de entorno, comida, caja y cocinero con `use_external` a `res://assets/materials/v3/*.tres`; `embedded_image_handling=0` y `materials/extract=0` en todos (también `_pipeline/`, sin mapeo: no están en el mundo). En `cook.glb.import` se inserta `materials` sin tocar el bloque `animations`.
+3. Dejar sin mapear los slots funcionales de `box.glb` (`mat_outline_hull`, `mat_sticker_atlas`).
+4. Sin cambios en `octopus.tscn`/`cachelos.tscn`/`box.tscn`/`player.tscn`: la conmutación por visibilidad ya la hace `Ingredient._apply_state_variants()` y las capas de la caja heredan de los `.glb.import` de piezas.
+5. Test `test_items_and_env_v3.gd` (AC1-AC4) y capturas con `xvfb-run -a`.
 
 ## Evidence
-(Lo rellena el worker.)
+- **Mapeos** (`_subresources["materials"]` con `use_external`, `embedded_image_handling=0`, `materials/extract=0`): `back_e/w`, `ground_e/w`, `props_e/w`, `tent`, `octopus`, `octopus_pieces`, `cachelos`, `cachelos_pieces`, `box`, `cook` (`.glb.import`); `_pipeline/materials_v2_test` y `test_cube` solo con los dos flags (activos de prueba, sin mapeo). Comprobado superficie a superficie tras `godot --import`: cada slot real acaba en el `.tres` v3 de la ficha. En `cook.glb.import` se insertó `materials` sin tocar `animations`.
+- **Slots funcionales de `box.glb`**: `mat_outline_hull` y `mat_sticker_atlas` sin mapear (test `test_box_keeps_functional_slots`). `sticker` ya va oculto por `BoxModel`, así que no importa que pierda su textura embebida.
+- **Escenas**: no hizo falta tocar `octopus.tscn`, `cachelos.tscn`, `box.tscn` ni `player.tscn`. El cambio de estado por visibilidad ya lo hace `Ingredient._apply_state_variants()` y las capas de la caja heredan los materiales de los `.glb.import` de piezas.
+- **`env_track`/`env_puddle`**: `ground_*_decals` ya va con `visible = false` en `entities/environment/environment.tscn` (cubierto por `test_render_config.gd`). Se probó `import/skip_import` y se descartó porque deja un override huérfano en `environment.tscn` (aviso «has vanished»). Esos dos slots quedan sin mapear.
+- **Tests**: `godot/tests/unit/test_items_and_env_v3.gd` (7 tests, AC1-AC4, más «entorno solo con `.tres` v3» y slots funcionales de la caja). Contrastes medidos: pulpo crudo/cocido 3.21, cachelos crudo/cocido 3.34; caja exterior/interior 4.07, pulpo/interior 5.05, cachelos/pulpo 4.26.
+- **Tests ajenos actualizados** (autorizado por el coordinador, owns ampliados): `test_cachelos.gd::test_pul046_state_meshes_and_palette` y `test_cooking_station.gd::test_ac2_cooked_octopus_shows_cooked_mesh`. Solo cambian los nombres de material v2 por los v3 (`mat_potato_raw`, `mat_cachelos_cooked`, `mat_octopus_cooked`, `mat_octopus_raw`). La comprobación de luminosidad cocido > crudo sigue igual y pasa.
+- **Capturas** (`xvfb-run -a`, `--audio-driver Dummy`, scripts `capture_boot.gd` y `capture.gd`): `docs/evidence/PUL-187/level_01.png` (nivel completo) y `items_v3.png` (pulpo y cachelos en sus 3 estados, caja llena con cachelos, cocineros J1 y J2).
+- **Discrepancia biblia / D26 (para que el coordinador corrija la biblia)**: art-bible §3.1 (filas `p1_blue`/`p2_amber`) y §3.2 (`mat_p1_blue`/`mat_p2_amber`) pintan los aros `ring_active_p1/p2` en `#2F6FB5`/`#F2C230`. D26 y `test_player_ring.gd` vetan el aro ámbar o amarillo. Decisión del coordinador (opción A): los aros siguen en `#1F5FBF`/`#B8325E` y AC4 se reescribió en ese sentido.
+- **Pregunta abierta para el responsable**: en `level_01.png` se ve un panel gris vacío sobre el toldo. La cara `env_sign` sí queda oculta con `mat_hidden_alpha.tres`. Lo que se ve es el marco/trasera del cartel, que está en el slot compartido `env_atlas` de `tent_structure` (franja y 3.57–5.2 m) y ahora sale en `mat_wall_granite.tres`. Ocultarlo exige remodelar `tent.glb` (fuera de alcance) o un recorte en escena. ¿Se deja así o se abre ficha?
+- **Notas**: la piel de J2 usa `mat_skin_dark` → `mat_potato_raw.tres` (`#8E6B47`), según la tabla normativa. Los PNG extraídos de v2 siguen en disco sin uso (salvo `tent_plate_albedo.png`); los limpia PUL-188.
