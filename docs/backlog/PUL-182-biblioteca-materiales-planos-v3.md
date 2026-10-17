@@ -1,11 +1,11 @@
 ---
 id: PUL-182
 title: Crear la biblioteca de materiales planos v3
-status: review
+status: done
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-181]
-orca_task: null
+orca_task: task_d65ad77645af
 unity_sources: []
 owns: [godot/assets/materials/v3/**, godot/tests/unit/test_materials_v3.gd*, docs/evidence/PUL-182/**, docs/backlog/PUL-182-biblioteca-materiales-planos-v3.md]
 touches_scenes: []
