@@ -1,7 +1,7 @@
 ---
 id: PUL-184
 title: Aplicar la paleta v3 y números macizos legibles en móvil a los puestos de entrega
-status: draft
+status: in_progress
 milestone: M3f
 role: ui-engineer
 deps: [PUL-181, PUL-182]

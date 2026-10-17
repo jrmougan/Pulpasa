@@ -1,7 +1,7 @@
 ---
 id: PUL-186
 title: Asignar materiales planos v3 y podar atrezo en encimeras y estaciones
-status: draft
+status: in_progress
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-182]

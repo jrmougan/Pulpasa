@@ -1,7 +1,7 @@
 ---
 id: PUL-187
 title: Asignar materiales planos v3 a entorno, comida, cajas y personajes
-status: draft
+status: in_progress
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-182, PUL-183]
