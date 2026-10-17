@@ -17,7 +17,7 @@ normativos de §3.4 frente a cada superficie donde aparecen.
 | 6 | `brand_red` | `#C8402F` | 0.1615 | `mat_brand_red.tres` | 0.80 | Exterior de caja de reparto (`box_outside`), toldo del puesto 1, acento de marca PulpaSA y barra de paciencia (<30 %) |
 | 7 | `ui_cream` | `#F7F4EC` | 0.9053 | `mat_ui_cream.tres` | 0.90 | Sal gruesa (§3.4), placa `OrderPlatePaper`, dígito frontal `StandNumber` (`1..4`), rayas impares del toldo, camisa/gorro de cocinero, papel de ticket y texto principal HUD |
 | 8 | `octopus_raw` | `#E0AFB2` | 0.4972 | `mat_octopus_raw.tres` | 0.88 | Pulpo crudo (cuerpo y tentáculos en arcón, mano, encimera y olla) y piel de personajes |
-| 9 | `octopus_cooked` | `#B8283D` | 0.1204 | `mat_octopus_cooked.tres` | 0.65 | Pulpo cocido entero y rodajas (`FillHalf`, `FillFull`) dentro de la caja |
+| 9 | `octopus_cooked` | `#B8283D` | 0.1204 | `mat_octopus_cooked.tres` | 0.65 | Pulpo cocido entero y rodajas (`Model/Octopus`, `octopus_pieces`) dentro de la caja |
 | 10 | `potato_raw` | `#8E6B47` | 0.1672 | `mat_potato_raw.tres` | 0.92 | Patata cruda con piel, madera cálida secundaria y borde histórico de cachelos (§3.4) |
 | 11 | `cachelos_cooked` | `#F2D56B` | 0.6753 | `mat_cachelos_cooked.tres` | 0.80 | Cachelos cocidos (§3.4), icono/pegatina de cachelos y flecha/etiqueta `potato` en la estación de condimentos |
 | 12 | `state_burnt` | `#2A2320` | 0.0180 | `mat_state_burnt.tres` | 0.95 | Ingrediente quemado (pulpo o cachelos), boca interior de olla y cubo de basura, tinta `StickerInk` (`#2A2320`) y pozos oscuros HUD (`UiHeader`, `DisplayWell`) |

@@ -85,7 +85,7 @@ PALETTE_V3: list[tuple[int, str, str, str, float, str]] = [
         "#B8283D",
         "mat_octopus_cooked.tres",
         0.65,
-        "Pulpo cocido entero y rodajas (`FillHalf`, `FillFull`) dentro de la caja",
+        "Pulpo cocido entero y rodajas (`Model/Octopus`, `octopus_pieces`) dentro de la caja",
     ),
     (
         10,

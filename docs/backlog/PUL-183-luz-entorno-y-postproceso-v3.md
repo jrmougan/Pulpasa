@@ -36,7 +36,7 @@ Aplicar la configuración de luz diurna, `WorldEnvironment`, post-proceso (SSAO 
 ## Acceptance
 - [ ] AC1 Given `godot/data/config/render_config.tres`, When se ejecuta `test_render_config.gd`, Then `background_mode == BG_COLOR`, `background_color` es `#4FA05A`, `ambient_light_energy` es `0.72 ± 0.01`, `ssao_enabled == true` (`ssao_radius == 0.45 ± 0.01`, `ssao_intensity == 1.1 ± 0.05`), `glow_enabled == false`, `adjustment_color_correction == null` y `tilt_shift_enabled == false`.
 - [ ] AC2 Given `godot/entities/environment/environment.tscn`, When se instancia en `test_level_01.gd`, Then `Sun.light_energy` es `1.18 ± 0.01`, `Sun.shadow_blur` es `3.2 ± 0.1`, `Bulbs.visible == false` (0 `OmniLight3D` visibles en el subárbol) y `Vignette.visible == false`.
-- [ ] AC3 Given `environment.tscn`, When se inspeccionan los nodos `ground_*_decals`, `back_*_props`, `back_*_fence`, `tent_bulbs`, `props_*_garlands` y `props_*_props`, Then los 11 tienen `is_visible_in_tree() == false`, mientras que `tent_canopy`, `tent_plate`, `back_*_wall` y `props_*_tables` siguen visibles.
+- [ ] AC3 Given `environment.tscn`, When se inspeccionan los nodos `ground_*_decals`, `back_*_props`, `back_*_fence`, `tent_bulbs`, `props_*_garlands` y `props_*_props`, Then los 11 tienen `is_visible_in_tree() == false`, mientras que `tent_awning`, `tent_plate`, `back_*_wall` y `props_*_tables` siguen visibles.
 - [ ] AC4 Given una captura de `environment.tscn` en `docs/evidence/PUL-183/`, When se inspecciona, Then no hay viñeta perimetral ni manchas de luz puntual sobre el suelo.
 - [ ] AC5 `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
 

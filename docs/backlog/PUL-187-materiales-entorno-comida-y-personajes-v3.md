@@ -34,8 +34,8 @@ Vincular los materiales planos de `godot/assets/materials/v3/` al entorno de la 
    - Mapear el slot real exterior `mat_plastic_red` → `mat_brand_red.tres` (`#C8402F`).
    - Mapear el slot `atlas_box` / interior de caja en `box.tscn` → `mat_surface_top.tres` (`#EDE8DF`, contraste con el exterior **4.07 : 1**).
    - Conservar los slots funcionales `mat_outline_hull` (shader selección/outline) y `mat_sticker_atlas` (pegatinas 3D).
-   - Capas de pulpo cortado (`FillHalf`, `FillFull`, `octopus_pieces`) → `mat_octopus_cooked.tres` (`#B8283D`, contraste **5.05 : 1** sobre el fondo `#EDE8DF`).
-   - Capa de cachelos (`CachelosLayer`) → `mat_cachelos_cooked.tres` (`#F2D56B`, contraste **4.26 : 1** sobre la cama de pulpo `#B8283D`).
+   - Capas de pulpo cortado (`Model/Octopus`, `octopus_pieces`) → `mat_octopus_cooked.tres` (`#B8283D`, contraste **5.05 : 1** sobre el fondo `#EDE8DF`).
+   - Capa de cachelos (`Model/Cachelos`, `cachelos_pieces`) → `mat_cachelos_cooked.tres` (`#F2D56B`, contraste **4.26 : 1** sobre la cama de pulpo `#B8283D`).
 4. En `godot/assets/models/characters/cook/*.glb.import`, `godot/entities/player/player.tscn` y `godot/assets/models/_pipeline/**/*.glb.import`:
    - Configurar `gltf/embedded_image_handling = 0` y `materials/extract = 0` en `cook.glb.import` (slots reales exhaustivos de `slots_reales.md`: `mat_cloth_player_1` a `mat_p1_blue.tres`, `mat_cloth_player_2` a `mat_p2_amber.tres`, `mat_cloth_shirt` a `mat_ui_cream.tres`, `mat_cloth_pants` a `mat_brand_navy.tres`, `mat_skin_light` a `mat_octopus_raw.tres`, `mat_skin_dark` a `mat_potato_raw.tres`, `mat_rubber` a `mat_state_burnt.tres`, `mat_wood_dark` a `mat_potato_raw.tres`, `mat_canvas_red` a `mat_brand_red.tres`, `mat_cook_atlas` a `mat_brand_navy.tres`).
    - Configurar `gltf/embedded_image_handling = 0` y `materials/extract = 0` en los modelos de prueba de `_pipeline/` (`materials_v2_test.glb`: `mat_steel_brushed`, `mat_plastic_red`, `mat_wood_used`; `test_cube.glb`: `mat_wood_light`, `mat_canvas_stripe`).
@@ -49,7 +49,7 @@ Vincular los materiales planos de `godot/assets/materials/v3/` al entorno de la 
 ## Acceptance
 - [ ] AC1 Given `tent.glb` instanciado en `test_items_and_env_v3.gd`, When se inspeccionan los materiales de `tent_structure` y `tent_plate`, Then las superficies `env_sign` y `env_board` usan `mat_hidden_alpha.tres` (`albedo_color.a == 0.0`) y `tent_plate` usa `mat_tent_plate.tres` con textura albedo `res://assets/models/environment/romeria_v2/tent_plate_albedo.png`.
 - [ ] AC2 Given `octopus.tscn` y `cachelos.tscn` en sus 3 estados (`RAW`, `COOKED`, `BURNT`), When `test_items_and_env_v3.gd` mide sus albedos, Then coinciden con `#E0AFB2`/`#B8283D`/`#2A2320` (pulpo) y `#8E6B47`/`#F2D56B`/`#2A2320` (cachelos), con contraste crudo/cocido **≥ 3.20 : 1** (`3.21 : 1` y `3.34 : 1`).
-- [ ] AC3 Given `box.tscn`, When `test_items_and_env_v3.gd` inspecciona el exterior, el interior, `FillFull` y `CachelosLayer`, Then usan `#C8402F`, `#EDE8DF`, `#B8283D` y `#F2D56B`, todos con contraste **≥ 4.0 : 1** frente a la capa inmediatamente inferior.
+- [ ] AC3 Given `box.tscn`, When `test_items_and_env_v3.gd` inspecciona el exterior, el interior, `Model/Octopus` (`octopus_pieces`) y `Model/Cachelos` (`cachelos_pieces`), Then usan `#C8402F`, `#EDE8DF`, `#B8283D` y `#F2D56B`, todos con contraste **≥ 4.0 : 1** frente a la capa inmediatamente inferior.
 - [ ] AC4 Given `player.tscn` para J1 y J2, When `test_items_and_env_v3.gd` comprueba el delantal y el aro activo, Then J1 usa `#2F6FB5` y J2 usa `#F2C230` sin texturas PBR.
 - [ ] AC5 `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
 
