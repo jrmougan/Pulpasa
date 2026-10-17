@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "mat_paprika_sweet"
+albedo_color = Color(0.839216, 0.211765, 0.121569, 1)
+roughness = 0.75
+specular_mode = 2

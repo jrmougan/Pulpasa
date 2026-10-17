@@ -1,7 +1,7 @@
 ---
 id: PUL-182
 title: Crear la biblioteca de materiales planos v3
-status: in_progress
+status: review
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-181]
@@ -49,7 +49,18 @@ Crear en `godot/assets/materials/v3/` la biblioteca cerrada de **18 recursos `St
 - [ ] AC4 `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
 
 ## Plan
-(Lo escribe el worker antes de empezar.)
+1. Generar los 16 `.tres` opacos con los hex/roughness de `docs/art/art-bible.md` §3.1 (`specular_mode = 2`;
+   `metallic`, `albedo_texture`, `normal_enabled` y `ao_enabled` quedan en sus valores por defecto: `0.0`, `null`, `false`, `false`).
+2. Crear `mat_tent_plate.tres` (base `#F7F4EC`, albedo `romeria_v2/tent_plate_albedo.png`, `roughness = 0.90`) y
+   `mat_hidden_alpha.tres` (`TRANSPARENCY_ALPHA`, `Color(0, 0, 0, 0)`, `roughness = 1.0`). Sin `uid://` en las cabeceras: Godot resuelve por ruta.
+3. Test `test_materials_v3.gd`: catálogo exacto de 18 nombres (≤ 20), hex con tolerancia `0.005`, roughness, `metallic`,
+   `specular_mode`, sin texturas de normal/AO/ORM y `transparency`; ruta exacta de la textura de `tent_plate`.
+4. Captura de la biblioteca con luz solar §4.1 sobre fondo `meadow_green`.
 
 ## Evidence
-(Lo rellena el worker.)
+- `godot/assets/materials/v3/`: 18 `.tres` (16 opacos + `mat_tent_plate` + `mat_hidden_alpha`). No se tocan `.glb`, `.tscn` ni `materials/v2/`.
+- `godot/tests/unit/test_materials_v3.gd`: 4 tests, 0 fallos (AC1-AC3).
+- `tools/verify.sh`: verde (gdformat, gdlint, import, GUT 1348/1348, smoke OK).
+- `docs/evidence/PUL-182/materials_v3.png`: esferas con cada material (xvfb-run -a, `--audio-driver Dummy`, sol `#FFF4E0` a 1.18,
+  cámara ortográfica). Sin brillos especulares; `hidden_alpha` invisible; `tent_plate` muestra la textura de la placa en un cubo.
+- Nota: el `.tres` de `tent_plate` referencia la textura por ruta sin `uid`; si `PUL-188` mueve el PNG, hay que actualizar esta ruta.

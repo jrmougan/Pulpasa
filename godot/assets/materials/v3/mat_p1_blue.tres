@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "mat_p1_blue"
+albedo_color = Color(0.184314, 0.435294, 0.709804, 1)
+roughness = 0.75
+specular_mode = 2

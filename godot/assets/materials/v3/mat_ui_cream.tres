@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "mat_ui_cream"
+albedo_color = Color(0.968627, 0.956863, 0.925490, 1)
+roughness = 0.90
+specular_mode = 2
