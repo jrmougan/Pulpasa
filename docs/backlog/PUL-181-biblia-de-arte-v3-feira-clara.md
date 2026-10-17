@@ -1,7 +1,7 @@
 ---
 id: PUL-181
 title: Escribir la biblia de arte v3 «Feira Clara» y partir su implementación en fichas
-status: draft
+status: in_progress
 milestone: M3f
 role: game-designer
 deps: [PUL-180]
