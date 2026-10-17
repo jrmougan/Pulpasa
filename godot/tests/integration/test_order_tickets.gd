@@ -150,7 +150,7 @@ func test_ac4_sticker_uses_box_badge_style_and_seasoning_color() -> void:
 	var box: StyleBoxFlat = disc.get_theme_stylebox("panel") as StyleBoxFlat
 	assert_eq(box.bg_color, SWEET.color)
 	var hot: Control = _entry_with(HOT).get_node("%SeasoningIcons").get_child(0)
-	assert_eq((hot.get_node("Icon") as TextureRect).self_modulate, Color.WHITE)
+	assert_eq((hot.get_node("Icon") as TextureRect).self_modulate, StickerInk.CREAM)
 
 
 func test_ac4_sweet_and_hot_dressing_tickets_are_distinguishable() -> void:
@@ -219,17 +219,19 @@ func _light_seasoning() -> SeasoningData:
 
 func test_pul086_light_sticker_has_ink_icon_and_ring() -> void:
 	var light: SeasoningData = _light_seasoning()
-	assert_true(StickerInk.is_light(light.color), "sal #F7F4EC (biblia §2.5)")
 	var sticker: Control = _entry_with(light).get_node("%SeasoningIcons").get_child(0)
 	var box: StyleBoxFlat = (sticker.get_node("Disc") as Panel).get_theme_stylebox("panel")
 	assert_eq(box.border_color, StickerInk.INK)
-	assert_gt(box.border_width_left, 0, "anillo marrón")
+	assert_gt(box.border_width_left, 0, "anillo oscuro")
 	assert_eq((sticker.get_node("Icon") as TextureRect).self_modulate, StickerInk.INK)
+	## v3 (PUL-185, biblia §6.2.1): todos los discos llevan anillo; el picante, icono crema.
 	for other: SeasoningData in [SWEET, HOT, CACHELOS]:
-		var plain: Control = _entry_with(other).get_node("%SeasoningIcons").get_child(0)
-		var style: StyleBoxFlat = (plain.get_node("Disc") as Panel).get_theme_stylebox("panel")
-		assert_eq(style.border_width_left, 0, "%s sin anillo" % other.display_name)
-		assert_eq((plain.get_node("Icon") as TextureRect).self_modulate, Color.WHITE)
+		var ringed: Control = _entry_with(other).get_node("%SeasoningIcons").get_child(0)
+		var style: StyleBoxFlat = (ringed.get_node("Disc") as Panel).get_theme_stylebox("panel")
+		assert_gt(style.border_width_left, 0, "%s con anillo" % other.display_name)
+		assert_eq(style.border_color, StickerInk.ring_color(other))
+		var ink: Color = StickerInk.CREAM if other == HOT else StickerInk.INK
+		assert_eq((ringed.get_node("Icon") as TextureRect).self_modulate, ink)
 
 
 func test_pul086_box_badge_light_uses_ink_icon_and_ringed_disc() -> void:
@@ -245,14 +247,17 @@ func test_pul086_box_badge_light_uses_ink_icon_and_ringed_disc() -> void:
 	var salt_badge: Node = row.get_child(1)
 	assert_eq((salt_badge.get_child(0) as Sprite3D).modulate, light.color)
 	assert_eq((salt_badge.get_child(1) as Sprite3D).modulate, StickerInk.INK)
-	assert_eq((hot_badge.get_child(1) as Sprite3D).modulate, Color.WHITE)
-	var ringed: Image = (salt_badge.get_child(0) as Sprite3D).texture.get_image()
-	var plain: Image = (hot_badge.get_child(0) as Sprite3D).texture.get_image()
-	var edge: Vector2i = Vector2i(ringed.get_width() / 2, 2)
-	assert_lt(ringed.get_pixelv(edge).get_luminance(), 0.5, "anillo oscuro en el borde")
-	assert_eq(plain.get_pixelv(edge).get_luminance(), 1.0, "disco liso sin anillo")
-	var centre: Vector2i = Vector2i(ringed.get_width() / 2, ringed.get_height() / 2)
-	assert_eq(ringed.get_pixelv(centre), Color.WHITE, "el centro toma el color de la sal")
+	assert_eq((hot_badge.get_child(1) as Sprite3D).modulate, StickerInk.CREAM)
+	for badge: Node in [salt_badge, hot_badge]:
+		var disc: Sprite3D = badge.get_child(0) as Sprite3D
+		var ring: Sprite3D = disc.get_node("Ring") as Sprite3D
+		assert_eq(ring.modulate, StickerInk.INK, "anillo oscuro sin teñir")
+		var fill: Image = disc.texture.get_image()
+		var edge: Vector2i = Vector2i(fill.get_width() / 2, 2)
+		assert_eq(fill.get_pixelv(edge).a, 0.0, "el relleno deja libre el anillo")
+		assert_eq(ring.texture.get_image().get_pixelv(edge).a, 1.0, "el anillo cubre el borde")
+		var centre: Vector2i = Vector2i(fill.get_width() / 2, fill.get_height() / 2)
+		assert_eq(fill.get_pixelv(centre), Color.WHITE, "el centro toma el color del disco")
 
 
 func test_pul086_clock_shows_remaining_time_in_display_format() -> void:
@@ -304,8 +309,8 @@ func test_pul086_ticket_uses_brand_panel_and_title() -> void:
 	var ticket: OrderTicket = _ticket(_service.get_active_orders()[0].id)
 	assert_eq(ticket.theme_type_variation, &"UiPanel")
 	var panel: StyleBoxFlat = ticket.get_theme_stylebox(&"panel", &"UiPanel") as StyleBoxFlat
-	assert_eq(Color(panel.bg_color, 1.0), Color("13202f"), "ui_panel = brand_night")
-	assert_eq(panel.border_color, Color("8e9494"), "ui_border")
+	assert_eq(panel.bg_color, Color("1D3557"), "ui_panel = brand_navy opaco (v3)")
+	assert_eq(panel.border_color, Color("EDE8DF"), "ui_border = surface_top (v3)")
 	assert_eq((ticket.get_node("%Title") as Label).text, "Comanda")
 
 

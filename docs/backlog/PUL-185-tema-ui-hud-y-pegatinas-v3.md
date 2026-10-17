@@ -1,13 +1,13 @@
 ---
 id: PUL-185
 title: Actualizar el tema UI, el HUD, los tickets y la tinta de pegatinas a la paleta v3
-status: in_progress
+status: review
 milestone: M3f
 role: ui-engineer
 deps: [PUL-181]
 orca_task: null
 unity_sources: []
-owns: [godot/ui/theme/default_theme.tres, godot/ui/widgets/sticker_ink.gd, godot/entities/items/badge_row.gd, godot/ui/tickets/ticket_entry.gd, godot/ui/hud/hud.tscn, godot/ui/tickets/order_ticket.tscn, godot/tests/unit/test_ui_theme_v3.gd*, docs/evidence/PUL-185/**, docs/backlog/PUL-185-tema-ui-hud-y-pegatinas-v3.md]
+owns: [godot/ui/theme/default_theme.tres, godot/ui/widgets/sticker_ink.gd, godot/entities/items/badge_row.gd, godot/ui/tickets/ticket_entry.gd, godot/ui/hud/hud.tscn, godot/ui/tickets/order_ticket.tscn, godot/tests/unit/test_ui_theme_v3.gd*, godot/tests/integration/test_order_tickets.gd*, godot/tests/integration/test_hud.gd*, docs/evidence/PUL-185/**, docs/backlog/PUL-185-tema-ui-hud-y-pegatinas-v3.md]
 touches_scenes: [godot/ui/hud/hud.tscn, godot/ui/tickets/order_ticket.tscn]
 ---
 
@@ -37,7 +37,44 @@ Alinear el tema de UI (`godot/ui/theme/default_theme.tres`), la tinta de pegatin
 - [ ] AC4 `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
 
 ## Plan
-(Lo escribe el worker antes de empezar.)
+1. Tema (§7): `UiPanel` navy opaco con borde 2 px `#EDE8DF`, radio 4 y sombra 3 px; `UiHeader`
+   y `DisplayWell` en `#2A2320` con borde 1 px y radio 3 (márgenes de contenido intactos: el
+   layout no cambia). Texto `#F7F4EC`; cifras (`FigureLabel`, `DisplayLabel`, `digits_color`) en
+   `#F2C230`; `CaptionLabel` en `#EDE8DF`; colores de barra/aviso/pista y `RoundHUD` a la paleta.
+2. `StickerInk`: `INK = #2A2320`, `CREAM`, `HOT_RING` (único punto del anillo del picante, P4),
+   `contrast()`/`luminance()` WCAG 2.1, `ring_color()`, `is_hot()`; el icono va en `INK` si
+   contrasta ≥ 3 : 1 con el disco y en crema si no (solo el picante).
+3. `ticket_entry.gd`: anillo `ring_color` en todos los discos; picante octogonal
+   (`corner_detail = 1`, chaflán 1/(2+√2)). `badge_row.gd`: silueta blanca (círculo u
+   octógono) rellena con el color del condimento y el anillo en un `Sprite3D` hijo `Ring` sin
+   teñir, para que quede exactamente en `INK`.
+4. Escenas: solo colores (aviso de mando en `#F2C230`; pista/barra de paciencia de
+   `order_ticket.tscn` en `#2A2320`/`#4FA05A`), sin tocar tamaños ni anclas.
+5. `test_ui_theme_v3.gd` (AC1–AC3) y actualización de los asserts v2 de dos tests (ver Evidence).
 
 ## Evidence
-(Lo rellena el worker.)
+- `tools/verify.sh` completo en verde: 1350/1350 tests, 116 scripts, smoke OK
+  (`test_ui_theme_v3.gd` 6/6). `tools/check_owns.py jrmougan/pul-185 main` limpio.
+- **Owns ampliados** con aprobación del coordinador: `godot/tests/integration/test_order_tickets.gd*`
+  y `godot/tests/integration/test_hud.gd*`. Solo se cambiaron los asserts que fijaban la paleta
+  v2 (UiPanel `#13202f`/`#8e9494`, cifras `#5b8db8`, «solo la sal lleva anillo», icono blanco);
+  ahora comprueban anillo en todos los discos, icono crema del picante, anillo 3D sin teñir y
+  colores v3. No se quitó ninguna comprobación de comportamiento.
+- Contrastes comprobados en el test (WCAG 2.1): crema 11.24 (navy) / 14.05 (burnt); ámbar
+  7.38 / 9.22; anillo `INK` 3.11 sobre caja `#C8402F` y 6.82 sobre suelo `#C4A882`; disco/anillo
+  ≥ 3.24 en dulce, cachelos, aceite y sal; icono crema sobre picante 8.21.
+- Capturas (`xvfb-run -a`, `--audio-driver Dummy`, 1280×720; script
+  `docs/evidence/PUL-185/capture_pul185.gd`):
+  - [`v3_hud_tickets_pegatinas.png`](../evidence/PUL-185/v3_hud_tickets_pegatinas.png): HUD,
+    dos tickets (dulce+cachelos, picante+cachelos) y las pegatinas 3D sobre las cajas en el suelo.
+  - [`hud_v3.png`](../evidence/PUL-185/hud_v3.png): panel navy con pozos `#2A2320` y cifras ámbar.
+  - [`pegatinas_zoom_picante_p4.png`](../evidence/PUL-185/pegatinas_zoom_picante_p4.png):
+    **P4**, picante con la regla actual (anillo `INK`, disco/anillo 1.71 : 1, octógono e icono
+    crema) junto a dulce y cachelos a 96 px.
+- **Pendiente del responsable (P4)**: si se aprueba otro anillo para el picante basta con cambiar
+  `StickerInk.HOT_RING` (`godot/ui/widgets/sticker_ink.gd`); el test lo lee de ahí.
+- Fuera de alcance (sin cambio): `UiCard`, `BrandLabel` y botones del menú (no los nombra §7);
+  la barra de paciencia sigue con dos estados (verde / rojo ≤ 25 %) porque la lógica está en
+  `order_ticket.gd`, fuera de owns; el ámbar intermedio de §7.3 queda para otra ficha.
+- El icono del dulce pasa a `INK` sobre `#D6361F` (3.24 : 1) según la tabla §6.2 («anillo e icono
+  interior `StickerInk`»); antes era blanco.

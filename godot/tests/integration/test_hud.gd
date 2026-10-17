@@ -160,7 +160,7 @@ func test_pul086_figures_use_brand_digits_on_brand_panel() -> void:
 	for name: String in ["TimeLeft", "Revenue"]:
 		var label: Label = _hud.get_node("%" + name)
 		assert_eq(label.theme_type_variation, &"FigureLabel", name)
-		assert_eq(label.get_theme_color(&"font_color"), Color("5b8db8"), "%s: ui_digits" % name)
+		assert_eq(label.get_theme_color(&"font_color"), Color("F2C230"), "%s: cifras v3" % name)
 	var background: PanelContainer = _hud.get_node("%Background")
 	assert_eq(background.theme_type_variation, &"UiPanel")
 	assert_eq(_text("Shift"), "Turno")

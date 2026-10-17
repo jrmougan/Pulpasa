@@ -5,7 +5,7 @@ extends HBoxContainer
 
 ## Mismo estilo que la fila de pegatinas de la caja: tamaño y marca de llama (D18).
 const BADGE_STYLE: BoxBadgeStyle = preload("res://data/config/box_badges.tres")
-## Fracción de la pegatina que ocupa el icono (blanco, o `StickerInk.INK` en discos claros).
+## Fracción de la pegatina que ocupa el icono (en `StickerInk.icon_color`).
 const ICON_FRACTION: float = 0.7
 ## Fracción de la pegatina que ocupa la marca de llama.
 const MARK_FRACTION: float = 0.5
@@ -66,10 +66,14 @@ func _make_seasoning_widget(seasoning: SeasoningData) -> Control:
 	disc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style: StyleBoxFlat = StyleBoxFlat.new()
 	style.bg_color = seasoning.color if seasoning.color.a > 0.0 else Color.GRAY
-	style.set_corner_radius_all(int(side / 2.0))
-	if StickerInk.is_light(style.bg_color):
-		style.border_color = StickerInk.INK
-		style.set_border_width_all(maxi(roundi(side * StickerInk.RING_FRACTION), 1))
+	if StickerInk.is_hot(seasoning):
+		## Octógono D26: esquinas en chaflán de un solo segmento.
+		style.set_corner_radius_all(roundi(side * StickerInk.OCTAGON_CHAMFER))
+		style.corner_detail = 1
+	else:
+		style.set_corner_radius_all(int(side / 2.0))
+	style.border_color = StickerInk.ring_color(seasoning)
+	style.set_border_width_all(maxi(roundi(side * StickerInk.RING_FRACTION), 1))
 	disc.add_theme_stylebox_override("panel", style)
 	sticker.add_child(disc)
 	var icon: TextureRect = TextureRect.new()
