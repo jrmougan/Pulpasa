@@ -5,6 +5,9 @@
 [ext_resource type="PackedScene" path="res://assets/models/food/octopus/octopus.glb" id="5_2pphk"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="6_peg75"]
 [ext_resource type="PackedScene" path="res://ui/widgets/world_progress_bar.tscn" id="7_sh7dx"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_octopus_raw.tres" id="8_raw"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_octopus_cooked.tres" id="9_cooked"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_state_burnt.tres" id="10_burnt"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_jqbqk"]
 radius = 0.26
@@ -20,6 +23,15 @@ shape = SubResource("SphereShape3D_jqbqk")
 
 [node name="Model" parent="." unique_id=1635490825 instance=ExtResource("5_2pphk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.26, 0)
+
+[node name="octopus_raw" parent="Model/octopus"]
+surface_material_override/1 = ExtResource("8_raw")
+
+[node name="octopus_cooked" parent="Model/octopus"]
+surface_material_override/1 = ExtResource("9_cooked")
+
+[node name="octopus_burnt" parent="Model/octopus"]
+surface_material_override/1 = ExtResource("10_burnt")
 
 [node name="AnchorPoint" type="Marker3D" parent="." unique_id=235730098]
 unique_name_in_owner = true

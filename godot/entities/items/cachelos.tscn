@@ -5,6 +5,9 @@
 [ext_resource type="PackedScene" path="res://assets/models/food/cachelos/cachelos.glb" id="5_cmod"]
 [ext_resource type="Script" path="res://components/highlightable.gd" id="6_chlt"]
 [ext_resource type="PackedScene" path="res://ui/widgets/world_progress_bar.tscn" id="7_cbar"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_potato_raw.tres" id="8_raw"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_cachelos_cooked.tres" id="9_cooked"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_state_burnt.tres" id="10_burnt"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_deg2y"]
 radius = 0.26
@@ -20,6 +23,15 @@ shape = SubResource("SphereShape3D_deg2y")
 
 [node name="Model" parent="." unique_id=2070337957 instance=ExtResource("5_cmod")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.26, 0)
+
+[node name="cachelos_raw" parent="Model/cachelos"]
+surface_material_override/1 = ExtResource("8_raw")
+
+[node name="cachelos_cooked" parent="Model/cachelos"]
+surface_material_override/1 = ExtResource("9_cooked")
+
+[node name="cachelos_burnt" parent="Model/cachelos"]
+surface_material_override/1 = ExtResource("10_burnt")
 
 [node name="AnchorPoint" type="Marker3D" parent="." unique_id=449312865]
 unique_name_in_owner = true
