@@ -10,6 +10,9 @@
 [ext_resource type="Resource" path="res://data/config/stand_palette.tres" id="9_pal"]
 [ext_resource type="Material" path="res://assets/models/stations/order_stand/delivery_zone_off.tres" id="10_off"]
 [ext_resource type="Material" path="res://assets/models/stations/order_stand/delivery_zone_on.tres" id="11_on"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_surface_top.tres" id="12_top"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_brand_navy.tres" id="13_navy"]
+[ext_resource type="Material" path="res://assets/materials/v3/mat_ui_cream.tres" id="14_cream"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_body"]
 size = Vector3(1.482, 0.975, 0.39)
@@ -43,14 +46,25 @@ shape = SubResource("BoxShape3D_body")
 script = ExtResource("7_view")
 number_label = NodePath("../StandNumber")
 
+[node name="counter" parent="Model/order_stand" index="9"]
+surface_material_override/0 = ExtResource("13_navy")
+surface_material_override/2 = ExtResource("12_top")
+surface_material_override/5 = ExtResource("13_navy")
+
+[node name="OrderPlateFrame" parent="Model/order_stand" index="11"]
+surface_material_override/0 = ExtResource("13_navy")
+
+[node name="OrderPlatePaper" parent="Model/order_stand" index="12"]
+surface_material_override/0 = ExtResource("14_cream")
+
 [node name="StandNumber" type="Label3D" parent="."]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.5, -0.232)
-modulate = Color(0.20392157, 0.1882353, 0.18039216, 1)
+modulate = Color(0.96862745, 0.95686275, 0.9254902, 1)
 outline_size = 0
 text = "1"
 font = ExtResource("5_font")
-font_size = 64
-pixel_size = 0.0058
+font_size = 96
+pixel_size = 0.005
 
 [node name="OutlineHull" type="Node3D" parent="."]
 
@@ -94,13 +108,12 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.905, -0.23)
 billboard = 1
 no_depth_test = true
-modulate = Color(0.20392157, 0.1882353, 0.18039216, 1)
-outline_modulate = Color(0.94509804, 0.9019608, 0.8, 1)
-outline_size = 8
+modulate = Color(0.11372549, 0.20784314, 0.34117648, 1)
+outline_size = 0
 text = "–"
 font = ExtResource("5_font")
-font_size = 96
-pixel_size = 0.00439
+font_size = 76
+pixel_size = 0.005
 
 [node name="Feedback" type="AudioStreamPlayer3D" parent="."]
 unique_name_in_owner = true
