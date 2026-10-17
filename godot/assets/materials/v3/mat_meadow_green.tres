@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "mat_meadow_green"
+albedo_color = Color(0.309804, 0.627451, 0.352941, 1)
+roughness = 0.95
+specular_mode = 2

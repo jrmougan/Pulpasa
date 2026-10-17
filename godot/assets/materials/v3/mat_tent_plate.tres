@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/models/environment/romeria_v2/tent_plate_albedo.png" id="1_albedo"]
+
+[resource]
+resource_name = "mat_tent_plate"
+albedo_color = Color(0.968627, 0.956863, 0.925490, 1)
+albedo_texture = ExtResource("1_albedo")
+roughness = 0.90
+specular_mode = 2

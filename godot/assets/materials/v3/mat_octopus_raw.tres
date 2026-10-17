@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "mat_octopus_raw"
+albedo_color = Color(0.878431, 0.686275, 0.698039, 1)
+roughness = 0.88
+specular_mode = 2
