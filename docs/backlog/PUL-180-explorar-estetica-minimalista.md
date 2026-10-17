@@ -1,11 +1,11 @@
 ---
 id: PUL-180
 title: Explorar una estética minimalista y proponer direcciones para elegir
-status: review
+status: done
 milestone: M3f
 role: game-designer
 deps: []
-orca_task: null
+orca_task: task_538481a1af8b
 unity_sources: []
 owns: [docs/art/minimal/**, docs/evidence/PUL-180/**, docs/backlog/PUL-180-explorar-estetica-minimalista.md]
 touches_scenes: []
