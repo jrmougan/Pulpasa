@@ -330,9 +330,9 @@ func _entry_with(seasoning: SeasoningData) -> TicketEntry:
 
 func test_pul099_palette_has_the_four_awning_colors_and_fallback() -> void:
 	var palette: StandPalette = PALETTE
-	assert_eq(palette.color_for(1).to_html(false), "d2473f")
-	assert_eq(palette.color_for(2).to_html(false), "3f7cc8")
-	assert_eq(palette.color_for(3).to_html(false), "e8c23a")
+	assert_eq(palette.color_for(1).to_html(false), "c8402f")
+	assert_eq(palette.color_for(2).to_html(false), "2f6fb5")
+	assert_eq(palette.color_for(3).to_html(false), "f2c230")
 	assert_eq(palette.color_for(4).to_html(false), "4fa05a")
 	assert_eq(palette.color_for(0), palette.fallback)
 	assert_eq(palette.color_for(5), palette.fallback)
