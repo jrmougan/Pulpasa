@@ -1,11 +1,11 @@
 ---
 id: PUL-183
 title: Configurar la luz, el entorno y el post-proceso v3 en environment.tscn
-status: review
+status: done
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-181]
-orca_task: null
+orca_task: task_8724d238bbbe
 unity_sources: []
 owns: [godot/data/config/render_config.tres, godot/entities/environment/environment.tscn, godot/tests/unit/test_render_config.gd, godot/tests/integration/test_level_01.gd, docs/evidence/PUL-183/**, docs/backlog/PUL-183-luz-entorno-y-postproceso-v3.md]
 touches_scenes: [godot/entities/environment/environment.tscn]
