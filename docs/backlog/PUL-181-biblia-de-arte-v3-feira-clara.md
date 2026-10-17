@@ -104,15 +104,22 @@ materiales y post-proceso.
     - `PUL-145`: obsoleta, sustituida por `PUL-183` y `PUL-186` (se apagan las `Bulbs` y desaparece el acero especular).
     - `PUL-146`: absorbida y superada por `PUL-186`, `PUL-187` y `PUL-188` (materiales compartidos en `materials/v3/`, borrado de texturas PBR extraídas y retirada de `art/blender/romeria.blend`).
 - **Ronda 2 — Corrección de los 9 hallazgos de revisión**:
-  1. Catálogo real de 68 slots extraído en `docs/evidence/PUL-181/slots_reales.md`; reglas para atlas (`counters_atlas` a `#1D3557`, `env_atlas` a `#9A948C`), slots compartidos y `SweetDressing`/`HotDressing` como nodos de escena.
+  1. Catálogo real de 68 slots extraído en `docs/evidence/PUL-181/slots_reales.md`; reglas para atlas (`counters_atlas` a `#9A948C` en import con override `#1D3557` en escena, `env_atlas` a `#9A948C`), slots compartidos y `SweetDressing`/`HotDressing` como nodos de escena.
   2. `gltf/embedded_image_handling = 0` explícito en `art-bible.md`, `PUL-186` y `PUL-187`.
-  3. Protocolo de benchmark unificado `docs/evidence/PUL-189/measure_perf.gd` (medición sobre `main` antes de la oleada 1) y rol `qa-tester` en `PUL-189`.
+  3. Protocolo de benchmark unificado `docs/evidence/PUL-189/measure_perf.gd` (medición sobre `main` antes de la oleada 1, commit base `e86baf3`) y rol `qa-tester` en `PUL-189`.
   4. Evaluación de fondos de pegatinas sobre caja `#C8402F` y suelo `#C4A882` con anillo exterior `StickerInk.INK` (`#2A2320`) en todos los discos (`PUL-185`).
   5. Exención explícita en `PUL-188` AC2 para slots funcionales y `_pipeline/**`; corrección de `owns` en `PUL-187` (`_pipeline/**/*.glb.import` y retirada de ruta inexistente de player).
   6. `PUL-184` en Oleada 2 (`deps: [PUL-181, PUL-182]`); `PUL-186` con `deps: [PUL-182]`.
-  7. Textura de `mat_tent_plate.tres` fijada a opción única `res://assets/textures/brand/tent_plate_albedo.png`.
+  7. Textura de `mat_tent_plate.tres` fijada a `res://assets/models/environment/romeria_v2/tent_plate_albedo.png`, preservada explícitamente en `PUL-188`.
   8. Refinamientos de Dirección A (§0.1) declarados en `art-bible.md`.
   9. Erratas subsanadas ($L$ de `#4FA05A` a 0.2754, 11 sub-mallas en `PUL-183`, paréntesis cerrado en §3.2).
+- **Ronda 3 — Corrección de re-revisión (hallazgos N1–N6)**:
+  - **N1 y N2**: `PUL-186` y `PUL-187` derivadas de `slots_reales.md` §1 y §2 como única fuente normativa de verdad; eliminados nombres inventados (`mat_rock`, `mat_wood`, `picnic_table`, `mat_eyes`, `mat_white`), corregidas asignaciones de `mat_steel_dark` a `#1D3557`, `seasoning_station_atlas` a `#EDE8DF`, `atlas_octopus` a `#B8283D` e incluidos todos los slots reales de estaciones y entorno.
+  - **N3**: `res://assets/models/environment/romeria_v2/tent_plate_albedo.png` como ruta única en `art-bible.md`, `PUL-182`, `PUL-187` y `PUL-188`; preservada explícitamente en `PUL-188`.
+  - **N4**: regla unificada del anillo delimitador `StickerInk.INK` (`#2A2320`) en todos los discos en `art-bible.md` §6.2.1 y `PUL-185`, con discriminación unívoca del picante por silueta octogonal D26 e icono chispa interior crema `#F7F4EC` (**8.21 : 1**).
+  - **N5**: contraste frentes navy corregido a **10.12 : 1** en §0.1.2; luminancia de `wall_granite #9A948C` corregida a **0.2994** en §0.1.1, §2, §10.1 y `moodboard-v3.svg`; cabecera de 7 columnas en tabla §3.1 y corrección a `mat_wall_granite.tres`.
+  - **N6**: mallas de dispensadores referenciadas con sus nombres reales `paprika_sweet` y `paprika_hot` de `seasoning_dispenser.glb` en §3.1, §3.3.4 y §5.3, sin geometrías añadidas (D28).
+  - Verificación estricta mediante `docs/evidence/PUL-181/check_names.py`.
 - **AC5 (`tools/verify.sh --quick` y `tools/check_owns.py`)**:
   ```text
   $ tools/verify.sh --quick

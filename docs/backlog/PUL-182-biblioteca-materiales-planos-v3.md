@@ -34,7 +34,7 @@ Crear en `godot/assets/materials/v3/` la biblioteca cerrada de **18 recursos `St
    - `mat_p2_amber.tres` (`#F2C230`, `roughness = 0.75`)
    Todos con `metallic = 0.0`, `specular_mode = BaseMaterial3D.SPECULAR_DISABLED` (`2`), `albedo_texture = null`, `normal_enabled = false` y `ao_enabled = false`.
 2. Crear los 2 materiales técnicos de la biblioteca (§3.1 y §3.2):
-   - `mat_tent_plate.tres`: `StandardMaterial3D` con `albedo_color = Color("#F7F4EC")`, `albedo_texture = ExtResource("res://assets/textures/brand/tent_plate_albedo.png")` (o `res://assets/models/environment/romeria_v2/tent_plate_albedo.png`, única textura fijada exactamente a los UVs de `env_plate`, §3.2), `roughness = 0.90`, `metallic = 0.0`, `specular_mode = SPECULAR_DISABLED` y 0 mapas ORM/normal.
+   - `mat_tent_plate.tres`: `StandardMaterial3D` con `albedo_color = Color("#F7F4EC")`, `albedo_texture = ExtResource("res://assets/models/environment/romeria_v2/tent_plate_albedo.png")` (única textura existente en el proyecto fijada exactamente a los UVs de `env_plate`, §3.2), `roughness = 0.90`, `metallic = 0.0`, `specular_mode = SPECULAR_DISABLED` y 0 mapas ORM/normal.
    - `mat_hidden_alpha.tres`: `StandardMaterial3D` con `transparency = BaseMaterial3D.TRANSPARENCY_ALPHA`, `albedo_color = Color(0.0, 0.0, 0.0, 0.0)`, `roughness = 1.0`, `metallic = 0.0`, `specular_mode = SPECULAR_DISABLED`.
 3. Añadir `godot/tests/unit/test_materials_v3.gd` que cargue todos los `.tres` de `res://assets/materials/v3/` y verifique el catálogo cerrado, sus colores hex, `roughness`, `metallic == 0.0`, `specular_mode == SPECULAR_DISABLED` y la ausencia de mapas ORM/normal.
 

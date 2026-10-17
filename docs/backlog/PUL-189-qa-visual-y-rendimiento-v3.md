@@ -27,7 +27,7 @@ Ejecutar la validación final de QA visual y de rendimiento de la estética v3 �
    - Medir la luminancia media del fotograma (`0.08 <= luma <= 0.95`, objetivo `0.30–0.45`) y verificar los 4 puntos corregidos de PUL-180 (sin cartel superior vacío sobre el toldo, números `#1..#4` y `1..4` macizos y legibles a `800×370`, `env_plate` limpia y SSAO suave sin `glow`/LUT/`Vignette`).
 3. **Medida de rendimiento y memoria antes y después con el mismo método**:
    - Fijar el script de benchmark en `docs/evidence/PUL-189/measure_perf.gd`.
-   - Ejecutar la medición de la línea base 'antes' (v2) sobre `main` (en el commit previo al inicio de la oleada 1 / PUL-182) ejecutando el script en headless y guardando los resultados en `docs/evidence/PUL-189/antes/perf_v2.json`.
+   - Ejecutar la medición de la línea base 'antes' (v2) sobre `main` (commit base `e86baf3`, previo al inicio de la oleada 1 / PUL-182) ejecutando el script en headless y guardando los resultados en `docs/evidence/PUL-189/antes/perf_v2.json`.
    - Tras la integración de PUL-188, ejecutar exactamente el mismo script sobre `level_01.tscn` (v3) guardando `docs/evidence/PUL-189/despues/perf_v3.json`.
    - Comparar ambas medidas en `docs/evidence/PUL-189/README.md` (`Performance.TIME_FPS`, `Performance.TIME_PROCESS`, `Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME`, `Performance.RENDER_TOTAL_OBJECTS_IN_FRAME`, `Performance.RENDER_VIDEO_MEM_USED`, `Performance.OBJECT_RESOURCE_COUNT`, materiales 3D únicos y texturas 3D cargadas, durante ≥ 120 frames tras el calentamiento).
 

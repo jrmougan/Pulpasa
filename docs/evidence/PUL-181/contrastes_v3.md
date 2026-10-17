@@ -44,7 +44,7 @@ normativos de §3.4 frente a cada superficie donde aparecen.
 | **Pimentón dulce** (`paprika_sweet`) | `#D6361F` | 0.1703 | Tarjeta/soporte crema claro (`mat_ui_cream`) | `#F7F4EC` | 0.9053 | **4.3358 : 1** | 4.34 : 1 | SÍ |
 | **Pimentón dulce** (`paprika_sweet`) | `#D6361F` | 0.1703 | Anillo e icono interior `StickerInk` en pegatina D26 y ticket (`mat_state_burnt`) | `#2A2320` | 0.0180 | **3.2409 : 1** | 3.24 : 1 | SÍ |
 | **Pimentón picante** (`paprika_hot`) | `#8F1A14` | 0.0663 | Encimera (`ServiceMat`), interior de caja (`box_inside`) y collar del dispensador (`mat_surface_top`) | `#EDE8DF` | 0.8105 | **7.3993 : 1** | 7.40 : 1 | SÍ |
-| **Pimentón picante** (`paprika_hot`) | `#8F1A14` | 0.0663 | Anillo claro / soporte crema (`mat_ui_cream`) | `#F7F4EC` | 0.9053 | **8.2150 : 1** | 8.21 : 1 | SÍ |
+| **Pimentón picante** (`paprika_hot`) | `#8F1A14` | 0.0663 | Icono interior / chispa crema (`mat_ui_cream`) | `#F7F4EC` | 0.9053 | **8.2150 : 1** | 8.21 : 1 | SÍ |
 | **Sal gruesa** (`salt`) | `#F7F4EC` | 0.9053 | Zócalo de estación (`ServiceFascia`), pastilla de ticket HUD y faldón (`mat_brand_navy`) | `#1D3557` | 0.0350 | **11.2449 : 1** | 11.24 : 1 | SÍ |
 | **Sal gruesa** (`salt`) | `#F7F4EC` | 0.9053 | Anillo `StickerInk` / pozo oscuro (`mat_state_burnt`) | `#2A2320` | 0.0180 | **14.0517 : 1** | 14.05 : 1 | SÍ |
 | **Sal gruesa** (`salt`) | `#F7F4EC` | 0.9053 | Cama de pulpo cocido en la caja y partículas de aliño sobre pulpo (`mat_octopus_cooked`) | `#B8283D` | 0.1204 | **5.6047 : 1** | 5.60 : 1 | SÍ |
@@ -98,6 +98,8 @@ Para garantizar WCAG 2.1 ≥ 3:1 en cualquier superficie, en la v3 (`PUL-185`) *
 | Anillo `StickerInk.INK` sobre suelo de cocina (frontera exterior) | `state_burnt` (`#2A2320`, 0.0180) | `ground_sand` (`#C4A882`, 0.4135) | **6.8180 : 1** | 6.82 : 1 | CUMPLE (≥ 3:1) — el anillo separa la pegatina del suelo |
 | Disco dulce interior contra anillo `StickerInk.INK` | `paprika_sweet` (`#D6361F`, 0.1703) | `state_burnt` (`#2A2320`, 0.0180) | **3.2409 : 1** | 3.24 : 1 | CUMPLE (≥ 3:1) — contraste interno disco/anillo |
 | Disco cachelos interior contra anillo `StickerInk.INK` | `cachelos` (`#F2D56B`, 0.6753) | `state_burnt` (`#2A2320`, 0.0180) | **10.6680 : 1** | 10.67 : 1 | CUMPLE (≥ 3:1) — contraste interno disco/anillo |
+| Disco picante interior contra anillo `StickerInk.INK` | `paprika_hot` (`#8F1A14`, 0.0663) | `state_burnt` (`#2A2320`, 0.0180) | **1.7105 : 1** | 1.71 : 1 | 1.71:1 (doble codificación: octógono D26 + icono interior crema a 8.21:1; el anillo exterior separa del fondo a 3.11:1 y 6.82:1) |
+| Icono chispa crema interior sobre disco picante | `ui_cream` (`#F7F4EC`, 0.9053) | `paprika_hot` (`#8F1A14`, 0.0663) | **8.2150 : 1** | 8.21 : 1 | CUMPLE (≥ 3:1) — icono interior crema sobre disco picante (8.21:1) |
 
 ## 6. Matriz par a par entre los 5 colores de §3.4 y doble codificación D26
 

@@ -25,7 +25,7 @@
   <g transform="translate(190, 114)">
     <rect x="0" y="0" width="150" height="84" rx="6" fill="#9A948C" stroke="#2A2320" stroke-width="1.5"/>
     <text x="0" y="102" class="n">2 · wall_granite</text>
-    <text x="0" y="116" class="m">#9A948C · L=0.3005 · R=0.92</text>
+    <text x="0" y="116" class="m">#9A948C · L=0.2994 · R=0.92</text>
     <text x="0" y="130" class="m">mat_wall_granite.tres</text>
   </g>
   <g transform="translate(356, 114)">

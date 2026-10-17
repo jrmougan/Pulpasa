@@ -190,7 +190,7 @@ SEC34_SURFACES: list[tuple[str, str, str, str, str]] = [
         "paprika_hot",
         "Pimentón picante",
         "#8F1A14",
-        "Anillo claro / soporte crema (`mat_ui_cream`)",
+        "Icono interior / chispa crema (`mat_ui_cream`)",
         "#F7F4EC",
     ),
     # Sal gruesa (#F7F4EC)
@@ -372,6 +372,22 @@ STICKER_BACKGROUND_PAIRS: list[tuple[str, str, str, str, str, str]] = [
         "state_burnt",
         "#2A2320",
         "CUMPLE (≥ 3:1) — contraste interno disco/anillo",
+    ),
+    (
+        "Disco picante interior contra anillo `StickerInk.INK`",
+        "paprika_hot",
+        "#8F1A14",
+        "state_burnt",
+        "#2A2320",
+        "1.71:1 (doble codificación: octógono D26 + icono interior crema a 8.21:1; el anillo exterior separa del fondo a 3.11:1 y 6.82:1)",
+    ),
+    (
+        "Icono chispa crema interior sobre disco picante",
+        "ui_cream",
+        "#F7F4EC",
+        "paprika_hot",
+        "#8F1A14",
+        "CUMPLE (≥ 3:1) — icono interior crema sobre disco picante (8.21:1)",
     ),
 ]
 

@@ -17,14 +17,23 @@ Vincular los materiales planos de `godot/assets/materials/v3/` a los módulos de
 ## Change
 1. En los `.glb.import` de `godot/assets/models/furniture/counters/*.glb.import` y `godot/assets/models/stations/**/*.glb.import`:
    - Configurar explícitamente `gltf/embedded_image_handling = 0` (para evitar la re-extracción de texturas PNG) y `materials/extract = 0`.
-   - Mapear cada slot real de `_subresources["materials"]` a su recurso externo de `res://assets/materials/v3/mat_*.tres` (`use_external/enabled = true`, `use_external/path = "res://assets/materials/v3/..."`) según `docs/evidence/PUL-181/slots_reales.md` y `docs/art/art-bible.md` §3.1:
+   - Mapear cada slot real de `_subresources["materials"]` a su recurso externo de `res://assets/materials/v3/mat_*.tres` (`use_external/enabled = true`, `use_external/path = "res://assets/materials/v3/..."`) derivando estrictamente de la tabla normativa de `docs/evidence/PUL-181/slots_reales.md` §1 y §2 (única fuente de verdad) y `docs/art/art-bible.md` §3.1:
      - Tableros superiores (`mat_steel_brushed_top`) → `mat_surface_top.tres` (`#EDE8DF`).
-     - Faldones y frentes de encimeras (`counters_atlas`) → `mat_brand_navy.tres` (`#1D3557`).
-     - Estructuras metálicas de encimeras y estaciones (`mat_steel_brushed`, `mat_steel_dark`) → `mat_wall_granite.tres` (`#9A948C`).
-     - Estructura de estación de sazonado (`seasoning_station_atlas`) → `mat_wall_granite.tres` (`#9A948C`).
+     - Estructuras metálicas y perfiles (`mat_steel_brushed`, `mat_steel_brushed_mid`) → `mat_wall_granite.tres` (`#9A948C`).
+     - Zócalos, faldones y elementos oscuros (`mat_steel_dark`) → `mat_brand_navy.tres` (`#1D3557`).
+     - Atlas de encimeras (`counters_atlas`) → `mat_wall_granite.tres` (`#9A948C`), aplicando en su escena `.tscn` `surface_material_override` a `mat_brand_navy.tres` (`#1D3557`) en los frentes que requieran faldón azul marino corporativo.
+     - Estructura de estación de sazonado (`seasoning_station_atlas`) → `mat_surface_top.tres` (`#EDE8DF`).
+     - Almacenes y estaciones de trabajo:
+       - `box_shelf.glb`: `mat_cardboard` (`mat_ground_sand.tres`), `atlas_box` (`mat_surface_top.tres`), `mat_steel_brushed_mid` (`mat_wall_granite.tres`), `mat_steel_dark` (`mat_brand_navy.tres`), `mat_steel_brushed_top` (`mat_surface_top.tres`), `mat_plastic_blue` (`mat_p1_blue.tres`), `mat_plastic_red` (`mat_brand_red.tres`), conservando el shader técnico `mat_outline_hull`.
+       - `cachelos_storage.glb`: `mat_food_potato_raw` (`mat_potato_raw.tres`), `atlas_cachelos` (`mat_cachelos_cooked.tres`), `mat_burlap` (`mat_ground_sand.tres`), `atlas_cachelos_storage` (`mat_potato_raw.tres`).
+       - `octopus_storage.glb`: `mat_food_octopus_raw` (`mat_octopus_raw.tres`), `atlas_octopus` (`mat_octopus_cooked.tres`), `mat_steel_dark` (`mat_brand_navy.tres`), `mat_rubber` (`mat_state_burnt.tres`), `mat_steel_brushed` (`mat_wall_granite.tres`), `mat_plastic_blue` (`mat_p1_blue.tres`), `mat_glass_water` (`mat_p1_blue.tres`), `mat_plastic_red` (`mat_brand_red.tres`), `mat_canvas_paper` (`mat_ui_cream.tres`).
+       - `pot.glb`: `mat_plastic_blue` (`mat_p1_blue.tres`), `mat_steel_brushed` (`mat_wall_granite.tres`), `mat_rubber_hose_red` (`mat_brand_red.tres`), `mat_rubber_hose_green` (`mat_meadow_green.tres`), `mat_steel_dark` (`mat_brand_navy.tres`), `mat_rubber` (`mat_state_burnt.tres`), `mat_steel_brushed_mid` (`mat_wall_granite.tres`), `mat_plastic_red` (`mat_brand_red.tres`), `pot_water` (`mat_p1_blue.tres`), `mat_emissive_bulb` (`mat_p2_amber.tres`).
+       - `order_stand.glb`: `mat_canvas_stand_1` (`mat_brand_red.tres`), `mat_canvas_paper` (`mat_ui_cream.tres`), `mat_canvas_stand_2` (`mat_p1_blue.tres`), `mat_canvas_stand_3` (`mat_p2_amber.tres`), `mat_canvas_stand_4` (`mat_meadow_green.tres`), `mat_steel_dark` (`mat_brand_navy.tres`), `mat_rubber` (`mat_state_burnt.tres`), `mat_steel_brushed_top` (`mat_surface_top.tres`), `mat_steel_brushed_mid` (`mat_wall_granite.tres`), `mat_steel_brushed` (`mat_wall_granite.tres`), `order_stand_atlas` (`mat_brand_navy.tres`), `mat_emissive_screen` (`mat_surface_top.tres`), conservando los slots funcionales `delivery_zone_off` y `kiosk_delivery_signs`.
+       - `trash_bin.glb`: `mat_plastic_red` (`mat_brand_red.tres`), `mat_rubber` (`mat_state_burnt.tres`), `mat_plastic_blue` (`mat_p1_blue.tres`), `mat_steel_brushed` (`mat_wall_granite.tres`), `mat_food_tray_liner` (`mat_surface_top.tres`), `mat_cloth_pants` (`mat_brand_navy.tres`).
+       - `seasoning_station/`: `cachelos_bowl.glb` con `mat_clay` (`mat_potato_raw.tres`) y `mat_food_potato_cooked` (`mat_cachelos_cooked.tres`); `seasoning_dispenser.glb` con `mat_steel_dark` (`mat_brand_navy.tres`), `mat_steel_brushed` (`mat_wall_granite.tres`) y `seasoning_signs` (funcional).
      - Sacos de arpillera (`mat_burlap`) y embalaje (`mat_cardboard`) → `mat_ground_sand.tres` (`#C4A882`).
-     - Gomas y protecciones (`mat_rubber`) → `mat_state_burnt.tres` (`#2A2320`).
-     - Señalética funcional (`seasoning_signs` en `seasoning_dispenser.glb`) → conservada como slot funcional exento del catálogo plano.
+     - Gomas y juntas (`mat_rubber`) → `mat_state_burnt.tres` (`#2A2320`).
+     - Pasaplatos (`counter_pass_signs`) → `mat_p2_amber.tres` (`#F2C230`).
 2. En `godot/entities/environment/kitchen_layout.tscn`:
    - Sustituir `Floor/Mesh.material_override` (`kitchen_floor_dirt.tres`) por `res://assets/materials/v3/mat_ground_sand.tres` (`#C4A882`).
    - Ocultar (`visible = false`) los 5 nodos de atrezo sobre encimeras (§5.1): `BackCounter/BackBetweenStoragePot/Model/props_crock`, `BackCounter/BackRight/Model/props_board`, `BackCounter/BackRight/Model/props_crock`, `Walls/WallLeftKitchen/Model/props_crock` y `Walls/WallRight/Model/props_board`.
@@ -36,7 +45,7 @@ Vincular los materiales planos de `godot/assets/materials/v3/` a los módulos de
    - `seasoning_station.tscn`, `seasoning_dispenser.tscn` y `cachelos_bowl.tscn` (§5.3 y §6.2):
      - Ocultar (`visible = false`) las 15 sub-mallas pre-D25 `CounterArrow_*`, `Label_*` y `ServiceArrow_*` (`sweet`, `hot`, `salt`, `oil`, `potato`).
      - Asignar `ServiceMat` a `mat_surface_top.tres` (`#EDE8DF`) y `ServiceFascia` a `mat_brand_navy.tres` (`#1D3557`).
-     - Asignar mediante `surface_material_override` en las instancias de los nodos de malla el cuerpo de `SweetDressing` a `mat_paprika_sweet.tres` (`#D6361F`, contraste **3.91 : 1** sobre `#EDE8DF`), el de `HotDressing` a `mat_paprika_hot.tres` (`#8F1A14`, contraste **7.40 : 1** sobre `#EDE8DF`), su collar superior a `mat_surface_top.tres` (`#EDE8DF`) y el cuenco de `CachelosBowl` a `mat_brand_navy.tres` (`#1D3557`) con cachelos en `mat_cachelos_cooked.tres` (`#F2D56B`, contraste **8.54 : 1**).
+     - Asignar mediante `surface_material_override` en las instancias de los nodos de malla el cuerpo de `SweetDressing` (`paprika_sweet`) a `mat_paprika_sweet.tres` (`#D6361F`, contraste **3.91 : 1** sobre `#EDE8DF`), el de `HotDressing` (`paprika_hot`) a `mat_paprika_hot.tres` (`#8F1A14`, contraste **7.40 : 1** sobre `#EDE8DF`), su collar superior a `mat_surface_top.tres` (`#EDE8DF`) y el cuenco de `CachelosBowl` a `mat_brand_navy.tres` (`#1D3557`) con cachelos en `mat_cachelos_cooked.tres` (`#F2D56B`, contraste **8.54 : 1**).
 4. Añadir `godot/tests/integration/test_stations_v3.gd` que verifique la poda de atrezo (`is_visible_in_tree() == false`), la permanencia de `SizePanel_*` en el árbol, los materiales planos v3 sin texturas PBR y la emisión visible de `Steam` al cocer.
 
 ## Constraints
