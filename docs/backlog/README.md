@@ -188,7 +188,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-181 | M3f | game-designer | done | Escribir la biblia de arte v3 «Feira Clara» y partir su implementación en fichas |
 | PUL-182 | M3f | asset-pipeline | done | Crear la biblioteca de materiales planos v3 |
 | PUL-183 | M3f | asset-pipeline | done | Configurar la luz, el entorno y el post-proceso v3 en environment.tscn |
-| PUL-184 | M3f | ui-engineer | in_progress | Aplicar la paleta v3 y números macizos legibles en móvil a los puestos de entrega |
+| PUL-184 | M3f | ui-engineer | done | Aplicar la paleta v3 y números macizos legibles en móvil a los puestos de entrega |
 | PUL-185 | M3f | ui-engineer | done | Actualizar el tema UI, el HUD, los tickets y la tinta de pegatinas a la paleta v3 |
 | PUL-186 | M3f | asset-pipeline | done | Asignar materiales planos v3 y podar atrezo en encimeras y estaciones |
 | PUL-187 | M3f | asset-pipeline | in_progress | Asignar materiales planos v3 a entorno, comida, cajas y personajes |

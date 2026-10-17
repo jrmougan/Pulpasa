@@ -1,11 +1,11 @@
 ---
 id: PUL-184
 title: Aplicar la paleta v3 y números macizos legibles en móvil a los puestos de entrega
-status: review
+status: done
 milestone: M3f
 role: ui-engineer
 deps: [PUL-181, PUL-182]
-orca_task: null
+orca_task: task_8c32859718ab
 unity_sources: []
 owns: [godot/data/config/stand_palette.tres, godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand_model.gd, godot/tests/unit/test_order_stand_model.gd, godot/tests/integration/test_order_tickets.gd*, docs/evidence/PUL-184/**, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md]
 touches_scenes: [godot/entities/stations/order_stand.tscn]
