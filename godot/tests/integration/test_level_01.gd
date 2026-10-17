@@ -659,8 +659,14 @@ func test_ac2_environment_has_world_environment_and_sun() -> void:
 	var suns: Array[Node] = env.find_children("*", "DirectionalLight3D", true, false)
 	assert_eq(suns.size(), 1)
 	var sun: DirectionalLight3D = suns[0]
-	assert_almost_eq(sun.light_energy, 1.34, 0.01)
+	assert_almost_eq(sun.light_energy, 1.18, 0.01)
+	assert_almost_eq(sun.shadow_blur, 3.2, 0.1)
 	assert_true(sun.shadow_enabled)
+	# PUL-183: sin luces puntuales ni viñeta (biblia v3 §4).
+	assert_false((env.get_node("Bulbs") as Node3D).visible)
+	for omni: Node in env.find_children("*", "OmniLight3D", true, false):
+		assert_false((omni as OmniLight3D).is_visible_in_tree(), "%s visible" % omni.name)
+	assert_false((env.get_node("Vignette") as CanvasLayer).visible)
 	# Unity: euler (57,97; −18,3; 7,8) → la luz apunta hacia abajo y hacia −Z de Godot.
 	var direction: Vector3 = -sun.global_basis.z
 	assert_lt(direction.y, -0.8)
