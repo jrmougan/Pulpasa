@@ -28,19 +28,22 @@ script = ExtResource("4_script")
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=338215520]
 transform = Transform3D(0.660628, 0.614949, -0.430592, 0, 0.573576, 0.819152, 0.750713, -0.541155, 0.378921, 3.9, 20.1, 3.01)
-light_color = Color(1, 0.913725, 0.784314, 1)
-light_energy = 1.34
+light_color = Color(1, 0.956863, 0.878431, 1)
+light_energy = 1.18
 light_angular_distance = 0.0
 shadow_enabled = true
 shadow_bias = 0.04
 shadow_normal_bias = 1.5
-shadow_blur = 2.0
+shadow_opacity = 0.75
+shadow_blur = 3.2
 directional_shadow_mode = 0
 directional_shadow_max_distance = 40.0
 
 [node name="Bulbs" type="Node3D" parent="."]
+visible = false
 
 [node name="BulbTentWest" type="OmniLight3D" parent="Bulbs"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 1.85, -4.5)
 light_color = Color(1, 0.835294, 0.541176, 1)
 light_energy = 1.4
@@ -48,6 +51,7 @@ light_specular = 0.2
 omni_range = 3.5
 
 [node name="BulbTentCenter" type="OmniLight3D" parent="Bulbs"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 1.85, -4.5)
 light_color = Color(1, 0.835294, 0.541176, 1)
 light_energy = 1.4
@@ -55,6 +59,7 @@ light_specular = 0.2
 omni_range = 3.5
 
 [node name="BulbTentEast" type="OmniLight3D" parent="Bulbs"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.4, 1.85, -4.5)
 light_color = Color(1, 0.835294, 0.541176, 1)
 light_energy = 1.4
@@ -62,6 +67,7 @@ light_specular = 0.2
 omni_range = 3.5
 
 [node name="BulbGarlandWest" type="OmniLight3D" parent="Bulbs"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4, 2.1, 1.0)
 light_color = Color(1, 0.835294, 0.541176, 1)
 light_energy = 1.2
@@ -69,6 +75,7 @@ light_specular = 0.2
 omni_range = 4.5
 
 [node name="BulbGarlandEast" type="OmniLight3D" parent="Bulbs"]
+visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.4, 2.1, 1.0)
 light_color = Color(1, 0.835294, 0.541176, 1)
 light_energy = 1.2
@@ -77,6 +84,7 @@ omni_range = 4.5
 
 [node name="Vignette" type="CanvasLayer" parent="."]
 layer = -1
+visible = false
 
 [node name="Overlay" type="TextureRect" parent="Vignette"]
 anchors_preset = 15
@@ -110,3 +118,44 @@ transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -9.1, 0, 1.2)
 
 [node name="PropsEast" parent="Model" instance=ExtResource("7_props_e")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 11.0, 0, 1.2)
+
+[node name="ground_w_decals" parent="Model/GroundWest/ground_w"]
+visible = false
+
+[node name="ground_e_decals" parent="Model/GroundEast/ground_e"]
+visible = false
+
+[node name="back_w_fence" parent="Model/BackWest/back_w"]
+visible = false
+
+[node name="back_w_props" parent="Model/BackWest/back_w"]
+visible = false
+
+[node name="back_e_fence" parent="Model/BackEast/back_e"]
+visible = false
+
+[node name="back_e_props" parent="Model/BackEast/back_e"]
+visible = false
+
+[node name="tent_bulbs" parent="Model/Tent/tent"]
+visible = false
+
+[node name="props_w_garlands" parent="Model/PropsWest/props_w"]
+visible = false
+
+[node name="props_w_props" parent="Model/PropsWest/props_w"]
+visible = false
+
+[node name="props_e_garlands" parent="Model/PropsEast/props_e"]
+visible = false
+
+[node name="props_e_props" parent="Model/PropsEast/props_e"]
+visible = false
+
+[editable path="Model/GroundWest"]
+[editable path="Model/GroundEast"]
+[editable path="Model/BackWest"]
+[editable path="Model/BackEast"]
+[editable path="Model/Tent"]
+[editable path="Model/PropsWest"]
+[editable path="Model/PropsEast"]

@@ -1,7 +1,7 @@
 ---
 id: PUL-183
 title: Configurar la luz, el entorno y el post-proceso v3 en environment.tscn
-status: in_progress
+status: review
 milestone: M3f
 role: asset-pipeline
 deps: [PUL-181]
@@ -41,7 +41,17 @@ Aplicar la configuración de luz diurna, `WorldEnvironment`, post-proceso (SSAO 
 - [ ] AC5 `tools/verify.sh` en verde y `tools/check_owns.py` limpio.
 
 ## Plan
-(Lo escribe el worker antes de empezar.)
+1. Comprobar en el árbol instanciado de `environment.tscn` las rutas reales de las 11 sub-mallas (`Model/<Instancia>/<raíz glb>/<malla>`).
+2. Reescribir el `Environment` de `render_config.tres` con los valores de §4.1/§4.2 (sin `Sky` ni LUT `GradientTexture1D`, que dejan de usarse).
+3. En `environment.tscn`: `Sun` v3, `visible = false` en `Bulbs`, sus 5 `OmniLight3D` y `Vignette`, y overrides `visible = false` (con `[editable]`) en las 11 sub-mallas.
+4. Tests: AC1 y AC3 en `test_render_config.gd`; AC2 en `test_ac2_environment_has_world_environment_and_sun` de `test_level_01.gd`.
+5. Capturas con `xvfb-run -a` y verify completo.
 
 ## Evidence
-(Lo rellena el worker.)
+- AC1: `test_render_config.gd` → `test_environment_matches_art_bible`, `test_contact_ssao_on`, `test_forbidden_post_process_off`. Se sustituye `test_sky_reflects_light_for_steel` (PUL-089, reflejo del cielo en el acero), incompatible con `REFLECTION_SOURCE_DISABLED` de la v3.
+- AC2: `test_level_01.gd::test_ac2_environment_has_world_environment_and_sun` (`light_energy` 1.18, `shadow_blur` 3.2, `Bulbs`/`Vignette` ocultos, 0 `OmniLight3D` visibles en el árbol); también `test_render_config.gd::test_bulbs_and_vignette_off`.
+- AC3: `test_render_config.gd::test_noisy_props_pruned` (11 ocultas; `tent_awning`, `tent_plate`, `back_*_wall`, `props_*_tables` visibles).
+- AC4: `docs/evidence/PUL-183/level_01.png` (nivel completo) y `environment.png` (solo `Environment` con la cámara del nivel), 1920×1080, generadas con `cd godot && xvfb-run -a godot --audio-driver Dummy --resolution 1920x1080 -s res://../docs/evidence/PUL-183/capture_boot.gd`. Sin viñeta perimetral ni manchas de luz puntual; desaparecen charcos/rodadas, vallas, guirnaldas y bultos.
+- AC5: `tools/verify.sh` en verde (1347/1347 tests, smoke OK); `tools/check_owns.py` limpio.
+- Fuera de alcance (visible en la captura): el cartel superior vacío (`env_sign`) y las pizarras del muro (`env_board`) de `tent_structure` siguen visibles; los oculta la regla §5.2 con `mat_hidden_alpha.tres`, que no está en los `owns` de esta ficha.
+- Nota: el comentario de `godot/resources/render_config.gd` aún cita «biblia v2 §1.3» y «glow y gradación»; no está en `owns`, se deja para quien lo tenga.
