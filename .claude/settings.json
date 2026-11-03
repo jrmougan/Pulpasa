@@ -8,6 +8,7 @@
       "Bash(gdlint:*)",
       "Bash(gdformat:*)",
       "Bash(orca-ide orchestration:*)",
+      "Bash(orca orchestration:*)",
       "mcp__godot__check_project",
       "mcp__godot__get_debug_output",
       "mcp__godot__get_scene_tree",
