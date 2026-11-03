@@ -4,8 +4,9 @@ description: Receta del producer para lanzar una ficha de docs/backlog como work
 ---
 # Lanzar fichas con Orca
 
-Usa siempre `orca-ide` (en Linux `orca` es el lector de pantalla). Antes de la primera oleada
-de la sesión, lee la guía completa: `orca-ide skills get orchestration`.
+Los comandos de esta receta usan `orca-ide`, el nombre en Linux, donde `orca` es el lector de
+pantalla. En Windows `orca-ide` no existe: sustitúyelo por `orca` en todos ellos. Antes de la
+primera oleada de la sesión, lee la guía completa: `orca-ide skills get orchestration`.
 
 ## Una oleada
 

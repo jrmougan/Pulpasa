@@ -21,7 +21,8 @@ Cooperativo de cocina (pulpo á feira en romerías gallegas) en migración de Un
   Scoop con `hold`). No lo gestiona mise.
 - MCP `godot` (`.mcp.json`, godot-mcp-runtime 3.8.1, sin diálogos de confirmación por decisión del responsable): ejecutar, capturar, simular input, leer errores.
   Proyecto: `<raíz>/godot`. Linux sin pantalla: lanzar Claude con `xvfb-run -a`.
-- Orca: usa siempre `orca-ide`, nunca `orca` (en Linux es el lector de pantalla).
+- Orca: el comando depende del sistema. En Linux, `orca-ide`, nunca `orca` (es el lector de pantalla).
+  En Windows, `orca`, porque `orca-ide` no existe.
 
 ## Reglas no negociables
 1. Una ficha por worker. Escribe su id en `.claude/current-task` antes de editar: un hook solo
