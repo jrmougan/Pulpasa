@@ -1,7 +1,7 @@
 # ADR-002 — Bus de eventos y autoloads (sustituto de QFramework)
 
-- **Estado:** aceptado (2026-10-03); Enmienda 1 (PUL-066) pendiente del gate humano; Enmienda 2
-  (PUL-120, D26) propuesta, pendiente del gate humano
+- **Estado:** aceptado (2026-10-03); Enmienda 1 (PUL-066) y Enmienda 2 (PUL-120, D26) **aceptadas**
+  por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197)
 - **Fecha:** 2026-10-03
 - **Ficha:** PUL-003
 - **Relacionado:** `docs/arch/signals.md`, ADR-001, ADR-003, ADR-005 (D14); inventario §1 (Architecture, Systems,
@@ -203,7 +203,7 @@ Consecuencias de ese orden:
 
 ## Enmienda 1 (2026-10-06, PUL-066) — `AudioDirector` y fases
 
-- **Estado:** propuesta, **pendiente del gate humano** (con ADR-006).
+- **Estado:** **aceptada** por el responsable en gate humano el 2026-11-04 (G01–G04, `gate-enmiendas.md`).
 
 1. **Quinto autoload.** Tras `RoundManager`:
 
@@ -222,15 +222,15 @@ Consecuencias de ese orden:
    `phase_changed` por fase y rellena los puestos que abre; después `round_time_changed` y, si
    procede, fin de ronda. En `start`, `phase_changed(1)` va entre `orders_reset` y las comandas
    iniciales. Sin fases en `RoundConfig`, nada de esto ocurre (comportamiento actual).
-3. **`OrderBoard`** gana `set_active_slots(slot_ids)` y `set_new_order_max_time(seconds)`, que
+3. **`OrderBoard`** gana `set_active_slots(slot_ids)` y `set_new_order_patience_multiplier(factor)` (ADR-006 §6), que
    llama `RoundState` (el núcleo que recibe el tablero, regla 3). No hay señales nuevas de tablero.
 4. **Semilla.** `RoundConfig.rng_seed` (0 = aleatoria). `OrderService.setup` la usa si no recibe
    `rng`. Los núcleos siguen sin crear su propio RNG (regla 7).
 
 ## Enmienda 2 (2026-10-11, PUL-120) — Emisor de interacción y perfil de plataforma (D26)
 
-- **Estado:** propuesta, **pendiente del gate humano** (con ADR-003 §11, ADR-004 §6 y ADR-005
-  Enmienda D26).
+- **Estado:** **aceptada** por el responsable en gate humano el 2026-11-04 (G05, G06, `gate-enmiendas.md`;
+  con ADR-003 §11, ADR-004 §6 y ADR-005 Enmienda D26).
 
 1. **Emisor no autoload en el bus.** Las dos señales nuevas, `action_hint_changed` e
    `interaction_resolved` (`signals.md` §2, «Interacción»), las emite el componente común

@@ -1,5 +1,27 @@
 # Gate de enmiendas pendientes
 
+## Resolución (2026-11-04)
+
+**Gate resuelto por el responsable el 2026-11-04.** Sus cuatro respuestas, literales:
+
+| Pregunta | Respuesta |
+|---|---|
+| Tabla | «Aplicar todas» |
+| Rechazo tras caducar (G22, G51) | «Corregir el guard» |
+| R2 (G45) | «Aprobar la lectura» |
+| T3 | «Solo lo de Unity» |
+
+Lo aplica PUL-197, sin cambiar código; el guard lo corrige PUL-198. De las 58 filas, 55 constan aplicadas y 3 pendientes,
+porque al contrastar la frase con el código resultó falsa y la fila no preveía la corrección:
+- **G08**: «`interact()` consume la pulsación sin guardar nada» (`Slot.accepted_group`, ADR-003 §8.2). Desde D26, con un
+  objeto que no acepta, el slot no es objetivo e `interact()` devuelve `false`.
+- **G13**: citar `test_trash_bin.gd` por la regla de colocación de los cubos (ADR-003 §10.3). Ese test no comprueba la
+  distancia a los puestos, que salieron del grupo `interactable` por D26.
+- **G57**: lo mismo que G13 en `scene-tree.md` §2; el resto de la fila está aplicado.
+
+Detalle fila a fila: `docs/evidence/PUL-197/ac1-filas.md`. Todo lo que sigue es el análisis que sirvió para decidir y se
+conserva tal cual: los estados, las líneas citadas y las palabras «pendiente» o «propuesta» son los de antes del gate.
+
 Documento de trabajo para el gate humano (PUL-196, 2026-11-04). **Ningún agente acepta nada**: este
 documento solo recomienda. Los estados siguen siendo los de cada cabecera hasta que el responsable
 decida. Cada fila se comprobó contra el código de la rama de PUL-196 (base `cac6ac1`); si el código

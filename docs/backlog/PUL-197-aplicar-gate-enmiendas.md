@@ -1,7 +1,7 @@
 ---
 id: PUL-197
 title: Aplicar las decisiones del gate de enmiendas a los contratos
-status: ready
+status: review
 milestone: M4
 role: godot-architect
 deps: []
@@ -25,12 +25,23 @@ Gate humano del responsable, 2026-11-04, sobre `docs/arch/gate-enmiendas.md`:
 No cambia código ni tests. Si al aplicar una fila su frase resulta falsa contra el código, no la aceptes tal cual: corrígela si la fila ya lo prevé; si no, déjala pendiente y anótala. El texto de G22 y G51 no afirma como cierto lo que PUL-198 aún no ha corregido.
 
 ## Acceptance
-- [ ] AC1 Given las 58 filas, When se revisa cada documento, Then cada una consta aplicada o pendiente con motivo → tabla en docs/evidence/PUL-197/
-- [ ] AC2 Given `git diff` de la rama, When se revisa, Then no cambia nada bajo `godot/` → salida en docs/evidence/PUL-197/
-- [ ] AC3 Given `docs/arch`, When `grep -inE "propuest|pendiente"`, Then cada aparición vigente se explica → salida en docs/evidence/PUL-197/
+- [x] AC1 Given las 58 filas, When se revisa cada documento, Then cada una consta aplicada o pendiente con motivo → tabla en docs/evidence/PUL-197/
+- [x] AC2 Given `git diff` de la rama, When se revisa, Then no cambia nada bajo `godot/` → salida en docs/evidence/PUL-197/
+- [x] AC3 Given `docs/arch`, When `grep -inE "propuest|pendiente"`, Then cada aparición vigente se explica → salida en docs/evidence/PUL-197/
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Leer `gate-enmiendas.md`, el índice y todos los contratos afectados.
+2. Aplicar las filas por documento (ADR-002 a ADR-006, `signals.md`, `scene-tree.md`), corrigiendo lo que dice cada fila, tras contrastar cada frase nueva con el código citado. Lo falso que la fila no prevea queda pendiente con motivo.
+3. G22 y G51 no se matizan: se conserva «sin emisión en el juego» con una nota de que `order_stand.gd:156` lo incumple hasta PUL-198.
+4. G45 en `signals.md` y AC2 de `audio-y-fx`; T3 en `decisions.md`, solo lo de Unity; D23 ratificada y `presses_to_fill` = 6 sin «provisional».
+5. Índice `README.md` y resolución arriba de `gate-enmiendas.md`, sin borrar el análisis.
+6. Evidencia en `docs/evidence/PUL-197/`: tabla de 58 filas, `git diff --name-only`, `grep` explicado, `verify.sh --quick`, `check_owns.py`.
 
 ## Evidence
-(Lo rellena el worker: salida de verify.sh, capturas, notas.)
+En `docs/evidence/PUL-197/`:
+- `ac1-filas.md`: las 58 filas, 55 aplicadas y 3 pendientes (G08, G13, G57), con motivo y ruta:línea.
+- `ac2-diff.txt`: `git diff --name-only` de la rama; nada bajo `godot/`.
+- `ac3-grep.txt` y `ac3-grep.md`: salida del `grep` y explicación de cada aparición.
+- `verify-quick.txt` y `check-owns.txt`: `tools/verify.sh --quick` y `tools/check_owns.py`, en verde.
+
+Pendientes: las frases de G08 y G13/G57 son falsas contra el código y las filas no prevén la corrección. Hace falta otra decisión del responsable. `verify.sh --quick` no ejecuta tests: esta ficha solo cambia documentos.

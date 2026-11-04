@@ -1,0 +1,52 @@
+docs/arch/ADR-001-gdscript-convenciones.md:96:Correspondencia con las rutas propuestas en el inventario: `scenes/player/` → `entities/player/`,
+docs/arch/ADR-001-gdscript-convenciones.md:138:(T2; arreglo pendiente de publicar en godot-mcp-runtime#73). La práctica ya es editar el texto (PUL-184, PUL-186).
+docs/arch/ADR-002-eventbus-autoloads.md:164:10. **Independiente de la dimensión (D14).** Autoloads, `core/`, `resources/` y las firmas de
+docs/arch/ADR-003-arbol-escenas-composicion.md:4:  por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197), salvo la frase de `Slot.accepted_group` de §8.2 (G08, pendiente: ver allí);
+docs/arch/ADR-003-arbol-escenas-composicion.md:10:  regla de colocación de los cubos a un test en §10.3 (G13, pendiente: ver allí); enmienda §11 (D26: verbo
+docs/arch/ADR-003-arbol-escenas-composicion.md:227:> **Pendiente (G08, gate del 2026-11-04).** `accepted_group` existe y filtra (`slot.gd:94`), pero la frase
+docs/arch/ADR-003-arbol-escenas-composicion.md:560:> **Pendiente (G13, gate del 2026-11-04).** La atribución a `test_level_01.gd` es falsa: ese test solo fija las
+docs/arch/ADR-003-arbol-escenas-composicion.md:935:8. *Un `ActionLanguageData` único* (propuesta del diseño). Mezclaría datos del detector
+docs/arch/ADR-003-arbol-escenas-composicion.md:964:   prefiere separar capas y dejar pendiente solo la parte específica.
+docs/arch/ADR-004-input-coop-local.md:32:Al escribir esta ADR la dimensión del juego estaba pendiente (D14; hoy decidida: 3D, ADR-005), así que separa lo que no depende de
+docs/arch/ADR-004-input-coop-local.md:139:  (índices, no nodos: el bus es independiente de la dimensión). Cumple
+docs/arch/ADR-005-dimension-3d-2d.md:13:El prototipo Unity es 3D. El responsable duda entre seguir en 3D o pasar a 2D (D14, pendiente).
+docs/arch/ADR-005-dimension-3d-2d.md:87:## Recomendación (propuesta)
+docs/arch/ADR-005-dimension-3d-2d.md:118:- (−) Mientras D14 siga pendiente, las fases 3–8 no se pueden planificar en detalle; los spikes
+docs/arch/ADR-006-audio-feedback.md:168:propuesto por el diseño):
+docs/arch/ADR-006-audio-feedback.md:245:  `RoundManager` (ADR-002 regla 2). `phase` empieza en 1. Firma independiente de la dimensión.
+docs/arch/gate-enmiendas.md:1:# Gate de enmiendas pendientes
+docs/arch/gate-enmiendas.md:14:Lo aplica PUL-197, sin cambiar código; el guard lo corrige PUL-198. De las 58 filas, 55 constan aplicadas y 3 pendientes,
+docs/arch/gate-enmiendas.md:23:conserva tal cual: los estados, las líneas citadas y las palabras «pendiente» o «propuesta» son los de antes del gate.
+docs/arch/gate-enmiendas.md:57:   «Pendiente de R2» y el AC2 de `audio-y-fx` sigue pidiendo una señal de `EventBus`.
+docs/arch/gate-enmiendas.md:58:3. **D23 (G49, G55)**: `signals.md` y `scene-tree.md` dicen «pendiente de la revisión del producer» y
+docs/arch/gate-enmiendas.md:61:4. **T3**: propuesta al final del documento.
+docs/arch/gate-enmiendas.md:155:| G45 | `signals.md` §5, nota final, y ADR-006 §3 (R2) | PUL-066 | Leer el AC2 de `audio-y-fx` como «su señal, de `EventBus` o local» | Sí, es lo implementado. `godot/entities/items/box.gd:199`, `godot/entities/player/player.gd:214`, `godot/entities/stations/order_stand.gd:197` | **Sí, documental.** `docs/arch/signals.md:299` dice «Pendiente de R2» y `docs/design/features/audio-y-fx.md:11` sigue pidiendo señal de `EventBus`. La ficha PUL-066 no registra la respuesta | aceptar con cambios: aprobar la lectura y actualizar las dos líneas |
+docs/arch/gate-enmiendas.md:156:| G46 | `signals.md`, estado «propuesto» | PUL-003 | El catálogo como contrato | Sí en nombres y firmas: `godot/tests/unit/test_event_bus.gd:53`, `godot/tests/unit/test_event_bus.gd:61`. No implementado: aviso «Fase n» del HUD, Could (`docs/arch/signals.md:79`) | **Sí.** Receptores que el catálogo no lista: `godot/autoload/game_state.gd:51`, `godot/autoload/game_state.gd:52`, `godot/entities/player/character_switcher.gd:29`, `godot/ui/menus/pause_menu.gd:29`, `godot/ui/touch/touch_controls.gd:38`. `comprobaciones.txt` marca también `camera_rig.gd` y `audio_director.gd`, pero son falsos positivos, porque el guion solo mira la fila y solo nombres `.gd`: `docs/arch/signals.md:101` declara `godot/entities/camera/camera_rig.gd:42` en una nota aparte, y la fila de `pause_changed` lista `AudioDirector` por su nombre. Receptor que el catálogo lista y el código no conecta: `docs/arch/signals.md:88` sigue poniendo `order_stand.gd` en `delivery_rejected`, con el cue `deliver_error` (`comprobaciones.txt`); solo una nota al final de esa fila dice que deja de reproducirlo | aceptar con cambios: añadir esos cinco receptores, integrar si se quiere la nota de `docs/arch/signals.md:101` en la fila `docs/arch/signals.md:97`, quitar `order_stand.gd` de la columna de receptores de `delivery_rejected` y quitar `hud.gd` de `phase_changed` o dejarlo como Could explícito |
+docs/arch/gate-enmiendas.md:159:| G49 | `signals.md`, enmienda D23 | PUL-093 | Sin señales nuevas; receptores del indicador de entrega y del ticket | Sí. `godot/entities/stations/order_stand.gd:77`, `godot/core/seasoning_rules.gd:8`, `godot/tests/unit/test_event_bus.gd:53` | **Sí, de estado.** `docs/arch/signals.md:10` dice «pendiente de la revisión del producer»; `docs/arch/ADR-003-arbol-escenas-composicion.md:249` dice aceptada | aceptar con cambios: actualizar el estado y resolver la pregunta 3 |
+docs/arch/gate-enmiendas.md:162:| G52 | `scene-tree.md`, estado «propuesto» | PUL-003 | El árbol como contrato | Sí en lo esencial: `godot/scenes/levels/level_01.tscn:32`, `godot/scenes/levels/level_01.tscn:36`, `godot/scenes/levels/level_01.tscn:128` | **Sí.** `docs/arch/scene-tree.md:38` dice «Dimensión pendiente»; `docs/arch/scene-tree.md:423` dice energía 1,34 y son 1,18 (`godot/entities/environment/environment.tscn:32`, `godot/tests/integration/test_level_01.gd:662`, PUL-183); `docs/arch/scene-tree.md:284` mantiene el puesto en `interactable` (lo corrige §9.2) | aceptar con cambios: corregir esas líneas y el título («objetivo de M0») |
+docs/arch/gate-enmiendas.md:166:| G56 | `scene-tree.md`, recogida de PUL-073 | PUL-073 | `Bulbs` y `Vignette`, «pendiente del QA de M3b» | Los nodos existen: `godot/entities/environment/environment.tscn:42`, `godot/entities/environment/environment.tscn:85` | **Sí, de estado.** `docs/arch/scene-tree.md:14` sigue pendiente, pero PUL-073 está `done` y el roadmap da M3b por cerrado en lo técnico (`docs/design/roadmap.md:13`) | aceptar con cambios: quitar «pendiente del QA» |
+docs/arch/gate-enmiendas.md:170:## Propuesta sobre T3
+docs/arch/gate-enmiendas.md:176:**Propuesta:** marcar T3 como «Superada por D17» en lo que dice de Unity. Lo de `godot/` en este repo
+docs/arch/gate-enmiendas.md:180:## Apariciones de `grep -inE "propuest|pendiente"` en `docs/arch`
+docs/arch/gate-enmiendas.md:182:Se excluye este documento. `pendiente` también coincide dentro de «independiente».
+docs/arch/gate-enmiendas.md:186:| `docs/arch/ADR-001-gdscript-convenciones.md:96` | Fuera: «rutas propuestas» del inventario, no es una enmienda |
+docs/arch/gate-enmiendas.md:187:| `docs/arch/ADR-001-gdscript-convenciones.md:138` | Fuera: arreglo externo pendiente de publicar. ADR-001 Enmienda 1 está aprobada y la ficha cubre ADR-002 a ADR-006 |
+docs/arch/gate-enmiendas.md:190:| `docs/arch/ADR-002-eventbus-autoloads.md:164` | Fuera: «independiente» |
+docs/arch/gate-enmiendas.md:196:| `docs/arch/ADR-003-arbol-escenas-composicion.md:15` | Fuera: referencia caducada a «D14 pendiente»; D14 está cerrada. Conviene corregirla al aceptar |
+docs/arch/gate-enmiendas.md:200:| `docs/arch/ADR-003-arbol-escenas-composicion.md:913` | Fuera: alternativa descartada («propuesta del diseño») |
+docs/arch/gate-enmiendas.md:204:| `docs/arch/ADR-004-input-coop-local.md:139` | Fuera: «independiente» |
+docs/arch/gate-enmiendas.md:216:| `docs/arch/ADR-006-audio-feedback.md:168` | Fuera: nombre de cue «propuesto por el diseño» |
+docs/arch/gate-enmiendas.md:217:| `docs/arch/ADR-006-audio-feedback.md:244` | Fuera: «independiente» |
+docs/arch/gate-enmiendas.md:218:| `docs/arch/README.md:6` | Fuera: «independiente» |
+docs/arch/gate-enmiendas.md:237:| `docs/arch/scene-tree.md:707` | Fuera: pictogramas pendientes de assets, tarea de arte y no de contrato |
+docs/arch/gate-enmiendas.md:244:| `docs/arch/signals.md:39` | Fuera: «independientes» |
+docs/arch/README.md:6:mantiene la capa común independiente de la dimensión.
+docs/arch/README.md:12:| [ADR-003](ADR-003-arbol-escenas-composicion.md) | Árbol de escenas, composición y contrato de interacción; §8 estación (D18), §9 estación al paso (D23), §10 D25, §11 lenguaje de acciones (D26) | aceptado; §8, §10 y §11 aceptadas (2026-11-04), §9 ratificada; pendientes: una frase de §8.2 (G08) y otra de §10.3 (G13) |
+docs/arch/README.md:17:| [scene-tree.md](scene-tree.md) | Árbol de escenas y enmiendas (M2b, M3, M3c/D23, D25, D26 en §9) | aceptado (2026-11-04); pendientes: `accepted_group` en §3 (G08) y una atribución a test en §2 (G13, G57) |
+docs/arch/README.md:19:El gate de las enmiendas se resolvió el 2026-11-04: decisiones, análisis y lo que sigue pendiente (G08, G13, G57), en
+docs/arch/README.md:23:`propuesto` → `aceptado` (gate humano del responsable) → `sustituido por ADR-xxx` si se reemplaza.
+docs/arch/scene-tree.md:4:  `gate-enmiendas.md`, PUL-197), salvo dos frases **pendientes**: la de `accepted_group` de `slot.tscn` en §3
+docs/arch/scene-tree.md:114:**Pendiente (G13, G57; gate del 2026-11-04).** La atribución de arriba a `test_level_01.gd` no se ha cambiado y es
+docs/arch/scene-tree.md:285:                      │   PENDIENTE (G08, ADR-003 §8.2): desde D26 lo no aceptado no hace objetivo al slot, no consume
+docs/arch/scene-tree.md:702:(pendiente de assets).
+docs/arch/signals.md:40:directamente las señales del `OrderBoard` que recibe en su constructor. **Las firmas de `EventBus` son independientes de la dimensión** (D14, ADR-005): solo
