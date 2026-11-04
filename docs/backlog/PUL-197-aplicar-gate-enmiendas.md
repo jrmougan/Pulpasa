@@ -44,4 +44,9 @@ En `docs/evidence/PUL-197/`:
 - `ac3-grep.txt` y `ac3-grep.md`: salida del `grep` y explicación de cada aparición.
 - `verify-quick.txt` y `check-owns.txt`: `tools/verify.sh --quick` y `tools/check_owns.py`, en verde.
 
-Pendientes: las frases de G08 y G13/G57 son falsas contra el código y las filas no prevén la corrección. Hace falta otra decisión del responsable. `verify.sh --quick` no ejecuta tests: esta ficha solo cambia documentos.
+Pendientes: las frases de G08 (cinco, en ADR-003 §8.2) y G13/G57 son falsas contra el código y las filas no prevén la corrección. Hace falta otra decisión del responsable. `verify.sh --quick` no ejecuta tests: esta ficha solo cambia documentos.
+
+Revisión de PUL-197, contrastada contra el código, por lectura:
+- B1, N1, N2, N5, N6, N7 y N9: ciertos y corregidos. N9 se aplicó a las seis copias de la nota, con el mismo antecedente, no solo a `signals.md`. N8 no requería cambio.
+- Ningún hallazgo resultó falso. Una precisión: la revisión sitúa N4 fuera de `owns`, pero `docs/design/features/audio-y-fx.md` está en `owns` de esta ficha. No se ha tocado, como pidió el coordinador, y sigue como tarjeta propuesta. N3 sí está fuera de `owns`.
+- Hallazgo nuevo, sin corregir porque ninguna fila lo prevé: `docs/arch/scene-tree.md:241` dice que la caja, «con cualquier otra cosa en la mano», consume la pulsación; `box.gd` devuelve `false` con hint `NONE` (`godot/entities/items/box.gd:121`). Es el mismo caso que G08.

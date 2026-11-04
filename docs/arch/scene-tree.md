@@ -32,8 +32,7 @@
   equivalencias 2D (§6); bajas (§7.3). Resumen y árboles completos en §9. Lo marcado **D26** lo
   implementan las fichas de la partición de PUL-120.
 
-Árbol de escenas del juego, escrito por capas desde M0: donde una enmienda cambia algo, manda la más
-reciente. Rutas relativas a `godot/` (estructura de ADR-001).
+Árbol de escenas del juego, escrito por capas; cada enmienda marca lo que sustituye. Rutas relativas a `godot/` (estructura de ADR-001).
 `%Nombre` = nodo con nombre único de escena. Entre corchetes, la fase de M0 en que se crea la
 escena y, si aplica, el hito en que se amplía. Lo marcado **M2** no existe en M0 pero se reserva
 su sitio para no reestructurar.
@@ -612,7 +611,7 @@ quitarse de los enums.
 | Qué | Dónde | Nota |
 |---|---|---|
 | Puesto como objetivo | `OrderStand` en el grupo `interactable` y la capa `interactable`; `can_interact`, `interact`, rama B12 de `order_stand.gd` | Entrega solo por `%DeliveryZone`; el cuerpo pasa a la capa `world` |
-| Cue de entrega errónea | `order_stand.gd::_on_delivery_rejected` → `play_cue(&"deliver_error")`; clave `deliver_error` del mapa | `delivery_rejected` sin emisión en el juego. *Nota del gate del 2026-11-04 (G22, G51): hoy `order_stand.gd:156` lo incumple en el tick posterior a la caducidad: puede emitirse con `penalty` 0 (`docs/evidence/PUL-196/repro-entrega.txt`). Lo corrige PUL-198; el contrato no se matiza.* |
+| Cue de entrega errónea | `order_stand.gd::_on_delivery_rejected` → `play_cue(&"deliver_error")`; clave `deliver_error` del mapa | `delivery_rejected` sin emisión en el juego. *Nota del gate del 2026-11-04 (G22, G51): hoy `order_stand.gd:156` incumple «sin emisión en el juego» en el tick posterior a la caducidad: puede emitirse con `penalty` 0 (`docs/evidence/PUL-196/repro-entrega.txt`). Lo corrige PUL-198; el contrato no se matiza.* |
 | Cue de error de la estación | `seasoning_station.gd` → `play_cue(&"season_error")`; clave `season_error` | El rechazo suena en el jugador (`rejected`) |
 | `cook_done` | clave del mapa y `cooking_station.gd` | Renombrada `cook_ready` |
 | Toggle del cuenco | `cachelos_bowl.gd` (`_toggle`, `clock`, `_game_time`, `_last_change`); `SeasoningStationData.toggle_guard` y su valor en `seasoning_station.tres`; `SeasoningRules.toggle()`; `Box.toggle_seasoning()` | El cuenco solo pone (`Box.apply_seasoning`) |

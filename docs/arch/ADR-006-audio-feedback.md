@@ -180,7 +180,7 @@ propuesto por el diseño):
 **Bajas del mapa** (las retira la ficha de montaje cuando ningún emisor las use; hasta entonces
 conviven con las nuevas para que cada ficha cambie su escena sin romper el test de claves):
 `cook_done` (renombrado a `cook_ready`), `season_error` y `deliver_error` (sustituidos por `rejected`;
-el puesto ya no rechaza: la entrega es solo por zona, ADR-003 §11.7; *Nota del gate del 2026-11-04 (G22, G51): hoy `order_stand.gd:156` lo incumple en el tick posterior a la caducidad: puede emitirse con `penalty` 0 (`docs/evidence/PUL-196/repro-entrega.txt`). Lo corrige PUL-198; el contrato no se matiza.*). Sin alias: el mapa no tiene dos
+el puesto ya no rechaza: la entrega es solo por zona, ADR-003 §11.7; *Nota del gate del 2026-11-04 (G22, G51): hoy `order_stand.gd:156` incumple «sin emisión en el juego» en el tick posterior a la caducidad: puede emitirse con `penalty` 0 (`docs/evidence/PUL-196/repro-entrega.txt`). Lo corrige PUL-198; el contrato no se matiza.*). Sin alias: el mapa no tiene dos
 claves para el mismo hecho.
 
 **Verbo → respuesta de éxito** (un cue por efecto, con las excepciones de esta tabla; lo reproduce la escena que cambia):

@@ -9,7 +9,7 @@ mantiene la capa común independiente de la dimensión.
 |---|---|---|
 | [ADR-001](ADR-001-gdscript-convenciones.md) | Lenguaje, convenciones GDScript y estructura de carpetas | aceptado; Enmienda 1 aprobada |
 | [ADR-002](ADR-002-eventbus-autoloads.md) | `EventBus` y autoloads (`GameState`, `OrderService`, `RoundManager`); sustituto de QFramework | aceptado; Enmiendas 1 y 2 aceptadas (2026-11-04) |
-| [ADR-003](ADR-003-arbol-escenas-composicion.md) | Árbol de escenas, composición y contrato de interacción; §8 estación (D18), §9 estación al paso (D23), §10 D25, §11 lenguaje de acciones (D26) | aceptado; §8, §10 y §11 aceptadas (2026-11-04), §9 ratificada; pendientes: una frase de §8.2 (G08) y otra de §10.3 (G13) |
+| [ADR-003](ADR-003-arbol-escenas-composicion.md) | Árbol de escenas, composición y contrato de interacción; §8 estación (D18), §9 estación al paso (D23), §10 D25, §11 lenguaje de acciones (D26) | aceptado; §8, §10 y §11 aceptadas (2026-11-04), §9 ratificada; pendientes: cinco frases de §8.2 (G08) y una de §10.3 (G13) |
 | [ADR-004](ADR-004-input-coop-local.md) | InputMap por jugador y dispositivo; cambio de personaje; §6 táctil (D26) | aceptado; §6 aceptada (2026-11-04) |
 | [ADR-005](ADR-005-dimension-3d-2d.md) | Dimensión 3D o 2D (D14); Enmienda D26: escala de UI, safe area, perfil de plataforma y cámara móvil; Enmienda D27: botones en fila | aceptado (3D); Enmiendas D26 y D27 aceptadas (2026-11-04) |
 | [ADR-006](ADR-006-audio-feedback.md) | Audio, feedback, quemado y fases (M3); §4.1 cues de D26 | aceptado; enmiendas D25 y D26 aceptadas (2026-11-04); R2 aprobada |

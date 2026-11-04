@@ -1,7 +1,7 @@
 # ADR-003 — Árbol de escenas y composición
 
 - **Estado:** aceptado (2026-10-03); enmienda §8 (estación de condimentos, PUL-056) **aceptada**
-  por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197), salvo la frase de `Slot.accepted_group` de §8.2 (G08, pendiente: ver allí);
+  por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197), salvo cinco frases de §8.2 (G08, pendiente: ver allí);
   enmienda §9 (estación al paso, D23) aceptada por el producer el 2026-10-07 tras su revisión
   (PUL-093) y **ratificada** por el responsable en ese mismo gate; sustituye las partes de §8 que
   dependían de la bandeja; enmienda de §3 (API de `Holder`), §9.4 y §9.5 tras implementar M3c (PUL-103)
@@ -224,10 +224,20 @@ pulsación y `holder.can_drop_freely()` (§9.5). En la estación un rechazo **no
   detector sustituye el slot por la caja guardada, que ya consume la pulsación de una mano llena:
   no se suelta la segunda caja (AC9).
 
-> **Pendiente (G08, gate del 2026-11-04).** `accepted_group` existe y filtra (`slot.gd:94`), pero la frase
-> «`interact()` consume la pulsación sin guardar nada» es falsa desde D26: con un objeto que no acepta, el hint es
-> `NONE` (§11.6, A5), el slot no es objetivo e `interact()` devuelve `false` (`test_slot.gd:248`). La fila G08 no
-> prevé esa corrección, así que la frase no queda aceptada ni corregida. El resto de §8.2 queda aceptado.
+> **Pendiente (G08, gate del 2026-11-04).** Estas cinco frases de §8.2 son falsas contra el código. La fila G08 no prevé
+> corregirlas, así que no quedan aceptadas ni reescritas:
+> - «`interact_pressed()` suelta lo que lleva la mano si el objetivo no consume la pulsación»: desde D26, un objetivo con
+>   verbo que devuelve `false` da `push_error` y un rechazo; solo cae al suelo el objetivo heredado sin verbo
+>   (`interaction_component.gd:79`).
+> - Dispensador, «`can_interact(actor)` es `true` solo con `actor.holder` y la mano vacía», y «con algo en la mano
+>   […] `is_reachable_from` devuelve `false`»: es al revés. Con la mano vacía `for_dispenser` da `NONE` y
+>   `is_reachable_from` ignora la mano (`action_rules.gd:88`, `seasoning_dispenser.gd:42`).
+> - Cuenco, «`can_interact(actor)` es `true` siempre que haya `actor.holder`»: devuelve `is_target()`, y `for_bowl` da
+>   `NONE` con la mano vacía (`cachelos_bowl.gd:67`, `action_rules.gd:110`).
+> - `Slot`, «`interact()` consume la pulsación sin guardar nada»: con un objeto que no acepta, el hint es `NONE` (§11.6,
+>   A5), el slot no es objetivo e `interact()` devuelve `false` (`slot.gd:118`, `test_slot.gd:248`).
+> - «la caja guardada […] ya consume la pulsación de una mano llena»: con una caja en la mano `for_box` da `NONE`, así
+>   que la caja guardada no es objetivo (`action_rules.gd:42`).
 
 #### 8.3 Reglas en el núcleo y API de la caja
 - `core/seasoning_rules.gd` (`class_name SeasoningRules`, común, puro): `enum Rejection { NONE,
@@ -499,6 +509,8 @@ static func apply(current: Array[SeasoningData], seasoning: SeasoningData, is_fu
 se mantiene. **Se quita `paprika_swap`.** `toggle_guard` (0,25) queda **solo para el cuenco** (que
 sigue alternando cachelos). `operator_side_only`, `cachelos_stock_max` (4),
 `cachelos_initial_stock` (0) y `cachelos_portions_per_item` (2) sin cambios.
+*Enmienda D26 (PUL-120):* `toggle_guard` tampoco queda para el cuenco: sustituido por la nota de **Cuenco**, abajo, y por
+las bajas de §11.7.
 
 **Motivos de rechazo que quedan** (`rejected`, señal local): dispensador → `BOX_NOT_FULL`;
 cuenco → `BOWL_EMPTY`, `BOWL_FULL`. `ALREADY_APPLIED` existe en el enum pero no se emite en `rejected`.
@@ -866,7 +878,7 @@ dulce / picante; `+C` = con cachelos).
 - `EventBus.delivery_rejected` y `OrderBoard` **se conservan** (firma, núcleo y tests de núcleo; P3 del
   gate) pero la señal queda **sin emisión en el juego**. `order_stand.gd` deja de reproducir
   `deliver_error` y `RoundConfig.wrong_delivery_penalty` pasa a **0** en `round_config.tres` (D8
-  modificada; ficha de montaje). *Nota del gate del 2026-11-04 (G22, G51): hoy `order_stand.gd:156` lo incumple en el tick posterior a la caducidad: puede emitirse con `penalty` 0 (`docs/evidence/PUL-196/repro-entrega.txt`). Lo corrige PUL-198; el contrato no se matiza.*
+  modificada; ficha de montaje). *Nota del gate del 2026-11-04 (G22, G51): hoy `order_stand.gd:156` incumple «sin emisión en el juego» en el tick posterior a la caducidad: puede emitirse con `penalty` 0 (`docs/evidence/PUL-196/repro-entrega.txt`). Lo corrige PUL-198; el contrato no se matiza.*
 
 **Cuenco** (`cachelos_bowl.gd`; D26.5, modifica D23/D25):
 - Con caja llena solo **pone**: `box.apply_seasoning(seasoning)` (cachelos, grupo `&""`) y gasta 1
@@ -998,6 +1010,6 @@ caja pasa a encajar (§11.7).
   delante si el punto está libre (prompt SOLTAR visible) o da un rechazo `busy` contra barra o pared
   (decisión del producer autorizada por el responsable, P1 de PUL-120).
 - (§11, −) `delivery_rejected` y la penalización de caja errónea (D8) quedan sin uso en el juego; se
-  conservan por no cambiar firmas. *Nota del gate del 2026-11-04 (G22, G51): hoy `order_stand.gd:156` lo incumple en el tick posterior a la caducidad: puede emitirse con `penalty` 0 (`docs/evidence/PUL-196/repro-entrega.txt`). Lo corrige PUL-198; el contrato no se matiza.*
+  conservan por no cambiar firmas. *Nota del gate del 2026-11-04 (G22, G51): hoy `order_stand.gd:156` incumple «sin emisión en el juego» en el tick posterior a la caducidad: puede emitirse con `penalty` 0 (`docs/evidence/PUL-196/repro-entrega.txt`). Lo corrige PUL-198; el contrato no se matiza.*
 - El árbol concreto está en `docs/arch/scene-tree.md`. Cambiarlo en algo que afecte a otra
   ficha (nombres de escena, `@export` públicos, grupos, capas) requiere enmienda.

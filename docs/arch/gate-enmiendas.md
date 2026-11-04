@@ -13,8 +13,10 @@
 
 Lo aplica PUL-197, sin cambiar código; el guard lo corrige PUL-198. De las 58 filas, 55 constan aplicadas y 3 pendientes,
 porque al contrastar la frase con el código resultó falsa y la fila no preveía la corrección:
-- **G08**: «`interact()` consume la pulsación sin guardar nada» (`Slot.accepted_group`, ADR-003 §8.2). Desde D26, con un
-  objeto que no acepta, el slot no es objetivo e `interact()` devuelve `false`.
+- **G08**: cinco frases de ADR-003 §8.2, detalladas allí: que `interact_pressed()` suelta si el objetivo no consume; el
+  `can_interact` del dispensador «con la mano vacía» y su `is_reachable_from`; el `can_interact` del cuenco «siempre que
+  haya `actor.holder`»; que `Slot.accepted_group` consume la pulsación, y que la caja guardada consume la de una mano
+  llena. Desde D26 ninguna coincide con el código.
 - **G13**: citar `test_trash_bin.gd` por la regla de colocación de los cubos (ADR-003 §10.3). Ese test no comprueba la
   distancia a los puestos, que salieron del grupo `interactable` por D26.
 - **G57**: lo mismo que G13 en `scene-tree.md` §2; el resto de la fila está aplicado.
