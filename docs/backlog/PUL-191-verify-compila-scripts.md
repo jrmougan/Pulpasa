@@ -1,7 +1,7 @@
 ---
 id: PUL-191
 title: Detectar en verify.sh scripts que no compilan aunque ningún test los cargue
-status: review
+status: done
 milestone: M4
 role: godot-architect
 deps: []
