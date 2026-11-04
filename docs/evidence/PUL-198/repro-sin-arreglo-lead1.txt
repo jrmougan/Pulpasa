@@ -1,0 +1,9 @@
+physics_frame=10 jugador movido a la zona
+physics_frame=11 paciencia forzada id=2
+physics_frame=11 order_expired id=2 slot=2 penalty=3
+physics_frame=11 order_generated id=3 slot=2
+physics_frame=12 delivery_rejected slot=2 order=2 penalty=0
+physics_frame=12 body_entered
+physics_frame=13 order_completed id=3
+physics_frame=13 order_generated id=4 slot=2
+RESULTADO: delivery_rejected emitidas = 1

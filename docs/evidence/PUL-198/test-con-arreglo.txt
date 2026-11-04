@@ -1,0 +1,5 @@
+* test_pul198_entry_after_expiry_tick_before_advance_does_not_reject
+* test_pul198_entry_after_the_advance_delivers_replacement
+38/38 passed.
+Passing Tests        38
+---- All tests passed! ----
