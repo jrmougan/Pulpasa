@@ -152,7 +152,7 @@ Unity se indica como tal y lo que cambió cita su decisión. Cualquier cambio va
   (ADR-006 §6, `PhaseData.active_slots`, hoy 2/3/4) solo se reponen los puestos activos de la fase; la comanda
   de un puesto que se desactiva sigue hasta entregarse o caducar y no se repone.
 - **Corte**: por pulsación (D13; D26: mantener pulsado repite cada `cut_repeat_interval` = 0,2 s, atajo, con
-  contador `N/6`), con una **caja única** y `presses_to_fill` = **6** (D25, provisional; antes S/M/L:
+  contador `N/6`), con una **caja única** y `presses_to_fill` = **6** (D25; deja de ser provisional por G11, gate del 2026-11-04; antes S/M/L:
   5 / 10 / 20 en el prototipo, 4 / 6 / 10 con D23). Es un `int` y la caja llena `BoxData.fill_after(cortes)`
   (PUL-104); 1 pulpo = 2 cajas (`amount_per_full_box`). El pulpo se agota con un resto ≤ `Ingredient.EMPTY_EPSILON`.
 - **Aliño** (D25, sustituye a los 4 dispensadores de D18/D23): dos dispensadores de aliño completo, *dulce*
@@ -184,7 +184,7 @@ Rechazadas: asignar la comanda a cualquier puesto (D12); corte por «mantener pu
 4. **Modelos Pandazole (D6)**: ¿se usan o se sustituyen? Afecta a asset-pipeline, no a las features.
 5. **Fases de dificultad**: valores provisionales de `dificultad-progresiva.md` (límites de fase, puestos activos, `max_time`, recetas por fase de D25) a validar en playtest.
 6. **Número de puestos de entrega** del nivel: 4 asumidos por `max_active_orders`; confirmar con el inventario (PUL-001).
-7. **D25**: `presses_to_fill` = 6 y los precios de las 4 recetas son provisionales; se re-miden en QA tras implementar D25.
+7. **D25**: los precios de las 4 recetas son provisionales; se re-miden en QA tras implementar D25. `presses_to_fill` = 6 ya no lo es (G11, gate del 2026-11-04).
 8. **D26**: valores de `lenguaje-acciones.md` (histéresis 20 %, anillos de 8 px, aviso a 3 Hz) y de
    `controles-tactiles.md` (zoom 120 px/m, texto 36 px, botones 72/48 dp) son de diseño y se validan en
    un playtest en PC con el perfil táctil forzado y, más adelante, en un teléfono (ficha de export Android).
