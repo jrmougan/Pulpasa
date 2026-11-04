@@ -1,0 +1,15 @@
+M	docs/arch/README.md
+A	docs/arch/gate-enmiendas.md
+M	docs/backlog/PUL-196-preparar-gate-enmiendas.md
+A	docs/evidence/PUL-196/ac1-ac2.txt
+A	docs/evidence/PUL-196/ac3-diff.txt
+A	docs/evidence/PUL-196/comprobaciones.py
+A	docs/evidence/PUL-196/comprobaciones.txt
+A	docs/evidence/PUL-196/comprobar_gate.py
+A	docs/evidence/PUL-196/repro-entrega.txt
+A	docs/evidence/PUL-196/repro_entrega_tras_caducidad.gd
+A	docs/evidence/PUL-196/repro_lanzador.gd
+A	docs/evidence/PUL-196/verify-completo.txt
+A	docs/evidence/PUL-196/verify-quick.txt
+check_owns: 13 rutas dentro de owns de PUL-196.
+check_owns rc=0

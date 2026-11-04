@@ -1,0 +1,231 @@
+== G10, bajas de ADR-003 §8.4: rutas que no deben existir
+entities/stations/spice_shelf.tscn: no existe
+entities/items/seasoning.tscn: no existe
+entities/items/seasoning_item.gd: no existe
+assets/models/placeholders/condiment_jar.tscn: no existe
+Tray o get_box fuera de tests: 0
+initial_item_data fuera de tests: 0
+
+== Apariciones fuera de tests de nombres que los contratos dan de baja
+set_new_order_max_time: 0
+toggle_seasoning: 0
+swap_exclusive: 0
+paprika_swap: 0
+toggle_guard: 0
+button_zone_top_px: 0
+cook_done: 0
+season_error: 0
+deliver_error: 0
+short_label: 0
+UiScale.factor: 0
+
+== G25, eventos táctiles en project.godot
+InputEventScreenTouch o InputEventScreenDrag: 0
+
+== G31, factor en ui_scale.gd
+factor o MAX_FACTOR: 0
+
+== G35, tipos de mundo en la capa común de E6
+core/platform_profile.gd: ninguno
+resources/ui_profile.gd: ninguno
+ui/widgets/ui_scale.gd: ninguno
+ui/widgets/safe_area_margin.gd: ninguno
+resources/camera_profile.gd: ['5: ## `size` de la Camera3D ortográfica (alto de la vista en m).']
+core/camera_follow.gd: ninguno
+
+== G46, señales de EventBus: catálogo de signals.md §2 frente a connect/emit en el código
+Excluye tests y sandboxes de desarrollo (ver la sección G05 y G24).
+Solo mira la columna de la fila y solo nombres .gd: una nota aparte o un receptor citado por su
+nombre de clase salen como falsos positivos (camera_rig.gd, signals.md:101; audio_director.gd,
+AudioDirector en la fila de pause_changed).
+en el catálogo y no en el código: []
+en el código y no en el catálogo: []
+round_started: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=['character_switcher.gd', 'game_state.gd', 'pause_menu.gd'] en_la_fila_sin_conectar=[]
+round_time_changed: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+round_finished: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=['game_state.gd'] en_la_fila_sin_conectar=[]
+score_changed: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+phase_changed: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=['hud.gd']
+orders_reset: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+order_generated: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+order_completed: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+delivery_rejected: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=['order_stand.gd']
+order_patience_changed: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+order_expired: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+action_hint_changed: emite=['interaction_component.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+interaction_resolved: emite=['interaction_component.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+pause_changed: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=['audio_director.gd', 'touch_controls.gd'] en_la_fila_sin_conectar=[]
+character_switched: emite=['character_switcher.gd'] conecta_sin_estar_en_la_fila=['camera_rig.gd'] en_la_fila_sin_conectar=[]
+device_assigned: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+device_disconnected: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+
+== G05 y G24, señales de EventBus usadas desde sandboxes (excluidos arriba)
+godot/ui/touch/sandbox/touch_sandbox.gd:48: EventBus.action_hint_changed.emit(1, case[1], case[2], case[3])
+ficheros fuera de ui/touch/sandbox que citan touch_sandbox: []
+
+== G12, G15, G50 y G57, motivos de `rejected` del dispensador: código frente a texto
+seasoning_dispenser.gd:71: rejected.emit(result)
+seasoning_dispenser.gd:74: rejected.emit(_rejection_of(hint.reason))
+seasoning_dispenser.gd:93: return SeasoningRules.Rejection.ALREADY_APPLIED
+seasoning_dispenser.gd:94: return SeasoningRules.Rejection.BOX_NOT_FULL
+docs/arch/ADR-003-arbol-escenas-composicion.md:440: ## D25: aplica `seasoning` a una caja. Sin llenar: BOX_NOT_FULL. Si ya lo lleva: ALREADY_APPLIED
+docs/arch/ADR-003-arbol-escenas-composicion.md:446: `find(current, seasoning)` → `ALREADY_APPLIED`; `find_in_group(current, group)` → sustituye; si no,
+docs/arch/ADR-003-arbol-escenas-composicion.md:449: - `Rejection` gana **`ALREADY_APPLIED` al final** (valor 8, sin renumerar). `EXCLUSIVE_TAKEN` pasa a
+docs/arch/ADR-003-arbol-escenas-composicion.md:472: `BOX_NOT_FULL`: `rejected(BOX_NOT_FULL)` (suena `season_error`); `ALREADY_APPLIED`: **se consume en
+docs/arch/ADR-003-arbol-escenas-composicion.md:474: que está mal se tira al cubo (§10.3). *Enmienda D26 (PUL-120):* `ALREADY_APPLIED` deja de ser
+docs/arch/ADR-003-arbol-escenas-composicion.md:476: - **Sin antirrebote**: aplicar es idempotente (la segunda pulsación del mismo da `ALREADY_APPLIED`), así
+docs/arch/ADR-003-arbol-escenas-composicion.md:493: cuenco → `BOWL_EMPTY`, `BOWL_FULL`. `ALREADY_APPLIED` existe en el enum pero no se emite en `rejected`.
+docs/arch/ADR-003-arbol-escenas-composicion.md:583: Los dispensadores siguen con `rejected` (solo `BOX_NOT_FULL`); la caja con `seasoned` /
+docs/arch/ADR-003-arbol-escenas-composicion.md:591: 3. *`ALREADY_APPLIED` como rechazo con `season_error`.* D25 dice «no hace nada»; un error sonoro por
+docs/arch/ADR-003-arbol-escenas-composicion.md:628: | `ActionReason` | `core/action_reason.gd` (`class_name ActionReason extends RefCounted`) | Constantes `String
+docs/arch/ADR-003-arbol-escenas-composicion.md:860: - `rejected` local del cuenco: `BOWL_EMPTY`, `BOWL_FULL`, `ALREADY_APPLIED` y `BOX_NOT_FULL` (mapeo de
+docs/arch/ADR-003-arbol-escenas-composicion.md:863: **Dispensador** (`seasoning_dispenser.gd`; sustituye lo dicho en §10.2 sobre `ALREADY_APPLIED`): con el
+docs/arch/ADR-003-arbol-escenas-composicion.md:865: `rejected(ALREADY_APPLIED)` local y el jugador suena `rejected` (D26.3; pregunta 3 del diseño). Caja
+docs/arch/scene-tree.md:238: el dispensador de aliño: sustituye al otro aliño, `ALREADY_APPLIED` si ya lo lleva) y
+docs/arch/scene-tree.md:362: │                     D25: llena → box.apply_seasoning(seasoning): NONE → %Gesture; ALREADY_APPLIED → nada
+docs/arch/scene-tree.md:368: │   signal rejected(reason: SeasoningRules.Rejection)   (D25: solo BOX_NOT_FULL)
+docs/arch/signals.md:19: `ALREADY_APPLIED` y `PhaseData` gana `orders` (§1); el ticket ya no lee la caja (§2, §4).
+docs/arch/signals.md:53: | `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX` (en desuso desde D23: sin c
+docs/arch/signals.md:206: | `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn` (M3: `%Feedback`, cue `se
+docs/arch/signals.md:208: | `rejected(reason: SeasoningRules.Rejection)` | `seasoning_dispenser.gd` (`SeasoningDispenser`) | `seasoning_
+docs/arch/signals.md:212: pulsaciones cuyo hint es `BLOCKED` (dispensador: `BOX_NOT_FULL`, y ahora también `ALREADY_APPLIED`;
+docs/arch/signals.md:213: cuenco: `BOWL_EMPTY`, `BOWL_FULL` al reponer, `ALREADY_APPLIED` si la caja ya lleva cachelos y
+docs/arch/signals.md:251: `rejected(BOX_NOT_FULL)`; `ALREADY_APPLIED`: nada (pulsación consumida en silencio). Sin antirrebote.
+
+== G16, cuenco con caja vacía o a medias: el fixture por stock
+action_matrix.csv:227: E1s0-M5,bowl,side=operator;stock=0,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:228: E1s0-M6,bowl,side=operator;stock=0,M6,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:240: E2s1-M5,bowl,side=operator;stock=1,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:241: E2s1-M6,bowl,side=operator;stock=1,M6,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:253: E2s2-M5,bowl,side=operator;stock=2,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:254: E2s2-M6,bowl,side=operator;stock=2,M6,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:266: E3s3-M5,bowl,side=operator;stock=3,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:267: E3s3-M6,bowl,side=operator;stock=3,M6,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:279: E3s4-M5,bowl,side=operator;stock=4,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:280: E3s4-M6,bowl,side=operator;stock=4,M6,1,cachelos,BLOCKED,box_not_full,,
+
+== G17 y G18, interactables de entities/ sin get_action_hint en sus scripts directos
+godot/entities/player/sandbox/sandbox_item.tscn: ['res://entities/player/sandbox/sandbox_pickable.gd', 'res://components/highlightable.gd']
+ficheros que citan sandbox_item: ['godot/scenes/sandbox/player_sandbox.tscn', 'godot/tests/integration/test_player.gd', 'godot/tests/integration/test_player_animation.gd']
+
+== G19, cues de las pulsaciones dobles y de dónde sale el hint de _press
+components/hold_component.gd:71: item_dropped.emit(body)
+entities/player/player.gd:71: _hold.item_dropped.connect(_on_item_dropped)
+entities/player/player.gd:206: _feedback.play_cue(&"drop")
+entities/stations/trash_bin.gd:44: var item: Node = actor.holder.drop()
+entities/stations/trash_bin.gd:47: trashed.emit(item)
+entities/stations/trash_bin.gd:61: _feedback.play_cue(CUE_TRASH)
+entities/stations/cooking_station.gd:285: var ingredient: Ingredient = holder.drop() as Ingredient
+entities/stations/cooking_station.gd:302: cooking_started.emit(ingredient)
+entities/stations/cooking_station.gd:392: cooking_started.connect(_on_feedback.bind(&"cook_start", false))
+entities/items/box.gd:159: seasoning_removed.emit(result.removed)
+entities/items/box.gd:161: seasoned.emit(result.added)
+components/interaction_component.gd:77: hint = InteractionContract.hint_of(target, self)
+components/interaction_component.gd:90: hint = _floor_hint()
+components/interaction_component.gd:96: hint = _floor_hint()
+components/interaction_component.gd:100: hint = _floor_hint()
+components/interaction_component.gd:136: return _is_repeatable(InteractionContract.hint_of(_target, self))
+
+== G20, Tween en action_prompt.gd y tipos de action_icon_set.gd
+apariciones de tween, sin distinguir mayúsculas: 0
+tipos exportados: ['Array[Texture2D]', 'Color', 'Dictionary[StringName,', 'Texture2D', 'float', 'int']
+
+== G14, quién usa el catálogo de paridad de tests/helpers/m0_data
+godot/tests/unit/test_order_board.gd:5: const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+godot/tests/unit/test_round_manager.gd:8: const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+godot/tests/unit/test_round_manager.gd:9: const CONFIG_PATH: String = "res://tests/helpers/m0_data/m0_round_config.tres"
+godot/tests/unit/test_round_state.gd:7: const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+godot/tests/unit/test_round_state.gd:8: const CONFIG_PATH: String = "res://tests/helpers/m0_data/m0_round_config.tres"
+
+== G25, quién lee PlayerInput, _unhandled_input o _input
+entities/player/player.gd: PlayerInput=1 _unhandled_input=0 _input=0 Input.get_vector=1
+components/interaction_component.gd: PlayerInput=2 _unhandled_input=1 _input=0 Input.get_vector=0
+entities/player/character_switcher.gd: PlayerInput=0 _unhandled_input=1 _input=0 Input.get_vector=0
+ui/menus/pause_menu.gd: PlayerInput=0 _unhandled_input=0 _input=1 Input.get_vector=0
+
+== G37, zona de la flecha en el código y en sus tests
+entities/camera/camera_rig.gd:231: var avoid: Rect2 = _button_zone(canvas)
+entities/camera/camera_rig.gd:243: func _button_zone(canvas: Vector2) -> Rect2:
+tests/integration/test_camera_follow.gd:189: func test_arrow_keeps_16px_from_button_zone() -> void:
+tests/integration/test_camera_follow.gd:196: var zone: Rect2 = Rect2(Vector2(2340.0 - 390.0, 600.0), Vector2(390.0, 480.0)).grow(16.0)
+tests/unit/test_camera_follow_math.gd:129: func test_edge_point_avoids_button_zone() -> void:
+tests/unit/test_camera_follow_math.gd:131: var avoid: Rect2 = Rect2(1950.0, 600.0, 390.0, 480.0)
+
+== Residuos: nombres dados de baja en docs/arch (sin el gate); revisar una a una
+docs/arch/ADR-003-arbol-escenas-composicion.md:156: > de aliño que **aplican** (§10.2): `toggle_seasoning(…, swap_exclusive)` y `paprika_swap` dejan de
+docs/arch/ADR-003-arbol-escenas-composicion.md:157: > ser la API del dispensador y el antirrebote (`toggle_guard`) queda solo para el cuenco. La regla de
+docs/arch/ADR-003-arbol-escenas-composicion.md:163: Diseño: `docs/design/features/estacion-condimentos.md` (aprobado el 2026-10-05, `paprika_swap` =
+docs/arch/ADR-003-arbol-escenas-composicion.md:215: nada (`signals.md` §4). La estación oye esas señales, suena `%ErrorAudio` y sacude el emisor.
+docs/arch/ADR-003-arbol-escenas-composicion.md:216: - Antirrebote (`toggle_guard`): la segunda pulsación se **consume en silencio** (sin `rejected`).
+docs/arch/ADR-003-arbol-escenas-composicion.md:229: - `Box` (específica) expone `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) ->
+docs/arch/ADR-003-arbol-escenas-composicion.md:272: | Caja a medio cortar | Servicio: es objetivo y **rechaza** `BOX_NOT_FULL` (R3: la caja no cambia y suena `sea
+docs/arch/ADR-003-arbol-escenas-composicion.md:292: `side_of()` y la respuesta a `rejected` (cue `season_error` + sacudida del emisor).
+docs/arch/ADR-003-arbol-escenas-composicion.md:293: - El antirrebote (`toggle_guard`, 0,25 s) usa el **reloj de juego**: segundos acumulados en
+docs/arch/ADR-003-arbol-escenas-composicion.md:305: > y `paprika_swap` quedan sustituidas por §10.1 y §10.2: una sola caja de 6 pulsaciones, sin talla
+docs/arch/ADR-003-arbol-escenas-composicion.md:316: | `SeasoningStationData` (ya existe) | `cachelos_portions_per_item` / `cachelos_stock_max` | `int` | 1 → **2**
+docs/arch/ADR-003-arbol-escenas-composicion.md:403: D18 (dispensadores que alternan, `paprika_swap`) y concreta D8 (la caja errónea es solo de
+docs/arch/ADR-003-arbol-escenas-composicion.md:447: añade. Generaliza `paprika_swap` = `true` a cualquier grupo de exclusividad; deja de existir la
+docs/arch/ADR-003-arbol-escenas-composicion.md:451: - `toggle()` pierde el parámetro `swap_exclusive`: `toggle(current, seasoning, is_full) -> Toggle`.
+docs/arch/ADR-003-arbol-escenas-composicion.md:459: `seasoned(nuevo)`, una vez cada una y en la misma llamada (el orden de AC4 de `paprika_swap`).
+docs/arch/ADR-003-arbol-escenas-composicion.md:461: - `toggle_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection` pierde `swap_exclusive`
+docs/arch/ADR-003-arbol-escenas-composicion.md:472: `BOX_NOT_FULL`: `rejected(BOX_NOT_FULL)` (suena `season_error`); `ALREADY_APPLIED`: **se consume en
+docs/arch/ADR-003-arbol-escenas-composicion.md:488: se mantiene. **Se quita `paprika_swap`.** `toggle_guard` (0,25) queda **solo para el cuenco** (que
+docs/arch/ADR-003-arbol-escenas-composicion.md:496: `box.toggle_seasoning(seasoning)` sin el segundo argumento.
+docs/arch/ADR-003-arbol-escenas-composicion.md:591: 3. *`ALREADY_APPLIED` como rechazo con `season_error`.* D25 dice «no hace nada»; un error sonoro por
+docs/arch/ADR-003-arbol-escenas-composicion.md:846: `deliver_error` y `RoundConfig.wrong_delivery_penalty` pasa a **0** en `round_config.tres` (D8
+docs/arch/ADR-003-arbol-escenas-composicion.md:857: - Bajas: `SeasoningStationData.toggle_guard` (y en `seasoning_station.tres`), `SeasoningRules.toggle()`
+docs/arch/ADR-003-arbol-escenas-composicion.md:858: y `Box.toggle_seasoning()` (sin usuarios; las dos últimas en la oleada de montaje).
+docs/arch/ADR-003-arbol-escenas-composicion.md:874: **Estación** (`seasoning_station.gd`): deja de reproducir `season_error` al oír `rejected` (lo hace el
+docs/arch/ADR-003-arbol-escenas-composicion.md:884: | Raciones del cuenco | `cachelos_bowl.tscn`, `%StockMeter` (`Sprite3D` billboard) | 4 muescas ≥ 24 px, `stock
+docs/arch/ADR-003-arbol-escenas-composicion.md:918: **Estado tras el montaje (PUL-131).** Quedan superados en §8–§10 el cue `season_error` (§8, tabla de
+docs/arch/ADR-003-arbol-escenas-composicion.md:919: §9 y rechazo `BOX_NOT_FULL` de §10: ahora suena `rejected` en el jugador), `Box.toggle_seasoning()` y
+docs/arch/ADR-006-audio-feedback.md:25: | `order_stand.tscn` | `%ErrorAudio` | `order_stand.gd` | `EventBus.delivery_rejected` de su `slot_id` |
+docs/arch/ADR-006-audio-feedback.md:26: | `seasoning_station.tscn` | `%ErrorAudio` | `seasoning_station.gd` | `rejected` de dispensadores y cuenco |
+docs/arch/ADR-006-audio-feedback.md:118: Los one-shot existentes (`%CutAudio`, `%SeasonAudio`, `%OkAudio`, `%ErrorAudio`) se sustituyen
+docs/arch/ADR-006-audio-feedback.md:142: | `season_error` | `rejected` (local, dispensador/cuenco) | `seasoning_station.tscn` · `%Feedback` | `SHAKE` d
+docs/arch/ADR-006-audio-feedback.md:144: | `deliver_error` | `EventBus.delivery_rejected` (su `slot_id`) | `order_stand.tscn` · `%Feedback` | `SHAKE` d
+docs/arch/ADR-006-audio-feedback.md:176: | `rejected` (diseño: `action_rejected`) | `InteractionComponent.interaction_resolved` (local) con `BLOCKED`, 
+docs/arch/ADR-006-audio-feedback.md:182: `cook_done` (renombrado a `cook_ready`), `season_error` y `deliver_error` (sustituidos por `rejected`;
+docs/arch/ADR-006-audio-feedback.md:206: Correcta y errónea son distintas en sonido (`deliver_ok`/`deliver_error`) y en visual
+docs/arch/ADR-006-audio-feedback.md:339: - (§4.1, −) Durante la transición el mapa tuvo claves de baja (`cook_done`, `season_error`,
+docs/arch/ADR-006-audio-feedback.md:340: `deliver_error`) hasta la ficha de montaje; PUL-131 las retiró (las filas `cook_done`, `season_error` y
+docs/arch/ADR-006-audio-feedback.md:341: `deliver_error` de la tabla de cues son históricas).
+docs/arch/scene-tree.md:232: `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection` *(baja D26, PUL
+docs/arch/scene-tree.md:239: `toggle_seasoning(seasoning: SeasoningData)` pierde `swap_exclusive` (solo la llama el cuenco).
+docs/arch/scene-tree.md:240: **D26 (PUL-131):** `toggle_seasoning` de baja; el cuenco solo pone con `apply_seasoning` (§7.3).
+docs/arch/scene-tree.md:300: └── %Feedback (AudioStreamPlayer3D, FeedbackPlayer) [M3; sustituye a %OkAudio/%ErrorAudio], pulse_target = el 
+docs/arch/scene-tree.md:323: `paprika_swap`. El mostrador (5,2 m) no cambia. El árbol de abajo es el de M3c con las notas D25.
+docs/arch/scene-tree.md:334: │   conecta rejected de los 4 dispensadores (D25: 2) y del cuenco → %Feedback (season_error) + sacudida del em
+docs/arch/scene-tree.md:350: └── %ErrorAudio (AudioStreamPlayer3D)    sonido de rechazo (dispensadores, cuenco) → M3: %Feedback (FeedbackPl
+docs/arch/scene-tree.md:360: │                     (ADR-003 §8.2): caja a medio cortar → rejected(BOX_NOT_FULL); llena → box.toggle_seasoni
+docs/arch/scene-tree.md:361: │                     sobre la caja de la mano (con paprika_swap); la caja sigue en la mano
+docs/arch/scene-tree.md:364: │   antirrebote: data.toggle_guard s por dispensador; M3c (PUL-097): reloj de juego (_game_time acumulado en
+docs/arch/scene-tree.md:389: │             llama box.toggle_seasoning(seasoning) sin swap_exclusive y es el único usuario de toggle_guard
+docs/arch/scene-tree.md:393: ├── %Portions (Node3D)   M2b: una malla por ración, visibles según stock. M3c (PUL-094): estados
+docs/arch/scene-tree.md:477: data/config/seasoning_station.tres               SeasoningStationData [M2b] (toggle_guard 0.25, cachelos_stock
+docs/arch/scene-tree.md:479: paprika_swap true, operator_side_only true)
+docs/arch/scene-tree.md:510: resto sin cambios (operator_side_only true, toggle_guard 0.25,
+docs/arch/scene-tree.md:511: paprika_swap true, cachelos_initial_stock 0); PUL-097
+docs/arch/scene-tree.md:527: data/config/seasoning_station.tres               − paprika_swap; toggle_guard 0.25 solo para el cuenco; resto 
+docs/arch/scene-tree.md:574: | Condimentar al interactuar con la caja | `box.gd`: ramas de `SeasoningItem` en la mano y de cachelos cocidos
+docs/arch/scene-tree.md:605: | `paprika_swap` | `SeasoningStationData`, `seasoning_station.tres`, `seasoning_dispenser.gd`, `cachelos_bowl.
+docs/arch/scene-tree.md:606: | `swap_exclusive` | `SeasoningRules.toggle`, `Box.toggle_seasoning` | El cuenco llama sin él |
+docs/arch/scene-tree.md:610: | Tests de tallas y de 4 dispensadores | `test_data_boxes.gd`, `test_order_tickets.gd` (talla), `test_seasonin
+docs/arch/scene-tree.md:620: | Cue de entrega errónea | `order_stand.gd::_on_delivery_rejected` → `play_cue(&"deliver_error")`; clave `deli
+docs/arch/scene-tree.md:621: | Cue de error de la estación | `seasoning_station.gd` → `play_cue(&"season_error")`; clave `season_error` | E
+docs/arch/scene-tree.md:623: | Toggle del cuenco | `cachelos_bowl.gd` (`_toggle`, `clock`, `_game_time`, `_last_change`); `SeasoningStation
+docs/arch/scene-tree.md:630: | Tests | `test_ui_scale` / casos de `factor()` en `test_hud.gd` y `test_order_tickets.gd`; casos de `test_ord
+docs/arch/scene-tree.md:671: Box: + get_presses() -> int, + get_action_hint(actor); − toggle_seasoning() (montaje)
+docs/arch/scene-tree.md:683: seasoning_station.tscn     SeasoningStation: sin cue season_error al oír rejected (montaje)
+docs/arch/scene-tree.md:686: sin deliver_error (montaje)
+docs/arch/scene-tree.md:755: resources/seasoning_station_data.gd   − toggle_guard
+docs/arch/scene-tree.md:768: propio; − cook_done, season_error, deliver_error (en la oleada de montaje)
+docs/arch/signals.md:53: | `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX` (en desuso desde D23: sin c
+docs/arch/signals.md:88: | `delivery_rejected(slot_id: int, order_id: int, penalty: int)` | `OrderService` (`OrderBoard.try_deliver()` 
+docs/arch/signals.md:206: | `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn` (M3: `%Feedback`, cue `se
+docs/arch/signals.md:207: | `seasoning_removed(seasoning: SeasoningData)` | `box.gd` | `%BadgeRow` de `box.tscn` (rehace la fila); M3: `
+docs/arch/signals.md:208: | `rejected(reason: SeasoningRules.Rejection)` | `seasoning_dispenser.gd` (`SeasoningDispenser`) | `seasoning_
+docs/arch/signals.md:215: `seasoning_station.gd` deja de reproducir `season_error` (el rechazo suena en el jugador,
+docs/arch/signals.md:217: | `stock_changed(stock: int)` | `cachelos_bowl.gd` | visual de raciones de `cachelos_bowl.tscn` (`%Portions`) 
+docs/arch/signals.md:237: la mano**; sin caja no es objetivo): antirrebote (`toggle_guard`, reloj de juego inyectable) → caja
+docs/arch/signals.md:239: `box.toggle_seasoning(seasoning, data.paprika_swap)` → `NONE`: la caja emite
+docs/arch/signals.md:287: | audio-y-fx AC5 entrega correcta / errónea | `EventBus.order_completed` / `delivery_rejected` | `order_stand.

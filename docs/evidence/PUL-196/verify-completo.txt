@@ -1,0 +1,56 @@
+Salida final de tools/verify.sh (completo) en la rama pul-196; rc=0.
+
+= Run Summary
+==============================================
+
+Totals
+------
+Scripts             119
+Tests              1378
+Passing Tests      1378
+Asserts           30370
+Time              504.803s
+
+
+---- All tests passed! ----
+
+Results saved to res://.gut_reports/junit.xml
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✓ verify OK
+
+== Tests citados en gate-enmiendas.md, buscados en godot/.gut_reports/junit.xml
+test_data_defaults_and_pause_duck: pasa
+test_ac1_start_sequence_reset_phase_orders_time_started: pasa
+test_ac5_same_seed_same_order_sequence: pasa
+test_pul131_single_after_several_switches_one_component_per_player: pasa
+test_points_on_each_side: pasa
+test_t6_trash_bins_are_far_from_every_target_and_the_gap: pasa
+test_pul115_phase_pools_subset_of_catalog_and_per_phase: pasa
+test_ac1_bus_declares_exactly_catalog_signal_names: pasa
+test_pul131_ac3_the_stand_is_not_interactable_any_more: pasa
+test_ac3_pickable_priority_beats_hysteresis_with_empty_hand: pasa
+test_two_prompts_on_same_target_are_side_by_side_with_markers: pasa
+test_ac1_fixture_has_at_least_250_unique_rows: pasa
+test_fixture_is_well_formed_and_the_counts_are_exact: pasa
+test_d26_stand_is_not_interactable_and_sits_on_the_world_layer: pasa
+test_d26_wrong_delivery_penalty_is_zero_and_no_deliver_error_cue: pasa
+test_ac1_bus_signal_signatures_match_catalog: pasa
+test_focus_out_pauses_immediately_and_focus_in_does_not_resume: pasa
+test_back_request_pauses_the_round_and_a_second_one_does_not_resume: pasa
+test_touch_flag_forces_mobile: pasa
+test_text_floor_is_reversible_and_leaves_larger_text_alone: pasa
+test_safe_margins_for_2340x1080_notch: pasa
+test_ac11_running_character_stays_inside_screen_and_stops_cleanly: pasa
+test_bac1_switch_button_sits_left_of_the_action_button_in_a_row: pasa
+test_bac1_switch_button_row_with_the_design_safe_area: pasa
+test_touch_rects_stay_inside_the_ui_profile_button_zone_at_2340: pasa
+test_arrow_keeps_16px_from_button_zone: pasa
+test_bac3_case09_counters_clear_the_button_zone_from_the_pot_stand: pasa
+test_pool_same_seed_same_sequence_and_one_rng_call_per_order: pasa
+test_new_cues_have_seven_distinct_streams: pasa
+test_edge_point_avoids_button_zone: pasa (añadido después, desde junit.xml)
+
+citados: 30; sin pasar: 0
