@@ -1,14 +1,14 @@
 ---
 id: PUL-000
 title: Título corto en imperativo
-status: draft        # draft | ready | in_progress | review | done | blocked
-milestone: M0        # F0 | M0 | M1 | M2 | M3 | M4
+status: draft        # draft | ready | in_progress | review | done | blocked | superseded
+milestone: M0        # hitos en docs/design/roadmap.md
 role: gameplay-engineer
 deps: []
 orca_task: null      # lo rellena el producer
-unity_sources: []    # scripts/prefabs de Assets/ que sirven de especificación
-owns: []             # globs editables en exclusiva (lo hace cumplir guard_ownership.py)
-touches_scenes: []   # .tscn editables en exclusiva durante esta oleada
+unity_sources: []    # opcional: scripts/prefabs de Assets/, solo como referencia (D17)
+owns: []
+touches_scenes: []
 ---
 
 ## Target

@@ -10,18 +10,22 @@ Se ejecuta dentro de Blender, sin pantalla, desde la raíz del repo:
 Opciones (tras `--`):
   --category CAT    destino godot/assets/models/CAT/<asset>/<asset>.glb (<asset> = nombre del .blend)
   --out RUTA        destino explícito (.glb), relativo a la raíz del repo o absoluto
-  --animations      exporta animaciones (solo el personaje, art-bible §2.4)
-  --max-tris N      falla si la colección supera N triángulos (presupuesto de art-bible §2.2)
+  --animations      exporta animaciones (solo el personaje, art-bible-v1 §2.4)
+  --max-tris N      falla si la colección supera N triángulos (presupuesto de art-bible-v1 §2.2)
   --smoke-cube      construye el cubo de prueba sobre la plantilla y lo exporta a
                     godot/assets/models/_pipeline/test_cube/test_cube.glb
-  --materials-test  construye un taburete con tres materiales v2 (PUL-074) y lo exporta a
-                    godot/assets/models/_pipeline/materials_v2_test/materials_v2_test.glb
+  --materials-test  (heredado de la v2, PUL-074) construye un taburete con tres materiales de la
+                    biblioteca v2 y lo exporta a
+                    godot/assets/models/_pipeline/materials_v2_test/materials_v2_test.glb. La
+                    biblioteca v2 sigue en el repo hasta PUL-188; no es una prueba de la v3
 
-Reglas que comprueba antes de exportar (art-bible §2): existe la colección `export`, hay una sola
+Reglas que comprueba antes de exportar (art-bible-v1 §2): existe la colección `export`, hay una sola
 raíz, escalas y rotaciones aplicadas en todos los objetos (local y mundo), no hay cámaras ni luces y existe el
-marcador `Anchor_Front` en +Y con ≤ 1° de desviación (frente −Z en Godot). Texturas (biblioteca v2,
-docs/art/materials-v2.md): cada imagen de los materiales exportados existe en disco y mide ≤ 1024 px por
-lado (art-bible v2 §4.2); el .glb las embebe y Godot las extrae junto a él al importar. Sale con código 1
+marcador `Anchor_Front` en +Y con ≤ 1° de desviación (frente −Z en Godot). Texturas: el .glb se exporta sin imágenes (`export_image_format="NONE"`); solo
+`--materials-test` (v2) comprueba que cada imagen exista y mida ≤ 1024 px. Salida v3 (art-bible v3 §3.2/§3.3):
+el .glb nuevo siembra su .glb.import con `gltf/embedded_image_handling` = 0 (Godot descarta las
+texturas y no vuelve a extraer PNG), `materials/extract` = 0 y sin tangentes; los slots se redirigen
+a godot/assets/materials/v3/ en `_subresources` (paso manual, pipeline.md §5). Sale con código 1
 si algo falla.
 """
 
@@ -42,7 +46,9 @@ EPS = 1e-4
 ROT_EPS = math.radians(0.01)
 FRONT_MAX_ANGLE_DEG = 1.0
 
-# Ajustes de import que el pipeline fija en cada .glb.import (pipeline.md §4).
+# Ajustes de import que el pipeline fija en cada .glb.import nuevo (pipeline.md §5, art-bible v3 §3.2/§3.3):
+# sin texturas extraídas (embedded_image_handling 0 = descartar), materiales sin extraer (los slots se
+# redirigen a godot/assets/materials/v3/ en _subresources) y sin tangentes (no hay normal maps en la v3).
 IMPORT_PARAMS = {
     "nodes/root_type": '""',
     "nodes/root_name": '""',
@@ -50,7 +56,7 @@ IMPORT_PARAMS = {
     "nodes/root_scale": "1.0",
     "nodes/use_name_suffixes": "false",
     "nodes/use_node_type_suffixes": "false",
-    "meshes/ensure_tangents": "true",
+    "meshes/ensure_tangents": "false",
     "meshes/generate_lods": "true",
     "meshes/create_shadow_meshes": "true",
     "meshes/light_baking": "1",
@@ -58,7 +64,7 @@ IMPORT_PARAMS = {
     "animation/import": "true",
     "animation/fps": "30",
     "gltf/naming_version": "2",
-    "gltf/embedded_image_handling": "1",
+    "gltf/embedded_image_handling": "0",
 }
 
 
@@ -125,8 +131,8 @@ def box_uv(bm: bmesh.types.BMesh, meters_per_unit: float = 2.0) -> None:
 def build_materials_test() -> None:
     """Taburete de 0,45 m: patas y travesaños de acero, asiento de plástico rojo y balda de madera.
 
-    Prueba de AC2 de PUL-074: un asset con materiales enlazados de _materials_v2.blend importa en
-    Godot con sus texturas (albedo, ORM y normal) y pasa test_assets_models.gd.
+    Era la prueba de AC2 de PUL-074 con el exportador v2 (texturas albedo, ORM y normal). Con el export
+    actual (sin imágenes) solo comprueba que los nombres de slot de los materiales enlazados se exportan.
     """
     coll = bpy.data.collections[EXPORT_COLLECTION]
     root = bpy.data.objects["asset"]
@@ -165,7 +171,7 @@ def build_materials_test() -> None:
 
 
 def check_textures(objs: list) -> list:
-    """Imágenes de los materiales exportados: deben existir y medir ≤ 1024 px (art-bible v2 §4.2)."""
+    """Imágenes de los materiales exportados: deben existir y medir ≤ 1024 px (límite de tamaño heredado de la v2)."""
     errors, seen = [], set()
     for o in objs:
         if o.type != "MESH":
@@ -194,7 +200,7 @@ def collection_objects() -> list:
     return list(coll.all_objects)
 
 
-def validate(objs: list, max_tris: int) -> int:
+def validate(objs: list, max_tris: int, check_tex: bool = False) -> int:
     if not objs:
         fail(f"la colección '{EXPORT_COLLECTION}' está vacía")
     names = {o.name for o in objs}
@@ -233,7 +239,8 @@ def validate(objs: list, max_tris: int) -> int:
             deviation = math.degrees(math.atan2(p.x, p.y))
             if abs(deviation) > FRONT_MAX_ANGLE_DEG:
                 errors.append(f"{FRONT_ANCHOR} desviado {deviation:.1f}° de +Y, está en {where}")
-    errors += check_textures(objs)
+    if check_tex:
+        errors += check_textures(objs)
     if max_tris and tris > max_tris:
         errors.append(f"{tris} triángulos > presupuesto {max_tris}")
     if errors:
@@ -242,6 +249,8 @@ def validate(objs: list, max_tris: int) -> int:
 
 
 def resolve_out(args: argparse.Namespace) -> Path:
+    if (args.smoke_cube or args.materials_test) and args.out:
+        fail("--smoke-cube y --materials-test escriben siempre en godot/assets/models/_pipeline/; no admiten --out")
     if args.smoke_cube:
         return MODELS_DIR / "_pipeline" / "test_cube" / "test_cube.glb"
     if args.materials_test:
@@ -294,7 +303,7 @@ def main() -> None:
     if args.materials_test:
         build_materials_test()
     objs = collection_objects()
-    tris = validate(objs, args.max_tris)
+    tris = validate(objs, args.max_tris, args.materials_test)
     out = resolve_out(args)
     if out.suffix != ".glb":
         fail(f"el destino debe ser .glb: {out}")
@@ -312,8 +321,8 @@ def main() -> None:
         export_lights=False,
         export_extras=False,
         export_materials="EXPORT",
-        export_image_format="AUTO",
-        export_tangents=True,
+        export_image_format="NONE",
+        export_tangents=False,
         export_animations=args.animations,
         export_skins=args.animations,
         export_morph=False,

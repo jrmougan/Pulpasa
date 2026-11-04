@@ -1,0 +1,57 @@
+AC2 current-task=PUL-184, destinos dentro de owns
+FAIL rc=1 (esperado 0) AC2 literal (owns y touches_scenes): godot/entities/stations/order_stand.tscn
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+FAIL rc=1 (esperado 0) AC2 glob **: docs/evidence/PUL-184/captura.png
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+FAIL rc=1 (esperado 0) AC2 glob *: godot/tests/integration/test_order_tickets.gd.uid
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+FAIL rc=1 (esperado 0) AC2 la propia ficha: docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>

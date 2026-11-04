@@ -1,0 +1,43 @@
+AC1: la misma ficha en cada forma; hook y check_owns dan la misma lista (mensaje de rechazo real).
+La línea `owns:` del cuerpo no debe contar. Código nuevo:
+OK   inline: hook rc=2 ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rc=1 ['docs/a.txt', 'src/**', 'scenes/a.tscn']
+OK   inline: rutas incluidas: hook rc=[0, 0, 0] | check_owns rc=0
+OK   bloque: hook rc=2 ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rc=1 ['docs/a.txt', 'src/**', 'scenes/a.tscn']
+OK   bloque: rutas incluidas: hook rc=[0, 0, 0] | check_owns rc=0
+OK   inline con comentario final: hook rc=2 ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rc=1 ['docs/a.txt', 'src/**', 'scenes/a.tscn']
+OK   inline con comentario final: rutas incluidas: hook rc=[0, 0, 0] | check_owns rc=0
+OK   bloque con comentarios: hook rc=2 ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rc=1 ['docs/a.txt', 'src/**', 'scenes/a.tscn']
+OK   bloque con comentarios: rutas incluidas: hook rc=[0, 0, 0] | check_owns rc=0
+OK   bloque sin sangría: hook rc=2 ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rc=1 ['docs/a.txt', 'src/**', 'scenes/a.tscn']
+OK   bloque sin sangría: rutas incluidas: hook rc=[0, 0, 0] | check_owns rc=0
+OK   inline vacía con comentario: hook rc=2 [] | check_owns rc=1 []
+OK   inline vacía con comentario: rutas incluidas: hook rc=[] | check_owns rc=0
+OK   comillas y # dentro de un glob: hook rc=2 ['docs/a.txt', 'src/**', 'docs/b#c.txt', 'scenes/a.tscn'] | check_owns rc=1 ['docs/a.txt', 'src/**', 'docs/b#c.txt', 'scenes/a.tscn']
+OK   comillas y # dentro de un glob: rutas incluidas: hook rc=[0, 0, 0, 0] | check_owns rc=0
+OK   BOM: hook rc=2 ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rc=1 ['docs/a.txt', 'src/**', 'scenes/a.tscn']
+OK   BOM: rutas incluidas: hook rc=[0, 0, 0] | check_owns rc=0
+OK   CRLF: hook rc=2 ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rc=1 ['docs/a.txt', 'src/**', 'scenes/a.tscn']
+OK   CRLF: rutas incluidas: hook rc=[0, 0, 0] | check_owns rc=0
+
+Otro directorio de trabajo (carpeta ajena y subcarpeta del repo):
+OK   ajena: hook incluida rc=0, fuera rc=2, fuera sin CLAUDE_PROJECT_DIR rc=2; check_owns dentro rc=0, fuera rc=1
+OK   subcarpeta: hook incluida rc=0, fuera rc=2, fuera sin CLAUDE_PROJECT_DIR rc=2; check_owns dentro rc=0, fuera rc=1
+
+check_owns en rama sin pul-<n>, con módulo y sin él:
+OK   con módulo: rc=0 check_owns: main no es una rama de ficha; no se comprueba.
+OK   sin módulo: rc=0 check_owns: main no es una rama de ficha; no se comprueba.
+OK   sin módulo en rama de ficha: rc=1 (rechaza)
+
+OK   árbol limpio tras todo lo anterior: status='', __pycache__=[]
+OK   control sin la bandera: __pycache__=['tools/__pycache__']
+
+Línea base, hook y check_owns de ec25ecc (informativo, documenta el fallo que se corrige):
+  inline: hook igual ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rama con rutas incluidas rc=0
+  bloque: hook igual ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rama con rutas incluidas rc=1
+  inline con comentario final: hook DISTINTA None | check_owns rama con rutas incluidas rc=1
+  bloque con comentarios: hook DISTINTA ['scenes/a.tscn'] | check_owns rama con rutas incluidas rc=1
+  bloque sin sangría: hook DISTINTA ['scenes/a.tscn'] | check_owns rama con rutas incluidas rc=1
+  inline vacía con comentario: hook igual [] | check_owns rama con rutas incluidas rc=0
+  comillas y # dentro de un glob: hook DISTINTA ['scenes/a.tscn'] | check_owns rama con rutas incluidas rc=1
+  BOM: hook igual ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rama con rutas incluidas rc=1
+  CRLF: hook igual ['docs/a.txt', 'src/**', 'scenes/a.tscn'] | check_owns rama con rutas incluidas rc=1

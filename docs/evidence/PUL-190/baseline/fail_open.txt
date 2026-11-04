@@ -1,0 +1,30 @@
+Comando de settings.json, marcador activo y destino ajeno: cualquier rc distinto de 2 deja pasar la edición
+comando: python3 "$CLAUDE_PROJECT_DIR"/.claude/hooks/guard_ownership.py
+FALLO ABIERTO rc=1 control: hook intacto
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+FALLO ABIERTO rc=1 PYTHONIOENCODING inválida (Fatal Python error, antes del try)
+    Fatal Python error: init_stdio_encoding: failed to get the Python codec name of the stdio encoding
+    Python runtime state: core initialized
+    LookupError: unknown encoding: no-existe
+    
+    Current thread 0x0000c19c (most recent call first):
+      <no Python frame>
+FALLO ABIERTO rc=127 intérprete ausente (simulado con un comando inexistente, sin quitar Python)
+    bash: line 1: python3-no-existe: command not found
+FALLO ABIERTO rc=1 hook que no compila
+      File "<ruta> line 1
+        def (:
+            ^
+    SyntaxError: invalid syntax

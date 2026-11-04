@@ -3,11 +3,11 @@
 Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 
 - **Ciclo:** draft → ready (la marca el producer) → in_progress → review → done.
-- **owns / touches_scenes** limitan lo que el worker puede editar. Un `.tscn` tiene un solo
-  dueño por oleada.
+- **owns / touches_scenes** son globs que limitan lo que el worker puede editar (los hacen
+  cumplir `guard_ownership.py` y `check_owns.py`). Un `.tscn` tiene un solo dueño por oleada.
 - Cada criterio de aceptación enlaza con un test o con una captura en `docs/evidence/<id>/`.
-- El cuerpo sigue el contrato de Orca (Target, Change, Constraints, Ownership, Acceptance),
-  así que la ficha se pasa tal cual a `worker-start --spec`.
+- El cuerpo tiene las secciones de `_TEMPLATE.md`. Para lanzar una ficha como worker, sigue la
+  skill `orca-dispatch`.
 
 ## Fichas actuales
 
@@ -194,10 +194,10 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-187 | M3f | asset-pipeline | done | Asignar materiales planos v3 a entorno, comida, cajas y personajes |
 | PUL-188 | M3f | asset-pipeline | draft | Integrar Feira Clara en level_01 y limpiar materiales y texturas v2 sin uso |
 | PUL-189 | M3f | qa-tester | draft | Pasar el QA visual y de rendimiento antes y después de la estética v3 |
-| PUL-190 | M4 | godot-architect | ready | Hacer que guard_ownership lea UTF-8 y bloquee ante cualquier fallo |
-| PUL-191 | M4 | godot-architect | ready | Detectar en verify.sh scripts que no compilan aunque ningún test los cargue |
-| PUL-192 | M4 | godot-architect | ready | Convertir AGENTS.md en el fichero real de contexto y CLAUDE.md en su import |
-| PUL-193 | M4 | godot-architect | ready | Compartir el parser de fichas entre hook y merge gate y limpiar la plantilla |
-| PUL-194 | M4 | asset-pipeline | ready | Pasar el pipeline de arte y blender_export a la estética v3 |
-| PUL-195 | M4 | godot-architect | ready | Ajustar los permisos de settings.json a las recetas actuales |
-| PUL-196 | M4 | godot-architect | ready | Corregir el índice de contratos y preparar el gate de enmiendas pendientes |
+| PUL-190 | M4 | godot-architect | done | Hacer que guard_ownership lea UTF-8 y bloquee ante cualquier fallo |
+| PUL-191 | M4 | godot-architect | done | Detectar en verify.sh scripts que no compilan aunque ningún test los cargue |
+| PUL-192 | M4 | godot-architect | blocked | Convertir AGENTS.md en el fichero real de contexto y CLAUDE.md en su import |
+| PUL-193 | M4 | godot-architect | done | Compartir el parser de fichas entre hook y merge gate y limpiar la plantilla |
+| PUL-194 | M4 | asset-pipeline | done | Pasar el pipeline de arte y blender_export a la estética v3 |
+| PUL-195 | M4 | godot-architect | blocked | Ajustar los permisos de settings.json a las recetas actuales |
+| PUL-196 | M4 | godot-architect | done | Corregir el índice de contratos y preparar el gate de enmiendas pendientes |

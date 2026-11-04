@@ -1,0 +1,6 @@
+Entorno de AC4: contenedor Docker, proyecto copiado con tar, sin .godot y sin montar el worktree.
+uname -sm: Linux x86_64
+Distribución: Debian GNU/Linux 13 (trixie)
+Godot: 4.7.2.stable.official.ed1daf0bf, binario oficial con SHA512 comprobado con SHA512-SUMS.txt de la release
+gdformat: 4.5.0
+macOS: no verificable, no hay máquina macOS disponible.

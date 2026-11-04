@@ -1,7 +1,7 @@
 ---
 id: PUL-195
 title: Ajustar los permisos de settings.json a las recetas actuales
-status: ready
+status: blocked
 milestone: M4
 role: godot-architect
 deps: []
