@@ -9,8 +9,8 @@ shopt -s lastpipe # `input | run_raw` debe fijar RC en este shell, no en un subs
 HOOK="$(cygpath -wa "$1" 2>/dev/null || realpath "$1")"
 OUT="$2"
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-mkdir -p "$OUT"
-OUT="$(cd "$OUT" && pwd)"
+mkdir -p "$OUT" || { echo "run_acs: no puedo crear $OUT" >&2; exit 2; }
+OUT="$(cd "$OUT" && pwd)" || { echo "run_acs: no puedo entrar en $OUT" >&2; exit 2; }
 export LC_ALL=C # grep compara bytes: «está» solo casa si stderr sale en UTF-8.
 # PYTHONUTF8=1 ocultaría el bug: el hook debe funcionar con la codificación por defecto de Windows.
 unset PYTHONUTF8 PYTHONIOENCODING
