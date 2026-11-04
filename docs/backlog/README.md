@@ -201,3 +201,5 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-194 | M4 | asset-pipeline | done | Pasar el pipeline de arte y blender_export a la estética v3 |
 | PUL-195 | M4 | godot-architect | blocked | Ajustar los permisos de settings.json a las recetas actuales |
 | PUL-196 | M4 | godot-architect | done | Corregir el índice de contratos y preparar el gate de enmiendas pendientes |
+| PUL-197 | M4 | godot-architect | ready | Aplicar las decisiones del gate de enmiendas a los contratos |
+| PUL-198 | M4 | gameplay-engineer | ready | Evitar delivery_rejected en el tick posterior a la caducidad de una comanda |
