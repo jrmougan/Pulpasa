@@ -1,0 +1,443 @@
+== AC1: apariciones de propuest|pendiente en docs/arch (sin gate-enmiendas.md)
+docs/arch/ADR-001-gdscript-convenciones.md:96 -> Fuera: «rutas propuestas» del inventario, no es una enmienda
+docs/arch/ADR-001-gdscript-convenciones.md:138 -> Fuera: arreglo externo pendiente de publicar. ADR-001 Enmienda 1 está aprobada y la ficha cubre ADR-002 a ADR-006
+docs/arch/ADR-002-eventbus-autoloads.md:3 -> G01–G04
+docs/arch/ADR-002-eventbus-autoloads.md:4 -> G05, G06
+docs/arch/ADR-002-eventbus-autoloads.md:164 -> Fuera: «independiente»
+docs/arch/ADR-002-eventbus-autoloads.md:206 -> G01–G04
+docs/arch/ADR-002-eventbus-autoloads.md:232 -> G05, G06
+docs/arch/ADR-003-arbol-escenas-composicion.md:3 -> G07–G10
+docs/arch/ADR-003-arbol-escenas-composicion.md:8 -> G11–G15
+docs/arch/ADR-003-arbol-escenas-composicion.md:10 -> G16–G24
+docs/arch/ADR-003-arbol-escenas-composicion.md:15 -> Fuera: referencia caducada a «D14 pendiente»; D14 está cerrada. Conviene corregirla al aceptar
+docs/arch/ADR-003-arbol-escenas-composicion.md:153 -> G07–G10
+docs/arch/ADR-003-arbol-escenas-composicion.md:397 -> G11–G15
+docs/arch/ADR-003-arbol-escenas-composicion.md:603 -> G16–G24
+docs/arch/ADR-003-arbol-escenas-composicion.md:913 -> Fuera: alternativa descartada («propuesta del diseño»)
+docs/arch/ADR-003-arbol-escenas-composicion.md:942 -> Fuera: alternativa descartada, redactada antes de D14
+docs/arch/ADR-004-input-coop-local.md:4 -> G25–G29
+docs/arch/ADR-004-input-coop-local.md:32 -> Fuera: contexto caducado sobre D14. Conviene corregirlo al aceptar
+docs/arch/ADR-004-input-coop-local.md:139 -> Fuera: «independiente»
+docs/arch/ADR-004-input-coop-local.md:153 -> G25–G29
+docs/arch/ADR-005-dimension-3d-2d.md:4 -> G30–G35
+docs/arch/ADR-005-dimension-3d-2d.md:5 -> G30–G39
+docs/arch/ADR-005-dimension-3d-2d.md:6 -> G36–G39
+docs/arch/ADR-005-dimension-3d-2d.md:14 -> Fuera: contexto histórico, anterior a la decisión del propio ADR
+docs/arch/ADR-005-dimension-3d-2d.md:88 -> Fuera: recomendación histórica; la decisión aceptada está en `docs/arch/ADR-005-dimension-3d-2d.md:108`
+docs/arch/ADR-005-dimension-3d-2d.md:119 -> Fuera: consecuencia escrita antes de decidir D14
+docs/arch/ADR-005-dimension-3d-2d.md:124 -> G30–G35
+docs/arch/ADR-005-dimension-3d-2d.md:326 -> G36–G39
+docs/arch/ADR-006-audio-feedback.md:4 -> G40–G42
+docs/arch/ADR-006-audio-feedback.md:6 -> G43, G44
+docs/arch/ADR-006-audio-feedback.md:168 -> Fuera: nombre de cue «propuesto por el diseño»
+docs/arch/ADR-006-audio-feedback.md:244 -> Fuera: «independiente»
+docs/arch/README.md:6 -> Fuera: «independiente»
+docs/arch/README.md:11 -> G01–G06
+docs/arch/README.md:12 -> G07–G24
+docs/arch/README.md:13 -> G25–G29
+docs/arch/README.md:14 -> G30–G39
+docs/arch/README.md:15 -> G40–G44
+docs/arch/README.md:16 -> G46–G51
+docs/arch/README.md:17 -> G52–G58
+docs/arch/README.md:19 -> Fuera: enlace a este documento
+docs/arch/README.md:22 -> Fuera: definición del ciclo
+docs/arch/scene-tree.md:3 -> G52
+docs/arch/scene-tree.md:5 -> G53
+docs/arch/scene-tree.md:7 -> G54
+docs/arch/scene-tree.md:10 -> G55
+docs/arch/scene-tree.md:14 -> G56
+docs/arch/scene-tree.md:21 -> G57
+docs/arch/scene-tree.md:27 -> G58
+docs/arch/scene-tree.md:38 -> G52
+docs/arch/scene-tree.md:639 -> G58
+docs/arch/scene-tree.md:707 -> Fuera: pictogramas pendientes de assets, tarea de arte y no de contrato
+docs/arch/signals.md:3 -> G46
+docs/arch/signals.md:5 -> G47
+docs/arch/signals.md:6 -> G48
+docs/arch/signals.md:10 -> G49
+docs/arch/signals.md:15 -> G50
+docs/arch/signals.md:21 -> G51
+docs/arch/signals.md:39 -> Fuera: «independientes»
+docs/arch/signals.md:299 -> G45
+apariciones: 60; clasificadas: 60; sobran: 0
+
+== Forma de la tabla
+filas: 58; {'aceptar': 34, 'aceptar con cambios': 24, 'rechazar': 0}
+
+== AC2: cada cita ruta:línea de la tabla y de la propuesta sobre T3, con su línea
+G01 godot/project.godot:20: AudioDirector="*res://autoload/audio_director.gd"
+G01 godot/autoload/audio_director.gd:21: _bus.pause_changed.connect(_on_pause_changed)
+G01 godot/autoload/audio_director.gd:51: AudioServer.set_bus_volume_db(index, _mix.get_bus_db(bus))
+G01 godot/tests/unit/test_audio_mix.gd:13: func test_data_defaults_and_pause_duck() -> void:
+G02 godot/core/round_state.gd:11: signal phase_changed(phase: int)
+G02 godot/core/round_state.gd:148: _enter_phase(_phase)
+G02 godot/core/round_state.gd:163: phase_changed.emit(_phase)
+G02 godot/autoload/round_manager.gd:103: _get_bus().phase_changed.emit(phase)
+G02 godot/tests/unit/test_phases.gd:130: func test_ac1_start_sequence_reset_phase_orders_time_started() -> void:
+G03 godot/core/order_board.gd:69: func set_active_slots(slot_ids: Array[int]) -> void:
+G03 godot/core/order_board.gd:76: func set_new_order_patience_multiplier(factor: float) -> void:
+G03 docs/arch/ADR-002-eventbus-autoloads.md:225: 3. **`OrderBoard`** gana `set_active_slots(slot_ids)` y `set_new_order_max_time(seconds)`, que
+G04 godot/resources/round_config.gd:25: @export var rng_seed: int = 0
+G04 godot/autoload/order_service.gd:30: if config != null and config.rng_seed != 0:
+G04 godot/tests/unit/test_phases.gd:384: func test_ac5_same_seed_same_order_sequence() -> void:
+G05 godot/components/interaction_component.gd:116: EventBus.interaction_resolved.emit(player, hint.verb, int(hint.state), hint.reason)
+G05 godot/components/interaction_component.gd:172: EventBus.action_hint_changed.emit(player, hint.verb, int(hint.state), hint.reason)
+G05 godot/tests/unit/test_interaction_component.gd:363: func test_pul131_single_after_several_switches_one_component_per_player() -> void:
+G06 godot/autoload/game_state.gd:21: var platform: PlatformProfile.Kind = PlatformProfile.Kind.DESKTOP
+G06 godot/autoload/game_state.gd:62: func set_platform(kind: PlatformProfile.Kind) -> void:
+G06 godot/autoload/game_state.gd:66: get_tree().root.content_scale_factor = ui_profile.content_scale
+G06 godot/autoload/game_state.gd:77: NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED:
+G06 godot/core/platform_profile.gd:18: static func detect(features: PackedStringArray, user_args: PackedStringArray) -> Kind:
+G06 godot/tests/unit/test_game_state.gd:240: assert_eq(_state.ui_profile.text_min_px, 36.0)
+G07 godot/core/station_side.gd:10: static func classify(
+G07 godot/entities/stations/seasoning_station.gd:35: func side_of(floor_position: Vector2) -> StationSide.Side:
+G07 godot/components/interaction_detector.gd:164: if not entity.has_method(&"is_reachable_from"):
+G07 godot/components/interaction_contract.gd:16: const INTERACTABLE_OPTIONAL_METHODS: PackedStringArray = ["is_reachable_from"]
+G07 godot/tests/unit/test_station_side.gd:8: func test_points_on_each_side() -> void:
+G07 docs/arch/ADR-003-arbol-escenas-composicion.md:182: | `SeasoningDispenser.is_reachable_from` | Específica | `false` si `holder` lleva algo (AC8, enmienda PUL-064); si no, `true` si `station.side_of(floo
+G07 godot/entities/stations/seasoning_dispenser.gd:42: func is_reachable_from(floor_position: Vector2, _holder: Holder) -> bool:
+G08 godot/entities/stations/seasoning_dispenser.gd:71: rejected.emit(result)
+G08 godot/entities/stations/cachelos_bowl.gd:84: rejected.emit(_rejection_of(hint.reason))
+G08 godot/entities/stations/slot.gd:17: @export var accepted_group: StringName = &""
+G08 godot/entities/stations/slot.gd:94: return item != null and (accepted_group.is_empty() or item.is_in_group(accepted_group))
+G08 godot/entities/stations/seasoning_station.tscn:56: [node name="Feedback" type="AudioStreamPlayer3D" parent="."]
+G08 godot/tests/integration/test_seasoning_station.gd:407: assert_null(STATION_DATA.get("toggle_guard"), "baja de toggle_guard")
+G09 godot/core/seasoning_rules.gd:8: enum Rejection {
+G09 godot/core/seasoning_rules.gd:88: static func canonical_order(seasonings: Array[SeasoningData]) -> Array[SeasoningData]:
+G09 godot/tests/integration/test_box.gd:277: assert_false(box.has_method(&"toggle_seasoning"), "D26: el cuenco solo pone")
+G09 godot/entities/items/box.gd:80: func apply_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection:
+G10 godot/entities/stations/seasoning_station.tscn:19: [node name="SeasoningStation" type="StaticBody3D"]
+G10 godot/entities/stations/seasoning_station.tscn:40: [node name="SweetDressing" parent="Dispensers" node_paths=PackedStringArray("station") instance=ExtResource("4_disp")]
+G10 godot/entities/stations/seasoning_station.tscn:52: [node name="CachelosBowl" parent="." node_paths=PackedStringArray("station") instance=ExtResource("5_bowl")]
+G10 godot/entities/items/badge_row.gd:152: if style.hot_mark != null and style.has_hot_mark(seasoning):
+G10 docs/arch/ADR-003-arbol-escenas-composicion.md:241: `interactable`: lo son sus hijos (bandeja, dispensadores, cuenco).
+G11 godot/resources/box_data.gd:8: @export_range(1, 20) var presses_to_fill: int = 1
+G11 godot/data/boxes/box.tres:9: presses_to_fill = 6
+G11 godot/resources/recipe_data.gd:8: @export var ingredient: IngredientData
+G11 godot/core/order_validator.gd:9: static func matches(order_data: OrderData, contents: BoxContents) -> bool:
+G11 godot/core/box_contents.gd:6: var box: BoxData
+G11 godot/entities/stations/box_shelf.tscn:24: [node name="BoxSpawner" type="StaticBody3D" parent="." unique_id=1736467547 groups=["interactable"]]
+G11 godot/entities/stations/box_shelf.tscn:38: root = NodePath("../../Model/box_shelf/OutlineHull")
+G11 godot/ui/tickets/ticket_entry.gd:46: for seasoning: SeasoningData in SeasoningRules.canonical_order(data.seasonings):
+G11 godot/resources/box_data.gd:10: @export_range(0.1, 5.0) var counter_full_time: float = 0.5
+G11 docs/arch/ADR-003-arbol-escenas-composicion.md:412: | Instancia única | `data/boxes/box.tres` (nuevo) | `presses_to_fill` = **6** (provisional, se re-mide en QA). Se dan de baja `small.tres`, `medium.tr
+G12 godot/resources/seasoning_data.gd:7: enum SeasoningType { SALT, PAPRIKA, HOT_PAPRIKA, OIL, CACHELOS, SWEET_DRESSING, HOT_DRESSING }
+G12 godot/core/seasoning_rules.gd:21: ALREADY_APPLIED,
+G12 godot/core/seasoning_rules.gd:41: static func apply(current: Array[SeasoningData], seasoning: SeasoningData, is_full: bool) -> Toggle:
+G12 godot/entities/items/box.gd:80: func apply_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection:
+G12 godot/entities/items/box.gd:159: seasoning_removed.emit(result.removed)
+G12 godot/entities/items/box.gd:161: seasoned.emit(result.added)
+G12 godot/entities/stations/seasoning_dispenser.tscn:75: [node name="Gesture" type="GPUParticles3D" parent="."]
+G12 godot/entities/stations/seasoning_station.tscn:41: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.1, -0.1)
+G12 godot/entities/stations/seasoning_station.tscn:47: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.1)
+G12 godot/entities/stations/seasoning_station.tscn:53: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.1, -0.1)
+G12 godot/resources/box_badge_style.gd:18: return seasoning != null and seasoning.type == SeasoningData.SeasoningType.HOT_DRESSING
+G13 godot/core/trash_rules.gd:10: static func can_trash(item: Node) -> bool:
+G13 godot/resources/trash_bin_data.gd:6: @export var trash_penalty: int = 0
+G13 godot/data/config/trash_bin.tres:7: trash_penalty = 0
+G13 godot/entities/stations/trash_bin.gd:27: func is_reachable_from(_floor_position: Vector2, holder: Holder) -> bool:
+G13 godot/entities/stations/trash_bin.gd:44: var item: Node = actor.holder.drop()
+G13 godot/entities/stations/trash_bin.gd:47: trashed.emit(item)
+G13 godot/entities/stations/trash_bin.tscn:13: [node name="TrashBin" type="StaticBody3D" groups=["interactable"]]
+G13 godot/scenes/levels/level_01.tscn:89: [node name="TrashBinKitchen" parent="Stations" instance=ExtResource("22_trash")]
+G13 godot/scenes/levels/level_01.tscn:92: [node name="TrashBinService" parent="Stations" instance=ExtResource("22_trash")]
+G13 godot/tests/integration/test_trash_bin.gd:291: func test_t6_trash_bins_are_far_from_every_target_and_the_gap() -> void:
+G13 docs/arch/ADR-003-arbol-escenas-composicion.md:542: estricta de lo necesario, inocua). **Regla de colocación** (contrato, la exige `test_level_01.gd`): cada cubo a
+G13 godot/tests/integration/test_level_01.gd:33: "Stations/TrashBinKitchen": [8.9, 0.9, 0.0],
+G14 godot/data/recipes/a_feira.tres:11: base_points = 8
+G14 godot/data/recipes/bravo_cachelos.tres:11: base_points = 13
+G14 godot/data/orders/con_cachelos.tres:12: seasonings = [ExtResource("3_sea"), ExtResource("4_sea")]
+G14 godot/data/orders/order_catalog.tres:11: orders = [ExtResource("2_o"), ExtResource("3_o"), ExtResource("4_o"), ExtResource("5_o")]
+G14 godot/data/config/round_config.tres:16: orders = [ExtResource("3_o1")]
+G14 godot/tests/unit/test_data_integrity.gd:254: func test_pul115_phase_pools_subset_of_catalog_and_per_phase() -> void:
+G15 godot/entities/stations/trash_bin.gd:8: signal trashed(item: Node)
+G15 godot/tests/unit/test_event_bus.gd:53: func test_ac1_bus_declares_exactly_catalog_signal_names() -> void:
+G16 godot/core/action_verb.gd:25: const ALL: Array[StringName] = [PICK_UP, DROP, COOK, CUT, SEASON_SWEET, SEASON_HOT, CACHELOS, TRASH]
+G16 godot/core/action_verb.gd:27: const REPEATABLE: Array[StringName] = [CUT]
+G16 godot/core/action_reason.gd:21: const ALL: Array[StringName] = [BOX_NOT_FULL, BUSY, EMPTY, FULL, ALREADY_APPLIED, NOT_COOKED]
+G16 godot/core/action_hint.gd:7: enum State { NONE = 0, OK = 1, BLOCKED = 2 }
+G16 godot/core/action_hint.gd:48: func same_as(other: ActionHint) -> bool:
+G16 godot/core/action_rules.gd:9: enum Held {
+G16 godot/core/hold_repeat.gd:36: func advance(delta: float) -> bool:
+G16 godot/entities/items/held_kind.gd:8: static func of(item: Node) -> ActionRules.Held:
+G17 godot/components/interaction_contract.gd:12: const HINT_METHOD: StringName = &"get_action_hint"
+G17 godot/components/interaction_contract.gd:13: const INTERACTABLE_METHODS: PackedStringArray = ["can_interact", "interact", "get_action_hint"]
+G17 godot/entities/stations/slot.gd:70: func get_action_hint(actor: InteractionComponent) -> ActionHint:
+G17 godot/entities/stations/slot.gd:111: func _resolve(holder: Holder) -> ActionHint:
+G17 godot/entities/stations/item_spawner.gd:16: func get_action_hint(actor: InteractionComponent) -> ActionHint:
+G17 godot/tests/integration/test_stations_contract.gd:75: func test_pul131_ac3_the_stand_is_not_interactable_any_more() -> void:
+G18 godot/components/interaction_detector.gd:28: signal hint_changed(target: Node, hint: ActionHint)
+G18 godot/components/interaction_detector.gd:43: @export var actor: InteractionComponent
+G18 godot/components/interaction_detector.gd:84: func get_hint() -> ActionHint:
+G18 godot/components/interaction_detector.gd:134: config.hysteresis_margin
+G18 godot/components/interaction_detector.gd:139: _publish(null, ActionRules.for_floor(HeldKind.of(held), holder.can_drop_freely()))
+G18 godot/components/interaction_detector.gd:146: return actor != null and actor.control != null and actor.control.controlled_by > 0
+G18 godot/components/interaction_detector.gd:154: _lit.set_blocked(hint.state == ActionHint.State.BLOCKED)
+G18 godot/core/interaction_scoring.gd:70: static func pick_best(
+G18 godot/data/config/player_config.tres:16: hysteresis_margin = 0.2
+G18 godot/tests/unit/test_interaction_scoring.gd:386: func test_ac3_pickable_priority_beats_hysteresis_with_empty_hand() -> void:
+G19 godot/components/interaction_component.gd:68: func interact_pressed() -> bool:
+G19 godot/components/interaction_component.gd:81: push_error("%s: get_action_hint no es NONE pero interact() devolvió false" % target)
+G19 godot/components/interaction_component.gd:113: interaction_resolved.emit(target, hint)
+G19 godot/components/interaction_component.gd:127: return hint.state == ActionHint.State.OK and hint.verb in ActionVerb.REPEATABLE
+G19 godot/entities/player/player.gd:214: _feedback.play_cue(&"rejected", goal)
+G19 godot/core/player_input.gd:38: func is_interact_pressed() -> bool:
+G19 godot/data/config/input_config.tres:9: cut_repeat_interval = 0.2
+G20 godot/entities/player/action_prompt.tscn:6: top_level = true
+G20 godot/components/action_prompt.gd:35: static var _registry: Dictionary = {}
+G20 godot/components/action_prompt.gd:41: @export var icons: ActionIconSet = preload("res://data/config/action_icons.tres")
+G20 godot/components/action_prompt.gd:424: var anchor: Node3D = target.get_node_or_null(^"%PromptAnchor") as Node3D
+G20 godot/components/hold_component.gd:91: func get_drop_position() -> Vector3:
+G20 godot/resources/action_icon_set.gd:8: @export var verb_icons: Dictionary[StringName, Texture2D] = {}
+G20 godot/resources/action_icon_set.gd:36: @export var prompt_offset: float = 0.9
+G20 godot/tests/integration/test_action_prompt.gd:316: func test_two_prompts_on_same_target_are_side_by_side_with_markers() -> void:
+G21 godot/tests/fixtures/action_matrix.csv:1: id,receiver,params,hand,reachable,verb,state,reason,replaces,progress
+G21 godot/tests/unit/test_action_rules.gd:110: func test_ac1_fixture_has_at_least_250_unique_rows() -> void:
+G21 godot/tests/integration/test_action_matrix.gd:734: func test_fixture_is_well_formed_and_the_counts_are_exact() -> void:
+G22 godot/entities/stations/order_stand.tscn:33: [node name="OrderStand" type="StaticBody3D"]
+G22 godot/entities/stations/order_stand.tscn:34: collision_layer = 1
+G22 godot/entities/stations/order_stand.gd:92: func _physics_process(_delta: float) -> void:
+G22 godot/entities/stations/order_stand.gd:142: if box == null or not _zone_accepts(box):
+G22 godot/data/config/round_config.tres:38: wrong_delivery_penalty = 0
+G22 godot/entities/stations/cachelos_bowl.gd:116: if box.apply_seasoning(seasoning) == SeasoningRules.Rejection.NONE:
+G22 godot/data/seasonings/sweet_dressing.tres:13: verb = &"season_sweet"
+G22 godot/tests/integration/test_order_stand.gd:328: func test_d26_stand_is_not_interactable_and_sits_on_the_world_layer() -> void:
+G22 godot/tests/integration/test_order_stand.gd:425: func test_d26_wrong_delivery_penalty_is_zero_and_no_deliver_error_cue() -> void:
+G23 godot/entities/stations/kitchen.tscn:133: [node name="CookRing" parent="." unique_id=1276433737 instance=ExtResource("5_b5ifj")]
+G23 godot/entities/stations/cooking_station.gd:119: slot_data.ring = _ring_base.duplicate() as WorldProgressRing
+G23 godot/resources/kitchen_data.gd:11: @export var warn_blink_hz: float = 3.0
+G23 godot/entities/items/box.tscn:95: [node name="CutCounter" type="Node3D" parent="." unique_id=1199965948]
+G23 godot/entities/stations/cachelos_bowl.tscn:49: [node name="StockMeter" type="Sprite3D" parent="."]
+G23 godot/entities/player/player.tscn:206: [node name="ActiveIndicator" type="MeshInstance3D" parent="."]
+G23 godot/entities/player/player.tscn:213: [node name="InactiveIndicator" type="MeshInstance3D" parent="."]
+G23 godot/entities/player/player.tscn:220: [node name="ActiveMarker" type="Sprite3D" parent="."]
+G23 godot/components/highlightable.gd:70: func set_blocked(blocked: bool) -> void:
+G23 godot/shaders/highlight_outline.gdshader:4: // Color blanco calido #FFF4D6 (D26.6); el ambar del objetivo BLOQUEADO es otro material.
+G23 docs/arch/ADR-003-arbol-escenas-composicion.md:885: | Personaje activo | `player.tscn` `%ActiveIndicator` + `%ActiveMarker` (nuevo, `Sprite3D` billboard `icon_mark_active` ≥ 24 px sobre la cabeza) | Act
+G23 godot/entities/player/player.gd:21: @export var inactive_material: Material
+G24 godot/autoload/event_bus.gd:35: signal action_hint_changed(player_index: int, verb: StringName, state: int, reason: StringName)
+G24 godot/autoload/event_bus.gd:37: signal interaction_resolved(player_index: int, verb: StringName, state: int, reason: StringName)
+G24 godot/components/interaction_component.gd:15: signal interaction_resolved(target: Node, hint: ActionHint)
+G24 godot/tests/unit/test_event_bus.gd:61: func test_ac1_bus_signal_signatures_match_catalog() -> void:
+G25 godot/ui/touch/virtual_stick.gd:151: Input.action_press(action, strength)
+G25 godot/ui/touch/touch_button.gd:126: Input.parse_input_event(event)
+G25 godot/ui/touch/touch_controls.gd:88: func release_all() -> void:
+G26 godot/ui/touch/touch_controls.tscn:23: [node name="SafeArea" type="MarginContainer" parent="."]
+G26 godot/ui/touch/touch_controls.tscn:34: [node name="Content" type="Control" parent="SafeArea"]
+G26 godot/ui/touch/touch_controls.tscn:40: [node name="MoveStick" type="Control" parent="SafeArea/Content"]
+G26 godot/ui/touch/touch_controls.tscn:47: [node name="ActionButton" type="Control" parent="SafeArea/Content"]
+G26 godot/ui/touch/touch_controls.tscn:54: [node name="SwitchButton" type="Control" parent="SafeArea/Content"]
+G26 godot/ui/touch/touch_controls.tscn:63: [node name="PauseButton" type="Control" parent="SafeArea/Content"]
+G26 godot/ui/touch/action_button.gd:26: EventBus.action_hint_changed.connect(_on_action_hint_changed)
+G26 godot/ui/touch/action_button.gd:152: vibrate.call(config.haptic_reject_ms)
+G26 godot/resources/touch_config.gd:7: @export var px_per_dp_at_1080: float = 2.5
+G26 godot/scenes/levels/level_01.tscn:128: [node name="TouchControls" parent="UI" instance=ExtResource("23_touch")]
+G26 godot/ui/touch/touch_controls.gd:23: if GameState.platform != PlatformProfile.Kind.MOBILE:
+G26 godot/resources/touch_config.gd:27: @export var action_icon_px_1080: float = 96.0
+G27 godot/core/touch_input.gd:19: static func source_of(event: InputEvent, joy_deadzone: float) -> Source:
+G27 godot/core/touch_input.gd:34: static func controls_visible(
+G27 godot/ui/touch/touch_controls.gd:159: var show_controls: bool = TouchInput.controls_visible(
+G27 docs/arch/ADR-004-input-coop-local.md:231: - `static func source_of(event: InputEvent) -> Source`: `InputEventScreenTouch` / `ScreenDrag` →
+G28 godot/core/player_input.gd:38: func is_interact_pressed() -> bool:
+G28 godot/core/hold_repeat.gd:36: func advance(delta: float) -> bool:
+G28 godot/core/action_verb.gd:27: const REPEATABLE: Array[StringName] = [CUT]
+G28 godot/resources/input_config.gd:10: @export var cut_repeat_interval: float = 0.2
+G28 godot/components/interaction_component.gd:132: if player_input == null or not player_input.is_interact_pressed():
+G29 godot/ui/menus/main_menu.gd:50: func _apply_platform() -> void:
+G29 godot/autoload/game_state.gd:77: NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED:
+G29 godot/autoload/game_state.gd:79: NOTIFICATION_WM_GO_BACK_REQUEST:
+G29 godot/autoload/game_state.gd:199: _set_keep_screen_on(platform == PlatformProfile.Kind.MOBILE)
+G29 godot/tests/integration/test_app_lifecycle.gd:30: func test_focus_out_pauses_immediately_and_focus_in_does_not_resume() -> void:
+G29 godot/tests/integration/test_app_lifecycle.gd:48: func test_back_request_pauses_the_round_and_a_second_one_does_not_resume() -> void:
+G29 godot/ui/menus/main_menu.gd:65: and GameState.platform == PlatformProfile.Kind.MOBILE
+G29 godot/project.godot:12: config/quit_on_go_back=false
+G30 godot/core/platform_profile.gd:18: static func detect(features: PackedStringArray, user_args: PackedStringArray) -> Kind:
+G30 godot/autoload/game_state.gd:21: var platform: PlatformProfile.Kind = PlatformProfile.Kind.DESKTOP
+G30 godot/autoload/game_state.gd:62: func set_platform(kind: PlatformProfile.Kind) -> void:
+G30 godot/tests/unit/test_platform_profile.gd:12: func test_touch_flag_forces_mobile() -> void:
+G31 godot/project.godot:33: window/size/viewport_width=1280
+G31 godot/project.godot:35: window/stretch/mode="canvas_items"
+G31 godot/project.godot:36: window/stretch/aspect="expand"
+G31 godot/project.godot:37: window/handheld/orientation=4
+G31 godot/ui/widgets/ui_scale.gd:12: static func px_to_units(px_at_1080: float, canvas_height: float) -> float:
+G32 godot/resources/ui_profile.gd:7: @export var content_scale: float = 1.0
+G32 godot/data/config/ui_profile_mobile.tres:8: text_min_px = 36.0
+G32 godot/data/config/ui_profile_mobile.tres:12: ticket_width_min = 330.0
+G32 godot/data/config/ui_profile_mobile.tres:13: ticket_width_max = 380.0
+G32 godot/ui/widgets/ui_scale.gd:12: static func px_to_units(px_at_1080: float, canvas_height: float) -> float:
+G32 godot/ui/widgets/ui_scale.gd:17: static func dp_to_units(dp: float, px_per_dp_at_1080: float, canvas_height: float) -> float:
+G32 godot/ui/widgets/ui_scale.gd:23: static func safe_margins(window_size: Vector2, safe_rect: Rect2, canvas_size: Vector2) -> Vector4:
+G32 godot/tests/integration/test_ui_scale.gd:80: func test_text_floor_is_reversible_and_leaves_larger_text_alone() -> void:
+G32 godot/resources/ui_profile.gd:13: @export var menu_card_width: float = 0.0
+G33 godot/ui/widgets/safe_area_margin.gd:1: class_name SafeAreaMargin
+G33 godot/ui/widgets/safe_area_margin.gd:18: func set_safe_rect(rect: Rect2, window_size: Vector2 = Vector2.ZERO) -> void:
+G33 godot/ui/hud/hud.gd:2: extends SafeAreaMargin
+G33 godot/ui/tickets/order_tickets_panel.gd:2: extends SafeAreaMargin
+G33 godot/ui/touch/touch_controls.tscn:23: [node name="SafeArea" type="MarginContainer" parent="."]
+G33 godot/ui/menus/menu_panel.tscn:22: [node name="SafeArea" type="MarginContainer" parent="."]
+G33 godot/ui/menus/main_menu.tscn:5: [ext_resource type="Script" path="res://ui/widgets/safe_area_margin.gd" id="3_safe"]
+G33 godot/ui/menus/pause_menu.tscn:15: [node name="MenuPanel" type="Control" parent="." unique_id=1619565341 instance=ExtResource("2_412up")]
+G33 godot/ui/menus/game_over.tscn:16: [node name="MenuPanel" type="Control" parent="." unique_id=1619565341 instance=ExtResource("2_ghdab")]
+G33 godot/tests/unit/test_ui_scale_math.gd:26: func test_safe_margins_for_2340x1080_notch() -> void:
+G34 godot/entities/camera/camera_rig.gd:16: @export var desktop_profile: CameraProfile = preload("res://data/config/camera_desktop.tres")
+G34 godot/entities/camera/camera_rig.gd:17: @export var mobile_profile: CameraProfile = preload("res://data/config/camera_mobile.tres")
+G34 godot/entities/camera/camera_rig.gd:19: @export var characters: Array[Node3D] = []
+G34 godot/entities/camera/camera_rig.gd:58: func set_profile(new_profile: CameraProfile) -> void:
+G34 godot/entities/camera/camera_rig.gd:194: func _on_character_switched(player_index: int, character_index: int) -> void:
+G34 godot/entities/camera/camera_rig.tscn:13: [node name="OffscreenArrow" type="CanvasLayer" parent="."]
+G34 godot/resources/camera_profile.gd:24: @export var respect_top_band: bool = false
+G34 godot/data/config/camera_desktop.tres:7: ortho_size = 12.74
+G34 godot/data/config/camera_mobile.tres:7: ortho_size = 7.0
+G34 godot/data/config/camera_mobile.tres:16: respect_top_band = true
+G34 godot/core/camera_follow.gd:46: func follow(target: Vector2, smooth_time: float, delta: float) -> Vector2:
+G34 godot/core/camera_follow.gd:99: static func clamp_focus_covered(
+G34 godot/core/camera_follow.gd:119: static func clear_east_cover(
+G34 godot/scenes/levels/level_01.tscn:120: characters = [NodePath("../Characters/Player1"), NodePath("../Characters/Player2")]
+G34 godot/tests/integration/test_camera_follow.gd:95: func test_ac11_running_character_stays_inside_screen_and_stops_cleanly() -> void:
+G35 godot/resources/camera_profile.gd:5: ## `size` de la Camera3D ortográfica (alto de la vista en m).
+G36 godot/ui/touch/touch_controls.gd:137: var switch_center: Vector2 = (
+G36 godot/ui/touch/touch_controls.gd:145: _place(_switch, switch_center, small)
+G36 godot/tests/integration/test_touch_layout.gd:85: func test_bac1_switch_button_sits_left_of_the_action_button_in_a_row() -> void:
+G36 godot/tests/integration/test_touch_layout.gd:97: func test_bac1_switch_button_row_with_the_design_safe_area() -> void:
+G37 godot/resources/ui_profile.gd:29: @export var button_zone_height_px: float = 240.0
+G37 godot/data/config/ui_profile_mobile.tres:22: button_zone_width_px = 390.0
+G37 godot/data/config/ui_profile_mobile.tres:23: button_zone_height_px = 240.0
+G37 godot/data/config/ui_profile_desktop.tres:23: button_zone_height_px = 240.0
+G37 godot/entities/camera/camera_rig.gd:243: func _button_zone(canvas: Vector2) -> Rect2:
+G37 godot/tests/integration/test_touch_layout.gd:199: func test_touch_rects_stay_inside_the_ui_profile_button_zone_at_2340() -> void:
+G37 godot/tests/integration/test_camera_follow.gd:189: func test_arrow_keeps_16px_from_button_zone() -> void:
+G38 godot/tests/integration/test_camera_button_zone.gd:264: func test_bac3_case09_counters_clear_the_button_zone_from_the_pot_stand() -> void:
+G39 godot/ui/touch/touch_controls.gd:124: var gap: float = UiScale.px_to_units(config.button_gap_px_1080, canvas.y)
+G39 godot/resources/touch_config.gd:15: @export var button_gap_px_1080: float = 24.0
+G39 godot/ui/touch/touch_controls.tscn:54: [node name="SwitchButton" type="Control" parent="SafeArea/Content"]
+G40 godot/data/audio/feedback_map.tres:171: &"trash": SubResource("Resource_trash"),
+G40 godot/data/audio/feedback_map.tres:172: &"unseason": SubResource("Resource_iru8r")
+G40 godot/entities/stations/trash_bin.gd:11: const CUE_TRASH: StringName = &"trash"
+G40 godot/entities/items/box.gd:159: seasoning_removed.emit(result.removed)
+G41 godot/core/action_rules.gd:46: static func for_pot(held: Held, free_places: int, has_burnt: bool, has_ready: bool) -> ActionHint:
+G41 godot/entities/stations/cooking_station.gd:396: discarded.connect(_on_feedback.bind(&"discard", false))
+G42 godot/resources/phase_data.gd:14: @export var orders: Array[OrderData] = []
+G42 godot/core/order_board.gd:62: _order_pool.clear()
+G42 godot/core/order_board.gd:83: func set_order_pool(orders: Array[OrderData]) -> void:
+G42 godot/core/order_board.gd:107: var source: Array[OrderData] = _catalog.orders if _order_pool.is_empty() else _order_pool
+G42 godot/core/round_state.gd:161: _board.set_order_pool(phase.orders)
+G42 godot/data/config/round_config.tres:16: orders = [ExtResource("3_o1")]
+G42 godot/data/config/round_config.tres:23: orders = [ExtResource("3_o1"), ExtResource("4_o2")]
+G42 godot/data/config/round_config.tres:30: orders = [ExtResource("3_o1"), ExtResource("4_o2"), ExtResource("5_o3"), ExtResource("6_o4")]
+G42 godot/tests/unit/test_phases.gd:700: func test_pool_same_seed_same_sequence_and_one_rng_call_per_order() -> void:
+G43 godot/data/audio/feedback_map.tres:155: &"box_full": SubResource("Resource_boxfull"),
+G43 godot/data/audio/feedback_map.tres:158: &"cook_ready": SubResource("Resource_cookready"),
+G43 godot/data/audio/feedback_map.tres:168: &"rejected": SubResource("Resource_rejected"),
+G43 godot/data/audio/feedback_map.tres:170: &"switch": SubResource("Resource_switch"),
+G43 godot/entities/stations/cooking_station.gd:354: _feedback.play_cue(&"burn_warning")
+G43 godot/entities/stations/cooking_station.gd:393: cooking_finished.connect(_on_feedback.bind(&"cook_ready", true))
+G43 godot/entities/items/box.gd:199: _feedback.play_cue(&"box_full" if is_full() else &"cut")
+G43 godot/entities/player/player.gd:214: _feedback.play_cue(&"rejected", goal)
+G43 godot/entities/player/player.gd:220: _feedback.play_cue(&"switch", self)
+G43 godot/tests/unit/test_feedback_distinct.gd:16: func test_new_cues_have_seven_distinct_streams() -> void:
+G43 docs/arch/ADR-006-audio-feedback.md:206: Correcta y errónea son distintas en sonido (`deliver_ok`/`deliver_error`) y en visual
+G43 godot/tests/integration/test_order_stand.gd:425: func test_d26_wrong_delivery_penalty_is_zero_and_no_deliver_error_cue() -> void:
+G44 godot/ui/touch/action_button.gd:27: EventBus.interaction_resolved.connect(_on_interaction_resolved)
+G44 godot/ui/touch/action_button.gd:152: vibrate.call(config.haptic_reject_ms)
+G45 godot/entities/items/box.gd:199: _feedback.play_cue(&"box_full" if is_full() else &"cut")
+G45 godot/entities/player/player.gd:214: _feedback.play_cue(&"rejected", goal)
+G45 godot/entities/stations/order_stand.gd:197: _feedback.play_cue(&"deliver_ok")
+G45 docs/arch/signals.md:299: o local)". Pendiente de R2 en el gate.
+G45 docs/design/features/audio-y-fx.md:11: - **AC2** Given cada evento de la lista (corte, caldero, coger, soltar, nueva comanda, entrega, caducada), When se emite su señal de `EventBus`, Then 
+G46 godot/tests/unit/test_event_bus.gd:53: func test_ac1_bus_declares_exactly_catalog_signal_names() -> void:
+G46 godot/tests/unit/test_event_bus.gd:61: func test_ac1_bus_signal_signatures_match_catalog() -> void:
+G46 docs/arch/signals.md:79: | `phase_changed(phase: int)` | `RoundManager` (reenvía `RoundState`) | `level_audio.gd` (cue `phase_up` si `phase` ≥ 2), `hud.gd` (aviso «Fase n», Co
+G46 godot/autoload/game_state.gd:51: _bus.round_started.connect(_on_round_started)
+G46 godot/autoload/game_state.gd:52: _bus.round_finished.connect(_on_round_finished)
+G46 godot/entities/player/character_switcher.gd:29: _bus.round_started.connect(_on_round_started)
+G46 godot/ui/menus/pause_menu.gd:29: EventBus.round_started.connect(_on_round_started)
+G46 godot/ui/touch/touch_controls.gd:38: EventBus.pause_changed.connect(_on_pause_changed)
+G47 godot/entities/items/box.gd:161: seasoned.emit(result.added)
+G47 godot/entities/stations/cachelos_bowl.gd:15: signal rejected(reason: SeasoningRules.Rejection)
+G47 godot/entities/stations/seasoning_dispenser.gd:13: signal rejected(reason: SeasoningRules.Rejection)
+G47 godot/core/station_side.gd:10: static func classify(
+G47 docs/arch/signals.md:206: | `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn` (M3: `%Feedback`, cue `season`); `%BadgeRow` de `box.tscn` (M2, P
+G47 docs/arch/signals.md:217: | `stock_changed(stock: int)` | `cachelos_bowl.gd` | visual de raciones de `cachelos_bowl.tscn` (`%Portions`) | Al reponer (+`cachelos_portions_per_it
+G47 docs/arch/signals.md:53: | `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX` (en desuso desde D23: sin caja en la mano el dispensador no es obje
+G48 godot/autoload/event_bus.gd:16: signal phase_changed(phase: int)
+G48 godot/entities/stations/cooking_station.gd:29: signal burn_warned(ingredient: Ingredient)
+G48 godot/entities/stations/cooking_station.gd:31: signal burnt(ingredient: Ingredient)
+G48 godot/entities/stations/cooking_station.gd:33: signal discarded(ingredient: Ingredient)
+G48 godot/components/feedback_player.gd:13: signal played(cue: StringName)
+G48 docs/arch/signals.md:287: | audio-y-fx AC5 entrega correcta / errónea | `EventBus.order_completed` / `delivery_rejected` | `order_stand.tscn`: `deliver_ok` + `POP` / `deliver_e
+G49 godot/entities/stations/order_stand.gd:77: func is_zone_lit() -> bool:
+G49 godot/core/seasoning_rules.gd:8: enum Rejection {
+G49 godot/tests/unit/test_event_bus.gd:53: func test_ac1_bus_declares_exactly_catalog_signal_names() -> void:
+G49 docs/arch/signals.md:10: - **Enmienda D23** (PUL-093, 2026-10-07, ADR-003 §9), **pendiente de la revisión del producer**:
+G49 docs/arch/ADR-003-arbol-escenas-composicion.md:249: ### 9. Estación al paso, pasaplatos marcados y entrega iluminada (D23) — *enmienda 2026-10-07, PUL-093, aceptada*
+G50 godot/entities/stations/trash_bin.gd:8: signal trashed(item: Node)
+G50 godot/core/seasoning_rules.gd:21: ALREADY_APPLIED,
+G50 godot/resources/phase_data.gd:14: @export var orders: Array[OrderData] = []
+G50 docs/arch/signals.md:251: `rejected(BOX_NOT_FULL)`; `ALREADY_APPLIED`: nada (pulsación consumida en silencio). Sin antirrebote.
+G51 godot/autoload/event_bus.gd:35: signal action_hint_changed(player_index: int, verb: StringName, state: int, reason: StringName)
+G51 godot/autoload/event_bus.gd:37: signal interaction_resolved(player_index: int, verb: StringName, state: int, reason: StringName)
+G51 godot/components/interaction_detector.gd:28: signal hint_changed(target: Node, hint: ActionHint)
+G51 godot/components/interaction_component.gd:15: signal interaction_resolved(target: Node, hint: ActionHint)
+G51 godot/entities/camera/camera_rig.gd:194: func _on_character_switched(player_index: int, character_index: int) -> void:
+G51 godot/autoload/order_service.gd:96: _get_bus().delivery_rejected.emit(slot_id, order_id, penalty)
+G52 godot/scenes/levels/level_01.tscn:32: [node name="Environment" parent="." unique_id=1215910342 instance=ExtResource("4_iu1m7")]
+G52 godot/scenes/levels/level_01.tscn:36: [node name="Stations" type="Node3D" parent="." unique_id=1166734241]
+G52 godot/scenes/levels/level_01.tscn:128: [node name="TouchControls" parent="UI" instance=ExtResource("23_touch")]
+G52 docs/arch/scene-tree.md:38: **Dimensión pendiente (D14, ADR-005).** Las secciones §1 (autoloads y flujo), §4 (UI de pantalla,
+G52 docs/arch/scene-tree.md:423: ├── Sun (DirectionalLight3D)        energía 1,34 (la fija test_level_01), sombras
+G52 godot/entities/environment/environment.tscn:32: light_energy = 1.18
+G52 godot/tests/integration/test_level_01.gd:662: assert_almost_eq(sun.light_energy, 1.18, 0.01)
+G52 docs/arch/scene-tree.md:284: order_stand.tscn      OrderStand (StaticBody3D; grupo interactable)  order_stand.gd  class_name OrderStand  @export slot_id: int
+G53 godot/entities/stations/seasoning_station.tscn:19: [node name="SeasoningStation" type="StaticBody3D"]
+G53 godot/entities/stations/seasoning_station.tscn:41: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.1, -0.1)
+G53 godot/entities/stations/seasoning_station.tscn:47: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.1)
+G53 godot/entities/stations/seasoning_station.tscn:53: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.1, -0.1)
+G53 godot/entities/stations/slot.gd:17: @export var accepted_group: StringName = &""
+G53 docs/arch/scene-tree.md:334: │   conecta rejected de los 4 dispensadores (D25: 2) y del cuenco → %Feedback (season_error) + sacudida del emisor
+G53 docs/arch/scene-tree.md:350: └── %ErrorAudio (AudioStreamPlayer3D)    sonido de rechazo (dispensadores, cuenco) → M3: %Feedback (FeedbackPlayer), cue season_error
+G53 docs/arch/scene-tree.md:356: │   is_reachable_from(floor_position: Vector2, holder: Holder) -> bool
+G53 godot/entities/stations/seasoning_dispenser.gd:42: func is_reachable_from(floor_position: Vector2, _holder: Holder) -> bool:
+G54 godot/project.godot:20: AudioDirector="*res://autoload/audio_director.gd"
+G54 godot/entities/environment/level_audio.tscn:21: [node name="PhaseCue" type="AudioStreamPlayer" parent="."]
+G54 godot/entities/environment/level_audio.gd:10: const PHASE_CUE: StringName = &"phase_up"
+G54 godot/autoload/audio_director.gd:51: AudioServer.set_bus_volume_db(index, _mix.get_bus_db(bus))
+G54 godot/data/config/round_config.tres:15: patience_multiplier = 1.0
+G54 godot/data/config/round_config.tres:22: patience_multiplier = 0.85
+G54 godot/data/config/round_config.tres:29: patience_multiplier = 0.7
+G54 docs/arch/scene-tree.md:489: 2 / 3 / 4 puestos · max_time 90 / 70 / 50), + rng_seed: int (0 = aleatoria)
+G55 godot/scenes/levels/level_01.tscn:50: [node name="PassSlot01" parent="Stations" instance=ExtResource("19_slot")]
+G55 godot/scenes/levels/level_01.tscn:65: [node name="PassSlot06" parent="Stations" instance=ExtResource("19_slot")]
+G55 godot/entities/environment/kitchen_layout.tscn:90: [node name="BarKitchenSide" type="StaticBody3D" parent="Bar"]
+G55 godot/entities/environment/kitchen_layout.tscn:109: [node name="BarServiceSide" type="StaticBody3D" parent="Bar"]
+G55 godot/entities/environment/kitchen_layout.tscn:127: [node name="GapThreshold" parent="Bar" instance=ExtResource("m_pass_threshold")]
+G55 godot/entities/stations/order_stand.gd:77: func is_zone_lit() -> bool:
+G55 godot/entities/stations/order_stand.gd:28: @export var material_on: Material
+G55 godot/entities/environment/environment.tscn:43: visible = false
+G55 godot/entities/environment/environment.tscn:87: visible = false
+G56 godot/entities/environment/environment.tscn:42: [node name="Bulbs" type="Node3D" parent="."]
+G56 godot/entities/environment/environment.tscn:85: [node name="Vignette" type="CanvasLayer" parent="."]
+G56 docs/arch/scene-tree.md:14: pendiente del QA de M3b). Lo marcado **M3c** lo implementan PUL-097..PUL-101.
+G56 docs/design/roadmap.md:13: | M3b | **Técnico cerrado 2026-10-07** · Estética v2 según la referencia elegida (`docs/art/style-refs/referencia-elegida-2026-10-06.png`): biblia v2,
+G57 godot/entities/stations/box_shelf.tscn:24: [node name="BoxSpawner" type="StaticBody3D" parent="." unique_id=1736467547 groups=["interactable"]]
+G57 godot/entities/stations/trash_bin.tscn:13: [node name="TrashBin" type="StaticBody3D" groups=["interactable"]]
+G57 godot/scenes/levels/level_01.tscn:89: [node name="TrashBinKitchen" parent="Stations" instance=ExtResource("22_trash")]
+G57 godot/scenes/levels/level_01.tscn:92: [node name="TrashBinService" parent="Stations" instance=ExtResource("22_trash")]
+G57 godot/data/boxes/box.tres:9: presses_to_fill = 6
+G57 godot/data/config/trash_bin.tres:7: trash_penalty = 0
+G57 docs/arch/scene-tree.md:104: (`ItemSpawner.can_interact` es `true` con la mano llena: consumen la pulsación), `Kitchen`,
+G57 godot/entities/stations/item_spawner.gd:16: func get_action_hint(actor: InteractionComponent) -> ActionHint:
+G57 docs/arch/scene-tree.md:108: **`test_level_01.gd` lo exige** (T6 de `cubo-basura`): recorre esas instancias del nivel y comprueba
+G58 godot/entities/player/player.tscn:229: [node name="ActionPrompt" parent="." node_paths=PackedStringArray("detector", "actor", "hold") instance=ExtResource("15_prompt")]
+G58 godot/entities/items/box.tscn:95: [node name="CutCounter" type="Node3D" parent="." unique_id=1199965948]
+G58 godot/entities/stations/kitchen.tscn:133: [node name="CookRing" parent="." unique_id=1276433737 instance=ExtResource("5_b5ifj")]
+G58 godot/ui/touch/touch_controls.tscn:23: [node name="SafeArea" type="MarginContainer" parent="."]
+G58 godot/entities/camera/camera_rig.tscn:13: [node name="OffscreenArrow" type="CanvasLayer" parent="."]
+G58 docs/arch/scene-tree.md:163: ├── TouchControls    ui/touch/touch_controls.tscn  [D26] solo SINGLE y con pantalla táctil (ADR-004 §6)
+G58 godot/ui/touch/touch_controls.gd:23: if GameState.platform != PlatformProfile.Kind.MOBILE:
+G58 docs/arch/scene-tree.md:627: | Escala casera | `UiScale.factor()`, `UiScale.REFERENCE_HEIGHT_PX`, `MAX_FACTOR`; la línea de `scale` de `hud.gd` y `order_tickets_panel.gd` | La sus
+G58 godot/ui/widgets/ui_scale.gd:7: const REFERENCE_HEIGHT_PX: float = 1080.0
+G58 godot/ui/tickets/order_tickets_panel.gd:81: var available_px: float = inner * UiScale.REFERENCE_HEIGHT_PX / canvas.y
+-- docs/design/decisions.md:43: | T3 | Ubicación | `godot/` en este repo; Unity (`Assets/`) queda como especificación hasta la paridad |
+-- docs/design/decisions.md:23: | D17 | Paridad con Unity | No es requisito más allá de M0 | El prototipo era rudimentario: se renuncia a la puerta humana «lado a lado» (2026-10-04).
+
+RESULTADO: OK

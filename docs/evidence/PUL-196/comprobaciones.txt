@@ -1,0 +1,55 @@
+== G10, bajas de ADR-003 §8.4: rutas que no deben existir
+entities/stations/spice_shelf.tscn: no existe
+entities/items/seasoning.tscn: no existe
+entities/items/seasoning_item.gd: no existe
+assets/models/placeholders/condiment_jar.tscn: no existe
+Tray o get_box fuera de tests: 0
+initial_item_data fuera de tests: 0
+
+== Apariciones fuera de tests de nombres que los contratos dan de baja
+set_new_order_max_time: 0
+toggle_seasoning: 0
+swap_exclusive: 0
+paprika_swap: 0
+toggle_guard: 0
+button_zone_top_px: 0
+cook_done: 0
+season_error: 0
+deliver_error: 0
+short_label: 0
+UiScale.factor: 0
+
+== G25, eventos táctiles en project.godot
+InputEventScreenTouch o InputEventScreenDrag: 0
+
+== G31, factor en ui_scale.gd
+factor o MAX_FACTOR: 0
+
+== G35, tipos de mundo en la capa común de E6
+core/platform_profile.gd: ninguno
+resources/ui_profile.gd: ninguno
+ui/widgets/ui_scale.gd: ninguno
+ui/widgets/safe_area_margin.gd: ninguno
+resources/camera_profile.gd: ['5: ## `size` de la Camera3D ortográfica (alto de la vista en m).']
+core/camera_follow.gd: ninguno
+
+== G46, señales de EventBus: catálogo de signals.md §2 frente a connect/emit en el código
+en el catálogo y no en el código: []
+en el código y no en el catálogo: []
+round_started: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=['character_switcher.gd', 'game_state.gd', 'pause_menu.gd'] en_la_fila_sin_conectar=[]
+round_time_changed: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+round_finished: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=['game_state.gd'] en_la_fila_sin_conectar=[]
+score_changed: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+phase_changed: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=['hud.gd']
+orders_reset: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+order_generated: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+order_completed: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+delivery_rejected: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=['order_stand.gd']
+order_patience_changed: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+order_expired: emite=['order_service.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+action_hint_changed: emite=['interaction_component.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+interaction_resolved: emite=['interaction_component.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+pause_changed: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=['audio_director.gd', 'touch_controls.gd'] en_la_fila_sin_conectar=[]
+character_switched: emite=['character_switcher.gd'] conecta_sin_estar_en_la_fila=['camera_rig.gd'] en_la_fila_sin_conectar=[]
+device_assigned: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+device_disconnected: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
