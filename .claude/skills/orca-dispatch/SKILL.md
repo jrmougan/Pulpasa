@@ -43,7 +43,7 @@ procesa el lote entero (mezcla tipos). `question` → `orca-ide orchestration re
 `inbox --terminal run:<run_id> --limit 50`.
 
 Por cada `worker_done` con `--outcome succeeded`:
-1. Revisión: `worker-start --spec "Revisa la rama <rama> contra docs/backlog/PUL-0xx-*.md. Base: <rama-integración>. Lee CLAUDE.md. Rol: .claude/agents/reviewer.md. Responde APPROVE o CHANGES en worker_done." --worktree branch:<rama> --agent codex --json`.
+1. Revisión: `worker-start --spec "Revisa la rama <rama> contra docs/backlog/PUL-0xx-*.md. Base: <rama-integración>. Rol: .claude/agents/reviewer.md. Responde APPROVE o CHANGES en worker_done." --worktree branch:<rama> --agent codex --json`.
 2. Si `CHANGES`: `orca-ide orchestration send --to dispatch:<id del worker> --subject "Cambios PUL-0xx" --body "<hallazgos>"`; responde con otro `worker_done`.
 3. Si `APPROVE`, con árbol limpio y de una en una: `tools/merge_gate.sh <rama>` (nombre exacto del recibo o de `worker-show`; debe contener `pul-<n>`, o check_owns no comprueba nada). Después ficha en `done`, tabla de `docs/backlog/README.md`, `orca_task`, commit `docs: close PUL-0xx` y `worker-release --dispatch <id>`.
 
@@ -58,6 +58,6 @@ la Task queda bloqueada hasta `gate-resolve --id <gate_id> --resolution "<texto>
 ## Agentes no Claude
 
 Antigravity y kimi: lee `references/agentes-no-claude.md` antes de lanzarlos. Ni estos ni Codex como
-worker ejecutan los hooks de `.claude/`: pide en el spec leer `CLAUDE.md` (en Windows, `AGENTS.md` no lo contiene) y
+worker ejecutan los hooks de `.claude/`: pide en el spec
 ejecutar `tools/check_owns.py <rama> <base>` y `tools/verify.sh` antes de `worker_done`. Un worktree por ficha (`--worktree new-child`). Revisa sus
 capturas contra cada AC: un estado que no se distingue en la imagen no prueba el AC.

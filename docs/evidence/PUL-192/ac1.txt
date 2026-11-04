@@ -1,0 +1,36 @@
+AC1. AGENTS.md como fichero normal, en Windows con core.symlinks=false.
+El fichero se borró y se volvió a materializar desde git antes de medirlo.
+
+$ git config core.symlinks
+false
+
+$ rm AGENTS.md
+$ git checkout -- AGENTS.md
+
+$ git ls-files -s AGENTS.md
+100644 0cca485d38ff90d289b756b76c7a8a7faf7fd238 0	AGENTS.md
+
+$ wc -c AGENTS.md CLAUDE.md
+3369 AGENTS.md
+  11 CLAUDE.md
+3380 total
+
+$ file AGENTS.md
+AGENTS.md: Unicode text, UTF-8 text
+
+$ grep -nE '^[1-7]\. ' AGENTS.md | cut -c1-60
+26:1. Una ficha por worker. Escribe su id en `.claude/curren
+30:2. No se termina con `tools/verify.sh` en rojo: pásalo a
+32:3. Tipado estático en todo GDScript. Datos de balance en
+33:4. Lógica en núcleos `RefCounted` de `core/`; autoloads
+36:5. Un `.tscn` tiene un solo dueño por oleada. No invente
+37:6. No portes los bugs del prototipo (lista en `docs/migra
+38:7. No edites `Assets/`, `godot/addons/` ni `main.tex`.
+
+$ cat CLAUDE.md
+@AGENTS.md
+
+Constraint «el contenido no crece salvo esa línea», contra el CLAUDE.md de la base (HEAD era aún cac6ac1):
+$ git show HEAD:CLAUDE.md | diff - AGENTS.md
+24a25
+> Los hooks de `.claude/` solo corren en Claude Code: fuera de él, la barrera es `tools/merge_gate.sh`.
