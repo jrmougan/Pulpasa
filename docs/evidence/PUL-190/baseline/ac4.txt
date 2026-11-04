@@ -1,0 +1,122 @@
+AC4 ficha o entrada ilegible: siempre rc=2
+FAIL rc=0 (esperado 2) ficha con bytes no UTF-8, destino que su owns permitiría: Assets/x.txt
+FAIL rc=1 (esperado 2) la ficha es un directorio: Assets/x.txt
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 632, in read_text
+        with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+             ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 537, in open
+        return io.open(self, mode, buffering, encoding, errors, newline)
+               ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    PermissionError: [Errno 13] Permission denied: '<ruta>
+PASS rc=2 (esperado 2) ficha sin frontmatter: Assets/x.txt
+    Bloqueado: Assets/x.txt no est\xe1 en `owns` ni `touches_scenes` de PUL-903-sinfm.md.
+    Rutas permitidas: docs/backlog/PUL-903-sinfm.md, docs/evidence/PUL-903/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (orca ask) en vez de editarlo.
+PASS rc=2 (esperado 2) ficha inexistente: Assets/x.txt
+    Bloqueado: no encuentro la ficha docs/backlog/PUL-999-*.md.
+PASS rc=2 (esperado 2) current-task con bytes no UTF-8: Assets/x.txt
+    Bloqueado: no encuentro la ficha docs/backlog/\xff\xfePUL-184-*.md.
+PASS rc=2 (esperado 2) current-task con BOM (Set-Content de PowerShell 5): Assets/x.txt
+    Bloqueado: no encuentro la ficha docs/backlog/﻿PUL-184-*.md.
+FAIL rc=1 (esperado 2) entrada JSON inválida
+    Traceback (most recent call last):
+      File "<ruta> line 23, in <module>
+        data = json.load(sys.stdin)
+      File "<ruta> line 298, in load
+        return loads(fp.read(),
+            cls=cls, object_hook=object_hook,
+            parse_float=parse_float, parse_int=parse_int,
+            parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+      File "<ruta> line 352, in loads
+        return _default_decoder.decode(s)
+               ~~~~~~~~~~~~~~~~~~~~~~~^^^
+      File "<ruta> line 345, in decode
+        obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+                   ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 361, in raw_decode
+        obj, end = self.scan_once(s, idx)
+                   ~~~~~~~~~~~~~~^^^^^^^^
+    json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+FAIL rc=1 (esperado 2) entrada vacía
+    Traceback (most recent call last):
+      File "<ruta> line 23, in <module>
+        data = json.load(sys.stdin)
+      File "<ruta> line 298, in load
+        return loads(fp.read(),
+            cls=cls, object_hook=object_hook,
+            parse_float=parse_float, parse_int=parse_int,
+            parse_constant=parse_constant, object_pairs_hook=object_pairs_hook, **kw)
+      File "<ruta> line 352, in loads
+        return _default_decoder.decode(s)
+               ~~~~~~~~~~~~~~~~~~~~~~~^^^
+      File "<ruta> line 345, in decode
+        obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+                   ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 363, in raw_decode
+        raise JSONDecodeError("Expecting value", s, err.value) from None
+    json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+FAIL rc=1 (esperado 2) entrada JSON con bytes no UTF-8
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+FAIL rc=1 (esperado 2) JSON que no es un objeto
+    Traceback (most recent call last):
+      File "<ruta> line 24, in <module>
+        target = data.get("tool_input", {}).get("file_path")
+                 ^^^^^^^^
+    AttributeError: 'list' object has no attribute 'get'
+FAIL rc=1 (esperado 2) tool_input null
+    Traceback (most recent call last):
+      File "<ruta> line 24, in <module>
+        target = data.get("tool_input", {}).get("file_path")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    AttributeError: 'NoneType' object has no attribute 'get'
+FAIL rc=1 (esperado 2) file_path no es texto
+    Traceback (most recent call last):
+      File "<ruta> line 28, in <module>
+        rel = PurePosixPath(Path(target).resolve().relative_to(root).as_posix())
+                            ~~~~^^^^^^^^
+      File "<ruta> line 503, in __init__
+        super().__init__(*args)
+        ~~~~~~~~~~~~~~~~^^^^^^^
+      File "<ruta> line 132, in __init__
+        raise TypeError(
+        ...<2 lines>...
+            f"not {type(path).__name__!r}")
+    TypeError: argument should be a str or an os.PathLike object where __fspath__ returns a str, not 'int'
+FAIL rc=1 (esperado 2) file_path con NUL
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+PASS rc=2 (esperado 2) destino fuera del repositorio
+    Bloqueado: ../fuera.txt est\xe1 fuera del repositorio.
+Restricción de la ficha: sin current-task no se restringe nada, ni con entrada inválida
+PASS rc=0 (esperado 0) sin current-task, destino ajeno
+PASS rc=0 (esperado 0) sin current-task, entrada inválida
+PASS rc=0 (esperado 0) current-task vacío, destino ajeno

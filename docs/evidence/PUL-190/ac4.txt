@@ -1,0 +1,46 @@
+AC4 ficha o entrada ilegible: siempre rc=2
+PASS rc=2 (esperado 2) ficha con bytes no UTF-8, destino que su owns permitiría: Assets/x.txt
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 27: invalid start byte).
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) la ficha es un directorio: Assets/x.txt
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (PermissionError: [Errno 13] Permission denied: '<ruta>
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) ficha sin frontmatter: Assets/x.txt
+    Bloqueado: Assets/x.txt no está en `owns` ni `touches_scenes` de PUL-903-sinfm.md.
+    Rutas permitidas: docs/backlog/PUL-903-sinfm.md, docs/evidence/PUL-903/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS rc=2 (esperado 2) ficha inexistente: Assets/x.txt
+    Bloqueado: no encuentro la ficha docs/backlog/PUL-999-*.md.
+PASS rc=2 (esperado 2) current-task con bytes no UTF-8: Assets/x.txt
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte).
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) current-task con BOM (Set-Content de PowerShell 5): Assets/x.txt
+    Bloqueado: no encuentro la ficha docs/backlog/﻿PUL-184-*.md.
+PASS rc=2 (esperado 2) entrada JSON inválida
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)).
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) entrada vacía
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (JSONDecodeError: Expecting value: line 1 column 1 (char 0)).
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) entrada JSON con bytes no UTF-8
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf1 in position 35: invalid continuation byte).
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) JSON que no es un objeto
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (AttributeError: 'list' object has no attribute 'get').
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) tool_input null
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (AttributeError: 'NoneType' object has no attribute 'get').
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) file_path no es texto
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (TypeError: argument should be a str or an os.PathLike object where __fspath__ returns a str, not 'int').
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) file_path con NUL
+    Bloqueado: Assets/\x00x.txt no está en `owns` ni `touches_scenes` de PUL-184-puestos-entrega-y-numeros-v3.md.
+    Rutas permitidas: godot/data/config/stand_palette.tres, godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand_model.gd, godot/tests/unit/test_order_stand_model.gd, godot/tests/integration/test_order_tickets.gd*, docs/evidence/PUL-184/**, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, godot/entities/stations/order_stand.tscn, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, docs/evidence/PUL-184/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS rc=2 (esperado 2) destino fuera del repositorio
+    Bloqueado: ../fuera.txt está fuera del repositorio.
+Restricción de la ficha: sin current-task no se restringe nada, ni con entrada inválida
+PASS rc=0 (esperado 0) sin current-task, destino ajeno
+PASS rc=0 (esperado 0) sin current-task, entrada inválida
+PASS rc=0 (esperado 0) current-task vacío, destino ajeno

@@ -1,7 +1,7 @@
 ---
 id: PUL-190
 title: Hacer que guard_ownership lea UTF-8 y bloquee ante cualquier fallo
-status: ready
+status: review
 milestone: M4
 role: godot-architect
 deps: []
@@ -29,14 +29,39 @@ Sin `current-task`, el hook sigue sin restringir nada. No cambia el formato de `
 `tools/check_owns.py` queda fuera de esta ficha.
 
 ## Acceptance
-- [ ] AC1 Given `current-task` = PUL-184, When se edita `Assets/x.txt`, Then rc=2 con el mensaje de `owns` → salida en docs/evidence/PUL-190/
-- [ ] AC2 Given `current-task` = PUL-184, When se edita una ruta de su `owns`, Then rc=0 → salida en docs/evidence/PUL-190/
-- [ ] AC3 Given todas las fichas de docs/backlog, When se ejecuta el hook con cada una en Windows, Then ninguna da rc=1 → salida en docs/evidence/PUL-190/
-- [ ] AC4 Given una ficha ilegible o una entrada JSON inválida, When se ejecuta el hook, Then rc=2 → salida en docs/evidence/PUL-190/
-- [ ] AC5 Given una ruta destino no ASCII, When se ejecuta el hook, Then decide por `owns` sin excepción → salida en docs/evidence/PUL-190/
+- [x] AC1 Given `current-task` = PUL-184, When se edita `Assets/x.txt`, Then rc=2 con el mensaje de `owns` → salida en docs/evidence/PUL-190/
+- [x] AC2 Given `current-task` = PUL-184, When se edita una ruta de su `owns`, Then rc=0 → salida en docs/evidence/PUL-190/
+- [x] AC3 Given todas las fichas de docs/backlog, When se ejecuta el hook con cada una en Windows, Then ninguna da rc=1 → salida en docs/evidence/PUL-190/
+- [x] AC4 Given una ficha ilegible o una entrada JSON inválida, When se ejecuta el hook, Then rc=2 → salida en docs/evidence/PUL-190/
+- [x] AC5 Given una ruta destino no ASCII, When se ejecuta el hook, Then decide por `owns` sin excepción → salida en docs/evidence/PUL-190/
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Línea base: un arnés `docs/evidence/PUL-190/run_acs.sh` (Git Bash, rutas `pwd -W`, sandbox con copia de
+   `docs/backlog` y `.claude/current-task` propio, para no ensuciar el backlog real con fichas ilegibles) se ejecuta
+   primero contra el hook antiguo: debe reproducir el rc=1.
+2. Hook: pasar el cuerpo a `main()`; `sys.stderr.reconfigure` a UTF-8, `encoding="utf-8"` en fichas y `current-task`,
+   JSON desde `sys.stdin.buffer` decodificado como UTF-8. `except Exception` alrededor de `main()` → exit 2 con mensaje.
+   Marcador ausente o vacío se comprueba antes de leer la entrada: sigue sin restringir. Mensaje: `orchestration ask`.
+3. Volver a pasar el arnés contra el hook nuevo, guardar la salida por AC y `tools/verify.sh --quick`.
 
 ## Evidence
-(Lo rellena el worker: salida de verify.sh, capturas, notas.)
+Arnés: `docs/evidence/PUL-190/run_acs.sh <hook.py> <dir_salida>`, desde Git Bash en Windows 11, con rutas `pwd -W`,
+Python 3.13.18, locale cp1252 (`env.txt`) y `PYTHONUTF8`/`PYTHONIOENCODING` sin definir. Usa un sandbox con copia de
+`docs/backlog`, para que las fichas ilegibles de AC4 no toquen el backlog real. Resumen en `summary.txt`.
+
+| AC | Hook nuevo | Hook antiguo (`baseline/`) | Salida |
+|---|---|---|---|
+| AC1 | rc=2 con el mensaje de `owns` y `orchestration ask` | rc=1 (`UnicodeDecodeError`) | `ac1.txt` |
+| AC2 | rc=0 en 4 rutas (literal, `**`, `*`, propia ficha) | rc=1 en las 4 | `ac2.txt` |
+| AC3 | 188 fichas: 0 con rc=1; ajena rc=2, primera de `owns` rc=0, propia ficha rc=0 | 13 fichas con rc=1, las que cita la ficha | `ac3.txt` |
+| AC4 | rc=2 en los 14 casos de bloqueo; sin `current-task` o vacío, rc=0 en los 3 de control | rc=1 en 8 y rc=0 con la ficha de bytes no UTF-8 | `ac4.txt` |
+| AC5 | Decide por `owns` en 6 casos, con UTF-8 crudo y `\u`; 2 más con `PYTHONIOENCODING=cp1252` | rc=1 en la ficha PUL-184 | `ac5.txt` |
+
+- `tools/verify.sh --quick`: `✓ verify OK` (`verify_quick.txt`).
+- Hook sobre el worktree real, con `current-task` = PUL-190: `Assets/x.txt` da rc=2 y `.claude/hooks/guard_ownership.py` rc=0.
+- **Bloqueos que AC4 añade a la ficha**: `current-task` con BOM (lo escribe `Set-Content` de PowerShell 5) da rc=2 porque
+  no encuentra la ficha. Falla cerrado, pero el mensaje no nombra el BOM. `file_path` con NUL da rc=2 por `owns`, no por excepción.
+- **No verificable**:
+  - Linux y macOS: solo se ha ejecutado en Windows. El cambio no depende del sistema.
+  - Intérprete ausente o hook que no compila: Python no llega a ejecutar el `try`, así que el código de salida no es 2 y la
+    edición pasa. Se arregla en `.claude/settings.json`, fuera de `owns`, y no se ha probado.

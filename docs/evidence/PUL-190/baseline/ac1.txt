@@ -1,0 +1,17 @@
+AC1 current-task=PUL-184, destino fuera de owns
+FAIL rc=1 (esperado 2) AC1: Assets/x.txt
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+FAIL el mensaje no cita orchestration ask
+PASS el mensaje ya no cita orca ask
