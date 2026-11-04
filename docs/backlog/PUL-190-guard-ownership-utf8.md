@@ -47,21 +47,40 @@ Sin `current-task`, el hook sigue sin restringir nada. No cambia el formato de `
 ## Evidence
 Arnés: `docs/evidence/PUL-190/run_acs.sh <hook.py> <dir_salida>`, desde Git Bash en Windows 11, con rutas `pwd -W`,
 Python 3.13.18, locale cp1252 (`env.txt`) y `PYTHONUTF8`/`PYTHONIOENCODING` sin definir. Usa un sandbox con copia de
-`docs/backlog`, para que las fichas ilegibles de AC4 no toquen el backlog real. Resumen en `summary.txt`.
+`docs/backlog`, para que las fichas ilegibles de AC4 no toquen el backlog real. Resumen en `summary.txt`. La línea base
+es el hook de `cac6ac1`, pasado por el mismo arnés.
 
 | AC | Hook nuevo | Hook antiguo (`baseline/`) | Salida |
 |---|---|---|---|
 | AC1 | rc=2 con el mensaje de `owns` y `orchestration ask` | rc=1 (`UnicodeDecodeError`) | `ac1.txt` |
 | AC2 | rc=0 en 4 rutas (literal, `**`, `*`, propia ficha) | rc=1 en las 4 | `ac2.txt` |
 | AC3 | 188 fichas: 0 con rc=1; ajena rc=2, primera de `owns` rc=0, propia ficha rc=0 | 13 fichas con rc=1, las que cita la ficha | `ac3.txt` |
-| AC4 | rc=2 en los 14 casos de bloqueo; sin `current-task` o vacío, rc=0 en los 3 de control | rc=1 en 8 y rc=0 con la ficha de bytes no UTF-8 | `ac4.txt` |
+| AC4 | 35 de 35: rc=2 en los 26 casos de bloqueo y rc=0 en los 9 de control (BOM, `owns` con stderr cerrado, sin `current-task` o vacío) | 25 fallos: 10 con rc=0 donde debía bloquear, 11 con rc=1 y 4 con BOM | `ac4.txt` |
 | AC5 | Decide por `owns` en 6 casos, con UTF-8 crudo y `\u`; 2 más con `PYTHONIOENCODING=cp1252` | rc=1 en la ficha PUL-184 | `ac5.txt` |
 
+- **Entrada sin `file_path` de texto**: `{}`, `tool_input` vacío, otro campo (`path`) y `file_path` a `null`, `""`, `0`,
+  `false`, `[]`, `{}` o `123` dan rc=2 con «entrada sin file_path válido». Antes, todos menos `123` daban rc=0.
+- **Stderr cerrado** (`2>&-`): sin `current-task` o con él vacío, rc=0; con ficha activa, decide por `owns`.
+- **BOM**: `current-task` o ficha con BOM ya no bloquean; decide `owns` (rc=0 dentro, rc=2 fuera).
+- `file_path` con NUL da rc=2 por `owns` en Windows, no por excepción.
 - `tools/verify.sh --quick`: `✓ verify OK` (`verify_quick.txt`).
 - Hook sobre el worktree real, con `current-task` = PUL-190: `Assets/x.txt` da rc=2 y `.claude/hooks/guard_ownership.py` rc=0.
-- **Bloqueos que AC4 añade a la ficha**: `current-task` con BOM (lo escribe `Set-Content` de PowerShell 5) da rc=2 porque
-  no encuentra la ficha. Falla cerrado, pero el mensaje no nombra el BOM. `file_path` con NUL da rc=2 por `owns`, no por excepción.
-- **No verificable**:
-  - Linux y macOS: solo se ha ejecutado en Windows. El cambio no depende del sistema.
-  - Intérprete ausente o hook que no compila: Python no llega a ejecutar el `try`, así que el código de salida no es 2 y la
-    edición pasa. Se arregla en `.claude/settings.json`, fuera de `owns`, y no se ha probado.
+- **Linux** (WSL2 Ubuntu, Python 3.14.4, rutas POSIX, `linux/`): mismo resultado en todos los AC, `fallos=0`.
+
+### Fallo abierto conocido
+Medido con el comando real de `.claude/settings.json`, ficha activa y destino ajeno (`fail_open.txt`, igual en Windows y
+Linux). Solo el 2 bloquea, así que en estos tres casos **la edición fuera de `owns` pasa**. Ocurren antes de que Python
+ejecute el `try`, por lo que este hook no puede evitarlos.
+
+| Caso | rc |
+|---|---|
+| Control: hook intacto | 2 |
+| `PYTHONIOENCODING` inválida (`Fatal Python error`) | 1 |
+| Intérprete ausente (simulado con un comando inexistente, sin quitar Python) | 127 |
+| Hook que no compila | 1 |
+
+El arreglo va en `.claude/settings.json`, fuera de `owns`: un envoltorio que convierta cualquier rc distinto de 0 y 2 en
+2 y que falle cerrado si falta el intérprete. Requiere otra ficha.
+
+### No verificado
+- macOS: no hay máquina disponible.

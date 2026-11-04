@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Ejecuta AC1-AC5 de PUL-190 contra guard_ownership.py desde Git Bash, con rutas de Windows (`pwd -W`).
+# Ejecuta AC1-AC5 de PUL-190 contra guard_ownership.py. En Git Bash usa rutas de Windows (`pwd -W`);
+# en Linux, rutas POSIX. fail_open.txt mide lo que el hook no puede arreglar: no cuenta como fallo.
 # Uso: run_acs.sh <hook.py> <dir_salida>
 # Trabaja en un sandbox con copia de docs/backlog: las fichas ilegibles de AC4 no tocan el backlog real.
 # Sale con 1 si falla alguna comprobación.
 set -uo pipefail
 shopt -s lastpipe # `input | run_raw` debe fijar RC en este shell, no en un subshell.
-HOOK="$(cygpath -wa "$1")"
+HOOK="$(cygpath -wa "$1" 2>/dev/null || realpath "$1")"
 OUT="$2"
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 mkdir -p "$OUT"
@@ -19,7 +20,7 @@ trap 'rm -rf "$BOX_UNIX"' EXIT
 mkdir -p "$BOX_UNIX/.claude" "$BOX_UNIX/docs"
 cp -r "$REPO/docs/backlog" "$BOX_UNIX/docs/backlog"
 cd "$BOX_UNIX" || exit 1
-BOX="$(pwd -W)"
+BOX="$(pwd -W 2>/dev/null || pwd)"
 export CLAUDE_PROJECT_DIR="$BOX"
 MARK=".claude/current-task"
 
@@ -34,20 +35,26 @@ import re, sys
 sys.stdout.reconfigure(encoding="utf-8", newline="\n")
 text = open(sys.argv[1], "rb").read().decode("utf-8", "backslashreplace").replace("\0", "\\x00")
 for line in text.splitlines():
-    print("    " + re.sub(r"[A-Za-z]:[\\/]\S*", "<ruta>", line))
+    print("    " + re.sub(r"([A-Za-z]:[\\/]|/tmp/|/mnt/)\S*", "<ruta>", line))
 ' "$ERR"
 }
 
-# Cadena JSON con la ruta de Windows, escapada como la manda Claude Code (barras invertidas).
+# Cadena JSON con la ruta del sistema; en Windows, escapada como la manda Claude Code (barras invertidas).
 input_for() {
   local win="$BOX/$1"
-  win="${win//\//\\\\}"
+  [[ "$BOX" == *:* ]] && win="${win//\//\\\\}"
   printf '{"tool_name":"Edit","tool_input":{"file_path":"%s"}}' "$win"
 }
 
 run_raw() { # entrada por stdin; deja RC y ERR
   python3 "$HOOK" >/dev/null 2>"$ERR"
   RC=$?
+}
+
+run_closed() { # como run_raw, con stderr cerrado: Python deja sys.stderr en None
+  python3 "$HOOK" >/dev/null 2>&-
+  RC=$?
+  : >"$ERR"
 }
 
 # check <etiqueta> <rc esperado> <texto esperado en stderr o ""> ; el stderr ya está en ERR y RC fijado.
@@ -66,9 +73,11 @@ edit_case() { # <etiqueta> <ruta relativa> <rc> <texto>
 }
 
 OWNS_MSG='no está en `owns`'
+PATH_MSG='entrada sin file_path válido'
+OWN_PATH='godot/entities/stations/order_stand.tscn' # literal en `owns` de PUL-184
 ASK_MSG='orchestration ask'
 
-python3 -c 'import locale, sys; print("python", sys.version.split()[0], "| locale", locale.getencoding())' \
+python3 -c 'import locale, platform, sys; print(platform.system(), "| python", sys.version.split()[0], "| locale", locale.getencoding())' \
   >"$OUT/env.txt"
 
 {
@@ -156,9 +165,6 @@ python3 -c 'import locale, sys; print("python", sys.version.split()[0], "| local
   printf '\xff\xfePUL-184\n' >"$MARK"
   edit_case "current-task con bytes no UTF-8" "Assets/x.txt" 2 "Bloqueado"
 
-  printf '\xef\xbb\xbfPUL-184\n' >"$MARK"
-  edit_case "current-task con BOM (Set-Content de PowerShell 5)" "Assets/x.txt" 2 "Bloqueado"
-
   printf 'PUL-184\n' >"$MARK"
   printf '{no es json' | run_raw
   check "entrada JSON inválida" 2 "Bloqueado"
@@ -170,12 +176,38 @@ python3 -c 'import locale, sys; print("python", sys.version.split()[0], "| local
   check "JSON que no es un objeto" 2 "Bloqueado"
   printf '{"tool_input":null}' | run_raw
   check "tool_input null" 2 "Bloqueado"
-  printf '{"tool_input":{"file_path":123}}' | run_raw
-  check "file_path no es texto" 2 "Bloqueado"
+
+  echo "Entrada sin file_path de texto: Edit, Write y MultiEdit siempre lo llevan"
+  for json in '{}' '{"tool_input":{}}' '{"tool_input":{"path":"Assets/x.txt"}}' \
+    '{"tool_input":{"file_path":null}}' '{"tool_input":{"file_path":""}}' '{"tool_input":{"file_path":0}}' \
+    '{"tool_input":{"file_path":false}}' '{"tool_input":{"file_path":[]}}' '{"tool_input":{"file_path":{}}}' \
+    '{"tool_input":{"file_path":123}}'; do
+    printf '%s' "$json" | run_raw
+    check "$json" 2 "$PATH_MSG"
+  done
+
   printf '{"tool_input":{"file_path":"Assets/\\u0000x.txt"}}' | run_raw
   check "file_path con NUL" 2 "Bloqueado"
   printf '{"tool_input":{"file_path":"../fuera.txt"}}' | run_raw
   check "destino fuera del repositorio" 2 "fuera del repositorio"
+
+  echo "Un BOM no hace ilegible el texto: decide owns (Set-Content de PowerShell 5 lo escribe)"
+  printf '\xef\xbb\xbfPUL-184\n' >"$MARK"
+  edit_case "current-task con BOM, ruta de owns" "$OWN_PATH" 0 ""
+  edit_case "current-task con BOM, destino ajeno" "Assets/x.txt" 2 "$OWNS_MSG"
+  printf '\xef\xbb\xbf---\nowns: [Assets/**]\n---\n' >"$B/PUL-905-bom.md"
+  printf 'PUL-905\n' >"$MARK"
+  edit_case "ficha con BOM, ruta de owns" "Assets/x.txt" 0 ""
+  edit_case "ficha con BOM, destino ajeno" "godot/x.gd" 2 "$OWNS_MSG"
+
+  echo "Stderr cerrado: no cambia ninguna decisión"
+  printf 'PUL-184\n' >"$MARK"
+  input_for "Assets/x.txt" | run_closed
+  check "stderr cerrado, destino ajeno" 2 ""
+  input_for "$OWN_PATH" | run_closed
+  check "stderr cerrado, ruta de owns" 0 ""
+  printf '{no es json' | run_closed
+  check "stderr cerrado, entrada inválida" 2 ""
 
   echo "Restricción de la ficha: sin current-task no se restringe nada, ni con entrada inválida"
   rm -f "$MARK"
@@ -186,6 +218,13 @@ python3 -c 'import locale, sys; print("python", sys.version.split()[0], "| local
   : >"$MARK"
   input_for "Assets/x.txt" | run_raw
   check "current-task vacío, destino ajeno" 0 ""
+  input_for "Assets/x.txt" | run_closed
+  check "current-task vacío, stderr cerrado" 0 ""
+  rm -f "$MARK"
+  input_for "Assets/x.txt" | run_closed
+  check "sin current-task, stderr cerrado, destino ajeno" 0 ""
+  printf '{no es json' | run_closed
+  check "sin current-task, stderr cerrado, entrada inválida" 0 ""
 } >"$OUT/ac4.txt" 2>&1
 
 {
@@ -216,8 +255,43 @@ python3 -c 'import locale, sys; print("python", sys.version.split()[0], "| local
   unset PYTHONIOENCODING
 } >"$OUT/ac5.txt" 2>&1
 
+# Lo que queda fuera del alcance del hook, con el comando real de .claude/settings.json. Solo el 2 bloquea.
+hook_command() {
+  python3 -c '
+import json, sys
+hooks = json.load(open(sys.argv[1], encoding="utf-8"))["hooks"]["PreToolUse"]
+print(next(h for h in hooks if h["matcher"] == "Edit|Write|MultiEdit")["hooks"][0]["command"])
+' "$(cygpath -wa "$REPO/.claude/settings.json" 2>/dev/null || echo "$REPO/.claude/settings.json")"
+}
+
+measure() { # <etiqueta> <comando>; la edición va a una ruta ajena, así que el rc correcto es 2
+  input_for "Assets/x.txt" | bash -c "$2" >/dev/null 2>"$ERR"
+  RC=$?
+  if [[ "$RC" == 2 ]]; then
+    printf 'BLOQUEA rc=%s %s\n' "$RC" "$1"
+  else
+    printf 'FALLO ABIERTO rc=%s %s\n' "$RC" "$1"
+  fi
+  show_err
+}
+
+{
+  echo "Comando de settings.json, marcador activo y destino ajeno: cualquier rc distinto de 2 deja pasar la edición"
+  printf 'PUL-184\n' >"$MARK"
+  CMD="$(hook_command | tr -d '\r')"
+  echo "comando: $CMD"
+  mkdir -p .claude/hooks
+  cp "$HOOK" .claude/hooks/guard_ownership.py
+  measure "control: hook intacto" "$CMD"
+  measure "PYTHONIOENCODING inválida (Fatal Python error, antes del try)" "PYTHONIOENCODING=no-existe $CMD"
+  measure "intérprete ausente (simulado con un comando inexistente, sin quitar Python)" "${CMD/python3/python3-no-existe}"
+  printf 'def (:\n' >.claude/hooks/guard_ownership.py
+  measure "hook que no compila" "$CMD"
+} >"$OUT/fail_open.txt" 2>&1
+
 rm -f "$ERR"
 echo "fallos=$fails" | tee "$OUT/summary.txt"
 grep -c '^PASS' "$OUT"/ac[1245].txt | sed 's|.*/||' | tee -a "$OUT/summary.txt"
 tail -1 "$OUT/ac3.txt" | tee -a "$OUT/summary.txt"
+echo "fallo_abierto_conocido=$(grep -c '^FALLO ABIERTO' "$OUT/fail_open.txt")" | tee -a "$OUT/summary.txt"
 ((fails == 0))

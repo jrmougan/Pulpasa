@@ -6,8 +6,10 @@ La ficha activa se indica en .claude/current-task (una línea: PUL-xxx). Sin ese
 ficha y docs/evidence/<id>/.
 
 Claude Code solo trata como bloqueo el código de salida 2: cualquier otro deja pasar la edición.
-Por eso toda excepción inesperada sale con 2, y todo el texto se lee en UTF-8 de forma explícita
-(en Windows, la codificación por defecto es cp1252 y no sirve para las fichas).
+Por eso toda excepción inesperada sale con 2, igual que una entrada sin `file_path` de texto (las
+tres herramientas lo llevan), y todo el texto se lee en UTF-8 de forma explícita (en Windows, la
+codificación por defecto es cp1252 y no sirve para las fichas). Se admite BOM (`utf-8-sig`): lo
+escriben herramientas de Windows y es invisible en los mensajes.
 """
 import json
 import os
@@ -31,21 +33,24 @@ def frontmatter_list(text: str, key: str) -> list[str]:
 
 
 def main() -> int:
-    sys.stderr.reconfigure(encoding="utf-8", errors="backslashreplace")
-
     root = Path(os.environ.get("CLAUDE_PROJECT_DIR", ".")).resolve()
     marker = root / ".claude" / "current-task"
     if not marker.exists():
         return 0
 
-    task_id = marker.read_text(encoding="utf-8").strip()
+    # Después del marcador: sin ficha activa, un stderr cerrado (None) no puede bloquear nada.
+    if sys.stderr:
+        sys.stderr.reconfigure(encoding="utf-8", errors="backslashreplace")
+
+    task_id = marker.read_text(encoding="utf-8-sig").strip()
     if not task_id:
         return 0
 
     data = json.loads(sys.stdin.buffer.read().decode("utf-8"))
     target = data.get("tool_input", {}).get("file_path")
-    if not target:
-        return 0
+    if not isinstance(target, str) or not target:
+        print("Bloqueado: entrada sin file_path válido.", file=sys.stderr)
+        return 2
     resolved = Path(target).resolve()
     try:
         rel = PurePosixPath(resolved.relative_to(root).as_posix())
@@ -59,7 +64,7 @@ def main() -> int:
         return 2
     card = cards[0]
 
-    text = card.read_text(encoding="utf-8")
+    text = card.read_text(encoding="utf-8-sig")
     allowed = frontmatter_list(text, "owns") + frontmatter_list(text, "touches_scenes")
     allowed += [card.relative_to(root).as_posix(), f"docs/evidence/{task_id}/**", ".claude/current-task"]
 
