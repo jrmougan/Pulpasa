@@ -34,6 +34,10 @@ resources/camera_profile.gd: ['5: ## `size` de la Camera3D ortográfica (alto de
 core/camera_follow.gd: ninguno
 
 == G46, señales de EventBus: catálogo de signals.md §2 frente a connect/emit en el código
+Excluye tests y sandboxes de desarrollo (ver la sección G05 y G24).
+Solo mira la columna de la fila y solo nombres .gd: una nota aparte o un receptor citado por su
+nombre de clase salen como falsos positivos (camera_rig.gd, signals.md:101; audio_director.gd,
+AudioDirector en la fila de pause_changed).
 en el catálogo y no en el código: []
 en el código y no en el catálogo: []
 round_started: emite=['round_manager.gd'] conecta_sin_estar_en_la_fila=['character_switcher.gd', 'game_state.gd', 'pause_menu.gd'] en_la_fila_sin_conectar=[]
@@ -53,3 +57,87 @@ pause_changed: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=['audio_dire
 character_switched: emite=['character_switcher.gd'] conecta_sin_estar_en_la_fila=['camera_rig.gd'] en_la_fila_sin_conectar=[]
 device_assigned: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
 device_disconnected: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=[] en_la_fila_sin_conectar=[]
+
+== G05 y G24, señales de EventBus usadas desde sandboxes (excluidos arriba)
+godot/ui/touch/sandbox/touch_sandbox.gd:48: EventBus.action_hint_changed.emit(1, case[1], case[2], case[3])
+ficheros fuera de ui/touch/sandbox que citan touch_sandbox: []
+
+== Residuos: nombres dados de baja en docs/arch (sin el gate); revisar una a una
+docs/arch/ADR-003-arbol-escenas-composicion.md:156: > de aliño que **aplican** (§10.2): `toggle_seasoning(…, swap_exclusive)` y `paprika_swap` dejan de
+docs/arch/ADR-003-arbol-escenas-composicion.md:157: > ser la API del dispensador y el antirrebote (`toggle_guard`) queda solo para el cuenco. La regla de
+docs/arch/ADR-003-arbol-escenas-composicion.md:163: Diseño: `docs/design/features/estacion-condimentos.md` (aprobado el 2026-10-05, `paprika_swap` =
+docs/arch/ADR-003-arbol-escenas-composicion.md:215: nada (`signals.md` §4). La estación oye esas señales, suena `%ErrorAudio` y sacude el emisor.
+docs/arch/ADR-003-arbol-escenas-composicion.md:216: - Antirrebote (`toggle_guard`): la segunda pulsación se **consume en silencio** (sin `rejected`).
+docs/arch/ADR-003-arbol-escenas-composicion.md:229: - `Box` (específica) expone `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) ->
+docs/arch/ADR-003-arbol-escenas-composicion.md:272: | Caja a medio cortar | Servicio: es objetivo y **rechaza** `BOX_NOT_FULL` (R3: la caja no cambia y suena `sea
+docs/arch/ADR-003-arbol-escenas-composicion.md:292: `side_of()` y la respuesta a `rejected` (cue `season_error` + sacudida del emisor).
+docs/arch/ADR-003-arbol-escenas-composicion.md:293: - El antirrebote (`toggle_guard`, 0,25 s) usa el **reloj de juego**: segundos acumulados en
+docs/arch/ADR-003-arbol-escenas-composicion.md:305: > y `paprika_swap` quedan sustituidas por §10.1 y §10.2: una sola caja de 6 pulsaciones, sin talla
+docs/arch/ADR-003-arbol-escenas-composicion.md:316: | `SeasoningStationData` (ya existe) | `cachelos_portions_per_item` / `cachelos_stock_max` | `int` | 1 → **2**
+docs/arch/ADR-003-arbol-escenas-composicion.md:403: D18 (dispensadores que alternan, `paprika_swap`) y concreta D8 (la caja errónea es solo de
+docs/arch/ADR-003-arbol-escenas-composicion.md:447: añade. Generaliza `paprika_swap` = `true` a cualquier grupo de exclusividad; deja de existir la
+docs/arch/ADR-003-arbol-escenas-composicion.md:451: - `toggle()` pierde el parámetro `swap_exclusive`: `toggle(current, seasoning, is_full) -> Toggle`.
+docs/arch/ADR-003-arbol-escenas-composicion.md:459: `seasoned(nuevo)`, una vez cada una y en la misma llamada (el orden de AC4 de `paprika_swap`).
+docs/arch/ADR-003-arbol-escenas-composicion.md:461: - `toggle_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection` pierde `swap_exclusive`
+docs/arch/ADR-003-arbol-escenas-composicion.md:472: `BOX_NOT_FULL`: `rejected(BOX_NOT_FULL)` (suena `season_error`); `ALREADY_APPLIED`: **se consume en
+docs/arch/ADR-003-arbol-escenas-composicion.md:488: se mantiene. **Se quita `paprika_swap`.** `toggle_guard` (0,25) queda **solo para el cuenco** (que
+docs/arch/ADR-003-arbol-escenas-composicion.md:496: `box.toggle_seasoning(seasoning)` sin el segundo argumento.
+docs/arch/ADR-003-arbol-escenas-composicion.md:591: 3. *`ALREADY_APPLIED` como rechazo con `season_error`.* D25 dice «no hace nada»; un error sonoro por
+docs/arch/ADR-003-arbol-escenas-composicion.md:846: `deliver_error` y `RoundConfig.wrong_delivery_penalty` pasa a **0** en `round_config.tres` (D8
+docs/arch/ADR-003-arbol-escenas-composicion.md:857: - Bajas: `SeasoningStationData.toggle_guard` (y en `seasoning_station.tres`), `SeasoningRules.toggle()`
+docs/arch/ADR-003-arbol-escenas-composicion.md:858: y `Box.toggle_seasoning()` (sin usuarios; las dos últimas en la oleada de montaje).
+docs/arch/ADR-003-arbol-escenas-composicion.md:874: **Estación** (`seasoning_station.gd`): deja de reproducir `season_error` al oír `rejected` (lo hace el
+docs/arch/ADR-003-arbol-escenas-composicion.md:884: | Raciones del cuenco | `cachelos_bowl.tscn`, `%StockMeter` (`Sprite3D` billboard) | 4 muescas ≥ 24 px, `stock
+docs/arch/ADR-003-arbol-escenas-composicion.md:918: **Estado tras el montaje (PUL-131).** Quedan superados en §8–§10 el cue `season_error` (§8, tabla de
+docs/arch/ADR-003-arbol-escenas-composicion.md:919: §9 y rechazo `BOX_NOT_FULL` de §10: ahora suena `rejected` en el jugador), `Box.toggle_seasoning()` y
+docs/arch/ADR-006-audio-feedback.md:25: | `order_stand.tscn` | `%ErrorAudio` | `order_stand.gd` | `EventBus.delivery_rejected` de su `slot_id` |
+docs/arch/ADR-006-audio-feedback.md:26: | `seasoning_station.tscn` | `%ErrorAudio` | `seasoning_station.gd` | `rejected` de dispensadores y cuenco |
+docs/arch/ADR-006-audio-feedback.md:118: Los one-shot existentes (`%CutAudio`, `%SeasonAudio`, `%OkAudio`, `%ErrorAudio`) se sustituyen
+docs/arch/ADR-006-audio-feedback.md:142: | `season_error` | `rejected` (local, dispensador/cuenco) | `seasoning_station.tscn` · `%Feedback` | `SHAKE` d
+docs/arch/ADR-006-audio-feedback.md:144: | `deliver_error` | `EventBus.delivery_rejected` (su `slot_id`) | `order_stand.tscn` · `%Feedback` | `SHAKE` d
+docs/arch/ADR-006-audio-feedback.md:176: | `rejected` (diseño: `action_rejected`) | `InteractionComponent.interaction_resolved` (local) con `BLOCKED`, 
+docs/arch/ADR-006-audio-feedback.md:182: `cook_done` (renombrado a `cook_ready`), `season_error` y `deliver_error` (sustituidos por `rejected`;
+docs/arch/ADR-006-audio-feedback.md:206: Correcta y errónea son distintas en sonido (`deliver_ok`/`deliver_error`) y en visual
+docs/arch/ADR-006-audio-feedback.md:339: - (§4.1, −) Durante la transición el mapa tuvo claves de baja (`cook_done`, `season_error`,
+docs/arch/ADR-006-audio-feedback.md:340: `deliver_error`) hasta la ficha de montaje; PUL-131 las retiró (las filas `cook_done`, `season_error` y
+docs/arch/ADR-006-audio-feedback.md:341: `deliver_error` de la tabla de cues son históricas).
+docs/arch/scene-tree.md:232: `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection` *(baja D26, PUL
+docs/arch/scene-tree.md:239: `toggle_seasoning(seasoning: SeasoningData)` pierde `swap_exclusive` (solo la llama el cuenco).
+docs/arch/scene-tree.md:240: **D26 (PUL-131):** `toggle_seasoning` de baja; el cuenco solo pone con `apply_seasoning` (§7.3).
+docs/arch/scene-tree.md:300: └── %Feedback (AudioStreamPlayer3D, FeedbackPlayer) [M3; sustituye a %OkAudio/%ErrorAudio], pulse_target = el 
+docs/arch/scene-tree.md:323: `paprika_swap`. El mostrador (5,2 m) no cambia. El árbol de abajo es el de M3c con las notas D25.
+docs/arch/scene-tree.md:334: │   conecta rejected de los 4 dispensadores (D25: 2) y del cuenco → %Feedback (season_error) + sacudida del em
+docs/arch/scene-tree.md:350: └── %ErrorAudio (AudioStreamPlayer3D)    sonido de rechazo (dispensadores, cuenco) → M3: %Feedback (FeedbackPl
+docs/arch/scene-tree.md:360: │                     (ADR-003 §8.2): caja a medio cortar → rejected(BOX_NOT_FULL); llena → box.toggle_seasoni
+docs/arch/scene-tree.md:361: │                     sobre la caja de la mano (con paprika_swap); la caja sigue en la mano
+docs/arch/scene-tree.md:364: │   antirrebote: data.toggle_guard s por dispensador; M3c (PUL-097): reloj de juego (_game_time acumulado en
+docs/arch/scene-tree.md:389: │             llama box.toggle_seasoning(seasoning) sin swap_exclusive y es el único usuario de toggle_guard
+docs/arch/scene-tree.md:393: ├── %Portions (Node3D)   M2b: una malla por ración, visibles según stock. M3c (PUL-094): estados
+docs/arch/scene-tree.md:477: data/config/seasoning_station.tres               SeasoningStationData [M2b] (toggle_guard 0.25, cachelos_stock
+docs/arch/scene-tree.md:479: paprika_swap true, operator_side_only true)
+docs/arch/scene-tree.md:510: resto sin cambios (operator_side_only true, toggle_guard 0.25,
+docs/arch/scene-tree.md:511: paprika_swap true, cachelos_initial_stock 0); PUL-097
+docs/arch/scene-tree.md:527: data/config/seasoning_station.tres               − paprika_swap; toggle_guard 0.25 solo para el cuenco; resto 
+docs/arch/scene-tree.md:574: | Condimentar al interactuar con la caja | `box.gd`: ramas de `SeasoningItem` en la mano y de cachelos cocidos
+docs/arch/scene-tree.md:605: | `paprika_swap` | `SeasoningStationData`, `seasoning_station.tres`, `seasoning_dispenser.gd`, `cachelos_bowl.
+docs/arch/scene-tree.md:606: | `swap_exclusive` | `SeasoningRules.toggle`, `Box.toggle_seasoning` | El cuenco llama sin él |
+docs/arch/scene-tree.md:610: | Tests de tallas y de 4 dispensadores | `test_data_boxes.gd`, `test_order_tickets.gd` (talla), `test_seasonin
+docs/arch/scene-tree.md:620: | Cue de entrega errónea | `order_stand.gd::_on_delivery_rejected` → `play_cue(&"deliver_error")`; clave `deli
+docs/arch/scene-tree.md:621: | Cue de error de la estación | `seasoning_station.gd` → `play_cue(&"season_error")`; clave `season_error` | E
+docs/arch/scene-tree.md:623: | Toggle del cuenco | `cachelos_bowl.gd` (`_toggle`, `clock`, `_game_time`, `_last_change`); `SeasoningStation
+docs/arch/scene-tree.md:630: | Tests | `test_ui_scale` / casos de `factor()` en `test_hud.gd` y `test_order_tickets.gd`; casos de `test_ord
+docs/arch/scene-tree.md:671: Box: + get_presses() -> int, + get_action_hint(actor); − toggle_seasoning() (montaje)
+docs/arch/scene-tree.md:683: seasoning_station.tscn     SeasoningStation: sin cue season_error al oír rejected (montaje)
+docs/arch/scene-tree.md:686: sin deliver_error (montaje)
+docs/arch/scene-tree.md:755: resources/seasoning_station_data.gd   − toggle_guard
+docs/arch/scene-tree.md:768: propio; − cook_done, season_error, deliver_error (en la oleada de montaje)
+docs/arch/signals.md:53: | `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX` (en desuso desde D23: sin c
+docs/arch/signals.md:88: | `delivery_rejected(slot_id: int, order_id: int, penalty: int)` | `OrderService` (`OrderBoard.try_deliver()` 
+docs/arch/signals.md:206: | `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn` (M3: `%Feedback`, cue `se
+docs/arch/signals.md:207: | `seasoning_removed(seasoning: SeasoningData)` | `box.gd` | `%BadgeRow` de `box.tscn` (rehace la fila); M3: `
+docs/arch/signals.md:208: | `rejected(reason: SeasoningRules.Rejection)` | `seasoning_dispenser.gd` (`SeasoningDispenser`) | `seasoning_
+docs/arch/signals.md:215: `seasoning_station.gd` deja de reproducir `season_error` (el rechazo suena en el jugador,
+docs/arch/signals.md:217: | `stock_changed(stock: int)` | `cachelos_bowl.gd` | visual de raciones de `cachelos_bowl.tscn` (`%Portions`) 
+docs/arch/signals.md:237: la mano**; sin caja no es objetivo): antirrebote (`toggle_guard`, reloj de juego inyectable) → caja
+docs/arch/signals.md:239: `box.toggle_seasoning(seasoning, data.paprika_swap)` → `NONE`: la caja emite
+docs/arch/signals.md:287: | audio-y-fx AC5 entrega correcta / errónea | `EventBus.order_completed` / `delivery_rejected` | `order_stand.

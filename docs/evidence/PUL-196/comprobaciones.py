@@ -84,6 +84,10 @@ for name in [
     print(f"{name}: {found if found else 'ninguno'}")
 
 print("\n== G46, señales de EventBus: catálogo de signals.md §2 frente a connect/emit en el código")
+print("Excluye tests y sandboxes de desarrollo (ver la sección G05 y G24).")
+print("Solo mira la columna de la fila y solo nombres .gd: una nota aparte o un receptor citado por su")
+print("nombre de clase salen como falsos positivos (camera_rig.gd, signals.md:101; audio_director.gd,")
+print("AudioDirector en la fila de pause_changed).")
 signals = Path("docs/arch/signals.md").read_text(encoding="utf-8")
 section = signals[signals.index("## 2. Señales de `EventBus`"):signals.index("## 3.")]
 rows: dict[str, str] = {}
@@ -110,3 +114,28 @@ for signal in declared:
         f"conecta_sin_estar_en_la_fila={sorted(connected - listed)} "
         f"en_la_fila_sin_conectar={sorted(listed - connected)}"
     )
+
+print("\n== G05 y G24, señales de EventBus usadas desde sandboxes (excluidos arriba)")
+sandbox = [p for p in CACHE if p.suffix == ".gd" and "tests" not in p.parts and "sandbox" in str(p)]
+for path in sandbox:
+    for number, line in enumerate(CACHE[path].splitlines(), 1):
+        if re.search(r"EventBus\.[a-z_]+\.(?:emit|connect)", line):
+            print(f"{path.as_posix()}:{number}: {line.strip()}")
+loaders = sorted(
+    p.as_posix()
+    for p, content in CACHE.items()
+    if "touch_sandbox" in content and "ui/touch/sandbox" not in p.as_posix()
+)
+print(f"ficheros fuera de ui/touch/sandbox que citan touch_sandbox: {loaders}")
+
+print("\n== Residuos: nombres dados de baja en docs/arch (sin el gate); revisar una a una")
+RESIDUE = (
+    r"toggle_seasoning|swap_exclusive|paprika_swap|toggle_guard|ErrorAudio|season_error|deliver_error"
+    r"|%Portions"
+)
+for path in sorted(Path("docs/arch").glob("*.md")):
+    if path.name == "gate-enmiendas.md":
+        continue
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if re.search(RESIDUE, line):
+            print(f"{path.as_posix()}:{number}: {line.strip()[:110]}")
