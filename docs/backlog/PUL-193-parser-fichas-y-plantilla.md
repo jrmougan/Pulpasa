@@ -1,7 +1,7 @@
 ---
 id: PUL-193
 title: Compartir el parser de fichas entre hook y merge gate y limpiar la plantilla
-status: review
+status: done
 milestone: M4
 role: godot-architect
 deps: [PUL-190]
