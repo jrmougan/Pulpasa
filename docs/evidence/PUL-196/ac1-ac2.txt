@@ -62,9 +62,25 @@ docs/arch/signals.md:299 -> G45
 apariciones: 60; clasificadas: 60; sobran: 0
 
 == Forma de la tabla
-filas: 58; {'aceptar': 34, 'aceptar con cambios': 24, 'rechazar': 0}
+filas: 58; {'aceptar': 29, 'aceptar solo junto con otra fila': 2, 'aceptar con cambios': 27, 'rechazar': 0}
 
 == AC2: cada cita ruta:línea de la tabla y de la propuesta sobre T3, con su línea
+-- godot/entities/stations/order_stand.gd:156: if _order == null or Engine.get_physics_frames() == _expired_frame:
+-- godot/entities/stations/order_stand.gd:202: _expired_frame = Engine.get_physics_frames()
+-- godot/core/order_board.gd:149: if _expired_this_tick.has(slot_id):
+-- godot/core/order_board.gd:122: _expired_this_tick.clear()
+-- godot/entities/stations/order_stand.gd:176: func _on_body_entered(body: Node3D) -> void:
+-- godot/autoload/round_manager.gd:79: round_state.advance(delta)
+-- godot/core/round_state.gd:185: func _on_delivery_rejected(_slot_id: int, _order_id: int, penalty: int) -> void:
+-- godot/tests/integration/test_order_stand.gd:243: _stand._on_body_entered(_player)
+-- godot/tests/integration/test_order_stand.gd:272: _stand._on_body_entered(_player)
+-- godot/entities/stations/order_stand.gd:11: ## (sobre el label). `delivery_rejected` se conserva en el bus pero el juego ya no lo emite.
+-- docs/arch/signals.md:25: nuevos de `character_switched` (cámara móvil, cue `switch`); `delivery_rejected` queda sin emisión
+-- docs/arch/signals.md:88: | `delivery_rejected(slot_id: int, order_id: int, penalty: int)` | `OrderService` (`OrderBoard.try_deliver()` cuando la caja no coincide con la comand
+-- docs/arch/ADR-003-arbol-escenas-composicion.md:845: gate) pero la señal queda **sin emisión en el juego**. `order_stand.gd` deja de reproducir
+-- docs/arch/ADR-003-arbol-escenas-composicion.md:978: - (§11, −) `delivery_rejected` y la penalización de caja errónea (D8) quedan sin uso en el juego; se
+-- docs/arch/scene-tree.md:620: | Cue de entrega errónea | `order_stand.gd::_on_delivery_rejected` → `play_cue(&"deliver_error")`; clave `deliver_error` del mapa | `delivery_rejected
+-- godot/entities/stations/order_stand.gd:11: ## (sobre el label). `delivery_rejected` se conserva en el bus pero el juego ya no lo emite.
 G01 godot/project.godot:20: AudioDirector="*res://autoload/audio_director.gd"
 G01 godot/autoload/audio_director.gd:21: _bus.pause_changed.connect(_on_pause_changed)
 G01 godot/autoload/audio_director.gd:51: AudioServer.set_bus_volume_db(index, _mix.get_bus_db(bus))
@@ -111,6 +127,7 @@ G10 godot/entities/stations/seasoning_station.tscn:40: [node name="SweetDressing
 G10 godot/entities/stations/seasoning_station.tscn:52: [node name="CachelosBowl" parent="." node_paths=PackedStringArray("station") instance=ExtResource("5_bowl")]
 G10 godot/entities/items/badge_row.gd:152: if style.hot_mark != null and style.has_hot_mark(seasoning):
 G10 docs/arch/ADR-003-arbol-escenas-composicion.md:241: `interactable`: lo son sus hijos (bandeja, dispensadores, cuenco).
+G10 docs/arch/ADR-003-arbol-escenas-composicion.md:160: > **D23 (§9):** la bandeja (`Tray`) desaparece. Lo que aquí depende de ella (fila `Tray` de §8.1,
 G11 godot/resources/box_data.gd:8: @export_range(1, 20) var presses_to_fill: int = 1
 G11 godot/data/boxes/box.tres:9: presses_to_fill = 6
 G11 godot/resources/recipe_data.gd:8: @export var ingredient: IngredientData
@@ -203,6 +220,7 @@ G22 godot/entities/stations/cachelos_bowl.gd:116: if box.apply_seasoning(seasoni
 G22 godot/data/seasonings/sweet_dressing.tres:13: verb = &"season_sweet"
 G22 godot/tests/integration/test_order_stand.gd:328: func test_d26_stand_is_not_interactable_and_sits_on_the_world_layer() -> void:
 G22 godot/tests/integration/test_order_stand.gd:425: func test_d26_wrong_delivery_penalty_is_zero_and_no_deliver_error_cue() -> void:
+G22 docs/arch/ADR-003-arbol-escenas-composicion.md:845: gate) pero la señal queda **sin emisión en el juego**. `order_stand.gd` deja de reproducir
 G23 godot/entities/stations/kitchen.tscn:133: [node name="CookRing" parent="." unique_id=1276433737 instance=ExtResource("5_b5ifj")]
 G23 godot/entities/stations/cooking_station.gd:119: slot_data.ring = _ring_base.duplicate() as WorldProgressRing
 G23 godot/resources/kitchen_data.gd:11: @export var warn_blink_hz: float = 3.0
@@ -352,13 +370,23 @@ G46 godot/autoload/game_state.gd:52: _bus.round_finished.connect(_on_round_finis
 G46 godot/entities/player/character_switcher.gd:29: _bus.round_started.connect(_on_round_started)
 G46 godot/ui/menus/pause_menu.gd:29: EventBus.round_started.connect(_on_round_started)
 G46 godot/ui/touch/touch_controls.gd:38: EventBus.pause_changed.connect(_on_pause_changed)
+G46 godot/entities/camera/camera_rig.gd:42: _bus.character_switched.connect(_on_character_switched)
+G46 docs/arch/signals.md:97: | `character_switched(player_index: int, character_index: int)` | `character_switcher.gd` | `player.gd` (todos: indicador activo si su `player_index =
+G46 docs/arch/signals.md:88: | `delivery_rejected(slot_id: int, order_id: int, penalty: int)` | `OrderService` (`OrderBoard.try_deliver()` cuando la caja no coincide con la comand
 G47 godot/entities/items/box.gd:161: seasoned.emit(result.added)
 G47 godot/entities/stations/cachelos_bowl.gd:15: signal rejected(reason: SeasoningRules.Rejection)
 G47 godot/entities/stations/seasoning_dispenser.gd:13: signal rejected(reason: SeasoningRules.Rejection)
 G47 godot/core/station_side.gd:10: static func classify(
+G47 godot/entities/stations/cachelos_bowl.gd:116: if box.apply_seasoning(seasoning) == SeasoningRules.Rejection.NONE:
 G47 docs/arch/signals.md:206: | `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn` (M3: `%Feedback`, cue `season`); `%BadgeRow` de `box.tscn` (M2, P
+G47 docs/arch/signals.md:207: | `seasoning_removed(seasoning: SeasoningData)` | `box.gd` | `%BadgeRow` de `box.tscn` (rehace la fila); M3: `%Feedback` (cue `unseason`) | Al quitar 
+G47 docs/arch/signals.md:209: | `rejected(reason: SeasoningRules.Rejection)` | `cachelos_bowl.gd` (`CachelosBowl`) | `seasoning_station.gd` (ídem) | Al consumir una pulsación sin c
 G47 docs/arch/signals.md:217: | `stock_changed(stock: int)` | `cachelos_bowl.gd` | visual de raciones de `cachelos_bowl.tscn` (`%Portions`) | Al reponer (+`cachelos_portions_per_it
 G47 docs/arch/signals.md:53: | `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX` (en desuso desde D23: sin caja en la mano el dispensador no es obje
+G47 docs/arch/signals.md:237: la mano**; sin caja no es objetivo): antirrebote (`toggle_guard`, reloj de juego inyectable) → caja
+G47 docs/arch/signals.md:245: D23).
+G47 docs/arch/signals.md:248: dispensadores; la del cuenco sigue): caja = `actor.holder.get_held_item() as Box` →
+G47 docs/arch/signals.md:212: pulsaciones cuyo hint es `BLOCKED` (dispensador: `BOX_NOT_FULL`, y ahora también `ALREADY_APPLIED`;
 G48 godot/autoload/event_bus.gd:16: signal phase_changed(phase: int)
 G48 godot/entities/stations/cooking_station.gd:29: signal burn_warned(ingredient: Ingredient)
 G48 godot/entities/stations/cooking_station.gd:31: signal burnt(ingredient: Ingredient)
@@ -380,6 +408,8 @@ G51 godot/components/interaction_detector.gd:28: signal hint_changed(target: Nod
 G51 godot/components/interaction_component.gd:15: signal interaction_resolved(target: Node, hint: ActionHint)
 G51 godot/entities/camera/camera_rig.gd:194: func _on_character_switched(player_index: int, character_index: int) -> void:
 G51 godot/autoload/order_service.gd:96: _get_bus().delivery_rejected.emit(slot_id, order_id, penalty)
+G51 docs/arch/signals.md:25: nuevos de `character_switched` (cámara móvil, cue `switch`); `delivery_rejected` queda sin emisión
+G51 docs/arch/signals.md:88: | `delivery_rejected(slot_id: int, order_id: int, penalty: int)` | `OrderService` (`OrderBoard.try_deliver()` cuando la caja no coincide con la comand
 G52 godot/scenes/levels/level_01.tscn:32: [node name="Environment" parent="." unique_id=1215910342 instance=ExtResource("4_iu1m7")]
 G52 godot/scenes/levels/level_01.tscn:36: [node name="Stations" type="Node3D" parent="." unique_id=1166734241]
 G52 godot/scenes/levels/level_01.tscn:128: [node name="TouchControls" parent="UI" instance=ExtResource("23_touch")]

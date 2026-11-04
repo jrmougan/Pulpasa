@@ -41,11 +41,17 @@ Evidencia en `docs/evidence/PUL-196/`. Los guiones se ejecutan desde la raíz de
 - **AC3**: `ac3-diff.txt`: `git diff --name-status` contra la base y `tools/check_owns.py`. Solo cambian `README.md`, `gate-enmiendas.md`, la ficha y la evidencia.
 - **Verificación**: `tools/verify.sh --quick` en verde (`verify-quick.txt`). El primer intento falló porque el import inicial de este worktree superó el límite de 300 s de `verify.sh`; lancé el import a mano y el siguiente `verify.sh` pasó. También ejecuté `tools/verify.sh` completo, aunque la ficha no lo pedía: 1378 de 1378 tests y smoke OK; los 29 tests citados por nombre pasan según el `junit.xml` (`verify-completo.txt`).
 
-**Resultado del gate**: 58 filas, 34 para aceptar, 24 para aceptar con cambios y 0 para rechazar. No cambió ningún estado de ADR, `signals.md`, `scene-tree.md` ni `decisions.md`.
+**Resultado del gate**: 58 filas, 29 para aceptar, 2 para aceptar solo junto con otra fila, 27 para aceptar con cambios y 0 para rechazar. No cambió ningún estado de ADR, `signals.md`, `scene-tree.md` ni `decisions.md`.
 
 **Decisiones mías para revisar**:
 - En `README.md` también añadí la Enmienda D27 a la fila de ADR-005, porque su cabecera la da como propuesta y el índice la omitía, y un enlace a `gate-enmiendas.md`. La ficha solo citaba D14 y ADR-002.
 - Dividí las enmiendas por subsección (58 filas) para poder recomendar por separado lo que coincide y lo que no.
 - Para T3 propongo marcar como «Superada por D17» solo lo que dice de Unity, porque `godot/` en este repo sigue vigente.
 
-**No verificable**: medidas de px y px/m, valor provisional de `presses_to_fill` y comportamiento en teléfono real; requieren medir o un dispositivo, y no se volvieron a medir aquí. La tabla de ramas de ADR-003 §11.6 se comprobó mediante sus tests, no rama a rama.
+**No verificable**: medidas de px y px/m, valor provisional de `presses_to_fill` y comportamiento en teléfono real; requieren medir o un dispositivo, y no se volvieron a medir aquí. La tabla de ramas de ADR-003 §11.6 se comprobó mediante sus tests, no rama a rama. Tampoco se ha medido con qué frecuencia se da al jugar el caso de la decisión 5 (no es una partida completa), y las demás afirmaciones negativas sobre el juego solo están leídas.
+
+**Correcciones tras la revisión** (los cuatro hallazgos son ciertos):
+- **`delivery_rejected` (G22, G51)**: reproducido con escenas reales y el autoload `RoundManager` (`repro_lanzador.gd`, `repro_entrega_tras_caducidad.gd`, salida en `repro-entrega.txt`). Con la entrada un tick antes de la caducidad: caduca en el tick 11, `delivery_rejected` con `penalty` 0 en el 12 y entrega a la repuesta en el 13; con la entrada uno antes o uno después no se emite. G22 y G51 pasan a «aceptar con cambios», y la decisión 5 queda para el responsable. La revisión citaba `order_stand.gd:205-208`, pero el fichero tiene 204 líneas; las citas correctas son `:156` y `:202`.
+- **G47**: amplía la divergencia y el arreglo con `signals.md:207`, `:209` y la secuencia de `:237-248`. `:209` no estaba en la revisión.
+- **G10, G12, G50 y recuento**: G10 pasa a «aceptar con cambios»; G12 y G50 pasan a la categoría nueva «aceptar solo junto con otra fila». `comprobar_gate.py` cuenta esa categoría y ahora falla si una fila con «aceptar» a secas tiene divergencia.
+- **G46**: añade quitar `order_stand.gd` de los receptores de `delivery_rejected`. También añade `camera_rig.gd`, que estaba en `comprobaciones.txt` y no en la fila. `audio_director.gd` también sale en esa salida, pero es un falso positivo: la fila lo lista como `AudioDirector`.

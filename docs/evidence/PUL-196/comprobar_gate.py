@@ -4,6 +4,7 @@
 AC1: toda aparición de `propuest|pendiente` en docs/arch (salvo el propio gate) está clasificada.
 AC2: toda cita `ruta:línea` de docs/arch/gate-enmiendas.md existe; imprime la línea citada.
 Forma: cada fila de la tabla tiene 7 columnas, recomendación válida y, si dice «Sí», alguna cita.
+Una fila con «aceptar» a secas no puede tener divergencia.
 Sale con 1 si algo falla.
 """
 import glob
@@ -41,7 +42,7 @@ print(f"apariciones: {len(hits)}; clasificadas: {len(classified)}; sobran: {len(
 print("\n== Forma de la tabla")
 table = text[text.index("## Tabla"):text.index("## Propuesta sobre T3")]
 rows = [line for line in table.splitlines() if re.match(r"^\| G\d+ \|", line)]
-count = {"aceptar": 0, "aceptar con cambios": 0, "rechazar": 0}
+count = {"aceptar": 0, "aceptar solo junto con otra fila": 0, "aceptar con cambios": 0, "rechazar": 0}
 for row in rows:
     cells = [cell.strip() for cell in row.strip("|").split(" | ")]
     if len(cells) != 7:
@@ -51,6 +52,8 @@ for row in rows:
     verdict = cells[6]
     if verdict.startswith("aceptar con cambios"):
         key = "aceptar con cambios"
+    elif re.match(r"aceptar solo junto con G\d+", verdict):
+        key = "aceptar solo junto con otra fila"
     else:
         key = verdict.split(",")[0].split(":")[0]
     if key not in count:
@@ -58,6 +61,9 @@ for row in rows:
         fail = 1
     else:
         count[key] += 1
+    if key == "aceptar" and not cells[5].startswith("Sin divergencia"):
+        print(f"{cells[0]}: «aceptar» con divergencia: {cells[5]}")
+        fail = 1
     if cells[4].startswith(("Sí", "Parcial", "Los nodos")) and not re.search(
         r"`godot/[^`]+:\d+`", cells[4]
     ):
