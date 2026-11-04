@@ -46,11 +46,13 @@ Windows 11, Git Bash, Python 3.13.18, Godot 4.7.2. Errores inyectados en `godot/
 | AC1 `static var` y otro script | rc=1, sin ubicación de los dos `static var` | rc=1, con `at: @static_initializer (res://zz_pul204/static_direct.gd:3)`, `at: fail_on_load (…/static_boom.gd:8)`, la de `other_broken.gd:5` y el resumen | `ac1_linea_base.txt`, `ac1.txt` |
 | AC1 solo `static var` (`check_scripts: OK`) | rc=1, sin ubicación | rc=1, con ubicación | ídem |
 | AC1 45 scripts que no compilan | 0 de 45 en la lista, sin resumen | 45 de 45 en la lista, resumen y aviso de líneas omitidas; 60 líneas de `SCRIPT ERROR` y `at:` | ídem |
-| AC2 `tools/verify.sh` completo | no aplica | `✓ verify OK`, rc=0 en 531 s; 1378 de 1378 tests | `ac2.txt` |
+| AC2 `tools/verify.sh` completo, sobre `f6ce8ec` | no aplica | `✓ verify OK`, rc=0 en 531 s; 1378 de 1378 tests | `ac2.txt` |
 | AC3 control con el hook actual | `BLOQUEA` por `ModuleNotFoundError`, rc=0 | `BLOQUEA` por `owns`, `PASS`, rc=0, `fallos=0` | `ac3.txt`, `run_acs/` |
-| AC3 con `ac2.txt` sin poder escribirse | `fallos=0`, rc=0 | `FAIL faltan salidas: ac2.txt`, rc=1 | `ac3.txt` |
+| AC3 con `ac2.txt` sin poder escribirse | `fallos=0`, rc=0 | no llega a correr: `no puedo borrar la salida antigua`, rc=2 | `ac3.txt` |
+| AC3 bloque de AC2 sin salida y `ac2.txt` antiguo (inyectado) | no aplica | `FAIL faltan salidas: ac2.txt`, rc=1 | `ac3.txt` |
 | AC3 sandbox sin el parser (error inyectado) | no aplica | `FAIL el control no bloquea por owns`, rc=1 | `ac3.txt` |
-| Hook de Stop | 9 de 15 casos fallan: no mira `AGENTS.md` ni `CLAUDE.md` | 15 de 15; sin `current-task`, rc=0 y `verify` sin llamar | `stop_hook_linea_base.txt`, `stop_hook.txt` |
+| Hook de Stop, 35 casos | 21 fallan: no mira `AGENTS.md` ni `CLAUDE.md`, y los de N1 y N2 | 35 de 35; sin `current-task`, rc=0 y `verify` sin llamar | `stop_hook_linea_base.txt`, `stop_hook.txt` |
+| `mktemp` que falla, 16 casos | ver «Revisión» | 16 de 16: rc=2, repo intacto, 0 escrituras fuera | `mktemp_guard_antes_revision.txt`, `mktemp_guard.txt` |
 | `card_frontmatter.py` L27 | U+FEFF crudo | escape; mismo resultado con BOM y sin él | `card_frontmatter.txt` |
 
 `run_stop_hook.sh` prueba el hook en un repo temporal con un `verify.sh` falso, para no lanzar la suite en cada caso.
@@ -73,7 +75,29 @@ Windows 11, Git Bash, Python 3.13.18, Godot 4.7.2. Errores inyectados en `godot/
 - **Peor caso con GUT colgado y el resto en su tiempo medido:** 720 + 47 = 767 s, 133 s por debajo de 900. Es lo que cubre el valor elegido.
 - **Queda sin cubrir:** si el import, la compilación o el smoke se acercan a su timeout además de una suite lenta, el hook de 900 s corta antes que `verify.sh`. Cerrarlo exige un `timeout` de al menos 1453 s en `settings.json`, fuera de `owns`, o bajar los otros timeouts.
 
+### Revisión de `f6ce8ec`
+Cada hallazgo se reprodujo antes de corregirlo. Ninguno es falso, pero B1 y N1 son más estrechos de lo descrito.
+
+| Hallazgo | Comprobación | Veredicto |
+|---|---|---|
+| B1 | Bash 5.3.15 de este Git Bash da rc=1 con `cd ""` y el script para (rc=1) sin tocar nada. Con un `cd` que devuelve 0, como pide el hallazgo, el repo desechable queda cambiado y con un commit más. | Cierto si `cd ""` devuelve 0; no ocurre con este bash |
+| B2 | Con `mktemp` vacío intenta `mkdir /.claude`, `mkdir /docs` y `cp` a `/docs/backlog`, con los dos `cd`. `mkdir` y `cp` falsos lo registran sin ejecutarlo; `/.claude` y `/docs` no existen al terminar. | Cierto |
+| N1 | No se puede escribir: rc=2 siempre. `1x`, `1 2` y `08`: rc=2 sin llegar a parar. Pero `abc` da rc=1 (deja parar sin avisar) y `-1` solo retrasa el límite. El contador vacío ya funcionaba. | Cierto, con esos matices |
+| N2 | `current-task` vacío o solo con espacios: rc=2 y `verify` llamado. | Cierto |
+| N3 | Con `ac2.txt` como directorio, `rm` falla y el arnés seguía; solo lo detectaba al final. No se ha probado un fichero normal imposible de borrar. | Cierto para el directorio |
+| N4 | Cambiado a `/^[ \t]*at: /`; `ac1.txt` conserva las ubicaciones. No se ha probado un `awk` sin clases POSIX. | Aplicado |
+| N5 | Sin cambios, ver «No verificable». | Anotado |
+
+Además de lo pedido:
+- N1 lee el contador en base 10: sin eso, `08` rompe la aritmética aunque pase el filtro.
+- N2 trata también como vacío un `current-task` solo con espacios o BOM, como `guard_ownership.py`. Si no se puede leer, cuenta como ficha.
+- Las guardas de `mktemp` escriben un mensaje, y `cd` del sandbox sale con 2 en los dos scripts.
+- `run_mktemp_guard.sh` exige un directorio vacío fuera de cualquier repo.
+
+`verify.sh` completo no se ha repetido sobre este commit: lo hará el merge gate. El único cambio en `verify.sh` es N4, cubierto por `--quick` y `ac1.txt`.
+
 ### No verificable
+- **N5, macOS (no se toca):** su bash de serie es 3.2, sin `mapfile` (`verify.sh:16`) ni `shopt -s lastpipe` (`run_acs.sh:9`), y el sistema no trae `timeout` (`verify.sh`). `mise.toml` no aporta ninguno. Sale de la documentación de esas herramientas, no de una prueba.
 - **Linux y macOS:** todo se ha ejecutado en Windows; el encargo prohíbe usar WSL y esta máquina no es un Mac. En particular, el `awk` de `verify.sh`, `run_stop_hook.sh` y `run_acs.sh`.
 - **Agotar los timeouts reales** (720 s de GUT, 900 s del hook): no se han provocado. Tampoco qué hace Claude Code con el agente al agotarse los 900 s.
 - **Evento Stop real de Claude Code:** el hook se ha invocado directamente, con `verify.sh` falso. `verify.sh` real se ha pasado aparte.

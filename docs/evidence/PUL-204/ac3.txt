@@ -43,15 +43,17 @@ BLOQUEA rc=2 control: hook intacto
     Bloqueado: Assets/x.txt no está en `owns` ni `touches_scenes` de PUL-184-puestos-entrega-y-numeros-v3.md.
 PASS el control bloquea por owns
 
-### arreglado: salida ac2.txt que no se puede escribir
+### arreglado: salida antigua ac2.txt que no se puede borrar (es un directorio)
 $ run_acs.sh .claude/hooks/guard_ownership.py <dir_salida>
 rm: cannot remove '<ruta>: Is a directory
-docs/evidence/PUL-190/run_acs.sh: line 106: <ruta>: Is a directory
+run_acs: no puedo borrar la salida antigua ac2.txt
+rc=2
+
+### error inyectado: el bloque de AC2 no escribe su salida y hay un ac2.txt antiguo
+$ zz_run_acs_noac2.sh .claude/hooks/guard_ownership.py <dir_salida>
 fallos=1
 FAIL faltan salidas: ac2.txt
-grep: <ruta>: Is a directory
 ac1.txt:3
-ac2.txt:0
 ac4.txt:35
 ac5.txt:10
 TOTAL fichas=197 con_rc1=0 fallos=0

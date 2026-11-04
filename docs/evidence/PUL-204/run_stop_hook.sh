@@ -4,9 +4,11 @@
 # No toca el repo real y no lanza la suite. Sale con 1 si algún caso falla.
 set -uo pipefail
 HOOK="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
-BOX="$(mktemp -d)"
+BOX="$(mktemp -d)" || { echo "run_stop_hook: mktemp ha fallado" >&2; exit 2; }
+# Sin esto, un BOX vacío con un `cd ""` que devuelve 0 comitea y resetea el repo desde el que se lanza.
+[[ -n "$BOX" && -d "$BOX" ]] || { echo "run_stop_hook: mktemp no ha creado el directorio" >&2; exit 2; }
 trap 'rm -rf "$BOX"' EXIT
-cd "$BOX" || exit 1
+cd "$BOX" || exit 2
 git init -q .
 git config user.email pul204@example.invalid
 git config user.name PUL-204
@@ -33,7 +35,7 @@ fails=0
 reset_box() {
   git reset -q --hard "$BASE"
   git clean -fdq godot docs AGENTS.md CLAUDE.md
-  rm -f .claude/.stop-retries "$CALLS"
+  rm -rf .claude/.stop-retries "$CALLS"
   printf 'PUL-204\n' >.claude/current-task
 }
 
@@ -108,6 +110,45 @@ rm -f "$CALLS"
 case_run "tres fallos seguidos, intento 1" 2 1
 case_run "tres fallos seguidos, intento 2" 2 2
 case_run "tres fallos seguidos, intento 3: deja parar y escala" 0 3
+
+echo "N2: current-task sin ficha, igual que guard_ownership.py"
+reset_box
+printf 'b\n' >>godot/a.gd
+: >.claude/current-task
+case_run "current-task vacío" 0 0
+rm -f "$CALLS"
+printf ' \r\n\t\n' >.claude/current-task
+case_run "current-task solo con espacios" 0 0
+rm -f "$CALLS"
+printf '\xef\xbb\xbf\n' >.claude/current-task
+case_run "current-task solo con BOM" 0 0
+rm -f "$CALLS"
+printf '\xef\xbb\xbfPUL-204\n' >.claude/current-task
+case_run "current-task con BOM y ficha: sigue contando" 2 1
+
+echo "N1: contador dañado o que no se puede escribir"
+for bad in abc 1x '1 2' -1; do
+  reset_box
+  printf 'b\n' >>godot/a.gd
+  printf '%s\n' "$bad" >.claude/.stop-retries
+  case_run "contador «$bad», intento 1" 2 1
+  case_run "contador «$bad», intento 2" 2 2
+  case_run "contador «$bad», intento 3: deja parar y escala" 0 3
+done
+reset_box
+printf 'b\n' >>godot/a.gd
+: >.claude/.stop-retries
+case_run "contador vacío" 2 1
+reset_box
+printf 'b\n' >>godot/a.gd
+printf '08\n' >.claude/.stop-retries
+case_run "contador 08, con cero a la izquierda: decimal, deja parar" 0 1
+reset_box
+printf 'b\n' >>godot/a.gd
+mkdir .claude/.stop-retries
+case_run "contador imposible de escribir, intento 1: avisa y deja parar" 0 1
+case_run "contador imposible de escribir, intento 2: avisa y deja parar" 0 2
+rm -rf .claude/.stop-retries
 
 echo "fallos=$fails"
 ((fails == 0))

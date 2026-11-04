@@ -36,7 +36,7 @@ out=$(timeout 300 "$GODOT" --headless -s res://../tools/check_scripts.gd 2>&1); 
 if ((rc != 0)) || ! grep -q '^check_scripts: OK' <<<"$out" || grep -q 'SCRIPT ERROR' <<<"$out"; then
   awk -v limit=60 '
     function emit(line) { if (++shown <= limit) print line }
-    want_at { want_at = 0; if ($0 ~ /^[[:space:]]*at: /) emit($0) }
+    want_at { want_at = 0; if ($0 ~ /^[ \t]*at: /) emit($0) }
     /SCRIPT ERROR/ { emit($0); want_at = 1 }
     /^check_scripts:/ { summary[++count] = $0 }
     END {

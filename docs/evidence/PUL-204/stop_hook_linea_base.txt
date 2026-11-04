@@ -14,5 +14,27 @@ FAIL rc=0 (esperado 2) verify=0 (esperado 1) current-task, CLAUDE.md sin version
 FAIL rc=0 (esperado 2) verify=0 (esperado 1) tres fallos seguidos, intento 1
 FAIL rc=0 (esperado 2) verify=0 (esperado 2) tres fallos seguidos, intento 2
 FAIL rc=0 (esperado 0) verify=0 (esperado 3) tres fallos seguidos, intento 3: deja parar y escala
-fallos=9
+N2: current-task sin ficha, igual que guard_ownership.py
+FAIL rc=2 (esperado 0) verify=1 (esperado 0) current-task vacío
+FAIL rc=2 (esperado 0) verify=1 (esperado 0) current-task solo con espacios
+FAIL rc=0 (esperado 0) verify=1 (esperado 0) current-task solo con BOM
+PASS rc=2 (esperado 2) verify=1 (esperado 1) current-task con BOM y ficha: sigue contando
+N1: contador dañado o que no se puede escribir
+FAIL rc=1 (esperado 2) verify=1 (esperado 1) contador «abc», intento 1
+FAIL rc=1 (esperado 2) verify=2 (esperado 2) contador «abc», intento 2
+FAIL rc=1 (esperado 0) verify=3 (esperado 3) contador «abc», intento 3: deja parar y escala
+PASS rc=2 (esperado 2) verify=1 (esperado 1) contador «1x», intento 1
+PASS rc=2 (esperado 2) verify=2 (esperado 2) contador «1x», intento 2
+FAIL rc=2 (esperado 0) verify=3 (esperado 3) contador «1x», intento 3: deja parar y escala
+PASS rc=2 (esperado 2) verify=1 (esperado 1) contador «1 2», intento 1
+PASS rc=2 (esperado 2) verify=2 (esperado 2) contador «1 2», intento 2
+FAIL rc=2 (esperado 0) verify=3 (esperado 3) contador «1 2», intento 3: deja parar y escala
+PASS rc=2 (esperado 2) verify=1 (esperado 1) contador «-1», intento 1
+PASS rc=2 (esperado 2) verify=2 (esperado 2) contador «-1», intento 2
+FAIL rc=2 (esperado 0) verify=3 (esperado 3) contador «-1», intento 3: deja parar y escala
+PASS rc=2 (esperado 2) verify=1 (esperado 1) contador vacío
+FAIL rc=2 (esperado 0) verify=1 (esperado 1) contador 08, con cero a la izquierda: decimal, deja parar
+FAIL rc=2 (esperado 0) verify=1 (esperado 1) contador imposible de escribir, intento 1: avisa y deja parar
+FAIL rc=2 (esperado 0) verify=2 (esperado 2) contador imposible de escribir, intento 2: avisa y deja parar
+fallos=21
 rc=1

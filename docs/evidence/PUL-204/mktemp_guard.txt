@@ -1,0 +1,19 @@
+$ run_mktemp_guard.sh <dir> docs/evidence/PUL-204/run_stop_hook.sh docs/evidence/PUL-190/run_acs.sh guarda
+PASS stop mktemp=falla cd=real rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS stop mktemp=vacio cd=real rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS stop mktemp=inexistente cd=real rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=falla cd=real rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=vacio cd=real rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=inexistente cd=real rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=fichero_falla cd=real rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=fichero_vacio cd=real rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS stop mktemp=falla cd=vacio_0 rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS stop mktemp=vacio cd=vacio_0 rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS stop mktemp=inexistente cd=vacio_0 rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=falla cd=vacio_0 rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=vacio cd=vacio_0 rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=inexistente cd=vacio_0 rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=fichero_falla cd=vacio_0 rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+PASS acs mktemp=fichero_vacio cd=vacio_0 rc=2 repo_cambiado=no commits=1 escrituras_fuera=0
+fallos=0
+rc=0

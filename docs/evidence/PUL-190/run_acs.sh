@@ -13,23 +13,30 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 mkdir -p "$OUT" || { echo "run_acs: no puedo crear $OUT" >&2; exit 2; }
 OUT="$(cd "$OUT" && pwd)" || { echo "run_acs: no puedo entrar en $OUT" >&2; exit 2; }
 EXPECTED=(ac1 ac2 ac3 ac4 ac5 fail_open)
-for name in "${EXPECTED[@]}"; do rm -f "$OUT/$name.txt"; done # Una salida de otra pasada no cuenta como presente.
+# Una salida de otra pasada no cuenta como presente.
+for name in "${EXPECTED[@]}"; do
+  rm -f "$OUT/$name.txt"
+  [[ ! -e "$OUT/$name.txt" ]] || { echo "run_acs: no puedo borrar la salida antigua $name.txt" >&2; exit 2; }
+done
 export LC_ALL=C # grep compara bytes: «está» solo casa si stderr sale en UTF-8.
 # PYTHONUTF8=1 ocultaría el bug: el hook debe funcionar con la codificación por defecto de Windows.
 unset PYTHONUTF8 PYTHONIOENCODING
 
-BOX_UNIX="$(mktemp -d)"
+BOX_UNIX="$(mktemp -d)" || { echo "run_acs: mktemp ha fallado" >&2; exit 2; }
+# Sin esto, un BOX_UNIX vacío hace `mkdir -p /.claude /docs` y `cp -r` a la raíz.
+[[ -n "$BOX_UNIX" && -d "$BOX_UNIX" ]] || { echo "run_acs: mktemp no ha creado el directorio" >&2; exit 2; }
 trap 'rm -rf "$BOX_UNIX"' EXIT
 mkdir -p "$BOX_UNIX/.claude" "$BOX_UNIX/docs"
 cp -r "$REPO/docs/backlog" "$BOX_UNIX/docs/backlog"
-cd "$BOX_UNIX" || exit 1
+cd "$BOX_UNIX" || exit 2
 BOX="$(pwd -W 2>/dev/null || pwd)"
 export CLAUDE_PROJECT_DIR="$BOX"
 MARK=".claude/current-task"
 
 fails=0
 RC=0
-ERR="$(mktemp)"
+ERR="$(mktemp)" || { echo "run_acs: mktemp ha fallado" >&2; exit 2; }
+[[ -n "$ERR" && -f "$ERR" ]] || { echo "run_acs: mktemp no ha creado el fichero" >&2; exit 2; }
 
 # Stderr legible y sin rutas absolutas: decodifica como UTF-8 y marca los bytes rotos como \xNN.
 show_err() {

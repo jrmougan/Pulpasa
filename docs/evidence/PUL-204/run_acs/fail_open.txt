@@ -10,7 +10,7 @@ FALLO ABIERTO rc=1 PYTHONIOENCODING inválida (Fatal Python error, antes del try
     Python runtime state: core initialized
     LookupError: unknown encoding: no-existe
     
-    Current thread 0x0000cb60 (most recent call first):
+    Current thread 0x00000fc0 (most recent call first):
       <no Python frame>
 FALLO ABIERTO rc=127 intérprete ausente (simulado con un comando inexistente, sin quitar Python)
     bash: line 1: python3-no-existe: command not found
