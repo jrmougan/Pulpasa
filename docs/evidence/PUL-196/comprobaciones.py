@@ -128,6 +128,18 @@ loaders = sorted(
 )
 print(f"ficheros fuera de ui/touch/sandbox que citan touch_sandbox: {loaders}")
 
+print("\n== G12, G15, G50 y G57, motivos de `rejected` del dispensador: código frente a texto")
+dispenser = CACHE[GODOT / "entities/stations/seasoning_dispenser.gd"]
+for number, line in enumerate(dispenser.splitlines(), 1):
+    if re.search(r"rejected\.emit|Rejection\.(?:ALREADY_APPLIED|BOX_NOT_FULL)", line):
+        print(f"seasoning_dispenser.gd:{number}: {line.strip()}")
+for path in sorted(Path("docs/arch").glob("*.md")):
+    if path.name == "gate-enmiendas.md":
+        continue
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if re.search(r"ALREADY_APPLIED|solo `?BOX_NOT_FULL|único motivo es `BOX_NOT_FULL", line):
+            print(f"{path.as_posix()}:{number}: {line.strip()[:110]}")
+
 print("\n== Residuos: nombres dados de baja en docs/arch (sin el gate); revisar una a una")
 RESIDUE = (
     r"toggle_seasoning|swap_exclusive|paprika_swap|toggle_guard|ErrorAudio|season_error|deliver_error"

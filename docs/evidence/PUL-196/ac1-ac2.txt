@@ -62,7 +62,7 @@ docs/arch/signals.md:299 -> G45
 apariciones: 60; clasificadas: 60; sobran: 0
 
 == Forma de la tabla
-filas: 58; {'aceptar': 28, 'aceptar solo junto con otra fila': 2, 'aceptar con cambios': 28, 'rechazar': 0}
+filas: 58; {'aceptar': 27, 'aceptar solo junto con otra fila': 2, 'aceptar con cambios': 29, 'rechazar': 0}
 
 == AC2: cada cita ruta:línea de la tabla y de la propuesta sobre T3, con su línea
 -- godot/entities/stations/order_stand.gd:156: if _order == null or Engine.get_physics_frames() == _expired_frame:
@@ -164,6 +164,13 @@ G12 godot/entities/stations/seasoning_station.tscn:41: transform = Transform3D(1
 G12 godot/entities/stations/seasoning_station.tscn:47: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.1)
 G12 godot/entities/stations/seasoning_station.tscn:53: transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.1, -0.1)
 G12 godot/resources/box_badge_style.gd:18: return seasoning != null and seasoning.type == SeasoningData.SeasoningType.HOT_DRESSING
+G12 docs/arch/ADR-003-arbol-escenas-composicion.md:492: **Motivos de rechazo que quedan** (`rejected`, señal local): dispensador → `BOX_NOT_FULL`;
+G12 docs/arch/ADR-003-arbol-escenas-composicion.md:493: cuenco → `BOWL_EMPTY`, `BOWL_FULL`. `ALREADY_APPLIED` existe en el enum pero no se emite en `rejected`.
+G12 godot/entities/stations/seasoning_dispenser.gd:74: rejected.emit(_rejection_of(hint.reason))
+G12 godot/entities/stations/seasoning_dispenser.gd:93: return SeasoningRules.Rejection.ALREADY_APPLIED
+G12 godot/entities/stations/cachelos_bowl.gd:128: return SeasoningRules.Rejection.ALREADY_APPLIED
+G12 docs/arch/ADR-003-arbol-escenas-composicion.md:860: - `rejected` local del cuenco: `BOWL_EMPTY`, `BOWL_FULL`, `ALREADY_APPLIED` y `BOX_NOT_FULL` (mapeo de
+G12 docs/arch/ADR-003-arbol-escenas-composicion.md:863: **Dispensador** (`seasoning_dispenser.gd`; sustituye lo dicho en §10.2 sobre `ALREADY_APPLIED`): con el
 G13 godot/core/trash_rules.gd:10: static func can_trash(item: Node) -> bool:
 G13 godot/resources/trash_bin_data.gd:6: @export var trash_penalty: int = 0
 G13 godot/data/config/trash_bin.tres:7: trash_penalty = 0
@@ -184,6 +191,14 @@ G14 godot/data/config/round_config.tres:16: orders = [ExtResource("3_o1")]
 G14 godot/tests/unit/test_data_integrity.gd:254: func test_pul115_phase_pools_subset_of_catalog_and_per_phase() -> void:
 G15 godot/entities/stations/trash_bin.gd:8: signal trashed(item: Node)
 G15 godot/tests/unit/test_event_bus.gd:53: func test_ac1_bus_declares_exactly_catalog_signal_names() -> void:
+G15 godot/entities/items/box.gd:159: seasoning_removed.emit(result.removed)
+G15 godot/entities/items/box.gd:161: seasoned.emit(result.added)
+G15 docs/arch/ADR-003-arbol-escenas-composicion.md:583: Los dispensadores siguen con `rejected` (solo `BOX_NOT_FULL`); la caja con `seasoned` /
+G15 godot/entities/stations/seasoning_dispenser.gd:74: rejected.emit(_rejection_of(hint.reason))
+G15 godot/entities/stations/seasoning_dispenser.gd:93: return SeasoningRules.Rejection.ALREADY_APPLIED
+G15 godot/tests/integration/test_seasoning_station.gd:203: func test_ac2_same_dressing_again_is_rejected_as_already_applied() -> void:
+G15 docs/arch/ADR-003-arbol-escenas-composicion.md:863: **Dispensador** (`seasoning_dispenser.gd`; sustituye lo dicho en §10.2 sobre `ALREADY_APPLIED`): con el
+G15 docs/arch/ADR-003-arbol-escenas-composicion.md:918: **Estado tras el montaje (PUL-131).** Quedan superados en §8–§10 el cue `season_error` (§8, tabla de
 G16 godot/core/action_verb.gd:25: const ALL: Array[StringName] = [PICK_UP, DROP, COOK, CUT, SEASON_SWEET, SEASON_HOT, CACHELOS, TRASH]
 G16 godot/core/action_verb.gd:27: const REPEATABLE: Array[StringName] = [CUT]
 G16 godot/core/action_reason.gd:21: const ALL: Array[StringName] = [BOX_NOT_FULL, BUSY, EMPTY, FULL, ALREADY_APPLIED, NOT_COOKED]
@@ -430,7 +445,10 @@ G49 docs/arch/ADR-003-arbol-escenas-composicion.md:249: ### 9. Estación al paso
 G50 godot/entities/stations/trash_bin.gd:8: signal trashed(item: Node)
 G50 godot/core/seasoning_rules.gd:21: ALREADY_APPLIED,
 G50 godot/resources/phase_data.gd:14: @export var orders: Array[OrderData] = []
+G50 docs/arch/signals.md:53: | `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX` (en desuso desde D23: sin caja en la mano el dispensador no es obje
+G50 docs/arch/signals.md:208: | `rejected(reason: SeasoningRules.Rejection)` | `seasoning_dispenser.gd` (`SeasoningDispenser`) | `seasoning_station.gd` (suena `%ErrorAudio` y sacud
 G50 docs/arch/signals.md:251: `rejected(BOX_NOT_FULL)`; `ALREADY_APPLIED`: nada (pulsación consumida en silencio). Sin antirrebote.
+G50 docs/arch/signals.md:212: pulsaciones cuyo hint es `BLOCKED` (dispensador: `BOX_NOT_FULL`, y ahora también `ALREADY_APPLIED`;
 G51 godot/autoload/event_bus.gd:35: signal action_hint_changed(player_index: int, verb: StringName, state: int, reason: StringName)
 G51 godot/autoload/event_bus.gd:37: signal interaction_resolved(player_index: int, verb: StringName, state: int, reason: StringName)
 G51 godot/components/interaction_detector.gd:28: signal hint_changed(target: Node, hint: ActionHint)
@@ -491,6 +509,10 @@ G57 godot/entities/stations/item_spawner.gd:16: func get_action_hint(actor: Inte
 G57 docs/arch/scene-tree.md:108: **`test_level_01.gd` lo exige** (T6 de `cubo-basura`): recorre esas instancias del nivel y comprueba
 G57 docs/arch/scene-tree.md:239: `toggle_seasoning(seasoning: SeasoningData)` pierde `swap_exclusive` (solo la llama el cuenco).
 G57 docs/arch/scene-tree.md:232: `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection` *(baja D26, PUL-131)*,
+G57 docs/arch/scene-tree.md:362: │                     D25: llena → box.apply_seasoning(seasoning): NONE → %Gesture; ALREADY_APPLIED → nada
+G57 docs/arch/scene-tree.md:363: │                     (consumida en silencio); BOX_NOT_FULL → rejected
+G57 docs/arch/scene-tree.md:368: │   signal rejected(reason: SeasoningRules.Rejection)   (D25: solo BOX_NOT_FULL)
+G57 godot/entities/stations/seasoning_dispenser.gd:74: rejected.emit(_rejection_of(hint.reason))
 G58 godot/entities/player/player.tscn:229: [node name="ActionPrompt" parent="." node_paths=PackedStringArray("detector", "actor", "hold") instance=ExtResource("15_prompt")]
 G58 godot/entities/items/box.tscn:95: [node name="CutCounter" type="Node3D" parent="." unique_id=1199965948]
 G58 godot/entities/stations/kitchen.tscn:133: [node name="CookRing" parent="." unique_id=1276433737 instance=ExtResource("5_b5ifj")]

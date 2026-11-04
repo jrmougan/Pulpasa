@@ -62,6 +62,35 @@ device_disconnected: emite=['game_state.gd'] conecta_sin_estar_en_la_fila=[] en_
 godot/ui/touch/sandbox/touch_sandbox.gd:48: EventBus.action_hint_changed.emit(1, case[1], case[2], case[3])
 ficheros fuera de ui/touch/sandbox que citan touch_sandbox: []
 
+== G12, G15, G50 y G57, motivos de `rejected` del dispensador: código frente a texto
+seasoning_dispenser.gd:71: rejected.emit(result)
+seasoning_dispenser.gd:74: rejected.emit(_rejection_of(hint.reason))
+seasoning_dispenser.gd:93: return SeasoningRules.Rejection.ALREADY_APPLIED
+seasoning_dispenser.gd:94: return SeasoningRules.Rejection.BOX_NOT_FULL
+docs/arch/ADR-003-arbol-escenas-composicion.md:440: ## D25: aplica `seasoning` a una caja. Sin llenar: BOX_NOT_FULL. Si ya lo lleva: ALREADY_APPLIED
+docs/arch/ADR-003-arbol-escenas-composicion.md:446: `find(current, seasoning)` → `ALREADY_APPLIED`; `find_in_group(current, group)` → sustituye; si no,
+docs/arch/ADR-003-arbol-escenas-composicion.md:449: - `Rejection` gana **`ALREADY_APPLIED` al final** (valor 8, sin renumerar). `EXCLUSIVE_TAKEN` pasa a
+docs/arch/ADR-003-arbol-escenas-composicion.md:472: `BOX_NOT_FULL`: `rejected(BOX_NOT_FULL)` (suena `season_error`); `ALREADY_APPLIED`: **se consume en
+docs/arch/ADR-003-arbol-escenas-composicion.md:474: que está mal se tira al cubo (§10.3). *Enmienda D26 (PUL-120):* `ALREADY_APPLIED` deja de ser
+docs/arch/ADR-003-arbol-escenas-composicion.md:476: - **Sin antirrebote**: aplicar es idempotente (la segunda pulsación del mismo da `ALREADY_APPLIED`), así
+docs/arch/ADR-003-arbol-escenas-composicion.md:493: cuenco → `BOWL_EMPTY`, `BOWL_FULL`. `ALREADY_APPLIED` existe en el enum pero no se emite en `rejected`.
+docs/arch/ADR-003-arbol-escenas-composicion.md:583: Los dispensadores siguen con `rejected` (solo `BOX_NOT_FULL`); la caja con `seasoned` /
+docs/arch/ADR-003-arbol-escenas-composicion.md:591: 3. *`ALREADY_APPLIED` como rechazo con `season_error`.* D25 dice «no hace nada»; un error sonoro por
+docs/arch/ADR-003-arbol-escenas-composicion.md:628: | `ActionReason` | `core/action_reason.gd` (`class_name ActionReason extends RefCounted`) | Constantes `String
+docs/arch/ADR-003-arbol-escenas-composicion.md:860: - `rejected` local del cuenco: `BOWL_EMPTY`, `BOWL_FULL`, `ALREADY_APPLIED` y `BOX_NOT_FULL` (mapeo de
+docs/arch/ADR-003-arbol-escenas-composicion.md:863: **Dispensador** (`seasoning_dispenser.gd`; sustituye lo dicho en §10.2 sobre `ALREADY_APPLIED`): con el
+docs/arch/ADR-003-arbol-escenas-composicion.md:865: `rejected(ALREADY_APPLIED)` local y el jugador suena `rejected` (D26.3; pregunta 3 del diseño). Caja
+docs/arch/scene-tree.md:238: el dispensador de aliño: sustituye al otro aliño, `ALREADY_APPLIED` si ya lo lleva) y
+docs/arch/scene-tree.md:362: │                     D25: llena → box.apply_seasoning(seasoning): NONE → %Gesture; ALREADY_APPLIED → nada
+docs/arch/scene-tree.md:368: │   signal rejected(reason: SeasoningRules.Rejection)   (D25: solo BOX_NOT_FULL)
+docs/arch/signals.md:19: `ALREADY_APPLIED` y `PhaseData` gana `orders` (§1); el ticket ya no lee la caja (§2, §4).
+docs/arch/signals.md:53: | `SeasoningRules.Rejection` | enum | `core/seasoning_rules.gd` | `NONE`, `NO_BOX` (en desuso desde D23: sin c
+docs/arch/signals.md:206: | `seasoned(seasoning: SeasoningData)` | `box.gd` | audio de molinillo de `box.tscn` (M3: `%Feedback`, cue `se
+docs/arch/signals.md:208: | `rejected(reason: SeasoningRules.Rejection)` | `seasoning_dispenser.gd` (`SeasoningDispenser`) | `seasoning_
+docs/arch/signals.md:212: pulsaciones cuyo hint es `BLOCKED` (dispensador: `BOX_NOT_FULL`, y ahora también `ALREADY_APPLIED`;
+docs/arch/signals.md:213: cuenco: `BOWL_EMPTY`, `BOWL_FULL` al reponer, `ALREADY_APPLIED` si la caja ya lleva cachelos y
+docs/arch/signals.md:251: `rejected(BOX_NOT_FULL)`; `ALREADY_APPLIED`: nada (pulsación consumida en silencio). Sin antirrebote.
+
 == Residuos: nombres dados de baja en docs/arch (sin el gate); revisar una a una
 docs/arch/ADR-003-arbol-escenas-composicion.md:156: > de aliño que **aplican** (§10.2): `toggle_seasoning(…, swap_exclusive)` y `paprika_swap` dejan de
 docs/arch/ADR-003-arbol-escenas-composicion.md:157: > ser la API del dispensador y el antirrebote (`toggle_guard`) queda solo para el cuenco. La regla de

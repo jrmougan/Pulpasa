@@ -41,7 +41,7 @@ Evidencia en `docs/evidence/PUL-196/`. Los guiones se ejecutan desde la raíz de
 - **AC3**: `ac3-diff.txt`: `git diff --name-status` contra la base y `tools/check_owns.py`. Solo cambian `README.md`, `gate-enmiendas.md`, la ficha y la evidencia.
 - **Verificación**: `tools/verify.sh --quick` en verde (`verify-quick.txt`). El primer intento falló porque el import inicial de este worktree superó el límite de 300 s de `verify.sh`; lancé el import a mano y el siguiente `verify.sh` pasó. También ejecuté `tools/verify.sh` completo, aunque la ficha no lo pedía: 1378 de 1378 tests y smoke OK; los 29 tests citados por nombre pasan según el `junit.xml` (`verify-completo.txt`).
 
-**Resultado del gate**: 58 filas, 28 para aceptar, 2 para aceptar solo junto con otra fila, 28 para aceptar con cambios y 0 para rechazar. No cambió ningún estado de ADR, `signals.md`, `scene-tree.md` ni `decisions.md`.
+**Resultado del gate**: 58 filas, 27 para aceptar, 2 para aceptar solo junto con otra fila, 29 para aceptar con cambios y 0 para rechazar. No cambió ningún estado de ADR, `signals.md`, `scene-tree.md` ni `decisions.md`.
 
 **Decisiones mías para revisar**:
 - En `README.md` también añadí la Enmienda D27 a la fila de ADR-005, porque su cabecera la da como propuesta y el índice la omitía, y un enlace a `gate-enmiendas.md`. La ficha solo citaba D14 y ADR-002.
@@ -63,3 +63,10 @@ Evidencia en `docs/evidence/PUL-196/`. Los guiones se ejecutan desde la raíz de
 - **G23, G47, G53 y G57**: añaden `ADR-003:884`, `signals.md:217`, `scene-tree.md:393` y `scene-tree.md:239`. La lista no era exhaustiva y sigue sin serlo, así que «Cómo leer» lo avisa y `comprobaciones.txt` tiene una sección nueva, «Residuos», con todas las apariciones.
 - **G05 y G24**: citan el emisor de desarrollo `touch_sandbox.gd:48`. `comprobaciones.py` declara la exclusión e imprime lo que excluye.
 - **Comprobaciones**: `comprobar_gate.py` sigue mirando solo el prefijo «Sin divergencia», así que no detecta una fila mal clasificada como G33; eso sigue dependiendo de la revisión manual. Volví a ejecutar AC1, AC2, AC3 y `tools/verify.sh --quick`, no la suite completa, porque esta ronda no cambia código de `godot/`.
+
+**Correcciones tras la tercera revisión** (el hallazgo es cierto):
+- **G15**: pasa de «aceptar» a «aceptar con cambios». `ADR-003:583` dice «solo `BOX_NOT_FULL`», pero `seasoning_dispenser.gd:74` y `:93` también emiten `ALREADY_APPLIED`, y `test_seasoning_station.gd:203` lo exige. `ADR-003:863` solo sustituye lo dicho en §10.2. De las dos opciones de la revisión elegí cambiar la frase de §10.5 y no ampliar §11.7, porque así G15 no queda a la espera de G22 ni de la decisión 5.
+- **G12**: cita `ADR-003:492` y `:493`, que no llevan nota propia y solo quedan sustituidas por `:860` y `:863`. La recomendación no cambia.
+- **G50 y G57 (añadido mío)**: busqué la misma afirmación en `docs/arch` (nueva sección de `comprobaciones.txt`). G50 añade `signals.md:53` y `:208`, que corrige la nota D26 de `:212`. G57 añade `scene-tree.md:362`, `:363` y `:368`, que no tienen nota D26 que las corrija. Sus recomendaciones no cambian.
+- **Límite nuevo en el gate**: las 27 filas con «aceptar» se comprobaron con las líneas que citan, no frase a frase, y no las he vuelto a repasar. `comprobar_gate.py` tampoco detecta este tipo de error, porque solo mira el prefijo «Sin divergencia».
+- **Comprobaciones**: volví a ejecutar AC1, AC2, AC3, `comprobaciones.py` y `tools/verify.sh --quick`. No repetí la suite completa, porque esta ronda no cambia código de `godot/`.
