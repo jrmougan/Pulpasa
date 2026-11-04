@@ -1,8 +1,8 @@
 # Árbol de escenas
 
 - **Estado:** **aceptado** por el responsable en gate humano el 2026-11-04 (contrato; ver ADR-003;
-  `gate-enmiendas.md`, PUL-197), salvo dos frases **pendientes**: la de `accepted_group` de `slot.tscn` en §3
-  (G08) y la que atribuye la regla de colocación de los cubos a un test en §2 (G13, G57)
+  `gate-enmiendas.md`, PUL-197), salvo tres frases **pendientes**: la de `accepted_group` de `slot.tscn` en §3
+  (G08), la de la caja que consume la pulsación «con cualquier otra cosa en la mano» en §3 y la que atribuye la regla de colocación de los cubos a un test en §2 (G13, G57)
 - **Ficha:** PUL-003; enmienda de la estación de condimentos y la planta B en PUL-056
   (2026-10-05, D18/D19, ADR-003 §8), **aceptada** por el responsable en gate humano el 2026-11-04: §2, §3 (caja, slot, estación),
   §5, §6 y §7 (bajas). Lo marcado **M2b** lo implementan PUL-057..PUL-061.
@@ -239,7 +239,7 @@ Caja (API del contrato con la estación, M2b, PUL-057; ADR-003 §8.3):
 `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection` *(baja D26, PUL-131)*,
 `remove_seasoning(seasoning: SeasoningData) -> bool`, `has_seasoning()`, `is_full()`,
 `get_contents()`. `interact()` corta (D1) o se coge; con cualquier otra cosa en la mano consume la
-pulsación sin efecto (ya no condimenta, AC12). D23 no cambia esta API: el dispensador y el cuenco la
+pulsación sin efecto (ya no condimenta, AC12) **[pendiente: desde D26 `box.gd:121` devuelve `false` con hint `NONE`; mismo caso que G08, PUL-197]**. D23 no cambia esta API: el dispensador y el cuenco la
 llaman sobre la caja **de la mano** del actor en vez de la de la bandeja.
 **D25:** se añade `apply_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection` (la llama
 el dispensador de aliño: sustituye al otro aliño, `ALREADY_APPLIED` si ya lo lleva) y

@@ -14,7 +14,7 @@ mantiene la capa común independiente de la dimensión.
 | [ADR-005](ADR-005-dimension-3d-2d.md) | Dimensión 3D o 2D (D14); Enmienda D26: escala de UI, safe area, perfil de plataforma y cámara móvil; Enmienda D27: botones en fila | aceptado (3D); Enmiendas D26 y D27 aceptadas (2026-11-04) |
 | [ADR-006](ADR-006-audio-feedback.md) | Audio, feedback, quemado y fases (M3); §4.1 cues de D26 | aceptado; enmiendas D25 y D26 aceptadas (2026-11-04); R2 aprobada |
 | [signals.md](signals.md) | Catálogo de señales con firma, emisor y receptores (D26: `action_hint_changed`, `interaction_resolved`) | aceptado (2026-11-04) |
-| [scene-tree.md](scene-tree.md) | Árbol de escenas y enmiendas (M2b, M3, M3c/D23, D25, D26 en §9) | aceptado (2026-11-04); pendientes: `accepted_group` en §3 (G08) y una atribución a test en §2 (G13, G57) |
+| [scene-tree.md](scene-tree.md) | Árbol de escenas y enmiendas (M2b, M3, M3c/D23, D25, D26 en §9) | aceptado (2026-11-04); pendientes: `accepted_group` y la caja con la mano llena en §3 (G08) y una atribución a test en §2 (G13, G57) |
 
 El gate de las enmiendas se resolvió el 2026-11-04: decisiones, análisis y lo que sigue pendiente (G08, G13, G57), en
 [gate-enmiendas.md](gate-enmiendas.md).
