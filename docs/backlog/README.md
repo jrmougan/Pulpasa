@@ -199,7 +199,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-192 | M4 | godot-architect | done | Duplicar el contexto en AGENTS.md y CLAUDE.md con comprobación de sincronía |
 | PUL-193 | M4 | godot-architect | done | Compartir el parser de fichas entre hook y merge gate y limpiar la plantilla |
 | PUL-194 | M4 | asset-pipeline | done | Pasar el pipeline de arte y blender_export a la estética v3 |
-| PUL-195 | M4 | godot-architect | blocked | Ajustar los permisos de settings.json a las recetas actuales |
+| PUL-195 | M4 | godot-architect | done | Ajustar los permisos de settings.json a las recetas actuales |
 | PUL-196 | M4 | godot-architect | done | Corregir el índice de contratos y preparar el gate de enmiendas pendientes |
 | PUL-197 | M4 | godot-architect | done | Aplicar las decisiones del gate de enmiendas a los contratos |
 | PUL-198 | M4 | gameplay-engineer | ready | Evitar delivery_rejected en el tick posterior a la caducidad de una comanda |
