@@ -51,6 +51,6 @@ test_arrow_keeps_16px_from_button_zone: pasa
 test_bac3_case09_counters_clear_the_button_zone_from_the_pot_stand: pasa
 test_pool_same_seed_same_sequence_and_one_rng_call_per_order: pasa
 test_new_cues_have_seven_distinct_streams: pasa
+test_edge_point_avoids_button_zone: pasa (añadido después, desde junit.xml)
 
-citados: 29; sin pasar: 0
-test_edge_point_avoids_button_zone: pasa
+citados: 30; sin pasar: 0

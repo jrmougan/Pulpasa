@@ -332,6 +332,7 @@ G25 godot/ui/touch/virtual_stick.gd:151: Input.action_press(action, strength)
 G25 godot/ui/touch/touch_button.gd:126: Input.parse_input_event(event)
 G25 godot/ui/touch/touch_controls.gd:88: func release_all() -> void:
 G25 godot/entities/player/player.gd:132: var input: PlayerInput = _control.get_player_input()
+G25 godot/entities/player/player.gd:157: var raw: Vector2 = Input.get_vector(
 G25 godot/components/interaction_component.gd:45: func _unhandled_input(event: InputEvent) -> void:
 G25 godot/components/interaction_component.gd:47: if player_input == null or not player_input.is_interact_event(event):
 G25 godot/entities/player/character_switcher.gd:37: func _unhandled_input(event: InputEvent) -> void:
@@ -343,6 +344,7 @@ G25 docs/arch/ADR-004-input-coop-local.md:164: `InteractionComponent`, `Characte
 G25 godot/ui/menus/pause_menu.gd:36: func _input(event: InputEvent) -> void:
 G25 godot/ui/menus/pause_menu.gd:39: if event.is_action_pressed("pause"):
 G25 godot/core/player_input.gd:42: ## Para `_unhandled_input`: la pausa y la UI consumen el evento antes.
+G25 godot/entities/player/player.gd:157: var raw: Vector2 = Input.get_vector(
 G26 godot/ui/touch/touch_controls.tscn:23: [node name="SafeArea" type="MarginContainer" parent="."]
 G26 godot/ui/touch/touch_controls.tscn:34: [node name="Content" type="Control" parent="SafeArea"]
 G26 godot/ui/touch/touch_controls.tscn:40: [node name="MoveStick" type="Control" parent="SafeArea/Content"]

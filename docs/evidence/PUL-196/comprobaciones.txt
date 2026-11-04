@@ -137,10 +137,10 @@ godot/tests/unit/test_round_state.gd:7: const CATALOG_PATH: String = "res://test
 godot/tests/unit/test_round_state.gd:8: const CONFIG_PATH: String = "res://tests/helpers/m0_data/m0_round_config.tres"
 
 == G25, quién lee PlayerInput, _unhandled_input o _input
-entities/player/player.gd: PlayerInput=1 _unhandled_input=0 _input=0
-components/interaction_component.gd: PlayerInput=2 _unhandled_input=1 _input=0
-entities/player/character_switcher.gd: PlayerInput=0 _unhandled_input=1 _input=0
-ui/menus/pause_menu.gd: PlayerInput=0 _unhandled_input=0 _input=1
+entities/player/player.gd: PlayerInput=1 _unhandled_input=0 _input=0 Input.get_vector=0
+components/interaction_component.gd: PlayerInput=2 _unhandled_input=1 _input=0 Input.get_vector=0
+entities/player/character_switcher.gd: PlayerInput=0 _unhandled_input=1 _input=0 Input.get_vector=0
+ui/menus/pause_menu.gd: PlayerInput=0 _unhandled_input=0 _input=1 Input.get_vector=0
 
 == G37, zona de la flecha en el código y en sus tests
 entities/camera/camera_rig.gd:231: var avoid: Rect2 = _button_zone(canvas)

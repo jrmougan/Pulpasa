@@ -196,7 +196,8 @@ for rel in [
     print(
         f"{rel}: PlayerInput={len(re.findall(r'\bPlayerInput\b', content))} "
         f"_unhandled_input={len(re.findall(r'func _unhandled_input', content))} "
-        f"_input={len(re.findall(r'func _input', content))}"
+        f"_input={len(re.findall(r'func _input', content))} "
+        f"Input.get_vector={len(re.findall(r'Input\.get_vector\(', content))}"
     )
 
 print("\n== G37, zona de la flecha en el código y en sus tests")
