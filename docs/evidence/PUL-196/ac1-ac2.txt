@@ -62,9 +62,9 @@ docs/arch/signals.md:299 -> G45
 apariciones: 60; clasificadas: 60; sobran: 0
 
 == Forma de la tabla
-filas: 58; {'aceptar': 24, 'aceptar solo junto con otra fila': 2, 'aceptar con cambios': 32, 'rechazar': 0}
-recuento escrito en gate-enmiendas.md: [24, 2, 32, 0]
-recuento escrito en ficha PUL-196: [24, 2, 32, 0]
+filas: 58; {'aceptar': 23, 'aceptar solo junto con otra fila': 2, 'aceptar con cambios': 33, 'rechazar': 0}
+recuento escrito en gate-enmiendas.md: [23, 2, 33, 0]
+recuento escrito en ficha PUL-196: [23, 2, 33, 0]
 
 == AC2: cada cita ruta:línea de la tabla y de la propuesta sobre T3, con su línea
 -- godot/entities/stations/order_stand.gd:156: if _order == null or Engine.get_physics_frames() == _expired_frame:
@@ -191,6 +191,14 @@ G14 godot/data/orders/con_cachelos.tres:12: seasonings = [ExtResource("3_sea"), 
 G14 godot/data/orders/order_catalog.tres:11: orders = [ExtResource("2_o"), ExtResource("3_o"), ExtResource("4_o"), ExtResource("5_o")]
 G14 godot/data/config/round_config.tres:16: orders = [ExtResource("3_o1")]
 G14 godot/tests/unit/test_data_integrity.gd:254: func test_pul115_phase_pools_subset_of_catalog_and_per_phase() -> void:
+G14 godot/tests/unit/test_order_board.gd:6: const ORDER_PATH: String = "res://data/orders/a_feira.tres"
+G14 godot/tests/unit/test_order_board.gd:5: const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+G14 docs/arch/ADR-003-arbol-escenas-composicion.md:572: (`test_data_catalog.gd`, `test_order_board.gd`, `test_order_validator.gd`, `test_m1_flow.gd`,
+G14 docs/arch/ADR-003-arbol-escenas-composicion.md:575: - `tests/helpers/m0_data/` (copias de paridad M0) apunta a `small/medium/large.tres` y a los
+G14 docs/arch/ADR-003-arbol-escenas-composicion.md:576: condimentos de baja: se rehace sin `box` y con los aliños nuevos, o se da de baja si ya no lo usa
+G14 docs/arch/ADR-003-arbol-escenas-composicion.md:577: ningún test; lo decide la ficha que tenga esos tests.
+G14 godot/tests/unit/test_round_manager.gd:8: const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+G14 godot/tests/unit/test_round_state.gd:7: const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
 G15 godot/entities/stations/trash_bin.gd:8: signal trashed(item: Node)
 G15 godot/tests/unit/test_event_bus.gd:53: func test_ac1_bus_declares_exactly_catalog_signal_names() -> void:
 G15 godot/entities/items/box.gd:159: seasoning_removed.emit(result.removed)
@@ -323,6 +331,18 @@ G24 godot/tests/unit/test_event_bus.gd:61: func test_ac1_bus_signal_signatures_m
 G25 godot/ui/touch/virtual_stick.gd:151: Input.action_press(action, strength)
 G25 godot/ui/touch/touch_button.gd:126: Input.parse_input_event(event)
 G25 godot/ui/touch/touch_controls.gd:88: func release_all() -> void:
+G25 godot/entities/player/player.gd:132: var input: PlayerInput = _control.get_player_input()
+G25 godot/components/interaction_component.gd:45: func _unhandled_input(event: InputEvent) -> void:
+G25 godot/components/interaction_component.gd:47: if player_input == null or not player_input.is_interact_event(event):
+G25 godot/entities/player/character_switcher.gd:37: func _unhandled_input(event: InputEvent) -> void:
+G25 godot/entities/player/character_switcher.gd:38: if not event.is_action_pressed(SWITCH_ACTION, false, true):
+G25 godot/ui/menus/pause_menu.gd:36: func _input(event: InputEvent) -> void:
+G25 godot/ui/menus/pause_menu.gd:39: if event.is_action_pressed("pause"):
+G25 docs/arch/ADR-004-input-coop-local.md:163: acciones ni eventos (`InputEventScreenTouch` no es un binding). Todo el juego (jugador,
+G25 docs/arch/ADR-004-input-coop-local.md:164: `InteractionComponent`, `CharacterSwitcher`, pausa) sigue leyendo `PlayerInput` y `_unhandled_input`
+G25 godot/ui/menus/pause_menu.gd:36: func _input(event: InputEvent) -> void:
+G25 godot/ui/menus/pause_menu.gd:39: if event.is_action_pressed("pause"):
+G25 godot/core/player_input.gd:42: ## Para `_unhandled_input`: la pausa y la UI consumen el evento antes.
 G26 godot/ui/touch/touch_controls.tscn:23: [node name="SafeArea" type="MarginContainer" parent="."]
 G26 godot/ui/touch/touch_controls.tscn:34: [node name="Content" type="Control" parent="SafeArea"]
 G26 godot/ui/touch/touch_controls.tscn:40: [node name="MoveStick" type="Control" parent="SafeArea/Content"]
@@ -411,8 +431,12 @@ G37 godot/data/config/ui_profile_mobile.tres:22: button_zone_width_px = 390.0
 G37 godot/data/config/ui_profile_mobile.tres:23: button_zone_height_px = 240.0
 G37 godot/data/config/ui_profile_desktop.tres:23: button_zone_height_px = 240.0
 G37 godot/entities/camera/camera_rig.gd:243: func _button_zone(canvas: Vector2) -> Rect2:
+G37 godot/entities/camera/camera_rig.gd:231: var avoid: Rect2 = _button_zone(canvas)
 G37 godot/tests/integration/test_touch_layout.gd:199: func test_touch_rects_stay_inside_the_ui_profile_button_zone_at_2340() -> void:
+G37 godot/entities/camera/camera_rig.gd:231: var avoid: Rect2 = _button_zone(canvas)
 G37 godot/tests/integration/test_camera_follow.gd:189: func test_arrow_keeps_16px_from_button_zone() -> void:
+G37 godot/tests/integration/test_camera_follow.gd:196: var zone: Rect2 = Rect2(Vector2(2340.0 - 390.0, 600.0), Vector2(390.0, 480.0)).grow(16.0)
+G37 godot/tests/unit/test_camera_follow_math.gd:129: func test_edge_point_avoids_button_zone() -> void:
 G38 godot/tests/integration/test_camera_button_zone.gd:264: func test_bac3_case09_counters_clear_the_button_zone_from_the_pot_stand() -> void:
 G39 godot/ui/touch/touch_controls.gd:124: var gap: float = UiScale.px_to_units(config.button_gap_px_1080, canvas.y)
 G39 godot/resources/touch_config.gd:15: @export var button_gap_px_1080: float = 24.0

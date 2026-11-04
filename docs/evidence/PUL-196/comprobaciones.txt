@@ -129,6 +129,27 @@ components/interaction_component.gd:136: return _is_repeatable(InteractionContra
 apariciones de tween, sin distinguir mayúsculas: 0
 tipos exportados: ['Array[Texture2D]', 'Color', 'Dictionary[StringName,', 'Texture2D', 'float', 'int']
 
+== G14, quién usa el catálogo de paridad de tests/helpers/m0_data
+godot/tests/unit/test_order_board.gd:5: const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+godot/tests/unit/test_round_manager.gd:8: const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+godot/tests/unit/test_round_manager.gd:9: const CONFIG_PATH: String = "res://tests/helpers/m0_data/m0_round_config.tres"
+godot/tests/unit/test_round_state.gd:7: const CATALOG_PATH: String = "res://tests/helpers/m0_data/orders/order_catalog.tres"
+godot/tests/unit/test_round_state.gd:8: const CONFIG_PATH: String = "res://tests/helpers/m0_data/m0_round_config.tres"
+
+== G25, quién lee PlayerInput, _unhandled_input o _input
+entities/player/player.gd: PlayerInput=1 _unhandled_input=0 _input=0
+components/interaction_component.gd: PlayerInput=2 _unhandled_input=1 _input=0
+entities/player/character_switcher.gd: PlayerInput=0 _unhandled_input=1 _input=0
+ui/menus/pause_menu.gd: PlayerInput=0 _unhandled_input=0 _input=1
+
+== G37, zona de la flecha en el código y en sus tests
+entities/camera/camera_rig.gd:231: var avoid: Rect2 = _button_zone(canvas)
+entities/camera/camera_rig.gd:243: func _button_zone(canvas: Vector2) -> Rect2:
+tests/integration/test_camera_follow.gd:189: func test_arrow_keeps_16px_from_button_zone() -> void:
+tests/integration/test_camera_follow.gd:196: var zone: Rect2 = Rect2(Vector2(2340.0 - 390.0, 600.0), Vector2(390.0, 480.0)).grow(16.0)
+tests/unit/test_camera_follow_math.gd:129: func test_edge_point_avoids_button_zone() -> void:
+tests/unit/test_camera_follow_math.gd:131: var avoid: Rect2 = Rect2(1950.0, 600.0, 390.0, 480.0)
+
 == Residuos: nombres dados de baja en docs/arch (sin el gate); revisar una a una
 docs/arch/ADR-003-arbol-escenas-composicion.md:156: > de aliño que **aplican** (§10.2): `toggle_seasoning(…, swap_exclusive)` y `paprika_swap` dejan de
 docs/arch/ADR-003-arbol-escenas-composicion.md:157: > ser la API del dispensador y el antirrebote (`toggle_guard`) queda solo para el cuenco. La regla de

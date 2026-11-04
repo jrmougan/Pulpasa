@@ -179,6 +179,36 @@ icons = CACHE[GODOT / "resources/action_icon_set.gd"]
 types = re.findall(r"@export[^\n]*? var \w+: ([^\s=]+)", icons)
 print(f"tipos exportados: {sorted(set(types))}")
 
+print("\n== G14, quién usa el catálogo de paridad de tests/helpers/m0_data")
+for path in sorted(p for p in CACHE if p.suffix == ".gd" and "m0_data" in CACHE[p]):
+    for number, line in enumerate(CACHE[path].splitlines(), 1):
+        if "m0_data" in line:
+            print(f"{path.as_posix()}:{number}: {line.strip()}")
+
+print("\n== G25, quién lee PlayerInput, _unhandled_input o _input")
+for rel in [
+    "entities/player/player.gd",
+    "components/interaction_component.gd",
+    "entities/player/character_switcher.gd",
+    "ui/menus/pause_menu.gd",
+]:
+    content = CACHE[GODOT / rel]
+    print(
+        f"{rel}: PlayerInput={len(re.findall(r'\bPlayerInput\b', content))} "
+        f"_unhandled_input={len(re.findall(r'func _unhandled_input', content))} "
+        f"_input={len(re.findall(r'func _input', content))}"
+    )
+
+print("\n== G37, zona de la flecha en el código y en sus tests")
+for rel, pattern in [
+    ("entities/camera/camera_rig.gd", r"var avoid: Rect2|func _button_zone"),
+    ("tests/integration/test_camera_follow.gd", r"func test_arrow_keeps_16px|var zone: Rect2"),
+    ("tests/unit/test_camera_follow_math.gd", r"func test_edge_point_avoids|var avoid: Rect2 = Rect2\(1950"),
+]:
+    for number, line in enumerate(CACHE[GODOT / rel].splitlines(), 1):
+        if re.search(pattern, line):
+            print(f"{rel}:{number}: {line.strip()}")
+
 print("\n== Residuos: nombres dados de baja en docs/arch (sin el gate); revisar una a una")
 RESIDUE = (
     r"toggle_seasoning|swap_exclusive|paprika_swap|toggle_guard|ErrorAudio|season_error|deliver_error"

@@ -53,3 +53,4 @@ test_pool_same_seed_same_sequence_and_one_rng_call_per_order: pasa
 test_new_cues_have_seven_distinct_streams: pasa
 
 citados: 29; sin pasar: 0
+test_edge_point_avoids_button_zone: pasa
