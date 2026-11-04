@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Verificación única del proyecto Godot. La usan hooks, agentes y el merge gate.
-# Uso: tools/verify.sh [--quick]   (--quick: solo lint + parseo, sin tests ni smoke)
+# Uso: tools/verify.sh [--quick]   (--quick: formato, lint, import y compilación de scripts, sin tests ni smoke)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 GODOT_DIR="$ROOT/godot"
@@ -21,6 +21,20 @@ if ((${#GD_FILES[@]})); then gdlint "${GD_FILES[@]}" || fail=1; fi
 step "import"
 out=$(timeout 300 "$GODOT" --headless --import 2>&1); rc=$?
 if ((rc != 0)) || grep -qE '^(SCRIPT )?ERROR' <<<"$out"; then grep -E 'ERROR' <<<"$out" | head -30; fail=1; fi
+
+# El import y el smoke no detectan errores de tipo en scripts que nada carga: se compilan todos aquí.
+# Se exige la línea de OK para que un fallo al arrancar la propia comprobación no pase por verde, y se
+# falla con cualquier SCRIPT ERROR porque el motor puede dar por válido un script cuya dependencia no compila.
+# Los ERROR de fugas al salir son ruido de cargar todo y salir: no cuentan.
+step "compilación de scripts"
+out=$(timeout 300 "$GODOT" --headless -s res://../tools/check_scripts.gd 2>&1); rc=$?
+if ((rc != 0)) || ! grep -q '^check_scripts: OK' <<<"$out" || grep -q 'SCRIPT ERROR' <<<"$out"; then
+  grep -E 'SCRIPT ERROR|at: GDScript::reload|^check_scripts:' <<<"$out" | head -60
+  echo "✗ compilación de scripts: rc=$rc" >&2
+  fail=1
+else
+  grep '^check_scripts: OK' <<<"$out"
+fi
 
 if ((QUICK == 0)); then
   step "tests (GUT)"

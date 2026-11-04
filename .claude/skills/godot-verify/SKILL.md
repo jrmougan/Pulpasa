@@ -1,15 +1,20 @@
 ---
 name: godot-verify
-description: Cómo verificar un cambio en Pulpasa - tools/verify.sh (lint, import, tests GUT, smoke) y verificación visual con el MCP de Godot (ejecutar, input simulado, captura, errores). Úsala antes de dar una ficha por terminada.
+description: Cómo verificar un cambio en Pulpasa - tools/verify.sh (lint, import, compilación de scripts, tests GUT, smoke) y verificación visual con el MCP de Godot (ejecutar, input simulado, captura, errores). Úsala antes de dar una ficha por terminada.
 ---
 # Verificar un cambio
 
 ## 1. Verificación automática (siempre)
 
 ```bash
-tools/verify.sh          # gdformat, gdlint, import, tests GUT, smoke de 120 frames
-tools/verify.sh --quick  # solo formato, lint e import
+tools/verify.sh          # gdformat, gdlint, import, compilación de scripts, tests GUT, smoke de 120 frames
+tools/verify.sh --quick  # solo formato, lint, import y compilación de scripts
 ```
+
+La compilación (`tools/check_scripts.gd`) hace `load()` y `can_instantiate()` de todos los `.gd` salvo `addons/`,
+`.godot/` y `.mcp/`, y lista los que fallan. Hace falta porque ni el import ni el smoke detectan errores de tipo en
+scripts que nada carga. También falla con cualquier `SCRIPT ERROR`: la lista puede omitir un script cuya dependencia
+no compila, pero el error sí lo nombra.
 
 La suite completa puede tardar ~8 min (también `tools/merge_gate.sh`): en Claude Code, lánzala con
 `run_in_background` y espera el aviso, sin sondear. Mientras iteras, usa `--quick` y el test concreto.
