@@ -1,7 +1,7 @@
 ---
 id: PUL-196
 title: Corregir el índice de contratos y preparar el gate de enmiendas pendientes
-status: review
+status: done
 milestone: M4
 role: godot-architect
 deps: []
