@@ -1,7 +1,7 @@
 ---
 id: PUL-200
 title: Corregir lo que pipeline.md dice de materials_v2_test y ref_materials_v2
-status: review
+status: done
 milestone: M4
 role: asset-pipeline
 deps: []
