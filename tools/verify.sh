@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Verificación única del proyecto Godot. La usan hooks, agentes y el merge gate.
-# Uso: tools/verify.sh [--quick]   (--quick: formato, lint, import y compilación de scripts, sin tests ni smoke)
+# Uso: tools/verify.sh [--quick]   (--quick: sincronía de AGENTS.md y CLAUDE.md, formato, lint, import y compilación de scripts, sin tests ni smoke)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 GODOT_DIR="$ROOT/godot"
@@ -8,6 +8,9 @@ GODOT="${GODOT_PATH:-godot}"
 QUICK=0; [[ "${1:-}" == "--quick" ]] && QUICK=1
 fail=0
 step() { printf '\n== %s\n' "$1"; }
+
+step "sincronía de AGENTS.md y CLAUDE.md"
+python3 "$ROOT/tools/check_agents_sync.py" || fail=1
 
 cd "$GODOT_DIR"
 mapfile -t GD_FILES < <(find . -name '*.gd' -not -path './addons/*' -not -path './.godot/*' -not -path './.mcp/*' | sort)

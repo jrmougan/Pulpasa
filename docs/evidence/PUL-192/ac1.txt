@@ -1,0 +1,119 @@
+AC1. AGENTS.md y CLAUDE.md como ficheros normales idénticos. Windows, core.symlinks=false.
+
+== Índice y contenido
+$ git ls-files -s AGENTS.md CLAUDE.md
+100644 0cca485d38ff90d289b756b76c7a8a7faf7fd238 0	AGENTS.md
+100644 0cca485d38ff90d289b756b76c7a8a7faf7fd238 0	CLAUDE.md
+[rc=0]
+
+$ git ls-files --eol AGENTS.md CLAUDE.md
+i/lf    w/lf    attr/text=auto eol=lf 	AGENTS.md
+i/lf    w/lf    attr/text=auto eol=lf 	CLAUDE.md
+[rc=0]
+
+$ wc -c AGENTS.md CLAUDE.md
+3369 AGENTS.md
+3369 CLAUDE.md
+6738 total
+[rc=0]
+
+$ cmp AGENTS.md CLAUDE.md
+[rc=0]
+
+$ grep -cE "^[1-7]\. " AGENTS.md CLAUDE.md
+AGENTS.md:7
+CLAUDE.md:7
+
+Contra el CLAUDE.md de integración solo crece la línea de los hooks:
+$ git show jrmougan/improve-agent-context-docs:CLAUDE.md | diff - AGENTS.md
+24a25
+> Los hooks de `.claude/` solo corren en Claude Code: fuera de él, la barrera es `tools/merge_gate.sh`.
+
+== Sin divergencia
+$ python3 tools/check_agents_sync.py
+check_agents_sync: AGENTS.md y CLAUDE.md coinciden.
+[rc=0]
+
+== Divergencia inyectada en CLAUDE.md, sin commitear
+$ echo "linea inyectada" >> CLAUDE.md
+$ python3 tools/check_agents_sync.py
+check_agents_sync: AGENTS.md y CLAUDE.md difieren, primera diferencia en L42. Deben ser identicos: copia el cambio al otro.
+[rc=1]
+
+$ tools/verify.sh --quick
+
+== sincronía de AGENTS.md y CLAUDE.md
+check_agents_sync: AGENTS.md y CLAUDE.md difieren, primera diferencia en L42. Deben ser identicos: copia el cambio al otro.
+
+== gdformat --check
+245 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== compilación de scripts
+check_scripts: OK (245 scripts)
+
+✗ verify FAILED
+[rc=1]
+
+== Revertida
+$ (restaurar CLAUDE.md desde una copia fuera del repo)
+$ git diff --quiet HEAD -- CLAUDE.md
+[rc=0]
+
+$ python3 tools/check_agents_sync.py
+check_agents_sync: AGENTS.md y CLAUDE.md coinciden.
+[rc=0]
+
+$ tools/verify.sh --quick
+
+== sincronía de AGENTS.md y CLAUDE.md
+check_agents_sync: AGENTS.md y CLAUDE.md coinciden.
+
+== gdformat --check
+245 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== compilación de scripts
+check_scripts: OK (245 scripts)
+
+✓ verify OK
+[rc=0]
+
+== Casos del script en una copia fuera del repo (script y ficheros de prueba, sin tocar la rama)
+$ # solo cambian los finales de línea (LF y CRLF), con otro cwd
+check_agents_sync: AGENTS.md y CLAUDE.md coinciden.
+[rc=0]
+
+$ # difiere la línea 2
+check_agents_sync: AGENTS.md y CLAUDE.md difieren, primera diferencia en L2. Deben ser identicos: copia el cambio al otro.
+[rc=1]
+
+$ # difiere solo el salto final
+check_agents_sync: AGENTS.md y CLAUDE.md difieren, primera diferencia en L2. Deben ser identicos: copia el cambio al otro.
+[rc=1]
+
+$ # línea en blanco de más al final
+check_agents_sync: AGENTS.md y CLAUDE.md difieren, primera diferencia en L3. Deben ser identicos: copia el cambio al otro.
+[rc=1]
+
+$ # falta CLAUDE.md
+check_agents_sync: falta CLAUDE.md.
+[rc=1]
+
+$ # faltan los dos
+check_agents_sync: falta AGENTS.md.
+check_agents_sync: falta CLAUDE.md.
+[rc=1]
+
+$ # CLAUDE.md es un symlink a AGENTS.md
+check_agents_sync: CLAUDE.md es un symlink: debe ser un fichero normal.
+[rc=1]
+

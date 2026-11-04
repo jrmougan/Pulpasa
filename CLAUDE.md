@@ -22,6 +22,7 @@ camino de una alpha. Desarrollo hecho por agentes coordinados con Orca. La migra
 - Orca (único orquestador, T6): `orca-ide` en Linux, nunca `orca` (es el lector de pantalla); `orca` en Windows.
 
 ## Reglas no negociables
+Los hooks de `.claude/` solo corren en Claude Code: fuera de él, la barrera es `tools/merge_gate.sh`.
 1. Una ficha por worker. Escribe su id en `.claude/current-task` antes de editar: un hook solo
    permite tocar `owns` y `touches_scenes` de esa ficha. Bórralo al terminar. El merge gate
    (`tools/check_owns.py`) rechaza la rama si cambia cualquier otra ruta, también desde Bash: si
