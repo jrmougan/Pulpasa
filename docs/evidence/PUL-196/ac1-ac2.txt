@@ -62,7 +62,9 @@ docs/arch/signals.md:299 -> G45
 apariciones: 60; clasificadas: 60; sobran: 0
 
 == Forma de la tabla
-filas: 58; {'aceptar': 27, 'aceptar solo junto con otra fila': 2, 'aceptar con cambios': 29, 'rechazar': 0}
+filas: 58; {'aceptar': 24, 'aceptar solo junto con otra fila': 2, 'aceptar con cambios': 32, 'rechazar': 0}
+recuento escrito en gate-enmiendas.md: [24, 2, 32, 0]
+recuento escrito en ficha PUL-196: [24, 2, 32, 0]
 
 == AC2: cada cita ruta:línea de la tabla y de la propuesta sobre T3, con su línea
 -- godot/entities/stations/order_stand.gd:156: if _order == null or Engine.get_physics_frames() == _expired_frame:
@@ -207,12 +209,26 @@ G16 godot/core/action_hint.gd:48: func same_as(other: ActionHint) -> bool:
 G16 godot/core/action_rules.gd:9: enum Held {
 G16 godot/core/hold_repeat.gd:36: func advance(delta: float) -> bool:
 G16 godot/entities/items/held_kind.gd:8: static func of(item: Node) -> ActionRules.Held:
+G16 docs/arch/ADR-003-arbol-escenas-composicion.md:637: **Prioridad de motivos** (diseño): un único motivo por hint; primero el estado del **objetivo**
+G16 docs/arch/ADR-003-arbol-escenas-composicion.md:640: cachelos el motivo es `already_applied`, no `empty` (fila E1 del diseño; el contrato sigue la tabla).
+G16 godot/core/action_rules.gd:101: Held.BOX_EMPTY, Held.BOX_PARTIAL:
+G16 godot/core/action_rules.gd:107: if stock <= 0:
+G16 godot/tests/fixtures/action_matrix.csv:227: E1s0-M5,bowl,side=operator;stock=0,M5,1,cachelos,BLOCKED,box_not_full,,
+G16 godot/tests/fixtures/action_matrix.csv:228: E1s0-M6,bowl,side=operator;stock=0,M6,1,cachelos,BLOCKED,box_not_full,,
+G16 docs/design/features/lenguaje-acciones.md:218: | E1 Lado de aliñar, `stock` 0 | — | — | — | — | OK:CACHELOS (repone) | B:caja a medias | B:vacío | B:ya aplicado («ya lleva») |
+G16 godot/tests/fixtures/action_matrix.csv:279: E3s4-M5,bowl,side=operator;stock=4,M5,1,cachelos,BLOCKED,box_not_full,,
+G16 docs/arch/ADR-003-arbol-escenas-composicion.md:639: `not_cooked`). **Excepción de la tabla**: en el cuenco con stock 0 y una caja llena que **ya lleva**
 G17 godot/components/interaction_contract.gd:12: const HINT_METHOD: StringName = &"get_action_hint"
 G17 godot/components/interaction_contract.gd:13: const INTERACTABLE_METHODS: PackedStringArray = ["can_interact", "interact", "get_action_hint"]
 G17 godot/entities/stations/slot.gd:70: func get_action_hint(actor: InteractionComponent) -> ActionHint:
 G17 godot/entities/stations/slot.gd:111: func _resolve(holder: Holder) -> ActionHint:
 G17 godot/entities/stations/item_spawner.gd:16: func get_action_hint(actor: InteractionComponent) -> ActionHint:
 G17 godot/tests/integration/test_stations_contract.gd:75: func test_pul131_ac3_the_stand_is_not_interactable_any_more() -> void:
+G17 docs/arch/ADR-003-arbol-escenas-composicion.md:644: - **`get_action_hint(actor: InteractionComponent) -> ActionHint`**: obligatorio en todo nodo del grupo
+G17 godot/entities/player/sandbox/sandbox_item.tscn:10: [node name="SandboxItem" type="RigidBody3D" unique_id=1327851386 groups=["interactable", "pickable"]]
+G17 godot/entities/player/sandbox/sandbox_pickable.gd:1: class_name SandboxPickable
+G17 godot/tests/integration/test_stations_contract.gd:7: ## Los sandboxes de desarrollo no son entidades de juego.
+G17 godot/tests/integration/test_stations_contract.gd:8: const SKIPPED_DIR: String = "/sandbox/"
 G18 godot/components/interaction_detector.gd:28: signal hint_changed(target: Node, hint: ActionHint)
 G18 godot/components/interaction_detector.gd:43: @export var actor: InteractionComponent
 G18 godot/components/interaction_detector.gd:84: func get_hint() -> ActionHint:
@@ -223,6 +239,9 @@ G18 godot/components/interaction_detector.gd:154: _lit.set_blocked(hint.state ==
 G18 godot/core/interaction_scoring.gd:70: static func pick_best(
 G18 godot/data/config/player_config.tres:16: hysteresis_margin = 0.2
 G18 godot/tests/unit/test_interaction_scoring.gd:386: func test_ac3_pickable_priority_beats_hysteresis_with_empty_hand() -> void:
+G18 docs/arch/ADR-003-arbol-escenas-composicion.md:677: impide que una entidad de `entities/` dependa de ella.
+G18 godot/components/interaction_contract.gd:12: const HINT_METHOD: StringName = &"get_action_hint"
+G18 godot/tests/integration/test_stations_contract.gd:8: const SKIPPED_DIR: String = "/sandbox/"
 G19 godot/components/interaction_component.gd:68: func interact_pressed() -> bool:
 G19 godot/components/interaction_component.gd:81: push_error("%s: get_action_hint no es NONE pero interact() devolvió false" % target)
 G19 godot/components/interaction_component.gd:113: interaction_resolved.emit(target, hint)
@@ -230,6 +249,27 @@ G19 godot/components/interaction_component.gd:127: return hint.state == ActionHi
 G19 godot/entities/player/player.gd:214: _feedback.play_cue(&"rejected", goal)
 G19 godot/core/player_input.gd:38: func is_interact_pressed() -> bool:
 G19 godot/data/config/input_config.tres:9: cut_repeat_interval = 0.2
+G19 docs/arch/ADR-003-arbol-escenas-composicion.md:731: pulsación con respuesta da **exactamente un** cue de respuesta (ADR-006 §4.1).
+G19 godot/components/hold_component.gd:71: item_dropped.emit(body)
+G19 godot/entities/player/player.gd:71: _hold.item_dropped.connect(_on_item_dropped)
+G19 godot/entities/player/player.gd:206: _feedback.play_cue(&"drop")
+G19 godot/entities/stations/trash_bin.gd:44: var item: Node = actor.holder.drop()
+G19 godot/entities/stations/trash_bin.gd:47: trashed.emit(item)
+G19 godot/entities/stations/trash_bin.gd:61: _feedback.play_cue(CUE_TRASH)
+G19 godot/entities/stations/cooking_station.gd:285: var ingredient: Ingredient = holder.drop() as Ingredient
+G19 godot/entities/stations/cooking_station.gd:302: cooking_started.emit(ingredient)
+G19 godot/entities/stations/cooking_station.gd:392: cooking_started.connect(_on_feedback.bind(&"cook_start", false))
+G19 godot/entities/items/box.gd:159: seasoning_removed.emit(result.removed)
+G19 godot/entities/items/box.gd:161: seasoned.emit(result.added)
+G19 docs/arch/ADR-006-audio-feedback.md:192: | `cook` (COCER) | `cook_start` (olla); también suena `drop` del jugador (§4, colocar en estación) |
+G19 docs/arch/ADR-006-audio-feedback.md:194: | `season_sweet` / `season_hot` (ALIÑAR) | `season` (caja); al sustituir, `unseason` + `season` (D25) |
+G19 docs/arch/ADR-006-audio-feedback.md:196: | `trash` (TIRAR) | `trash` (cubo; también suena `drop`) o `discard` (olla, quemado) |
+G19 docs/arch/ADR-006-audio-feedback.md:186: **Verbo → respuesta de éxito** (un cue por pulsación `OK`; lo reproduce la escena que cambia):
+G19 docs/arch/ADR-003-arbol-escenas-composicion.md:713: 1. `hint` = el vigente del detector (`get_hint()`, el mismo que se ve) y `target` = su objetivo; si
+G19 godot/components/interaction_component.gd:77: hint = InteractionContract.hint_of(target, self)
+G19 godot/components/interaction_component.gd:90: hint = _floor_hint()
+G19 godot/components/interaction_component.gd:96: hint = _floor_hint()
+G19 godot/components/interaction_component.gd:100: hint = _floor_hint()
 G20 godot/entities/player/action_prompt.tscn:6: top_level = true
 G20 godot/components/action_prompt.gd:35: static var _registry: Dictionary = {}
 G20 godot/components/action_prompt.gd:41: @export var icons: ActionIconSet = preload("res://data/config/action_icons.tres")
@@ -238,6 +278,13 @@ G20 godot/components/hold_component.gd:91: func get_drop_position() -> Vector3:
 G20 godot/resources/action_icon_set.gd:8: @export var verb_icons: Dictionary[StringName, Texture2D] = {}
 G20 godot/resources/action_icon_set.gd:36: @export var prompt_offset: float = 0.9
 G20 godot/tests/integration/test_action_prompt.gd:316: func test_two_prompts_on_same_target_are_side_by_side_with_markers() -> void:
+G20 docs/arch/ADR-003-arbol-escenas-composicion.md:786: Cada pulsación reinicia la animación. Tween del nodo (se congela en pausa).
+G20 godot/components/action_prompt.gd:141: func advance(delta: float) -> void:
+G20 godot/components/action_prompt.gd:123: func _process(delta: float) -> void:
+G20 godot/components/action_prompt.gd:124: advance(delta)
+G20 docs/arch/ADR-003-arbol-escenas-composicion.md:790: Resource`, común: solo `Texture2D`, `Color`, `float`): `verb_icons: Dictionary[StringName, Texture2D]`
+G20 godot/resources/action_icon_set.gd:29: @export var prompt_icon_px_1080: int = 64
+G20 godot/resources/action_icon_set.gd:39: @export var reject_shake_px: int = 6
 G21 godot/tests/fixtures/action_matrix.csv:1: id,receiver,params,hand,reachable,verb,state,reason,replaces,progress
 G21 godot/tests/unit/test_action_rules.gd:110: func test_ac1_fixture_has_at_least_250_unique_rows() -> void:
 G21 godot/tests/integration/test_action_matrix.gd:734: func test_fixture_is_well_formed_and_the_counts_are_exact() -> void:

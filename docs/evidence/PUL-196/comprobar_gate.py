@@ -5,6 +5,7 @@ AC1: toda aparición de `propuest|pendiente` en docs/arch (salvo el propio gate)
 AC2: toda cita `ruta:línea` de docs/arch/gate-enmiendas.md existe; imprime la línea citada.
 Forma: cada fila de la tabla tiene 7 columnas, recomendación válida y, si dice «Sí», alguna cita.
 Una fila con «aceptar» a secas no puede tener divergencia.
+El recuento escrito en el gate y en la ficha debe coincidir con el contado.
 Sale con 1 si algo falla.
 """
 import glob
@@ -70,6 +71,25 @@ for row in rows:
         print(f"{cells[0]}: dice implementada sin ruta:línea")
         fail = 1
 print(f"filas: {len(rows)}; {count}")
+expected = list(count.values())
+written = {
+    "gate-enmiendas.md": re.search(
+        r"Resultado: (\d+) filas para aceptar, (\d+) para aceptar solo junto con otra fila, "
+        r"(\d+) para aceptar con cambios y\s+(\d+) para rechazar",
+        text,
+    ),
+    "ficha PUL-196": re.search(
+        r"\*\*Resultado del gate\*\*: \d+ filas, (\d+) para aceptar, (\d+) para aceptar solo junto "
+        r"con otra fila, (\d+) para aceptar con cambios y (\d+) para rechazar",
+        next(Path("docs/backlog").glob("PUL-196-*.md")).read_text(encoding="utf-8"),
+    ),
+}
+for where, match in written.items():
+    numbers = [int(group) for group in match.groups()] if match else None
+    print(f"recuento escrito en {where}: {numbers}")
+    if numbers != expected:
+        print(f"{where}: el recuento escrito no coincide con el contado {expected}")
+        fail = 1
 
 print("\n== AC2: cada cita ruta:línea de la tabla y de la propuesta sobre T3, con su línea")
 scope = text[:text.index("## Apariciones de")]

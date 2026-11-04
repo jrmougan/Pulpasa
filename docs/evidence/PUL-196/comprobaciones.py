@@ -140,6 +140,45 @@ for path in sorted(Path("docs/arch").glob("*.md")):
         if re.search(r"ALREADY_APPLIED|solo `?BOX_NOT_FULL|único motivo es `BOX_NOT_FULL", line):
             print(f"{path.as_posix()}:{number}: {line.strip()[:110]}")
 
+print("\n== G16, cuenco con caja vacía o a medias: el fixture por stock")
+matrix = (GODOT / "tests/fixtures/action_matrix.csv").read_text(encoding="utf-8").splitlines()
+for number, line in enumerate(matrix, 1):
+    if re.match(r"E[123]s\d-M[56],", line):
+        print(f"action_matrix.csv:{number}: {line}")
+
+print("\n== G17 y G18, interactables de entities/ sin get_action_hint en sus scripts directos")
+for path in sorted(p for p in CACHE if p.suffix == ".tscn" and "entities" in p.parts):
+    match = re.search(r'\[node [^\n]*groups=\[[^\]]*"interactable"', CACHE[path])
+    scripts_of = re.findall(r'path="(res://[^"]+\.gd)"', CACHE[path])
+    if match:
+        has_hint = any(
+            "get_action_hint" in CACHE.get(GODOT / s.removeprefix("res://"), "") for s in scripts_of
+        )
+        if not has_hint:
+            print(f"{path.as_posix()}: {scripts_of}")
+users = sorted(p.as_posix() for p, content in CACHE.items() if "sandbox_item" in content)
+print(f"ficheros que citan sandbox_item: {users}")
+
+print("\n== G19, cues de las pulsaciones dobles y de dónde sale el hint de _press")
+for rel, pattern in [
+    ("components/hold_component.gd", r"item_dropped\.emit"),
+    ("entities/player/player.gd", r"item_dropped\.connect|play_cue\(&\"drop\"\)"),
+    ("entities/stations/trash_bin.gd", r"holder\.drop\(\)|trashed\.emit|play_cue\(CUE_TRASH\)"),
+    ("entities/stations/cooking_station.gd", r"holder\.drop\(\)|cooking_started\.emit|&\"cook_start\""),
+    ("entities/items/box.gd", r"seasoning_removed\.emit\(result|seasoned\.emit\(result"),
+    ("components/interaction_component.gd", r"\.get_hint\(\)|hint_of\(|= _floor_hint\(\)"),
+]:
+    for number, line in enumerate(CACHE[GODOT / rel].splitlines(), 1):
+        if re.search(pattern, line):
+            print(f"{rel}:{number}: {line.strip()}")
+
+print("\n== G20, Tween en action_prompt.gd y tipos de action_icon_set.gd")
+prompt = CACHE[GODOT / "components/action_prompt.gd"]
+print(f"apariciones de tween, sin distinguir mayúsculas: {len(re.findall(r'(?i)tween', prompt))}")
+icons = CACHE[GODOT / "resources/action_icon_set.gd"]
+types = re.findall(r"@export[^\n]*? var \w+: ([^\s=]+)", icons)
+print(f"tipos exportados: {sorted(set(types))}")
+
 print("\n== Residuos: nombres dados de baja en docs/arch (sin el gate); revisar una a una")
 RESIDUE = (
     r"toggle_seasoning|swap_exclusive|paprika_swap|toggle_guard|ErrorAudio|season_error|deliver_error"

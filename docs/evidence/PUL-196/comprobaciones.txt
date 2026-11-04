@@ -91,6 +91,44 @@ docs/arch/signals.md:212: pulsaciones cuyo hint es `BLOCKED` (dispensador: `BOX_
 docs/arch/signals.md:213: cuenco: `BOWL_EMPTY`, `BOWL_FULL` al reponer, `ALREADY_APPLIED` si la caja ya lleva cachelos y
 docs/arch/signals.md:251: `rejected(BOX_NOT_FULL)`; `ALREADY_APPLIED`: nada (pulsación consumida en silencio). Sin antirrebote.
 
+== G16, cuenco con caja vacía o a medias: el fixture por stock
+action_matrix.csv:227: E1s0-M5,bowl,side=operator;stock=0,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:228: E1s0-M6,bowl,side=operator;stock=0,M6,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:240: E2s1-M5,bowl,side=operator;stock=1,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:241: E2s1-M6,bowl,side=operator;stock=1,M6,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:253: E2s2-M5,bowl,side=operator;stock=2,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:254: E2s2-M6,bowl,side=operator;stock=2,M6,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:266: E3s3-M5,bowl,side=operator;stock=3,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:267: E3s3-M6,bowl,side=operator;stock=3,M6,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:279: E3s4-M5,bowl,side=operator;stock=4,M5,1,cachelos,BLOCKED,box_not_full,,
+action_matrix.csv:280: E3s4-M6,bowl,side=operator;stock=4,M6,1,cachelos,BLOCKED,box_not_full,,
+
+== G17 y G18, interactables de entities/ sin get_action_hint en sus scripts directos
+godot/entities/player/sandbox/sandbox_item.tscn: ['res://entities/player/sandbox/sandbox_pickable.gd', 'res://components/highlightable.gd']
+ficheros que citan sandbox_item: ['godot/scenes/sandbox/player_sandbox.tscn', 'godot/tests/integration/test_player.gd', 'godot/tests/integration/test_player_animation.gd']
+
+== G19, cues de las pulsaciones dobles y de dónde sale el hint de _press
+components/hold_component.gd:71: item_dropped.emit(body)
+entities/player/player.gd:71: _hold.item_dropped.connect(_on_item_dropped)
+entities/player/player.gd:206: _feedback.play_cue(&"drop")
+entities/stations/trash_bin.gd:44: var item: Node = actor.holder.drop()
+entities/stations/trash_bin.gd:47: trashed.emit(item)
+entities/stations/trash_bin.gd:61: _feedback.play_cue(CUE_TRASH)
+entities/stations/cooking_station.gd:285: var ingredient: Ingredient = holder.drop() as Ingredient
+entities/stations/cooking_station.gd:302: cooking_started.emit(ingredient)
+entities/stations/cooking_station.gd:392: cooking_started.connect(_on_feedback.bind(&"cook_start", false))
+entities/items/box.gd:159: seasoning_removed.emit(result.removed)
+entities/items/box.gd:161: seasoned.emit(result.added)
+components/interaction_component.gd:77: hint = InteractionContract.hint_of(target, self)
+components/interaction_component.gd:90: hint = _floor_hint()
+components/interaction_component.gd:96: hint = _floor_hint()
+components/interaction_component.gd:100: hint = _floor_hint()
+components/interaction_component.gd:136: return _is_repeatable(InteractionContract.hint_of(_target, self))
+
+== G20, Tween en action_prompt.gd y tipos de action_icon_set.gd
+apariciones de tween, sin distinguir mayúsculas: 0
+tipos exportados: ['Array[Texture2D]', 'Color', 'Dictionary[StringName,', 'Texture2D', 'float', 'int']
+
 == Residuos: nombres dados de baja en docs/arch (sin el gate); revisar una a una
 docs/arch/ADR-003-arbol-escenas-composicion.md:156: > de aliño que **aplican** (§10.2): `toggle_seasoning(…, swap_exclusive)` y `paprika_swap` dejan de
 docs/arch/ADR-003-arbol-escenas-composicion.md:157: > ser la API del dispensador y el antirrebote (`toggle_guard`) queda solo para el cuenco. La regla de

@@ -41,7 +41,7 @@ Evidencia en `docs/evidence/PUL-196/`. Los guiones se ejecutan desde la raíz de
 - **AC3**: `ac3-diff.txt`: `git diff --name-status` contra la base y `tools/check_owns.py`. Solo cambian `README.md`, `gate-enmiendas.md`, la ficha y la evidencia.
 - **Verificación**: `tools/verify.sh --quick` en verde (`verify-quick.txt`). El primer intento falló porque el import inicial de este worktree superó el límite de 300 s de `verify.sh`; lancé el import a mano y el siguiente `verify.sh` pasó. También ejecuté `tools/verify.sh` completo, aunque la ficha no lo pedía: 1378 de 1378 tests y smoke OK; los 29 tests citados por nombre pasan según el `junit.xml` (`verify-completo.txt`).
 
-**Resultado del gate**: 58 filas, 27 para aceptar, 2 para aceptar solo junto con otra fila, 29 para aceptar con cambios y 0 para rechazar. No cambió ningún estado de ADR, `signals.md`, `scene-tree.md` ni `decisions.md`.
+**Resultado del gate**: 58 filas, 24 para aceptar, 2 para aceptar solo junto con otra fila, 32 para aceptar con cambios y 0 para rechazar. No cambió ningún estado de ADR, `signals.md`, `scene-tree.md` ni `decisions.md`.
 
 **Decisiones mías para revisar**:
 - En `README.md` también añadí la Enmienda D27 a la fila de ADR-005, porque su cabecera la da como propuesta y el índice la omitía, y un enlace a `gate-enmiendas.md`. La ficha solo citaba D14 y ADR-002.
@@ -70,3 +70,12 @@ Evidencia en `docs/evidence/PUL-196/`. Los guiones se ejecutan desde la raíz de
 - **G50 y G57 (añadido mío)**: busqué la misma afirmación en `docs/arch` (nueva sección de `comprobaciones.txt`). G50 añade `signals.md:53` y `:208`, que corrige la nota D26 de `:212`. G57 añade `scene-tree.md:362`, `:363` y `:368`, que no tienen nota D26 que las corrija. Sus recomendaciones no cambian.
 - **Límite nuevo en el gate**: las 27 filas con «aceptar» se comprobaron con las líneas que citan, no frase a frase, y no las he vuelto a repasar. `comprobar_gate.py` tampoco detecta este tipo de error, porque solo mira el prefijo «Sin divergencia».
 - **Comprobaciones**: volví a ejecutar AC1, AC2, AC3, `comprobaciones.py` y `tools/verify.sh --quick`. No repetí la suite completa, porque esta ronda no cambia código de `godot/`.
+
+**Correcciones tras la cuarta revisión** (los cinco hallazgos son ciertos; comprobados contra el código):
+- **G20**: pasa a «aceptar con cambios». `action_prompt.gd` no tiene ningún Tween y `action_icon_set.gd:29` y `:39` son `int`.
+- **G19**: pasa a «aceptar con cambios». TIRAR, COCER y SUSTITUIR aliño dan dos cues, y `_press` no llama a `get_hint()`. La fila dice que un solo cue de verdad necesitaría otra ficha de código. **Añadido mío**: el título de `ADR-006:186` también dice «un cue por pulsación», aunque sus filas admiten los casos dobles. No cambié G43 por esto.
+- **G16**: pasa a «aceptar con cambios». **Matiz**: la revisión hablaba de stock 0, pero `action_rules.gd:101` no mira el stock, así que con el cuenco lleno también gana `box_not_full` sobre `full`. Por eso propongo escribir la excepción «con cualquier stock, también 0». Las otras funciones de `action_rules.gd` no contradicen la prioridad.
+- **G17 y G18**: anotan la excepción de desarrollo de `sandbox_item.tscn`. Siguen en «aceptar».
+- **Recuento**: 24, 2, 32 y 0. `comprobar_gate.py` ahora falla si el recuento escrito en el gate o en esta ficha no coincide con el contado. Las cifras de las correcciones anteriores se quedan como historia de cada ronda.
+- **Límite**: el gate dice que solo corregí estas filas y que **las 24 filas con «aceptar» siguen sin repasarse frase a frase**. No hice ese repaso, y `comprobar_gate.py` sigue sin detectar una fila mal clasificada.
+- **Comprobaciones**: `comprobaciones.py` añade secciones para G16, G17, G18, G19 y G20. Volví a ejecutar AC1, AC2, AC3, `comprobaciones.py` y `tools/verify.sh --quick`. No repetí la suite completa, porque esta ronda no cambia código de `godot/`.
