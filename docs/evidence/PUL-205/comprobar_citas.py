@@ -20,6 +20,8 @@ CITES = [
     ("godot/core/action_rules.gd", 88, "return ActionHint.none()"),
     ("godot/core/action_rules.gd", 110, "return ActionHint.none()"),
     ("godot/core/action_rules.gd", 124, "if can_drop:"),
+    ("godot/core/action_rules.gd", 126, "ActionReason.BUSY"),
+    ("docs/arch/ADR-002-eventbus-autoloads.md", 127, "`max_time > 0`"),
     ("godot/components/interaction_detector.gd", 104, "entity is Slot and"),
     ("godot/components/interaction_detector.gd", 110, "if not hint.is_target():"),
     ("godot/entities/stations/seasoning_dispenser.gd", 42, "func is_reachable_from(floor_position: Vector2, _holder: Holder)"),

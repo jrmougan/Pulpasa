@@ -180,7 +180,7 @@ propuesto por el diseño):
 **Bajas del mapa** (las retira la ficha de montaje cuando ningún emisor las use; hasta entonces
 conviven con las nuevas para que cada ficha cambie su escena sin romper el test de claves):
 `cook_done` (renombrado a `cook_ready`), `season_error` y `deliver_error` (sustituidos por `rejected`;
-el puesto ya no rechaza: la entrega es solo por zona, ADR-003 §11.7; *Nota del gate del 2026-11-04 (G22, G51), resuelta: hasta PUL-198, `order_stand.gd` podía provocar la emisión con `penalty` 0 en el tick posterior a la caducidad (`docs/evidence/PUL-196/repro-entrega.txt`). Desde PUL-198 la zona no pide `try_deliver` hasta el siguiente `advance` (`godot/entities/stations/order_stand.gd:161`, `godot/entities/stations/order_stand.gd:167`); el contrato no se matizó.*). Sin alias: el mapa no tiene dos
+el puesto ya no rechaza: la entrega es solo por zona, ADR-003 §11.7; *Nota del gate del 2026-11-04 (G22, G51), resuelta: hasta PUL-198, `order_stand.gd` podía provocar la emisión con `penalty` 0 en el tick posterior a la caducidad (`docs/evidence/PUL-196/repro-entrega.txt`). Desde PUL-198 la zona no pide `try_deliver` hasta el siguiente `advance` (`godot/entities/stations/order_stand.gd:161`, `godot/entities/stations/order_stand.gd:167`); el contrato no se matizó. Presupone `OrderData.max_time > 0`: ver la fila de `delivery_rejected` en `signals.md` §2.*). Sin alias: el mapa no tiene dos
 claves para el mismo hecho.
 
 **Verbo → respuesta de éxito** (un cue por efecto, con las excepciones de esta tabla; lo reproduce la escena que cambia):

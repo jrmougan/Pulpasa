@@ -9,6 +9,8 @@ ok  godot/core/action_rules.gd:68  static func for_spawner(held: Held) -> Action
 ok  godot/core/action_rules.gd:88  return ActionHint.none()
 ok  godot/core/action_rules.gd:110  return ActionHint.none()
 ok  godot/core/action_rules.gd:124  if can_drop:
+ok  godot/core/action_rules.gd:126  return ActionHint.blocked(ActionVerb.DROP, ActionReason.BUSY)
+ok  docs/arch/ADR-002-eventbus-autoloads.md:127  - Los `OrderData` tienen `max_time > 0` (40-90s) y se emite `order_patience_changed` en ca
 ok  godot/components/interaction_detector.gd:104  var stored: bool = entity is Slot and (entity as Slot).has_item()
 ok  godot/components/interaction_detector.gd:110  if not hint.is_target():
 ok  godot/entities/stations/seasoning_dispenser.gd:42  func is_reachable_from(floor_position: Vector2, _holder: Holder) -> bool:
@@ -40,4 +42,4 @@ ok  godot/core/order_board.gd:157  delivery_rejected.emit(slot_id, order.id, 0)
 ok  godot/core/order_board.gd:160  delivery_rejected.emit(slot_id, order.id, _reject_penalty)
 ok  godot/autoload/order_service.gd:96  _get_bus().delivery_rejected.emit(slot_id, order_id, penalty)
 ok  godot/autoload/round_manager.gd:77  func _physics_process(delta: float) -> void:
-42/42 citas correctas
+44/44 citas correctas

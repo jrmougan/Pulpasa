@@ -1,4 +1,3 @@
-# tools/verify.sh --quick, rc=0
 
 == sincronía de AGENTS.md y CLAUDE.md
 check_agents_sync: AGENTS.md y CLAUDE.md coinciden.

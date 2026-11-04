@@ -213,8 +213,7 @@ objetivo, su hint recalculado es `NONE` o es un objetivo heredado sin verbo que 
 `godot/components/interaction_component.gd:93`, `godot/components/interaction_component.gd:99`,
 `godot/core/action_rules.gd:124`). Un objetivo con verbo que devuelve `false` da `push_error` y un rechazo, y no suelta
 (`godot/components/interaction_component.gd:79`). En la estación un rechazo **no debe tirar nada** (AC8: «la mano no cambia»). Regla:
-- Dispensador: `can_interact(actor)` es `true` solo con una caja en la mano (sustituye a la enmienda PUL-064, que pedía
-  la mano vacía): con la mano vacía o con cualquier otra cosa `ActionRules.for_dispenser` da `NONE`
+- Dispensador: `can_interact(actor)` es `true` solo con una caja en la mano (la enmienda PUL-064, que pedía la mano vacía, quedó sustituida por §9.1 y §11.2): con la mano vacía o con cualquier otra cosa `ActionRules.for_dispenser` da `NONE`
   (`godot/entities/stations/seasoning_dispenser.gd:56`, `godot/core/action_rules.gd:88`), así que el detector no lo
   resalta (`godot/components/interaction_detector.gd:110`). `is_reachable_from` ignora la mano y solo filtra el lado
   (`godot/entities/stations/seasoning_dispenser.gd:42`). `HAND_BUSY` queda en desuso. Cuenco:
@@ -233,7 +232,8 @@ objetivo, su hint recalculado es `NONE` o es un objetivo heredado sin verbo que 
   Con un objeto guardado, el detector sustituye el slot por él (`godot/components/interaction_detector.gd:104`). La caja
   guardada es objetivo con la mano vacía o con pulpo crudo o cocido; con otra caja o con cualquier otra cosa
   `ActionRules.for_box` da `NONE` y no es objetivo (`godot/core/action_rules.gd:42`). Sin otro objetivo, la pulsación va al
-  suelo y lo que lleva la mano se suelta si hay sitio (`godot/components/interaction_component.gd:99`).
+  suelo y lo que lleva la mano se suelta si hay sitio; si no, rechazo `busy` (A9)
+  (`godot/components/interaction_component.gd:99`, `godot/core/action_rules.gd:126`).
 
 #### 8.3 Reglas en el núcleo y API de la caja
 - `core/seasoning_rules.gd` (`class_name SeasoningRules`, común, puro): `enum Rejection { NONE,
@@ -411,7 +411,7 @@ color de datos (`RecipeData.box`, `ActiveOrder.slot_id` + `StandPalette`), sin e
 6. *Nodo propio `%DeliveryMark` en `order_stand.tscn`.* Duplicaría la malla que ya trae el `.glb`
    del puesto (PUL-096); se usa `DeliveryFrame` dentro de `Model` (enmienda PUL-103).
 
-### 10. Caja única, aliño de una pulsación, cubo de basura y comandas por fase (D25) — *Enmienda D25 (PUL-111, 2026-10-10), aceptada por el responsable el 2026-11-04 (salvo lo marcado en §10.3)*
+### 10. Caja única, aliño de una pulsación, cubo de basura y comandas por fase (D25) — *Enmienda D25 (PUL-111, 2026-10-10), aceptada por el responsable el 2026-11-04 (atribución de §10.3 corregida en PUL-205)*
 
 **Contexto.** D25 (responsable, 2026-10-10, tras el playtest de M3c; registro en
 `docs/design/decisions.md`, PUL-110) quita las mecánicas que no piden decisión: tamaños S/M/L, los
@@ -871,7 +871,7 @@ dulce / picante; `+C` = con cachelos).
 - `EventBus.delivery_rejected` y `OrderBoard` **se conservan** (firma, núcleo y tests de núcleo; P3 del
   gate) pero la señal queda **sin emisión en el juego**. `order_stand.gd` deja de reproducir
   `deliver_error` y `RoundConfig.wrong_delivery_penalty` pasa a **0** en `round_config.tres` (D8
-  modificada; ficha de montaje). *Nota del gate del 2026-11-04 (G22, G51), resuelta: hasta PUL-198, `order_stand.gd` podía provocar la emisión con `penalty` 0 en el tick posterior a la caducidad (`docs/evidence/PUL-196/repro-entrega.txt`). Desde PUL-198 la zona no pide `try_deliver` hasta el siguiente `advance` (`godot/entities/stations/order_stand.gd:161`, `godot/entities/stations/order_stand.gd:167`); el contrato no se matizó.*
+  modificada; ficha de montaje). *Nota del gate del 2026-11-04 (G22, G51), resuelta: hasta PUL-198, `order_stand.gd` podía provocar la emisión con `penalty` 0 en el tick posterior a la caducidad (`docs/evidence/PUL-196/repro-entrega.txt`). Desde PUL-198 la zona no pide `try_deliver` hasta el siguiente `advance` (`godot/entities/stations/order_stand.gd:161`, `godot/entities/stations/order_stand.gd:167`); el contrato no se matizó. Presupone `OrderData.max_time > 0`: ver la fila de `delivery_rejected` en `signals.md` §2.*
 
 **Cuenco** (`cachelos_bowl.gd`; D26.5, modifica D23/D25):
 - Con caja llena solo **pone**: `box.apply_seasoning(seasoning)` (cachelos, grupo `&""`) y gasta 1
@@ -1003,6 +1003,6 @@ caja pasa a encajar (§11.7).
   delante si el punto está libre (prompt SOLTAR visible) o da un rechazo `busy` contra barra o pared
   (decisión del producer autorizada por el responsable, P1 de PUL-120).
 - (§11, −) `delivery_rejected` y la penalización de caja errónea (D8) quedan sin uso en el juego; se
-  conservan por no cambiar firmas. *Nota del gate del 2026-11-04 (G22, G51), resuelta: hasta PUL-198, `order_stand.gd` podía provocar la emisión con `penalty` 0 en el tick posterior a la caducidad (`docs/evidence/PUL-196/repro-entrega.txt`). Desde PUL-198 la zona no pide `try_deliver` hasta el siguiente `advance` (`godot/entities/stations/order_stand.gd:161`, `godot/entities/stations/order_stand.gd:167`); el contrato no se matizó.*
+  conservan por no cambiar firmas. *Nota del gate del 2026-11-04 (G22, G51), resuelta: hasta PUL-198, `order_stand.gd` podía provocar la emisión con `penalty` 0 en el tick posterior a la caducidad (`docs/evidence/PUL-196/repro-entrega.txt`). Desde PUL-198 la zona no pide `try_deliver` hasta el siguiente `advance` (`godot/entities/stations/order_stand.gd:161`, `godot/entities/stations/order_stand.gd:167`); el contrato no se matizó. Presupone `OrderData.max_time > 0`: ver la fila de `delivery_rejected` en `signals.md` §2.*
 - El árbol concreto está en `docs/arch/scene-tree.md`. Cambiarlo en algo que afecte a otra
   ficha (nombres de escena, `@export` públicos, grupos, capas) requiere enmienda.
