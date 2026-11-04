@@ -8,4 +8,3 @@ Success: no problems found
 == import
 
 ✓ verify OK
-exit=0

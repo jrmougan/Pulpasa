@@ -44,7 +44,7 @@ cambia su versión sin otra aprobación.
 ```json
 "blender": {
   "command": "uvx",
-  "args": ["--from", "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.3#subdirectory=mcp", "blender-mcp"],
+  "args": ["--python", "3.13", "--from", "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.3#subdirectory=mcp", "blender-mcp"],
   "env": { "BLENDER_MCP_PORT": "${BLENDER_MCP_PORT:-9876}", "BLENDER_PATH": "blender" }
 }
 ```
@@ -73,7 +73,7 @@ tools/blender_mcp.sh stop
 
 | Grupo | Tools | Uso en Pulpasa |
 |---|---|---|
-| Ejecutar código | `execute_blender_code` (Blender conectado), `execute_blender_code_for_cli` (abre un `.blend` en un Blender `-b` aparte) | Modelado por `bpy`/`bmesh`; asignar materiales `mat_*` |
+| Ejecutar código | `execute_blender_code` (Blender conectado), `execute_blender_code_for_cli` (abre un `.blend` en un Blender `-b` aparte) | Modelado por `bpy`/`bmesh`; nombrar los slots de material (§3, §8.1) |
 | Inspección de escena | `get_objects_summary`, `get_object_detail_summary` | Comprobar colecciones, jerarquía, escala/rotación |
 | Inspección de `.blend` | `get_blendfile_summary_datablocks`, `…_missing_files`, `…_of_linked_libraries`, `…_path_info`, `…_usage_guess` (y variantes `_for_cli`) | Revisar un `.blend` sin abrirlo en la sesión |
 | Imagen | `render_thumbnail_to_path`, `render_viewport_to_path`, `get_screenshot_of_window_as_image`, `get_screenshot_of_area_as_image`, `get_screenshot_of_window_as_json` | Capturas de revisión (las de ventana requieren Blender con interfaz) |
@@ -96,10 +96,16 @@ por ficha, art-bible-v1 §2.4). Contiene:
 - **Materiales: aún enlaza la biblioteca v2** (45 `mat_*` de `art/blender/_materials_v2.blend`, link con ruta
   relativa `//_materials_v2.blend`; por eso el `.blend` del asset debe vivir en `art/blender/`). La plantilla
   no se ha migrado y ninguna ficha abierta lo hace (PUL-188 no la menciona). En la v3 el color y el acabado **no
-  se definen en Blender**, sino en los 18 `.tres` de `godot/assets/materials/v3/` (art-bible §3.1). Los
-  `mat_*` de la plantilla sirven solo como **nombre de slot** del `.glb`: cada malla lleva un slot con
-  nombre claro y estable, y el `.glb.import` lo redirige a un `.tres` v3 (§5). No crees texturas ni
-  nodos de material con imágenes (§8); nada de lo que el slot traiga de la v2 llega a Godot.
+  se definen en Blender**, sino en los 18 `.tres` de `godot/assets/materials/v3/` (art-bible §3.1). Un
+  material de Blender solo sirve como **nombre de slot** del `.glb` (regla única, §8.1): cada malla lleva un
+  slot con nombre claro y estable, y el `.glb.import` lo redirige a un `.tres` v3 (§5). Ese slot puede ser un
+  material plano sin nodos de imagen creado para nombrarlo, o un `mat_*` de la plantilla.
+- **Aviso sobre la v2.** El exportador usa `export_image_format="NONE"`: el `.glb` no embebe imágenes aunque el
+  `mat_*` v2 tenga PBR, y ya no depende de `godot/assets/textures/v2` (que PUL-188 borra). Pero el **color
+  base** del slot v2 sí llega a Godot como un `StandardMaterial3D` con ese nombre y un color fuera de la paleta v3
+  hasta que el slot se redirija a un `.tres` v3 (§5): ese paso es obligatorio, ni el export ni el import avisan
+  si se olvida.
+
 ## 4. Export headless: `tools/blender_export.py`
 
 ```sh
@@ -124,11 +130,12 @@ para pruebas del pipeline). El script **valida antes de exportar** y sale con c�
 - hay cámaras, luces o sufijos de colisión (`-col`, `-colonly`…);
 - falta `Anchor_Front`, está sobre el origen o se desvía más de 1° del eje +Y;
 - se pasa `--max-tris` y la colección lo supera (presupuestos de art-bible-v1 §2.2);
-- una textura de un material exportado no existe en disco o mide más de 1024 px (comprobación heredada de
-  la v2; en la v3 los assets no llevan texturas, §8, así que en la práctica solo salta con restos de la v2).
+- (solo `--materials-test`, heredado de la v2) una textura no existe en disco o mide más de 1024 px. Los
+  export normales y `--smoke-cube` no comprueban texturas porque no las exportan.
 
 Exporta glTF 2.0 binario solo de la colección `export` (incluidas anidadas), `+Y Up`,
-modificadores aplicados, materiales (para conservar los nombres de slot), sin tangentes, cámaras,
+modificadores aplicados, materiales (para conservar los nombres de slot) pero sin imágenes
+(`export_image_format="NONE"`), sin tangentes, cámaras,
 luces ni *extras*; animaciones y skins solo con
 `--animations`. Escribe un resumen `blender_export: OK <ruta> (N objetos, T triángulos, K KiB)`.
 
@@ -136,7 +143,9 @@ luces ni *extras*; animaciones y skins solo con
 `blender_export: OK`. Para probar sin ensuciar el repo, abre la plantilla (sin guardarla), añade una malla bajo
 `asset` y llama al script con `--out` a un directorio temporal fuera de `godot/`. Así se hizo en PUL-194
 ([`docs/evidence/PUL-194/`](../evidence/PUL-194/)): `.glb` generado y `.glb.import` sembrado con los ajustes de §5.
-`--smoke-cube` sí escribe dentro de `godot/assets/models/_pipeline/test_cube/` (el cubo está versionado y lo exige
+`--smoke-cube` (con `mat_wood_used` y `mat_plastic_red`, nombres de slot) se probó en un destino temporal, con
+copias de la plantilla y de `_materials_v2.blend` donde `textures/v2` no es alcanzable: exit 0, `.glb` de 3 KiB sin
+imágenes. Sin `--out` sí escribe dentro de `godot/assets/models/_pipeline/test_cube/` (el cubo está versionado y lo exige
 `test_assets_models.gd`).
 
 ## 5. Import en Godot (`.glb.import`)
@@ -177,8 +186,9 @@ La tabla slot → material (atlas incluidos) y los slots funcionales que se cons
 §3.3 y en [`../evidence/PUL-181/slots_reales.md`](../evidence/PUL-181/slots_reales.md). Un color que falte
 en los 18 `.tres` no se arregla en el `.glb`: es una decisión de paleta (art-bible §2 y §3.1).
 
-Los `.import` anteriores a PUL-194 pueden conservar `ensure_tangents=true` o `embedded_image_handling=1`
-mientras las fichas PUL-186, PUL-187 y PUL-188 los migran; para esos manda la biblia (§3.3.1). Después de
+Estado real de los `.glb.import` existentes: los 40 tienen `embedded_image_handling=0`, pero 30 conservan
+`ensure_tangents=true` (sin efecto visual; ninguna ficha abierta lo cambia; si se quiere uniformidad, pedir
+ficha al coordinador). Los valores de la tabla rigen para los `.glb` nuevos. Después de
 exportar: `godot --headless --path godot --import` y versionar `.glb` y `.glb.import` (ya no se versionan PNG
 extraídos). Los `.glb` **no se envuelven en `.tscn`**: la escena de gameplay instancia el
 `.glb` bajo su nodo `Model` (`docs/arch/scene-tree.md` §3).
@@ -201,7 +211,8 @@ la captura en `scale_check`.
 1. `tools/blender_mcp.sh start` (si se usa el MCP).
 2. Copiar la plantilla a `art/blender/<asset>.blend`, renombrar `asset`, modelar en `export` con el
    frente a +Y y el origen en el centro de la base; un slot de material con nombre claro por cada
-   material v3 que vaya a usar la malla (§8). Sin texturas ni UV de textura.
+   material v3 que vaya a usar la malla (nombre de slot según §3 y §8.1; el color no se define en Blender).
+   Sin texturas ni UV de textura.
 3. `blender -b art/blender/<asset>.blend --python tools/blender_export.py -- --category <cat> --max-tris <N>`.
 4. Redirigir los slots del `.glb.import` a los `.tres` v3 (§5), `godot --headless --path godot --import` y
    `tools/verify.sh` (incluye `test_assets_models.gd`).
@@ -217,20 +228,23 @@ Sustituye al antiguo §8 de la biblioteca v2. Resumen para las fichas de arte; m
 [`art-bible.md`](art-bible.md) §3.
 
 1. **Materiales**: solo los 18 `.tres` de `godot/assets/materials/v3/` (art-bible §3.1): colores planos,
-   `metallic = 0`, `specular_mode = SPECULAR_DISABLED`, sin albedo, ORM ni normal. Los materiales no se
-   crean en Blender ni se añaden a mano: se reutilizan por slot (§5).
+   `metallic = 0`, `specular_mode = SPECULAR_DISABLED`, sin albedo, ORM ni normal. El color y el acabado
+   no se definen en Blender: en Blender solo existe un slot con nombre (material plano sin nodos de imagen, o un
+   `mat_*` de la plantilla) y se reutiliza el `.tres` por slot (§5).
 2. **Texturas 3D prohibidas** (art-bible §3.2.1): ninguna textura de ruido/desgaste, ningún `*_orm.png` ni
    `*_normal.png`. Ni se hornean atlas ni se proyecta UV de caja. Excepciones, y solo estas:
    `mat_tent_plate.tres` con `res://assets/models/environment/romeria_v2/tent_plate_albedo.png` (cartel de marca)
    y los iconos planos de UI y señalética listados en art-bible §3.2.2.
-3. **Export**: el `.glb` no necesita llevar texturas útiles; con `gltf/embedded_image_handling = 0` Godot
-   descarta las que vengan embebidas. `blender_export.py` aún valida que las imágenes de los materiales
-   exportados existan y midan ≤ 1024 px (comprobación heredada).
+3. **Export**: el `.glb` no necesita llevar texturas útiles; `blender_export.py` exporta sin imágenes
+   (`export_image_format="NONE"`) y, con `gltf/embedded_image_handling = 0`, Godot descartaría las que hubiera.
+   Solo `--materials-test` (v2) valida existencia y tamaño de texturas.
 4. **Import**: `.glb.import` con `embedded_image_handling = 0`, `materials/extract = 0` y los slots redirigidos
-   (§5). No quedan `.png` junto al `.glb` ni `.png.import` que versionar.
+   (§5). Un `.glb` nuevo no genera PNG ni `.png.import` que versionar, salvo la excepción de §8.2; lo existente sigue hasta PUL-188 (§8.6).
 5. **Atlas multicolor y slots compartidos**: se resuelven con la tabla de art-bible §3.3.3-§3.3.5; la
    variación por estado (crudo/cocido/quemado) se hace con visibilidad de nodos o `surface_material_override`
    en la escena dueña, no con texturas.
 6. **Lo que aún existe de la v2** (hasta PUL-188): `godot/assets/materials/v2/`, `godot/assets/textures/v2/`,
-   los PNG extraídos junto a los `.glb`, `art/blender/_materials_v2.blend`, `materials-v2.md` y el banco
+   los PNG extraídos junto a los `.glb`, `art/blender/_materials_v2.blend` (enlazada por `_template.blend`; ninguna
+   ficha migra la plantilla: si PUL-188 borra `textures/v2`, un `.blend` con `mat_*` v2 solo exporta con el
+   exportador de PUL-194, que ya no lee texturas), `materials-v2.md` y el banco
    `_pipeline/materials_v2_test/`. No se usan como referencia de ningún asset nuevo y no se re-exportan.
