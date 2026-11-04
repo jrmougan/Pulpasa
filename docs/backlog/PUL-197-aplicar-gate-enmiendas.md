@@ -1,7 +1,7 @@
 ---
 id: PUL-197
 title: Aplicar las decisiones del gate de enmiendas a los contratos
-status: review
+status: done
 milestone: M4
 role: godot-architect
 deps: []
