@@ -1,7 +1,7 @@
 ---
 id: PUL-190
 title: Hacer que guard_ownership lea UTF-8 y bloquee ante cualquier fallo
-status: review
+status: done
 milestone: M4
 role: godot-architect
 deps: []

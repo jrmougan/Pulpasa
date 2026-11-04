@@ -194,7 +194,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-187 | M3f | asset-pipeline | done | Asignar materiales planos v3 a entorno, comida, cajas y personajes |
 | PUL-188 | M3f | asset-pipeline | draft | Integrar Feira Clara en level_01 y limpiar materiales y texturas v2 sin uso |
 | PUL-189 | M3f | qa-tester | draft | Pasar el QA visual y de rendimiento antes y después de la estética v3 |
-| PUL-190 | M4 | godot-architect | ready | Hacer que guard_ownership lea UTF-8 y bloquee ante cualquier fallo |
+| PUL-190 | M4 | godot-architect | done | Hacer que guard_ownership lea UTF-8 y bloquee ante cualquier fallo |
 | PUL-191 | M4 | godot-architect | ready | Detectar en verify.sh scripts que no compilan aunque ningún test los cargue |
 | PUL-192 | M4 | godot-architect | ready | Convertir AGENTS.md en el fichero real de contexto y CLAUDE.md en su import |
 | PUL-193 | M4 | godot-architect | ready | Compartir el parser de fichas entre hook y merge gate y limpiar la plantilla |
