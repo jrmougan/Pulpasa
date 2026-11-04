@@ -1,7 +1,7 @@
 ---
 id: PUL-198
 title: Evitar delivery_rejected en el tick posterior a la caducidad de una comanda
-status: review
+status: done
 milestone: M4
 role: gameplay-engineer
 deps: []
