@@ -16,7 +16,7 @@ recoge llenas desde el servicio. Como 1 pulpo = 2 cajas, lo natural es dejar **d
 las dos seguidas: no queda sobrante que aparcar (E8 de PUL-090).
 
 > **Sustituido por D25 (2026-10-10):** ya no hay tamaños S/M/L (ni los cortes 5/10/20 de Unity ni los
-> 4/6/10 de D23). Hay **una sola caja** y `presses_to_fill` = **6** (provisional: se re-mide en QA).
+> 4/6/10 de D23). Hay **una sola caja** y `presses_to_fill` = **6** (deja de ser provisional: gate del responsable, 2026-11-04, G11).
 > El rack da una sola caja y el ticket no muestra talla. Siguen la pulsación repetida (D13), el
 > pasaplatos como mesa de corte y 1 pulpo = 2 cajas.
 
@@ -65,5 +65,5 @@ GUT para AC1–AC4, AC6, AC8–AC12 (lógica de caja e ingrediente, datos, rack,
 reloj de juego inyectado); AC7 en integración; AC5 por test de escena; captura para AC12.
 
 ## Preguntas abiertas
-1. **Valor de `presses_to_fill`.** 6 es provisional (D25); QA lo re-mide con el flujo de una caja
-   única (¿cansa o aburre?). Es un dato: cambiarlo no exige código.
+1. ~~**Valor de `presses_to_fill`.**~~ Respondida (G11, gate del responsable, 2026-11-04): 6 deja de ser
+   provisional (D25). Sigue siendo un dato en `data/boxes/box.tres`: cambiarlo no exige código.

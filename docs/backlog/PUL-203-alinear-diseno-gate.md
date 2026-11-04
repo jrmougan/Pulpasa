@@ -1,7 +1,7 @@
 ---
 id: PUL-203
 title: Alinear los documentos de diseño con el gate de enmiendas
-status: ready
+status: review
 milestone: M4
 role: game-designer
 deps: [PUL-198, PUL-202]
@@ -25,10 +25,15 @@ Documentos de diseño que contradicen lo decidido en el gate del 2026-11-04.
 Solo describe lo ya decidido: no decide ni cambia valores. Si algo necesita decisión, status=blocked y pregúntalo. Sin tocar `decisions.md` ni `docs/arch`.
 
 ## Acceptance
-- [ ] AC1 Given esas líneas, When se contrastan con `decisions.md`, `signals.md` y los tests citados, Then coinciden → tabla en docs/evidence/PUL-203/
+- [x] AC1 Given esas líneas, When se contrastan con `decisions.md`, `signals.md` y los tests citados, Then coinciden → tabla en docs/evidence/PUL-203/
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Leer `decisions.md` (D25), `gate-enmiendas.md`, `signals.md`, ADR-006 y los tests citados.
+2. Editar solo las líneas de `owns` que contradicen el gate; sin tocar valores.
+3. Tabla línea-fuente en `docs/evidence/PUL-203/` y `tools/verify.sh --quick`.
 
 ## Evidence
-(Lo rellena el worker: salida de verify.sh, capturas, notas.)
+- AC1: `docs/evidence/PUL-203/ac1-lineas-fuente.md`.
+- `tools/verify.sh --quick`: verde (gdformat, gdlint, import, compilación de scripts).
+- `gdd.md:185` no se toca (fases provisionales). `gdd.md:187` conserva como provisionales los precios de D25.
+- Duda: AC5d sigue describiendo el rechazo por pulsación (pre-D26); solo se cambió la línea «Test:».

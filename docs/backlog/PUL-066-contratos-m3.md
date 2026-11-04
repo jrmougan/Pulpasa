@@ -60,3 +60,7 @@ ADR-006 (audio y feedback) y enmiendas de `signals.md`/`scene-tree.md`/ADR-002:
 - `tools/verify.sh` verde (645/645 tests, smoke OK; `docs/evidence/PUL-066/verify.log`). Una
   primera pasada falló en GUT sin cambios de código (solo docs): probable intermitencia de
   temporización en los flujos integrados; la segunda, verde. `check_owns` limpio (solo docs).
+- R2 (G45; registrada por PUL-203): respondida por el responsable en el gate del 2026-11-04
+  («Aprobar la lectura»). Ninguna señal local sube a `EventBus`; AC2 de `audio-y-fx` se lee «su señal
+  (de `EventBus` o local)» y se descarta la alternativa B. Constancia en `docs/arch/signals.md` §5
+  (nota final) y `docs/arch/ADR-006-audio-feedback.md` §3 (PUL-197).

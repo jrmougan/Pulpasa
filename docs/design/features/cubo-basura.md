@@ -34,7 +34,7 @@ vuelven al cuenco, D23). Lo que haya en un pasaplatos se recoge primero.
 - **T3** Given la mano vacía, When el jugador está a ≤ 1,5 m del cubo, Then el cubo no es objetivo (no se resalta, pulsar no hace nada y no suena ningún cue). *Test:* `test_trash_bin.gd` (candidatos del detector).
 - **T4** Given una tirada, Then suena 1 cue `trash` (ni 0 ni 2) y hay una respuesta visual (tapa que se sacude o puf) de ≥ 0,3 s. *Test:* `test_trash_bin.gd` (contador del servicio de audio y estado del efecto) + captura.
 - **T5** `trash_penalty` vive en datos con valor 0 (`TrashBinData` en `data/config/trash_bin.tres`); aplicar > 0 requiere enmienda de contrato (nota de contrato: el cubo no lo aplica en la alpha). Given el dato, Then `trash_penalty` = 0 y, tras una tirada, la recaudación no cambia. *Test:* test de datos + `test_trash_bin.gd`.
-- **T6** Given `level_01.tscn`, Then hay exactamente 2 cubos; cada uno está a ≥ 1,5 m de cualquier pasaplatos y del hueco de la barra, el hueco conserva ≥ 1,0 m libre de paso, y ninguno queda bajo el HUD a 1280×720. *Test:* `test_level_01.gd` (distancias) + captura a 1280×720.
+- **T6** Given `level_01.tscn`, Then hay exactamente 2 cubos; cada uno está a ≥ 1,5 m de cualquier pasaplatos y del hueco de la barra, el hueco conserva ≥ 1,0 m libre de paso, y ninguno queda bajo el HUD a 1280×720. *Test:* `test_trash_bin.gd`: `test_t6_level_has_exactly_two_trash_bins_at_contract_positions` (2 cubos), `test_t6_trash_bins_are_far_from_every_target_and_the_gap` (≥ 1,5 m de todo objetivo, pasaplatos incluidos tras PUL-202, y del hueco) y `test_t6_gap_keeps_one_meter_clear_and_bins_not_under_hud` (hueco ≥ 1,0 m y cubos fuera del HUD) + captura a 1280×720.
 - **T7** Given una caja errónea en la mano frente a un puesto, When el jugador va al cubo, tira y rehace una caja correcta, Then no se emitió `delivery_rejected`, la recaudación no bajó y la comanda sigue viva (tirar no consume ni rechaza la comanda). *Test:* `test_trash_bin.gd` + `test_order_stand.gd`.
 - **T8** Given un jugador con algo en la mano a ≤ 1,5 m de un cubo y de un pasaplatos libre a la vez, Then solo uno es objetivo (el más cercano al frente del jugador) y no se resaltan los dos. *Test:* `test_trash_bin.gd` con el detector real.
 - **T9** Given Local 2P, When J1 y J2 tiran a la vez en el mismo cubo, Then ambos objetos se destruyen, se emiten 2 `trashed` y suenan 2 cues `trash` (uno por tirada). *Test:* `test_trash_bin.gd`.
@@ -53,8 +53,8 @@ en `level_01.tscn` (`TrashBinKitchen`, `TrashBinService`). Qué se puede tirar (
 puede llevar en la mano) lo fijan los contratos, no los datos.
 
 ## Verificación
-GUT para T1–T3, T5, T7–T9 (núcleo de la regla + estación instanciada con el detector real); T6 por test
-de nivel con distancias y captura; T4 con captura de la respuesta visual en `docs/evidence/<ficha>/`.
+GUT para T1–T3, T5, T7–T9 (núcleo de la regla + estación instanciada con el detector real); T6 por los
+tests de nivel de `test_trash_bin.gd` (distancias y HUD) y captura; T4 con captura de la respuesta visual en `docs/evidence/<ficha>/`.
 
 ## Preguntas abiertas
 1. **Cubo de cachelos en cocina vs. servicio.** Los cachelos sobrantes están en la cocina; si el
