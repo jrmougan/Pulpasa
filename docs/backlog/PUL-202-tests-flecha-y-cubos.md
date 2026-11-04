@@ -1,7 +1,7 @@
 ---
 id: PUL-202
 title: Probar la flecha contra la zona anclada y la distancia de los cubos a los puestos
-status: review
+status: done
 milestone: M4
 role: gameplay-engineer
 deps: []

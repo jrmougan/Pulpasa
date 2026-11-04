@@ -206,7 +206,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-199 | M4 | godot-architect | ready | Hacer que el hook de ownership falle cerrado y actúe desde subcarpetas |
 | PUL-200 | M4 | asset-pipeline | done | Corregir lo que pipeline.md dice de materials_v2_test y ref_materials_v2 |
 | PUL-201 | M4 | asset-pipeline | draft | Retirar los restos v2 que ninguna ficha cubre |
-| PUL-202 | M4 | gameplay-engineer | ready | Probar la flecha contra la zona anclada y la distancia de los cubos a los puestos |
+| PUL-202 | M4 | gameplay-engineer | done | Probar la flecha contra la zona anclada y la distancia de los cubos a los puestos |
 | PUL-203 | M4 | game-designer | ready | Alinear los documentos de diseño con el gate de enmiendas |
 | PUL-204 | M4 | godot-architect | ready | Ajustar timeouts, diagnóstico y documentación de verify |
 | PUL-205 | M4 | godot-architect | ready | Corregir las frases de contrato pendientes del gate (G08, G13, G57) |
