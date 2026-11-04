@@ -1,7 +1,7 @@
 ---
 id: PUL-194
 title: Pasar el pipeline de arte y blender_export a la estética v3
-status: review
+status: done
 milestone: M4
 role: asset-pipeline
 deps: []
