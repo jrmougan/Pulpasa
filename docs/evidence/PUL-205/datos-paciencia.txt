@@ -1,0 +1,20 @@
+# Paciencia en los datos del juego
+11:orders = [ExtResource("2_o"), ExtResource("3_o"), ExtResource("4_o"), ExtResource("5_o")]
+12:max_active_orders = 4
+godot/data/orders/a_feira.tres:12:max_time = 60.0
+godot/data/orders/bravo_cachelos.tres:13:max_time = 80.0
+godot/data/orders/con_cachelos.tres:13:max_time = 80.0
+godot/data/orders/picante.tres:12:max_time = 60.0
+15:patience_multiplier = 1.0
+22:patience_multiplier = 0.85
+29:patience_multiplier = 0.7
+# Quien emite y quien pide entregar, fuera de tests
+godot/autoload/order_service.gd:47:func try_deliver(slot_id: int, contents: BoxContents) -> ActiveOrder:
+godot/autoload/order_service.gd:50:	return board.try_deliver(slot_id, contents)
+godot/autoload/order_service.gd:96:	_get_bus().delivery_rejected.emit(slot_id, order_id, penalty)
+godot/core/order_board.gd:146:func try_deliver(slot_id: int, contents: BoxContents) -> ActiveOrder:
+godot/core/order_board.gd:150:		delivery_rejected.emit(slot_id, _expired_this_tick[slot_id], 0)
+godot/core/order_board.gd:154:		delivery_rejected.emit(slot_id, NO_ORDER, 0)
+godot/core/order_board.gd:157:		delivery_rejected.emit(slot_id, order.id, 0)
+godot/core/order_board.gd:160:		delivery_rejected.emit(slot_id, order.id, _reject_penalty)
+godot/entities/stations/order_stand.gd:154:	if _service.try_deliver(slot_id, box.get_contents()) == null:

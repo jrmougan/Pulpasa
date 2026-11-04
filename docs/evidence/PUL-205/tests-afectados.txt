@@ -1,0 +1,15 @@
+# godot --headless -s addons/gut/gut_cmdln.gd -gconfig= -gexit -gtest=res://tests/integration/test_order_stand.gd,res://tests/integration/test_trash_bin.gd,res://tests/integration/test_slot.gd
+# rc=0
+PUL-202 TrashBinKitchen a OrderStand1: 10.636 m
+PUL-202 TrashBinKitchen a OrderStand2: 9.671 m
+PUL-202 TrashBinKitchen a OrderStand3: 8.896 m
+PUL-202 TrashBinKitchen a OrderStand4: 8.918 m
+PUL-202 TrashBinService a OrderStand1: 2.552 m
+PUL-202 TrashBinService a OrderStand2: 4.349 m
+PUL-202 TrashBinService a OrderStand3: 7.247 m
+PUL-202 TrashBinService a OrderStand4: 9.215 m
+Scripts               3
+Tests                69
+Passing Tests        69
+Asserts             742
+---- All tests passed! ----

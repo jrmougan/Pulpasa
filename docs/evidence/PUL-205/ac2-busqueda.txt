@@ -1,0 +1,35 @@
+# PUL-205 AC2: clasificación de lo que queda en docs/arch
+# Salvedades vigentes de G08, G13 y G57: ninguna.
+# - ADR-003:4 y :10, scene-tree.md:5, README.md:12, :17 y :19: dicen que PUL-205 lo corrigió.
+# - gate-enmiendas.md:18, :22 y :25: resolución, en pasado.
+# - gate-enmiendas.md:123, :128, :172 y :238: análisis anterior al gate, que el documento conserva tal cual.
+# order_stand.gd:156: solo en ese mismo análisis (gate-enmiendas.md:69, :80, :94, :137 y :166).
+# «pendiente»: las líneas de abajo son otro asunto o la palabra «independiente».
+# grep -nE "G08|G13|G57" docs/arch/*.md (texto recortado a 170 caracteres)
+docs/arch/ADR-003-arbol-escenas-composicion.md:4:  por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197); las frases de §8.2 de G08 se corrigier
+docs/arch/ADR-003-arbol-escenas-composicion.md:10:  regla de colocación de los cubos a un test en §10.3 (G13) se corrigió en PUL-205; enmienda §11 (D26: verbo
+docs/arch/gate-enmiendas.md:18:- **G08**: cinco frases de ADR-003 §8.2 y una de la caja en `scene-tree.md` §3: que `interact_pressed()` suelta si el
+docs/arch/gate-enmiendas.md:22:- **G13**: citar `test_trash_bin.gd` por la regla de colocación de los cubos (ADR-003 §10.3). Hasta PUL-202 ese test no
+docs/arch/gate-enmiendas.md:25:- **G57**: lo mismo que G13 en `scene-tree.md` §2; el resto de la fila estaba aplicado.
+docs/arch/gate-enmiendas.md:123:| G08 | ADR-003 §8.2 | PUL-056 | Dispensador y cuenco consumen la pulsación al rechazar; `Slot.accepted_group` | Sí, lo vigente. `godot
+docs/arch/gate-enmiendas.md:128:| G13 | ADR-003 §10.3 | PUL-111 | Cubo de basura: reglas, datos, contrato, señal local, dos instancias, regla de colocación | Sí. `god
+docs/arch/gate-enmiendas.md:172:| G57 | `scene-tree.md`, enmienda D25 | PUL-111 | Caja única, rack, estación con 2 dispensadores, cubos, ticket sin talla, datos, bajas 
+docs/arch/gate-enmiendas.md:238:| `docs/arch/scene-tree.md:21` | G57 |
+docs/arch/README.md:12:| [ADR-003](ADR-003-arbol-escenas-composicion.md) | Árbol de escenas, composición y contrato de interacción; §8 estación (D18), §9 estación 
+docs/arch/README.md:17:| [scene-tree.md](scene-tree.md) | Árbol de escenas y enmiendas (M2b, M3, M3c/D23, D25, D26 en §9) | aceptado (2026-11-04); `accepted_group` y la
+docs/arch/README.md:19:El gate de las enmiendas se resolvió el 2026-11-04: decisiones, análisis y lo que corrigió PUL-205 (G08, G13, G57), en
+docs/arch/scene-tree.md:5:  (G08), la de la caja «con cualquier otra cosa en la mano» en §3 y la que atribuye la regla de colocación de los cubos a un test en §2 (G1
+
+# grep -nE "order_stand.gd:156|hoy .order_stand" docs/arch/*.md
+docs/arch/gate-enmiendas.md:69:   (`godot/entities/stations/order_stand.gd:156`).
+docs/arch/gate-enmiendas.md:80:     no penaliza, y eso se cumple. El guard `godot/entities/stations/order_stand.gd:156` solo protege el tick de la caducidad
+docs/arch/gate-enmiendas.md:94:     `godot/entities/stations/order_stand.gd:156` hasta el siguiente `advance`, con un test de entrada física real. El contrato queda como
+docs/arch/gate-enmiendas.md:137:| G22 | ADR-003 §11.7 | PUL-120 | Entrega solo por zona, cuenco que solo pone, verbo del aliño en datos | Sí. `godot/entities/stations/
+docs/arch/gate-enmiendas.md:166:| G51 | `signals.md`, enmienda D26 | PUL-120 | Dos señales en el bus, tipos, señales locales, `delivery_rejected` sin emisión en el jue
+
+# grep -niE "pendiente" fuera de gate-enmiendas.md, en los documentos tocados
+docs/arch/ADR-003-arbol-escenas-composicion.md:969:   prefiere separar capas y dejar pendiente solo la parte específica.
+docs/arch/ADR-006-audio-feedback.md:245:  `RoundManager` (ADR-002 regla 2). `phase` empieza en 1. Firma independiente de la dimensión.
+docs/arch/README.md:6:mantiene la capa común independiente de la dimensión.
+docs/arch/scene-tree.md:701:(pendiente de assets).
+docs/arch/signals.md:40:directamente las señales del `OrderBoard` que recibe en su constructor. **Las firmas de `EventBus` son independientes de la dimensión** (D14, AD

@@ -1,0 +1,7 @@
+# Sonda fuera del repo: Slot real con una caja guardada y otra caja en la mano del jugador real.
+setup pick=true store=true hold=true slot_has=true
+solapa_slot=true objetivo=<null>
+hint_caja_guardada state=0
+hint_publicado verb=drop state=1
+interact_pressed=true mano_vacia=true guardada_sigue=true
+PROBE_END

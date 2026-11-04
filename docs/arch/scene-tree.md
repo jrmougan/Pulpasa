@@ -1,8 +1,8 @@
 # Árbol de escenas
 
 - **Estado:** **aceptado** por el responsable en gate humano el 2026-11-04 (contrato; ver ADR-003;
-  `gate-enmiendas.md`, PUL-197), salvo tres frases **pendientes**: la de `accepted_group` de `slot.tscn` en §3
-  (G08), la de la caja que consume la pulsación «con cualquier otra cosa en la mano» en §3 y la que atribuye la regla de colocación de los cubos a un test en §2 (G13, G57)
+  `gate-enmiendas.md`, PUL-197); PUL-205 corrigió según el código la frase de `accepted_group` de `slot.tscn` en §3
+  (G08), la de la caja «con cualquier otra cosa en la mano» en §3 y la que atribuye la regla de colocación de los cubos a un test en §2 (G13, G57)
 - **Ficha:** PUL-003; enmienda de la estación de condimentos y la planta B en PUL-056
   (2026-10-05, D18/D19, ADR-003 §8), **aceptada** por el responsable en gate humano el 2026-11-04: §2, §3 (caja, slot, estación),
   §5, §6 y §7 (bajas). Lo marcado **M2b** lo implementan PUL-057..PUL-061.
@@ -107,13 +107,11 @@ que es objetivo con la mano llena** —`OctopusStorage`, `CachelosStorage` y `Bo
 `Kitchen2`, los 6 `PassSlot`, dispensadores y cuenco, y los 4 `OrderStand`— y del hueco (segmento
 x 2,8…4,2, z 0), que conserva ≥ 1,0 m libre; sin solapar la colisión de `kitchen_layout.tscn` y
 fuera del HUD (suelo x < −7,2, z > −0,1) y de la banda de tickets (z < −6,8) a 1280×720.
-**`test_level_01.gd` lo exige** (T6 de `cubo-basura`): recorre esas instancias del nivel y comprueba
-la distancia mínima de cada `TrashBin`, además del encuadre.
-
-**Pendiente (G13, G57; gate del 2026-11-04).** La atribución de arriba a `test_level_01.gd` no se ha cambiado y es
-falsa: ese test solo fija las posiciones. `test_trash_bin.gd` comprueba la distancia a los nodos del grupo
-`interactable` y al hueco, pero no a los `OrderStand`, que salieron de ese grupo por D26. La regla de colocación
-queda aceptada; la atribución, no: ver ADR-003 §10.3.
+**`test_t6_trash_bins_are_far_from_every_target_and_the_gap` lo exige** (T6 de `cubo-basura`;
+`godot/tests/integration/test_trash_bin.gd:291`): mide la distancia mínima de cada `TrashBin` a los objetivos del grupo
+`interactable`, a cada `OrderStand` y al hueco. El encuadre lo comprueba `test_t6_gap_keeps_one_meter_clear_and_bins_not_under_hud`
+(`godot/tests/integration/test_trash_bin.gd:330`); `test_level_01.gd` solo fija las posiciones
+(`godot/tests/integration/test_level_01.gd:33`).
 
 | Cubo | Posición (raíz) | Objetivo más cercano con la mano llena | Colisión vecina |
 |---|---|---|---|
@@ -238,8 +236,10 @@ los cachelos.
 Caja (API del contrato con la estación, M2b, PUL-057; ADR-003 §8.3):
 `toggle_seasoning(seasoning: SeasoningData, swap_exclusive: bool) -> SeasoningRules.Rejection` *(baja D26, PUL-131)*,
 `remove_seasoning(seasoning: SeasoningData) -> bool`, `has_seasoning()`, `is_full()`,
-`get_contents()`. `interact()` corta (D1) o se coge; con cualquier otra cosa en la mano consume la
-pulsación sin efecto (ya no condimenta, AC12) **[pendiente: desde D26 `box.gd:121` devuelve `false` con hint `NONE`; mismo caso que G08, PUL-197]**. D23 no cambia esta API: el dispensador y el cuenco la
+`get_contents()`. `interact()` corta (D1) o se coge; con pulpo crudo, o con pulpo cocido y la caja llena, rechaza sin
+efecto y devuelve `true` (`godot/core/action_rules.gd:34`, `godot/core/action_rules.gd:38`,
+`godot/entities/items/box.gd:122`); con cualquier otra cosa en la mano el hint es `NONE`: no es objetivo e `interact()`
+devuelve `false` sin efecto (ya no condimenta, AC12; `godot/core/action_rules.gd:42`, `godot/entities/items/box.gd:121`). D23 no cambia esta API: el dispensador y el cuenco la
 llaman sobre la caja **de la mano** del actor en vez de la de la bandeja.
 **D25:** se añade `apply_seasoning(seasoning: SeasoningData) -> SeasoningRules.Rejection` (la llama
 el dispensador de aliño: sustituye al otro aliño, `ALREADY_APPLIED` si ya lo lleva) y
@@ -279,9 +279,9 @@ trash_bin.tscn [D25]  TrashBin (StaticBody3D, capa interactable; grupo interacta
                       └── %Feedback (FeedbackPlayer)   cue trash, POP del cubo
 slot.tscn [5]         Slot (StaticBody3D; grupo interactable)  slot.gd  @export initial_item: PackedScene
                       │   @export accepted_group: StringName = &""  [M2b] vacío = acepta cualquier objeto; si no,
-                      │   lo que no esté en el grupo se rechaza consumiendo la pulsación (ADR-003 §8.2).
-                      │   Sin usuario en el nivel desde D23 (lo usaba Tray); se conserva
-                      │   PENDIENTE (G08, ADR-003 §8.2): desde D26 lo no aceptado no hace objetivo al slot, no consume
+                      │   con lo que no esté en el grupo el slot vacío da hint NONE: no es objetivo e interact()
+                      │   devuelve false (godot/entities/stations/slot.gd:118, godot/tests/integration/test_slot.gd:248;
+                      │   ADR-003 §8.2). Sin usuario en el nivel desde D23 (lo usaba Tray); se conserva
                       ├── CollisionShape3D, Model, %Anchor (Marker3D), %Highlightable (retícula)
                       │   [M3c, D23] Model = marca pass_mark de counters (PUL-095; esquinas papel/marino,
                       │   ≥ 18 px de lado a 1280×720, R11) en lugar del placeholder table_square; el nivel
@@ -611,7 +611,7 @@ quitarse de los enums.
 | Qué | Dónde | Nota |
 |---|---|---|
 | Puesto como objetivo | `OrderStand` en el grupo `interactable` y la capa `interactable`; `can_interact`, `interact`, rama B12 de `order_stand.gd` | Entrega solo por `%DeliveryZone`; el cuerpo pasa a la capa `world` |
-| Cue de entrega errónea | `order_stand.gd::_on_delivery_rejected` → `play_cue(&"deliver_error")`; clave `deliver_error` del mapa | `delivery_rejected` sin emisión en el juego. *Nota del gate del 2026-11-04 (G22, G51): hoy `order_stand.gd:156` incumple «sin emisión en el juego» en el tick posterior a la caducidad: puede emitirse con `penalty` 0 (`docs/evidence/PUL-196/repro-entrega.txt`). Lo corrige PUL-198; el contrato no se matiza.* |
+| Cue de entrega errónea | `order_stand.gd::_on_delivery_rejected` → `play_cue(&"deliver_error")`; clave `deliver_error` del mapa | `delivery_rejected` sin emisión en el juego. *Nota del gate del 2026-11-04 (G22, G51), resuelta: hasta PUL-198, `order_stand.gd` podía provocar la emisión con `penalty` 0 en el tick posterior a la caducidad (`docs/evidence/PUL-196/repro-entrega.txt`). Desde PUL-198 la zona no pide `try_deliver` hasta el siguiente `advance` (`godot/entities/stations/order_stand.gd:161`, `godot/entities/stations/order_stand.gd:167`); el contrato no se matizó.* |
 | Cue de error de la estación | `seasoning_station.gd` → `play_cue(&"season_error")`; clave `season_error` | El rechazo suena en el jugador (`rejected`) |
 | `cook_done` | clave del mapa y `cooking_station.gd` | Renombrada `cook_ready` |
 | Toggle del cuenco | `cachelos_bowl.gd` (`_toggle`, `clock`, `_game_time`, `_last_change`); `SeasoningStationData.toggle_guard` y su valor en `seasoning_station.tres`; `SeasoningRules.toggle()`; `Box.toggle_seasoning()` | El cuenco solo pone (`Box.apply_seasoning`) |

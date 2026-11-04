@@ -1,0 +1,43 @@
+ok  godot/components/interaction_component.gd:79  if not bool(target.call(&"interact", self)):
+ok  godot/components/interaction_component.gd:88  # Objetivo heredado (sin verbo): como antes, si no consume cae al suelo.
+ok  godot/components/interaction_component.gd:93  elif target != null:
+ok  godot/components/interaction_component.gd:99  else:
+ok  godot/core/action_rules.gd:34  Held.OCTOPUS_RAW:
+ok  godot/core/action_rules.gd:38  Held.OCTOPUS_COOKED:
+ok  godot/core/action_rules.gd:42  return ActionHint.none()
+ok  godot/core/action_rules.gd:68  static func for_spawner(held: Held) -> ActionHint:
+ok  godot/core/action_rules.gd:88  return ActionHint.none()
+ok  godot/core/action_rules.gd:110  return ActionHint.none()
+ok  godot/core/action_rules.gd:124  if can_drop:
+ok  godot/components/interaction_detector.gd:104  var stored: bool = entity is Slot and (entity as Slot).has_item()
+ok  godot/components/interaction_detector.gd:110  if not hint.is_target():
+ok  godot/entities/stations/seasoning_dispenser.gd:42  func is_reachable_from(floor_position: Vector2, _holder: Holder) -> bool:
+ok  godot/entities/stations/seasoning_dispenser.gd:56  func can_interact(actor: InteractionComponent) -> bool:
+ok  godot/entities/stations/cachelos_bowl.gd:67  func can_interact(actor: InteractionComponent) -> bool:
+ok  godot/entities/stations/slot.gd:118  return ActionRules.for_pass_slot(
+ok  godot/tests/integration/test_slot.gd:248  func test_pul058_accepted_group_rejects_other_items_without_being_a_target() -> void:
+ok  godot/entities/items/box.gd:121  if hint.state != ActionHint.State.OK:
+ok  godot/entities/items/box.gd:122  return hint.state == ActionHint.State.BLOCKED
+ok  godot/tests/integration/test_trash_bin.gd:291  func test_t6_trash_bins_are_far_from_every_target_and_the_gap() -> void:
+ok  godot/tests/integration/test_trash_bin.gd:303  for node: Node in level.find_children("*", "OrderStand", true, false):
+ok  godot/tests/integration/test_trash_bin.gd:324  assert_gte(gap, TRASH_MIN_DISTANCE, "%s a %s" % [bin.name, target.name])
+ok  godot/tests/integration/test_trash_bin.gd:327  assert_gte(pos.distance_to(gap_point), TRASH_MIN_DISTANCE, "%s al hueco" % bin.name)
+ok  godot/tests/integration/test_trash_bin.gd:330  func test_t6_gap_keeps_one_meter_clear_and_bins_not_under_hud() -> void:
+ok  godot/tests/integration/test_level_01.gd:33  "Stations/TrashBinKitchen": [8.9, 0.9, 0.0],
+ok  godot/entities/stations/order_stand.gd:65  _bus.order_patience_changed.connect(_on_order_patience_changed)
+ok  godot/entities/stations/order_stand.gd:154  if _service.try_deliver(slot_id, box.get_contents()) == null:
+ok  godot/entities/stations/order_stand.gd:156  holder.drop()
+ok  godot/entities/stations/order_stand.gd:161  if _order == null or _blocked_by_expiry():
+ok  godot/entities/stations/order_stand.gd:167  func _blocked_by_expiry() -> bool:
+ok  godot/entities/stations/order_stand.gd:170  return _order.max_time > 0.0 or Engine.get_physics_frames() <= _expired_frame + 1
+ok  godot/entities/stations/order_stand.gd:221  func _on_order_patience_changed(_order_id: int, _time_left: float, _max_time: float) -> vo
+ok  godot/core/order_board.gd:122  _expired_this_tick.clear()
+ok  godot/core/order_board.gd:133  order_patience_changed.emit(order.id, order.time_left, order.max_time)
+ok  godot/core/order_board.gd:138  order_expired.emit(order.copy(), _expire_penalty)
+ok  godot/core/order_board.gd:150  delivery_rejected.emit(slot_id, _expired_this_tick[slot_id], 0)
+ok  godot/core/order_board.gd:154  delivery_rejected.emit(slot_id, NO_ORDER, 0)
+ok  godot/core/order_board.gd:157  delivery_rejected.emit(slot_id, order.id, 0)
+ok  godot/core/order_board.gd:160  delivery_rejected.emit(slot_id, order.id, _reject_penalty)
+ok  godot/autoload/order_service.gd:96  _get_bus().delivery_rejected.emit(slot_id, order_id, penalty)
+ok  godot/autoload/round_manager.gd:77  func _physics_process(delta: float) -> void:
+42/42 citas correctas
