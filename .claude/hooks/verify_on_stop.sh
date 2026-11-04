@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Stop: en modo worker (existe .claude/current-task) y con cambios en godot/,
-# no deja terminar si tools/verify.sh falla. Máximo 3 bloqueos seguidos por tarea
+# Stop: en modo worker (existe .claude/current-task) y con cambios en godot/, AGENTS.md o
+# CLAUDE.md, no deja terminar si tools/verify.sh falla. Máximo 3 bloqueos seguidos por tarea
 # para no entrar en bucle; al tercero deja parar y el agente debe escalar.
 set -uo pipefail
 ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 MARK="$ROOT/.claude/current-task"
 [[ -f "$MARK" ]] || exit 0
 cd "$ROOT"
-if git diff --quiet HEAD -- godot/ 2>/dev/null && [[ -z "$(git ls-files --others --exclude-standard godot/)" ]]; then
+WATCHED=(godot/ AGENTS.md CLAUDE.md)
+if git diff --quiet HEAD -- "${WATCHED[@]}" 2>/dev/null && [[ -z "$(git ls-files --others --exclude-standard -- "${WATCHED[@]}")" ]]; then
   exit 0
 fi
 COUNT_FILE="$ROOT/.claude/.stop-retries"

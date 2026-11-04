@@ -1,0 +1,18 @@
+$ run_stop_hook.sh .claude/hooks/verify_on_stop.sh
+PASS rc=0 (esperado 0) verify=0 (esperado 0) sin current-task, AGENTS.md cambiado
+PASS rc=0 (esperado 0) verify=0 (esperado 0) sin current-task, godot/ cambiado
+PASS rc=0 (esperado 0) verify=0 (esperado 0) current-task, sin cambios
+PASS rc=0 (esperado 0) verify=0 (esperado 0) current-task, solo docs/ cambiado
+PASS rc=2 (esperado 2) verify=1 (esperado 1) current-task, godot/ cambiado, verify falla
+PASS rc=2 (esperado 2) verify=1 (esperado 1) current-task, godot/ con fichero nuevo, verify falla
+PASS rc=2 (esperado 2) verify=1 (esperado 1) current-task, AGENTS.md cambiado, verify falla
+PASS rc=2 (esperado 2) verify=1 (esperado 1) current-task, CLAUDE.md cambiado, verify falla
+PASS rc=2 (esperado 2) verify=1 (esperado 1) current-task, CLAUDE.md borrado, verify falla
+PASS rc=2 (esperado 2) verify=1 (esperado 1) current-task, AGENTS.md en el índice, verify falla
+PASS rc=0 (esperado 0) verify=1 (esperado 1) current-task, AGENTS.md cambiado, verify pasa
+PASS rc=2 (esperado 2) verify=1 (esperado 1) current-task, CLAUDE.md sin versionar, verify falla
+PASS rc=2 (esperado 2) verify=1 (esperado 1) tres fallos seguidos, intento 1
+PASS rc=2 (esperado 2) verify=2 (esperado 2) tres fallos seguidos, intento 2
+PASS rc=0 (esperado 0) verify=3 (esperado 3) tres fallos seguidos, intento 3: deja parar y escala
+fallos=0
+rc=0

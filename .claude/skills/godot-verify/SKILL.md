@@ -1,14 +1,14 @@
 ---
 name: godot-verify
-description: Cómo verificar un cambio en Pulpasa - tools/verify.sh (lint, import, compilación de scripts, tests GUT, smoke) y verificación visual con el MCP de Godot (ejecutar, input simulado, captura, errores). Úsala antes de dar una ficha por terminada.
+description: Cómo verificar un cambio en Pulpasa - tools/verify.sh (sincronía de AGENTS.md y CLAUDE.md, lint, import, compilación de scripts, tests GUT, smoke) y verificación visual con el MCP de Godot (ejecutar, input simulado, captura, errores). Úsala antes de dar una ficha por terminada.
 ---
 # Verificar un cambio
 
 ## 1. Verificación automática (siempre)
 
 ```bash
-tools/verify.sh          # gdformat, gdlint, import, compilación de scripts, tests GUT, smoke de 120 frames
-tools/verify.sh --quick  # solo formato, lint, import y compilación de scripts
+tools/verify.sh          # sincronía de AGENTS.md y CLAUDE.md, gdformat, gdlint, import, compilación de scripts, tests GUT, smoke de 120 frames
+tools/verify.sh --quick  # lo mismo sin tests ni smoke
 ```
 
 La compilación (`tools/check_scripts.gd`) hace `load()` y `can_instantiate()` de todos los `.gd` salvo `addons/`,

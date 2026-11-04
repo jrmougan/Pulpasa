@@ -1,0 +1,21 @@
+Comando de settings.json, marcador activo y destino ajeno: cualquier rc distinto de 2 deja pasar la edición
+comando: python3 "$CLAUDE_PROJECT_DIR"/.claude/hooks/guard_ownership.py
+BLOQUEA rc=2 control: hook intacto
+    Bloqueado: Assets/x.txt no está en `owns` ni `touches_scenes` de PUL-184-puestos-entrega-y-numeros-v3.md.
+    Rutas permitidas: godot/data/config/stand_palette.tres, godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand_model.gd, godot/tests/unit/test_order_stand_model.gd, godot/tests/integration/test_order_tickets.gd*, docs/evidence/PUL-184/**, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, godot/entities/stations/order_stand.tscn, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, docs/evidence/PUL-184/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS el control bloquea por owns
+FALLO ABIERTO rc=1 PYTHONIOENCODING inválida (Fatal Python error, antes del try)
+    Fatal Python error: init_stdio_encoding: failed to get the Python codec name of the stdio encoding
+    Python runtime state: core initialized
+    LookupError: unknown encoding: no-existe
+    
+    Current thread 0x0000cb60 (most recent call first):
+      <no Python frame>
+FALLO ABIERTO rc=127 intérprete ausente (simulado con un comando inexistente, sin quitar Python)
+    bash: line 1: python3-no-existe: command not found
+FALLO ABIERTO rc=1 hook que no compila
+      File "<ruta> line 1
+        def (:
+            ^
+    SyntaxError: invalid syntax
