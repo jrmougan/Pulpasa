@@ -96,7 +96,7 @@ Se listan todos. Destino: **A** = autoload, **N** = script de nodo, **R** = `Res
 | `Interaction/HighlightController.cs` | Fachada Show/Hide sobre outline + retícula | `highlightable.gd` (N) o grupo `highlightable` + `material_overlay` | 5 | Un único componente de resaltado |
 | `Interaction/InteractableHighlight.cs` | Activa un visual de retícula (slots) | Parte de `highlightable.gd` (nodo visual opcional) | 5 | |
 | `Interaction/InteractionDetector.cs` | Elige objetivo: OverlapSphere 1,5 m (2,2 en el nivel), cono 30° (salvo < 0,7 m), puntuación `dot*2 + 1/dist`, prioriza cogibles con manos vacías y `Kitchen` +1 | `interaction_detector.gd` (N) con `Area3D` | 5 | Lógica de puntuación como función pura testeable con GUT. Duplicado en `Player.prefab` (§4) |
-| `Interaction/OutlineHighlighter.cs` | Clona mallas ×1,05 con material de contorno | Shader inverted hull como `material_overlay` | 5 | Ver skill `unity-to-godot` |
+| `Interaction/OutlineHighlighter.cs` | Clona mallas ×1,05 con material de contorno | Shader inverted hull como `material_overlay` | 5 | — |
 | `Interaction/SlotHelper.cs` (clase `SnappingHelper`) | Alinea un objeto a un ancla usando su hijo `AnchorPoint` | Función estática en `slot.gd` o `util/snapping.gd` | 5 | Usa `transform.Find("AnchorPoint")`: en Godot `%AnchorPoint` / `@export` |
 
 ### Interfaces
