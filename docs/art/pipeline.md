@@ -117,7 +117,7 @@ blender -b art/blender/x.blend --python tools/blender_export.py -- --out godot/a
 # Prueba de humo: cubo de 1 m sobre la plantilla → godot/assets/models/_pipeline/test_cube/test_cube.glb
 blender -b art/blender/_template.blend --python tools/blender_export.py -- --smoke-cube
 # Heredado de la v2 (PUL-074), NO es una prueba de la v3 → godot/assets/models/_pipeline/materials_v2_test/
-# (no lo ejecutes: reescribiría el .glb y sus PNG, que PUL-188 va a borrar)
+# (no lo ejecutes: reescribiría el .glb versionado con uno sin imágenes; PUL-188 va a borrarlo)
 blender -b art/blender/_template.blend --python tools/blender_export.py -- --materials-test
 ```
 
@@ -143,10 +143,11 @@ luces ni *extras*; animaciones y skins solo con
 `blender_export: OK`. Para probar sin ensuciar el repo, abre la plantilla (sin guardarla), añade una malla bajo
 `asset` y llama al script con `--out` a un directorio temporal fuera de `godot/`. Así se hizo en PUL-194
 ([`docs/evidence/PUL-194/`](../evidence/PUL-194/)): `.glb` generado y `.glb.import` sembrado con los ajustes de §5.
-`--smoke-cube` (con `mat_wood_used` y `mat_plastic_red`, nombres de slot) se probó en un destino temporal, con
-copias de la plantilla y de `_materials_v2.blend` donde `textures/v2` no es alcanzable: exit 0, `.glb` de 3 KiB sin
-imágenes. Sin `--out` sí escribe dentro de `godot/assets/models/_pipeline/test_cube/` (el cubo está versionado y lo exige
-`test_assets_models.gd`).
+`--smoke-cube` (con `mat_wood_used` y `mat_plastic_red`, nombres de slot) escribe siempre en
+`godot/assets/models/_pipeline/test_cube/` (el cubo está versionado y lo exige `test_assets_models.gd`) y **no admite `--out`**:
+combinarlos termina con error para no sobrescribir ese `.glb` sin querer (lo mismo con `--materials-test`). Para probarlo
+fuera del repo, copia `tools/` y las dos `.blend` (`_template.blend` y `_materials_v2.blend`) a un árbol temporal y ejecútalo allí.
+En PUL-194 se probó así: exit 0, `.glb` de 3 KiB sin imágenes.
 
 ## 5. Import en Godot (`.glb.import`)
 

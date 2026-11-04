@@ -7,7 +7,7 @@ Cada fila es una instruccion v2 que `pipeline.md` daba como vigente antes de PUL
 | §5: `gltf/embedded_image_handling` = `1` (extraer texturas) | §3.2.1 y §3.3.1, §9.2: obligatorio `0` | §5: `0`, marcado como obligatorio; `blender_export.py` siembra `0` (AC1) |
 | §5: `meshes/ensure_tangents` = `true` por los normal maps v2 | §3.2.1 y §1.1: 0 mapas de normales | §5: `false`; el export tampoco escribe tangentes |
 | §4: export con «texturas embebidas y tangentes» | §3.2.1: 0 texturas PBR | §4: materiales solo para conservar nombres de slot, sin tangentes |
-| §4: textura > 1024 px (art-bible v2 §4.2) | v2 archivada | §4: comprobacion marcada como heredada; en la v3 solo salta con restos v2 |
+| §4: textura > 1024 px (art-bible v2 §4.2) | v2 archivada | §4: comprobacion marcada como heredada; solo se comprueba con `--materials-test` (heredado) |
 | §3: «reutilizalos; no crees materiales a mano» con los 45 `mat_*` v2 | §3.1: solo los 18 `.tres` de `materials/v3/` | §3: la plantilla aun enlaza la v2 (dicho tal cual); los `mat_*` solo dan nombre de slot, el color vive en los `.tres` |
 | §5: «Godot extrae `<asset>_<imagen>.png`; versionar PNG y `.png.import`» | §3.3.1: no deben regenerarse PNG | §5: ya no se versionan PNG extraidos |
 | §5: «materiales embebidos (`StandardMaterial3D` importado)» | §3.3.2: slots a `.tres` v3 por `_subresources` | §5: bloque `_subresources` con `use_external/path`, tabla en art-bible §3.3 y `slots_reales.md` |

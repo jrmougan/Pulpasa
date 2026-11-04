@@ -131,8 +131,8 @@ def box_uv(bm: bmesh.types.BMesh, meters_per_unit: float = 2.0) -> None:
 def build_materials_test() -> None:
     """Taburete de 0,45 m: patas y travesaños de acero, asiento de plástico rojo y balda de madera.
 
-    Prueba de AC2 de PUL-074: un asset con materiales enlazados de _materials_v2.blend importa en
-    Godot con sus texturas (albedo, ORM y normal) y pasa test_assets_models.gd.
+    Era la prueba de AC2 de PUL-074 con el exportador v2 (texturas albedo, ORM y normal). Con el export
+    actual (sin imágenes) solo comprueba que los nombres de slot de los materiales enlazados se exportan.
     """
     coll = bpy.data.collections[EXPORT_COLLECTION]
     root = bpy.data.objects["asset"]
@@ -249,6 +249,8 @@ def validate(objs: list, max_tris: int, check_tex: bool = False) -> int:
 
 
 def resolve_out(args: argparse.Namespace) -> Path:
+    if (args.smoke_cube or args.materials_test) and args.out:
+        fail("--smoke-cube y --materials-test escriben siempre en godot/assets/models/_pipeline/; no admiten --out")
     if args.smoke_cube:
         return MODELS_DIR / "_pipeline" / "test_cube" / "test_cube.glb"
     if args.materials_test:
