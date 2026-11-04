@@ -9,12 +9,18 @@
       "Bash(gdformat:*)",
       "Bash(orca-ide orchestration:*)",
       "Bash(orca orchestration:*)",
+      "Bash(orca-ide status:*)",
+      "Bash(orca-ide skills get:*)",
+      "Bash(orca status:*)",
+      "Bash(orca skills get:*)",
       "mcp__godot__check_project",
       "mcp__godot__get_debug_output",
-      "mcp__godot__get_scene_tree",
       "mcp__godot__get_project_files",
       "mcp__godot__take_screenshot",
-      "mcp__godot__stop_project"
+      "mcp__godot__stop_project",
+      "mcp__godot__run_project",
+      "mcp__godot__simulate_input",
+      "mcp__godot__get_ui_elements"
     ]
   },
   "hooks": {
