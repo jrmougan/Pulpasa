@@ -1,0 +1,18 @@
+$ tools/verify.sh   (commit de la implementación, árbol limpio, Windows)
+== sincronía de AGENTS.md y CLAUDE.md
+check_agents_sync: AGENTS.md y CLAUDE.md coinciden.
+== gdformat --check
+245 files would be left unchanged
+== gdlint
+Success: no problems found
+== import
+== compilación de scripts
+check_scripts: OK (245 scripts)
+== tests (GUT)
+Scripts             119
+Tests              1378
+Passing Tests      1378
+---- All tests passed! ----
+== smoke run (escena principal, 120 frames)
+OK
+✓ verify OK
