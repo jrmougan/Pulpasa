@@ -274,6 +274,39 @@ func test_pul039_zone_delivers_replacement_in_a_later_tick() -> void:
 	assert_signal_not_emitted(_bus, "delivery_rejected")
 
 
+## PUL-198 AC1: la caja entra por física en el tick siguiente a la caducidad, antes del `advance`
+## de ese tick (el núcleo aún rechazaría): el puesto no pregunta y no hay `delivery_rejected`.
+## Cuando llega el `advance`, quien ya está dentro entrega.
+func test_pul198_entry_after_expiry_tick_before_advance_does_not_reject() -> void:
+	var data: OrderData = CATALOG.orders[0]
+	var old: ActiveOrder = _expiring_board(data, data)
+	var box: Box = _box_in_hand(old)
+	_service.board.advance(data.max_time + 0.01)
+	await _enter_zone()
+	assert_signal_not_emitted(_bus, "delivery_rejected", "sin rechazo antes del advance")
+	assert_signal_not_emitted(_bus, "order_completed")
+	assert_eq(_hold.get_held_item(), box)
+	_service.board.advance(0.01)
+	await wait_physics_frames(2)
+	assert_signal_emit_count(_bus, "order_completed", 1, "tras el advance, entrega")
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+
+
+## PUL-198 AC2: pasado el `advance` del tick siguiente, la caja que coincide con la repuesta que
+## entra por física se entrega.
+func test_pul198_entry_after_the_advance_delivers_replacement() -> void:
+	var data: OrderData = CATALOG.orders[0]
+	var old: ActiveOrder = _expiring_board(data, data)
+	var box: Box = _box_in_hand(old)
+	_service.board.advance(data.max_time + 0.01)
+	await wait_physics_frames(1)
+	_service.board.advance(0.01)
+	await _enter_zone()
+	assert_signal_emit_count(_bus, "order_completed", 1)
+	assert_signal_not_emitted(_bus, "delivery_rejected")
+	assert_true(_is_released(box))
+
+
 func test_d26_a_rejection_on_the_bus_does_not_sound_in_the_stand() -> void:
 	_bus.delivery_rejected.emit(SLOT_ID, 1, 0)
 	assert_signal_not_emitted(_feedback(), "played")
@@ -546,6 +579,8 @@ func test_pul100_ac1_zone_turns_off_on_expired_and_reset() -> void:
 	assert_false(_stand.is_zone_lit(), "caducada: apagada al instante")
 	await wait_physics_frames(LIGHT_TICKS)
 	assert_false(_stand.is_zone_lit(), "y sigue apagada sin comanda")
+	# PUL-198: tras caducar, la zona espera al siguiente `advance` (aquí, su paciencia en el bus).
+	_bus.order_patience_changed.emit(order.id, 1.0, 2.0)
 	_bus.order_generated.emit(order)
 	await wait_physics_frames(LIGHT_TICKS)
 	assert_true(_stand.is_zone_lit(), "comanda viva otra vez")
