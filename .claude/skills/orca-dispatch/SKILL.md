@@ -57,7 +57,8 @@ la Task queda bloqueada hasta `gate-resolve --id <gate_id> --resolution "<texto>
 
 ## Agentes no Claude
 
-Antigravity y kimi: lee `references/agentes-no-claude.md` antes de lanzarlos. Ni estos ni Codex como
+Antigravity y kimi: lee `references/agentes-no-claude.md` antes de lanzarlos. No consta que carguen `AGENTS.md`
+por sí solos (solo está probado en Codex): pide en su spec que lo lean antes de empezar. Ni estos ni Codex como
 worker ejecutan los hooks de `.claude/`: pide en el spec
 ejecutar `tools/check_owns.py <rama> <base>` y `tools/verify.sh` antes de `worker_done`. Un worktree por ficha (`--worktree new-child`). Revisa sus
 capturas contra cada AC: un estado que no se distingue en la imagen no prueba el AC.

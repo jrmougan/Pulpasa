@@ -30,6 +30,18 @@ Reproduce el fallo que describe la ficha: Codex no recibía las reglas.
 >
 > 2. Los hooks de `.claude/` solo corren en Claude Code: fuera de él, la barrera es `tools/merge_gate.sh`.
 
+## Repetición tras la revisión
+
+Mismo comando y mismo prompt, sin llamadas a comandos en la salida `--json`:
+
+| Arranque | Regla 1 | Línea de los hooks |
+|---|---|---|
+| Clon de la base (`AGENTS.md` de 9 bytes), raíz | NO_DISPONIBLE | NO_DISPONIBLE |
+| Worktree de la rama, raíz | sí | sí |
+| Worktree de la rama, `godot/` | sí | sí |
+
+Arrancar desde un subdirectorio no afecta a Codex, a diferencia de Claude Code (`ac2.md`).
+
 ## Límite
 
 Se lanzó con `codex exec` en un worktree, no como worker supervisado por Orca (`worker-start --agent codex`): esta tarea
