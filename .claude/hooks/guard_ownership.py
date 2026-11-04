@@ -10,30 +10,20 @@ Por eso toda excepción inesperada sale con 2, igual que una entrada sin `file_p
 tres herramientas lo llevan), y todo el texto se lee en UTF-8 de forma explícita (en Windows, la
 codificación por defecto es cp1252 y no sirve para las fichas). Se admite BOM (`utf-8-sig`): lo
 escriben herramientas de Windows y es invisible en los mensajes.
+
+El parser de fichas es tools/card_frontmatter.py, compartido con tools/check_owns.py. Se importa con
+ficha activa y no antes: sin ficha el hook no lo necesita, y si no se puede importar, bloquea.
 """
 import json
 import os
-import re
 import sys
 from pathlib import Path, PurePosixPath
 
-
-def frontmatter_list(text: str, key: str) -> list[str]:
-    m = re.match(r"^---\n(.*?)\n---", text, re.S)
-    if not m:
-        return []
-    fm = m.group(1)
-    inline = re.search(rf"^{key}:\s*\[(.*?)\]\s*$", fm, re.M)
-    if inline:
-        return [v.strip().strip("'\"") for v in inline.group(1).split(",") if v.strip()]
-    block = re.search(rf"^{key}:\s*\n((?:\s+-\s+.*\n?)+)", fm, re.M)
-    if block:
-        return [l.split("-", 1)[1].strip().strip("'\"") for l in block.group(1).splitlines() if l.strip()]
-    return []
+HOOK_REPO = Path(__file__).resolve().parents[2]
 
 
 def main() -> int:
-    root = Path(os.environ.get("CLAUDE_PROJECT_DIR", ".")).resolve()
+    root = Path(os.environ.get("CLAUDE_PROJECT_DIR") or HOOK_REPO).resolve()
     marker = root / ".claude" / "current-task"
     if not marker.exists():
         return 0
@@ -45,6 +35,11 @@ def main() -> int:
     task_id = marker.read_text(encoding="utf-8-sig").strip()
     if not task_id:
         return 0
+
+    # Sin .pyc: .gitignore no cubre __pycache__, y merge_gate.sh exige el árbol limpio.
+    sys.dont_write_bytecode = True
+    sys.path.insert(0, str(HOOK_REPO / "tools"))
+    from card_frontmatter import frontmatter_list
 
     data = json.loads(sys.stdin.buffer.read().decode("utf-8"))
     target = data.get("tool_input", {}).get("file_path")
@@ -85,7 +80,7 @@ def main() -> int:
 if __name__ == "__main__":
     try:
         status = main()
-    except Exception as exc:
+    except BaseException as exc:  # También SystemExit: el módulo importado no decide la salida.
         status = 2
         try:
             print(

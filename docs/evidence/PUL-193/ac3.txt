@@ -1,0 +1,17 @@
+AC3: copia de _TEMPLATE.md con owns relleno.
+OK   docs/a.txt: rc=0 (se espera 0)
+OK   src/d/e.gd: rc=0 (se espera 0)
+OK   zz/fuera.txt: rc=2 (se espera 2)
+OK   plantilla anterior con comentario tras owns, docs/a.txt: rc=0
+
+Plantilla:
+OK   sin comentarios: 'owns: []', 'touches_scenes: []'
+OK   unity_sources: []    # opcional: scripts/prefabs de Assets/, solo como referencia (D17)
+OK   status: draft        # draft | ready | in_progress | review | done | blocked | superseded
+OK   milestone: M0        # hitos en docs/design/roadmap.md
+
+Cabecera de README.md:
+OK   sin 'tal cual' en la cabecera
+OK   sin 'Ownership' en la cabecera
+OK   sin 'worker-start --spec' en la cabecera
+OK   tabla de fichas idéntica a ec25ecc

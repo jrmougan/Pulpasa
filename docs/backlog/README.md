@@ -3,11 +3,11 @@
 Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 
 - **Ciclo:** draft → ready (la marca el producer) → in_progress → review → done.
-- **owns / touches_scenes** limitan lo que el worker puede editar. Un `.tscn` tiene un solo
-  dueño por oleada.
+- **owns / touches_scenes** son globs que limitan lo que el worker puede editar (los hacen
+  cumplir `guard_ownership.py` y `check_owns.py`). Un `.tscn` tiene un solo dueño por oleada.
 - Cada criterio de aceptación enlaza con un test o con una captura en `docs/evidence/<id>/`.
-- El cuerpo sigue el contrato de Orca (Target, Change, Constraints, Ownership, Acceptance),
-  así que la ficha se pasa tal cual a `worker-start --spec`.
+- El cuerpo tiene las secciones de `_TEMPLATE.md`. Para lanzar una ficha como worker, sigue la
+  skill `orca-dispatch`.
 
 ## Fichas actuales
 
