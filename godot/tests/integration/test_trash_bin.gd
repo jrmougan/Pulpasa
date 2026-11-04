@@ -297,6 +297,16 @@ func test_t6_trash_bins_are_far_from_every_target_and_the_gap() -> void:
 			continue
 		if not target is RigidBody3D:
 			targets.append(target)
+	# PUL-202: los puestos salieron de `interactable` (D26); se buscan por clase en todo el nivel,
+	# así que uno nuevo entra solo, y deben coincidir con los que registra el nivel.
+	var stands: Array[Node3D] = []
+	for node: Node in level.find_children("*", "OrderStand", true, false):
+		stands.append(node as Node3D)
+	assert_gte(stands.size(), 1, "el nivel tiene puestos")
+	assert_eq(stands.size(), (level.get(&"stands") as Array).size(), "todo puesto está en `stands`")
+	for stand: Node3D in stands:
+		if not targets.has(stand):
+			targets.append(stand)
 	var names: Array[String] = []
 	for target: Node3D in targets:
 		names.append(String(target.name))
@@ -309,6 +319,8 @@ func test_t6_trash_bins_are_far_from_every_target_and_the_gap() -> void:
 		var pos: Vector2 = _flat(bin.global_position)
 		for target: Node3D in targets:
 			var gap: float = pos.distance_to(_flat(target.global_position))
+			if target is OrderStand:
+				print("PUL-202 %s a %s: %.3f m" % [bin.name, target.name, gap])
 			assert_gte(gap, TRASH_MIN_DISTANCE, "%s a %s" % [bin.name, target.name])
 		var span: Vector2 = _gap_span(level)
 		var gap_point: Vector2 = Vector2(clampf(pos.x, span.x, span.y), BAR_Z)

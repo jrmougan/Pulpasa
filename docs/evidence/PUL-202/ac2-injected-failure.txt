@@ -1,0 +1,30 @@
+* test_t2_raw_cooked_octopus_and_cachelos_are_trashed
+* test_t2_burnt_octopus_in_pot_is_not_seen_by_the_bin
+* test_t3_empty_hand_is_not_target_nor_interactable
+* test_t3_with_item_in_hand_detector_targets_bin
+* test_t4_one_trash_cue_with_visual_response
+* test_t5_penalty_is_zero_and_earnings_unchanged
+* test_t7_trashing_does_not_reject_the_order
+* test_t8_only_closest_of_bin_and_free_slot_is_target
+* test_t9_two_players_trash_at_once
+* test_t6_level_has_exactly_two_trash_bins_at_contract_positions
+    [Failed]:  [1.22065544128417970000] expected to equal [0.0] +/- [0.01]:  
+      at line 279
+* test_t6_trash_bins_are_far_from_every_target_and_the_gap
+PUL-202 TrashBinKitchen a OrderStand1: 10.636 m
+PUL-202 TrashBinKitchen a OrderStand2: 9.671 m
+PUL-202 TrashBinKitchen a OrderStand3: 8.896 m
+PUL-202 TrashBinKitchen a OrderStand4: 8.918 m
+PUL-202 TrashBinService a OrderStand1: 1.331 m
+    [Failed]:  [1.33135282993317] expected to be >= than [1.5]:  TrashBinService a OrderStand1
+      at line 324
+PUL-202 TrashBinService a OrderStand2: 3.189 m
+PUL-202 TrashBinService a OrderStand3: 6.146 m
+PUL-202 TrashBinService a OrderStand4: 8.135 m
+* test_t6_gap_keeps_one_meter_clear_and_bins_not_under_hud
+11/13 passed.
+    [Failed]:  [1.22065544128417970000] expected to equal [0.0] +/- [0.01]:  
+          at line 279
+    [Failed]:  [1.33135282993317] expected to be >= than [1.5]:  TrashBinService a OrderStand1
+          at line 324
+Failing Tests         2

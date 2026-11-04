@@ -1,7 +1,7 @@
 ---
 id: PUL-202
 title: Probar la flecha contra la zona anclada y la distancia de los cubos a los puestos
-status: ready
+status: review
 milestone: M4
 role: gameplay-engineer
 deps: []
@@ -28,7 +28,18 @@ No toques código de juego. Si un test revela un fallo real, no lo tapes: status
 - [ ] AC3 Given la suite, When `tools/verify.sh`, Then verde → docs/evidence/PUL-202/
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+Ficheros: solo los tres tests de `owns`; sin señales nuevas ni código de juego.
+- AC1: `test_arrow_keeps_16px_from_button_zone` (test_camera_follow.gd) compara con `_rig._button_zone(canvas)`
+  (la zona real de `camera_rig.gd`) crecida `ARROW_GAP_PX`; `test_edge_point_avoids_button_zone`
+  (test_camera_follow_math.gd) exige 16 px (antes 15). Error inyectado y revertido en `camera_follow.gd`
+  y `camera_rig.gd`.
+- AC2: `test_t6_trash_bins_are_far_from_every_target_and_the_gap` (test_trash_bin.gd) añade los
+  `OrderStand` hallados por clase con `find_children` (no dependen de grupos) y exige que coincidan en
+  número con `Level.stands`. Error inyectado: mover el cubo de servicio a <1,5 m de `OrderStand1`.
+- AC3: `tools/verify.sh` completo.
 
 ## Evidence
-(Lo rellena el worker: salida de verify.sh, capturas, notas.)
+- AC1: docs/evidence/PUL-202/ac1-injected-failure.txt (dos errores inyectados y revertidos: `camera_follow.gd` con hueco 15 px y `camera_rig.gd` sin zona; fallan test_edge_point_avoids_button_zone y test_arrow_keeps_16px_from_button_zone; zona real medida (1818, 777)).
+- AC2: ac2-distances.txt (8 distancias cubo-puesto, minima 2,552 m) y ac2-injected-failure.txt (cubo movido a 1,33 m de OrderStand1: falla T6).
+- AC3: ac3-verify.txt, verify OK, 1378/1378 tests.
+- Nota: el `print` de distancias en T6 es deliberado (AC2). Los puestos se hallan por clase (`find_children`) y se exige que coincidan en numero con `Level.stands`.

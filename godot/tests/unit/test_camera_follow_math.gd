@@ -135,8 +135,9 @@ func test_edge_point_avoids_button_zone() -> void:
 	]:
 		var p: Vector2 = CameraFollow.edge_point(target, bounds, avoid, size, 16.0)
 		var arrow: Rect2 = Rect2(p - size * 0.5, size)
+		# PUL-202: el hueco pedido es 16 px; se exigen los 16 (menos 0,01 por redondeo de float).
 		assert_false(
-			arrow.intersects(avoid.grow(15.0)), "a 16 px de la zona de botones: %s" % target
+			arrow.intersects(avoid.grow(16.0 - 0.01)), "a 16 px de la zona de botones: %s" % target
 		)
 		assert_true(bounds.grow(0.01).has_point(p), "dentro de los límites: %s" % target)
 
