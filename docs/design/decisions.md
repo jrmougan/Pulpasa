@@ -44,3 +44,4 @@ Tomadas el 2026-10-03 por el responsable del proyecto. Fuente de verdad frente a
 | T4 | Tests | GUT 9.7.1 en headless vía `tools/verify.sh` |
 | T5 | MCP | `godot-mcp-runtime@3.8.1` (`.mcp.json`) |
 | T6 | Orquestación | Orca es el único orquestador; subagentes de Claude Code solo dentro de un worker |
+| T7 | Edición de escenas | Sin editor ni operación del MCP que funcione, `.tscn` y `.tres` se editan como texto con las condiciones de ADR-001 Enmienda 1. Decidido por el responsable el 2026-11-04 |

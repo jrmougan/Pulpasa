@@ -7,7 +7,7 @@ de la específica; ADR-005 recoge la comparación para decidir.
 
 | Documento | Tema | Estado |
 |---|---|---|
-| [ADR-001](ADR-001-gdscript-convenciones.md) | Lenguaje, convenciones GDScript y estructura de carpetas | propuesto |
+| [ADR-001](ADR-001-gdscript-convenciones.md) | Lenguaje, convenciones GDScript y estructura de carpetas | aceptado; Enmienda 1 aprobada |
 | [ADR-002](ADR-002-eventbus-autoloads.md) | `EventBus` y autoloads (`GameState`, `OrderService`, `RoundManager`); sustituto de QFramework | propuesto |
 | [ADR-003](ADR-003-arbol-escenas-composicion.md) | Árbol de escenas, composición y contrato de interacción; §8 estación (D18), §9 estación al paso (D23), §10 D25, §11 lenguaje de acciones (D26) | aceptado; §8, §10 y §11 propuestas |
 | [ADR-004](ADR-004-input-coop-local.md) | InputMap por jugador y dispositivo; cambio de personaje; §6 táctil (D26) | aceptado; §6 propuesta |
