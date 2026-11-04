@@ -1,7 +1,7 @@
 ---
 id: PUL-203
 title: Alinear los documentos de diseño con el gate de enmiendas
-status: review
+status: done
 milestone: M4
 role: game-designer
 deps: [PUL-198, PUL-202]
