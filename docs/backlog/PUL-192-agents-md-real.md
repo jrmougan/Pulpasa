@@ -1,7 +1,7 @@
 ---
 id: PUL-192
 title: Convertir AGENTS.md en el fichero real de contexto y CLAUDE.md en su import
-status: ready
+status: blocked
 milestone: M4
 role: godot-architect
 deps: []
