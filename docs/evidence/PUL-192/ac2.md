@@ -73,5 +73,25 @@ regla 1:
 En estas pruebas, la segunda línea no cambia el resultado: sin ella, la sesión ya intenta leer `AGENTS.md`, y `-p` le
 deniega el permiso porque el fichero queda fuera del directorio de trabajo.
 
+## Repetición en la segunda revisión
+
+Mismo prompt y `--tools ""`, con `--output-format json` y Claude Code 2.1.318. Los clones son de `pul-192` y de la base
+(`cac6ac1`), con `core.symlinks=false`.
+
+| Arranque | Regla 1 | Línea de los hooks |
+|---|---|---|
+| Worktree de la rama, raíz | sí | sí |
+| Worktree de la rama, `godot/` | NO_DISPONIBLE | NO_DISPONIBLE |
+| Clon de la rama, raíz | sí | sí |
+| Clon de la rama, `godot/` | NO_DISPONIBLE | NO_DISPONIBLE |
+| Clon de la base, `godot/` | sí | NO_DISPONIBLE (la línea no existe en la base) |
+| Clon de la rama con el import dentro del cwd, `godot/` | sí | sí |
+
+Última fila: en un clon temporal, `CLAUDE.md` contenía solo `@godot/ctx_import_test.md`, copia de `AGENTS.md`. No se ha
+aplicado a la rama. Es una sola sesión. Encaja con que se descarte el import que queda fuera del cwd, pero no demuestra
+el mecanismo, y tampoco que la causa sea `hasClaudeMdExternalIncludesApproved`.
+
+AC2 sigue sin cumplirse desde subdirectorios y su casilla queda sin marcar hasta que decida el coordinador.
+
 Sin comprobar: una sesión interactiva desde `godot/`, tanto si pide aprobar el import como si pide permiso para `Read`.
 Los flujos documentados de Orca arrancan en la raíz del worktree; esta prueba no los lanza.

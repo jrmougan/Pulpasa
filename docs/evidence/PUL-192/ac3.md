@@ -42,6 +42,11 @@ Mismo comando y mismo prompt, sin llamadas a comandos en la salida `--json`:
 
 Arrancar desde un subdirectorio no afecta a Codex, a diferencia de Claude Code (`ac2.md`).
 
+## Repetición en la segunda revisión
+
+Mismo comando y mismo prompt, sin llamadas a comandos en la salida `--json`. En el worktree de la rama, desde la raíz y
+desde `godot/`, Codex cita la regla 1 y la línea de los hooks.
+
 ## Límite
 
 Se lanzó con `codex exec` en un worktree, no como worker supervisado por Orca (`worker-start --agent codex`): esta tarea
