@@ -193,8 +193,14 @@ func test_arrow_keeps_16px_from_button_zone() -> void:
 	_run(1.5)
 	assert_true(_arrow_layer().visible)
 	var arrow: TextureRect = _arrow()
-	var zone: Rect2 = Rect2(Vector2(2340.0 - 390.0, 600.0), Vector2(390.0, 480.0)).grow(16.0)
-	assert_false(Rect2(arrow.position, arrow.size).intersects(zone), "a >= 16 px de los botones")
+	# PUL-202: la zona real de camera_rig.gd, anclada a la safe area (no un rectángulo fijo).
+	var real: Rect2 = _rig._button_zone(Vector2(CANVAS))
+	assert_lt(
+		real.position.x, 1950.0, "la zona anclada empieza antes que el rectángulo fijo antiguo"
+	)
+	var zone: Rect2 = real.grow(CameraRig.ARROW_GAP_PX - 0.01)
+	var box: Rect2 = Rect2(arrow.position, arrow.size)
+	assert_false(box.intersects(zone), "a >= 16 px de la zona de botones real %s" % real)
 
 
 func test_arrow_follows_active_switch() -> void:

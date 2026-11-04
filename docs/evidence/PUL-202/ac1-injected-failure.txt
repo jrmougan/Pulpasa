@@ -1,0 +1,47 @@
+== inyeccion A (camera_follow.gd: avoid.grow(gap - 1.0)) test_camera_follow_math
+* test_follow_time_reaches_most_of_the_distance
+* test_rest_has_no_oscillation
+* test_target_jitter_stays_within_tolerance
+* test_zero_smooth_time_snaps
+* test_pan_takes_duration_and_is_ease_out
+* test_pan_follows_moving_target
+* test_pan_zero_duration_snaps
+* test_clamp_focus_limits_view_to_margin
+* test_clamp_focus_centers_when_view_is_larger
+* test_edge_point_on_boundary_towards_target
+* test_edge_point_avoids_button_zone
+    [Failed]:  a 16 px de la zona de botones: (5000.0, 1000.0)
+      at line 139
+* test_covered_focus_centers_target_in_visible_part
+* test_covered_clamp_without_cover_matches_plain_clamp
+* test_covered_clamp_lets_north_edge_clear_the_band
+* test_covered_clamp_keeps_south_and_side_limits
+* test_covered_clamp_centers_when_view_is_larger_than_area
+* test_clear_east_cover_keeps_focus_when_target_is_clear
+* test_clear_east_cover_moves_just_enough_east
+* test_clear_east_cover_lets_view_leave_margin_by_the_cover_only
+19/20 passed.
+    [Failed]:  a 16 px de la zona de botones: (5000.0, 1000.0)
+          at line 139
+Failing Tests         1
+== inyeccion A (camera_follow.gd: avoid.grow(gap - 1.0)) test_camera_follow
+* test_no_oscillation_at_rest
+* test_ac11_running_character_stays_inside_screen_and_stops_cleanly
+* test_view_never_leaves_level_margin
+* test_switch_pans_to_new_character_in_pan_time
+* test_other_player_switch_is_ignored
+* test_arrow_hidden_when_inactive_is_on_screen
+* test_arrow_points_to_offscreen_inactive_inside_safe_area
+* test_arrow_keeps_16px_from_button_zone
+    [Failed]:  a >= 16 px de la zona de botones real [P: (1818.0, 777.0), S: (522.0, 303.0)]
+      at line 201
+* test_arrow_follows_active_switch
+* test_arrow_is_48_real_px_with_size_2d_override
+10/11 passed.
+    [Failed]:  a >= 16 px de la zona de botones real [P: (1818.0, 777.0), S: (522.0, 303.0)]
+          at line 201
+Failing Tests         1
+== inyeccion B (camera_rig.gd: avoid = Rect2()) test_camera_follow
+    [Failed]:  a >= 16 px de la zona de botones real [P: (1818.0, 777.0), S: (522.0, 303.0)]
+      at line 201
+10/11 passed.
