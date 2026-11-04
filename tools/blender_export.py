@@ -14,14 +14,18 @@ Opciones (tras `--`):
   --max-tris N      falla si la colección supera N triángulos (presupuesto de art-bible §2.2)
   --smoke-cube      construye el cubo de prueba sobre la plantilla y lo exporta a
                     godot/assets/models/_pipeline/test_cube/test_cube.glb
-  --materials-test  construye un taburete con tres materiales v2 (PUL-074) y lo exporta a
-                    godot/assets/models/_pipeline/materials_v2_test/materials_v2_test.glb
+  --materials-test  (heredado de la v2, PUL-074) construye un taburete con tres materiales de la
+                    biblioteca v2 y lo exporta a
+                    godot/assets/models/_pipeline/materials_v2_test/materials_v2_test.glb. La
+                    biblioteca v2 sigue en el repo hasta PUL-188; no es una prueba de la v3
 
 Reglas que comprueba antes de exportar (art-bible §2): existe la colección `export`, hay una sola
 raíz, escalas y rotaciones aplicadas en todos los objetos (local y mundo), no hay cámaras ni luces y existe el
-marcador `Anchor_Front` en +Y con ≤ 1° de desviación (frente −Z en Godot). Texturas (biblioteca v2,
-docs/art/materials-v2.md): cada imagen de los materiales exportados existe en disco y mide ≤ 1024 px por
-lado (art-bible v2 §4.2); el .glb las embebe y Godot las extrae junto a él al importar. Sale con código 1
+marcador `Anchor_Front` en +Y con ≤ 1° de desviación (frente −Z en Godot). Texturas: cada imagen de
+los materiales exportados existe en disco y mide ≤ 1024 px por lado. Salida v3 (art-bible v3 §3.2/§3.3):
+el .glb nuevo siembra su .glb.import con `gltf/embedded_image_handling` = 0 (Godot descarta las
+texturas y no vuelve a extraer PNG), `materials/extract` = 0 y sin tangentes; los slots se redirigen
+a godot/assets/materials/v3/ en `_subresources` (paso manual, pipeline.md §5). Sale con código 1
 si algo falla.
 """
 
@@ -42,7 +46,9 @@ EPS = 1e-4
 ROT_EPS = math.radians(0.01)
 FRONT_MAX_ANGLE_DEG = 1.0
 
-# Ajustes de import que el pipeline fija en cada .glb.import (pipeline.md §4).
+# Ajustes de import que el pipeline fija en cada .glb.import nuevo (pipeline.md §5, art-bible v3 §3.2/§3.3):
+# sin texturas extraídas (embedded_image_handling 0 = descartar), materiales sin extraer (los slots se
+# redirigen a godot/assets/materials/v3/ en _subresources) y sin tangentes (no hay normal maps en la v3).
 IMPORT_PARAMS = {
     "nodes/root_type": '""',
     "nodes/root_name": '""',
@@ -50,7 +56,7 @@ IMPORT_PARAMS = {
     "nodes/root_scale": "1.0",
     "nodes/use_name_suffixes": "false",
     "nodes/use_node_type_suffixes": "false",
-    "meshes/ensure_tangents": "true",
+    "meshes/ensure_tangents": "false",
     "meshes/generate_lods": "true",
     "meshes/create_shadow_meshes": "true",
     "meshes/light_baking": "1",
@@ -58,7 +64,7 @@ IMPORT_PARAMS = {
     "animation/import": "true",
     "animation/fps": "30",
     "gltf/naming_version": "2",
-    "gltf/embedded_image_handling": "1",
+    "gltf/embedded_image_handling": "0",
 }
 
 
@@ -165,7 +171,7 @@ def build_materials_test() -> None:
 
 
 def check_textures(objs: list) -> list:
-    """Imágenes de los materiales exportados: deben existir y medir ≤ 1024 px (art-bible v2 §4.2)."""
+    """Imágenes de los materiales exportados: deben existir y medir ≤ 1024 px (límite de tamaño heredado de la v2)."""
     errors, seen = [], set()
     for o in objs:
         if o.type != "MESH":
@@ -313,7 +319,7 @@ def main() -> None:
         export_extras=False,
         export_materials="EXPORT",
         export_image_format="AUTO",
-        export_tangents=True,
+        export_tangents=False,
         export_animations=args.animations,
         export_skins=args.animations,
         export_morph=False,

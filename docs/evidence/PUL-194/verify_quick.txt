@@ -1,0 +1,11 @@
+
+== gdformat --check
+245 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+✓ verify OK
+exit=0
