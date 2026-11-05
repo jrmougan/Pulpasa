@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Ejecuta AC1-AC5 de PUL-190 contra guard_ownership.py. En Git Bash usa rutas de Windows (`pwd -W`);
-# en Linux, rutas POSIX. fail_open.txt mide lo que el hook no puede arreglar: no cuenta como fallo.
+# en Linux, rutas POSIX. fail_open.txt mide lo que el hook no puede arreglar: no cuenta como fallo,
+# salvo su control, que debe bloquear por `owns`.
 # Uso: run_acs.sh <hook.py> <dir_salida>
 # Trabaja en un sandbox con copia de docs/backlog: las fichas ilegibles de AC4 no tocan el backlog real.
-# Sale con 1 si falla alguna comprobación.
+# Sale con 1 si falla alguna comprobación o falta alguna salida esperada.
 set -uo pipefail
 shopt -s lastpipe # `input | run_raw` debe fijar RC en este shell, no en un subshell.
 HOOK="$(cygpath -wa "$1" 2>/dev/null || realpath "$1")"
@@ -11,22 +12,31 @@ OUT="$2"
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 mkdir -p "$OUT" || { echo "run_acs: no puedo crear $OUT" >&2; exit 2; }
 OUT="$(cd "$OUT" && pwd)" || { echo "run_acs: no puedo entrar en $OUT" >&2; exit 2; }
+EXPECTED=(ac1 ac2 ac3 ac4 ac5 fail_open)
+# Una salida de otra pasada no cuenta como presente.
+for name in "${EXPECTED[@]}"; do
+  rm -f "$OUT/$name.txt"
+  [[ ! -e "$OUT/$name.txt" ]] || { echo "run_acs: no puedo borrar la salida antigua $name.txt" >&2; exit 2; }
+done
 export LC_ALL=C # grep compara bytes: «está» solo casa si stderr sale en UTF-8.
 # PYTHONUTF8=1 ocultaría el bug: el hook debe funcionar con la codificación por defecto de Windows.
 unset PYTHONUTF8 PYTHONIOENCODING
 
-BOX_UNIX="$(mktemp -d)"
+BOX_UNIX="$(mktemp -d)" || { echo "run_acs: mktemp ha fallado" >&2; exit 2; }
+# Sin esto, un BOX_UNIX vacío hace `mkdir -p /.claude /docs` y `cp -r` a la raíz.
+[[ -n "$BOX_UNIX" && -d "$BOX_UNIX" ]] || { echo "run_acs: mktemp no ha creado el directorio" >&2; exit 2; }
 trap 'rm -rf "$BOX_UNIX"' EXIT
 mkdir -p "$BOX_UNIX/.claude" "$BOX_UNIX/docs"
 cp -r "$REPO/docs/backlog" "$BOX_UNIX/docs/backlog"
-cd "$BOX_UNIX" || exit 1
+cd "$BOX_UNIX" || exit 2
 BOX="$(pwd -W 2>/dev/null || pwd)"
 export CLAUDE_PROJECT_DIR="$BOX"
 MARK=".claude/current-task"
 
 fails=0
 RC=0
-ERR="$(mktemp)"
+ERR="$(mktemp)" || { echo "run_acs: mktemp ha fallado" >&2; exit 2; }
+[[ -n "$ERR" && -f "$ERR" ]] || { echo "run_acs: mktemp no ha creado el fichero" >&2; exit 2; }
 
 # Stderr legible y sin rutas absolutas: decodifica como UTF-8 y marca los bytes rotos como \xNN.
 show_err() {
@@ -280,9 +290,17 @@ measure() { # <etiqueta> <comando>; la edición va a una ruta ajena, así que el
   printf 'PUL-184\n' >"$MARK"
   CMD="$(hook_command | tr -d '\r')"
   echo "comando: $CMD"
-  mkdir -p .claude/hooks
+  mkdir -p .claude/hooks tools
   cp "$HOOK" .claude/hooks/guard_ownership.py
+  cp "$REPO/tools/card_frontmatter.py" tools/ # El hook lo importa de su repo, aquí el sandbox.
   measure "control: hook intacto" "$CMD"
+  # Cualquier excepción también da rc=2: solo el mensaje prueba que ha decidido `owns`.
+  if [[ "$RC" == 2 ]] && grep -qF "$OWNS_MSG" "$ERR"; then
+    echo "PASS el control bloquea por owns"
+  else
+    echo "FAIL el control no bloquea por owns"
+    fails=$((fails + 1))
+  fi
   measure "PYTHONIOENCODING inválida (Fatal Python error, antes del try)" "PYTHONIOENCODING=no-existe $CMD"
   measure "intérprete ausente (simulado con un comando inexistente, sin quitar Python)" "${CMD/python3/python3-no-existe}"
   printf 'def (:\n' >.claude/hooks/guard_ownership.py
@@ -290,7 +308,12 @@ measure() { # <etiqueta> <comando>; la edición va a una ruta ajena, así que el
 } >"$OUT/fail_open.txt" 2>&1
 
 rm -f "$ERR"
+# Un `{ ...; } >fichero` que no puede abrir su salida se salta el bloque entero y no cuenta ningún fallo.
+missing=()
+for name in "${EXPECTED[@]}"; do [[ -f "$OUT/$name.txt" && -s "$OUT/$name.txt" ]] || missing+=("$name.txt"); done
+fails=$((fails + ${#missing[@]}))
 echo "fallos=$fails" | tee "$OUT/summary.txt"
+((${#missing[@]} == 0)) || echo "FAIL faltan salidas: ${missing[*]}" | tee -a "$OUT/summary.txt"
 grep -c '^PASS' "$OUT"/ac[1245].txt | sed 's|.*/||' | tee -a "$OUT/summary.txt"
 tail -1 "$OUT/ac3.txt" | tee -a "$OUT/summary.txt"
 echo "fallo_abierto_conocido=$(grep -c '^FALLO ABIERTO' "$OUT/fail_open.txt")" | tee -a "$OUT/summary.txt"

@@ -1,0 +1,9 @@
+T6 sobre level_01.tscn, sin inyeccion (13/13 passed):
+PUL-202 TrashBinKitchen a OrderStand1: 10.636 m
+PUL-202 TrashBinKitchen a OrderStand2: 9.671 m
+PUL-202 TrashBinKitchen a OrderStand3: 8.896 m
+PUL-202 TrashBinKitchen a OrderStand4: 8.918 m
+PUL-202 TrashBinService a OrderStand1: 2.552 m
+PUL-202 TrashBinService a OrderStand2: 4.349 m
+PUL-202 TrashBinService a OrderStand3: 7.247 m
+PUL-202 TrashBinService a OrderStand4: 9.215 m

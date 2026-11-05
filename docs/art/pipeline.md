@@ -6,8 +6,9 @@ que la v3 conserva de [`art-bible-v1.md`](art-bible-v1.md) §2 (v3 §0.2); todas
 
 **Estado de la migración v2 → v3.** La biblioteca de materiales v2 (`art/blender/_materials_v2.blend`,
 `godot/assets/materials/v2/`, `godot/assets/textures/v2/`, los PNG extraídos junto a los `.glb` y
-[`materials-v2.md`](materials-v2.md)) **sigue en el repo** hasta que PUL-188 la borre (su ficha no menciona `art/blender/_materials_v2.blend`, `_template.blend` ni
-`materials-v2.md`: esos quedan por decidir). Existe, pero no es vigente: ningún asset nuevo la usa como destino (§8).
+[`materials-v2.md`](materials-v2.md)) **sigue en el repo**; PUL-188 solo borra `godot/assets/materials/v2/`, `godot/assets/textures/v2/` y los
+`godot/assets/models/**/*.png` (y sus `.png.import`). `art/blender/_materials_v2.blend`, `_template.blend`, `materials-v2.md` y el banco
+`_pipeline/**` no figuran en su `owns` y siguen: qué hacer con ellos lo decide PUL-201. Existe, pero no es vigente: ningún asset nuevo la usa como destino (§8).
 
 ## 1. Requisitos
 
@@ -94,7 +95,8 @@ por ficha, art-bible-v1 §2.4). Contiene:
   × 1,8 m, origen en la base) y `ref_counter_1m` (encimera de 1 × 0,8 × 1 m) en alámbrico, y la
   flecha `ref_front_+Y`.
 - **Materiales: aún enlaza la biblioteca v2** (45 `mat_*` de `art/blender/_materials_v2.blend`, link con ruta
-  relativa `//_materials_v2.blend`; por eso el `.blend` del asset debe vivir en `art/blender/`). La plantilla
+  relativa `//_materials_v2.blend`; por eso el `.blend` del asset debe vivir en `art/blender/`). La tira
+  `ref_materials_v2` de la colección `reference` de la plantilla mantiene vivos esos 45 `mat_*` y sirve de muestrario: no la borres. La plantilla
   no se ha migrado y ninguna ficha abierta lo hace (PUL-188 no la menciona). En la v3 el color y el acabado **no
   se definen en Blender**, sino en los 18 `.tres` de `godot/assets/materials/v3/` (art-bible §3.1). Un
   material de Blender solo sirve como **nombre de slot** del `.glb` (regla única, §8.1): cada malla lleva un
@@ -117,7 +119,8 @@ blender -b art/blender/x.blend --python tools/blender_export.py -- --out godot/a
 # Prueba de humo: cubo de 1 m sobre la plantilla → godot/assets/models/_pipeline/test_cube/test_cube.glb
 blender -b art/blender/_template.blend --python tools/blender_export.py -- --smoke-cube
 # Heredado de la v2 (PUL-074), NO es una prueba de la v3 → godot/assets/models/_pipeline/materials_v2_test/
-# (no lo ejecutes: reescribiría el .glb versionado con uno sin imágenes; PUL-188 va a borrarlo)
+# (no lo ejecutes: reescribiría el .glb versionado con uno sin imágenes. PUL-188 no lo borra: art-bible §3.3.5 mantiene
+# `_pipeline/**` como banco excluido; solo borra sus PNG, tras lo cual `--materials-test`, que valida texturas, fallaría)
 blender -b art/blender/_template.blend --python tools/blender_export.py -- --materials-test
 ```
 
@@ -240,12 +243,12 @@ Sustituye al antiguo §8 de la biblioteca v2. Resumen para las fichas de arte; m
    (`export_image_format="NONE"`) y, con `gltf/embedded_image_handling = 0`, Godot descartaría las que hubiera.
    Solo `--materials-test` (v2) valida existencia y tamaño de texturas.
 4. **Import**: `.glb.import` con `embedded_image_handling = 0`, `materials/extract = 0` y los slots redirigidos
-   (§5). Un `.glb` nuevo no genera PNG ni `.png.import` que versionar, salvo la excepción de §8.2; lo existente sigue hasta PUL-188 (§8.6).
+   (§5). Un `.glb` nuevo no genera PNG ni `.png.import` que versionar, salvo la excepción de §8.2; los PNG existentes los borra PUL-188 (§8.6).
 5. **Atlas multicolor y slots compartidos**: se resuelven con la tabla de art-bible §3.3.3-§3.3.5; la
    variación por estado (crudo/cocido/quemado) se hace con visibilidad de nodos o `surface_material_override`
    en la escena dueña, no con texturas.
-6. **Lo que aún existe de la v2** (hasta PUL-188): `godot/assets/materials/v2/`, `godot/assets/textures/v2/`,
-   los PNG extraídos junto a los `.glb`, `art/blender/_materials_v2.blend` (enlazada por `_template.blend`; ninguna
+6. **Lo que aún existe de la v2**. PUL-188 borra `godot/assets/materials/v2/`, `godot/assets/textures/v2/` y los PNG
+   extraídos junto a los `.glb` (incluidos los de `_pipeline/`). No figura en su `owns` y sigue: `art/blender/_materials_v2.blend` (enlazada por `_template.blend`; ninguna
    ficha migra la plantilla: si PUL-188 borra `textures/v2`, un `.blend` con `mat_*` v2 solo exporta con el
    exportador de PUL-194, que ya no lee texturas), `materials-v2.md` y el banco
-   `_pipeline/materials_v2_test/`. No se usan como referencia de ningún asset nuevo y no se re-exportan.
+   `_pipeline/materials_v2_test/` (el `.glb` se queda, excluido por art-bible §3.3.5, sin sus PNG; su destino es PUL-201). No se usan como referencia de ningún asset nuevo y no se re-exportan.

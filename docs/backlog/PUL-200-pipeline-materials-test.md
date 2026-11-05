@@ -1,7 +1,7 @@
 ---
 id: PUL-200
 title: Corregir lo que pipeline.md dice de materials_v2_test y ref_materials_v2
-status: ready
+status: done
 milestone: M4
 role: asset-pipeline
 deps: []
@@ -22,10 +22,12 @@ touches_scenes: []
 Solo documentación; contrástalo con la ficha de PUL-188 y art-bible. No abras ni modifiques `.blend`. Lo que hacer con esos restos es PUL-201.
 
 ## Acceptance
-- [ ] AC1 Given `pipeline.md`, When se contrasta con el `owns` de PUL-188 y art-bible §3.3.5, Then no afirma nada falso sobre `_pipeline/**` → docs/evidence/PUL-200/
+- [x] AC1 Given `pipeline.md`, When se contrasta con el `owns` de PUL-188 y art-bible §3.3.5, Then no afirma nada falso sobre `_pipeline/**` → docs/evidence/PUL-200/
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Contrastar `pipeline.md` con el `owns` de PUL-188 y art-bible §3.3.5.
+2. Corregir cabecera, §3 (restaurar nota `ref_materials_v2`), §4, §8.4 y §8.6.
+3. Tabla frase-fuente en `docs/evidence/PUL-200/`; `tools/verify.sh --quick`.
 
 ## Evidence
-(Lo rellena el worker: salida de verify.sh, capturas, notas.)
+Tabla frase-fuente: `docs/evidence/PUL-200/frase-fuente.md`. `tools/verify.sh --quick`: ver informe del commit.

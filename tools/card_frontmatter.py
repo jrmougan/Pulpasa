@@ -24,7 +24,7 @@ def _strip_comment(line: str) -> str:
 
 def _frontmatter_lines(text: str) -> list[str]:
     # git show no quita el BOM ni todas las lecturas normalizan CRLF: da igual cómo llegue el texto.
-    lines = text.removeprefix("﻿").replace("\r\n", "\n").replace("\r", "\n").split("\n")
+    lines = text.removeprefix("\ufeff").replace("\r\n", "\n").replace("\r", "\n").split("\n")
     if lines[0].rstrip() != "---":
         return []
     for index, line in enumerate(lines[1:], start=1):

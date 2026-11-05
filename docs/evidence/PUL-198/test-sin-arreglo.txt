@@ -1,0 +1,10 @@
+* test_pul198_entry_after_expiry_tick_before_advance_does_not_reject
+    [Failed]:  Expected object @Node@159:<Node#167134628218>(event_bus.gd) to NOT emit signal [delivery_rejected]:  sin rechazo antes del advance
+    [Failed]:  Expected object @Node@159:<Node#167134628218>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+* test_pul198_entry_after_the_advance_delivers_replacement
+37/38 passed.
+- test_pul198_entry_after_expiry_tick_before_advance_does_not_reject
+    [Failed]:  Expected object @Node@159:<Node#167134628218>(event_bus.gd) to NOT emit signal [delivery_rejected]:  sin rechazo antes del advance
+    [Failed]:  Expected object @Node@159:<Node#167134628218>(event_bus.gd) to NOT emit signal [delivery_rejected]:  
+Passing Tests        37
+Failing Tests         1

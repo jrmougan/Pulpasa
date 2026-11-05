@@ -1,0 +1,44 @@
+### static var con error en su inicializador y otro script distinto que no compila
+$ tools/verify.sh --quick
+== compilación de scripts
+SCRIPT ERROR: Parse Error: Cannot return a value of type "String" as "int".
+   at: GDScript::reload (res://zz_pul204/other_broken.gd:5)
+SCRIPT ERROR: Parse Error: Cannot return value of type "String" because the function return type is "int".
+   at: GDScript::reload (res://zz_pul204/other_broken.gd:5)
+SCRIPT ERROR: Out of bounds get index '3' (on base: 'Array[int]')
+   at: fail_on_load (res://zz_pul204/static_boom.gd:8)
+SCRIPT ERROR: Out of bounds get index '3' (on base: 'Array')
+   at: @static_initializer (res://zz_pul204/static_direct.gd:3)
+check_scripts: no compila: res://zz_pul204/other_broken.gd
+check_scripts: 1 de 248 scripts no compilan.
+✗ compilación de scripts: rc=1
+
+✗ verify FAILED
+rc=1
+
+### solo static var: check_scripts da OK y aun así debe fallar con ubicación
+$ tools/verify.sh --quick
+== compilación de scripts
+SCRIPT ERROR: Out of bounds get index '3' (on base: 'Array[int]')
+   at: fail_on_load (res://zz_pul204/static_boom.gd:8)
+SCRIPT ERROR: Out of bounds get index '3' (on base: 'Array')
+   at: @static_initializer (res://zz_pul204/static_direct.gd:3)
+check_scripts: OK (247 scripts)
+✗ compilación de scripts: rc=0
+
+✗ verify FAILED
+rc=1
+
+### 45 scripts que no compilan: lista larga
+$ tools/verify.sh --quick
+rc=1
+líneas de diagnóstico SCRIPT ERROR+at: 60
+líneas de la lista 'no compila': 45
+líneas del resumen: 1
+--- últimas 6 líneas
+check_scripts: no compila: res://zz_pul204/many_44.gd
+check_scripts: no compila: res://zz_pul204/many_45.gd
+check_scripts: 45 de 290 scripts no compilan.
+✗ compilación de scripts: rc=1
+
+✗ verify FAILED

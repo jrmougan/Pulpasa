@@ -14,7 +14,7 @@ camino de una alpha. Desarrollo hecho por agentes coordinados con Orca. La migra
 
 ## Comandos
 - Toolchain: `mise install` en la raíz. Se trabaja en Linux, macOS y Windows; las versiones solo cambian por commit en `mise.toml`.
-- Verificación completa: `tools/verify.sh` (gdformat, gdlint, import, GUT, smoke). `--quick` sin tests.
+- Verificación completa: `tools/verify.sh` (sincronía de AGENTS.md y CLAUDE.md, gdformat, gdlint, import, compilación de scripts, GUT, smoke). `--quick` sin tests ni smoke.
 - Merge de una rama de worker (solo el producer): `tools/merge_gate.sh <rama>`.
 - Godot: `godot` en el PATH (4.7.2, binario oficial; con el gestor de cada sistema, p. ej. Godots o
   Scoop con `hold`). No lo gestiona mise.
