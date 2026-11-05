@@ -1,7 +1,7 @@
 ---
 id: PUL-205
 title: Corregir las frases de contrato pendientes del gate (G08, G13, G57)
-status: review
+status: done
 milestone: M4
 role: godot-architect
 deps: [PUL-202]

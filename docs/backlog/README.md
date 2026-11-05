@@ -209,4 +209,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-202 | M4 | gameplay-engineer | done | Probar la flecha contra la zona anclada y la distancia de los cubos a los puestos |
 | PUL-203 | M4 | game-designer | done | Alinear los documentos de diseño con el gate de enmiendas |
 | PUL-204 | M4 | godot-architect | ready | Ajustar timeouts, diagnóstico y documentación de verify |
-| PUL-205 | M4 | godot-architect | ready | Corregir las frases de contrato pendientes del gate (G08, G13, G57) |
+| PUL-205 | M4 | godot-architect | done | Corregir las frases de contrato pendientes del gate (G08, G13, G57) |
