@@ -1,0 +1,7 @@
+fallos=0
+ac1.txt:3
+ac2.txt:4
+ac4.txt:35
+ac5.txt:10
+TOTAL fichas=197 con_rc1=0 fallos=0
+fallo_abierto_conocido=0

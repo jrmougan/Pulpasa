@@ -27,7 +27,7 @@
     "PreToolUse": [
       {
         "matcher": "Edit|Write|MultiEdit",
-        "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard_ownership.py" }]
+        "hooks": [{ "type": "command", "command": "h=\"$CLAUDE_PROJECT_DIR/.claude/hooks/run_guard.sh\"; [ -s \"$h\" ] || { echo 'Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.' >&2; exit 2; }; sh \"$h\" || exit 2" }]
       }
     ],
     "PostToolUse": [
@@ -38,7 +38,7 @@
     ],
     "Stop": [
       {
-        "hooks": [{ "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/verify_on_stop.sh", "timeout": 900 }]
+        "hooks": [{ "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/verify_on_stop.sh", "timeout": 1500 }]
       }
     ]
   }

@@ -1,0 +1,10 @@
+check_owns: pul-199 cambia rutas fuera de owns de docs/backlog/PUL-199-hooks-regla-1.md:
+  - docs/backlog/PUL-200-pipeline-materials-test.md
+  - docs/backlog/PUL-201-retirar-restos-v2.md
+  - docs/backlog/PUL-202-tests-flecha-y-cubos.md
+  - docs/backlog/PUL-203-alinear-diseno-gate.md
+  - docs/backlog/PUL-204-mantenimiento-verify.md
+  - docs/backlog/PUL-205-contrato-g08-g13-g57.md
+  - docs/backlog/README.md
+Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.md, docs/evidence/PUL-199/**
+rc=1
