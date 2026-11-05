@@ -1,0 +1,31 @@
+$ run_mktemp_guard.sh <dir> <run_stop_hook.sh sin guarda> <run_acs.sh de f6ce8ec> sin_guarda
+FAIL stop mktemp=falla cd=real rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+FAIL stop mktemp=vacio cd=real rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+FAIL stop mktemp=inexistente cd=real rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+FAIL acs mktemp=falla cd=real rc=1 repo_cambiado=no commits=1 escrituras_fuera=3
+    fuera: mkdir /.claude
+    fuera: mkdir /docs
+    fuera: cp -> /docs/backlog
+FAIL acs mktemp=vacio cd=real rc=1 repo_cambiado=no commits=1 escrituras_fuera=3
+    fuera: mkdir /.claude
+    fuera: mkdir /docs
+    fuera: cp -> /docs/backlog
+FAIL acs mktemp=inexistente cd=real rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+FAIL acs mktemp=fichero_falla cd=real rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+FAIL acs mktemp=fichero_vacio cd=real rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+FAIL stop mktemp=falla cd=vacio_0 rc=1 repo_cambiado=sí commits=2 escrituras_fuera=0
+FAIL stop mktemp=vacio cd=vacio_0 rc=1 repo_cambiado=sí commits=2 escrituras_fuera=0
+FAIL stop mktemp=inexistente cd=vacio_0 rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+FAIL acs mktemp=falla cd=vacio_0 rc=1 repo_cambiado=sí commits=1 escrituras_fuera=3
+    fuera: mkdir /.claude
+    fuera: mkdir /docs
+    fuera: cp -> /docs/backlog
+FAIL acs mktemp=vacio cd=vacio_0 rc=1 repo_cambiado=sí commits=1 escrituras_fuera=3
+    fuera: mkdir /.claude
+    fuera: mkdir /docs
+    fuera: cp -> /docs/backlog
+FAIL acs mktemp=inexistente cd=vacio_0 rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+FAIL acs mktemp=fichero_falla cd=vacio_0 rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+FAIL acs mktemp=fichero_vacio cd=vacio_0 rc=1 repo_cambiado=no commits=1 escrituras_fuera=0
+fallos=16
+rc=0

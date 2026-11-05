@@ -1,0 +1,2 @@
+31603ce: U+FEFF crudo en el fuente=True, escape en el fuente=False, frontmatter_list con BOM=['a', 'b'], sin BOM=['a', 'b']
+rama: U+FEFF crudo en el fuente=False, escape en el fuente=True, frontmatter_list con BOM=['a', 'b'], sin BOM=['a', 'b']

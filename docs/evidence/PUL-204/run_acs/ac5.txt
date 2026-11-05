@@ -1,0 +1,24 @@
+AC5 rutas destino no ASCII: decide owns, sin excepción
+PASS rc=2 (esperado 2) fuera de owns, UTF-8 crudo: Assets/peñón_ñandú.txt
+    Bloqueado: Assets/peñón_ñandú.txt no está en `owns` ni `touches_scenes` de PUL-184-puestos-entrega-y-numeros-v3.md.
+    Rutas permitidas: godot/data/config/stand_palette.tres, godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand_model.gd, godot/tests/unit/test_order_stand_model.gd, godot/tests/integration/test_order_tickets.gd*, docs/evidence/PUL-184/**, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, godot/entities/stations/order_stand.tscn, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, docs/evidence/PUL-184/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS stderr conserva la ruta en UTF-8
+PASS rc=0 (esperado 0) dentro de owns (glob), UTF-8 crudo: docs/evidence/PUL-184/captura_ñ_€.png
+PASS rc=2 (esperado 2) fuera de owns, JSON con \u
+    Bloqueado: Assets/peñón.txt no está en `owns` ni `touches_scenes` de PUL-184-puestos-entrega-y-numeros-v3.md.
+    Rutas permitidas: godot/data/config/stand_palette.tres, godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand_model.gd, godot/tests/unit/test_order_stand_model.gd, godot/tests/integration/test_order_tickets.gd*, docs/evidence/PUL-184/**, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, godot/entities/stations/order_stand.tscn, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, docs/evidence/PUL-184/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS rc=0 (esperado 0) ficha con owns no ASCII, literal: docs/ñandú/peñón.md
+PASS rc=0 (esperado 0) ficha con owns no ASCII, glob: godot/ñ/a/b.gd
+PASS rc=2 (esperado 2) ficha con owns no ASCII, ruta parecida: docs/nandu/penon.md
+    Bloqueado: docs/nandu/penon.md no está en `owns` ni `touches_scenes` de PUL-904-ñandú.md.
+    Rutas permitidas: docs/ñandú/peñón.md, godot/ñ/**, docs/backlog/PUL-904-ñandú.md, docs/evidence/PUL-904/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+Consola forzada a cp1252: el resultado no cambia
+PASS rc=2 (esperado 2) PYTHONIOENCODING=cp1252, fuera de owns: Assets/peñón.txt
+    Bloqueado: Assets/peñón.txt no está en `owns` ni `touches_scenes` de PUL-184-puestos-entrega-y-numeros-v3.md.
+    Rutas permitidas: godot/data/config/stand_palette.tres, godot/entities/stations/order_stand.tscn, godot/entities/stations/order_stand_model.gd, godot/tests/unit/test_order_stand_model.gd, godot/tests/integration/test_order_tickets.gd*, docs/evidence/PUL-184/**, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, godot/entities/stations/order_stand.tscn, docs/backlog/PUL-184-puestos-entrega-y-numeros-v3.md, docs/evidence/PUL-184/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS stderr sigue en UTF-8
+PASS rc=0 (esperado 0) PYTHONIOENCODING=cp1252, dentro de owns: docs/evidence/PUL-184/ñ.png
