@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Ejecuta AC1-AC5 de PUL-190 contra guard_ownership.py. En Git Bash usa rutas de Windows (`pwd -W`);
-# en Linux, rutas POSIX. fail_open.txt mide lo que el hook no puede arreglar: no cuenta como fallo,
-# salvo su control, que debe bloquear por `owns`.
+# en Linux, rutas POSIX. fail_open.txt mide el comando real de settings.json (desde PUL-199, con
+# run_guard.sh): cada fila debe bloquear por su causa, no solo con rc=2, y si no, cuenta como fallo.
 # Uso: run_acs.sh <hook.py> <dir_salida>
 # Trabaja en un sandbox con copia de docs/backlog: las fichas ilegibles de AC4 no tocan el backlog real.
 # Sale con 1 si falla alguna comprobación o falta alguna salida esperada.
@@ -285,6 +285,15 @@ measure() { # <etiqueta> <comando>; la edición va a una ruta ajena, así que el
   show_err
 }
 
+cause() { # <texto>: la fila anterior debe haber bloqueado por esta causa
+  if [[ "$RC" == 2 ]] && grep -qF "$1" "$ERR"; then
+    echo "PASS causa: $1"
+  else
+    echo "FAIL causa: $1"
+    fails=$((fails + 1))
+  fi
+}
+
 {
   echo "Comando de settings.json, marcador activo y destino ajeno: cualquier rc distinto de 2 deja pasar la edición"
   printf 'PUL-184\n' >"$MARK"
@@ -292,6 +301,7 @@ measure() { # <etiqueta> <comando>; la edición va a una ruta ajena, así que el
   echo "comando: $CMD"
   mkdir -p .claude/hooks tools
   cp "$HOOK" .claude/hooks/guard_ownership.py
+  cp "$REPO/.claude/hooks/run_guard.sh" .claude/hooks/run_guard.sh
   cp "$REPO/tools/card_frontmatter.py" tools/ # El hook lo importa de su repo, aquí el sandbox.
   measure "control: hook intacto" "$CMD"
   # Cualquier excepción también da rc=2: solo el mensaje prueba que ha decidido `owns`.
@@ -301,10 +311,23 @@ measure() { # <etiqueta> <comando>; la edición va a una ruta ajena, así que el
     echo "FAIL el control no bloquea por owns"
     fails=$((fails + 1))
   fi
-  measure "PYTHONIOENCODING inválida (Fatal Python error, antes del try)" "PYTHONIOENCODING=no-existe $CMD"
-  measure "intérprete ausente (simulado con un comando inexistente, sin quitar Python)" "${CMD/python3/python3-no-existe}"
+  # El comando empieza por una asignación: un `VAR=valor` delante no se exportaría.
+  measure "PYTHONIOENCODING inválida (Fatal Python error, antes del try)" "export PYTHONIOENCODING=no-existe; $CMD"
+  cause "unknown encoding"
+  cause "sin decidir"
+  # Sin Python de verdad: fuera del PATH todo directorio que lo tenga.
+  NOPY_PATH=""
+  IFS=: read -ra path_dirs <<<"$PATH"
+  for d in "${path_dirs[@]}"; do
+    [[ -z "$d" || -e "$d/python3" || -e "$d/python3.exe" || -e "$d/python" || -e "$d/python.exe" ]] && continue
+    NOPY_PATH="${NOPY_PATH:+$NOPY_PATH:}$d"
+  done
+  measure "intérprete ausente (sin python en el PATH)" "export PATH=$(printf %q "$NOPY_PATH"); $CMD"
+  cause "no hay python3 ni python"
   printf 'def (:\n' >.claude/hooks/guard_ownership.py
   measure "hook que no compila" "$CMD"
+  cause "SyntaxError"
+  cause "sin decidir"
 } >"$OUT/fail_open.txt" 2>&1
 
 rm -f "$ERR"

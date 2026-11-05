@@ -9,11 +9,15 @@
 #
 # Sin ficha activa no se restringe nada: se sale antes de buscar Python, con el mismo criterio de
 # marcador que guard_ownership.py. Un marcador vacío tampoco restringe; con contenido, decide el hook.
+# Por eso un marcador solo con espacios da rc=0 con Python (el hook lo recorta) y rc=2 sin él.
 #
 # El repositorio es el de este fichero, no $CLAUDE_PROJECT_DIR: Claude Code lo fija al directorio de
 # arranque, que no tiene por qué ser la raíz. Se quita para que el hook use también su propia ubicación.
 
-hook_dir=${0%/*}
+case $0 in
+  */*) hook_dir=${0%/*} ;;
+  *) hook_dir=. ;;
+esac
 unset CLAUDE_PROJECT_DIR
 root=$hook_dir/../..
 marker=$root/.claude/current-task

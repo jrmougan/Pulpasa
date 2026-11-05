@@ -4,16 +4,19 @@
 #   <árbol>: raíz de un checkout (el clon anterior al cambio da la línea base; el worktree, el resultado).
 # Trabaja en un sandbox con copia de .claude/hooks, settings.json, card_frontmatter.py y la ficha, para poder
 # romper hooks sin tocar el árbol. La plantilla de mktemp respeta TMPDIR: apúntalo fuera del repo y de $HOME.
-# [shell] ejecuta el comando (bash por defecto); [dir_temporal] aloja el sandbox. Solo el rc=2 bloquea en Claude Code. Sale con 1 si un caso con expectativa no se cumple.
+# [shell] ejecuta el comando (bash por defecto; con dash, además, `sh` en el PATH es dash, para que el
+# envoltorio corra en dash); [dir_temporal] aloja el sandbox. Solo el rc=2 bloquea en Claude Code. Sale con 1 si un caso con expectativa no se cumple.
 set -uo pipefail
 SRC="$(cd "$1" && pwd)"
 OUT="$(cd "$(dirname "$2")" && pwd)/$(basename "$2")"
 export LC_ALL=C
 unset PYTHONUTF8 PYTHONIOENCODING
 
-HOOK_SHELL="${3:-bash}"
+SHELL_ARG="${3:-bash}"
+HOOK_SHELL="$(command -v "$SHELL_ARG")" # Absoluta: hay casos con un PATH sin shell.
 [[ -n "${4:-}" ]] && export TMPDIR="$4"
-BOX_UNIX="$(mktemp -d)"
+BOX_UNIX="$(mktemp -d)" || { echo "run_acs: mktemp ha fallado" >&2; exit 2; }
+[[ -n "$BOX_UNIX" && -d "$BOX_UNIX" ]] || { echo "run_acs: mktemp no ha creado el directorio" >&2; exit 2; }
 trap 'rm -rf "$BOX_UNIX"' EXIT
 fresh_box() {
   rm -rf "${BOX_UNIX:?}/.claude" "$BOX_UNIX/tools" "$BOX_UNIX/docs"
@@ -25,6 +28,11 @@ fresh_box() {
   printf 'PUL-199\n' >"$BOX_UNIX/.claude/current-task"
 }
 fresh_box
+if [[ "$SHELL_ARG" == dash ]]; then
+  mkdir "$BOX_UNIX/dashbin"
+  cp "$HOOK_SHELL" "$BOX_UNIX/dashbin/sh"
+  export PATH="$BOX_UNIX/dashbin:$PATH"
+fi
 cd "$BOX_UNIX" || exit 1
 BOX="$(pwd -W 2>/dev/null || pwd)"
 export CLAUDE_PROJECT_DIR="$BOX"
@@ -43,6 +51,8 @@ for d in "${path_dirs[@]}"; do
   NOPY_PATH="${NOPY_PATH:+$NOPY_PATH:}$d"
 done
 FAKE="$BOX_UNIX/fakebin"
+NOSH_PATH="$BOX_UNIX/sin_nada"
+mkdir "$NOSH_PATH"
 ERR="$BOX_UNIX/stderr.txt"
 fails=0
 open=0
@@ -73,12 +83,24 @@ run_case() {
   show_err
 }
 
+# check_rc <esperado> <rc> <etiqueta>; el stderr ya está en ERR.
+check_rc() {
+  local verdict=PASS
+  if [[ "$2" != "$1" ]]; then
+    verdict=FAIL
+    fails=$((fails + 1))
+  fi
+  printf '%s rc=%s (esperado %s) %s\n' "$verdict" "$2" "$1" "$3"
+  show_err
+}
+
 FOREIGN=Assets/x.txt
 OWNED=.claude/hooks/guard_ownership.py
 
 {
   echo "comando: $CMD"
-  echo "PATH sin python: $(env PATH="$NOPY_PATH" bash -c 'command -v python3 python || echo ninguno')"
+  echo "PATH sin python: $(env PATH="$NOPY_PATH" "$HOOK_SHELL" -c 'command -v python3 python || echo ninguno')"
+  echo "sh del PATH: $(sh -c 'if [ -n "${BASH_VERSION:-}" ]; then echo "bash $BASH_VERSION"; else echo "no es bash"; fi')"
   echo
   echo "== Control"
   run_case 2 "hook intacto, fuera de owns" "$FOREIGN"
@@ -140,6 +162,36 @@ OWNED=.claude/hooks/guard_ownership.py
   run_case 2 "current-task es un directorio" "$FOREIGN"
   run_case 2 "current-task es un directorio, sin python" "$FOREIGN" PATH="$NOPY_PATH"
   fresh_box
+
+  echo
+  echo "== \$0 sin barra: el marcador se busca igual (revisión, N2)"
+  (cd .claude/hooks && input_for "$FOREIGN" | env -u CLAUDE_PROJECT_DIR sh run_guard.sh >/dev/null 2>"$ERR")
+  check_rc 2 $? "sh run_guard.sh desde su directorio, fuera de owns"
+  (cd .claude/hooks && input_for "$OWNED" | env -u CLAUDE_PROJECT_DIR sh run_guard.sh >/dev/null 2>"$ERR")
+  check_rc 0 $? "sh run_guard.sh desde su directorio, dentro de owns"
+
+  echo
+  echo "== Se bloquea todo, también sin marcador (revisión, N3)"
+  run_case 2 "sin sh en el PATH, con marcador" "$FOREIGN" PATH="$NOSH_PATH"
+  run_case 2 "CLAUDE_PROJECT_DIR vacío, con marcador" "$OWNED" CLAUDE_PROJECT_DIR=
+  rm .claude/current-task
+  run_case 2 "sin sh en el PATH, sin marcador" "$FOREIGN" PATH="$NOSH_PATH"
+  run_case 2 "CLAUDE_PROJECT_DIR vacío, sin marcador" "$FOREIGN" CLAUDE_PROJECT_DIR=
+  fresh_box
+
+  echo
+  echo "== Marcador solo con espacios: decide Python si lo hay; sin él, bloquea (revisión, N4)"
+  printf ' \n' >.claude/current-task
+  run_case 0 "marcador con espacios, con python" "$FOREIGN"
+  run_case 2 "marcador con espacios, sin python" "$FOREIGN" PATH="$NOPY_PATH"
+  fresh_box
+
+  echo
+  echo "== Abierto conocido: CLAUDE_PROJECT_DIR en la raíz de la sesión y destino en un worktree con marcador (revisión, N1)"
+  mkdir -p sesion/.claude
+  cp -r "$SRC/.claude/hooks" sesion/.claude/hooks
+  run_case 0 "ABIERTO el marcador del worktree no se ve desde la raíz de la sesión" "$FOREIGN" CLAUDE_PROJECT_DIR="$BOX/sesion"
+  rm -rf sesion
 
   echo
   echo "== Abierto conocido: un fichero que sigue siendo código válido y sale con 0 no se distingue del hook"
