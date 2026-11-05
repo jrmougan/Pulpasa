@@ -11,17 +11,20 @@
 | R2 (G45) | «Aprobar la lectura» |
 | T3 | «Solo lo de Unity» |
 
-Lo aplica PUL-197, sin cambiar código; el guard lo corrige PUL-198. De las 58 filas, 55 constan aplicadas y 3 pendientes,
-porque al contrastar la frase con el código resultó falsa y la fila no preveía la corrección:
-- **G08**: cinco frases de ADR-003 §8.2, detalladas allí: que `interact_pressed()` suelta si el objetivo no consume; el
-  `can_interact` del dispensador «con la mano vacía» y su `is_reachable_from`; el `can_interact` del cuenco «siempre que
-  haya `actor.holder`»; que `Slot.accepted_group` consume la pulsación, y que la caja guardada consume la de una mano
-  llena. Desde D26 ninguna coincide con el código.
-- **G13**: citar `test_trash_bin.gd` por la regla de colocación de los cubos (ADR-003 §10.3). Ese test no comprueba la
-  distancia a los puestos, que salieron del grupo `interactable` por D26.
-- **G57**: lo mismo que G13 en `scene-tree.md` §2; el resto de la fila está aplicado.
+Lo aplicó PUL-197, sin cambiar código; el guard lo corrigió PUL-198. De las 58 filas, 55 constaron aplicadas y 3 quedaron
+pendientes, porque al contrastar la frase con el código resultó falsa y la fila no preveía la corrección. Las corrigió
+PUL-205, aceptado por el responsable en gate humano el 2026-11-05; frase antigua, frase nueva y `ruta:línea` en
+`docs/evidence/PUL-205/ac1-frases.md`:
+- **G08**: cinco frases de ADR-003 §8.2 y una de la caja en `scene-tree.md` §3: que `interact_pressed()` suelta si el
+  objetivo no consume; el `can_interact` del dispensador «con la mano vacía» y su `is_reachable_from`; el `can_interact`
+  del cuenco «siempre que haya `actor.holder`»; que `Slot.accepted_group` consume la pulsación; que la caja guardada
+  consume la de una mano llena, y que la caja consume la de «cualquier otra cosa». Desde D26 ninguna coincidía con el código.
+- **G13**: citar `test_trash_bin.gd` por la regla de colocación de los cubos (ADR-003 §10.3). Hasta PUL-202 ese test no
+  comprobaba la distancia a los puestos, que salieron del grupo `interactable` por D26; ahora sí, y es el que se cita
+  (`godot/tests/integration/test_trash_bin.gd:291`).
+- **G57**: lo mismo que G13 en `scene-tree.md` §2; el resto de la fila estaba aplicado.
 
-Detalle fila a fila: `docs/evidence/PUL-197/ac1-filas.md`. Todo lo que sigue es el análisis que sirvió para decidir y se
+Detalle fila a fila al cerrar PUL-197: `docs/evidence/PUL-197/ac1-filas.md`. Todo lo que sigue es el análisis que sirvió para decidir y se
 conserva tal cual: los estados, las líneas citadas y las palabras «pendiente» o «propuesta» son los de antes del gate.
 
 Documento de trabajo para el gate humano (PUL-196, 2026-11-04). **Ningún agente acepta nada**: este

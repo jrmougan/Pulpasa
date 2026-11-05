@@ -1,0 +1,18 @@
+# Sonda fuera del repo: order_stand.tscn y player.tscn reales, RoundManager real, un solo puesto activo.
+# Forzado: la repuesta y su max_time, la paciencia que caduca, el teletransporte (un tick antes) y la pausa
+# entre el tick de la caducidad y el siguiente, con un paso de física por frame. Mismo guion en los dos casos.
+== repuesta con max_time=0
+physics_frame=10 jugador movido a la zona
+physics_frame=11 expired 1
+physics_frame=11 pausa; repuesta max_time=0.0
+physics_frame=13 reanuda
+physics_frame=14 delivery_rejected slot=2 order=1 penalty=0
+physics_frame=15 completed 2
+RESULTADO: delivery_rejected emitidas = 1
+== repuesta con max_time=60
+physics_frame=10 jugador movido a la zona
+physics_frame=11 expired 1
+physics_frame=11 pausa; repuesta max_time=60.0
+physics_frame=14 reanuda
+physics_frame=15 completed 2
+RESULTADO: delivery_rejected emitidas = 0
