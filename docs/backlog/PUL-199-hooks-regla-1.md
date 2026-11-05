@@ -1,7 +1,7 @@
 ---
 id: PUL-199
 title: Hacer que el hook de ownership falle cerrado y actúe desde subcarpetas
-status: review
+status: done
 milestone: M4
 role: godot-architect
 deps: []

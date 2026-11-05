@@ -203,7 +203,7 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-196 | M4 | godot-architect | done | Corregir el índice de contratos y preparar el gate de enmiendas pendientes |
 | PUL-197 | M4 | godot-architect | done | Aplicar las decisiones del gate de enmiendas a los contratos |
 | PUL-198 | M4 | gameplay-engineer | done | Evitar delivery_rejected en el tick posterior a la caducidad de una comanda |
-| PUL-199 | M4 | godot-architect | ready | Hacer que el hook de ownership falle cerrado y actúe desde subcarpetas |
+| PUL-199 | M4 | godot-architect | done | Hacer que el hook de ownership falle cerrado y actúe desde subcarpetas |
 | PUL-200 | M4 | asset-pipeline | done | Corregir lo que pipeline.md dice de materials_v2_test y ref_materials_v2 |
 | PUL-201 | M4 | asset-pipeline | draft | Retirar los restos v2 que ninguna ficha cubre |
 | PUL-202 | M4 | gameplay-engineer | done | Probar la flecha contra la zona anclada y la distancia de los cubos a los puestos |
