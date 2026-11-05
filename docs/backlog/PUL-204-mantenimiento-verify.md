@@ -1,7 +1,7 @@
 ---
 id: PUL-204
 title: Ajustar timeouts, diagnóstico y documentación de verify
-status: review
+status: done
 milestone: M4
 role: godot-architect
 deps: []
