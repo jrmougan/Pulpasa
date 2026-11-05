@@ -1,7 +1,7 @@
 # ADR-003 — Árbol de escenas y composición
 
 - **Estado:** aceptado (2026-10-03); enmienda §8 (estación de condimentos, PUL-056) **aceptada**
-  por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197); las frases de §8.2 de G08 se corrigieron según el código en PUL-205;
+  por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197); las frases de §8.2 de G08 se corrigieron según el código en PUL-205, aceptado por el responsable el 2026-11-05;
   enmienda §9 (estación al paso, D23) aceptada por el producer el 2026-10-07 tras su revisión
   (PUL-093) y **ratificada** por el responsable en ese mismo gate; sustituye las partes de §8 que
   dependían de la bandeja; enmienda de §3 (API de `Holder`), §9.4 y §9.5 tras implementar M3c (PUL-103)

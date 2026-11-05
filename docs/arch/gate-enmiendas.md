@@ -13,7 +13,7 @@
 
 Lo aplicó PUL-197, sin cambiar código; el guard lo corrigió PUL-198. De las 58 filas, 55 constaron aplicadas y 3 quedaron
 pendientes, porque al contrastar la frase con el código resultó falsa y la fila no preveía la corrección. Las corrigió
-PUL-205, que como contrato requiere gate humano antes del merge; frase antigua, frase nueva y `ruta:línea` en
+PUL-205, aceptado por el responsable en gate humano el 2026-11-05; frase antigua, frase nueva y `ruta:línea` en
 `docs/evidence/PUL-205/ac1-frases.md`:
 - **G08**: cinco frases de ADR-003 §8.2 y una de la caja en `scene-tree.md` §3: que `interact_pressed()` suelta si el
   objetivo no consume; el `can_interact` del dispensador «con la mano vacía» y su `is_reachable_from`; el `can_interact`

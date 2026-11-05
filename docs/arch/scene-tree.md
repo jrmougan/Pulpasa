@@ -1,7 +1,7 @@
 # Árbol de escenas
 
 - **Estado:** **aceptado** por el responsable en gate humano el 2026-11-04 (contrato; ver ADR-003;
-  `gate-enmiendas.md`, PUL-197); PUL-205 corrigió según el código la frase de `accepted_group` de `slot.tscn` en §3
+  `gate-enmiendas.md`, PUL-197); PUL-205 (aceptado por el responsable el 2026-11-05) corrigió según el código la frase de `accepted_group` de `slot.tscn` en §3
   (G08), la de la caja «con cualquier otra cosa en la mano» en §3 y la que atribuye la regla de colocación de los cubos a un test en §2 (G13, G57)
 - **Ficha:** PUL-003; enmienda de la estación de condimentos y la planta B en PUL-056
   (2026-10-05, D18/D19, ADR-003 §8), **aceptada** por el responsable en gate humano el 2026-11-04: §2, §3 (caja, slot, estación),
