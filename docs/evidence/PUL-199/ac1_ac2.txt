@@ -1,0 +1,152 @@
+comando: h="$CLAUDE_PROJECT_DIR/.claude/hooks/run_guard.sh"; [ -s "$h" ] || { echo "Bloqueado: falta o esta vacio el envoltorio: $h" >&2; exit 2; }; sh "$h" || exit 2
+PATH sin python: ninguno
+sh del PATH: bash 5.3.15(2)-release
+
+== Control
+PASS rc=2 (esperado 2) hook intacto, fuera de owns -> Assets/x.txt
+    Bloqueado: Assets/x.txt no está en `owns` ni `touches_scenes` de PUL-199-hooks-regla-1.md.
+    Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.md, docs/evidence/PUL-199/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+
+== AC1: los cuatro casos de la ficha, fuera de owns
+PASS rc=2 (esperado 2) AC1 PYTHONIOENCODING inválida -> Assets/x.txt
+    Fatal Python error: init_stdio_encoding: failed to get the Python codec name of the stdio encoding
+    Python runtime state: core initialized
+    LookupError: unknown encoding: no-existe
+PASS rc=2 (esperado 2) AC1 PYTHONUTF8=9 -> Assets/x.txt
+    Fatal Python error: preconfig_init_utf8_mode: invalid PYTHONUTF8 environment variable value
+    Python runtime state: preinitializing
+    
+PASS rc=2 (esperado 2) AC1 intérprete ausente (sin python en PATH) -> Assets/x.txt
+    Bloqueado: no hay python3 ni python en el PATH.
+    Hay ficha activa y no se ha podido comprobar `owns`; pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) AC1 hook que no compila -> Assets/x.txt
+      File "<ruta>", line 1
+        def (:
+            ^
+
+== AC1: también dentro de owns, si Python no llega a decidir no hay permiso
+PASS rc=2 (esperado 2) PYTHONIOENCODING inválida -> .claude/hooks/guard_ownership.py
+    Fatal Python error: init_stdio_encoding: failed to get the Python codec name of the stdio encoding
+    Python runtime state: core initialized
+    LookupError: unknown encoding: no-existe
+PASS rc=2 (esperado 2) PYTHONUTF8=9 -> .claude/hooks/guard_ownership.py
+    Fatal Python error: preconfig_init_utf8_mode: invalid PYTHONUTF8 environment variable value
+    Python runtime state: preinitializing
+    
+PASS rc=2 (esperado 2) sin python en PATH -> .claude/hooks/guard_ownership.py
+    Bloqueado: no hay python3 ni python en el PATH.
+    Hay ficha activa y no se ha podido comprobar `owns`; pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) hook que no compila -> .claude/hooks/guard_ownership.py
+      File "<ruta>", line 1
+        def (:
+            ^
+
+== Más allá de la ficha: falta o se rompe alguna pieza, fuera de owns
+PASS rc=2 (esperado 2) falta guard_ownership.py -> Assets/x.txt
+    Bloqueado: falta o está vacío .claude/hooks/guard_ownership.py.
+    Hay ficha activa y no se ha podido comprobar `owns`; pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) guard_ownership.py vacío -> Assets/x.txt
+    Bloqueado: falta o está vacío .claude/hooks/guard_ownership.py.
+    Hay ficha activa y no se ha podido comprobar `owns`; pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) BaseException en el import: SystemExit(0) -> Assets/x.txt
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (SystemExit: 0).
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) BaseException en el import: KeyboardInterrupt -> Assets/x.txt
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (KeyboardInterrupt: ).
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) el intérprete muere por una señal -> Assets/x.txt
+    <ruta>: line 40: 128951 Killed                     "$python" "$guard"
+    Bloqueado: guard_ownership.py ha terminado con rc=137 sin decidir.
+    Hay ficha activa y no se ha podido comprobar `owns`; pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) stub de la Microsoft Store (rc=49 por 9009) -> Assets/x.txt
+    Bloqueado: guard_ownership.py ha terminado con rc=49 sin decidir.
+    Hay ficha activa y no se ha podido comprobar `owns`; pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) falta run_guard.sh -> Assets/x.txt
+    Bloqueado: falta o esta vacio el envoltorio: <ruta>
+PASS rc=2 (esperado 2) run_guard.sh vacío -> Assets/x.txt
+    Bloqueado: falta o esta vacio el envoltorio: <ruta>
+PASS rc=2 (esperado 2) run_guard.sh con error de sintaxis -> Assets/x.txt
+    <ruta>: line 1: syntax error near unexpected token `then'
+    <ruta>: line 1: `if then ('
+PASS rc=2 (esperado 2) falta .claude/hooks entero -> Assets/x.txt
+    Bloqueado: falta o esta vacio el envoltorio: <ruta>
+PASS rc=2 (esperado 2) CLAUDE_PROJECT_DIR sin definir -> Assets/x.txt
+    Bloqueado: falta o esta vacio el envoltorio: /.claude/hooks/run_guard.sh
+PASS rc=2 (esperado 2) CLAUDE_PROJECT_DIR vacío -> Assets/x.txt
+    Bloqueado: falta o esta vacio el envoltorio: /.claude/hooks/run_guard.sh
+PASS rc=2 (esperado 2) current-task es un directorio -> Assets/x.txt
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (PermissionError: [Errno 13] Permission denied: '<ruta>
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+PASS rc=2 (esperado 2) current-task es un directorio, sin python -> Assets/x.txt
+    Bloqueado: no hay python3 ni python en el PATH.
+    Hay ficha activa y no se ha podido comprobar `owns`; pregunta al coordinador (`orchestration ask`).
+
+== $0 sin barra: el marcador se busca igual (revisión, N2)
+PASS rc=2 (esperado 2) sh run_guard.sh desde su directorio, fuera de owns
+    Bloqueado: Assets/x.txt no está en `owns` ni `touches_scenes` de PUL-199-hooks-regla-1.md.
+    Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.md, docs/evidence/PUL-199/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS rc=0 (esperado 0) sh run_guard.sh desde su directorio, dentro de owns
+
+== Se bloquea todo, también sin marcador (revisión, N3)
+PASS rc=2 (esperado 2) sin sh en el PATH, con marcador -> Assets/x.txt
+    /usr/bin/bash: line 1: sh: command not found
+PASS rc=2 (esperado 2) CLAUDE_PROJECT_DIR vacío, con marcador -> .claude/hooks/guard_ownership.py
+    Bloqueado: falta o esta vacio el envoltorio: /.claude/hooks/run_guard.sh
+PASS rc=2 (esperado 2) sin sh en el PATH, sin marcador -> Assets/x.txt
+    /usr/bin/bash: line 1: sh: command not found
+PASS rc=2 (esperado 2) CLAUDE_PROJECT_DIR vacío, sin marcador -> Assets/x.txt
+    Bloqueado: falta o esta vacio el envoltorio: /.claude/hooks/run_guard.sh
+
+== Marcador solo con espacios: decide Python si lo hay; sin él, bloquea (revisión, N4)
+PASS rc=0 (esperado 0) marcador con espacios, con python -> Assets/x.txt
+PASS rc=2 (esperado 2) marcador con espacios, sin python -> Assets/x.txt
+    Bloqueado: no hay python3 ni python en el PATH.
+    Hay ficha activa y no se ha podido comprobar `owns`; pregunta al coordinador (`orchestration ask`).
+
+== Abierto conocido: CLAUDE_PROJECT_DIR en la raíz de la sesión y destino en un worktree con marcador (revisión, N1)
+PASS rc=0 (esperado 0) ABIERTO el marcador del worktree no se ve desde la raíz de la sesión -> Assets/x.txt
+
+== Abierto conocido: un fichero que sigue siendo código válido y sale con 0 no se distingue del hook
+PASS rc=0 (esperado 0) ABIERTO run_guard.sh sustituido por exit 0 -> Assets/x.txt
+PASS rc=0 (esperado 0) ABIERTO run_guard.sh truncado tras los comentarios -> Assets/x.txt
+PASS rc=0 (esperado 0) ABIERTO guard_ownership.py sustituido por uno que sale con 0 -> Assets/x.txt
+PASS rc=0 (esperado 0) ABIERTO guard_ownership.py truncado a un docstring -> Assets/x.txt
+
+== AC2: dentro y fuera de owns, hook intacto
+PASS rc=0 (esperado 0) literal de owns -> .claude/hooks/guard_ownership.py
+PASS rc=0 (esperado 0) otra entrada de owns -> .claude/settings.json
+PASS rc=0 (esperado 0) la propia ficha -> docs/backlog/PUL-199-hooks-regla-1.md
+PASS rc=0 (esperado 0) docs/evidence/<id>/ -> docs/evidence/PUL-199/x.txt
+PASS rc=0 (esperado 0) current-task -> .claude/current-task
+PASS rc=2 (esperado 2) fuera de owns -> godot/core/x.gd
+    Bloqueado: godot/core/x.gd no está en `owns` ni `touches_scenes` de PUL-199-hooks-regla-1.md.
+    Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.md, docs/evidence/PUL-199/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS rc=2 (esperado 2) fuera de owns, otra ficha -> docs/backlog/PUL-001.md
+    Bloqueado: docs/backlog/PUL-001.md no está en `owns` ni `touches_scenes` de PUL-199-hooks-regla-1.md.
+    Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.md, docs/evidence/PUL-199/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS rc=2 (esperado 2) parecida a owns -> .claude/hooks/guard_ownership.py.bak
+    Bloqueado: .claude/hooks/guard_ownership.py.bak no está en `owns` ni `touches_scenes` de PUL-199-hooks-regla-1.md.
+    Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.md, docs/evidence/PUL-199/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS rc=2 (esperado 2) fuera de owns, no ASCII -> Assets/peñón.txt
+    Bloqueado: Assets/peñón.txt no está en `owns` ni `touches_scenes` de PUL-199-hooks-regla-1.md.
+    Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.md, docs/evidence/PUL-199/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (`orchestration ask`, con el binario de Orca que indica CLAUDE.md) en vez de editarlo.
+PASS rc=2 (esperado 2) entrada JSON inválida
+    Bloqueado: guard_ownership no ha podido comprobar `owns` (JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)).
+    Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+
+== Sin current-task no se restringe nada (regla previa, PUL-190), ni aunque falte una pieza
+PASS rc=0 (esperado 0) sin marcador, fuera de owns -> Assets/x.txt
+PASS rc=0 (esperado 0) sin marcador, sin python -> Assets/x.txt
+PASS rc=0 (esperado 0) sin marcador, PYTHONUTF8=9 -> Assets/x.txt
+PASS rc=0 (esperado 0) marcador vacío -> Assets/x.txt
+PASS rc=0 (esperado 0) marcador vacío, sin python -> Assets/x.txt
+PASS rc=2 (esperado 2) sin marcador pero falta run_guard.sh (no se distingue: bloquea) -> Assets/x.txt
+    Bloqueado: falta o esta vacio el envoltorio: <ruta>
+
+RESUMEN fallos=0 abiertos_con_rc_distinto_de_2=0

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Verificación única del proyecto Godot. La usan hooks, agentes y el merge gate.
-# Uso: tools/verify.sh [--quick]   (--quick: solo lint + parseo, sin tests ni smoke)
+# Uso: tools/verify.sh [--quick]   (--quick: sincronía de AGENTS.md y CLAUDE.md, formato, lint, import y compilación de scripts, sin tests ni smoke)
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 GODOT_DIR="$ROOT/godot"
@@ -8,6 +8,9 @@ GODOT="${GODOT_PATH:-godot}"
 QUICK=0; [[ "${1:-}" == "--quick" ]] && QUICK=1
 fail=0
 step() { printf '\n== %s\n' "$1"; }
+
+step "sincronía de AGENTS.md y CLAUDE.md"
+python3 "$ROOT/tools/check_agents_sync.py" || fail=1
 
 cd "$GODOT_DIR"
 mapfile -t GD_FILES < <(find . -name '*.gd' -not -path './addons/*' -not -path './.godot/*' -not -path './.mcp/*' | sort)
@@ -22,10 +25,36 @@ step "import"
 out=$(timeout 300 "$GODOT" --headless --import 2>&1); rc=$?
 if ((rc != 0)) || grep -qE '^(SCRIPT )?ERROR' <<<"$out"; then grep -E 'ERROR' <<<"$out" | head -30; fail=1; fi
 
+# El import y el smoke no detectan errores de tipo en scripts que nada carga: se compilan todos aquí.
+# Se exige la línea de OK para que un fallo al arrancar la propia comprobación no pase por verde, y se
+# falla con cualquier SCRIPT ERROR porque el motor puede dar por válido un script cuya dependencia no compila.
+# Los ERROR de fugas al salir son ruido de cargar todo y salir: no cuentan.
+# El diagnóstico da cada SCRIPT ERROR con su `at:`, venga de donde venga, y limita solo esos: la lista y el
+# resumen de check_scripts salen siempre, al final.
+step "compilación de scripts"
+out=$(timeout 300 "$GODOT" --headless -s res://../tools/check_scripts.gd 2>&1); rc=$?
+if ((rc != 0)) || ! grep -q '^check_scripts: OK' <<<"$out" || grep -q 'SCRIPT ERROR' <<<"$out"; then
+  awk -v limit=60 '
+    function emit(line) { if (++shown <= limit) print line }
+    want_at { want_at = 0; if ($0 ~ /^[ \t]*at: /) emit($0) }
+    /SCRIPT ERROR/ { emit($0); want_at = 1 }
+    /^check_scripts:/ { summary[++count] = $0 }
+    END {
+      if (shown > limit) printf "... %d líneas más de SCRIPT ERROR omitidas\n", shown - limit
+      for (i = 1; i <= count; i++) print summary[i]
+    }
+  ' <<<"$out"
+  echo "✗ compilación de scripts: rc=$rc" >&2
+  fail=1
+else
+  grep '^check_scripts: OK' <<<"$out"
+fi
+
 if ((QUICK == 0)); then
   step "tests (GUT)"
   mkdir -p .gut_reports
-  timeout 600 "$GODOT" --headless -s addons/gut/gut_cmdln.gd 2>&1 | tee .gut_reports/last.log | tail -25
+  # Suma de todos los timeouts: 1440 s, más que los 900 s del hook de Stop. Cálculo: docs/backlog/PUL-204-mantenimiento-verify.md
+  timeout 720 "$GODOT" --headless -s addons/gut/gut_cmdln.gd 2>&1 | tee .gut_reports/last.log | tail -25
   rc=${PIPESTATUS[0]}
   if ((rc != 0)) || ! grep -q 'All tests passed' .gut_reports/last.log; then fail=1; fi
   # GUT ignora en silencio los scripts que no compilan ("Ignoring script ... does not extend GutTest"):

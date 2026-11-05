@@ -1,0 +1,25 @@
+# Sonda fuera del repo: level_01.tscn real, caja guardada en PassSlot05 (x 5,7, z 0) y otra caja en la mano de Player1.
+# hint=verbo/estado: 1 = OK, 2 = BLOCKED. Con z 2,0 el objetivo es un pasaplatos vacío vecino, no el suelo.
+# z 0,6 queda en 0,71 porque el cuerpo choca con la barra.
+guardada=true
+z=+0.6 de cara z_real=+0.71 objetivo=ninguno hint=drop/2 pulsar=true en_mano=true
+z=+0.6 de espaldas z_real=+0.71 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=+0.9 de cara z_real=+0.90 objetivo=ninguno hint=drop/2 pulsar=true en_mano=true
+z=+0.9 de espaldas z_real=+0.90 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=+1.2 de cara z_real=+1.20 objetivo=ninguno hint=drop/2 pulsar=true en_mano=true
+z=+1.2 de espaldas z_real=+1.20 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=+1.5 de cara z_real=+1.50 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=+1.5 de espaldas z_real=+1.50 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=+2.0 de cara z_real=+2.00 objetivo=PassSlot04 hint=drop/1 pulsar=true en_mano=false
+z=+2.0 de espaldas z_real=+2.00 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=-0.6 de cara z_real=-0.71 objetivo=ninguno hint=drop/2 pulsar=true en_mano=true
+z=-0.6 de espaldas z_real=-0.71 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=-0.9 de cara z_real=-0.90 objetivo=ninguno hint=drop/2 pulsar=true en_mano=true
+z=-0.9 de espaldas z_real=-0.90 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=-1.2 de cara z_real=-1.20 objetivo=ninguno hint=drop/2 pulsar=true en_mano=true
+z=-1.2 de espaldas z_real=-1.20 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=-1.5 de cara z_real=-1.50 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=-1.5 de espaldas z_real=-1.50 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+z=-2.0 de cara z_real=-2.00 objetivo=PassSlot06 hint=drop/1 pulsar=true en_mano=false
+z=-2.0 de espaldas z_real=-2.00 objetivo=ninguno hint=drop/1 pulsar=true en_mano=false
+PROBE_END

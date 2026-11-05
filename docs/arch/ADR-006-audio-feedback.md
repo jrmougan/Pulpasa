@@ -1,9 +1,9 @@
 # ADR-006 — Audio, feedback de acciones, quemado y fases
 
 - **Estado:** aceptado (2026-10-06, gate del responsable; fases con multiplicador de paciencia);
-  enmienda D25 (cue `trash` en §4, nota en §5 y comandas por fase en §6) **propuesta**, pendiente del
-  gate humano (PUL-111); enmienda D26 (§4.1: cues de respuesta y de estado distintos, `rejected` único)
-  **propuesta**, pendiente del gate humano (PUL-120)
+  enmienda D25 (cue `trash` en §4, nota en §5 y comandas por fase en §6; PUL-111) y enmienda D26 (§4.1: cues
+  de respuesta y de estado distintos, `rejected` único; PUL-120) **aceptadas** por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197); R2 (§3) respondida en
+  ese gate
 - **Fecha:** 2026-10-06; enmiendas 2026-10-10 y 2026-10-11
 - **Ficha:** PUL-066; enmiendas PUL-111 (D25, ADR-003 §10) y PUL-120 (D26, ADR-003 §11)
 - **Relacionado:** ADR-002 (Enmienda 1), ADR-003 (capa común / específica), ADR-005 (D14 = 3D),
@@ -98,8 +98,8 @@ feature por sí misma. Motivos:
 - Ningún sistema de otra escena necesita esos hechos hoy (HUD, tickets y puntuación no).
 
 Consecuencia en la feature: AC2 de `audio-y-fx` dice "se emite su señal de `EventBus`"; con esta
-decisión debe leerse "su señal (de `EventBus` o local, `signals.md`)". **Decisión del responsable
-(R2)**: aprobar esa lectura o pedir la alternativa B.
+decisión se lee "su señal (de `EventBus` o local, `signals.md`)". **Decisión del responsable (R2),
+gate del 2026-11-04**: se aprueba esa lectura y se descarta la alternativa B; el AC2 ya lo dice así.
 
 ### 4. `FeedbackPlayer` y el mapa evento → sonido/visual
 
@@ -180,10 +180,10 @@ propuesto por el diseño):
 **Bajas del mapa** (las retira la ficha de montaje cuando ningún emisor las use; hasta entonces
 conviven con las nuevas para que cada ficha cambie su escena sin romper el test de claves):
 `cook_done` (renombrado a `cook_ready`), `season_error` y `deliver_error` (sustituidos por `rejected`;
-el puesto ya no rechaza: la entrega es solo por zona, ADR-003 §11.7). Sin alias: el mapa no tiene dos
+el puesto ya no rechaza: la entrega es solo por zona, ADR-003 §11.7; *Nota del gate del 2026-11-04 (G22, G51), resuelta: hasta PUL-198, `order_stand.gd` podía provocar la emisión con `penalty` 0 en el tick posterior a la caducidad (`docs/evidence/PUL-196/repro-entrega.txt`). Desde PUL-198 la zona no pide `try_deliver` hasta el siguiente `advance` (`godot/entities/stations/order_stand.gd:161`, `godot/entities/stations/order_stand.gd:167`); el contrato no se matizó. Presupone `OrderData.max_time > 0`: ver la fila de `delivery_rejected` en `signals.md` §2.*). Sin alias: el mapa no tiene dos
 claves para el mismo hecho.
 
-**Verbo → respuesta de éxito** (un cue por pulsación `OK`; lo reproduce la escena que cambia):
+**Verbo → respuesta de éxito** (un cue por efecto, con las excepciones de esta tabla; lo reproduce la escena que cambia):
 
 | Verbo | Cue de éxito |
 |---|---|
@@ -203,8 +203,9 @@ Cada uno con `visual_time ≥ 0.3` salvo los de visual `NONE`.
 **Háptica** (diseño, `controles-tactiles.md`): la vibración de éxito y rechazo en móvil la hace el
 botón de acción táctil (ADR-004 §6) al oír `EventBus.interaction_resolved`, no el mapa de audio.
 
-Correcta y errónea son distintas en sonido (`deliver_ok`/`deliver_error`) y en visual
-(`POP`/`SHAKE`), como pide AC5. `order_new` lleva `delay` para no pisarse con `deliver_ok` u
+*Histórico, de antes de D26:* correcta y errónea eran distintas en sonido (`deliver_ok`/`deliver_error`) y
+en visual (`POP`/`SHAKE`), como pide AC5; `deliver_error` ya no existe. Sigue vigente lo que viene a
+continuación. `order_new` lleva `delay` para no pisarse con `deliver_ok` u
 `order_expired`, que en la reposición llegan en el mismo frame (`signals.md` §3); sigue siendo
 **un** sonido por señal (AC2). Colocar algo en una estación emite `item_dropped` y la señal de la
 estación: suenan los dos (`drop` es suave por datos); no se suprime para no romper "1 por señal".
@@ -331,7 +332,8 @@ estación: suenan los dos (`drop` es suave por datos); no se suprime para no rom
 - (+) AC2/AC5 se prueban contando `FeedbackPlayer.played` en el nivel, sin oír nada.
 - (+) Sin fases ni quemado en datos, el juego se comporta como hoy: los flujos M1/M2/M2b no cambian.
 - (−) Un quinto autoload (ADR-002, Enmienda 1). Es receptor y no tiene reglas de juego.
-- (−) La lectura de AC2 de `audio-y-fx` cambia ("su señal de `EventBus`" → "su señal"): R2.
+- (−) La lectura de AC2 de `audio-y-fx` cambia ("su señal de `EventBus`" → "su señal"): R2, aprobada el
+  2026-11-04.
 - (−) Colocar en una estación suena doble (`drop` + la de la estación).
 - (−) `FeedbackPlayer` es de la capa específica: con 2D habría que duplicarlo (`AudioStreamPlayer2D`).
 - (§4.1, +) El rechazo suena igual en toda la cocina y lo da quien pulsa; las estaciones solo suenan

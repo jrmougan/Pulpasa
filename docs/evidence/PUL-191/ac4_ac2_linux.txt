@@ -1,0 +1,27 @@
+# AC2: `var _x_err: String = 1` en core/action_hint.gd, sin commitear, en orden de declaraciones para que formato y lint pasen y solo pueda fallar este paso
+$ tools/verify.sh --quick
+
+== gdformat --check
+245 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== compilación de scripts
+SCRIPT ERROR: Parse Error: Cannot assign a value of type "int" as "String".
+          at: GDScript::reload (res://core/action_hint.gd:16)
+SCRIPT ERROR: Parse Error: Cannot assign a value of type int to variable "_x_err" with specified type String.
+          at: GDScript::reload (res://core/action_hint.gd:16)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+          at: GDScript::reload (res://components/interaction_detector.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+          at: GDScript::reload (res://components/action_prompt.gd:0)
+check_scripts: no compila: res://core/action_hint.gd
+check_scripts: 1 de 245 scripts no compilan.
+
+✗ verify FAILED
+✗ compilación de scripts: rc=1
+
+rc=1

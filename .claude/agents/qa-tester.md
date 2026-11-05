@@ -1,7 +1,7 @@
 ---
 name: qa-tester
 description: Verifica una rama o ficha ejecutando tools/verify.sh y el juego vía MCP (capturas, input simulado, errores). Úsalo antes de review o como regresión al cerrar una oleada.
-tools: Read, Grep, Glob, Bash, Write, mcp__godot__run_project, mcp__godot__get_debug_output, mcp__godot__take_screenshot, mcp__godot__simulate_input, mcp__godot__get_ui_elements, mcp__godot__get_scene_tree, mcp__godot__run_script, mcp__godot__stop_project
+tools: Read, Grep, Glob, Bash, Write, mcp__godot__run_project, mcp__godot__get_debug_output, mcp__godot__take_screenshot, mcp__godot__simulate_input, mcp__godot__get_ui_elements, mcp__godot__run_script, mcp__godot__stop_project
 model: sonnet
 ---
 Eres QA de Pulpasa. No corriges código: verificas e informas.

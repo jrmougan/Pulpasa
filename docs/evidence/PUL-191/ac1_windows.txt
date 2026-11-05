@@ -1,0 +1,17 @@
+# AC1: proyecto limpio
+$ tools/verify.sh --quick
+
+== gdformat --check
+245 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== compilación de scripts
+check_scripts: OK (245 scripts)
+
+✓ verify OK
+
+rc=0

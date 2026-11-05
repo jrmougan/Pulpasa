@@ -1,6 +1,6 @@
 # ADR-001 — Lenguaje y convenciones GDScript
 
-- **Estado:** aceptado (2026-10-03)
+- **Estado:** aceptado (2026-10-03); Enmienda 1 (edición de escenas como texto) **aprobada** por el responsable el 2026-11-04
 - **Fecha:** 2026-10-03
 - **Ficha:** PUL-003
 - **Relacionado:** `docs/design/decisions.md` (T1–T4), skill `gdscript-conventions`, ADR-003
@@ -104,7 +104,7 @@ GUT 9.7.1. `tests/unit/test_<sistema>.gd` para `core/` y autoloads instanciados 
 caso; cuando cubre un criterio de una ficha, el nombre lo cita: `test_ac1_order_completed_once_per_delivery`.
 
 ### Escenas y recursos
-`.tscn`/`.tres` se editan con el editor o el MCP; a mano solo cambios triviales. Nunca se inventan
+`.tscn`/`.tres` se editan con el editor o el MCP; a mano solo cambios triviales (*salvo Enmienda 1*). Nunca se inventan
 `uid://`. Los `.uid` se versionan. Un `.tscn` tiene un solo dueño por oleada (`touches_scenes`).
 
 ## Alternativas consideradas
@@ -130,3 +130,23 @@ caso; cuando cubre un criterio de una ficha, el nombre lo cita: `test_ac1_order_
   pasan como parámetro.
 - La skill `gdscript-conventions` debe enlazar esta ADR y usar la misma estructura (fuera del
   alcance de PUL-003: lo actualiza el producer al aceptar la ADR).
+
+## Enmienda 1 (2026-11-04) — Edición de escenas como texto
+
+**Contexto.** Un worker headless no tiene editor, y las operaciones headless de `godot-mcp-runtime@3.8.1`
+(`add_node`, `set_node_properties`, `get_scene_tree`, `validate`...) fallan con `untyped_declaration` = error
+(T2; arreglo pendiente de publicar en godot-mcp-runtime#73). La práctica ya es editar el texto (PUL-184, PUL-186).
+
+**Decisión.** Si no hay editor ni operación del MCP que funcione, se puede editar el texto de un `.tscn` o `.tres`,
+también en cambios no triviales, con estas condiciones:
+- Se conservan los `uid` y `unique_id` existentes. Nunca se inventa un `uid://`: el de un `ExtResource` nuevo se
+  copia del `.uid` o `.import` del recurso, o se omite.
+- Los ids de `ExtResource` y `SubResource` no se reutilizan ni colisionan dentro del fichero.
+- `tools/verify.sh` en verde, y la escena se carga en un test, en el smoke o con `run_project` y `scene`.
+- `owns` y `touches_scenes` siguen aplicando.
+
+**Alternativas.** Relajar `untyped_declaration` para que el MCP funcione: descartada (T2). Escalar cada cambio al
+responsable: descartada, porque bloquea toda ficha de escena sin aportar control.
+
+**Consecuencias.** (+) Las fichas de escena no se bloquean. (−) Un error de texto solo se detecta al cargar, de ahí
+la tercera condición. Cuando se publique el arreglo se revisa esta enmienda, junto con el pin de T5.

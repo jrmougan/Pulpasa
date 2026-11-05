@@ -1,9 +1,8 @@
 # ADR-005 — Dimensión: 3D o 2D
 
 - **Estado:** aceptado (2026-10-03): opción A, 3D con cámara ortográfica fija (D14); Enmienda D26
-  (escala de UI, perfil de plataforma, safe area y cámara móvil) **propuesta**, pendiente del gate
-  humano (PUL-120); Enmienda D27 (botones en fila y zona de botones con safe area, E4) **propuesta**,
-  pendiente del gate humano (PUL-137)
+  (escala de UI, perfil de plataforma, safe area y cámara móvil; PUL-120) y Enmienda D27 (botones en fila y
+  zona de botones con safe area, E4; PUL-137) **aceptadas** por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197)
 - **Fecha:** 2026-10-03; enmiendas 2026-10-11 (D26) y 2026-10-12 (D27)
 - **Ficha:** PUL-003; enmiendas PUL-120 (D26) y PUL-137 (D27)
 - **Relacionado:** D6 y D14 (`docs/design/decisions.md`), roadmap (fases y gate de M0), ADR-003 §0
@@ -121,7 +120,7 @@ renderizador Compatibility.
 
 ## Enmienda D26 (2026-10-11, PUL-120) — Escala de UI, plataforma, safe area y cámara móvil
 
-*Propuesta, pendiente del gate humano.* D26.8 lleva el juego a teléfonos (solo Individual,
+*Aceptada por el responsable en gate humano el 2026-11-04 (G30–G35).* D26.8 lleva el juego a teléfonos (solo Individual,
 apaisado). El estudio de PUL-119 midió que sin `window/stretch` la UI no escala (salvo HUD y tickets
 con `UiScale` casero), no hay safe area y la cámara fija da 66,8 px/m sobre el personaje a 1080 de
 alto. Especificación medible en `docs/design/features/controles-tactiles.md` (PUL-119). La cámara
@@ -162,10 +161,10 @@ window/handheld/orientation=4            (sensor_landscape: apaisado, gira con e
 
 ### E3. Escala por perfil y mínimos en datos (común)
 - `resources/ui_profile.gd` (`class_name UiProfile extends Resource`; el diseño lo llama `UiScaleData`).
-  Todas las medidas en **px de pantalla a 1080 de alto**:
+  Todas las medidas, salvo `menu_card_width`, en **px de pantalla a 1080 de alto**:
   `content_scale: float = 1.0` (se aplica a `get_tree().root.content_scale_factor`, multiplica el
   estiramiento de E2), `text_min_px: float` (36 en móvil), `menu_button_min_px: float` (120),
-  `menu_button_gap_px: float` (24), `ticket_width_min: float` (330), `ticket_width_max: float` (380),
+  `menu_button_gap_px: float` (24), `menu_card_width: float` (ancho mínimo de la tarjeta de pausa y game over, en unidades de lienzo: 720 en móvil; 0 = el de la escena), `ticket_width_min: float` (330), `ticket_width_max: float` (380),
   `ticket_height: float` (150), `ticket_gap: float` (16), `hud_block_width: float` (240),
   `top_band_max_px: float` (200), `ticket_icon_px: float` (48), `patience_bar_px: float` (12) y las
   zonas reservadas `stick_zone_fraction: float` (0,5), `stick_zone_top_px: float` (200),
@@ -192,9 +191,11 @@ window/handheld/orientation=4            (sensor_landscape: apaisado, gira con e
 - `ui/widgets/safe_area_margin.gd` (`class_name SafeAreaMargin extends MarginContainer`): márgenes con
   `UiScale.safe_margins(DisplayServer.window_get_size(), DisplayServer.get_display_safe_area(),
   get_viewport().get_visible_rect().size)` en `_ready` y en `get_viewport().size_changed`. Inyección
-  para tests: `set_safe_rect(rect: Rect2)` (el diseño simula 132 / 0 / 132 / 63 a 2340×1080).
-- Lo usan como contenedor raíz `hud.tscn`, `order_tickets_panel.tscn`, `touch_controls.tscn`,
-  `pause_menu.tscn`, `game_over.tscn` y `main_menu.tscn`.
+  para tests: `set_safe_rect(rect: Rect2, window_size: Vector2 = Vector2.ZERO)` (el diseño simula 132 / 0 /
+  132 / 63 a 2340×1080; sin `window_size`, el de `DisplayServer`).
+- Envuelven su contenido en él `hud.tscn` y `order_tickets_panel.tscn` (es su raíz), `touch_controls.tscn` y
+  `main_menu.tscn` (un hijo `SafeArea`), y `pause_menu.tscn` y `game_over.tscn` (lo toman de `menu_panel.tscn`,
+  que lo lleva como hijo `SafeArea`).
 - Disposición en `MOBILE` (`controles-tactiles.md`, «Maquetación de la banda superior»): HUD y 4
   tickets en una banda superior ≤ `top_band_max_px`; **zonas reservadas** que ni HUD ni tickets tocan:
   stick (x < 50 % del ancho, y ≥ 200 px) y botones (rectángulo anclado a la esquina inferior derecha
@@ -323,7 +324,7 @@ común sigue sin tipos de mundo: `PlatformProfile`, `UiProfile`, `UiScale`, `Saf
 
 ## Enmienda D27 (2026-10-12, PUL-137) — Botones en fila y zona de botones con safe area
 
-*Propuesta, pendiente del gate humano.* D27 (gate de PUL-136) elige los **botones en fila** para sacar
+*Aceptada por el responsable en gate humano el 2026-11-04 (G36–G39).* D27 (gate de PUL-136) elige los **botones en fila** para sacar
 el contador de los pasaplatos de debajo de los botones (caso 09 de PUL-133). Diseño y medidas:
 `docs/design/features/controles-tactiles.md` «Contadores del pasaplatos bajo los botones» y
 `docs/evidence/PUL-136/README.md`; recálculo con safe area en `docs/evidence/PUL-137/README.md`. Cambia

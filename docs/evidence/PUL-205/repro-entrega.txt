@@ -1,0 +1,41 @@
+# Reproducción de PUL-196 tras PUL-198: REPRO_LEAD=<n> godot --headless --path godot --script <raíz>/docs/evidence/PUL-196/repro_lanzador.gd
+# Las líneas de ERROR son recursos vivos al salir, ruido del lanzador.
+== REPRO_LEAD=0
+wrong_delivery_penalty de round_config.tres = 0
+physics_frame=1 order_generated id=1 slot=1
+physics_frame=1 order_generated id=2 slot=2
+physics_frame=11 jugador movido a la zona
+physics_frame=11 paciencia forzada id=2
+physics_frame=11 order_expired id=2 slot=2 penalty=3
+physics_frame=11 order_generated id=3 slot=2
+physics_frame=13 order_completed id=3
+physics_frame=13 order_generated id=4 slot=2
+physics_frame=13 body_entered
+RESULTADO: delivery_rejected emitidas = 0
+ERROR: 8 resources still in use at exit (run with --verbose for details).
+== REPRO_LEAD=1
+wrong_delivery_penalty de round_config.tres = 0
+physics_frame=1 order_generated id=1 slot=1
+physics_frame=1 order_generated id=2 slot=2
+physics_frame=10 jugador movido a la zona
+physics_frame=11 paciencia forzada id=2
+physics_frame=11 order_expired id=2 slot=2 penalty=3
+physics_frame=11 order_generated id=3 slot=2
+physics_frame=12 body_entered
+physics_frame=12 order_completed id=3
+physics_frame=12 order_generated id=4 slot=2
+RESULTADO: delivery_rejected emitidas = 0
+ERROR: 8 resources still in use at exit (run with --verbose for details).
+== REPRO_LEAD=2
+wrong_delivery_penalty de round_config.tres = 0
+physics_frame=1 order_generated id=1 slot=1
+physics_frame=1 order_generated id=2 slot=2
+physics_frame=9 jugador movido a la zona
+physics_frame=11 order_completed id=2
+physics_frame=11 order_generated id=3 slot=2
+physics_frame=11 body_entered
+physics_frame=11 paciencia forzada id=3
+physics_frame=11 order_expired id=3 slot=2 penalty=3
+physics_frame=11 order_generated id=4 slot=2
+RESULTADO: delivery_rejected emitidas = 0
+ERROR: 6 resources still in use at exit (run with --verbose for details).

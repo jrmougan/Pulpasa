@@ -1,0 +1,47 @@
+
+== sincronía de AGENTS.md y CLAUDE.md
+check_agents_sync: AGENTS.md y CLAUDE.md coinciden.
+
+== gdformat --check
+245 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== compilación de scripts
+check_scripts: OK (245 scripts)
+
+== tests (GUT)
+* test_ac2_text_colors_reach_aaa_on_panels_and_wells
+* test_ac3_ink_is_state_burnt_and_ring_separates_from_world
+* test_ac3_hot_sticker_is_octagonal_with_cream_icon
+* test_ac3_every_ticket_sticker_has_ink_ring
+[1m6/6 passed.
+[0m
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Scripts             119
+Tests              1380
+Passing Tests      1380
+Asserts           30420
+Time              515.001s
+
+
+[32m---- All tests passed! ----
+[0m
+Results saved to res://.gut_reports/junit.xml
+
+== smoke run (escena principal, 120 frames)
+OK
+
+✓ verify OK
+rc=0

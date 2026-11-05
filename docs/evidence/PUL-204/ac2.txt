@@ -1,0 +1,49 @@
+$ tools/verify.sh  (cada línea lleva delante los segundos desde el inicio)
+rc=0 total=531s; solo se conserva la cola de GUT que imprime verify.sh
+
+0 
+0 == sincronía de AGENTS.md y CLAUDE.md
+0 check_agents_sync: AGENTS.md y CLAUDE.md coinciden.
+0 
+0 == gdformat --check
+6 245 files would be left unchanged
+6 
+6 == gdlint
+13 Success: no problems found
+13 
+13 == import
+17 
+17 == compilación de scripts
+20 check_scripts: OK (245 scripts)
+20 
+20 == tests (GUT)
+530 * test_ac2_text_colors_reach_aaa_on_panels_and_wells
+530 * test_ac3_ink_is_state_burnt_and_ring_separates_from_world
+530 * test_ac3_hot_sticker_is_octagonal_with_cream_icon
+530 * test_ac3_every_ticket_sticker_has_ink_ring
+530 6/6 passed.
+530 
+530 
+530 
+530 
+530 ==============================================
+530 = Run Summary
+530 ==============================================
+530 
+530 Totals
+530 ------
+530 Scripts             119
+530 Tests              1378
+530 Passing Tests      1378
+530 Asserts           30374
+530 Time              505.868s
+530 
+530 
+530 ---- All tests passed! ----
+530 
+530 Results saved to res://.gut_reports/junit.xml
+530 
+530 == smoke run (escena principal, 120 frames)
+531 OK
+531 
+531 ✓ verify OK

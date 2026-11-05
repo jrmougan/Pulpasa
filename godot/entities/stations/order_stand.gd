@@ -35,9 +35,13 @@ var _last_box_id: int = 0
 var _last_attempt_frame: int = -1
 ## Copia de la comanda viva de este puesto, o `null` (sale de las señales del bus).
 var _order: ActiveOrder
-## Tick de física en que caducó la comanda de este puesto: en ese tick la zona no entrega a la
-## repuesta, aunque sea la misma receta (AC5b: la entrega de ese tick va a la caducada).
+## Tick de física en que caducó la comanda de este puesto.
 var _expired_frame: int = -1
+## Desde que caduca la comanda hasta el siguiente `advance` del tablero la zona no entrega a la
+## repuesta, aunque sea la misma receta (AC5b; PUL-198): el núcleo rechaza todo intento hasta
+## entonces, y el `body_entered` del tick siguiente llega antes de ese `advance`. El `advance`
+## se nota en `order_patience_changed`; sin paciencia en la repuesta no hay señal y vale tick + 1.
+var _awaiting_advance: bool = false
 var _frame: MeshInstance3D
 var _lit_material: StandardMaterial3D
 var _lit: bool = false
@@ -58,6 +62,7 @@ func _ready() -> void:
 	_bus.order_generated.connect(_on_order_generated)
 	_bus.order_completed.connect(_on_order_completed)
 	_bus.order_expired.connect(_on_order_expired)
+	_bus.order_patience_changed.connect(_on_order_patience_changed)
 	_zone.body_entered.connect(_on_body_entered)
 	_rebuild_label()
 	_setup_delivery_mark()
@@ -153,9 +158,16 @@ func _try_deliver(holder: Holder) -> void:
 
 
 func _zone_accepts(box: Box) -> bool:
-	if _order == null or Engine.get_physics_frames() == _expired_frame:
+	if _order == null or _blocked_by_expiry():
 		return false
 	return OrderValidator.matches(_order.data, box.get_contents())
+
+
+## `true` mientras el núcleo aún rechazaría la entrega por la caducidad de este puesto.
+func _blocked_by_expiry() -> bool:
+	if not _awaiting_advance:
+		return false
+	return _order.max_time > 0.0 or Engine.get_physics_frames() <= _expired_frame + 1
 
 
 ## Una sola consulta al cargar (puesto creado con la ronda en marcha); luego, solo señales (B16).
@@ -181,6 +193,7 @@ func _on_body_entered(body: Node3D) -> void:
 
 
 func _on_orders_reset() -> void:
+	_awaiting_advance = false
 	_set_order(null)
 
 
@@ -200,5 +213,10 @@ func _on_order_completed(order: ActiveOrder, _points: int) -> void:
 func _on_order_expired(order: ActiveOrder, _penalty: int) -> void:
 	if order.slot_id == slot_id:
 		_expired_frame = Engine.get_physics_frames()
+		_awaiting_advance = true
 		_set_order(null)
 		_feedback.play_cue(&"order_expired", _label)
+
+
+func _on_order_patience_changed(_order_id: int, _time_left: float, _max_time: float) -> void:
+	_awaiting_advance = false

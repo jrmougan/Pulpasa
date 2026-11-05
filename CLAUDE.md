@@ -1,45 +1,41 @@
 # Pulpasa
 
-Cooperativo de cocina (pulpo á feira en romerías gallegas) en migración de Unity 6 a
-**Godot 4.7.2** (3D, cámara ortográfica) y camino de una alpha. Desarrollo hecho por agentes coordinados con Orca.
+Cooperativo de cocina (pulpo á feira en romerías gallegas) en **Godot 4.7.2** (3D, cámara ortográfica),
+camino de una alpha. Desarrollo hecho por agentes coordinados con Orca. La migración desde Unity cerró en M0; fase actual en `docs/design/roadmap.md`.
 
 ## Dónde está cada cosa
 - `godot/`: proyecto Godot (lo que se desarrolla). GDScript tipado, tests GUT en `godot/tests/`.
-- `Assets/`: prototipo Unity. **Solo lectura**. Fue la especificación de M0; desde M1 es solo referencia (D17): manda el diseño.
-- `docs/design/roadmap.md`: hitos y fases de M0. `docs/design/decisions.md`: decisiones cerradas (mandan sobre el GDD). `docs/design/gdd.md`: GDD de trabajo.
+- `Assets/`: prototipo Unity. **Solo lectura** y solo referencia (D17): manda el diseño.
+- `docs/design/`: `roadmap.md` (hitos), `decisions.md` (decisiones cerradas, mandan sobre el GDD; D25-D28 cambian reglas, UX y estética), `gdd.md` (GDD de trabajo), `features/` (specs con AC).
 - `docs/arch/`: ADRs, `signals.md`, `scene-tree.md`. Contratos: no se cambian sin ADR y gate humano.
-- `docs/migration/inventory.md`: mapa Unity → Godot y bugs que no se portan.
+- `docs/art/`: `art-bible.md` (v3, D28), `pipeline.md`. `art/blender/`: fuentes (D20). `docs/assets/licenses.md`: registro (D16).
 - `docs/backlog/PUL-*.md`: fichas de tarea. `docs/evidence/<id>/`: capturas y pruebas.
-- GDD original (gallego, solo lectura): `/home/jeromo/vibedora/dev/pulpasa_docs/main.tex`.
+- GDD original (gallego, solo lectura, fuera del repo): `/home/jeromo/vibedora/dev/pulpasa_docs/main.tex`. Si no está en tu máquina, usa `gdd.md`.
 
 ## Comandos
-- Toolchain: `mise install` en la raíz (`mise.toml`: node, python ≥3.13, uv, jq, gdtoolkit). Se
-  trabaja en Linux, macOS y Windows; las versiones solo cambian por commit en `mise.toml`.
-- Verificación completa: `tools/verify.sh` (gdformat, gdlint, import, GUT, smoke). `--quick` sin tests.
+- Toolchain: `mise install` en la raíz. Se trabaja en Linux, macOS y Windows; las versiones solo cambian por commit en `mise.toml`.
+- Verificación completa: `tools/verify.sh` (sincronía de AGENTS.md y CLAUDE.md, gdformat, gdlint, import, compilación de scripts, GUT, smoke). `--quick` sin tests ni smoke.
 - Merge de una rama de worker (solo el producer): `tools/merge_gate.sh <rama>`.
 - Godot: `godot` en el PATH (4.7.2, binario oficial; con el gestor de cada sistema, p. ej. Godots o
   Scoop con `hold`). No lo gestiona mise.
-- MCP `godot` (`.mcp.json`, godot-mcp-runtime 3.8.1, sin diálogos de confirmación por decisión del responsable): ejecutar, capturar, simular input, leer errores.
-  Proyecto: `<raíz>/godot`. Linux sin pantalla: lanzar Claude con `xvfb-run -a`.
-- Orca: el comando depende del sistema. En Linux, `orca-ide`, nunca `orca` (es el lector de pantalla).
-  En Windows, `orca`, porque `orca-ide` no existe.
+- MCP `godot` (sin diálogos de confirmación, por decisión del responsable): skill `godot-verify`. MCP `blender`: `docs/art/pipeline.md`.
+- Orca (único orquestador, T6): `orca-ide` en Linux, nunca `orca` (es el lector de pantalla); `orca` en Windows.
 
 ## Reglas no negociables
+Los hooks de `.claude/` solo corren en Claude Code: fuera de él, la barrera es `tools/merge_gate.sh`.
 1. Una ficha por worker. Escribe su id en `.claude/current-task` antes de editar: un hook solo
    permite tocar `owns` y `touches_scenes` de esa ficha. Bórralo al terminar. El merge gate
    (`tools/check_owns.py`) rechaza la rama si cambia cualquier otra ruta, también desde Bash: si
    necesitas tocar algo más, pregunta al coordinador.
-2. No se termina con `tools/verify.sh` en rojo (un hook de Stop lo impide hasta 3 veces; después, escala).
+2. No se termina con `tools/verify.sh` en rojo: pásalo antes del commit final. El hook de Stop solo cubre
+   cambios sin commitear (lo impide hasta 3 veces; después, escala); la barrera final es el merge gate.
 3. Tipado estático en todo GDScript. Datos de balance en `.tres`, no en código.
-4. Lógica en núcleos `RefCounted` de `core/`; autoloads `EventBus`, `GameState`, `OrderService`,
-   `RoundManager` como adaptadores finos (ADR-002). Sistemas comunicados por señales de `EventBus`
+4. Lógica en núcleos `RefCounted` de `core/`; autoloads como adaptadores finos (ADR-002). Sistemas comunicados por señales de `EventBus`
    (catálogo cerrado en `docs/arch/signals.md`); nada de rutas absolutas de nodos.
-   `autoload/`, `core/`, `resources/` y `ui/` sin tipos 3D/2D de mundo.
+   `autoload/`, `core/`, `resources/` y `ui/` de pantalla sin tipos 3D/2D de mundo.
 5. Un `.tscn` tiene un solo dueño por oleada. No inventes `uid://`; versiona los `.uid`.
-6. No portes los bugs del prototipo (lista en `docs/migration/inventory.md`). La paridad con Unity ya no es requisito (D17).
+6. No portes los bugs del prototipo (lista en `docs/migration/inventory.md`).
 7. No edites `Assets/`, `godot/addons/` ni `main.tex`.
 
 ## Agentes y skills
-Roles en `.claude/agents/` (producer, migration-analyst, game-designer, godot-architect,
-gameplay-engineer, ui-engineer, asset-pipeline, qa-tester, reviewer).
-Skills: `orca-dispatch`, `godot-verify`, `gdscript-conventions`, `unity-to-godot`, `backlog-card`.
+Roles: `.claude/agents/<rol>.md`. Skills: `.claude/skills/<nombre>/SKILL.md`. Un worker de Orca lee su rol como texto: `tools` y `model` del frontmatter solo rigen en subagentes.

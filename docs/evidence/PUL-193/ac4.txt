@@ -1,0 +1,24 @@
+AC4: hook sin el módulo. Mensajes con la salida real de stderr.
+OK   módulo ausente, con current-task, ruta incluida: rc=2 (se espera 2)
+      Bloqueado: guard_ownership no ha podido comprobar `owns` (ModuleNotFoundError: No module named 'card_frontmatter').
+      Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+OK   módulo ausente, con current-task, ruta ajena: rc=2 (se espera 2)
+      Bloqueado: guard_ownership no ha podido comprobar `owns` (ModuleNotFoundError: No module named 'card_frontmatter').
+      Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+OK   módulo ausente, con otro card_frontmatter.py en el directorio de trabajo: rc=2 (se espera 2)
+      Bloqueado: guard_ownership no ha podido comprobar `owns` (ModuleNotFoundError: No module named 'card_frontmatter').
+      Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+OK   módulo con error de sintaxis: rc=2 (se espera 2)
+      Bloqueado: guard_ownership no ha podido comprobar `owns` (SyntaxError: invalid syntax (card_frontmatter.py, line 1)).
+      Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+OK   módulo sin la función: rc=2 (se espera 2)
+      Bloqueado: guard_ownership no ha podido comprobar `owns` (ImportError: cannot import name 'frontmatter_list' from 'card_frontmatter' (<sandbox>\tools\card_frontmatter.py)).
+      Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+OK   módulo que lanza al importar: rc=2 (se espera 2)
+      Bloqueado: guard_ownership no ha podido comprobar `owns` (RuntimeError: roto).
+      Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+OK   módulo que hace sys.exit(0) al importar: rc=2 (se espera 2)
+      Bloqueado: guard_ownership no ha podido comprobar `owns` (SystemExit: 0).
+      Revisa la ficha activa, .claude/current-task y la entrada del hook, o pregunta al coordinador (`orchestration ask`).
+OK   módulo ausente, sin current-task (no restringe nada): rc=0 (se espera 0)
+OK   módulo presente (control): rc=0 (se espera 0)

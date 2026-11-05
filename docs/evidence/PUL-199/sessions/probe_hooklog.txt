@@ -1,0 +1,15 @@
+{"source": "root-settings", "CLAUDE_PROJECT_DIR": "<clon>", "process_cwd": "<clon>", "payload_cwd": "<clon>", "file_path": "<clon>\\godot\\core\\zz_probe_probe_root_1.txt"}
+{"source": "root-settings", "CLAUDE_PROJECT_DIR": "<clon>", "process_cwd": "<clon>", "payload_cwd": "<clon>", "file_path": "<clon>\\godot\\core\\zz_probe_probe_root_2.txt"}
+{"source": "root-settings", "CLAUDE_PROJECT_DIR": "<clon>", "process_cwd": "<clon>", "payload_cwd": "<clon>", "file_path": "<clon>\\godot\\core\\zz_probe_probe_root_3.txt"}
+{"source": "godot-settings", "CLAUDE_PROJECT_DIR": "<clon>/godot", "process_cwd": "<clon>\\godot", "payload_cwd": "<clon>\\godot", "file_path": "<clon>\\godot\\core\\zz_probe_probe_godot_1.txt"}
+{"source": "godot-settings", "CLAUDE_PROJECT_DIR": "<clon>/godot", "process_cwd": "<clon>\\godot", "payload_cwd": "<clon>\\godot", "file_path": "<clon>\\godot\\core\\zz_probe_probe_godot_2.txt"}
+{"source": "godot-settings", "CLAUDE_PROJECT_DIR": "<clon>/godot", "process_cwd": "<clon>\\godot", "payload_cwd": "<clon>\\godot", "file_path": "<clon>\\godot\\core\\zz_probe_probe_godot_3.txt"}
+{"source": "godot-settings", "CLAUDE_PROJECT_DIR": "<clon>/godot", "process_cwd": "<clon>\\godot", "payload_cwd": "<clon>\\godot", "file_path": "<clon>\\godot\\core\\zz_probe_probe_godot_inherit_1.txt"}
+{"source": "godot-settings", "CLAUDE_PROJECT_DIR": "<clon>/godot", "process_cwd": "<clon>\\godot", "payload_cwd": "<clon>\\godot", "file_path": "<clon>\\godot\\core\\zz_probe_probe_godot_inherit_2.txt"}
+{"source": "godot-settings", "CLAUDE_PROJECT_DIR": "<clon>/godot", "process_cwd": "<clon>\\godot", "payload_cwd": "<clon>\\godot", "file_path": "<clon>\\godot\\core\\zz_probe_probe_godot_inherit_3.txt"}
+{"source": "root-settings", "CLAUDE_PROJECT_DIR": "<clon>", "process_cwd": "<clon>", "payload_cwd": "<clon>", "file_path": "<clon>\\godot\\core\\zz_probe_probe_root_other_1.txt"}
+{"source": "root-settings", "CLAUDE_PROJECT_DIR": "<clon>", "process_cwd": "<clon>", "payload_cwd": "<clon>", "file_path": "<clon>\\godot\\core\\zz_probe_probe_root_other_2.txt"}
+{"source": "root-settings", "CLAUDE_PROJECT_DIR": "<clon>", "process_cwd": "<clon>", "payload_cwd": "<clon>", "file_path": "<clon>\\godot\\core\\zz_probe_probe_root_other_3.txt"}
+{"source": "root-settings", "CLAUDE_PROJECT_DIR": "<clon>", "process_cwd": "<clon>", "payload_cwd": "<clon>", "file_path": "<clon>\\godot\\core\\zz_probe_probe_root_cd_1.txt"}
+{"source": "root-settings", "CLAUDE_PROJECT_DIR": "<clon>", "process_cwd": "<clon>", "payload_cwd": "<clon>", "file_path": "<clon>\\godot\\core\\zz_probe_probe_root_cd_2.txt"}
+{"source": "root-settings", "CLAUDE_PROJECT_DIR": "<clon>", "process_cwd": "<clon>", "payload_cwd": "<clon>", "file_path": "<clon>\\godot\\core\\zz_probe_probe_root_cd_3.txt"}

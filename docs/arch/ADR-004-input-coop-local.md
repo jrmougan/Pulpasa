@@ -1,7 +1,7 @@
 # ADR-004 — Input para coop local y cambio de personaje
 
 - **Estado:** aceptado (2026-10-03); enmienda §6 (D26: input táctil en Individual y corte al
-  mantener) **propuesta**, pendiente del gate humano (PUL-120)
+  mantener; PUL-120) **aceptada** por el responsable en gate humano el 2026-11-04 (`gate-enmiendas.md`, PUL-197)
 - **Fecha:** 2026-10-03; enmienda 2026-10-11
 - **Ficha:** PUL-003; enmienda PUL-120 (D26)
 - **Relacionado:** D3 y D11 (`docs/design/decisions.md`), ADR-005 (D14, 3D o 2D), Must 5–7 (`docs/design/roadmap.md`), features
@@ -29,7 +29,7 @@ nunca coinciden con eventos de mando porque el tipo de evento es distinto.
 M0 es paridad (1 jugador, teclado); coop, mando y cambio son M2. La fase 0 de M0 crea ya el
 InputMap con el esquema definitivo para no cambiar nombres después.
 
-La dimensión del juego está pendiente (D14, ADR-005), así que esta ADR separa lo que no depende de
+Al escribir esta ADR la dimensión del juego estaba pendiente (D14; hoy decidida: 3D, ADR-005), así que separa lo que no depende de
 ella (acciones, dispositivos, quién controla a quién) de cómo se traduce el input en movimiento.
 
 ## Decisión
@@ -150,7 +150,7 @@ Los menús usan `Button` con foco nativo y las acciones `ui_*` (B14). El menú p
 `GameState.mode` antes de cargar el nivel. La pausa (`pause_menu.tscn`, `PROCESS_MODE_ALWAYS`)
 escucha `pause` y llama `GameState.set_paused()`.
 
-### 6. Input táctil y corte al mantener (D26) — *Enmienda D26 (PUL-120, 2026-10-11), propuesta, pendiente del gate humano*
+### 6. Input táctil y corte al mantener (D26) — *Enmienda D26 (PUL-120, 2026-10-11), aceptada por el responsable el 2026-11-04*
 
 D26.8: móvil entra en el alcance de la alpha **solo en Individual** (con cambio de personaje),
 apaisado. Local 2P sigue siendo de PC/mando. Especificación medible:
@@ -160,9 +160,12 @@ Android: fuera de esta oleada (`export.md`).
 
 **6.1 Sin eventos táctiles en el InputMap.** Los controles táctiles **alimentan las acciones que ya
 existen** (`p1_move_*`, `p1_interact`, `p1_switch`, `pause`) desde código; `project.godot` no gana
-acciones ni eventos (`InputEventScreenTouch` no es un binding). Todo el juego (jugador,
-`InteractionComponent`, `CharacterSwitcher`, pausa) sigue leyendo `PlayerInput` y `_unhandled_input`
-sin saber de dónde viene la pulsación, y el test de bindings (teclado + mando) no cambia.
+acciones ni eventos (`InputEventScreenTouch` no es un binding). El juego no sabe de dónde viene la
+pulsación. Jugador, `InteractionComponent` y `CharacterSwitcher`, **en conjunto**, leen `PlayerInput` y
+`_unhandled_input`, no cada uno ambos: el jugador no usa `_unhandled_input` (toma la dirección de
+`PlayerInput` y la magnitud de `Input.get_vector` sobre las mismas acciones), `InteractionComponent` usa los
+dos y `CharacterSwitcher` solo `_unhandled_input`, con `p1_switch` y sin `PlayerInput`. La pausa escucha la
+acción `pause` en `_input` de `pause_menu.gd`. El test de bindings (teclado + mando) no cambia.
 
 | Control | Cómo alimenta | Acción |
 |---|---|---|
@@ -220,7 +223,9 @@ TouchControls (Control, anclas a pantalla completa, mouse_filter IGNORE)   touch
   12.0`, `button_margin_px_1080: float = 48.0`, `button_gap_px_1080: float = 24.0`, `stick_base_dp:
   float = 120.0`, `stick_radius_dp: float = 60.0`, `stick_deadzone: float = 0.2`,
   `stick_zone_fraction: float = 0.5`, `stick_zone_top_px_1080: float = 200.0`, `stick_fade_s: float =
-  0.15`, `haptics_enabled: bool = true`, `haptic_ok_ms: int = 20`, `haptic_reject_ms: int = 20`.
+  0.15`, `haptics_enabled: bool = true`, `haptic_ok_ms: int = 20`, `haptic_reject_ms: int = 20`. Esta lista es
+  el mínimo del contrato: el recurso añade campos de aspecto y respuesta (p. ej. `action_icon_px_1080`,
+  `press_scale`, `ring_px_1080`, `jump_px_1080`).
   Instancia `data/config/touch_config.tres`. Test de datos: `action_button_dp ≥ 72`,
   `small_button_dp ≥ 48`.
 - `TouchControls` se instancia en la `UI` (`CanvasLayer`) del nivel, encima de HUD y tickets y debajo
@@ -228,7 +233,7 @@ TouchControls (Control, anclas a pantalla completa, mouse_filter IGNORE)   touch
 
 **6.3 Cuándo se ven** (`core/touch_input.gd`, `class_name TouchInput extends RefCounted`, puro):
 - `enum Source { NONE, TOUCH, KEYS, JOYPAD }`.
-- `static func source_of(event: InputEvent) -> Source`: `InputEventScreenTouch` / `ScreenDrag` →
+- `static func source_of(event: InputEvent, joy_deadzone: float) -> Source`: `InputEventScreenTouch` / `ScreenDrag` →
   `TOUCH`; `InputEventKey` → `KEYS`; `InputEventJoypadButton` y `InputEventJoypadMotion` por encima de
   la zona muerta → `JOYPAD`; el resto (ratón, también el emulado desde táctil, e `InputEventAction`,
   que inyectan los propios controles) → `NONE` = no cambia la fuente.
@@ -251,6 +256,8 @@ TouchControls (Control, anclas a pantalla completa, mouse_filter IGNORE)   touch
   (`NOTIFICATION_APPLICATION_FOCUS_OUT` / `NOTIFICATION_APPLICATION_PAUSED`) y con la tecla Atrás
   (`NOTIFICATION_WM_GO_BACK_REQUEST`); al volver **no** reanuda sola. Mantiene la pantalla encendida
   durante la partida (`DisplayServer.screen_set_keep_on(true)`).
+- En el menú principal, la tecla Atrás sale del juego (`main_menu.gd`); `config/quit_on_go_back` es
+  `false` en `project.godot` para que en ronda pause en lugar de salir.
 
 **Alternativas descartadas (§6).**
 1. *Eventos `InputEventScreenTouch` en el InputMap.* No llevan zona ni índice útiles para un stick y

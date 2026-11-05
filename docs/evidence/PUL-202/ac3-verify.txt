@@ -1,0 +1,22 @@
+Success: no problems found
+== import
+== compilación de scripts
+check_scripts: OK (245 scripts)
+== tests (GUT)
+6/6 passed.
+==============================================
+= Run Summary
+==============================================
+Totals
+------
+Scripts             119
+Tests              1378
+Passing Tests      1378
+Asserts           30403
+Time              512.641s
+---- All tests passed! ----
+Results saved to res://.gut_reports/junit.xml
+== smoke run (escena principal, 120 frames)
+OK
+✓ verify OK
+exit 0

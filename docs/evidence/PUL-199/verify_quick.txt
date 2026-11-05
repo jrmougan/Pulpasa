@@ -1,0 +1,17 @@
+
+== sincronía de AGENTS.md y CLAUDE.md
+check_agents_sync: AGENTS.md y CLAUDE.md coinciden.
+
+== gdformat --check
+245 files would be left unchanged
+
+== gdlint
+Success: no problems found
+
+== import
+
+== compilación de scripts
+check_scripts: OK (245 scripts)
+
+✓ verify OK
+rc=0

@@ -1,0 +1,80 @@
+AC5 rutas destino no ASCII: decide owns, sin excepción
+FAIL rc=1 (esperado 2) fuera de owns, UTF-8 crudo: Assets/peñón_ñandú.txt
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+FAIL stderr no conserva la ruta en UTF-8
+FAIL rc=1 (esperado 0) dentro de owns (glob), UTF-8 crudo: docs/evidence/PUL-184/captura_ñ_€.png
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+FAIL rc=1 (esperado 2) fuera de owns, JSON con \u
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+PASS rc=0 (esperado 0) ficha con owns no ASCII, literal: docs/ñandú/peñón.md
+PASS rc=0 (esperado 0) ficha con owns no ASCII, glob: godot/ñ/a/b.gd
+FAIL rc=2 (esperado 2) ficha con owns no ASCII, ruta parecida: docs/nandu/penon.md
+    Bloqueado: docs/nandu/penon.md no est\xe1 en `owns` ni `touches_scenes` de PUL-904-\xf1and\xfa.md.
+    Rutas permitidas: docs/ñandú/peñón.md, godot/ñ/**, docs/backlog/PUL-904-\xf1and\xfa.md, docs/evidence/PUL-904/**, .claude/current-task
+    Si necesitas tocarlo, pregunta al coordinador (orca ask) en vez de editarlo.
+Consola forzada a cp1252: el resultado no cambia
+FAIL rc=1 (esperado 2) PYTHONIOENCODING=cp1252, fuera de owns: Assets/peñón.txt
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>
+FAIL stderr no sale en UTF-8
+FAIL rc=1 (esperado 0) PYTHONIOENCODING=cp1252, dentro de owns: docs/evidence/PUL-184/ñ.png
+    Traceback (most recent call last):
+      File "<ruta> line 54, in <module>
+        text = card.read_text()
+      File "<ruta> line 546, in read_text
+        return PathBase.read_text(self, encoding, errors, newline)
+               ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<ruta> line 633, in read_text
+        return f.read()
+               ~~~~~~^^
+      File "<ruta> line 23, in decode
+        return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeDecodeError: 'charmap' codec can't decode byte 0x81 in position 4513: character maps to <undefined>

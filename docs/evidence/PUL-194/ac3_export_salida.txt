@@ -1,0 +1,52 @@
+# AC3 PUL-194: exportacion headless con Blender 5.2.3 LTS (build e13b728c6880), Windows
+# Escena temporal: art/blender/_template.blend (solo lectura, no se guarda) + cubo de 1 m con un material plano.
+# Orden: blender -b art/blender/_template.blend --python <tmp>/run_export_test.py -- <repo> <tmp>/out2/pul194_test.glb
+#   (el script temporal construye el cubo y ejecuta tools/blender_export.py --out <tmp>/out2/pul194_test.glb --max-tris 20)
+# Destino fuera del repo (directorio temporal de la sesion, abreviado <tmp>). Resultado: exit 0, .glb generado.
+# Comprobacion posterior: git status no muestra nada nuevo dentro de godot/.
+
+--- salida de Blender ---
+00:01.703  blend            | Read blend: "<repo>/art/blender/_template.blend"
+00:01.703  reports          | Read library: '<repo>/art/blender/_materials_v2.blend', '//_materials_v2.blend', parent '<direct>'
+Blender 5.2.3 LTS (hash e13b728c6880 built 2026-10-22 01:37:16)
+INFO Draco is available, use library at <blender>/5.2/scripts/addons_core/io_scene_gltf2/bf_intern_draco_bridge.dll
+INFO MeshOptimizer is available, use library at <blender>/5.2/scripts/addons_core/io_scene_gltf2/bf_intern_meshopt_bridge.dll
+18:34:38 | INFO: Starting glTF 2.0 export
+18:34:38 | INFO: Extracting primitive: pul194_cube
+18:34:38 | INFO: Primitives created: 1
+18:34:38 | INFO: Finished glTF 2.0 export in 0.0495457649230957 s
+
+blender_export: OK <tmp>/out2/pul194_test.glb (3 objetos, 12 triángulos, 2 KiB)
+
+Blender quit
+
+--- contenido del destino temporal ---
+pul194_test.glb  1720 bytes, cabecera "glTF" (GLB binario)
+pul194_test.glb.import  472 bytes:
+
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/use_name_suffixes=false
+nodes/use_node_type_suffixes=false
+meshes/ensure_tangents=false
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+materials/extract=0
+animation/import=true
+animation/fps=30
+gltf/naming_version=2
+gltf/embedded_image_handling=0
+
+--- Revision: --smoke-cube con export_image_format=NONE, destino temporal, sin textures/v2 alcanzable ---
+blender_export: OK ...\p194\out\_pipeline\test_cube\test_cube.glb (3 objetos, 24 triangulos, 3 KiB), exit 0
