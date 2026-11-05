@@ -1,0 +1,6 @@
+root_nomark #1 NO_CREADO claude_rc=0 cwd=<clon> tools=['Write']
+    PreToolUse: ['rc=2 error stderr=Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.', 'rc=0 success stderr=']
+    resultado: ['ERROR PreToolUse:Write hook error: [h="$CLAUDE_PROJECT_DIR/.claude/hooks/run_guard.sh"; [ -s "$h" ] || { echo \'Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.\' >&2; exit 2; }; sh "$h" || exit 2]: Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.']
+root_nomark #2 NO_CREADO claude_rc=0 cwd=<clon> tools=['Write']
+    PreToolUse: ['rc=2 error stderr=Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.', 'rc=0 success stderr=']
+    resultado: ['ERROR PreToolUse:Write hook error: [h="$CLAUDE_PROJECT_DIR/.claude/hooks/run_guard.sh"; [ -s "$h" ] || { echo \'Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.\' >&2; exit 2; }; sh "$h" || exit 2]: Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.']

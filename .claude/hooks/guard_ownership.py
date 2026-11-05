@@ -9,7 +9,8 @@ Claude Code solo trata como bloqueo el código de salida 2: cualquier otro deja 
 Por eso toda excepción inesperada sale con 2, igual que una entrada sin `file_path` de texto (las
 tres herramientas lo llevan), y todo el texto se lee en UTF-8 de forma explícita (en Windows, la
 codificación por defecto es cp1252 y no sirve para las fichas). Se admite BOM (`utf-8-sig`): lo
-escriben herramientas de Windows y es invisible en los mensajes.
+escriben herramientas de Windows y es invisible en los mensajes. Lo que muere antes de este código
+(intérprete ausente, entorno de Python inválido, hook que no compila) lo cubre run_guard.sh.
 
 El parser de fichas es tools/card_frontmatter.py, compartido con tools/check_owns.py. Se importa con
 ficha activa y no antes: sin ficha el hook no lo necesita, y si no se puede importar, bloquea.

@@ -1,0 +1,18 @@
+root #1 NO_CREADO claude_rc=0 cwd=<clon> tools=['Write']
+    PreToolUse: ['rc=2 error stderr=Bloqueado: godot/core/zz_probe_only_project_root_1.txt no está en `owns` ni `touches_scenes` de PUL-199-hooks-regla-1.md. Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.']
+    resultado: ['ERROR PreToolUse:Write hook error: [h="$CLAUDE_PROJECT_DIR/.claude/hooks/run_guard.sh"; [ -s "$h" ] || { echo \'Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.\' >&2; exit 2; }; sh "$h" || exit 2]: Bloqueado: godot/core/zz_probe_only_project_root_1.txt no es']
+root #2 NO_CREADO claude_rc=0 cwd=<clon> tools=['Write']
+    PreToolUse: ['rc=2 error stderr=Bloqueado: godot/core/zz_probe_only_project_root_2.txt no está en `owns` ni `touches_scenes` de PUL-199-hooks-regla-1.md. Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.']
+    resultado: ['ERROR PreToolUse:Write hook error: [h="$CLAUDE_PROJECT_DIR/.claude/hooks/run_guard.sh"; [ -s "$h" ] || { echo \'Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.\' >&2; exit 2; }; sh "$h" || exit 2]: Bloqueado: godot/core/zz_probe_only_project_root_2.txt no es']
+root #3 NO_CREADO claude_rc=0 cwd=<clon> tools=['Write']
+    PreToolUse: ['rc=2 error stderr=Bloqueado: godot/core/zz_probe_only_project_root_3.txt no está en `owns` ni `touches_scenes` de PUL-199-hooks-regla-1.md. Rutas permitidas: .claude/settings.json, .claude/hooks/guard_ownership.py, .claude/hooks/run_guard.sh, docs/backlog/PUL-199-hooks-regla-1.']
+    resultado: ['ERROR PreToolUse:Write hook error: [h="$CLAUDE_PROJECT_DIR/.claude/hooks/run_guard.sh"; [ -s "$h" ] || { echo \'Bloqueado: falta o esta vacio .claude/hooks/run_guard.sh.\' >&2; exit 2; }; sh "$h" || exit 2]: Bloqueado: godot/core/zz_probe_only_project_root_3.txt no es']
+godot #1 CREADO claude_rc=0 cwd=<clon>\godot tools=['Write']
+    PreToolUse: ningún evento
+    resultado: ['OK File created successfully at: <clon>/godot/core/zz_probe_only_project_godot_1.txt (file state is current in your context — no need to Read it back)']
+godot #2 CREADO claude_rc=0 cwd=<clon>\godot tools=['Write']
+    PreToolUse: ningún evento
+    resultado: ['OK File created successfully at: <clon>/godot/core/zz_probe_only_project_godot_2.txt (file state is current in your context — no need to Read it back)']
+godot #3 CREADO claude_rc=0 cwd=<clon>\godot tools=['Write']
+    PreToolUse: ningún evento
+    resultado: ['OK File created successfully at: <clon>/godot/core/zz_probe_only_project_godot_3.txt (file state is current in your context — no need to Read it back)']
