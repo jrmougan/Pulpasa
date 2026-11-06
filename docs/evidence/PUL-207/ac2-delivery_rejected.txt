@@ -1,0 +1,8 @@
+Búsqueda: delivery_rejected en AC5d (docs/design/features/entrega-y-puntuacion.md:54), tras la reescritura.
+
+Aparece 2 veces:
+1. Criterio del jugador, en negativo: "no se emite `order_completed` ni `delivery_rejected`".
+2. Nota del núcleo (marcada "Nota (núcleo, no es el criterio del jugador)"): "`OrderBoard.try_deliver` sigue rechazando ... y emitiría `delivery_rejected(slot, id_de_la_caducada, 0)` (AC5b ...)"; "el juego no lo emite".
+
+Ya no aparece "se emite `delivery_rejected(slot, id_de_la_caducada, 0)`" como criterio del jugador.
+Texto anterior en docs/evidence/PUL-207/ac5d-antes.txt.
