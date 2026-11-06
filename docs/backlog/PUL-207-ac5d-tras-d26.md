@@ -1,7 +1,7 @@
 ---
 id: PUL-207
 title: Reescribir AC5d según lo que ve el jugador
-status: review
+status: done
 milestone: M4
 role: game-designer
 deps: []
@@ -33,3 +33,5 @@ Solo describe lo ya implementado (PUL-198) y decidido. No cambia valores ni `dec
 - `docs/evidence/PUL-207/ac5d-antes.txt` (texto anterior), `ac1-contraste.md`, `ac2-delivery_rejected.txt`, `verify-quick.txt` (OK).
 - Sin cambios de código ni de valores. El contraste es por lectura; no se ejecutó GUT.
 - Hueco: ningún test mide la recaudación (3 €) en la zona; se deduce de la ausencia de `delivery_rejected` (ver ac1-contraste.md).
+
+- Mergeada con `tools/merge_gate.sh` el 2026-11-06 (1380/1380 tests, smoke OK).

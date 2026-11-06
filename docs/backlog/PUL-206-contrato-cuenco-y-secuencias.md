@@ -1,7 +1,7 @@
 ---
 id: PUL-206
 title: Corregir ADR-003 §9.1 (cuenco) y las secuencias de entrega de signals.md §3
-status: review
+status: done
 milestone: M4
 role: godot-architect
 deps: []
@@ -55,3 +55,5 @@ Dos frases de contrato que no coinciden con el código, vistas al cerrar PUL-205
 - Notas: el código cumple el diseño (D26, tabla E); el texto literal de D23 en `decisions.md` («con
   cualquier otra cosa no es objetivo») no se reescribió en la línea de D26, pero D26 remite a
   `lenguaje-acciones.md`, que manda. Sin cambios en código ni en otras secciones. Requiere gate humano.
+
+- **Gate humano:** aceptado por el responsable el 2026-11-06; mergeada con `tools/merge_gate.sh` (1380/1380 tests, smoke OK).
