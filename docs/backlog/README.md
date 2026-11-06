@@ -211,4 +211,4 @@ Una ficha por tarea: `PUL-<nnn>-<slug>.md`, a partir de `_TEMPLATE.md`.
 | PUL-204 | M4 | godot-architect | done | Ajustar timeouts, diagnóstico y documentación de verify |
 | PUL-205 | M4 | godot-architect | done | Corregir las frases de contrato pendientes del gate (G08, G13, G57) |
 | PUL-206 | M4 | godot-architect | ready | Corregir ADR-003 §9.1 (cuenco) y las secuencias de entrega de signals.md §3 |
-| PUL-207 | M4 | game-designer | draft | Decidir qué describe AC5d tras D26 |
+| PUL-207 | M4 | game-designer | ready | Decidir qué describe AC5d tras D26 |
