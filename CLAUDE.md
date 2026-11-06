@@ -27,6 +27,8 @@ Los hooks de `.claude/` solo corren en Claude Code: fuera de él, la barrera es 
    permite tocar `owns` y `touches_scenes` de esa ficha. Bórralo al terminar. El merge gate
    (`tools/check_owns.py`) rechaza la rama si cambia cualquier otra ruta, también desde Bash: si
    necesitas tocar algo más, pregunta al coordinador.
+   Arranca la sesión en la raíz del repo: desde una subcarpeta, o en un subagente con worktree
+   aislado, el hook no actúa y solo queda el merge gate.
 2. No se termina con `tools/verify.sh` en rojo: pásalo antes del commit final. El hook de Stop solo cubre
    cambios sin commitear (lo impide hasta 3 veces; después, escala); la barrera final es el merge gate.
 3. Tipado estático en todo GDScript. Datos de balance en `.tres`, no en código.
