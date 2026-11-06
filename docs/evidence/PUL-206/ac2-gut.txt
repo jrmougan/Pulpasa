@@ -1,0 +1,70 @@
+PUL-206 AC2: hint del cuenco con una caja a medio cortar.
+Godot 4.7.2.stable.official.ed1daf0bf, rama pul-206 (base 81a450c), tras `godot --headless --import`.
+Tests GUT existentes, sin cambios; no se añadió ningún test ni sonda. 0 líneas "SCRIPT ERROR" en
+las tres salidas.
+
+## 1. level_01.tscn real, lado de servicio, caja a medio cortar (fill 0,5)
+Caso "E1s0-M6@bowl" de BOWL_CASES (godot/tests/integration/test_d26_no_mute_press.gd:95).
+Fila del CSV del diseño: godot/tests/fixtures/action_matrix.csv:228
+  E1s0-M6,bowl,side=operator;stock=0,M6,1,cachelos,BLOCKED,box_not_full,,
+M6 = caja con fill 0,5 (test_d26_no_mute_press.gd:298). Con el detector real, el test exige que
+el objetivo sea el cuenco y que el hint publicado sea cachelos/BLOCKED/box_not_full, y que la
+pulsación dé una respuesta BLOCKED con un solo cue "rejected" sin cambiar el mundo
+(test_d26_no_mute_press.gd:499, :501-505, :552-560).
+
+$ godot --headless -s addons/gut/gut_cmdln.gd -gtest=res://tests/integration/test_d26_no_mute_press.gd -gunit_test_name=test_ac1_cachelos_bowl_on_level_01 -gexit
+= Run Summary
+==============================================
+
+Totals
+------
+Scripts             119
+Tests                 1
+Passing Tests         1
+Asserts             744
+Time              2.435s
+
+
+Ran Tests matching "test_ac1_cachelos_bowl_on_level_01"
+---- All tests passed! ----
+rc=0
+
+## 2. Estación suelta, cajas con fill 0,0 y 0,6: hint BLOCKED BOX_NOT_FULL y rejected(BOX_NOT_FULL), stock sin cambios
+(godot/tests/integration/test_cachelos.gd:244)
+
+$ godot --headless -s addons/gut/gut_cmdln.gd -gtest=res://tests/integration/test_cachelos.gd -gunit_test_name=test_pul126_ac2_box_not_full_blocks_with_box_not_full -gexit
+= Run Summary
+==============================================
+
+Totals
+------
+Scripts             119
+Tests                 1
+Passing Tests         1
+Asserts             728
+Time              0.57s
+
+
+Ran Tests matching "test_pul126_ac2_box_not_full_blocks_with_box_not_full"
+---- All tests passed! ----
+rc=0
+
+## 3. Lado de pase con caja en la mano: el cuenco no es objetivo (is_reachable_from = false)
+(godot/tests/integration/test_seasoning_station.gd:603)
+
+$ godot --headless -s addons/gut/gut_cmdln.gd -gtest=res://tests/integration/test_seasoning_station.gd -gunit_test_name=test_r5_box_in_hand_bowl_is_not_target_from_pass_side_within_1_5_m -gexit
+= Run Summary
+==============================================
+
+Totals
+------
+Scripts             119
+Tests                 1
+Passing Tests         1
+Asserts             723
+Time              0.926s
+
+
+Ran Tests matching "test_r5_box_in_hand_bowl_is_not_target_from_pass_side_within_1_5_m"
+---- All tests passed! ----
+rc=0

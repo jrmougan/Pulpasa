@@ -156,9 +156,9 @@ pasa a coincidir, ADR-003 §11.7):
 `order_completed(order, points)` → `score_changed(n, revenue)` (desde `RoundManager`) →
 `order_generated(nueva)` para el mismo `slot_id` → el puesto suelta y libera la caja.
 
-**Entrega errónea**: `try_deliver` devuelve `null` → `delivery_rejected(slot_id, order_id, penalty)`; no cambia el estado de las comandas (M1: `RoundState` resta `penalty` y `RoundManager` reenvía `score_changed`).
+**Entrega errónea** (*Enmienda PUL-206:* secuencia del núcleo, `OrderBoard.try_deliver`; en el juego no se alcanza desde D26, ver `delivery_rejected` en §2): `try_deliver` devuelve `null` → `delivery_rejected(slot_id, order_id, penalty)` (`godot/core/order_board.gd:159`, `godot/core/order_board.gd:160`); no cambia el estado de las comandas (M1: `RoundState` resta `penalty` y emite `score_changed`, que `RoundManager` reenvía; `godot/core/round_state.gd:185`). La zona solo pide `try_deliver` con una caja que coincide con la comanda viva (`godot/entities/stations/order_stand.gd:147`, `godot/entities/stations/order_stand.gd:163`).
 
-**Entrega en el tick de caducidad** (AC5b): tick N: `advance` → `order_expired(A)` → `order_generated(B)` (mismo puesto) → entrega de la caja → `delivery_rejected(slot_id, A.id, 0)`; sin `order_completed` ni ingreso. B solo es entregable desde el `advance` del tick N+1.
+**Entrega en el tick de caducidad** (AC5b; *Enmienda PUL-206:* secuencia del núcleo, `OrderBoard.try_deliver`; en el juego no se alcanza desde D26 si `OrderData.max_time > 0`, como en §2, `docs/arch/ADR-002-eventbus-autoloads.md:127`): tick N: `advance` → `order_expired(A)` → `order_generated(B)` (mismo puesto) → entrega de la caja → `delivery_rejected(slot_id, A.id, 0)` (`godot/core/order_board.gd:149`, `godot/core/order_board.gd:150`); sin `order_completed` ni ingreso. B solo es entregable desde el `advance` del tick N+1 (`godot/core/order_board.gd:122`). La zona no pide `try_deliver` hasta el siguiente `advance` (`godot/entities/stations/order_stand.gd:161`, `godot/entities/stations/order_stand.gd:170`).
 
 **Fin de ronda**: `round_time_changed(0.0)` → `round_finished(result)`; el reloj se para y
 `OrderService` no repone más.

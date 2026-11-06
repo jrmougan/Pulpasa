@@ -286,16 +286,23 @@ de PUL-090).
 |---|---|---|
 | Nada | No es objetivo (R4) | No es objetivo |
 | Caja llena | Servicio: alterna su condimento en **esa** caja (R1–R2) | Servicio: alterna cachelos en esa caja |
-| Caja a medio cortar | Servicio: es objetivo y **rechaza** `BOX_NOT_FULL` (R3: la caja no cambia y suena `season_error`) | No es objetivo |
+| Caja a medio cortar | Servicio: es objetivo y **rechaza** `BOX_NOT_FULL` (R3: la caja no cambia y suena `season_error`) | *Enmienda PUL-206:* servicio: es objetivo y **rechaza**: `ActionRules.for_bowl` da `BLOCKED` `cachelos` `box_not_full` con la caja vacía o a medias (`godot/core/action_rules.gd:101`, `godot/core/action_rules.gd:102`); la pulsación emite `rejected(BOX_NOT_FULL)` sin cambiar la caja ni `stock` (`godot/entities/stations/cachelos_bowl.gd:83`, `godot/entities/stations/cachelos_bowl.gd:84`). Desde el pase no es objetivo (`godot/entities/stations/cachelos_bowl.gd:58`) |
 | Cachelos cocidos | No es objetivo | Cualquier lado: repone `+cachelos_portions_per_item` (R5–R6) |
 | Otra cosa (pulpo, cachelos crudos o quemados) | No es objetivo | No es objetivo |
 | Cualquier cosa, desde el lado de pase | No es objetivo | Solo cachelos cocidos (reponer) |
 
 - La caja **siempre sigue en la mano** (R1): dispensador y cuenco consumen la pulsación (§8.2), así
   que `InteractionComponent` nunca suelta. Al rechazar emiten `rejected(reason)` sin cambiar nada.
-- Asimetría deliberada con la caja a medio cortar: el dispensador es objetivo para que R3 dé
+- ~~Asimetría deliberada con la caja a medio cortar: el dispensador es objetivo para que R3 dé
   feedback (`BOX_NOT_FULL`); el cuenco no, por la aclaración del responsable sobre D23 («con
-  cualquier otra cosa no es objetivo»). Las dos son de `is_reachable_from`, sin código común.
+  cualquier otra cosa no es objetivo»). Las dos son de `is_reachable_from`, sin código común.~~
+  *Enmienda PUL-206 (sustituida por §11.7, tabla E de `lenguaje-acciones.md`):* sin asimetría: con la
+  caja a medio cortar, dispensador y cuenco son objetivo desde el lado de servicio y dan `BLOCKED`
+  `box_not_full` (`godot/core/action_rules.gd:81`, `godot/core/action_rules.gd:102`). Lo decide
+  `get_action_hint`, cada uno con su función de `ActionRules` (`godot/entities/stations/seasoning_dispenser.gd:50`,
+  `godot/entities/stations/seasoning_dispenser.gd:87`, `godot/entities/stations/cachelos_bowl.gd:61`,
+  `godot/entities/stations/cachelos_bowl.gd:94`); `is_reachable_from` solo filtra el lado
+  (`godot/entities/stations/cachelos_bowl.gd:51`, `godot/entities/stations/seasoning_dispenser.gd:42`).
 - Con algo en la mano que no hace objetivo a nada de la estación, la pulsación sigue la regla general
   (soltar, §9.5).
 - Defensa en profundidad: `can_interact(actor)` repite la condición de la mano (sin el lado, como en
