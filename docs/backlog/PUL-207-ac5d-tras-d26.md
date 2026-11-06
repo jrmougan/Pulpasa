@@ -1,7 +1,7 @@
 ---
 id: PUL-207
-title: Decidir qué describe AC5d tras D26
-status: ready
+title: Reescribir AC5d según lo que ve el jugador
+status: review
 milestone: M4
 role: game-designer
 deps: []
@@ -21,11 +21,15 @@ El cuerpo de AC5d sigue describiendo un rechazo por pulsación anterior a D26: �
 Solo describe lo ya implementado (PUL-198) y decidido. No cambia valores ni `decisions.md` ni `docs/arch`. Si el comportamiento del juego no coincide con la frase nueva, status=blocked con la evidencia; no se cambia código en esta ficha.
 
 ## Acceptance
-- [ ] AC1 Given el AC5d nuevo, When se contrasta con `godot/entities/stations/order_stand.gd` y con `test_pul198_entry_after_expiry_tick_before_advance_does_not_reject` y `test_pul198_entry_after_the_advance_delivers_replacement` (`godot/tests/integration/test_order_stand.gd`), Then cada afirmación coincide → tabla en docs/evidence/PUL-207/
-- [ ] AC2 Given `entrega-y-puntuacion.md`, When se busca `delivery_rejected` en AC5d, Then solo aparece como comportamiento del núcleo, no como criterio del jugador → salida en docs/evidence/PUL-207/
+- [x] AC1 Given el AC5d nuevo, When se contrasta con `godot/entities/stations/order_stand.gd` y con `test_pul198_entry_after_expiry_tick_before_advance_does_not_reject` y `test_pul198_entry_after_the_advance_delivers_replacement` (`godot/tests/integration/test_order_stand.gd`), Then cada afirmación coincide → tabla en docs/evidence/PUL-207/
+- [x] AC2 Given `entrega-y-puntuacion.md`, When se busca `delivery_rejected` en AC5d, Then solo aparece como comportamiento del núcleo, no como criterio del jugador → salida en docs/evidence/PUL-207/
 
 ## Plan
-(Lo escribe el worker antes de implementar.)
+1. Leer `order_stand.gd` y los dos tests `test_pul198_*` y contrastar cada frase.
+2. Reescribir AC5d como lo que ve el jugador; el rechazo del núcleo pasa a nota (AC5b intacto).
+3. Tabla de AC1, búsqueda de AC2 y `verify.sh --quick` en `docs/evidence/PUL-207/`.
 
 ## Evidence
-(Lo rellena el worker: salida de verify.sh, capturas, notas.)
+- `docs/evidence/PUL-207/ac5d-antes.txt` (texto anterior), `ac1-contraste.md`, `ac2-delivery_rejected.txt`, `verify-quick.txt` (OK).
+- Sin cambios de código ni de valores. El contraste es por lectura; no se ejecutó GUT.
+- Hueco: ningún test mide la recaudación (3 €) en la zona; se deduce de la ausencia de `delivery_rejected` (ver ac1-contraste.md).
