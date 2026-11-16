@@ -1,0 +1,6 @@
+godot-mcp-runtime@4.0.1, operación headless get_scene_tree sobre scenes/levels/level_01.tscn (sin run_project):
+isError false; devuelve el árbol (root/Environment/WorldEnvironment, root/Environment/Sun, root/Environment/Bulbs/...).
+
+Con 3.8.1 esta operación fallaba con untyped_declaration = error (ADR-001 Enmienda 1, contexto, línea 136;
+godot-mcp-runtime#73). En 4.0.1 ya no falla en este proyecto: el contexto de la Enmienda 1 queda desfasado.
+No se cambia la ADR (contrato): lo decide el responsable.
