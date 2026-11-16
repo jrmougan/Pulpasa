@@ -4,7 +4,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "godot-mcp-runtime@3.8.1"
+        "godot-mcp-runtime@4.0.1"
       ],
       "env": {
         "GODOT_MCP_DISABLE_ELICITATION": "true"
