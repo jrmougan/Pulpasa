@@ -14,7 +14,7 @@
       "command": "uvx",
       "args": [
         "--python",
-        "3.13",
+        "3.14",
         "--from",
         "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.3#subdirectory=mcp",
         "blender-mcp"

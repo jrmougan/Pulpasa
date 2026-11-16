@@ -45,7 +45,7 @@ cambia su versión sin otra aprobación.
 ```json
 "blender": {
   "command": "uvx",
-  "args": ["--python", "3.13", "--from", "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.3#subdirectory=mcp", "blender-mcp"],
+  "args": ["--python", "3.14", "--from", "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.3#subdirectory=mcp", "blender-mcp"],
   "env": { "BLENDER_MCP_PORT": "${BLENDER_MCP_PORT:-9876}", "BLENDER_PATH": "blender" }
 }
 ```
