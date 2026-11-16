@@ -1,0 +1,20 @@
+[SERVER] Elicitation disabled (GODOT_MCP_DISABLE_ELICITATION=true); launch and run_script confirmation prompts are skipped
+[SERVER] Using Godot at: godot
+Godot MCP server running on stdio
+[SERVER] Handling tool request: run_project
+--- run_project isError=false
+{"warnings":["Elicitation disabled (GODOT_MCP_DISABLE_ELICITATION); launching without user confirmation."],"projectPath":"<repo>/godot","sessionMode":"spawned","bridgePort":35395,"message":"Godot project started and the MCP bridge is ready. Background mode: window not shown on Windows, moved off-screen elsewhere; mouse input passes through."}
+[SERVER] Handling tool request: simulate_input
+--- simulate_input isError=false
+{"projectPath":"<repo>/godot","success":true,"results":[{"elapsed_ms":540,"frame":19,"index":0,"ok":true,"pressed":false,"type":"action"},{"changes":{"changed":[{"path":"/root/Level01/UI/HUD/Background/Stats/Time/TimeWell/TimeLeft","text":"295.0s"}]},"elapsed_ms":598,"frame":21,"index":1,"ok":true,"pressed":false,"type":"action"},{"changes":{"appeared":["/root/Level01/UI/OrderTicketsPanel/Tickets/OrderTicket","/root/Level01/UI/OrderTicketsPanel/Tickets/@PanelContainer@8"]},"elapsed_ms":925,"frame":32,"index":2,"ok":true,"type":"wait"}]}
+[SERVER] Handling tool request: take_screenshot
+--- take_screenshot isError=false
+{"projectPath":"<repo>/godot","responseMode":"path_only","path":"<repo>/godot/.mcp/godot-runtime/screenshots/screenshot_1794870277_89913.png","size":{"width":1280,"height":720},"stats":{"width":1280,"height":720,"chromatic":0.9919704861111112,"dominant":0.1843532986111111,"distinct":187,"likelyBlank":false}}
+[SERVER] Handling tool request: get_debug_output
+--- get_debug_output isError=false
+{"projectPath":"<repo>/godot","sessionMode":"spawned","output":["Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org","Vulkan 1.4.357 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3090","McpBridge: Listening on TCP port 35395","McpBridge: Background mode active - window off-screen, mouse input passes through"],"errors":["WARNING: Failed to create wd.xic as the input method or its xim server may not have started yet.","     at: _create_xic (platform/linuxbsd/x11/display_server_x11.cpp:6347)"],"running":true}
+[SERVER] Handling tool request: stop_project
+--- stop_project isError=false
+{"projectPath":"<repo>/godot","message":"Godot project stopped","sessionMode":"spawned","externalProcessPreserved":false,"alreadyExited":false,"finalOutput":["McpBridge: Listening on TCP port 35395","McpBridge: Background mode active - window off-screen, mouse input passes through"],"finalErrors":["WARNING: Failed to create wd.xic as the input method or its xim server may not have started yet.","     at: _create_xic (platform/linuxbsd/x11/display_server_x11.cpp:6347)"]}
+[SERVER] Cleaning up resources
+RESULT OK

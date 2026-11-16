@@ -1,0 +1,25 @@
+[SERVER] Elicitation disabled (GODOT_MCP_DISABLE_ELICITATION=true); launch and run_script confirmation prompts are skipped
+[SERVER] Using Godot at: godot
+Godot MCP server running on stdio
+[SERVER] Handling tool request: run_project
+godot (xvfb-run) pid 1111588
+--- run_project attach isError=false images=0
+{"projectPath":"<repo>/godot","sessionMode":"attached","bridgePort":44333,"message":"Attached to the project and the MCP bridge is ready. stdout/stderr are not captured in attach mode; stop_project detaches without stopping Godot."}
+[SERVER] Handling tool request: take_screenshot
+--- take_screenshot #1 isError=false images=0
+{"projectPath":"<repo>/godot","responseMode":"path_only","path":"<repo>/godot/.mcp/godot-runtime/screenshots/screenshot_1794870250_92324.png","size":{"width":1280,"height":720},"stats":{"width":1280,"height":720,"chromatic":0.9922960069444444,"dominant":0.22721354166666666,"distinct":178,"likelyBlank":false}}
+[SERVER] Handling tool request: simulate_input
+--- simulate_input isError=false images=0
+{"projectPath":"<repo>/godot","success":true,"results":[{"changes":{"appeared":["/root/Level01/UI/OrderTicketsPanel/Tickets/OrderTicket","/root/Level01/UI/OrderTicketsPanel/Tickets/@PanelContainer@8"],"changed":[{"path":"/root/Level01/UI/HUD/Background/Stats/Time/TimeWell/TimeLeft","text":"295.0s"}]},"elapsed_ms":652,"frame":21,"index":0,"ok":true,"pressed":false,"type":"action"},{"elapsed_ms":1107,"frame":34,"index":1,"ok":true,"pressed":false,"type":"action"},{"changes":{"changed":[{"path":"/root/Level01/UI/HUD/Background/Stats/Time/TimeWell/TimeLeft","text":"294.0s"},{"path":"/root/Level01/UI/OrderTicketsPanel/Tickets/OrderTicket/Content/ClockWell/Stack/Clock","text":"00:59"},{"path":"/root/Level01/UI/OrderTicketsPanel/Tickets/@PanelContainer@8/Content/ClockWell/Stack/Clock","text":"00:59"}]},"elapsed_ms":1422,"frame":43,"index":2,"ok":true,"type":"wait"},{"changes":{"appeared":["/root/Level01/UI/PauseMenu"],"focus":"/root/Level01/UI/PauseMenu/MenuPanel/SafeArea/Center/Card/Content/PrimaryButton"},"elapsed_ms":1492,"focus":"/root/Level01/UI/PauseMenu/MenuPanel/SafeArea/Center/Card/Content/PrimaryButton","frame":45,"index":3,"ok":true,"type":"key"},{"elapsed_ms":1821,"frame":54,"index":4,"ok":true,"type":"wait"}]}
+[SERVER] Handling tool request: take_screenshot
+--- take_screenshot #2 isError=false images=0
+{"projectPath":"<repo>/godot","responseMode":"path_only","path":"<repo>/godot/.mcp/godot-runtime/screenshots/screenshot_1794870252_91856.png","size":{"width":1280,"height":720},"stats":{"width":1280,"height":720,"chromatic":0.8219401041666666,"dominant":0.1821831597222222,"distinct":63,"likelyBlank":false}}
+copied <repo>/godot/.mcp/godot-runtime/screenshots/screenshot_1794870250_92324.png
+copied <repo>/godot/.mcp/godot-runtime/screenshots/screenshot_1794870252_91856.png
+[SERVER] Handling tool request: stop_project
+--- stop_project isError=false images=0
+{"warnings":["An attached session captures no stdout or stderr (Godot was launched outside MCP), so finalOutput and finalErrors are null, not empty."],"projectPath":"<repo>/godot","message":"Attached project detached and MCP bridge state cleaned up","sessionMode":"attached","externalProcessPreserved":true,"alreadyExited":false,"finalOutput":null,"finalErrors":null}
+--- godot log (errores):
+
+[SERVER] Cleaning up resources
+RESULT OK

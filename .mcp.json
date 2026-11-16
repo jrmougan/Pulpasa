@@ -4,7 +4,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "godot-mcp-runtime@3.8.1"
+        "godot-mcp-runtime@4.0.1"
       ],
       "env": {
         "GODOT_MCP_DISABLE_ELICITATION": "true"
@@ -14,7 +14,7 @@
       "command": "uvx",
       "args": [
         "--python",
-        "3.13",
+        "3.14",
         "--from",
         "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.3#subdirectory=mcp",
         "blender-mcp"

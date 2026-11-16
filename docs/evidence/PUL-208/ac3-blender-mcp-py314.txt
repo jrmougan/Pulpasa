@@ -1,0 +1,9 @@
+Entrada `blender` de .mcp.json arrancada tal cual por stdio (uvx --python 3.14 --from git+https://projects.blender.org/lab/blender_mcp.git@v1.0.3#subdirectory=mcp blender-mcp), uv 0.13.8:
+
+initialize -> serverInfo {'name': 'blender-mcp', 'version': '1.30.0'}, protocolVersion 2025-06-18
+tools/list -> 26 herramientas (execute_blender_code, execute_blender_code_for_cli, get_blendfile_summary_datablocks, ...)
+uvx --python 3.14 --from <misma fuente> python -c 'import sys; print(sys.version)' -> 3.14.7 (main, Sep 24 2026, 17:58:18) [Clang 22.1.3]
+Repo resuelto: v1.0.3 = 2cea8d566dde07fbac28a61d698909d69724e853
+
+No verificado: llamadas a herramientas contra Blender (Blender no está instalado en esta máquina).
+Solo se comprueba que el servidor MCP arranca y lista herramientas con Python 3.14.
