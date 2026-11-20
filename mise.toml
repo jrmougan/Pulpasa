@@ -1,8 +1,9 @@
 # Versiones del toolchain, iguales en Linux, macOS y Windows: `mise install` en la raíz.
-# Godot 4.7.2 se instala con el gestor de cada sistema (no lo gestiona mise).
+# Godot es el binario oficial (aqua:godotengine/godot); deja `godot` en el PATH de mise.
 min_version = "2026.10.1"
 
 [tools]
+godot = "4.7.2-stable"
 node = "24"
 python = "3.13"
 uv = "0.12"
